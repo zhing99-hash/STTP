@@ -1,0 +1,4 @@
+source_id,target_id,relation,confidence
+mg:stmt:2,mg:stmt:1,uses,0.98
+mg:stmt:3,mg:stmt:1,uses,0.95
+mg:stmt:1,mg:stmt:3,uses,0.9

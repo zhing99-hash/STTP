@@ -1,0 +1,17 @@
+{
+  "source": "elementkg-poc-sample",
+  "note": "极小样本，仅用于验证 ElementKG 适配器（桩）映射与归一化流程",
+  "entities": [
+    {"id": "element:H", "type": "element", "name": "氢"},
+    {"id": "element:O", "type": "element", "name": "氧"},
+    {"id": "molecule:H2", "type": "molecule", "name": "氢气"},
+    {"id": "molecule:O2", "type": "molecule", "name": "氧气"},
+    {"id": "molecule:H2O", "type": "molecule", "name": "水"},
+    {"id": "reaction:water_formation", "type": "reaction", "name": "水的生成"}
+  ],
+  "relations": [
+    {"head": "molecule:H2", "tail": "reaction:water_formation", "relation": "reactant_of"},
+    {"head": "molecule:O2", "tail": "reaction:water_formation", "relation": "reactant_of"},
+    {"head": "molecule:H2O", "tail": "reaction:water_formation", "relation": "product_of"}
+  ]
+}
