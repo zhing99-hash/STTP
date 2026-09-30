@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>公式知识图谱 · 拓扑浏览（Phase 4 · 真实数据）</title>
+
+<!-- Cytoscape.js（CDN；离线时自动降级为纯文本标签，不崩溃） -->
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+<!-- fcose 快速力导布局（可选，联网时生效；离线自动跳过） -->
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-fcose/cytoscape-fcose.js"></script>
+
+<!-- MathJax（CDN，用于详情面板的 LaTeX 渲染；离线时降级为纯文本公式） -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' },
+    startup: { typeset: false }   // 详情面板按需手动 typeset
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+  :root {
+    --bg: #0f1419; --panel: #1a2230; --panel-2: #222c3c; --line: #2e3a4d;
+    --text: #e6edf3; --muted: #9aa7b8; --accent: #4C72B0; --warn: #DD8452;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--text);
+    display: grid;
+    grid-template-columns: 244px 1fr 328px;
+    grid-template-rows: 48px 1fr 132px;
+    grid-template-areas:
+      "header header header"
+      "left   canvas right"
+      "left   bottom right";
+    height: 100vh; overflow: hidden;
+  }
+  header {
+    grid-area: header; background: var(--panel); border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 12px; padding: 0 14px;
+  }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; white-space: nowrap; }
+  header .spacer { flex: 1; }
+  #ds-status { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .toolbtn {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer;
+  }
+  .toolbtn:hover { background: #2c3850; }
+  #left  { grid-area: left;  background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto; padding: 12px; }
+  #right { grid-area: right; background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 12px; }
+  #canvas { grid-area: canvas; position: relative; }
+  #cy { width: 100%; height: 100%; display: block; background: #0b0f15; }
+  #bottom {
+    grid-area: bottom; background: var(--panel); border-top: 1px solid var(--line);
+    padding: 10px 14px; overflow: auto;
+  }
+  .section { margin-bottom: 15px; }
+  .section h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--muted); margin: 0 0 7px; font-weight: 600;
+  }
+  label.row { display: flex; align-items: center; gap: 6px; font-size: 12.5px; margin: 4px 0; cursor: pointer; }
+  .chk { accent-color: var(--accent); }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  input[type=text], select {
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+    border-radius: 6px; padding: 5px 8px; font-size: 12.5px; width: 100%;
+  }
+  .hint { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: 4px 0; }
+  .swatch { width: 14px; height: 14px; border-radius: 3px; flex: 0 0 auto; }
+  .line-chip { width: 22px; height: 0; border-top-width: 3px; border-top-style: solid; flex: 0 0 auto; }
+  .shape-chip { width: 14px; height: 14px; border: 2px solid; border-radius: 3px; flex: 0 0 auto; }
+  .detail-title { font-size: 16px; font-weight: 700; margin: 0 0 2px; word-break: break-all; }
+  .badge {
+    display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px;
+    margin: 2px 4px 2px 0; background: var(--panel-2); border: 1px solid var(--line);
+  }
+  .badge.ok { border-color: #2ca02c; color: #7fd18a; }
+  .detail-block { margin-top: 11px; }
+  .detail-block .lbl { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .detail-block .val { font-size: 12.5px; line-height: 1.5; margin-top: 3px; word-break: break-word; }
+  .neighbor {
+    font-size: 12px; padding: 5px 7px; border: 1px solid var(--line); border-radius: 6px;
+    margin: 4px 0; cursor: pointer; background: var(--panel-2);
+  }
+  .neighbor:hover { background: #2c3850; }
+  .empty { color: var(--muted); font-size: 12.5px; }
+  .pill { font-size: 11px; color: var(--muted); }
+  .note { font-size: 11px; color: var(--muted); }
+  code { background: #0b0f15; padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+
+  /* 底栏：路径查询 */
+  #bottom .pathrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  #bottom input[type=text] { width: 240px; }
+  #path-status { font-size: 11.5px; color: var(--muted); margin-top: 7px; }
+  #path-list { font-size: 11.5px; margin-top: 6px; max-height: 52px; overflow: auto; }
+
+  /* 悬浮 tooltip（边信息） */
+  #tooltip {
+    position: absolute; z-index: 50; display: none; pointer-events: none;
+    max-width: 340px; background: #0b0f15; border: 1px solid var(--line);
+    border-radius: 6px; padding: 8px 10px; font-size: 11.5px; line-height: 1.5;
+    color: var(--text); box-shadow: 0 4px 16px rgba(0,0,0,.5);
+  }
+  #tooltip b { color: #bcd; }
+  #fallback {
+    display: none; position: absolute; inset: 0; overflow: auto; padding: 16px;
+    background: #0b0f15; font-size: 12px; white-space: pre-wrap; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧮 公式知识图谱 · 拓扑浏览</h1>
+  <span class="note">Phase 4 · 真实数据 (graph_data.json) + 查询层 API</span>
+  <div class="spacer"></div>
+  <span id="ds-status">数据加载中 …</span>
+  <button class="toolbtn" id="btn-fit">适配视图</button>
+  <button class="toolbtn" id="btn-reset">重置筛选</button>
+  <select class="toolbtn" id="sel-layout" style="width:auto">
+    <option value="concentric" selected>布局: 同心 concentric（默认·快速）</option>
+    <option value="grid">布局: 网格 grid</option>
+    <option value="circle">布局: 圆周 circle</option>
+    <option value="cose">布局: 力导 cose（仅小图）</option>
+    <option value="fcose">布局: 力导 fcose（快速·需联网）</option>
+  </select>
+</header>
+
+<!-- 左栏：筛选 + 图例 -->
+<aside id="left">
+  <div class="section">
+    <h3>节点搜索</h3>
+    <input type="text" id="f-search" placeholder="id / 名称 / 类型 / LaTeX" />
+    <div class="hint">回车或点击「搜索」高亮并居中</div>
+    <button class="toolbtn" id="btn-search" style="margin-top:6px;width:100%">🔍 搜索</button>
+  </div>
+  <div class="section">
+    <h3>节点类型</h3>
+    <div id="f-ntype"></div>
+  </div>
+  <div class="section">
+    <h3>边类型 type</h3>
+    <div id="f-etype"></div>
+  </div>
+  <div class="section">
+    <h3>最小置信度 confidence</h3>
+    <input type="range" id="f-conf" min="0" max="1" step="0.05" value="0" />
+    <div class="hint">仅显示 confidence ≥ <span id="conf-val">0.00</span> 的边</div>
+  </div>
+  <div class="section">
+    <h3>显示选项</h3>
+    <label class="row"><input type="checkbox" class="chk" id="f-verified" /> 仅显示 verified 推断边</label>
+    <label class="row"><input type="checkbox" class="chk" id="f-eoi" checked /> explicit/inferred 区别着色</label>
+    <div class="hint">关闭后按边类型 kind 着色；线型始终：实线=explicit、虚线=inferred</div>
+    <label class="row"><input type="checkbox" class="chk" id="f-ghost" checked /> 显示 ghost 外部节点</label>
+  </div>
+  <div class="section">
+    <h3>图例</h3>
+    <div class="legend-item"><span class="swatch" style="background:#4C72B0"></span>学科: 数学</div>
+    <div class="legend-item"><span class="swatch" style="background:#DD8452"></span>学科: 物理</div>
+    <div class="legend-item"><span class="swatch" style="background:#55A868"></span>学科: 化学</div>
+    <div class="legend-item"><span class="swatch" style="background:#8C8C9A"></span>学科: 跨学科</div>
+    <hr style="border-color:var(--line)" />
+    <div class="legend-item"><span class="line-chip" style="border-top-color:#1f77b4"></span>explicit 显式（实线蓝）</div>
+    <div class="legend-item"><span class="line-chip" style="border-top-color:#DD8452;border-top-style:dashed"></span>inferred 推断（虚线橙）</div>
+    <div class="legend-item"><span class="line-chip" style="border-top-color:#888;border-top-style:dashed"></span>ghost 节点描边为虚线</div>
+    <div class="note" style="margin-top:6px">边越粗 / 越不透明 = 置信度越高</div>
+    <hr style="border-color:var(--line)" />
+    <div id="legend-type"></div>
+  </div>
+</aside>
+
+<!-- 中栏：图谱 -->
+<main id="canvas">
+  <div id="cy"></div>
+  <div id="fallback"></div>
+  <div id="tooltip"></div>
+</main>
+
+<!-- 右栏：详情 -->
+<aside id="right">
+  <div id="detail">
+    <p class="empty">点击任意节点查看详情（LaTeX / 定义 / 证明 / 邻居）。</p>
+  </div>
+</aside>
+
+<!-- 底栏：路径查询（调用后端 /api/path，失败时前端 BFS 兜底） -->
+<footer id="bottom">
+  <div class="pathrow">
+    <span class="pill">路径查询:</span>
+    <input type="text" id="path-src" placeholder="起点 id（如 MX:thm:gauss_bonnet）" />
+    <span>→</span>
+    <input type="text" id="path-dst" placeholder="终点 id（如 MX:def:manifold）" />
+    <button class="toolbtn" id="btn-path">高亮最短路径</button>
+    <button class="toolbtn" id="btn-path-clear">清除高亮</button>
+    <span class="note" id="api-status">API: 检测中 …</span>
+  </div>
+  <div id="path-status">优先调用后端 <code>/api/path</code>；无后端时自动前端 BFS 兜底（有向，≤5 跳）。</div>
+  <div id="path-list"></div>
+</footer>
+
+<script>
+/* =========================================================================
+ * 0. 全局常量与配色（与《可视化原型设计.md》一致）
+ * ========================================================================= */
+const SUBJECT_COLOR = {
+  "数学": "#4C72B0", "物理": "#DD8452", "化学": "#55A868", "跨学科": "#8C8C9A"
+};
+
+// 节点类型 → 描边色 + 形状
+const TYPE_STYLE = {
+  "Formula":          { color: "#1f77b4", shape: "round-rectangle" },
+  "Definition":       { color: "#17becf", shape: "round-rectangle" },
+  "Theorem":          { color: "#9467bd", shape: "round-rectangle" },
+  "Lemma":            { color: "#bcbd22", shape: "round-rectangle" },
+  "Equation":         { color: "#1f77b4", shape: "round-rectangle" },
+  "MathConcept":      { color: "#9467bd", shape: "ellipse" },
+  "Symbol":           { color: "#8c564b", shape: "diamond" },
+  "PhysicalQuantity": { color: "#e377c2", shape: "hexagon" },
+  "Molecule":         { color: "#2ca02c", shape: "triangle" },
+  "Element":          { color: "#ff7f0e", shape: "octagon" },
+  "Unit":             { color: "#17becf", shape: "diamond" },    // Phase 6 单位
+  "Constant":         { color: "#c49c00", shape: "round-rectangle" }, // 物理常量(G, R...)
+  "Entity":           { color: "#6b7a90", shape: "ellipse" },     // 外部对齐桩(wd/ek/pb)
+  "Reaction":         { color: "#d62728", shape: "star" },
+  "FunctionalGroup":   { color: "#7e7f9a", shape: "hexagon" },
+  "External":         { color: "#5a6a80", shape: "ellipse" },
+  "Unknown":          { color: "#888888", shape: "ellipse" }
+};
+
+// 边类型 type → 颜色（关闭「按来源着色」时使用）
+// 注意：筛选/着色用的是边的 type（derived_from/defines/...），
+// 而原始 kind（explicit_citation/llm_inferred/...）仅用于 tooltip 细分。
+const EDGE_TYPE_COLOR = {
+  "derived_from":             "#1f77b4",
+  "defines":                  "#8c564b",
+  "has_symbol":               "#7f7f7f",
+  "dimensionally_consistent": "#2ca02c",
+  "chemical_reaction":        "#d62728",
+  "proves":                   "#e377c2",
+  "depends_on":               "#ff7f0e",
+  "reactant_of":              "#d62728",
+  "product_of":               "#9467bd",
+  "has_unit":                 "#9467bd",     // Phase 6 物理量->单位
+  "composed_of":              "#2ca02c",     // Phase 6 分子->元素
+  "releases":                 "#d62728",     // Phase 6 反应->能量
+  "same_as":                  "#17becf",     // 跨源对齐(含 same_as 桥)
+  "same_period":              "#ff7f0e",     // Phase 8 同周期(周期表行)
+  "same_family":              "#bcbd22",     // Phase 8 同族(周期表列)
+  "reagent_of":              "#ff9896",     // Phase 8.B 试剂(反应角色)
+  "has_functionalgroup":     "#c5b0d5",     // Phase 8.B 分子->官能团
+  "has_element":             "#ffbb78",     // Phase 8.B 官能团->元素
+  "has_quantity":           "#1abc9c",     // Phase 9 分子-质量物理量桥(已验证)
+  "related_to":            "#e67e22"      // Phase 9 GNN 跨域假设(待复核)
+};
+
+// explicit_or_inferred → 颜色（按来源着色：实线蓝=explicit，虚线橙=inferred）
+const EOI_COLOR = { "explicit": "#1f77b4", "inferred": "#DD8452" };
+
+// 置信度 → 视觉编码
+function confToWidth(c){ return 1 + (Math.max(0, (c == null ? 0.5 : c)) - 0.5) * 8; }
+function confToOpacity(c){ return 0.35 + (c == null ? 0.5 : c) * 0.6; }
+
+/* =========================================================================
+ * 1. 数据加载：fetch ./graph_data.json（viz_server.py 或 python -m http.server）
+ * ========================================================================= */
+let NODES = [], EDGES = [], META = {};
+let DATA_OK = false;
+
+function shortId(id){ return String(id).replace(/^[A-Z]+:/, ""); }
+
+function inferSubjectFromId(id){
+  const s = String(id).toLowerCase();
+  if (s.includes(":chem:")) return "化学";
+  if (s.includes(":phy:"))  return "物理";
+  if (s.includes(":math:") || s.includes(":thm:") || s.includes(":def:") ||
+      s.includes(":lem:") || s.includes(":sym:")) return "数学";
+  return "跨学科";
+}
+function inferTypeFromId(id){
+  const s = String(id).toLowerCase();
+  if (s.includes(":sym:")) return "Symbol";
+  if (s.includes(":chem:") && s.includes("reaction")) return "Reaction";
+  return "External";
+}
+
+async function loadData(){
+  try {
+    const res = await fetch("./graph_data.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const d = await res.json();
+    NODES = d.nodes || [];
+    EDGES = d.edges || [];
+    META  = d.meta  || {};
+    DATA_OK = NODES.length > 0;
+  } catch (e) {
+    DATA_OK = false;
+    console.warn("加载 graph_data.json 失败：", e);
+  }
+}
+
+/* =========================================================================
+ * 2. 构建 Cytoscape elements（含对「外部端点」的 ghost 节点合成）
+ * ========================================================================= */
+function buildElements(){
+  const nodeIds = new Set(NODES.map(n => n.id));
+  const elements = [];
+
+  NODES.forEach(n => {
+    const st = TYPE_STYLE[n.type] || TYPE_STYLE.Unknown;
+    elements.push({
+      group: "nodes",
+      data: {
+        id: n.id,
+        label: String(n.label || shortId(n.id)).replace(/\$/g, ""), // 画布去掉 $ 定界符
+        type: n.type || "Unknown",
+        labels: (n.labels || []).join(";"),
+        subject: n.subject || "跨学科",
+        formula: n.formula || "",
+        confidence: n.confidence,
+        domain: n.domain || "",
+        definition: (n.attrs && (n.attrs.informal || n.attrs.definition)) || "",
+        proof: (n.attrs && n.attrs.proof) || "",
+        source: (n.attrs && (n.attrs.source_ref || n.attrs.source)) || "",
+        ghost: false,
+        _fill: SUBJECT_COLOR[n.subject] || "#8C8C9A",
+        _border: st.color,
+        _shape: st.shape
+      }
+    });
+  });
+
+  // ghost 节点：边端点不在节点表内（Phase 3 LLM 假设涉及的外部实体）
+  const ghosts = new Set();
+  EDGES.forEach(e => {
+    [e.source, e.target].forEach(id => { if (!nodeIds.has(id)) ghosts.add(id); });
+  });
+  ghosts.forEach(id => {
+    const subj = inferSubjectFromId(id);
+    const type = inferTypeFromId(id);
+    const st = TYPE_STYLE[type] || TYPE_STYLE.External;
+    elements.push({
+      group: "nodes",
+      data: {
+        id,
+        label: shortId(id),
+        type,
+        labels: "",
+        subject: subj,
+        formula: "",
+        confidence: null,
+        domain: "",
+        definition: "外部实体：作为推断边端点出现，但未收录在节点表中。",
+        proof: "", source: "",
+        ghost: true,
+        _fill: "#3a4657",
+        _border: st.color,
+        _shape: st.shape
+      }
+    });
+  });
+
+  EDGES.forEach((e, i) => {
+    const eoi = e.explicit_or_inferred === "explicit" ? "explicit" : "inferred";
+    const typeColor = EDGE_TYPE_COLOR[e.type] || EDGE_TYPE_COLOR[e.kind] || "#888";
+    const srcOk = nodeIds.has(e.source) || ghosts.has(e.source);
+    const dstOk = nodeIds.has(e.target) || ghosts.has(e.target);
+    elements.push({
+      group: "edges",
+      data: {
+        id: e.id || (e.source + "->" + e.target + "#" + i),
+        source: e.source,
+        target: e.target,
+        type: e.type || e.kind || "",
+        kind: e.kind || e.type || "",
+        confidence: (e.confidence == null ? 0.5 : e.confidence),
+        explicit_or_inferred: eoi,
+        verified: !!e.verified,
+        gate: e.gate || "",
+        evidence: e.evidence || "",
+        rationale: e.rationale || "",
+        dangling: !(srcOk && dstOk),
+        _color: typeColor,
+        _width: confToWidth(e.confidence),
+        _opacity: confToOpacity(e.confidence),
+        _style: eoi === "inferred" ? "dashed" : "solid"
+      }
+    });
+  });
+
+  return { elements, ghostCount: ghosts.size };
+}
+
+/* =========================================================================
+ * 3. Cytoscape 初始化
+ * ========================================================================= */
+let cy = null;
+let built = null;
+
+function initCy(){
+  built = buildElements();
+  if (window.cytoscapeFcose){ try { cytoscape.use(window.cytoscapeFcose); } catch (e) {} }
+  cy = cytoscape({
+    container: document.getElementById("cy"),
+    elements: built.elements,
+    wheelSensitivity: 0.2,
+    style: [
+      {
+        selector: "node",
+        style: {
+          "background-color": "data(_fill)",
+          "border-color": "data(_border)",
+          "border-width": 3,
+          "shape": "data(_shape)",
+          "label": "data(label)",
+          "color": "#e6edf3",
+          "font-size": 11,
+          "text-valign": "bottom",
+          "text-margin-y": 4,
+          "text-outline-color": "#0b0f15",
+          "text-outline-width": 2,
+          "text-wrap": "wrap",
+          "text-max-width": 90,
+          "width": "mapData(degNum, 1, 12, 26, 60)",
+          "height": "mapData(degNum, 1, 12, 26, 60)"
+        }
+      },
+      { selector: "node[?ghost]", style: { "border-style": "dashed", "border-width": 2, "font-size": 10 } },
+      { selector: "node:selected", style: { "border-width": 5, "border-color": "#ffffff" } },
+      {
+        selector: "edge",
+        style: {
+          "width": "data(_width)",
+          "line-color": "data(_color)",
+          "target-arrow-color": "data(_color)",
+          "line-style": "data(_style)",
+          "opacity": "data(_opacity)",
+          "curve-style": "bezier",
+          "target-arrow-shape": "triangle",
+          "arrow-scale": 1.0
+        }
+      },
+      // ── 按来源着色（explicit 实线蓝 / inferred 虚线橙）——受 class 控制 ──
+      { selector: "edge.k-eoi.eoi-explicit", style: { "line-color": "#1f77b4", "target-arrow-color": "#1f77b4", "line-style": "solid" } },
+      { selector: "edge.k-eoi.eoi-inferred", style: { "line-color": "#DD8452", "target-arrow-color": "#DD8452", "line-style": "dashed" } },
+      { selector: "edge:selected", style: { "opacity": 1, "width": 6 } },
+      { selector: ".dim", style: { "opacity": 0.10, "text-opacity": 0.12 } },
+      { selector: ".hidden", style: { "display": "none" } },
+      { selector: "node.hl", style: { "border-color": "#ffd166", "border-width": 6 } },
+      { selector: "edge.hl", style: { "opacity": 1, "width": 6, "line-color": "#ffd166", "target-arrow-color": "#ffd166", "line-style": "solid", "z-index": 99 } }
+    ],
+    layout: { name: "concentric", animate: false, padding: 60, concentric: n => (n.degree() + 1), minNodeSpacing: 30, levelWidth: () => 1, startAngle: Math.PI / 6 }
+  });
+
+  // 度数（用于节点尺寸）
+  cy.nodes().forEach(n => n.data("degNum", n.degree()));
+  // 边初始挂 eoi 类别 class
+  cy.edges().forEach(e => {
+    const eoi = e.data("explicit_or_inferred");
+    e.addClass(eoi === "explicit" ? "eoi-explicit" : "eoi-inferred");
+  });
+  if (typeof setDs === "function"){
+    if (EDGES.length > 4000){
+      setDs(`已加载 ${NODES.length} 节点 / ${EDGES.length} 边（默认同心快速布局）。力导布局请先在左侧精简同周期/同族等密集边。`);
+    } else {
+      setDs(`已加载 ${NODES.length} 节点 / ${EDGES.length} 边`);
+    }
+  }
+}
+
+/* =========================================================================
+ * 4. 详情面板（MathJax 渲染 LaTeX + 定义 / 证明 / 邻居）
+ * ========================================================================= */
+const detailEl = document.getElementById("detail");
+
+function escapeHtml(s){
+  return String(s == null ? "" : s).replace(/[&<>"]/g,
+    c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+function hasMathJax(){ return !!(window.MathJax && MathJax.typesetPromise); }
+
+function delimitLatex(tex){
+  // 含 $...$ 定界符则原样；否则包进 \[ ... \]
+  if (!tex) return "";
+  if (/\$[^$]+\$/.test(tex) || tex.indexOf("\\(") >= 0) return tex;
+  return "\\[" + tex + "\\]";
+}
+
+function renderDetail(node){
+  const d = node.data();
+  const neighbors = node.connectedEdges();
+  let nbHtml = "";
+  if (neighbors.length){
+    neighbors.forEach(e => {
+      const ed = e.data();
+      const other = (e.source().id() === d.id) ? e.target() : e.source();
+      const dir = (e.source().id() === d.id) ? "→" : "←";
+      const tag = ed.explicit_or_inferred === "inferred" ? "推断" : "显式";
+      nbHtml += `<div class="neighbor" data-id="${escapeHtml(other.id())}">
+        ${dir} <b>${escapeHtml(ed.kind)}</b> · ${escapeHtml(other.data("label"))}
+        <span class="badge">${tag} ${Number(ed.confidence).toFixed(2)}</span></div>`;
+    });
+  } else {
+    nbHtml = `<p class="empty">无相连关系。</p>`;
+  }
+
+  // LaTeX：含 $...$/\(..\) 用 MathJax 渲染；否则若为普通 LaTeX 也交给 MathJax
+  const latexRaw = d.formula || "";
+  const latexHtml = latexRaw
+    ? `<div id="mj">${escapeHtml(delimitLatex(latexRaw))}</div>`
+    : `<span class="empty">—</span>`;
+
+  const ghostBadge = d.ghost ? `<span class="badge">ghost 外部节点</span>` : "";
+
+  detailEl.innerHTML = `
+    <div class="detail-title">${escapeHtml(d.label)}</div>
+    <div>
+      <span class="badge">${escapeHtml(d.subject)}</span>
+      <span class="badge">${escapeHtml(d.type)}</span>
+      ${ghostBadge}
+      ${d.labels ? `<span class="badge">labels: ${escapeHtml(d.labels)}</span>` : ""}
+      ${d.verified === true ? `<span class="badge ok">verified</span>` : ""}
+    </div>
+    <div class="detail-block">
+      <div class="lbl">公式 (LaTeX · MathJax)</div>
+      <div class="val">${latexHtml}</div>
+    </div>
+    <div class="detail-block">
+      <div class="lbl">id</div>
+      <div class="val"><code>${escapeHtml(d.id)}</code></div>
+    </div>
+    <div class="detail-block">
+      <div class="lbl">定义 / 说明</div>
+      <div class="val">${escapeHtml(d.definition) || "—"}</div>
+    </div>
+    <div class="detail-block">
+      <div class="lbl">证明 / Proof</div>
+      <div class="val">${escapeHtml(d.proof) || "—"}</div>
+    </div>
+    <div class="detail-block">
+      <div class="lbl">来源</div>
+      <div class="val">${escapeHtml(d.source) || "—"}</div>
+    </div>
+    <div class="detail-block">
+      <div class="lbl">度数 / degree</div>
+      <div class="val">${d.degNum != null ? d.degNum : node.degree()}</div>
+    </div>
+    <div class="detail-block">
+      <div class="lbl">相连关系 (点击跳转)</div>
+      ${nbHtml}
+    </div>
+  `;
+
+  if (latexRaw && hasMathJax()){
+    MathJax.typesetPromise([document.getElementById("mj")]).catch(()=>{});
+  }
+}
+
+/* =========================================================================
+ * 5. 事件：点击 / 邻居跳转 / tooltip
+ * ========================================================================= */
+function bindEvents(){
+  cy.on("tap", "node", evt => {
+    const node = evt.target;
+    renderDetail(node);
+    const related = node.closedNeighborhood();
+    cy.elements().addClass("dim");
+    related.removeClass("dim");
+  });
+
+  cy.on("tap", evt => {
+    if (evt.target === cy){
+      detailEl.innerHTML = `<p class="empty">点击任意节点查看详情（LaTeX / 定义 / 证明 / 邻居）。</p>`;
+      cy.elements().removeClass("dim");
+    }
+  });
+
+  detailEl.addEventListener("click", e => {
+    const el = e.target.closest(".neighbor");
+    if (!el) return;
+    const n = cy.getElementById(el.getAttribute("data-id"));
+    if (n.nonempty()){
+      cy.animate({ center: { eles: n }, zoom: Math.max(cy.zoom(), 1.3) }, { duration: 300 });
+      renderDetail(n);
+    }
+  });
+
+  // 边 tooltip：confidence + gate + evidence
+  const tip = document.getElementById("tooltip");
+  cy.on("mouseover", "edge", evt => {
+    const d = evt.target.data();
+    const parts = [
+      `type: <b>${escapeHtml(d.type)}</b>  ·  kind: <b>${escapeHtml(d.kind)}</b>`,
+      `来源: <b>${escapeHtml(d.explicit_or_inferred)}</b>`,
+      `confidence: <b>${Number(d.confidence).toFixed(2)}</b>`,
+      d.verified ? `verified: <b>✅ ${escapeHtml(d.gate || "")}</b>` : (d.gate ? `gate: ${escapeHtml(d.gate)}` : ""),
+      d.evidence ? `evidence: ${escapeHtml(String(d.evidence).slice(0, 180))}` : "",
+      d.rationale ? `rationale: ${escapeHtml(String(d.rationale).slice(0, 180))}` : "",
+      `<span class="note">${escapeHtml(d.source)} → ${escapeHtml(d.target)}</span>`
+    ].filter(Boolean);
+    tip.innerHTML = parts.join("<br/>");
+    tip.style.display = "block";
+    const p = evt.renderedPosition || { x: 0, y: 0 };
+    tip.style.left = (p.x + 14) + "px";
+    tip.style.top  = (p.y + 12) + "px";
+  });
+  cy.on("mouseout", "edge", () => { tip.style.display = "none"; });
+  cy.on("pan zoom", () => { tip.style.display = "none"; });
+}
+
+/* =========================================================================
+ * 6. 筛选控件（类型 / 边类型 / 置信度 / verified / 着色）
+ * ========================================================================= */
+const state = {
+  ntypes: new Set(), etypes: new Set(),
+  minConf: 0, verifiedOnly: false, eoiColor: true, showGhost: true
+};
+
+function buildCheckboxes(containerId, items, set, labelFn){
+  const box = document.getElementById(containerId);
+  box.innerHTML = "";
+  items.forEach(it => {
+    const lab = document.createElement("label");
+    lab.className = "row";
+    lab.innerHTML = `<input type="checkbox" class="chk" value="${it}" ${set.has(it) ? "checked" : ""}/> ${labelFn(it)}`;
+    lab.querySelector("input").addEventListener("change", ev => {
+      if (ev.target.checked) set.add(it); else set.delete(it);
+      applyFilters();
+    });
+    box.appendChild(lab);
+  });
+}
+
+function applyFilters(){
+  if (!cy) return;
+  cy.batch(() => {
+    cy.nodes().forEach(n => {
+      const okType  = state.ntypes.has(n.data("type"));
+      const okGhost = state.showGhost || !n.data("ghost");
+      n.toggleClass("hidden", !(okType && okGhost));
+    });
+    cy.edges().forEach(e => {
+      const sVis = !e.source().hasClass("hidden");
+      const tVis = !e.target().hasClass("hidden");
+      let ok = sVis && tVis
+        && state.etypes.has(e.data("type"))
+        && e.data("confidence") >= state.minConf;
+      if (state.verifiedOnly){
+        ok = ok && e.data("explicit_or_inferred") === "inferred" && e.data("verified") === true;
+      }
+      e.toggleClass("hidden", !ok);
+    });
+  });
+}
+
+/* =========================================================================
+ * 7. 搜索（高亮 + 居中）
+ * ========================================================================= */
+function doSearch(){
+  const q = document.getElementById("f-search").value.trim().toLowerCase();
+  if (!q) return;
+  cy.elements().removeClass("dim hl");
+  const hit = cy.nodes().filter(n => {
+    const d = n.data();
+    return String(d.id).toLowerCase().includes(q)
+      || String(d.label).toLowerCase().includes(q)
+      || String(d.formula).toLowerCase().includes(q)
+      || String(d.type).toLowerCase().includes(q);
+  });
+  if (hit.nonempty()){
+    cy.elements().addClass("dim");
+    hit.removeClass("dim").addClass("hl");
+    cy.animate({ center: { eles: hit }, zoom: Math.max(cy.zoom(), 1.2) }, { duration: 300 });
+    if (hit.length === 1) renderDetail(hit[0]);
+    setDs(`搜索命中 ${hit.length} 个节点`);
+  } else {
+    setDs("未找到匹配节点");
+  }
+}
+
+/* =========================================================================
+ * 8. 路径查询（优先后端 /api/path；失败则前端 BFS 兜底）
+ * ========================================================================= */
+function bfsDirected(src, dst, maxHops){
+  if (src === dst) return [[src]];
+  const adj = {};
+  EDGES.forEach(e => {
+    (adj[e.source] = adj[e.source] || []).push(e.target);
+  });
+  const results = [];
+  let frontier = [[src]];
+  while (frontier.length && results.length < 20){
+    const next = [];
+    for (const p of frontier){
+      if (p.length - 1 >= maxHops) continue;
+      const last = p[p.length - 1];
+      for (const to of (adj[last] || [])){
+        if (p.includes(to)) continue;
+        const np = p.concat(to);
+        if (to === dst) results.push(np);
+        else next.push(np);
+      }
+    }
+    frontier = next;
+  }
+  return results;
+}
+
+function highlightPath(pathNodes){
+  cy.elements().removeClass("dim hl");
+  cy.elements().addClass("dim");
+  const eles = cy.collection();
+  pathNodes.forEach((id, i) => {
+    const n = cy.getElementById(id);
+    if (n.nonempty()) eles.merge(n);
+    if (i > 0){
+      const prev = pathNodes[i - 1];
+      cy.edges().forEach(e => {
+        if (e.data("source") === prev && e.data("target") === id) eles.merge(e);
+      });
+    }
+  });
+  eles.removeClass("dim").addClass("hl");
+  cy.animate({ fit: { eles: eles, padding: 60 } }, { duration: 400 });
+  return eles.length;
+}
+
+async function runPath(){
+  const s = document.getElementById("path-src").value.trim();
+  const t = document.getElementById("path-dst").value.trim();
+  const status = document.getElementById("path-status");
+  const list = document.getElementById("path-list");
+  list.innerHTML = "";
+  if (!s || !t){ status.textContent = "请输入起点与终点节点 id。"; return; }
+
+  let paths = null, via = "";
+  try {
+    const r = await fetch(`./api/path?src=${encodeURIComponent(s)}&dst=${encodeURIComponent(t)}`, { cache: "no-store" });
+    if (r.ok){
+      const j = await r.json();
+      if (Array.isArray(j.paths)){ paths = j.paths; via = "后端 /api/path"; }
+    }
+  } catch (e) { /* 无后端 → 走兜底 */ }
+
+  if (!paths || !paths.length){
+    paths = bfsDirected(s, t, 5);
+    via = "前端 BFS 兜底（有向 ≤5 跳）";
+  }
+
+  if (!paths || !paths.length){
+    cy.elements().removeClass("dim hl");
+    status.textContent = `${via} · 未找到 ${s} → ${t} 的路径。`;
+    return;
+  }
+
+  const shortest = paths.slice().sort((a, b) => a.length - b.length)[0];
+  highlightPath(shortest);
+  status.textContent = `${via} · 共 ${paths.length} 条路径，已高亮最短路径（${shortest.length - 1} 跳）。`;
+  list.innerHTML = paths.slice(0, 5).map(p =>
+    `<div>· ${p.map(escapeHtml).join(" → ")}</div>`).join("");
+}
+
+/* =========================================================================
+ * 9. 布局 / 工具栏 / 状态
+ * ========================================================================= */
+function setDs(msg){ document.getElementById("ds-status").textContent = msg; }
+
+function setLayout(name){
+  // 力导布局在大图上会卡死主线程 → 超过阈值时拒绝执行，提示先精简
+  const visibleEdges = cy.edges(":visible").length;
+  if ((name === "cose" || name === "fcose") && visibleEdges > 5000){
+    setDs(`⚠ 当前可见边 ${visibleEdges} 过多，力导布局会卡死。请先在左侧「边类型」取消勾选 same_period / same_family / has_functionalgroup 等密集边，或用「同心」布局。`);
+    return;
+  }
+  const opts = { name, animate: true, padding: 40 };
+  if (name === "concentric"){ opts.concentric = n => (n.degree() + 1); opts.minNodeSpacing = 30; opts.levelWidth = () => 1; }
+  if (name === "grid"){ opts.rows = undefined; }
+  if (name === "cose"){ opts.nodeRepulsion = 9000; opts.idealEdgeLength = 110; }
+  if (name === "fcose"){
+    if (!cy.hasLayout || !cy.hasLayout("fcose")){
+      setDs("⚠ fcose 未加载（离线？），已回退同心布局。");
+      opts.name = "concentric"; opts.concentric = n => (n.degree() + 1); opts.minNodeSpacing = 30; opts.levelWidth = () => 1;
+    } else {
+      opts.quality = "default"; opts.randomize = false; opts.animate = false;
+      opts.nodeRepulsion = 9000; opts.idealEdgeLength = 110; opts.gravity = 0.25;
+    }
+  }
+  cy.layout(opts).run();
+}
+
+/* =========================================================================
+ * 10. 离线降级：CDN 未加载时输出纯文本，不崩溃
+ * ========================================================================= */
+function showFallback(reason){
+  const fb = document.getElementById("fallback");
+  fb.style.display = "block";
+  if (!DATA_OK){
+    fb.textContent =
+      "⚠️ 无法加载 ./graph_data.json。\n\n" +
+      "请通过后端或静态服务器打开：\n" +
+      "  · python viz_server.py           然后访问 http://127.0.0.1:8765/\n" +
+      "  · python -m http.server         在 06_PoC 目录下执行\n\n" +
+      "（浏览器直接 file:// 打开会被 CORS 策略拦截 fetch）\n\n" + reason;
+    return;
+  }
+  let txt = "⚠️ Cytoscape.js CDN 未加载（离线），已降级为纯文本图谱：\n\n";
+  txt += `节点 ${NODES.length} 个：\n`;
+  NODES.forEach(n => { txt += `  · [${n.type}] ${n.id}  ${n.label}  ${n.formula || ""}\n`; });
+  txt += `\n边 ${EDGES.length} 条：\n`;
+  EDGES.forEach(e => { txt += `  · ${e.source} -[${e.type}/${e.explicit_or_inferred} conf=${e.confidence}]-> ${e.target}\n`; });
+  fb.textContent = txt;
+}
+
+/* =========================================================================
+ * 11. 引导启动
+ * ========================================================================= */
+  // 探测后端 API（在线 / 离线降级两种模式都探测）
+async function probeApi(){
+  try {
+    const r = await fetch("./api/stats", { cache: "no-store" });
+    if (r.ok){
+      const j = await r.json();
+      document.getElementById("api-status").textContent =
+        `API: ✅ 在线 (${j.backend}) · ${j.nodes}节点/${j.edges}边`;
+      return;
+    }
+    throw new Error("status " + r.status);
+  } catch (e) {
+    document.getElementById("api-status").textContent = "API: ⚪ 离线（路径查询将用前端 BFS 兜底）";
+  }
+}
+
+async function boot(){
+  await loadData();
+
+  // Cytoscape 缺失（离线）→ 纯文本降级
+  if (typeof cytoscape === "undefined"){
+    showFallback("Cytoscape.js CDN 未加载。");
+    document.getElementById("ds-status").textContent = "离线降级模式（纯文本）";
+    probeApi();
+    return;
+  }
+  if (!DATA_OK){
+    showFallback("graph_data.json 为空或缺失。");
+    setDs("数据加载失败");
+    return;
+  }
+
+  initCy();
+  bindEvents();
+
+  // 筛选初始集合来自真实数据
+  state.ntypes = new Set(cy.nodes().filter(n => !n.data("ghost")).map(n => n.data("type")));
+  state.etypes = new Set(EDGES.map(e => e.type));
+  const ntypes = [...state.ntypes].sort();
+  const etypes = [...state.etypes].sort();
+  buildCheckboxes("f-ntype", ntypes, state.ntypes, t => t);
+  buildCheckboxes("f-etype", etypes, state.etypes, k => k);
+
+  // 类型图例
+  const legendType = document.getElementById("legend-type");
+  ntypes.forEach(t => {
+    const st = TYPE_STYLE[t] || TYPE_STYLE.Unknown;
+    const item = document.createElement("div");
+    item.className = "legend-item";
+    item.innerHTML = `<span class="shape-chip" style="border-color:${st.color}"></span>${t}`;
+    legendType.appendChild(item);
+  });
+  // 边类型颜色图例（与勾选框 f-etype 对应）
+  etypes.forEach(t => {
+    const c = EDGE_TYPE_COLOR[t] || "#888";
+    const it = document.createElement("div");
+    it.className = "legend-item";
+    it.innerHTML = `<span class="line-chip" style="border-top-color:${c}"></span>${t}`;
+    legendType.appendChild(it);
+  });
+
+  // 控件绑定
+  const confSlider = document.getElementById("f-conf");
+  const confVal = document.getElementById("conf-val");
+  confSlider.addEventListener("input", () => {
+    state.minConf = parseFloat(confSlider.value);
+    confVal.textContent = state.minConf.toFixed(2);
+    applyFilters();
+  });
+  document.getElementById("f-verified").addEventListener("change", ev => {
+    state.verifiedOnly = ev.target.checked; applyFilters();
+  });
+  document.getElementById("f-eoi").addEventListener("change", ev => {
+    state.eoiColor = ev.target.checked;
+    cy.edges().toggleClass("k-eoi", state.eoiColor);
+  });
+  document.getElementById("f-ghost").addEventListener("change", ev => {
+    state.showGhost = ev.target.checked; applyFilters();
+  });
+  document.getElementById("f-search").addEventListener("keydown", ev => {
+    if (ev.key === "Enter") doSearch();
+  });
+  document.getElementById("btn-search").addEventListener("click", doSearch);
+  document.getElementById("btn-path").addEventListener("click", runPath);
+  document.getElementById("btn-path-clear").addEventListener("click", () => {
+    cy.elements().removeClass("dim hl");
+    document.getElementById("path-list").innerHTML = "";
+  });
+  document.getElementById("btn-fit").addEventListener("click", () => {
+    cy.elements().removeClass("dim hl"); cy.fit(undefined, 40);
+  });
+  document.getElementById("btn-reset").addEventListener("click", () => {
+    state.ntypes = new Set(ntypes);
+    state.etypes = new Set(etypes);
+    state.minConf = 0; state.verifiedOnly = false; state.showGhost = true;
+    confSlider.value = 0; confVal.textContent = "0.00";
+    document.getElementById("f-verified").checked = false;
+    document.getElementById("f-ghost").checked = true;
+    document.querySelectorAll('#left input[type=checkbox]').forEach(c => c.checked = true);
+    document.getElementById("f-verified").checked = false;
+    cy.elements().removeClass("dim hl hidden");
+    cy.fit(undefined, 40);
+  });
+  document.getElementById("sel-layout").addEventListener("change", ev => setLayout(ev.target.value));
+
+  // 默认按来源着色（class）
+  cy.edges().toggleClass("k-eoi", true);
+  applyFilters();
+  cy.fit(undefined, 40);
+
+  // 状态栏
+  const gc = built.ghostCount;
+  setDs(`数据源 graph_data.json · ${NODES.length} 节点 / ${EDGES.length} 边` + (gc ? ` (+${gc} ghost)` : ""));
+
+  // 探测后端 API
+  probeApi();
+}
+
+window.addEventListener("DOMContentLoaded", boot);
+</script>
+</body>
+</html>
