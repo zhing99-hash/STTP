@@ -1,0 +1,735 @@
+{
+  "counts": {
+    "KEEP": 85,
+    "DROP": 30,
+    "UPGRADE": 5
+  },
+  "total_related_to": 120,
+  "hypotheses": [
+    {
+      "source": "BC:mo:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Oxygen（O2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:co2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Carbon dioxide（CO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:glucose",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Glucose（C6H12O6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP（C10H16N5O13P3）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:rx:respiration",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：Cellular respiration（跨学科）与 ATP hydrolysis（化学）跨域关联，建议人工复核其量纲/组成/语义关系。"
+    },
+    {
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP hydrolysis（跨学科）与 ATP hydrolysis（化学）跨域关联，建议人工复核其量纲/组成/语义关系。"
+    },
+    {
+      "source": "WD:Q1190543",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q1190543 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "WD:Q114727876",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q114727876 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP（C10H16N5O13P3）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Chlorine（Cl2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：Photosynthesis（跨学科）与 ATP hydrolysis（化学）跨域关联，建议人工复核其量纲/组成/语义关系。"
+    },
+    {
+      "source": "MX:math:power_rule",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 n·xⁿ⁻¹ 与化学实体 combustion 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Methane（CH4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethylene（C2H4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MX:math:power_rule",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 n·xⁿ⁻¹ 与化学实体 CO₂ 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethylene（C2H4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Methane（CH4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Chlorine（Cl2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MX:math:derivative_power",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 d/dx(xⁿ) 与化学实体 combustion 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:280",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：carbon dioxide（CO2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q2039117",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q2039117 与化学概念 CO₂ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:280",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：carbon dioxide（CO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Benzene（C6H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethene（C2H4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Benzene（C6H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：methane（CH4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethene（C2H4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：methane（CH4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Hydrogen chloride（HCl）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium（Na）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Chlorine（Cl2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium（Na）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Hydrogen chloride（HCl）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethane（C2H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Methane（CH4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q2039117",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q2039117 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethylene（C2H4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethane（C2H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:280",
+      "target": "BC:rx:photosynthesis",
+      "decision": "UPGRADE",
+      "new_type": "reactant_of",
+      "hypothesis": "已验证：carbon dioxide（分子式 CO2）在反应 Photosynthesis 的方程式「6 CO2 + 6 H2O -> C6H12O6 + 6 O2」中明确作为反应物出现，构成真实跨域桥（R-CHEM 符号校验）。"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Generic amino acid（C2H5NO2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MX:math:derivative_power",
+      "target": "MX:chem:methane",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 d/dx(xⁿ) 与化学实体 CH₄ 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "MX:math:trig_unit",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 unit circle 与化学实体 CO₂ 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Generic amino acid（C2H5NO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q37129",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q37129 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：chlorane（ClH）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium chloride（NaCl）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MX:math:pythagorean_identity",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 sin²θ+cos²θ=1 与化学实体 combustion 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethane（C2H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Benzene（C6H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：chlorane（ClH）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethene（C2H4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：methane（CH4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethane（C2H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "BC:rx:respiration",
+      "decision": "UPGRADE",
+      "new_type": "reactant_of",
+      "hypothesis": "已验证：(3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol（分子式 C6H12O6）在反应 Cellular respiration 的方程式「C6H12O6 + 6 O2 -> 6 CO2 + 6 H2O」中明确作为反应物出现，构成真实跨域桥（R-CHEM 符号校验）。"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：(3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol（C6H12O6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium chloride（NaCl）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:sy:H",
+      "target": "OM:fo:combustion",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 H (hydrogen) 可能出现在化合物/反应式 Hydrocarbon combustion 中，构成元素—组成关联，建议以组成数据复核。"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Hydrogen chloride（HCl）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium（Na）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q468455",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q468455 与化学概念 CO₂ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethane（C2H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Water（H2O）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q37129",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q37129 与化学概念 CO₂ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：2-aminoacetic acid（C2H5NO2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MX:math:trig_unit",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 unit circle 与化学实体 combustion 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "UPGRADE",
+      "new_type": "reactant_of",
+      "hypothesis": "已验证：Water（分子式 H2O）在反应 ATP hydrolysis 的方程式「ATP + H2O -> ADP + Pi」中明确作为反应物出现，构成真实跨域桥（R-CHEM 符号校验）。"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：2-aminoacetic acid（C2H5NO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium chloride（NaCl）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Generic amino acid（C2H5NO2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：chlorane（ClH）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethanol（C2H5OH）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethanol（C2H5OH）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethane（C2H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "wd:Q_carbon_dioxide",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 wd:Q_carbon_dioxide 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "ek:molecule:CO2",
+      "target": "MX:chem:combustion",
+      "decision": "KEEP",
+      "hypothesis": "假设：ek:molecule:CO2（数学）与 combustion（化学）跨域关联，建议人工复核其量纲/组成/语义关系。"
+    },
+    {
+      "source": "WD:Q1997",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q1997 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "WD:Q1190543",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q1190543 与化学概念 CO₂ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "WD:Q114727876",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q114727876 与化学概念 CO₂ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "BC:rx:photosynthesis",
+      "decision": "UPGRADE",
+      "new_type": "product_of",
+      "hypothesis": "已验证：(3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol（分子式 C6H12O6）在反应 Photosynthesis 的方程式「6 CO2 + 6 H2O -> C6H12O6 + 6 O2」中明确作为产物出现，构成真实跨域桥（R-CHEM 符号校验）。"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：[[(2R,3S,4R,5R)-5-(6-aminopurin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy-hydroxyphosphoryl] phosphono hydrogen phosphate（C10H16N5O13P3）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：[[(2R,3S,4R,5R)-5-(6-aminopurin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy-hydroxyphosphoryl] phosphono hydrogen phosphate（C10H16N5O13P3）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Protein (polymer)（(C2H3NO)n）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：DNA (abstract)（(C10H14N5O7P)n）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Protein (polymer)（(C2H3NO)n）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：DNA (abstract)（(C10H14N5O7P)n）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Water（H2O）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：2-aminoacetic acid（C2H5NO2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:962",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：oxidane（H2O）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethanol（C2H5OH）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:962",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "UPGRADE",
+      "new_type": "reactant_of",
+      "hypothesis": "已验证：oxidane（分子式 H2O）在反应 ATP hydrolysis 的方程式「ATP + H2O -> ADP + Pi」中明确作为反应物出现，构成真实跨域桥（R-CHEM 符号校验）。"
+    },
+    {
+      "source": "wd:Q_pi",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 wd:Q_pi 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "WD:Q5188229",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q5188229 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：[[(2R,3S,4R,5R)-5-(6-aminopurin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy-hydroxyphosphoryl] phosphono hydrogen phosphate（C10H16N5O13P3）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MX:math:binomial",
+      "target": "MX:chem:methane",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 (a+b)² 与化学实体 CH₄ 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "MX:sym:chi_m",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 \\chi(M) 与化学实体 combustion 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Protein (polymer)（(C2H3NO)n）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：DNA (abstract)（(C10H14N5O7P)n）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:962",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：oxidane（H2O）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：sodium chloride（ClNa）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MX:math:binomial",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 (a+b)² 与化学实体 combustion 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：sodium chloride（ClNa）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：benzene（C6H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：benzene（C6H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MO:o2",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Dioxygen（O2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "MO:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Dioxygen（O2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q852973",
+      "target": "MX:chem:combustion",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q852973 与化学概念 combustion 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：benzene（C6H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：sodium chloride（ClNa）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q1190543",
+      "target": "MX:chem:methane",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q1190543 与化学概念 CH₄ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "MX:math:power_rule",
+      "target": "MX:chem:methane",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 n·xⁿ⁻¹ 与化学实体 CH₄ 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "MO:o2",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Dioxygen（O2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。"
+    },
+    {
+      "source": "WD:Q114727876",
+      "target": "MX:chem:methane",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q114727876 与化学概念 CH₄ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "wd:Q_pi",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 wd:Q_pi 与化学概念 CO₂ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "WD:Q5188229",
+      "target": "MX:chem:co2",
+      "decision": "DROP",
+      "hypothesis": "剔除：Wikidata 实体 WD:Q5188229 与化学概念 CO₂ 仅由 Phase 5 对齐桩关联，无可供符号校验的语义关系（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "MX:sym:chi_m",
+      "target": "MX:chem:methane",
+      "decision": "DROP",
+      "hypothesis": "剔除：数学概念 \\chi(M) 与化学实体 CH₄ 无直接语义关联（GNN 跨域伪影），不予保留。"
+    },
+    {
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:photosynthesis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP hydrolysis（跨学科）与 Photosynthesis stoichiometry（化学）跨域关联，建议人工复核其量纲/组成/语义关系。"
+    },
+    {
+      "source": "OM:sy:O",
+      "target": "IC:fo:ph",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 O (oxygen) 可能出现在化合物/反应式 pH definition 中，构成元素—组成关联，建议以组成数据复核。"
+    },
+    {
+      "source": "OM:sy:H",
+      "target": "IC:fo:ph",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 H (hydrogen) 可能出现在化合物/反应式 pH definition 中，构成元素—组成关联，建议以组成数据复核。"
+    },
+    {
+      "source": "OM:sy:C",
+      "target": "IC:fo:ph",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 C (carbon) 可能出现在化合物/反应式 pH definition 中，构成元素—组成关联，建议以组成数据复核。"
+    },
+    {
+      "source": "BC:rx:respiration",
+      "target": "BC:fo:photosynthesis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：Cellular respiration（跨学科）与 Photosynthesis stoichiometry（化学）跨域关联，建议人工复核其量纲/组成/语义关系。"
+    }
+  ]
+}

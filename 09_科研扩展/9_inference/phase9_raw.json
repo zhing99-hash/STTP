@@ -1,0 +1,3245 @@
+{
+  "nodes": [],
+  "edges": [
+    {
+      "id": "gnn9:MG:pq:volume->TH:pq:volume",
+      "source": "MG:pq:volume",
+      "target": "TH:pq:volume",
+      "type": "dimensionally_consistent",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.9,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "跨域物理量量纲一致（pint 校验，同属能量/长度等）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->PQ:energy",
+      "source": "PC:mol:962",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->PQ:mass",
+      "source": "PC:mol:962",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->PQ:ke",
+      "source": "PC:mol:962",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->CM:pq:mass",
+      "source": "PC:mol:962",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->CM:pq:energy",
+      "source": "PC:mol:962",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->TH:pq:energy",
+      "source": "PC:mol:962",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->TH:pq:internal_energy",
+      "source": "PC:mol:962",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->PQ:energy",
+      "source": "PC:mol:280",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->PQ:mass",
+      "source": "PC:mol:280",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->PQ:ke",
+      "source": "PC:mol:280",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->CM:pq:mass",
+      "source": "PC:mol:280",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->CM:pq:energy",
+      "source": "PC:mol:280",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->TH:pq:energy",
+      "source": "PC:mol:280",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->TH:pq:internal_energy",
+      "source": "PC:mol:280",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->PQ:energy",
+      "source": "PC:mol:297",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->PQ:mass",
+      "source": "PC:mol:297",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->PQ:ke",
+      "source": "PC:mol:297",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->CM:pq:mass",
+      "source": "PC:mol:297",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->CM:pq:energy",
+      "source": "PC:mol:297",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->TH:pq:energy",
+      "source": "PC:mol:297",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->TH:pq:internal_energy",
+      "source": "PC:mol:297",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:977->PQ:energy",
+      "source": "PC:mol:977",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:977->PQ:mass",
+      "source": "PC:mol:977",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:977->PQ:ke",
+      "source": "PC:mol:977",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:977->CM:pq:mass",
+      "source": "PC:mol:977",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:977->CM:pq:energy",
+      "source": "PC:mol:977",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:977->TH:pq:energy",
+      "source": "PC:mol:977",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:977->TH:pq:internal_energy",
+      "source": "PC:mol:977",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->PQ:energy",
+      "source": "PC:mol:6324",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->PQ:mass",
+      "source": "PC:mol:6324",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->PQ:ke",
+      "source": "PC:mol:6324",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->CM:pq:mass",
+      "source": "PC:mol:6324",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->CM:pq:energy",
+      "source": "PC:mol:6324",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->TH:pq:energy",
+      "source": "PC:mol:6324",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->TH:pq:internal_energy",
+      "source": "PC:mol:6324",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->PQ:energy",
+      "source": "PC:mol:6325",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->PQ:mass",
+      "source": "PC:mol:6325",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->PQ:ke",
+      "source": "PC:mol:6325",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->CM:pq:mass",
+      "source": "PC:mol:6325",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->CM:pq:energy",
+      "source": "PC:mol:6325",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->TH:pq:energy",
+      "source": "PC:mol:6325",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->TH:pq:internal_energy",
+      "source": "PC:mol:6325",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->PQ:energy",
+      "source": "PC:mol:241",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->PQ:mass",
+      "source": "PC:mol:241",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->PQ:ke",
+      "source": "PC:mol:241",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->CM:pq:mass",
+      "source": "PC:mol:241",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->CM:pq:energy",
+      "source": "PC:mol:241",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->TH:pq:energy",
+      "source": "PC:mol:241",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->TH:pq:internal_energy",
+      "source": "PC:mol:241",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:702->PQ:energy",
+      "source": "PC:mol:702",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:702->PQ:mass",
+      "source": "PC:mol:702",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:702->PQ:ke",
+      "source": "PC:mol:702",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:702->CM:pq:mass",
+      "source": "PC:mol:702",
+      "target": "CM:pq:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:702->CM:pq:energy",
+      "source": "PC:mol:702",
+      "target": "CM:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:702->TH:pq:energy",
+      "source": "PC:mol:702",
+      "target": "TH:pq:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:702->TH:pq:internal_energy",
+      "source": "PC:mol:702",
+      "target": "TH:pq:internal_energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5234->PQ:energy",
+      "source": "PC:mol:5234",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5234->PQ:mass",
+      "source": "PC:mol:5234",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5234->PQ:ke",
+      "source": "PC:mol:5234",
+      "target": "PQ:ke",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.85,
+        "explicit_or_inferred": "inferred",
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "status": "VERIFIED",
+        "source": "Phase9.GNN",
+        "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）",
+        "gnn_score": 0.0,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:o2->BC:rx:atp_hydrolysis",
+      "source": "BC:mo:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9947,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:co2->BC:rx:atp_hydrolysis",
+      "source": "BC:mo:co2",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9926,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:glucose->BC:rx:atp_hydrolysis",
+      "source": "BC:mo:glucose",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9909,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:atp->BC:rx:respiration",
+      "source": "BC:mo:atp",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9891,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:rx:respiration->BC:fo:atp_hydrolysis_eq",
+      "source": "BC:rx:respiration",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9884,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:rx:atp_hydrolysis->BC:fo:atp_hydrolysis_eq",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9877,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q1190543->MX:chem:combustion",
+      "source": "WD:Q1190543",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9867,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q114727876->MX:chem:combustion",
+      "source": "WD:Q114727876",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.985,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:atp->BC:rx:photosynthesis",
+      "source": "BC:mo:atp",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9847,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:cl2->BC:rx:respiration",
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9841,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:rx:photosynthesis->BC:fo:atp_hydrolysis_eq",
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.984,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:power_rule->MX:chem:combustion",
+      "source": "MX:math:power_rule",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9839,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:methane->BC:rx:respiration",
+      "source": "OM:mo:methane",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9838,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethylene->BC:rx:respiration",
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9838,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:power_rule->MX:chem:co2",
+      "source": "MX:math:power_rule",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9837,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethylene->BC:rx:atp_hydrolysis",
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9833,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:methane->BC:rx:atp_hydrolysis",
+      "source": "OM:mo:methane",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9831,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:cl2->BC:rx:atp_hydrolysis",
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.983,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:derivative_power->MX:chem:combustion",
+      "source": "MX:math:derivative_power",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.983,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->BC:rx:respiration",
+      "source": "PC:mol:280",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.983,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q2039117->MX:chem:co2",
+      "source": "WD:Q2039117",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9828,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:280",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9824,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:benzene->BC:rx:respiration",
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9821,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->BC:rx:respiration",
+      "source": "PC:mol:6325",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.982,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:benzene->BC:rx:atp_hydrolysis",
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9817,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->BC:rx:respiration",
+      "source": "PC:mol:297",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9817,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:6325",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9816,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:297",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9811,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:hcl->BC:rx:respiration",
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9803,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:na->BC:rx:respiration",
+      "source": "IC:mo:na",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9803,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:cl2->BC:rx:photosynthesis",
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.98,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:na->BC:rx:atp_hydrolysis",
+      "source": "IC:mo:na",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9798,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:hcl->BC:rx:atp_hydrolysis",
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9797,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethane->BC:rx:respiration",
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9795,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:methane->BC:rx:photosynthesis",
+      "source": "OM:mo:methane",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9794,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q2039117->MX:chem:combustion",
+      "source": "WD:Q2039117",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9794,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethylene->BC:rx:photosynthesis",
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9792,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethane->BC:rx:atp_hydrolysis",
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9791,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:280->BC:rx:photosynthesis",
+      "source": "PC:mol:280",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9785,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:amino_acid->BC:rx:respiration",
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.978,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:derivative_power->MX:chem:methane",
+      "source": "MX:math:derivative_power",
+      "target": "MX:chem:methane",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.978,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:trig_unit->MX:chem:co2",
+      "source": "MX:math:trig_unit",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9779,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:amino_acid->BC:rx:atp_hydrolysis",
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9779,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q37129->MX:chem:combustion",
+      "source": "WD:Q37129",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9777,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:313->BC:rx:respiration",
+      "source": "PC:mol:313",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9777,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:nacl->BC:rx:respiration",
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9775,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:pythagorean_identity->MX:chem:combustion",
+      "source": "MX:math:pythagorean_identity",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9774,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->BC:rx:respiration",
+      "source": "PC:mol:6324",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9774,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:benzene->BC:rx:photosynthesis",
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9774,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:313->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:313",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9774,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6325->BC:rx:photosynthesis",
+      "source": "PC:mol:6325",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9773,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:297->BC:rx:photosynthesis",
+      "source": "PC:mol:297",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9773,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:6324",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9773,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5793->BC:rx:respiration",
+      "source": "PC:mol:5793",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9769,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5793->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:5793",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9768,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:nacl->BC:rx:atp_hydrolysis",
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9767,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:sy:H->OM:fo:combustion",
+      "source": "IC:sy:H",
+      "target": "OM:fo:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9762,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:hcl->BC:rx:photosynthesis",
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9758,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:na->BC:rx:photosynthesis",
+      "source": "IC:mo:na",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9757,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q468455->MX:chem:co2",
+      "source": "WD:Q468455",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9748,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethane->BC:rx:photosynthesis",
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9748,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MO:h2o->BC:rx:respiration",
+      "source": "MO:h2o",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9744,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q37129->MX:chem:co2",
+      "source": "WD:Q37129",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9743,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:750->BC:rx:respiration",
+      "source": "PC:mol:750",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9737,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:trig_unit->MX:chem:combustion",
+      "source": "MX:math:trig_unit",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9736,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MO:h2o->BC:rx:atp_hydrolysis",
+      "source": "MO:h2o",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9734,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:750->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:750",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9734,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:IC:mo:nacl->BC:rx:photosynthesis",
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9733,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:amino_acid->BC:rx:photosynthesis",
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9732,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:313->BC:rx:photosynthesis",
+      "source": "PC:mol:313",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.973,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethanol->BC:rx:atp_hydrolysis",
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.973,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethanol->BC:rx:respiration",
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9729,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:6324->BC:rx:photosynthesis",
+      "source": "PC:mol:6324",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9726,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:wd:Q_carbon_dioxide->MX:chem:combustion",
+      "source": "wd:Q_carbon_dioxide",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9726,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:ek:molecule:CO2->MX:chem:combustion",
+      "source": "ek:molecule:CO2",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9726,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q1997->MX:chem:combustion",
+      "source": "WD:Q1997",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9726,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q1190543->MX:chem:co2",
+      "source": "WD:Q1190543",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9725,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q114727876->MX:chem:co2",
+      "source": "WD:Q114727876",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.972,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5793->BC:rx:photosynthesis",
+      "source": "PC:mol:5793",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.972,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5957->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:5957",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9716,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5957->BC:rx:respiration",
+      "source": "PC:mol:5957",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9715,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:protein->BC:rx:atp_hydrolysis",
+      "source": "BC:mo:protein",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9714,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:dna->BC:rx:atp_hydrolysis",
+      "source": "BC:mo:dna",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9714,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:protein->BC:rx:respiration",
+      "source": "BC:mo:protein",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9712,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:dna->BC:rx:respiration",
+      "source": "BC:mo:dna",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9712,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MO:h2o->BC:rx:photosynthesis",
+      "source": "MO:h2o",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9703,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:750->BC:rx:photosynthesis",
+      "source": "PC:mol:750",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9689,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->BC:rx:respiration",
+      "source": "PC:mol:962",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9687,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:mo:ethanol->BC:rx:photosynthesis",
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9679,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:962",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9675,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:wd:Q_pi->MX:chem:combustion",
+      "source": "wd:Q_pi",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9672,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q5188229->MX:chem:combustion",
+      "source": "WD:Q5188229",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9672,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5957->BC:rx:photosynthesis",
+      "source": "PC:mol:5957",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9664,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:binomial->MX:chem:methane",
+      "source": "MX:math:binomial",
+      "target": "MX:chem:methane",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9663,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:sym:chi_m->MX:chem:combustion",
+      "source": "MX:sym:chi_m",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9663,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:protein->BC:rx:photosynthesis",
+      "source": "BC:mo:protein",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9661,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:mo:dna->BC:rx:photosynthesis",
+      "source": "BC:mo:dna",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9661,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:962->BC:rx:photosynthesis",
+      "source": "PC:mol:962",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9649,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5234->BC:rx:respiration",
+      "source": "PC:mol:5234",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9646,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:binomial->MX:chem:combustion",
+      "source": "MX:math:binomial",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9644,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5234->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:5234",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9644,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->BC:rx:respiration",
+      "source": "PC:mol:241",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9641,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->BC:rx:atp_hydrolysis",
+      "source": "PC:mol:241",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9632,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MO:o2->BC:rx:respiration",
+      "source": "MO:o2",
+      "target": "BC:rx:respiration",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9631,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MO:o2->BC:rx:atp_hydrolysis",
+      "source": "MO:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9615,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q852973->MX:chem:combustion",
+      "source": "WD:Q852973",
+      "target": "MX:chem:combustion",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9614,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:241->BC:rx:photosynthesis",
+      "source": "PC:mol:241",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.96,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:PC:mol:5234->BC:rx:photosynthesis",
+      "source": "PC:mol:5234",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9598,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q1190543->MX:chem:methane",
+      "source": "WD:Q1190543",
+      "target": "MX:chem:methane",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9598,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:math:power_rule->MX:chem:methane",
+      "source": "MX:math:power_rule",
+      "target": "MX:chem:methane",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9597,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MO:o2->BC:rx:photosynthesis",
+      "source": "MO:o2",
+      "target": "BC:rx:photosynthesis",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.45,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "R-CHEM",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "反应-分子待验证",
+        "gnn_score": 0.9596,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q114727876->MX:chem:methane",
+      "source": "WD:Q114727876",
+      "target": "MX:chem:methane",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9585,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:wd:Q_pi->MX:chem:co2",
+      "source": "wd:Q_pi",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9574,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:WD:Q5188229->MX:chem:co2",
+      "source": "WD:Q5188229",
+      "target": "MX:chem:co2",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9574,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:MX:sym:chi_m->MX:chem:methane",
+      "source": "MX:sym:chi_m",
+      "target": "MX:chem:methane",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9557,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:rx:atp_hydrolysis->BC:fo:photosynthesis_eq",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:photosynthesis_eq",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9543,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:sy:O->IC:fo:ph",
+      "source": "OM:sy:O",
+      "target": "IC:fo:ph",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9538,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:sy:H->IC:fo:ph",
+      "source": "OM:sy:H",
+      "target": "IC:fo:ph",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9538,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:OM:sy:C->IC:fo:ph",
+      "source": "OM:sy:C",
+      "target": "IC:fo:ph",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9538,
+        "domain": "cross_domain"
+      }
+    },
+    {
+      "id": "gnn9:BC:rx:respiration->BC:fo:photosynthesis_eq",
+      "source": "BC:rx:respiration",
+      "target": "BC:fo:photosynthesis_eq",
+      "type": "related_to",
+      "kind": "llm_inferred_gnn",
+      "props": {
+        "confidence": 0.4,
+        "explicit_or_inferred": "inferred",
+        "verified": false,
+        "verification_gate": "NONE",
+        "status": "NEEDS_REVIEW",
+        "source": "Phase9.GNN",
+        "rationale": "跨域关联，待符号校验",
+        "gnn_score": 0.9531,
+        "domain": "cross_domain"
+      }
+    }
+  ]
+}
