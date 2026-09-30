@@ -1,0 +1,20 @@
+{
+  "base": {
+    "nodes": 36,
+    "edges": 52
+  },
+  "added": {
+    "wikidata_same_as": 19,
+    "gnn_inferred": 20,
+    "cross_source_same_as": 7
+  },
+  "warnings": [],
+  "final": {
+    "nodes": 62,
+    "edges": 98
+  },
+  "delta": {
+    "nodes": 26,
+    "edges": 46
+  }
+}

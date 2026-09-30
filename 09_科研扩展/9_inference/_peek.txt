@@ -1,0 +1,27 @@
+TYPE Molecule | id=MX:chem:co2 label=CO₂ subj=化学
+  attrs: {'ntype': 'molecule', 'name': 'CO₂', 'type': 'molecule', 'domain': 'chemistry', 'meaning': '二氧化碳（分子）', 'local_id': 'co2', 'confidence': 1.0, 'explicit_or_inferred': 'inferred', 'source': 'llm_hypothesis', 'created_at': '2026-09-28T16:17:34+08:00'}
+TYPE Reaction | id=RX:comb_ch4 label=Methane combustion subj=化学
+  attrs: {'name': 'Methane combustion', 'ntype': 'reaction', 'domain': 'chemistry.thermo', 'source': 'curated_seed/energy_combustion', 'confidence': 1.0, 'explicit_or_inferred': 'explicit', 'created_at': '2026-09-29T15:42:16.884376', 'equation': 'CH4 + 2 O2 -> CO2 + 2 H2O', 'exothermic': True}
+TYPE Element | id=EL:c label=Carbon subj=化学
+  attrs: {'name': 'Carbon', 'ntype': 'element', 'domain': 'chem.element', 'source': 'curated_seed/energy_combustion', 'confidence': 1.0, 'explicit_or_inferred': 'explicit', 'created_at': '2026-09-29T15:42:16.884376', 'symbol': 'C', 'atomic_number': 6, 'atomic_mass': 12.011}
+TYPE FunctionalGroup | id=EK2:fg:FG2 label=FG2 subj=化学
+  attrs: {'domain': 'chem.molecule', 'ntype': 'functional_group', 'source': 'ElementKG2.0', 'name': 'FG2'}
+TYPE Unit | id=UN:kg label=kilogram subj=物理
+  attrs: {'name': 'kilogram', 'ntype': 'unit', 'domain': 'phys.unit', 'source': 'curated_seed/energy_combustion', 'confidence': 1.0, 'explicit_or_inferred': 'explicit', 'created_at': '2026-09-29T15:42:16.884376', 'symbol': 'kg', 'dimension': 'M', 'si_base': True}
+TYPE Symbol | id=MX:sym:m label=M subj=数学
+  attrs: {'name': 'M', 'latex': 'M', 'meaning': 'Smooth n-dimensional manifold', 'scope': 'local', 'symbol_type': 'variable', 'source_ref': 'arXiv:2103.12345', 'source': 'mathxiv', 'created_at': '2026-09-28T15:33:30+08:00', 'version': 'v0.1', 'domain': 'math'}
+TYPE MathConcept | id=MX:math:binomial label=(a+b)² subj=数学
+  attrs: {'ntype': 'math_concept', 'name': '(a+b)²', 'type': 'math_concept', 'domain': 'math', 'meaning': '二项式展开', 'local_id': 'binomial', 'confidence': 1.0, 'explicit_or_inferred': 'inferred', 'source': 'llm_hypothesis', 'created_at': '2026-09-28T16:17:34+08:00'}
+=== has_unit edge sample ===
+  PQ:mass -> UN:kg  props=None
+  PQ:energy -> UN:j  props=None
+  PQ:c -> UN:mps  props=None
+=== composed_of edge sample ===
+  MO:ch4 -> EL:c  props=None
+  MO:ch4 -> EL:h  props=None
+  MO:o2 -> EL:o  props=None
+=== real_reaction edge sample (type/role) ===
+  MO:ch4 -[reactant_of]-> RX:comb_ch4
+  MO:o2 -[reactant_of]-> RX:comb_ch4
+  MO:co2 -[product_of]-> RX:comb_ch4
+  MO:h2o -[product_of]-> RX:comb_ch4
