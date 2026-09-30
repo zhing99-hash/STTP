@@ -1,0 +1,40 @@
+# ===== 大型原始数据集（请勿提交，按 07_交付物/ 文档自行下载）=====
+公共数据集/
+*.parquet
+*.owl
+elementkg_synthetic_corpus_40w/
+
+# ===== 生成的中间/导出产物（由脚本重新生成）=====
+06_PoC/graph_data_*.json
+06_PoC/graph_data_full.json
+06_PoC/etl/neo4j/*_aura_delta.json
+11_真实数据/*_raw.json
+11_真实数据/physicsbabel_circuits.parquet
+
+# ===== Python 缓存 / 临时 =====
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+Temp/
+*.tmp
+
+# ===== 本地密钥（切勿提交）=====
+.env
+*.local
+
+# ===== 操作系统 =====
+.DS_Store
+Thumbs.db
+
+# ===== 推送临时分块碎片（译入失败残留，非源码）=====
+06_PoC/etl/neo4j/pb_chunk_*.json
+
+
+# 临时日志 / 测试 / 中间产物
+06_PoC/_viz*.err
+06_PoC/_viz*.out
+*_test_*.json
+06_PoC/etl/with_inferred.json
+06_PoC/etl/normalized.json
+06_PoC/etl/normalized.jsonl
+

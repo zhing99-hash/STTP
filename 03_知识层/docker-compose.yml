@@ -1,0 +1,47 @@
+# ============================================================================
+# 公式知识图谱 · Neo4j 生产容器编排（docker-compose.yml）
+# Neo4j 5.x + APOC 插件 + 命名卷 + 健康检查
+# 用法：
+#   cp .env.example .env        # 按需修改密码
+#   docker compose up -d        # 启动
+#   docker compose ps           # 查看状态（STATUS 变 healthy 后再导入）
+# ============================================================================
+
+services:
+  neo4j:
+    image: neo4j:5.21                       # 5.x 社区版（支持 APOC 插件）
+    container_name: formula-graph-neo4j
+    restart: unless-stopped
+    environment:
+      # 认证：格式 user/password（与 .env 的 NEO4J_PASSWORD 保持一致）
+      NEO4J_AUTH: ${NEO4J_AUTH:-neo4j/password123}
+      # 启用 APOC 插件（load_neo4j.py / load.cypher 的动态关系类型 MERGE 依赖它）
+      NEO4J_PLUGINS: '["apoc"]'
+      # APOC 基本开关（社区版默认关闭部分过程，按需开启）
+      NEO4J_apoc_export_file_enabled: "true"
+      NEO4J_apoc_import_file_enabled: "true"
+      NEO4J_apoc_import_file_use__neo4j__config: "true"
+      # 允许任意名称的关系类型创建（与动态 MERGE 兼容）
+      NEO4J_dbms_security_auth_minimum__password__length: "6"
+    ports:
+      - "7474:7474"   # HTTP / Browser
+      - "7687:7687"   # Bolt 驱动端口
+    volumes:
+      - neo4j_data:/data          # 命名卷：持久化图数据
+      - neo4j_logs:/logs
+      - neo4j_plugins:/plugins
+    healthcheck:
+      # 用容器内自带的 cypher-shell 探活（需 NEO4J_PASSWORD 环境变量）
+      test: ["CMD-SHELL", "cypher-shell -a bolt://localhost:7687 -u neo4j -p \"$$NEO4J_PASSWORD\" 'RETURN 1' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+
+volumes:
+  neo4j_data:
+    name: formula-graph-neo4j-data
+  neo4j_logs:
+    name: formula-graph-neo4j-logs
+  neo4j_plugins:
+    name: formula-graph-neo4j-plugins
