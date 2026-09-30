@@ -1,0 +1,544 @@
+{
+  "schema_version": "0.1",
+  "phase": "7j",
+  "note": "Math: geometry vertical slice",
+  "nodes": [
+    {
+      "id": "MG:fo:law_cosines",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Law of cosines",
+        "ntype": "formula",
+        "domain": "math.geometry",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "c^2=a^2+b^2-2ab\\cos C"
+      }
+    },
+    {
+      "id": "MG:fo:law_sines",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Law of sines",
+        "ntype": "formula",
+        "domain": "math.geometry",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "\\frac{a}{\\sin A}=\\frac{b}{\\sin B}=\\frac{c}{\\sin C}"
+      }
+    },
+    {
+      "id": "MG:fo:circle_area",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Circle area",
+        "ntype": "formula",
+        "domain": "math.geometry",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "A=\\pi r^2"
+      }
+    },
+    {
+      "id": "MG:fo:sphere_vol",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Sphere volume",
+        "ntype": "formula",
+        "domain": "math.geometry",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "V=\\tfrac{4}{3}\\pi r^3"
+      }
+    },
+    {
+      "id": "MG:fo:euler_poly",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Euler's polyhedron formula",
+        "ntype": "formula",
+        "domain": "math.geometry",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "V-E+F=2"
+      }
+    },
+    {
+      "id": "MG:pq:area",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Area",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "symbol": "A",
+        "dimension": "L^2"
+      }
+    },
+    {
+      "id": "MG:pq:volume",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Volume",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "symbol": "V",
+        "dimension": "L^3"
+      }
+    },
+    {
+      "id": "MG:pq:angle",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Angle",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "symbol": "theta",
+        "dimension": "dimensionless"
+      }
+    },
+    {
+      "id": "MG:pq:radius",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Radius",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "symbol": "r",
+        "dimension": "L"
+      }
+    },
+    {
+      "id": "MG:un:sq_meter",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "square meter",
+        "ntype": "unit",
+        "domain": "math.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "symbol": "m^2",
+        "dimension": "L^2"
+      }
+    },
+    {
+      "id": "MG:un:cubic_meter",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "cubic meter",
+        "ntype": "unit",
+        "domain": "math.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "symbol": "m^3",
+        "dimension": "L^3"
+      }
+    },
+    {
+      "id": "MG:un:radian",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "radian",
+        "ntype": "unit",
+        "domain": "math.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "symbol": "rad",
+        "dimension": "dimensionless"
+      }
+    },
+    {
+      "id": "MG:sy:A",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "A (area)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "A"
+      }
+    },
+    {
+      "id": "MG:sy:V",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "V (volume)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "V"
+      }
+    },
+    {
+      "id": "MG:sy:r",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "r (radius)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "r"
+      }
+    },
+    {
+      "id": "MG:sy:theta",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "θ (angle)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "\\theta"
+      }
+    },
+    {
+      "id": "MG:sy:pi",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "π (pi)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "latex": "\\pi"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "MG:fo:law_cosines->MG:sy:theta[has_symbol]",
+      "source": "MG:fo:law_cosines",
+      "target": "MG:sy:theta",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:law_sines->MG:sy:theta[has_symbol]",
+      "source": "MG:fo:law_sines",
+      "target": "MG:sy:theta",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:circle_area->MG:sy:pi[has_symbol]",
+      "source": "MG:fo:circle_area",
+      "target": "MG:sy:pi",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:circle_area->MG:sy:r[has_symbol]",
+      "source": "MG:fo:circle_area",
+      "target": "MG:sy:r",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:sphere_vol->MG:sy:pi[has_symbol]",
+      "source": "MG:fo:sphere_vol",
+      "target": "MG:sy:pi",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:sphere_vol->MG:sy:r[has_symbol]",
+      "source": "MG:fo:sphere_vol",
+      "target": "MG:sy:r",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:euler_poly->MG:sy:V[has_symbol]",
+      "source": "MG:fo:euler_poly",
+      "target": "MG:sy:V",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:law_cosines->MG:pq:angle[defines]",
+      "source": "MG:fo:law_cosines",
+      "target": "MG:pq:angle",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:circle_area->MG:pq:area[defines]",
+      "source": "MG:fo:circle_area",
+      "target": "MG:pq:area",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:circle_area->MG:pq:radius[defines]",
+      "source": "MG:fo:circle_area",
+      "target": "MG:pq:radius",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:sphere_vol->MG:pq:volume[defines]",
+      "source": "MG:fo:sphere_vol",
+      "target": "MG:pq:volume",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:sphere_vol->MG:pq:radius[defines]",
+      "source": "MG:fo:sphere_vol",
+      "target": "MG:pq:radius",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:fo:euler_poly->MG:pq:volume[defines]",
+      "source": "MG:fo:euler_poly",
+      "target": "MG:pq:volume",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:pq:area->MG:un:sq_meter[has_unit]",
+      "source": "MG:pq:area",
+      "target": "MG:un:sq_meter",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:pq:volume->MG:un:cubic_meter[has_unit]",
+      "source": "MG:pq:volume",
+      "target": "MG:un:cubic_meter",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:pq:angle->MG:un:radian[has_unit]",
+      "source": "MG:pq:angle",
+      "target": "MG:un:radian",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792"
+      }
+    },
+    {
+      "id": "MG:sy:pi->MX:sym:pi[same_as]",
+      "source": "MG:sy:pi",
+      "target": "MX:sym:pi",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.603792",
+        "alignment": "manual_curation"
+      }
+    }
+  ]
+}

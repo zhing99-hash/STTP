@@ -1,0 +1,566 @@
+{
+  "schema_version": "0.1",
+  "phase": "7h",
+  "note": "Math: algebra & number theory vertical slice",
+  "nodes": [
+    {
+      "id": "MA:fo:quadratic",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Quadratic formula",
+        "ntype": "formula",
+        "domain": "math.algebra",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}"
+      }
+    },
+    {
+      "id": "MA:fo:binomial",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Binomial theorem",
+        "ntype": "formula",
+        "domain": "math.algebra",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "(a+b)^n=\\sum_{k=0}^{n}\\binom{n}{k}a^{n-k}b^k"
+      }
+    },
+    {
+      "id": "MA:fo:euler_identity",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Euler's identity",
+        "ntype": "formula",
+        "domain": "math.analysis",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "e^{i\\pi}+1=0",
+        "informal": "Links e, i, and pi."
+      }
+    },
+    {
+      "id": "MA:fo:pythagoras",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Pythagorean theorem",
+        "ntype": "formula",
+        "domain": "math.geometry",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "a^2+b^2=c^2"
+      }
+    },
+    {
+      "id": "MA:fo:log_product",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Logarithm of a product",
+        "ntype": "formula",
+        "domain": "math.algebra",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "\\log(xy)=\\log x+\\log y"
+      }
+    },
+    {
+      "id": "MA:pq:discriminant",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Discriminant",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "symbol": "Delta"
+      }
+    },
+    {
+      "id": "MA:pq:roots",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Roots of polynomial",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "symbol": "x"
+      }
+    },
+    {
+      "id": "MA:pq:binomial_coeff",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Binomial coefficient",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "symbol": "\\binom{n}{k}"
+      }
+    },
+    {
+      "id": "MA:pq:euler_e",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Euler's number",
+        "ntype": "constant",
+        "domain": "math.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "symbol": "e",
+        "value": 2.718281828459045,
+        "dimension": "dimensionless"
+      }
+    },
+    {
+      "id": "MA:sy:e",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "e (Euler's number)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "e"
+      }
+    },
+    {
+      "id": "MA:sy:i",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "i (imaginary unit)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "i"
+      }
+    },
+    {
+      "id": "MA:sy:pi",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "π (pi)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "\\pi"
+      }
+    },
+    {
+      "id": "MA:sy:a",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "a (coefficient)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "a"
+      }
+    },
+    {
+      "id": "MA:sy:b",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "b (coefficient)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "b"
+      }
+    },
+    {
+      "id": "MA:sy:x",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "x (variable)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "x"
+      }
+    },
+    {
+      "id": "MA:sy:n",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "n (integer)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "latex": "n"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "MA:fo:quadratic->MA:sy:a[has_symbol]",
+      "source": "MA:fo:quadratic",
+      "target": "MA:sy:a",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:quadratic->MA:sy:b[has_symbol]",
+      "source": "MA:fo:quadratic",
+      "target": "MA:sy:b",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:quadratic->MA:sy:x[has_symbol]",
+      "source": "MA:fo:quadratic",
+      "target": "MA:sy:x",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:binomial->MA:sy:a[has_symbol]",
+      "source": "MA:fo:binomial",
+      "target": "MA:sy:a",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:binomial->MA:sy:b[has_symbol]",
+      "source": "MA:fo:binomial",
+      "target": "MA:sy:b",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:binomial->MA:sy:n[has_symbol]",
+      "source": "MA:fo:binomial",
+      "target": "MA:sy:n",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:euler_identity->MA:sy:e[has_symbol]",
+      "source": "MA:fo:euler_identity",
+      "target": "MA:sy:e",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:euler_identity->MA:sy:i[has_symbol]",
+      "source": "MA:fo:euler_identity",
+      "target": "MA:sy:i",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:euler_identity->MA:sy:pi[has_symbol]",
+      "source": "MA:fo:euler_identity",
+      "target": "MA:sy:pi",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:pythagoras->MA:sy:a[has_symbol]",
+      "source": "MA:fo:pythagoras",
+      "target": "MA:sy:a",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:pythagoras->MA:sy:b[has_symbol]",
+      "source": "MA:fo:pythagoras",
+      "target": "MA:sy:b",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:pythagoras->MA:sy:x[has_symbol]",
+      "source": "MA:fo:pythagoras",
+      "target": "MA:sy:x",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:log_product->MA:sy:x[has_symbol]",
+      "source": "MA:fo:log_product",
+      "target": "MA:sy:x",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:quadratic->MA:pq:discriminant[defines]",
+      "source": "MA:fo:quadratic",
+      "target": "MA:pq:discriminant",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:quadratic->MA:pq:roots[defines]",
+      "source": "MA:fo:quadratic",
+      "target": "MA:pq:roots",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:binomial->MA:pq:binomial_coeff[defines]",
+      "source": "MA:fo:binomial",
+      "target": "MA:pq:binomial_coeff",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:fo:euler_identity->MA:pq:euler_e[defines]",
+      "source": "MA:fo:euler_identity",
+      "target": "MA:pq:euler_e",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    },
+    {
+      "id": "MA:sy:pi->MX:sym:pi[same_as]",
+      "source": "MA:sy:pi",
+      "target": "MX:sym:pi",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "MA:fo:pythagoras->MX:math:pythagorean_identity[same_as]",
+      "source": "MA:fo:pythagoras",
+      "target": "MX:math:pythagorean_identity",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "MA:fo:euler_identity->MA:pq:euler_e[derived_from]",
+      "source": "MA:fo:euler_identity",
+      "target": "MA:pq:euler_e",
+      "type": "derived_from",
+      "kind": "e_base",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "e_base",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.525003"
+      }
+    }
+  ]
+}

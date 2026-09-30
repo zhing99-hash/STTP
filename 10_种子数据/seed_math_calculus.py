@@ -1,0 +1,440 @@
+{
+  "schema_version": "0.1",
+  "phase": "7i",
+  "note": "Math: calculus vertical slice",
+  "nodes": [
+    {
+      "id": "MC:fo:power_rule",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Power rule",
+        "ntype": "formula",
+        "domain": "math.calculus",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "\\frac{d}{dx}x^n=nx^{n-1}"
+      }
+    },
+    {
+      "id": "MC:fo:ftc",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Fundamental theorem of calculus",
+        "ntype": "formula",
+        "domain": "math.calculus",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "\\int_a^b f'(x)\\,dx=f(b)-f(a)"
+      }
+    },
+    {
+      "id": "MC:fo:chain_rule",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Chain rule",
+        "ntype": "formula",
+        "domain": "math.calculus",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "\\frac{d}{dx}f(g(x))=f'(g(x))\\,g'(x)"
+      }
+    },
+    {
+      "id": "MC:fo:taylor",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Taylor series",
+        "ntype": "formula",
+        "domain": "math.calculus",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "f(x)=\\sum_{n=0}^\\infty \\frac{f^{(n)}(a)}{n!}(x-a)^n"
+      }
+    },
+    {
+      "id": "MC:fo:limit_def",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Derivative as a limit",
+        "ntype": "formula",
+        "domain": "math.calculus",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "f'(x)=\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}"
+      }
+    },
+    {
+      "id": "MC:pq:derivative",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Derivative",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "symbol": "f'"
+      }
+    },
+    {
+      "id": "MC:pq:integral",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Integral",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "symbol": "\\int f"
+      }
+    },
+    {
+      "id": "MC:pq:limit",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Limit",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "symbol": "\\lim"
+      }
+    },
+    {
+      "id": "MC:pq:order",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Order of derivative",
+        "ntype": "physical_quantity",
+        "domain": "math.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "symbol": "n"
+      }
+    },
+    {
+      "id": "MC:sy:f",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "f (function)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "f"
+      }
+    },
+    {
+      "id": "MC:sy:g",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "g (function)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "g"
+      }
+    },
+    {
+      "id": "MC:sy:n",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "n (order)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "n"
+      }
+    },
+    {
+      "id": "MC:sy:dx",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "dx (differential)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:33:30.565921",
+        "latex": "dx"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "MC:fo:power_rule->MC:sy:n[has_symbol]",
+      "source": "MC:fo:power_rule",
+      "target": "MC:sy:n",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:ftc->MC:sy:f[has_symbol]",
+      "source": "MC:fo:ftc",
+      "target": "MC:sy:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:ftc->MC:sy:dx[has_symbol]",
+      "source": "MC:fo:ftc",
+      "target": "MC:sy:dx",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:chain_rule->MC:sy:f[has_symbol]",
+      "source": "MC:fo:chain_rule",
+      "target": "MC:sy:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:chain_rule->MC:sy:g[has_symbol]",
+      "source": "MC:fo:chain_rule",
+      "target": "MC:sy:g",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:taylor->MC:sy:f[has_symbol]",
+      "source": "MC:fo:taylor",
+      "target": "MC:sy:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:taylor->MC:sy:n[has_symbol]",
+      "source": "MC:fo:taylor",
+      "target": "MC:sy:n",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:limit_def->MC:sy:f[has_symbol]",
+      "source": "MC:fo:limit_def",
+      "target": "MC:sy:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:power_rule->MC:pq:derivative[defines]",
+      "source": "MC:fo:power_rule",
+      "target": "MC:pq:derivative",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:ftc->MC:pq:integral[defines]",
+      "source": "MC:fo:ftc",
+      "target": "MC:pq:integral",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:ftc->MC:pq:derivative[defines]",
+      "source": "MC:fo:ftc",
+      "target": "MC:pq:derivative",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:chain_rule->MC:pq:derivative[defines]",
+      "source": "MC:fo:chain_rule",
+      "target": "MC:pq:derivative",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:taylor->MC:pq:derivative[defines]",
+      "source": "MC:fo:taylor",
+      "target": "MC:pq:derivative",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:limit_def->MC:pq:limit[defines]",
+      "source": "MC:fo:limit_def",
+      "target": "MC:pq:limit",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    },
+    {
+      "id": "MC:fo:limit_def->MC:pq:derivative[defines]",
+      "source": "MC:fo:limit_def",
+      "target": "MC:pq:derivative",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:33:30.565921"
+      }
+    }
+  ]
+}
