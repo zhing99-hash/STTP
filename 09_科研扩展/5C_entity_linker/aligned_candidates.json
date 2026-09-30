@@ -1,0 +1,1108 @@
+{
+  "metadata": {
+    "algorithm": "weighted similarity (label/symbol/definition/domain)",
+    "weights": {
+      "label": 0.4,
+      "symbol": 0.1,
+      "definition": 0.3,
+      "domain": 0.2
+    },
+    "threshold": 0.7,
+    "top_k": 10,
+    "pool_size": 68,
+    "query_count": 6,
+    "candidate_count": 60,
+    "high_confidence_count": 7
+  },
+  "candidates": [
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_pi",
+      "target_label": "pi",
+      "score": 0.9661,
+      "high_confidence": true,
+      "matched_by": [
+        "label",
+        "symbol",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 1.0,
+        "symbol": 1.0,
+        "definition": 0.8871,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_manifold",
+      "target_label": "manifold",
+      "score": 0.8745,
+      "high_confidence": true,
+      "matched_by": [
+        "label",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 1.0,
+        "symbol": 0.0,
+        "definition": 0.9151,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_newton_second",
+      "target_label": "newton's second law",
+      "score": 0.852,
+      "high_confidence": true,
+      "matched_by": [
+        "label",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 1.0,
+        "symbol": 0.0,
+        "definition": 0.84,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_tangent_space",
+      "target_label": "tangent space",
+      "score": 0.8082,
+      "high_confidence": true,
+      "matched_by": [
+        "label",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 1.0,
+        "symbol": 0.0,
+        "definition": 0.6941,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "EK",
+      "target_id": "ek:molecule:CO2",
+      "target_label": "carbon dioxide",
+      "score": 0.8011,
+      "high_confidence": true,
+      "matched_by": [
+        "label",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 1.0,
+        "symbol": 0.0,
+        "definition": 0.6704,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "PB",
+      "target_id": "pb:newton_second",
+      "target_label": "newton's second law",
+      "score": 0.7829,
+      "high_confidence": true,
+      "matched_by": [
+        "label",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 1.0,
+        "symbol": 0.0,
+        "definition": 0.6096,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_carbon_dioxide",
+      "target_label": "carbon dioxide",
+      "score": 0.7805,
+      "high_confidence": true,
+      "matched_by": [
+        "label",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 1.0,
+        "symbol": 0.0,
+        "definition": 0.6018,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_gauss_bonnet",
+      "target_label": "gauss bonnet theorem",
+      "score": 0.624,
+      "high_confidence": false,
+      "matched_by": [
+        "label",
+        "definition",
+        "domain"
+      ],
+      "components": {
+        "label": 0.75,
+        "symbol": 0.0,
+        "definition": 0.4134,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "PB",
+      "target_id": "pb:gravitation",
+      "target_label": "law of gravitation",
+      "score": 0.4078,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3784,
+        "symbol": 0.0,
+        "definition": 0.1883,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_gravitation",
+      "target_label": "law of gravitation",
+      "score": 0.3984,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3784,
+        "symbol": 0.0,
+        "definition": 0.1568,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "EK",
+      "target_id": "ek:molecule:O2",
+      "target_label": "oxygen gas",
+      "score": 0.3941,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.4167,
+        "symbol": 0.0,
+        "definition": 0.0915,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "EK",
+      "target_id": "ek:molecule:H2",
+      "target_label": "hydrogen gas",
+      "score": 0.3811,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3846,
+        "symbol": 0.0,
+        "definition": 0.0907,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_riemannian_metric",
+      "target_label": "riemannian metric",
+      "score": 0.3726,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3333,
+        "symbol": 0.0,
+        "definition": 0.1309,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_partition_of_unity",
+      "target_label": "partition of unity",
+      "score": 0.361,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3871,
+        "symbol": 0.0,
+        "definition": 0.0207,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_oxygen",
+      "target_label": "oxygen",
+      "score": 0.3607,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3,
+        "symbol": 0.0,
+        "definition": 0.1356,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_riemann_curvature",
+      "target_label": "riemann curvature tensor",
+      "score": 0.3591,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3784,
+        "symbol": 0.0,
+        "definition": 0.0258,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:3",
+      "target_label": "increment equals integral of derivative",
+      "score": 0.3529,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2353,
+        "symbol": 0.0,
+        "definition": 0.196,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_riemannian_metric",
+      "target_label": "riemannian metric",
+      "score": 0.3519,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.32,
+        "symbol": 0.0,
+        "definition": 0.0798,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_water",
+      "target_label": "water",
+      "score": 0.3503,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2105,
+        "symbol": 0.0,
+        "definition": 0.2203,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "EK",
+      "target_id": "ek:element:O",
+      "target_label": "oxygen",
+      "score": 0.3502,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3,
+        "symbol": 0.0,
+        "definition": 0.1006,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "EK",
+      "target_id": "ek:reaction:water_formation",
+      "target_label": "water formation",
+      "score": 0.3477,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3448,
+        "symbol": 0.0,
+        "definition": 0.0327,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_levi_civita",
+      "target_label": "levi civita connection",
+      "score": 0.3473,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3429,
+        "symbol": 0.0,
+        "definition": 0.034,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_levi_civita",
+      "target_label": "levi civita connection",
+      "score": 0.3439,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3529,
+        "symbol": 0.0,
+        "definition": 0.009,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_hydrogen",
+      "target_label": "hydrogen",
+      "score": 0.3431,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2727,
+        "symbol": 0.0,
+        "definition": 0.1133,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_euler_number",
+      "target_label": "euler number",
+      "score": 0.3426,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.32,
+        "symbol": 0.0,
+        "definition": 0.0486,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_levi_civita",
+      "target_label": "levi civita connection",
+      "score": 0.3394,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3333,
+        "symbol": 0.0,
+        "definition": 0.0203,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:2",
+      "target_label": "differentiation under the integral sign",
+      "score": 0.3392,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2745,
+        "symbol": 0.0,
+        "definition": 0.098,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_covariant_derivative",
+      "target_label": "covariant derivative",
+      "score": 0.3381,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.303,
+        "symbol": 0.0,
+        "definition": 0.0565,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:1",
+      "target_label": "fundamental theorem of calculus",
+      "score": 0.3334,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3182,
+        "symbol": 0.0,
+        "definition": 0.0203,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:3",
+      "target_label": "increment equals integral of derivative",
+      "score": 0.3322,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3077,
+        "symbol": 0.0,
+        "definition": 0.0305,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:chem:co2",
+      "source_source": "MX",
+      "target_source": "EK",
+      "target_id": "ek:element:H",
+      "target_label": "hydrogen",
+      "score": 0.3306,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2727,
+        "symbol": 0.0,
+        "definition": 0.0717,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_covariant_derivative",
+      "target_label": "covariant derivative",
+      "score": 0.3292,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.3125,
+        "symbol": 0.0,
+        "definition": 0.014,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_euler_characteristic",
+      "target_label": "euler characteristic",
+      "score": 0.3261,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.25,
+        "symbol": 0.0,
+        "definition": 0.087,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:tangent_space",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_euler_characteristic",
+      "target_label": "euler characteristic",
+      "score": 0.3256,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.303,
+        "symbol": 0.0,
+        "definition": 0.0145,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_partition_of_unity",
+      "target_label": "partition of unity",
+      "score": 0.3165,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2308,
+        "symbol": 0.0,
+        "definition": 0.0807,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_euler_number",
+      "target_label": "euler number",
+      "score": 0.3128,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.25,
+        "symbol": 0.0,
+        "definition": 0.0426,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_riemannian_metric",
+      "target_label": "riemannian metric",
+      "score": 0.312,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2759,
+        "symbol": 0.0,
+        "definition": 0.0057,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_partition_of_unity",
+      "target_label": "partition of unity",
+      "score": 0.3115,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2667,
+        "symbol": 0.0,
+        "definition": 0.0162,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:thm:gauss_bonnet",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:4",
+      "target_label": "definition of euler number e",
+      "score": 0.3111,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.25,
+        "symbol": 0.0,
+        "definition": 0.0369,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_riemann_curvature",
+      "target_label": "riemann curvature tensor",
+      "score": 0.3019,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.25,
+        "symbol": 0.0,
+        "definition": 0.0062,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "PB",
+      "target_id": "pb:work",
+      "target_label": "work",
+      "score": 0.3003,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.1739,
+        "symbol": 0.0,
+        "definition": 0.1025,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_euler_characteristic",
+      "target_label": "euler characteristic",
+      "score": 0.2975,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2143,
+        "symbol": 0.0,
+        "definition": 0.0393,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_tangent_space",
+      "target_label": "tangent space",
+      "score": 0.2945,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.1905,
+        "symbol": 0.0,
+        "definition": 0.061,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_partition_of_unity",
+      "target_label": "partition of unity",
+      "score": 0.293,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2,
+        "symbol": 0.0,
+        "definition": 0.0435,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_covariant_derivative",
+      "target_label": "covariant derivative",
+      "score": 0.2929,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2143,
+        "symbol": 0.0,
+        "definition": 0.0238,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:4",
+      "target_label": "definition of euler number e",
+      "score": 0.2925,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2222,
+        "symbol": 0.0,
+        "definition": 0.0121,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:def:manifold",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:1",
+      "target_label": "fundamental theorem of calculus",
+      "score": 0.2855,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2051,
+        "symbol": 0.0,
+        "definition": 0.0116,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_manifold",
+      "target_label": "manifold",
+      "score": 0.2838,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.2,
+        "symbol": 0.0,
+        "definition": 0.0128,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_work",
+      "target_label": "work",
+      "score": 0.28,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.1739,
+        "symbol": 0.0,
+        "definition": 0.0347,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_tangent_space",
+      "target_label": "tangent space",
+      "score": 0.2665,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.1333,
+        "symbol": 0.0,
+        "definition": 0.044,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_covariant_derivative",
+      "target_label": "covariant derivative",
+      "score": 0.2466,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.0909,
+        "symbol": 0.0,
+        "definition": 0.0341,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_riemann_curvature",
+      "target_label": "riemann curvature tensor",
+      "score": 0.2464,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.0769,
+        "symbol": 0.0,
+        "definition": 0.052,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_levi_civita",
+      "target_label": "levi civita connection",
+      "score": 0.2462,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.0833,
+        "symbol": 0.0,
+        "definition": 0.0428,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_riemannian_metric",
+      "target_label": "riemannian metric",
+      "score": 0.2461,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.1053,
+        "symbol": 0.0,
+        "definition": 0.0135,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_euler_characteristic",
+      "target_label": "euler characteristic",
+      "score": 0.2419,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.0909,
+        "symbol": 0.0,
+        "definition": 0.0183,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:sym:pi",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:3",
+      "target_label": "increment equals integral of derivative",
+      "score": 0.2409,
+      "high_confidence": false,
+      "matched_by": [
+        "domain"
+      ],
+      "components": {
+        "label": 0.0488,
+        "symbol": 0.0,
+        "definition": 0.0714,
+        "domain": 1.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_gauss_bonnet",
+      "target_label": "gauss bonnet theorem",
+      "score": 0.206,
+      "high_confidence": false,
+      "matched_by": [],
+      "components": {
+        "label": 0.4103,
+        "symbol": 0.0,
+        "definition": 0.1398,
+        "domain": 0.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_levi_civita",
+      "target_label": "levi civita connection",
+      "score": 0.1756,
+      "high_confidence": false,
+      "matched_by": [],
+      "components": {
+        "label": 0.439,
+        "symbol": 0.0,
+        "definition": 0.0,
+        "domain": 0.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "WD",
+      "target_id": "wd:Q_tangent_space",
+      "target_label": "tangent space",
+      "score": 0.1594,
+      "high_confidence": false,
+      "matched_by": [],
+      "components": {
+        "label": 0.375,
+        "symbol": 0.0,
+        "definition": 0.0312,
+        "domain": 0.0
+      }
+    },
+    {
+      "source_node": "MX:phy:newton2",
+      "source_source": "MX",
+      "target_source": "MG",
+      "target_id": "mg:stmt:1",
+      "target_label": "fundamental theorem of calculus",
+      "score": 0.1483,
+      "high_confidence": false,
+      "matched_by": [],
+      "components": {
+        "label": 0.36,
+        "symbol": 0.0,
+        "definition": 0.0142,
+        "domain": 0.0
+      }
+    }
+  ]
+}
