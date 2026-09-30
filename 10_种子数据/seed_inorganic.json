@@ -1,0 +1,647 @@
+{
+  "schema_version": "0.1",
+  "phase": "7g",
+  "note": "Inorganic chemistry vertical slice",
+  "nodes": [
+    {
+      "id": "IC:el:sodium",
+      "labels": [
+        "Entity",
+        "Element"
+      ],
+      "props": {
+        "name": "Sodium",
+        "ntype": "element",
+        "domain": "chem.element",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "symbol": "Na",
+        "atomic_number": 11
+      }
+    },
+    {
+      "id": "IC:el:chlorine",
+      "labels": [
+        "Entity",
+        "Element"
+      ],
+      "props": {
+        "name": "Chlorine",
+        "ntype": "element",
+        "domain": "chem.element",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "symbol": "Cl",
+        "atomic_number": 17
+      }
+    },
+    {
+      "id": "IC:el:iron",
+      "labels": [
+        "Entity",
+        "Element"
+      ],
+      "props": {
+        "name": "Iron",
+        "ntype": "element",
+        "domain": "chem.element",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "symbol": "Fe",
+        "atomic_number": 26
+      }
+    },
+    {
+      "id": "IC:mo:nacl",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Sodium chloride",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "formula": "NaCl",
+        "smiles": "[Na+].[Cl-]"
+      }
+    },
+    {
+      "id": "IC:mo:hcl",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Hydrogen chloride",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "formula": "HCl",
+        "smiles": "Cl"
+      }
+    },
+    {
+      "id": "IC:mo:cl2",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Chlorine",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "formula": "Cl2",
+        "smiles": "ClCl"
+      }
+    },
+    {
+      "id": "IC:mo:na",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Sodium",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "formula": "Na",
+        "smiles": "[Na]"
+      }
+    },
+    {
+      "id": "IC:mo:h2o",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Water",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "formula": "H2O",
+        "smiles": "O"
+      }
+    },
+    {
+      "id": "IC:mo:o2",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Oxygen",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "formula": "O2",
+        "smiles": "O=O"
+      }
+    },
+    {
+      "id": "IC:rx:neutralization",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Neutralization",
+        "ntype": "reaction",
+        "domain": "chemistry.aq",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "equation": "HCl + NaOH -> NaCl + H2O",
+        "exothermic": true
+      }
+    },
+    {
+      "id": "IC:rx:redox",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Hydrogen combustion",
+        "ntype": "reaction",
+        "domain": "chemistry.redox",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "equation": "2 H2 + O2 -> 2 H2O",
+        "exothermic": true
+      }
+    },
+    {
+      "id": "IC:rx:synthesis",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Sodium chloride synthesis",
+        "ntype": "reaction",
+        "domain": "chemistry.synthesis",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "equation": "2 Na + Cl2 -> 2 NaCl"
+      }
+    },
+    {
+      "id": "IC:fo:ph",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "pH definition",
+        "ntype": "formula",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "latex": "pH=-\\log_{10}[H^+]",
+        "informal": "pH is minus log of hydrogen ion concentration."
+      }
+    },
+    {
+      "id": "IC:fo:periodic",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Periodic law",
+        "ntype": "formula",
+        "domain": "chem.periodic",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "latex": "f(Z)",
+        "informal": "Properties are periodic functions of atomic number."
+      }
+    },
+    {
+      "id": "IC:sy:Na",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Na (sodium)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "latex": "Na"
+      }
+    },
+    {
+      "id": "IC:sy:Cl",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Cl (chlorine)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "latex": "Cl"
+      }
+    },
+    {
+      "id": "IC:sy:Fe",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Fe (iron)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "latex": "Fe"
+      }
+    },
+    {
+      "id": "IC:sy:H",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "H (hydrogen)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "latex": "H"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "IC:mo:h2o->MO:h2o[same_as]",
+      "source": "IC:mo:h2o",
+      "target": "MO:h2o",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "IC:mo:o2->MO:o2[same_as]",
+      "source": "IC:mo:o2",
+      "target": "MO:o2",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "IC:fo:ph->IC:sy:H[has_symbol]",
+      "source": "IC:fo:ph",
+      "target": "IC:sy:H",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:nacl->IC:el:sodium[composed_of]",
+      "source": "IC:mo:nacl",
+      "target": "IC:el:sodium",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 1
+      }
+    },
+    {
+      "id": "IC:mo:nacl->IC:el:chlorine[composed_of]",
+      "source": "IC:mo:nacl",
+      "target": "IC:el:chlorine",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 1
+      }
+    },
+    {
+      "id": "IC:mo:hcl->EL:h[composed_of]",
+      "source": "IC:mo:hcl",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 1
+      }
+    },
+    {
+      "id": "IC:mo:hcl->IC:el:chlorine[composed_of]",
+      "source": "IC:mo:hcl",
+      "target": "IC:el:chlorine",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 1
+      }
+    },
+    {
+      "id": "IC:mo:cl2->IC:el:chlorine[composed_of]",
+      "source": "IC:mo:cl2",
+      "target": "IC:el:chlorine",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 2
+      }
+    },
+    {
+      "id": "IC:mo:na->IC:el:sodium[composed_of]",
+      "source": "IC:mo:na",
+      "target": "IC:el:sodium",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 1
+      }
+    },
+    {
+      "id": "IC:mo:h2o->EL:h[composed_of]",
+      "source": "IC:mo:h2o",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 2
+      }
+    },
+    {
+      "id": "IC:mo:h2o->EL:o[composed_of]",
+      "source": "IC:mo:h2o",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 1
+      }
+    },
+    {
+      "id": "IC:mo:o2->EL:o[composed_of]",
+      "source": "IC:mo:o2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342",
+        "count": 2
+      }
+    },
+    {
+      "id": "IC:mo:hcl->IC:rx:neutralization[reactant_of]",
+      "source": "IC:mo:hcl",
+      "target": "IC:rx:neutralization",
+      "type": "reactant_of",
+      "kind": "acid_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "acid_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:nacl->IC:rx:neutralization[product_of]",
+      "source": "IC:mo:nacl",
+      "target": "IC:rx:neutralization",
+      "type": "product_of",
+      "kind": "salt_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "salt_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:h2o->IC:rx:neutralization[product_of]",
+      "source": "IC:mo:h2o",
+      "target": "IC:rx:neutralization",
+      "type": "product_of",
+      "kind": "water_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "water_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:na->IC:rx:synthesis[reactant_of]",
+      "source": "IC:mo:na",
+      "target": "IC:rx:synthesis",
+      "type": "reactant_of",
+      "kind": "metal_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "metal_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:cl2->IC:rx:synthesis[reactant_of]",
+      "source": "IC:mo:cl2",
+      "target": "IC:rx:synthesis",
+      "type": "reactant_of",
+      "kind": "halogen_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "halogen_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:nacl->IC:rx:synthesis[product_of]",
+      "source": "IC:mo:nacl",
+      "target": "IC:rx:synthesis",
+      "type": "product_of",
+      "kind": "salt_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "salt_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:h2o->IC:rx:redox[product_of]",
+      "source": "IC:mo:h2o",
+      "target": "IC:rx:redox",
+      "type": "product_of",
+      "kind": "water_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "water_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:mo:o2->IC:rx:redox[reactant_of]",
+      "source": "IC:mo:o2",
+      "target": "IC:rx:redox",
+      "type": "reactant_of",
+      "kind": "oxygen_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "oxygen_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:rx:neutralization->IC:fo:ph[derived_from]",
+      "source": "IC:rx:neutralization",
+      "target": "IC:fo:ph",
+      "type": "derived_from",
+      "kind": "ph_from_neutralization",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "ph_from_neutralization",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    },
+    {
+      "id": "IC:rx:synthesis->IC:fo:periodic[derived_from]",
+      "source": "IC:rx:synthesis",
+      "target": "IC:fo:periodic",
+      "type": "derived_from",
+      "kind": "periodic_from_synthesis",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "periodic_from_synthesis",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.726342"
+      }
+    }
+  ]
+}

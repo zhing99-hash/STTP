@@ -1,0 +1,1331 @@
+{
+  "schema_version": "0.1",
+  "phase": "7d",
+  "note": "Electromagnetism vertical slice",
+  "nodes": [
+    {
+      "id": "EM:fo:coulomb",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Coulomb's law",
+        "ntype": "formula",
+        "domain": "physics.em",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "F=k\\frac{q_1 q_2}{r^2}",
+        "informal": "Force between two point charges."
+      }
+    },
+    {
+      "id": "EM:fo:ohm",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Ohm's law",
+        "ntype": "formula",
+        "domain": "physics.em",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "V=IR",
+        "informal": "Voltage equals current times resistance."
+      }
+    },
+    {
+      "id": "EM:fo:lorentz",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Lorentz force",
+        "ntype": "formula",
+        "domain": "physics.em",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "\\vec{F}=q(\\vec{E}+\\vec{v}\\times\\vec{B})",
+        "informal": "Force on a charge in EM fields."
+      }
+    },
+    {
+      "id": "EM:fo:faraday",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Faraday's law",
+        "ntype": "formula",
+        "domain": "physics.em",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "\\mathcal{E}=-\\frac{d\\Phi}{dt}",
+        "informal": "Induced emf equals minus rate of flux change."
+      }
+    },
+    {
+      "id": "EM:fo:gauss",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Gauss's law",
+        "ntype": "formula",
+        "domain": "physics.em",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "\\nabla\\cdot\\vec{E}=\\frac{\\rho}{\\varepsilon_0}"
+      }
+    },
+    {
+      "id": "EM:fo:biot_savart",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Magnetic field of a wire",
+        "ntype": "formula",
+        "domain": "physics.em",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "B=\\frac{\\mu_0 I}{2\\pi r}"
+      }
+    },
+    {
+      "id": "EM:pq:charge",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Electric charge",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "Q",
+        "dimension": "I*T"
+      }
+    },
+    {
+      "id": "EM:pq:current",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Electric current",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "I",
+        "dimension": "I"
+      }
+    },
+    {
+      "id": "EM:pq:voltage",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Voltage",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "V",
+        "dimension": "M*L^2*T^-3*I^-1"
+      }
+    },
+    {
+      "id": "EM:pq:efield",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Electric field",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "E",
+        "dimension": "M*L*T^-3*I^-1"
+      }
+    },
+    {
+      "id": "EM:pq:bfield",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Magnetic field",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "B",
+        "dimension": "M*T^-2*I^-1"
+      }
+    },
+    {
+      "id": "EM:pq:capacitance",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Capacitance",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "C",
+        "dimension": "M^-1*L^-2*T^4*I^2"
+      }
+    },
+    {
+      "id": "EM:pq:resistance",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Resistance",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "R",
+        "dimension": "M*L^2*T^-3*I^-2"
+      }
+    },
+    {
+      "id": "EM:pq:inductance",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Inductance",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "L",
+        "dimension": "M*L^2*T^-2*I^-2"
+      }
+    },
+    {
+      "id": "EM:pq:permittivity",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Vacuum permittivity",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "eps0",
+        "value": 8.854187817e-12,
+        "dimension": "M^-1*L^-3*T^4*I^2"
+      }
+    },
+    {
+      "id": "EM:pq:permeability",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Vacuum permeability",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "mu0",
+        "value": 1.25663706212e-06,
+        "dimension": "M*L*T^-2*I^-2"
+      }
+    },
+    {
+      "id": "EM:pq:coulomb_const",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Coulomb constant",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "k",
+        "value": 8987551792.3,
+        "dimension": "M*L^3*T^-4*I^-2"
+      }
+    },
+    {
+      "id": "EM:pq:emf",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Electromotive force",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "eps",
+        "dimension": "M*L^2*T^-3*I^-1"
+      }
+    },
+    {
+      "id": "EM:pq:mag_flux",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Magnetic flux",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "Phi",
+        "dimension": "M*L^2*T^-2*I^-1"
+      }
+    },
+    {
+      "id": "EM:un:coulomb",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "coulomb",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "C",
+        "dimension": "I*T"
+      }
+    },
+    {
+      "id": "EM:un:volt",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "volt",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "V",
+        "dimension": "M*L^2*T^-3*I^-1"
+      }
+    },
+    {
+      "id": "EM:un:ampere",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "ampere",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "A",
+        "dimension": "I",
+        "si_base": true
+      }
+    },
+    {
+      "id": "EM:un:ohm",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "ohm",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "Ω",
+        "dimension": "M*L^2*T^-3*I^-2"
+      }
+    },
+    {
+      "id": "EM:un:farad",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "farad",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "F",
+        "dimension": "M^-1*L^-2*T^4*I^2"
+      }
+    },
+    {
+      "id": "EM:un:tesla",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "tesla",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "T",
+        "dimension": "M*T^-2*I^-1"
+      }
+    },
+    {
+      "id": "EM:un:henry",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "henry",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "H",
+        "dimension": "M*L^2*T^-2*I^-2"
+      }
+    },
+    {
+      "id": "EM:un:weber",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "weber",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "symbol": "Wb",
+        "dimension": "M*L^2*T^-2*I^-1"
+      }
+    },
+    {
+      "id": "EM:sy:Q",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Q (charge)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "Q"
+      }
+    },
+    {
+      "id": "EM:sy:I",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "I (current)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "I"
+      }
+    },
+    {
+      "id": "EM:sy:V",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "V (voltage)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "V"
+      }
+    },
+    {
+      "id": "EM:sy:E",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "E (electric field)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "E"
+      }
+    },
+    {
+      "id": "EM:sy:B",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "B (magnetic field)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "B"
+      }
+    },
+    {
+      "id": "EM:sy:R",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "R (resistance)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "R"
+      }
+    },
+    {
+      "id": "EM:sy:L",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "L (inductance)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "L"
+      }
+    },
+    {
+      "id": "EM:sy:eps",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "ε (emf)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "\\varepsilon"
+      }
+    },
+    {
+      "id": "EM:sy:Phi",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Φ (flux)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "\\Phi"
+      }
+    },
+    {
+      "id": "EM:sy:k",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "k (Coulomb constant)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "k"
+      }
+    },
+    {
+      "id": "EM:sy:eps0",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "ε₀ (permittivity)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "\\varepsilon_0"
+      }
+    },
+    {
+      "id": "EM:sy:mu0",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "μ₀ (permeability)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.257304",
+        "latex": "\\mu_0"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "EM:fo:coulomb->EM:sy:k[has_symbol]",
+      "source": "EM:fo:coulomb",
+      "target": "EM:sy:k",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:coulomb->EM:sy:Q[has_symbol]",
+      "source": "EM:fo:coulomb",
+      "target": "EM:sy:Q",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:ohm->EM:sy:V[has_symbol]",
+      "source": "EM:fo:ohm",
+      "target": "EM:sy:V",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:ohm->EM:sy:I[has_symbol]",
+      "source": "EM:fo:ohm",
+      "target": "EM:sy:I",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:ohm->EM:sy:R[has_symbol]",
+      "source": "EM:fo:ohm",
+      "target": "EM:sy:R",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->SY:f[has_symbol]",
+      "source": "EM:fo:lorentz",
+      "target": "SY:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->EM:sy:Q[has_symbol]",
+      "source": "EM:fo:lorentz",
+      "target": "EM:sy:Q",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->EM:sy:E[has_symbol]",
+      "source": "EM:fo:lorentz",
+      "target": "EM:sy:E",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->SY:v[has_symbol]",
+      "source": "EM:fo:lorentz",
+      "target": "SY:v",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->EM:sy:B[has_symbol]",
+      "source": "EM:fo:lorentz",
+      "target": "EM:sy:B",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:faraday->EM:sy:eps[has_symbol]",
+      "source": "EM:fo:faraday",
+      "target": "EM:sy:eps",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:faraday->EM:sy:Phi[has_symbol]",
+      "source": "EM:fo:faraday",
+      "target": "EM:sy:Phi",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:gauss->EM:sy:E[has_symbol]",
+      "source": "EM:fo:gauss",
+      "target": "EM:sy:E",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:gauss->EM:sy:eps0[has_symbol]",
+      "source": "EM:fo:gauss",
+      "target": "EM:sy:eps0",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:biot_savart->EM:sy:B[has_symbol]",
+      "source": "EM:fo:biot_savart",
+      "target": "EM:sy:B",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:biot_savart->EM:sy:mu0[has_symbol]",
+      "source": "EM:fo:biot_savart",
+      "target": "EM:sy:mu0",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:biot_savart->EM:sy:I[has_symbol]",
+      "source": "EM:fo:biot_savart",
+      "target": "EM:sy:I",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:coulomb->EM:pq:charge[defines]",
+      "source": "EM:fo:coulomb",
+      "target": "EM:pq:charge",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:coulomb->EM:pq:coulomb_const[defines]",
+      "source": "EM:fo:coulomb",
+      "target": "EM:pq:coulomb_const",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:ohm->EM:pq:voltage[defines]",
+      "source": "EM:fo:ohm",
+      "target": "EM:pq:voltage",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:ohm->EM:pq:current[defines]",
+      "source": "EM:fo:ohm",
+      "target": "EM:pq:current",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:ohm->EM:pq:resistance[defines]",
+      "source": "EM:fo:ohm",
+      "target": "EM:pq:resistance",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->EM:pq:charge[defines]",
+      "source": "EM:fo:lorentz",
+      "target": "EM:pq:charge",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->EM:pq:efield[defines]",
+      "source": "EM:fo:lorentz",
+      "target": "EM:pq:efield",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->EM:pq:bfield[defines]",
+      "source": "EM:fo:lorentz",
+      "target": "EM:pq:bfield",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:faraday->EM:pq:emf[defines]",
+      "source": "EM:fo:faraday",
+      "target": "EM:pq:emf",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:faraday->EM:pq:mag_flux[defines]",
+      "source": "EM:fo:faraday",
+      "target": "EM:pq:mag_flux",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:gauss->EM:pq:efield[defines]",
+      "source": "EM:fo:gauss",
+      "target": "EM:pq:efield",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:gauss->EM:pq:permittivity[defines]",
+      "source": "EM:fo:gauss",
+      "target": "EM:pq:permittivity",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:biot_savart->EM:pq:bfield[defines]",
+      "source": "EM:fo:biot_savart",
+      "target": "EM:pq:bfield",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:biot_savart->EM:pq:permeability[defines]",
+      "source": "EM:fo:biot_savart",
+      "target": "EM:pq:permeability",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:biot_savart->EM:pq:current[defines]",
+      "source": "EM:fo:biot_savart",
+      "target": "EM:pq:current",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:charge->EM:un:coulomb[has_unit]",
+      "source": "EM:pq:charge",
+      "target": "EM:un:coulomb",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:current->EM:un:ampere[has_unit]",
+      "source": "EM:pq:current",
+      "target": "EM:un:ampere",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:voltage->EM:un:volt[has_unit]",
+      "source": "EM:pq:voltage",
+      "target": "EM:un:volt",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:efield->EM:un:volt[has_unit]",
+      "source": "EM:pq:efield",
+      "target": "EM:un:volt",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:resistance->EM:un:ohm[has_unit]",
+      "source": "EM:pq:resistance",
+      "target": "EM:un:ohm",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:capacitance->EM:un:farad[has_unit]",
+      "source": "EM:pq:capacitance",
+      "target": "EM:un:farad",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:bfield->EM:un:tesla[has_unit]",
+      "source": "EM:pq:bfield",
+      "target": "EM:un:tesla",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:inductance->EM:un:henry[has_unit]",
+      "source": "EM:pq:inductance",
+      "target": "EM:un:henry",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:mag_flux->EM:un:weber[has_unit]",
+      "source": "EM:pq:mag_flux",
+      "target": "EM:un:weber",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:pq:emf->EM:un:volt[has_unit]",
+      "source": "EM:pq:emf",
+      "target": "EM:un:volt",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:coulomb->PQ:force[derived_from]",
+      "source": "EM:fo:coulomb",
+      "target": "PQ:force",
+      "type": "derived_from",
+      "kind": "force_from_charges",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "force_from_charges",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->PQ:force[derived_from]",
+      "source": "EM:fo:lorentz",
+      "target": "PQ:force",
+      "type": "derived_from",
+      "kind": "force_from_fields",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "force_from_fields",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    },
+    {
+      "id": "EM:fo:lorentz->PQ:vel[derived_from]",
+      "source": "EM:fo:lorentz",
+      "target": "PQ:vel",
+      "type": "derived_from",
+      "kind": "velocity_field",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "velocity_field",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.257304"
+      }
+    }
+  ]
+}

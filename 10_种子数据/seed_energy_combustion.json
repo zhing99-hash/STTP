@@ -1,0 +1,1264 @@
+{
+  "schema_version": "0.1",
+  "phase": "6",
+  "note": "Energy & combustion vertical slice (curated, additive to Aura)",
+  "nodes": [
+    {
+      "id": "EL:c",
+      "labels": [
+        "Entity",
+        "Element"
+      ],
+      "props": {
+        "name": "Carbon",
+        "ntype": "element",
+        "domain": "chem.element",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "C",
+        "atomic_number": 6,
+        "atomic_mass": 12.011,
+        "period": 2,
+        "group": 14
+      }
+    },
+    {
+      "id": "EL:h",
+      "labels": [
+        "Entity",
+        "Element"
+      ],
+      "props": {
+        "name": "Hydrogen",
+        "ntype": "element",
+        "domain": "chem.element",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "H",
+        "atomic_number": 1,
+        "atomic_mass": 1.008,
+        "period": 1,
+        "group": 1
+      }
+    },
+    {
+      "id": "EL:o",
+      "labels": [
+        "Entity",
+        "Element"
+      ],
+      "props": {
+        "name": "Oxygen",
+        "ntype": "element",
+        "domain": "chem.element",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "O",
+        "atomic_number": 8,
+        "atomic_mass": 15.999,
+        "period": 2,
+        "group": 16
+      }
+    },
+    {
+      "id": "UN:kg",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "kilogram",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "kg",
+        "dimension": "M",
+        "si_base": true
+      }
+    },
+    {
+      "id": "UN:m",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "meter",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "m",
+        "dimension": "L",
+        "si_base": true
+      }
+    },
+    {
+      "id": "UN:s",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "second",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "s",
+        "dimension": "T",
+        "si_base": true
+      }
+    },
+    {
+      "id": "UN:j",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "joule",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "J",
+        "dimension": "M*L^2*T^-2",
+        "derived_from": "kg*m^2/s^2"
+      }
+    },
+    {
+      "id": "UN:mps",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "meter per second",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "m/s",
+        "dimension": "L*T^-1"
+      }
+    },
+    {
+      "id": "UN:mps2",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "meter per second squared",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "m/s^2",
+        "dimension": "L*T^-2"
+      }
+    },
+    {
+      "id": "PQ:energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Energy",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "E",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "PQ:mass",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Mass",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "m",
+        "dimension": "M"
+      }
+    },
+    {
+      "id": "PQ:c",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Speed of light",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "c",
+        "value": 299792458,
+        "unit": "m/s"
+      }
+    },
+    {
+      "id": "PQ:force",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Force",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "F",
+        "dimension": "M*L*T^-2"
+      }
+    },
+    {
+      "id": "PQ:accel",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Acceleration",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "a",
+        "dimension": "L*T^-2"
+      }
+    },
+    {
+      "id": "PQ:vel",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Velocity",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "v",
+        "dimension": "L*T^-1"
+      }
+    },
+    {
+      "id": "PQ:ke",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Kinetic energy",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "symbol": "KE",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "SY:e",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "E (energy)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "E"
+      }
+    },
+    {
+      "id": "SY:m",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "m (mass)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "m"
+      }
+    },
+    {
+      "id": "SY:c",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "c (speed of light)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "c"
+      }
+    },
+    {
+      "id": "SY:f",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "F (force)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "F"
+      }
+    },
+    {
+      "id": "SY:a",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "a (acceleration)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "a"
+      }
+    },
+    {
+      "id": "SY:v",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "v (velocity)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "v"
+      }
+    },
+    {
+      "id": "SY:ke",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "KE (kinetic energy)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "KE"
+      }
+    },
+    {
+      "id": "FO:emc2",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Mass-energy equivalence",
+        "ntype": "formula",
+        "domain": "physics.relativity",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "E=mc^2",
+        "informal": "Energy equals mass times the speed of light squared."
+      }
+    },
+    {
+      "id": "FO:fma",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Newton's second law",
+        "ntype": "formula",
+        "domain": "physics.mechanics",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "F=ma",
+        "informal": "Force equals mass times acceleration."
+      }
+    },
+    {
+      "id": "FO:ke",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Kinetic energy",
+        "ntype": "formula",
+        "domain": "physics.mechanics",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "latex": "KE=\\tfrac{1}{2}mv^2",
+        "informal": "Kinetic energy of a mass m moving at velocity v."
+      }
+    },
+    {
+      "id": "MO:ch4",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Methane",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "formula": "CH4",
+        "smiles": "C"
+      }
+    },
+    {
+      "id": "MO:o2",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Dioxygen",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "formula": "O2",
+        "smiles": "O=O"
+      }
+    },
+    {
+      "id": "MO:co2",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Carbon dioxide",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "formula": "CO2",
+        "smiles": "O=C=O"
+      }
+    },
+    {
+      "id": "MO:h2o",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Water",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "formula": "H2O",
+        "smiles": "O"
+      }
+    },
+    {
+      "id": "RX:comb_ch4",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Methane combustion",
+        "ntype": "reaction",
+        "domain": "chemistry.thermo",
+        "source": "curated_seed/energy_combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "equation": "CH4 + 2 O2 -> CO2 + 2 H2O",
+        "exothermic": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "FO:emc2->SY:e[has_symbol]",
+      "source": "FO:emc2",
+      "target": "SY:e",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:emc2->SY:m[has_symbol]",
+      "source": "FO:emc2",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:emc2->SY:c[has_symbol]",
+      "source": "FO:emc2",
+      "target": "SY:c",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:fma->SY:f[has_symbol]",
+      "source": "FO:fma",
+      "target": "SY:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:fma->SY:m[has_symbol]",
+      "source": "FO:fma",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:fma->SY:a[has_symbol]",
+      "source": "FO:fma",
+      "target": "SY:a",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:ke->SY:ke[has_symbol]",
+      "source": "FO:ke",
+      "target": "SY:ke",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:ke->SY:m[has_symbol]",
+      "source": "FO:ke",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:ke->SY:v[has_symbol]",
+      "source": "FO:ke",
+      "target": "SY:v",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:emc2->PQ:energy[defines]",
+      "source": "FO:emc2",
+      "target": "PQ:energy",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:emc2->PQ:mass[defines]",
+      "source": "FO:emc2",
+      "target": "PQ:mass",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:emc2->PQ:c[defines]",
+      "source": "FO:emc2",
+      "target": "PQ:c",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:fma->PQ:force[defines]",
+      "source": "FO:fma",
+      "target": "PQ:force",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:fma->PQ:mass[defines]",
+      "source": "FO:fma",
+      "target": "PQ:mass",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:fma->PQ:accel[defines]",
+      "source": "FO:fma",
+      "target": "PQ:accel",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:ke->PQ:ke[defines]",
+      "source": "FO:ke",
+      "target": "PQ:ke",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:ke->PQ:mass[defines]",
+      "source": "FO:ke",
+      "target": "PQ:mass",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:ke->PQ:vel[defines]",
+      "source": "FO:ke",
+      "target": "PQ:vel",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "PQ:mass->UN:kg[has_unit]",
+      "source": "PQ:mass",
+      "target": "UN:kg",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "PQ:energy->UN:j[has_unit]",
+      "source": "PQ:energy",
+      "target": "UN:j",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "PQ:c->UN:mps[has_unit]",
+      "source": "PQ:c",
+      "target": "UN:mps",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "PQ:force->UN:kg[has_unit]",
+      "source": "PQ:force",
+      "target": "UN:kg",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "PQ:accel->UN:mps2[has_unit]",
+      "source": "PQ:accel",
+      "target": "UN:mps2",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "PQ:vel->UN:mps[has_unit]",
+      "source": "PQ:vel",
+      "target": "UN:mps",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "PQ:energy->PQ:mass[dimensionally_consistent]",
+      "source": "PQ:energy",
+      "target": "PQ:mass",
+      "type": "dimensionally_consistent",
+      "kind": "mass_energy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "mass_energy",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "note": "E=mc^2"
+      }
+    },
+    {
+      "id": "PQ:force->PQ:mass[dimensionally_consistent]",
+      "source": "PQ:force",
+      "target": "PQ:mass",
+      "type": "dimensionally_consistent",
+      "kind": "force_mass",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "force_mass",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "note": "F=ma"
+      }
+    },
+    {
+      "id": "PQ:ke->PQ:energy[dimensionally_consistent]",
+      "source": "PQ:ke",
+      "target": "PQ:energy",
+      "type": "dimensionally_consistent",
+      "kind": "same_dimension",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "same_dimension",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "note": "KE is energy"
+      }
+    },
+    {
+      "id": "MO:ch4->EL:c[composed_of]",
+      "source": "MO:ch4",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "count": 1
+      }
+    },
+    {
+      "id": "MO:ch4->EL:h[composed_of]",
+      "source": "MO:ch4",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "count": 4
+      }
+    },
+    {
+      "id": "MO:o2->EL:o[composed_of]",
+      "source": "MO:o2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "count": 2
+      }
+    },
+    {
+      "id": "MO:co2->EL:c[composed_of]",
+      "source": "MO:co2",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "count": 1
+      }
+    },
+    {
+      "id": "MO:co2->EL:o[composed_of]",
+      "source": "MO:co2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "count": 2
+      }
+    },
+    {
+      "id": "MO:h2o->EL:h[composed_of]",
+      "source": "MO:h2o",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "count": 2
+      }
+    },
+    {
+      "id": "MO:h2o->EL:o[composed_of]",
+      "source": "MO:h2o",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "count": 1
+      }
+    },
+    {
+      "id": "MO:ch4->RX:comb_ch4[reactant_of]",
+      "source": "MO:ch4",
+      "target": "RX:comb_ch4",
+      "type": "reactant_of",
+      "kind": "combustion_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_reactant",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "MO:o2->RX:comb_ch4[reactant_of]",
+      "source": "MO:o2",
+      "target": "RX:comb_ch4",
+      "type": "reactant_of",
+      "kind": "combustion_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_reactant",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "MO:co2->RX:comb_ch4[product_of]",
+      "source": "MO:co2",
+      "target": "RX:comb_ch4",
+      "type": "product_of",
+      "kind": "combustion_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_product",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "MO:h2o->RX:comb_ch4[product_of]",
+      "source": "MO:h2o",
+      "target": "RX:comb_ch4",
+      "type": "product_of",
+      "kind": "combustion_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_product",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "RX:comb_ch4->PQ:energy[releases]",
+      "source": "RX:comb_ch4",
+      "target": "PQ:energy",
+      "type": "releases",
+      "kind": "exothermic",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "exothermic",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "note": "combustion releases energy"
+      }
+    },
+    {
+      "id": "PQ:energy->FO:emc2[derived_from]",
+      "source": "PQ:energy",
+      "target": "FO:emc2",
+      "type": "derived_from",
+      "kind": "mass_energy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "mass_energy",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "FO:ke->FO:fma[derived_from]",
+      "source": "FO:ke",
+      "target": "FO:fma",
+      "type": "derived_from",
+      "kind": "work_energy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "work_energy",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "note": "work-energy theorem"
+      }
+    },
+    {
+      "id": "PQ:ke->FO:fma[derived_from]",
+      "source": "PQ:ke",
+      "target": "FO:fma",
+      "type": "derived_from",
+      "kind": "work_energy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "work_energy",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376"
+      }
+    },
+    {
+      "id": "MO:co2->MX:chem:co2[same_as]",
+      "source": "MO:co2",
+      "target": "MX:chem:co2",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "MO:ch4->MX:chem:methane[same_as]",
+      "source": "MO:ch4",
+      "target": "MX:chem:methane",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "PQ:energy->MX:phy:energy[same_as]",
+      "source": "PQ:energy",
+      "target": "MX:phy:energy",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "PQ:ke->MX:phy:kinetic_energy[same_as]",
+      "source": "PQ:ke",
+      "target": "MX:phy:kinetic_energy",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "FO:fma->MX:phy:newton2[same_as]",
+      "source": "FO:fma",
+      "target": "MX:phy:newton2",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "SY:c->MX:sym:c[same_as]",
+      "source": "SY:c",
+      "target": "MX:sym:c",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed/energy_combustion",
+        "created_at": "2026-09-29T15:42:16.884376",
+        "alignment": "manual_curation"
+      }
+    }
+  ]
+}
