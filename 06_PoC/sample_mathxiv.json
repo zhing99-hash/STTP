@@ -1,0 +1,151 @@
+{
+  "schema_version": "mathxiv-kg/1.0",
+  "paper_id": "arXiv:2103.12345",
+  "title": "Foundations of Riemannian Curvature (Synthetic PoC Sample)",
+  "domain": "math.DG",
+  "generated_by": "formula-kg-poc-synthesizer",
+  "nodes": [
+    {
+      "id": "def:manifold",
+      "type": "definition",
+      "latex": "M",
+      "informal_text": "A smooth n-dimensional manifold M is a second-countable Hausdorff topological space equipped with a maximal smooth atlas of charts.",
+      "proof": null,
+      "symbols": ["M", "n"]
+    },
+    {
+      "id": "def:tangent_space",
+      "type": "definition",
+      "latex": "T_p M",
+      "informal_text": "The tangent space T_p M at a point p in M is the vector space of all tangent vectors (derivations) at p.",
+      "proof": null,
+      "symbols": ["T_p M", "M", "p"]
+    },
+    {
+      "id": "def:riemannian_metric",
+      "type": "definition",
+      "latex": "g_{ij}",
+      "informal_text": "A Riemannian metric g on M is a smooth assignment of a positive-definite inner product g_p on each tangent space T_p M.",
+      "proof": null,
+      "symbols": ["g", "M", "T_p M"]
+    },
+    {
+      "id": "def:levi_civita",
+      "type": "definition",
+      "latex": "\\nabla",
+      "informal_text": "The Levi-Civita connection \\nabla is the unique torsion-free, metric-compatible affine connection on the Riemannian manifold (M,g).",
+      "proof": null,
+      "symbols": ["\\nabla", "M", "g"]
+    },
+    {
+      "id": "lemma:partition_of_unity",
+      "type": "lemma",
+      "latex": "\\{\\rho_\\alpha\\}",
+      "informal_text": "Given any open cover of M, there exists a smooth partition of unity subordinate to it.",
+      "proof": "Construct local bump functions from the smooth atlas of M and normalize by the locally finite sum.",
+      "symbols": ["\\rho_\\alpha", "M"]
+    },
+    {
+      "id": "lemma:covariant_derivative",
+      "type": "lemma",
+      "latex": "\\nabla_X Y",
+      "informal_text": "The covariant derivative \\nabla_X Y is tensorial (linear over C^\\infty(M)) in X and satisfies the Leibniz rule in Y.",
+      "proof": "Follows directly from the defining properties of the Levi-Civita connection.",
+      "symbols": ["\\nabla", "X", "Y", "M"]
+    },
+    {
+      "id": "thm:riemann_curvature",
+      "type": "theorem",
+      "latex": "R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{[X,Y]} Z",
+      "informal_text": "The Riemann curvature tensor R measures the failure of iterated second covariant derivatives to commute; it is a (1,3)-tensor.",
+      "proof": "Define R via the commutator of covariant derivatives and verify multilinearity and tensoriality in all four arguments.",
+      "symbols": ["R", "\\nabla", "X", "Y", "Z"]
+    },
+    {
+      "id": "thm:gauss_bonnet",
+      "type": "theorem",
+      "latex": "\\int_M K\\, dA = 2\\pi \\chi(M)",
+      "informal_text": "For a closed orientable surface M, the integral of Gaussian curvature K over M equals 2\\pi times its Euler characteristic \\chi(M).",
+      "proof": "Triangulate M, apply the local angle-defect formula, and sum defects using a partition of unity subordinate to the triangulation.",
+      "symbols": ["K", "M", "\\chi(M)", "\\pi"]
+    }
+  ],
+  "dependencies": [
+    {
+      "source": "def:tangent_space",
+      "target": "def:manifold",
+      "kind": "explicit_citation",
+      "confidence": 0.99
+    },
+    {
+      "source": "def:riemannian_metric",
+      "target": "def:tangent_space",
+      "kind": "explicit_citation",
+      "confidence": 0.95
+    },
+    {
+      "source": "def:levi_civita",
+      "target": "def:riemannian_metric",
+      "kind": "explicit_citation",
+      "confidence": 0.96
+    },
+    {
+      "source": "def:levi_civita",
+      "target": "def:tangent_space",
+      "kind": "explicit_citation",
+      "confidence": 0.93
+    },
+    {
+      "source": "lemma:partition_of_unity",
+      "target": "def:manifold",
+      "kind": "explicit_citation",
+      "confidence": 0.98
+    },
+    {
+      "source": "lemma:covariant_derivative",
+      "target": "def:levi_civita",
+      "kind": "explicit_citation",
+      "confidence": 0.97
+    },
+    {
+      "source": "thm:riemann_curvature",
+      "target": "lemma:covariant_derivative",
+      "kind": "llm_inferred",
+      "confidence": 0.88
+    },
+    {
+      "source": "thm:riemann_curvature",
+      "target": "def:levi_civita",
+      "kind": "explicit_citation",
+      "confidence": 0.94
+    },
+    {
+      "source": "thm:gauss_bonnet",
+      "target": "thm:riemann_curvature",
+      "kind": "explicit_citation",
+      "confidence": 0.96
+    },
+    {
+      "source": "thm:gauss_bonnet",
+      "target": "lemma:partition_of_unity",
+      "kind": "llm_inferred",
+      "confidence": 0.82
+    },
+    {
+      "source": "thm:gauss_bonnet",
+      "target": "def:riemannian_metric",
+      "kind": "llm_inferred",
+      "confidence": 0.79
+    }
+  ],
+  "definition_bank": [
+    {"symbol": "M", "definition": "Smooth n-dimensional manifold", "node_ref": "def:manifold"},
+    {"symbol": "T_p M", "definition": "Tangent space at point p in M", "node_ref": "def:tangent_space"},
+    {"symbol": "g", "definition": "Riemannian metric tensor on M", "node_ref": "def:riemannian_metric"},
+    {"symbol": "\\nabla", "definition": "Levi-Civita connection / covariant derivative", "node_ref": "def:levi_civita"},
+    {"symbol": "R", "definition": "Riemann curvature tensor", "node_ref": "thm:riemann_curvature"},
+    {"symbol": "K", "definition": "Gaussian curvature of a surface", "node_ref": "thm:gauss_bonnet"},
+    {"symbol": "\\chi(M)", "definition": "Euler characteristic of the manifold M", "node_ref": "thm:gauss_bonnet"},
+    {"symbol": "\\pi", "definition": "Archimedean constant pi (≈3.14159)"}
+  ]
+}
