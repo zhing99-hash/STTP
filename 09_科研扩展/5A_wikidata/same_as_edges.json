@@ -1,0 +1,512 @@
+{
+  "generated_by": "align_to_existing_graph.py",
+  "source_graph": "06_PoC/etl/neo4j/neo4j_ready.json",
+  "schema": "edge: source(node_id) -> target(WD:<qid>), kind=SAME_AS",
+  "counts": {
+    "same_as_edges": 19,
+    "wd_nodes": 19,
+    "sparql_success": 28,
+    "sparql_fail": 10,
+    "wbsearch_success": 10,
+    "wbsearch_fail": 0,
+    "cache_hit": 0
+  },
+  "edges": [
+    {
+      "id": "same_as:MX:thm:gauss_bonnet->Q742833",
+      "source": "MX:thm:gauss_bonnet",
+      "target": "WD:Q742833",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q742833",
+      "label": "Gauss–Bonnet theorem",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:thm:riemann_curvature->Q855112",
+      "source": "MX:thm:riemann_curvature",
+      "target": "WD:Q855112",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q855112",
+      "label": "Riemann curvature tensor",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:def:manifold->Q3552958",
+      "source": "MX:def:manifold",
+      "target": "WD:Q3552958",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "unknown",
+      "qid": "Q3552958",
+      "label": "differentiable manifold",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:def:tangent_space->Q909601",
+      "source": "MX:def:tangent_space",
+      "target": "WD:Q909601",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q909601",
+      "label": "tangent space",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:def:riemannian_metric->Q7888899",
+      "source": "MX:def:riemannian_metric",
+      "target": "WD:Q7888899",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q7888899",
+      "label": "Riemannian metric",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:def:levi_civita->Q548675",
+      "source": "MX:def:levi_civita",
+      "target": "WD:Q548675",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "unknown",
+      "qid": "Q548675",
+      "label": "Levi-Civita connection",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:lemma:covariant_derivative->Q2287715",
+      "source": "MX:lemma:covariant_derivative",
+      "target": "WD:Q2287715",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "unknown",
+      "qid": "Q2287715",
+      "label": "covariant derivative",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:lemma:partition_of_unity->Q9363325",
+      "source": "MX:lemma:partition_of_unity",
+      "target": "WD:Q9363325",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q9363325",
+      "label": "partition of unity",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:math:binomial->Q114727876",
+      "source": "MX:math:binomial",
+      "target": "WD:Q114727876",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q114727876",
+      "label": "binomial theorem",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:math:pythagorean_identity->Q2039117",
+      "source": "MX:math:pythagorean_identity",
+      "target": "WD:Q2039117",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q2039117",
+      "label": "Pythagorean trigonometric identity",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:math:power_rule->Q1190543",
+      "source": "MX:math:power_rule",
+      "target": "WD:Q1190543",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "unknown",
+      "qid": "Q1190543",
+      "label": "power rule",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:sym:pi->Q5188229",
+      "source": "MX:sym:pi",
+      "target": "WD:Q5188229",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q5188229",
+      "label": "Crossref",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:sym:chi_m->Q852973",
+      "source": "MX:sym:chi_m",
+      "target": "WD:Q852973",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "math",
+      "qid": "Q852973",
+      "label": "Euler characteristic",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:phy:newton2->Q2397319",
+      "source": "MX:phy:newton2",
+      "target": "WD:Q2397319",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "physics",
+      "qid": "Q2397319",
+      "label": "Newton's second law of motion for constant mass",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:phy:kinetic_energy->Q46276",
+      "source": "MX:phy:kinetic_energy",
+      "target": "WD:Q46276",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "physics",
+      "qid": "Q46276",
+      "label": "kinetic energy",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:phy:energy->Q11379",
+      "source": "MX:phy:energy",
+      "target": "WD:Q11379",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "physics",
+      "qid": "Q11379",
+      "label": "energy",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:chem:co2->Q1997",
+      "source": "MX:chem:co2",
+      "target": "WD:Q1997",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "chemistry",
+      "qid": "Q1997",
+      "label": "carbon dioxide",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:chem:methane->Q37129",
+      "source": "MX:chem:methane",
+      "target": "WD:Q37129",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "chemistry",
+      "qid": "Q37129",
+      "label": "methane",
+      "method": "wbsearch"
+    },
+    {
+      "id": "same_as:MX:chem:combustion->Q468455",
+      "source": "MX:chem:combustion",
+      "target": "WD:Q468455",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "alignment_source": "wikidata",
+      "domain": "chemistry",
+      "qid": "Q468455",
+      "label": "death by burning",
+      "method": "wbsearch"
+    }
+  ],
+  "wd_nodes": [
+    {
+      "id": "WD:Q742833",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q742833",
+        "label": "Gauss–Bonnet theorem",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q855112",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q855112",
+        "label": "Riemann curvature tensor",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q3552958",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q3552958",
+        "label": "differentiable manifold",
+        "domain": "unknown",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q909601",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q909601",
+        "label": "tangent space",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q7888899",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q7888899",
+        "label": "Riemannian metric",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q548675",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q548675",
+        "label": "Levi-Civita connection",
+        "domain": "unknown",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q2287715",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q2287715",
+        "label": "covariant derivative",
+        "domain": "unknown",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q9363325",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q9363325",
+        "label": "partition of unity",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q114727876",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q114727876",
+        "label": "binomial theorem",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q2039117",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q2039117",
+        "label": "Pythagorean trigonometric identity",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q1190543",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q1190543",
+        "label": "power rule",
+        "domain": "unknown",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q5188229",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q5188229",
+        "label": "Crossref",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q852973",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q852973",
+        "label": "Euler characteristic",
+        "domain": "math",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q2397319",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q2397319",
+        "label": "Newton's second law of motion for constant mass",
+        "domain": "physics",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q46276",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q46276",
+        "label": "kinetic energy",
+        "domain": "physics",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q11379",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q11379",
+        "label": "energy",
+        "domain": "physics",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q1997",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q1997",
+        "label": "carbon dioxide",
+        "domain": "chemistry",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q37129",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q37129",
+        "label": "methane",
+        "domain": "chemistry",
+        "source": "wikidata"
+      }
+    },
+    {
+      "id": "WD:Q468455",
+      "labels": [
+        "Entity",
+        "Wikidata"
+      ],
+      "props": {
+        "qid": "Q468455",
+        "label": "death by burning",
+        "domain": "chemistry",
+        "source": "wikidata"
+      }
+    }
+  ]
+}

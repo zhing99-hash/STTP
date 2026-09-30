@@ -1,0 +1,3068 @@
+{
+  "sparql": {
+    "sparql_rel:Q742833": {
+      "query": "SELECT ?p ?o ?ol WHERE {\n  wd:Q742833 ?p ?o .\n  FILTER(STRSTARTS(STR(?p), \"http://www.wikidata.org/prop/direct/\") &&\n        (?p = <http://www.wikidata.org/prop/direct/P31> ||\n         ?p = <http://www.wikidata.org/prop/direct/P279>))\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "p",
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q65943"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "theorem"
+              },
+              "p": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/prop/direct/P31"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790659692.330777
+    },
+    "sparql_rel:Q855112": {
+      "query": "SELECT ?p ?o ?ol WHERE {\n  wd:Q855112 ?p ?o .\n  FILTER(STRSTARTS(STR(?p), \"http://www.wikidata.org/prop/direct/\") &&\n        (?p = <http://www.wikidata.org/prop/direct/P31> ||\n         ?p = <http://www.wikidata.org/prop/direct/P279>))\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "p",
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q1758924"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "tensor field"
+              },
+              "p": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/prop/direct/P279"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790659774.563891
+    },
+    "sparql_rel:Q37554028": {
+      "query": "SELECT ?p ?o ?ol WHERE {\n  wd:Q37554028 ?p ?o .\n  FILTER(STRSTARTS(STR(?p), \"http://www.wikidata.org/prop/direct/\") &&\n        (?p = <http://www.wikidata.org/prop/direct/P31> ||\n         ?p = <http://www.wikidata.org/prop/direct/P279>))\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "p",
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q101352"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "family name"
+              },
+              "p": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/prop/direct/P31"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790659860.5922039
+    },
+    "sparql_rel:Q909601": {
+      "query": "SELECT ?p ?o ?ol WHERE {\n  wd:Q909601 ?p ?o .\n  FILTER(STRSTARTS(STR(?p), \"http://www.wikidata.org/prop/direct/\") &&\n        (?p = <http://www.wikidata.org/prop/direct/P31> ||\n         ?p = <http://www.wikidata.org/prop/direct/P279>))\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "p",
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q125977"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "vector space"
+              },
+              "p": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/prop/direct/P31"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790659946.8738248
+    },
+    "sparql_rel:Q7888899": {
+      "query": "SELECT ?p ?o ?ol WHERE {\n  wd:Q7888899 ?p ?o .\n  FILTER(STRSTARTS(STR(?p), \"http://www.wikidata.org/prop/direct/\") &&\n        (?p = <http://www.wikidata.org/prop/direct/P31> ||\n         ?p = <http://www.wikidata.org/prop/direct/P279>))\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "p",
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q865746"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "metric function"
+              },
+              "p": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/prop/direct/P31"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q78341368"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "pseudo-Riemannian metric"
+              },
+              "p": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/prop/direct/P279"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660031.182136
+    },
+    "sparql_rel:Q3552958": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q3552958 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660115.8911717
+    },
+    "sparql_rel:Q548675": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q548675 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660138.5517106
+    },
+    "sparql_rel:Q2397319": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q2397319 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q214070"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "physical law"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660158.7532628
+    },
+    "sparql_rel:Q46276": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q46276 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q3935690"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "form of energy"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660188.2102938
+    },
+    "sparql_rel:Q1997": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q1997 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q289382"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "trace gas"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q113145171"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "type of chemical entity"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660212.7212684
+    },
+    "sparql_rel:Q37129": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q37129 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q113145171"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "type of chemical entity"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660235.6021106
+    },
+    "sparql_rel:Q59548187": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q59548187 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660272.4330606
+    },
+    "sparql_rel:Q92065412": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q92065412 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660277.1465065
+    },
+    "sparql_rel:Q57258927": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q57258927 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660282.8691628
+    },
+    "sparql_rel:Q33741238": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q33741238 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660292.4773934
+    },
+    "sparql_rel:Q114173278": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q114173278 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660295.4443758
+    },
+    "sparql_rel:Q126789100": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q126789100 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660297.452386
+    },
+    "sparql_rel:Q2287715": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q2287715 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660324.019138
+    },
+    "sparql_rel:Q78044047": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q78044047 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660329.9702451
+    },
+    "sparql_rel:Q113691973": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q113691973 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660333.3586931
+    },
+    "sparql_rel:Q125599526": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q125599526 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660335.1350245
+    },
+    "sparql_rel:Q114173516": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q114173516 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660346.365273
+    },
+    "sparql_rel:Q191690": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q191690 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660370.3633718
+    },
+    "sparql_rel:Q9363325": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q9363325 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q65943"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "theorem"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660373.4683394
+    },
+    "sparql_rel:Q114727876": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q114727876 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q20026918"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "mathematical theory"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660394.0378332
+    },
+    "sparql_rel:Q2039117": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q2039117 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q976981"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "formula"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q58437145"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "trigonometric identity"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q65943"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "theorem"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660415.071124
+    },
+    "sparql_rel:Q1190543": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q1190543 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": []
+        }
+      },
+      "ts": 1790660436.6681714
+    },
+    "sparql_rel:Q7236409": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q7236409 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q482994"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "album"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660439.0565457
+    },
+    "sparql_rel:Q42722": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q42722 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q485258"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "federative unit of Brazil"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660462.550514
+    },
+    "sparql_rel:Q25237": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q25237 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q16521"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "taxon"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660465.589199
+    },
+    "sparql_rel:Q2093070": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q2093070 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q3409032"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "unisex given name"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q12308941"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "male given name"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660467.2108088
+    },
+    "sparql_rel:Q235034": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q235034 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q15936437"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "research university"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q221096"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "public–private partnership"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q902104"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "private university"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q23002039"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "public educational institution of the United States"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q45400320"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "open-access publisher"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660470.4688349
+    },
+    "sparql_rel:Q41583385": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q41583385 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q101352"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "family name"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660473.693804
+    },
+    "sparql_rel:Q12024": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q12024 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q16521"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "taxon"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660476.4297655
+    },
+    "sparql_rel:Q34430": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q34430 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q5"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "human"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660479.6231515
+    },
+    "sparql_rel:Q5188229": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q5188229 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q352450"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "agency"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q1789476"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "bibliographic database"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q108934881"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "open science infrastructure"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660482.9006088
+    },
+    "sparql_rel:Q852973": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q852973 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q625948"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "topological property"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660512.1236322
+    },
+    "sparql_rel:Q11379": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q11379 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q107715"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "physical quantity"
+              }
+            },
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q1554231"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "resource"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660552.2925806
+    },
+    "sparql_rel:Q468455": {
+      "query": "SELECT ?o ?ol WHERE {\n  wd:Q468455 wdt:P31 ?o .\n  OPTIONAL { ?o rdfs:label ?ol . FILTER(LANG(?ol) = \"en\") }\n}",
+      "result": {
+        "head": {
+          "vars": [
+            "o",
+            "ol"
+          ]
+        },
+        "results": {
+          "bindings": [
+            {
+              "o": {
+                "type": "uri",
+                "value": "http://www.wikidata.org/entity/Q15169167"
+              },
+              "ol": {
+                "xml:lang": "en",
+                "type": "literal",
+                "value": "execution method"
+              }
+            }
+          ]
+        }
+      },
+      "ts": 1790660575.9711
+    }
+  },
+  "wbsearch": {
+    "Gauss-Bonnet theorem": {
+      "result": [
+        {
+          "qid": "Q742833",
+          "label": "Gauss–Bonnet theorem",
+          "description": "Theorem in differential geometry"
+        },
+        {
+          "qid": "Q113890316",
+          "label": "Gauss-Bonnet Theorem in the Universal Covering Group of Euclidean Motion Group E(2) with the General Left-Invariant Metric",
+          "description": "scientific article published in 2022"
+        },
+        {
+          "qid": "Q123150886",
+          "label": "Gauss-Bonnet Theorems for Surfaces in Sub-Riemannian Three-dimensional Manifolds",
+          "description": "scientific article published in 2023"
+        },
+        {
+          "qid": "Q115383664",
+          "label": "Gauss-Bonnet Theorem in Sub-Riemannian Heisenberg Space ℍ 1 $\\mathbb H^{1}$",
+          "description": "scientific article published in 2016"
+        }
+      ],
+      "ts": 1790659690.142206
+    },
+    "Riemann curvature tensor": {
+      "result": [
+        {
+          "qid": "Q855112",
+          "label": "Riemann curvature tensor",
+          "description": "tensor field in general relativity and geometry"
+        },
+        {
+          "qid": "Q115392710",
+          "label": "Riemann curvature tensor in nonholonomic coordinates and non-Riemannian space-times",
+          "description": "scientific article published in 1984"
+        }
+      ],
+      "ts": 1790659770.6276495
+    },
+    "manifold": {
+      "result": [
+        {
+          "qid": "Q37554028",
+          "label": "Manifold",
+          "description": "family name"
+        },
+        {
+          "qid": "Q203920",
+          "label": "manifold",
+          "description": "topological space that at each point resembles Euclidean space (unspecified type)"
+        },
+        {
+          "qid": "Q122364010",
+          "label": "Manifold",
+          "description": "2021 video game"
+        },
+        {
+          "qid": "Q2721559",
+          "label": "topological manifold",
+          "description": "topological space (which may also be a separated space) which locally resembles real n-dimensional space"
+        },
+        {
+          "qid": "Q51756888",
+          "label": "Manifold Garden",
+          "description": "2019 indie first-person puzzle video game developed by William Chyr"
+        },
+        {
+          "qid": "Q1790740",
+          "label": "manifold",
+          "description": "structure that splits or combines fluid flow into channels"
+        },
+        {
+          "qid": "Q5336843",
+          "label": "Eden Fesi",
+          "description": "Marvel mutant"
+        },
+        {
+          "qid": "Q7049464",
+          "label": "nonlinear dimensionality reduction",
+          "description": "summary of algorithms for nonlinear dimensionality reduction"
+        },
+        {
+          "qid": "Q1890382",
+          "label": "Manifold System",
+          "description": "GIS software"
+        },
+        {
+          "qid": "Q6749559",
+          "label": "Manifold",
+          "description": "magazine on mathematics"
+        }
+      ],
+      "ts": 1790659856.015548
+    },
+    "tangent space": {
+      "result": [
+        {
+          "qid": "Q909601",
+          "label": "tangent space",
+          "description": "vector space associated to a point in a smooth manifold, consisting of vectors tangent to it (in some embedding into Euclidean space)"
+        },
+        {
+          "qid": "Q25523343",
+          "label": "Tangent space",
+          "description": ""
+        },
+        {
+          "qid": "Q7682875",
+          "label": "Tangent space to a functor",
+          "description": "concept in category theory"
+        },
+        {
+          "qid": "Q115276277",
+          "label": "Tangent space estimation for smooth embeddings of Riemannian manifolds",
+          "description": "scientific article published in 2013"
+        },
+        {
+          "qid": "Q131317129",
+          "label": "Tangent Spaces of Orbit Closures for Representations of Dynkin Quivers of Type $\\mathbb {D}$",
+          "description": "scientific article published on 3 September 2022"
+        },
+        {
+          "qid": "Q90417809",
+          "label": "Tangent space to the manifold of critical classical Hamiltonians representable by tensor networks",
+          "description": "scientific article published on 01 August 2019"
+        },
+        {
+          "qid": "Q91228999",
+          "label": "Tangent Space Features-Based Transfer Learning Classification Model for Two-Class Motor Imagery Brain-Computer Interface",
+          "description": "scientific article published on 12 November 2019"
+        },
+        {
+          "qid": "Q98468821",
+          "label": "Tangent-space gradient optimization of tensor network for machine learning",
+          "description": "scientific article published on 01 July 2020"
+        },
+        {
+          "qid": "Q123008562",
+          "label": "Tangent space alignment: Transfer learning for Brain-Computer Interface",
+          "description": "scientific article published in 2022"
+        },
+        {
+          "qid": "Q128594003",
+          "label": "Tangent-space methods for uniform matrix product states",
+          "description": "scholarly article"
+        }
+      ],
+      "ts": 1790659943.4014592
+    },
+    "Riemannian metric": {
+      "result": [
+        {
+          "qid": "Q7888899",
+          "label": "Riemannian metric",
+          "description": "positive-definite metric tensor"
+        },
+        {
+          "qid": "Q25324524",
+          "label": "Riemannian metric and Lie-bracket in computational anatomy",
+          "description": "application of differential geometry"
+        },
+        {
+          "qid": "Q89916510",
+          "label": "Riemannian Metric Optimization for Connectivity-driven Surface Mapping",
+          "description": "scientific article published on 02 October 2016"
+        },
+        {
+          "qid": "Q115224652",
+          "label": "Riemannian metrics on principal circle bundles over locally symmetric Kählerian manifolds",
+          "description": "scientific article published in 1982"
+        },
+        {
+          "qid": "Q115360639",
+          "label": "Riemannian metric of the averaged energy minimization problem in orbital transfer with low thrust",
+          "description": "scientific article published in 2007"
+        },
+        {
+          "qid": "Q115217209",
+          "label": "Riemannian metrics with periodic geodesic flows on projective spaces",
+          "description": "scientific article published in 1987"
+        },
+        {
+          "qid": "Q115236883",
+          "label": "Riemannian metrics on Lie groupoids",
+          "description": "scientific article published in 2018"
+        },
+        {
+          "qid": "Q115393180",
+          "label": "Riemannian metric on a multidimensional three-web and related differential-geometric structures",
+          "description": "scientific article published in 1993"
+        },
+        {
+          "qid": "Q115395235",
+          "label": "Riemannian metrics of positive scalar curvature on compact manifolds with boundary",
+          "description": "scientific article published in 1987"
+        },
+        {
+          "qid": "Q115276271",
+          "label": "Riemannian metrics for neural networks II: recurrent networks and learning symbolic data sequences",
+          "description": "scientific article published in 2015"
+        }
+      ],
+      "ts": 1790660029.0467136
+    },
+    "differentiable manifold": {
+      "result": [
+        {
+          "qid": "Q3552958",
+          "label": "differentiable manifold",
+          "description": "manifold upon which it is possible to perform calculus (any differentiablity class)"
+        },
+        {
+          "qid": "Q59548187",
+          "label": "Differentiable manifolds",
+          "description": "doctoral thesis by G. S. Wells"
+        },
+        {
+          "qid": "Q92065412",
+          "label": "differentiable manifold 2",
+          "description": ""
+        },
+        {
+          "qid": "Q57258927",
+          "label": "Differentiable Manifolds",
+          "description": "scientific article published in 1936"
+        },
+        {
+          "qid": "Q33741238",
+          "label": "Differentiable Manifolds in Euclidean Space",
+          "description": "scientific article"
+        }
+      ],
+      "ts": 1790660111.4102802
+    },
+    "Levi-Civita connection": {
+      "result": [
+        {
+          "qid": "Q548675",
+          "label": "Levi-Civita connection",
+          "description": "the unique torsion-free affine connection that preserves a given (pseudo-)Rimannian metric"
+        },
+        {
+          "qid": "Q114173278",
+          "label": "Levi-Civita connections from toral actions",
+          "description": "scientific article published in 2022"
+        },
+        {
+          "qid": "Q126789100",
+          "label": "Levi-Civita connections for a class of spectral triples",
+          "description": "scholarly article"
+        }
+      ],
+      "ts": 1790660135.400863
+    },
+    "Newton's second law of motion": {
+      "result": [
+        {
+          "qid": "Q2397319",
+          "label": "Newton's second law of motion for constant mass",
+          "description": "law stating that force equals mass times acceleration"
+        },
+        {
+          "qid": "Q104212301",
+          "label": "Newton's second law of motion (general)",
+          "description": "law stating that force changes momentum in time"
+        }
+      ],
+      "ts": 1790660156.2503314
+    },
+    "kinetic energy": {
+      "result": [
+        {
+          "qid": "Q46276",
+          "label": "kinetic energy",
+          "description": "energy of a moving physical body"
+        },
+        {
+          "qid": "Q1739288",
+          "label": "kerma",
+          "description": "kinetic energy released per mass"
+        },
+        {
+          "qid": "Q2140940",
+          "label": "rotational energy",
+          "description": "kinetic energy of rotating body with moment of inertia and angular velocity"
+        },
+        {
+          "qid": "Q858329",
+          "label": "kinetic energy penetrator",
+          "description": "type of ammunition designed to penetrate vehicle armour"
+        },
+        {
+          "qid": "Q113427895",
+          "label": "kinetic energy weapon",
+          "description": "weapon based solely on a projectile's kinetic energy instead of an explosive or any other kind of payload"
+        },
+        {
+          "qid": "Q112658527",
+          "label": "kinetic energy operator",
+          "description": ""
+        },
+        {
+          "qid": "Q173171",
+          "label": "kinetic energy recovery system",
+          "description": "automotive brake energy system"
+        },
+        {
+          "qid": "Q6130253",
+          "label": "Kinetic Energy Interceptor",
+          "description": "type of mobile ballistic missile defense system"
+        },
+        {
+          "qid": "Q48963389",
+          "label": "Vought KEM",
+          "description": "American anti-tank missile"
+        },
+        {
+          "qid": "Q21843419",
+          "label": "kinetic energy paradox",
+          "description": ""
+        }
+      ],
+      "ts": 1790660177.347684
+    },
+    "carbon dioxide": {
+      "result": [
+        {
+          "qid": "Q1997",
+          "label": "carbon dioxide",
+          "description": "chemical compound"
+        },
+        {
+          "qid": "Q59164117",
+          "label": "Carbon Dioxide as Chemical Feedstock",
+          "description": "scholarly article published 15 February 2010"
+        },
+        {
+          "qid": "Q3588927",
+          "label": "carbon dioxide emissions",
+          "description": "release of CO2 gas into the atmosphere"
+        },
+        {
+          "qid": "Q5611523",
+          "label": "carbon sink",
+          "description": "natural or artificial process in which something absorbs more carbon from the atmosphere than it releases"
+        },
+        {
+          "qid": "Q11371830",
+          "label": "Carbon Dioxide Springs",
+          "description": ""
+        },
+        {
+          "qid": "Q21109241",
+          "label": "carbamoyl-phosphate synthase (glutamine-hydrolyzing) activity",
+          "description": "Catalysis of the reaction: 2 ATP + L-glutamine + CO2 + H2O = 2 ADP + phosphate + glutamate + carbamoyl phosphate."
+        },
+        {
+          "qid": "Q57084901",
+          "label": "kilogram of carbon dioxide equivalent",
+          "description": "quantity that describes, for a given mixture and amount of greenhouse gas, the amount of CO2 that would have the same global warming potential (GWP), when measured over a specified timescale (generally, 100 years)"
+        },
+        {
+          "qid": "Q30314404",
+          "label": "extracorporeal carbon dioxide removal",
+          "description": "removal of carbon dioxide from the bloodstream"
+        },
+        {
+          "qid": "Q56298528",
+          "label": "carbon dioxide removal",
+          "description": "removal of atmospheric carbon dioxide"
+        },
+        {
+          "qid": "Q57084968",
+          "label": "kilogram of carbon dioxide equivalent per kilogram",
+          "description": "quantity that describes, for a given mixture and amount of greenhouse gas, the amount of CO2 that would have the same global warming potential (GWP), when measured over a specified timescale (generally, 100 years)"
+        }
+      ],
+      "ts": 1790660209.6120183
+    },
+    "methane": {
+      "result": [
+        {
+          "qid": "Q37129",
+          "label": "methane",
+          "description": "simplest organic molecule with one carbon atom and four hydrogen"
+        },
+        {
+          "qid": "Q40858",
+          "label": "natural gas",
+          "description": "fossil fuel containing a mix of methane and other gases"
+        },
+        {
+          "qid": "Q22275999",
+          "label": "methanogenesis",
+          "description": "biochemical process"
+        },
+        {
+          "qid": "Q1997",
+          "label": "carbon dioxide",
+          "description": "chemical compound"
+        },
+        {
+          "qid": "Q29305335",
+          "label": "Methane Hydrates in Quaternary Climate Change: The Clathrate Gun Hypothesis, Volume 54",
+          "description": "scientific article (publication date: 2003)"
+        },
+        {
+          "qid": "Q26075",
+          "label": "hydrogen cyanide",
+          "description": "chemical compound"
+        },
+        {
+          "qid": "Q47512",
+          "label": "acetic acid",
+          "description": "chemical compound"
+        },
+        {
+          "qid": "Q421748",
+          "label": "dichloromethane",
+          "description": "chemical compound"
+        },
+        {
+          "qid": "Q172275",
+          "label": "chloroform",
+          "description": "chemical compound"
+        },
+        {
+          "qid": "Q243354",
+          "label": "carbon disulfide",
+          "description": "chemical compound"
+        }
+      ],
+      "ts": 1790660230.4184365
+    },
+    "covariant derivative": {
+      "result": [
+        {
+          "qid": "Q2287715",
+          "label": "covariant derivative",
+          "description": "specification of derivatives along tangent vectors of a manifold"
+        },
+        {
+          "qid": "Q78044047",
+          "label": "Covariant-derivative expansion of the effective action and the Schwinger-Fock gauge condition",
+          "description": "scientific article published on 01 September 1986"
+        },
+        {
+          "qid": "Q113691973",
+          "label": "Covariant derivatives of eigenfunctions along parallel tensors over space forms and a conjecture motivated by the vertex algebraic structure",
+          "description": "scientific article published in 2022"
+        },
+        {
+          "qid": "Q125599526",
+          "label": "Covariant derivative of the curvature tensor of pseudo-Kählerian manifolds",
+          "description": "scientific article published in 2016"
+        },
+        {
+          "qid": "Q114173516",
+          "label": "Covariant derivatives for Ehresmann connections",
+          "description": "scientific article published in 2022"
+        }
+      ],
+      "ts": 1790660320.7163427
+    },
+    "partition of unity": {
+      "result": [
+        {
+          "qid": "Q191690",
+          "label": "partition of unity",
+          "description": "set of continuous functions from a topological space to the unit interval [0,1] such that for every point x, there is a neighborhood of x where a cofinite number of the functions are 0, and such that the sum of all the function values at x is 1"
+        },
+        {
+          "qid": "Q9363325",
+          "label": "partition of unity",
+          "description": ""
+        },
+        {
+          "qid": "Q107075418",
+          "label": "Partition of unity isogeometric analysis for singularly perturbed problems and fourth order differential equations containing singularities",
+          "description": "doctoral thesis of Sinae Kim"
+        },
+        {
+          "qid": "Q126305417",
+          "label": "Partition of unity finite element for analysis of contact interface stress singularity",
+          "description": "scholarly article"
+        },
+        {
+          "qid": "Q125023917",
+          "label": "Partition of unity and density: A counterexample",
+          "description": "scientific article published in 1997"
+        },
+        {
+          "qid": "Q124807475",
+          "label": "Partition of Unity and Density: A Counterexample",
+          "description": "scientific article published in 1997"
+        },
+        {
+          "qid": "Q117450382",
+          "label": "Partition of Unity Finite Element Method applied to exterior problems with Perfectly Matched Layers",
+          "description": ""
+        },
+        {
+          "qid": "Q129422657",
+          "label": "Partition of unity extension of functions on complex domains",
+          "description": "scholarly article"
+        },
+        {
+          "qid": "Q113327486",
+          "label": "Partition of unity isogeometric analysis of two dimensional elliptic singular perturbation problems",
+          "description": "scientific article published on 03 October 2016"
+        }
+      ],
+      "ts": 1790660366.8865013
+    },
+    "binomial theorem": {
+      "result": [
+        {
+          "qid": "Q114727876",
+          "label": "binomial theorem",
+          "description": "theory round the theorem (proofs, corollaries, counterexamples, exercises)"
+        },
+        {
+          "qid": "Q26708",
+          "label": "binomial theorem",
+          "description": "algebraic expansion of powers of a binomial"
+        },
+        {
+          "qid": "Q127690105",
+          "label": "Binomial theorem and odd power",
+          "description": ""
+        },
+        {
+          "qid": "Q66682924",
+          "label": "Binomial theorem involving Hermite polynomials and negative-binomial theorem involving Laguerre polynomials",
+          "description": "article published in 2013"
+        },
+        {
+          "qid": "Q66683624",
+          "label": "Binomial theorems related to two-variable Hermite polynomials and its application in quantum optics",
+          "description": "article published in 2014"
+        }
+      ],
+      "ts": 1790660390.1818666
+    },
+    "Pythagorean trigonometric identity": {
+      "result": [
+        {
+          "qid": "Q2039117",
+          "label": "Pythagorean trigonometric identity",
+          "description": "sin² θ + cos² θ = 1"
+        }
+      ],
+      "ts": 1790660410.9580042
+    },
+    "power rule": {
+      "result": [
+        {
+          "qid": "Q1190543",
+          "label": "power rule",
+          "description": "method of differentiating single term polynomials"
+        },
+        {
+          "qid": "Q7236409",
+          "label": "Power Rulez",
+          "description": "album by Dom Pachino"
+        }
+      ],
+      "ts": 1790660433.3874502
+    },
+    "pi": {
+      "result": [
+        {
+          "qid": "Q42722",
+          "label": "Piauí",
+          "description": "state in the Northeast Region of Brazil"
+        },
+        {
+          "qid": "Q25237",
+          "label": "Pisum sativum",
+          "description": "species of plant with edible seeds"
+        },
+        {
+          "qid": "Q2093070",
+          "label": "Pierre",
+          "description": "male given name"
+        },
+        {
+          "qid": "Q235034",
+          "label": "University of Pittsburgh",
+          "description": "state-related research university located in Pittsburgh, Pennsylvania, United States"
+        },
+        {
+          "qid": "Q41583385",
+          "label": "Pi",
+          "description": "family name"
+        },
+        {
+          "qid": "Q12024",
+          "label": "Pinus",
+          "description": "genus of plants in the conifer family Pinaceae"
+        },
+        {
+          "qid": "Q34430",
+          "label": "Edmond Boissier",
+          "description": "Swiss botanist, explorer and mathematician (1810-1885)"
+        },
+        {
+          "qid": "Q5188229",
+          "label": "Crossref",
+          "description": "one of the official Digital Object Identifier Registration Agencies of the International DOI Foundation"
+        },
+        {
+          "qid": "Q159536",
+          "label": "Piper",
+          "description": "genus of plants"
+        },
+        {
+          "qid": "Q145992",
+          "label": "Picea abies",
+          "description": "species of plant"
+        }
+      ],
+      "ts": 1790660456.3323011
+    },
+    "Euler characteristic": {
+      "result": [
+        {
+          "qid": "Q852973",
+          "label": "Euler characteristic",
+          "description": "topological invariant in mathematics"
+        },
+        {
+          "qid": "Q55643014",
+          "label": "Euler characteristic of an orbifold",
+          "description": "concept in differential geometry"
+        },
+        {
+          "qid": "Q41806857",
+          "label": "Euler Characteristics for Gaussian Field",
+          "description": "2001 doctoral thesis written by Jonathan E. Taylor"
+        },
+        {
+          "qid": "Q105583342",
+          "label": "Euler characteristic and related measures for random geometric sets",
+          "description": "scholarly article from 'Journal of Statistical Physics' published in 1991"
+        },
+        {
+          "qid": "Q105583340",
+          "label": "Euler characteristic in percolation theory",
+          "description": "scholarly article from 'Journal of Statistical Physics' published in 1990"
+        },
+        {
+          "qid": "Q57034391",
+          "label": "Euler characteristics of oceanic sea states",
+          "description": ""
+        },
+        {
+          "qid": "Q98959848",
+          "label": "Euler characteristics",
+          "description": "scientific article published in 1968"
+        },
+        {
+          "qid": "Q127310486",
+          "label": "Euler Characteristics of Crepant Resolutions of Weierstrass Models",
+          "description": "scholarly article"
+        },
+        {
+          "qid": "Q60145517",
+          "label": "Euler characteristics of general linear sections and polynomial Chern classes",
+          "description": ""
+        },
+        {
+          "qid": "Q115290068",
+          "label": "Euler characteristics, Akashi series and compact 𝑝-adic Lie groups",
+          "description": "scientific article published in 2010"
+        }
+      ],
+      "ts": 1790660504.0801136
+    },
+    "del (nabla)": {
+      "result": [],
+      "ts": 1790660532.3894887
+    },
+    "energy": {
+      "result": [
+        {
+          "qid": "Q11379",
+          "label": "energy",
+          "description": "quantitative property of a physical system, recognizable in the performance of work and in the form of heat and light"
+        },
+        {
+          "qid": "Q15765728",
+          "label": "Energy",
+          "description": "scientific journal"
+        },
+        {
+          "qid": "Q27727257",
+          "label": "Energy Research & Social Science",
+          "description": "journal"
+        },
+        {
+          "qid": "Q192704",
+          "label": "energy efficiency",
+          "description": "ratio between the useful energy output and the input of a machine"
+        },
+        {
+          "qid": "Q115819814",
+          "label": "Energy",
+          "description": "2022 song by Beyoncé featuring Beam"
+        },
+        {
+          "qid": "Q12482493",
+          "label": "Energy",
+          "description": "2006 studio album by The Upstairs"
+        },
+        {
+          "qid": "Q12580966",
+          "label": "Energy",
+          "description": "2008 studio album by Mighty Mouth"
+        },
+        {
+          "qid": "Q123785406",
+          "label": "Energy",
+          "description": "vocal track by 9ice; 2009 studio recording"
+        },
+        {
+          "qid": "Q1341441",
+          "label": "force field",
+          "description": "science fiction concept"
+        },
+        {
+          "qid": "Q3935690",
+          "label": "form of energy",
+          "description": "concept in physical sciences"
+        }
+      ],
+      "ts": 1790660549.3615603
+    },
+    "combustion": {
+      "result": [
+        {
+          "qid": "Q468455",
+          "label": "death by burning",
+          "description": "execution method"
+        },
+        {
+          "qid": "Q133235",
+          "label": "combustion",
+          "description": "high-temperature exothermic redox chemical reaction between a fuel (the reductant) and an oxidant, usually atmospheric oxygen, that produces oxidized, often gaseous products, in a mixture termed as smoke"
+        },
+        {
+          "qid": "Q135014462",
+          "label": "Combustion",
+          "description": "video game developed by Slipgate Ironworks™"
+        },
+        {
+          "qid": "Q15043642",
+          "label": "Combustion and Flame",
+          "description": "journal"
+        },
+        {
+          "qid": "Q15766629",
+          "label": "Proceedings of the Combustion Institute",
+          "description": "journal"
+        },
+        {
+          "qid": "Q3809680",
+          "label": "combustor",
+          "description": "component or area of a gas turbine, ramjet, or scramjet engine where combustion takes place"
+        },
+        {
+          "qid": "Q77526249",
+          "label": "Combustion",
+          "description": "painting by Charles Green Shaw"
+        },
+        {
+          "qid": "Q193470",
+          "label": "gas turbine",
+          "description": "type of internal combustion engine"
+        },
+        {
+          "qid": "Q5150986",
+          "label": "Combustion",
+          "description": "album by Decoded Feedback"
+        },
+        {
+          "qid": "Q15746595",
+          "label": "Combustion Science and Technology",
+          "description": "journal"
+        }
+      ],
+      "ts": 1790660570.5909894
+    }
+  },
+  "derived": {
+    "search:Gauss-Bonnet theorem": [
+      {
+        "qid": "Q742833",
+        "label": "Gauss–Bonnet theorem",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q113890316",
+        "label": "Gauss-Bonnet Theorem in the Universal Covering Group of Euclidean Motion Group E(2) with the General Left-Invariant Metric",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q123150886",
+        "label": "Gauss-Bonnet Theorems for Surfaces in Sub-Riemannian Three-dimensional Manifolds",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115383664",
+        "label": "Gauss-Bonnet Theorem in Sub-Riemannian Heisenberg Space ℍ 1 $\\mathbb H^{1}$",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q742833": {
+      "qid": "Q742833",
+      "types": [
+        {
+          "qid": "Q65943",
+          "label": "theorem"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:Riemann curvature tensor": [
+      {
+        "qid": "Q855112",
+        "label": "Riemann curvature tensor",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115392710",
+        "label": "Riemann curvature tensor in nonholonomic coordinates and non-Riemannian space-times",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q855112": {
+      "qid": "Q855112",
+      "types": [
+        {
+          "qid": "Q1758924",
+          "label": "tensor field"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:manifold": [
+      {
+        "qid": "Q37554028",
+        "label": "Manifold",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q203920",
+        "label": "manifold",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q122364010",
+        "label": "Manifold",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q2721559",
+        "label": "topological manifold",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q51756888",
+        "label": "Manifold Garden",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q1790740",
+        "label": "manifold",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q5336843",
+        "label": "Eden Fesi",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q7049464",
+        "label": "nonlinear dimensionality reduction",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q1890382",
+        "label": "Manifold System",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q6749559",
+        "label": "Manifold",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q37554028": {
+      "qid": "Q37554028",
+      "types": [
+        {
+          "qid": "Q101352",
+          "label": "family name"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "search:tangent space": [
+      {
+        "qid": "Q909601",
+        "label": "tangent space",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q25523343",
+        "label": "Tangent space",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q7682875",
+        "label": "Tangent space to a functor",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115276277",
+        "label": "Tangent space estimation for smooth embeddings of Riemannian manifolds",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q131317129",
+        "label": "Tangent Spaces of Orbit Closures for Representations of Dynkin Quivers of Type $\\mathbb {D}$",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q90417809",
+        "label": "Tangent space to the manifold of critical classical Hamiltonians representable by tensor networks",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q91228999",
+        "label": "Tangent Space Features-Based Transfer Learning Classification Model for Two-Class Motor Imagery Brain-Computer Interface",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q98468821",
+        "label": "Tangent-space gradient optimization of tensor network for machine learning",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q123008562",
+        "label": "Tangent space alignment: Transfer learning for Brain-Computer Interface",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q128594003",
+        "label": "Tangent-space methods for uniform matrix product states",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q909601": {
+      "qid": "Q909601",
+      "types": [
+        {
+          "qid": "Q125977",
+          "label": "vector space"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:Riemannian metric": [
+      {
+        "qid": "Q7888899",
+        "label": "Riemannian metric",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q25324524",
+        "label": "Riemannian metric and Lie-bracket in computational anatomy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q89916510",
+        "label": "Riemannian Metric Optimization for Connectivity-driven Surface Mapping",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115224652",
+        "label": "Riemannian metrics on principal circle bundles over locally symmetric Kählerian manifolds",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115360639",
+        "label": "Riemannian metric of the averaged energy minimization problem in orbital transfer with low thrust",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115217209",
+        "label": "Riemannian metrics with periodic geodesic flows on projective spaces",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115236883",
+        "label": "Riemannian metrics on Lie groupoids",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115393180",
+        "label": "Riemannian metric on a multidimensional three-web and related differential-geometric structures",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115395235",
+        "label": "Riemannian metrics of positive scalar curvature on compact manifolds with boundary",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115276271",
+        "label": "Riemannian metrics for neural networks II: recurrent networks and learning symbolic data sequences",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q7888899": {
+      "qid": "Q7888899",
+      "types": [
+        {
+          "qid": "Q865746",
+          "label": "metric function"
+        },
+        {
+          "qid": "Q78341368",
+          "label": "pseudo-Riemannian metric"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:differentiable manifold": [
+      {
+        "qid": "Q3552958",
+        "label": "differentiable manifold",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q59548187",
+        "label": "Differentiable manifolds",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q92065412",
+        "label": "differentiable manifold 2",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q57258927",
+        "label": "Differentiable Manifolds",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q33741238",
+        "label": "Differentiable Manifolds in Euclidean Space",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q3552958": {
+      "qid": "Q3552958",
+      "types": [],
+      "domain": "unknown"
+    },
+    "search:Levi-Civita connection": [
+      {
+        "qid": "Q548675",
+        "label": "Levi-Civita connection",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q114173278",
+        "label": "Levi-Civita connections from toral actions",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q126789100",
+        "label": "Levi-Civita connections for a class of spectral triples",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q548675": {
+      "qid": "Q548675",
+      "types": [],
+      "domain": "unknown"
+    },
+    "search:Newton's second law of motion": [
+      {
+        "qid": "Q2397319",
+        "label": "Newton's second law of motion for constant mass",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q104212301",
+        "label": "Newton's second law of motion (general)",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q2397319": {
+      "qid": "Q2397319",
+      "types": [
+        {
+          "qid": "Q214070",
+          "label": "physical law"
+        }
+      ],
+      "domain": "physics"
+    },
+    "search:kinetic energy": [
+      {
+        "qid": "Q46276",
+        "label": "kinetic energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q1739288",
+        "label": "kerma",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q2140940",
+        "label": "rotational energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q858329",
+        "label": "kinetic energy penetrator",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q113427895",
+        "label": "kinetic energy weapon",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q112658527",
+        "label": "kinetic energy operator",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q173171",
+        "label": "kinetic energy recovery system",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q6130253",
+        "label": "Kinetic Energy Interceptor",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q48963389",
+        "label": "Vought KEM",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q21843419",
+        "label": "kinetic energy paradox",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q46276": {
+      "qid": "Q46276",
+      "types": [
+        {
+          "qid": "Q3935690",
+          "label": "form of energy"
+        }
+      ],
+      "domain": "physics"
+    },
+    "search:carbon dioxide": [
+      {
+        "qid": "Q1997",
+        "label": "carbon dioxide",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q59164117",
+        "label": "Carbon Dioxide as Chemical Feedstock",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q3588927",
+        "label": "carbon dioxide emissions",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q5611523",
+        "label": "carbon sink",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q11371830",
+        "label": "Carbon Dioxide Springs",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q21109241",
+        "label": "carbamoyl-phosphate synthase (glutamine-hydrolyzing) activity",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q57084901",
+        "label": "kilogram of carbon dioxide equivalent",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q30314404",
+        "label": "extracorporeal carbon dioxide removal",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q56298528",
+        "label": "carbon dioxide removal",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q57084968",
+        "label": "kilogram of carbon dioxide equivalent per kilogram",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q1997": {
+      "qid": "Q1997",
+      "types": [
+        {
+          "qid": "Q289382",
+          "label": "trace gas"
+        },
+        {
+          "qid": "Q113145171",
+          "label": "type of chemical entity"
+        }
+      ],
+      "domain": "chemistry"
+    },
+    "search:methane": [
+      {
+        "qid": "Q37129",
+        "label": "methane",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q40858",
+        "label": "natural gas",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q22275999",
+        "label": "methanogenesis",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q1997",
+        "label": "carbon dioxide",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q29305335",
+        "label": "Methane Hydrates in Quaternary Climate Change: The Clathrate Gun Hypothesis, Volume 54",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q26075",
+        "label": "hydrogen cyanide",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q47512",
+        "label": "acetic acid",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q421748",
+        "label": "dichloromethane",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q172275",
+        "label": "chloroform",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q243354",
+        "label": "carbon disulfide",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q37129": {
+      "qid": "Q37129",
+      "types": [
+        {
+          "qid": "Q113145171",
+          "label": "type of chemical entity"
+        }
+      ],
+      "domain": "chemistry"
+    },
+    "rel:Q59548187": {
+      "qid": "Q59548187",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q92065412": {
+      "qid": "Q92065412",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q57258927": {
+      "qid": "Q57258927",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q33741238": {
+      "qid": "Q33741238",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q114173278": {
+      "qid": "Q114173278",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q126789100": {
+      "qid": "Q126789100",
+      "types": [],
+      "domain": "unknown"
+    },
+    "search:covariant derivative": [
+      {
+        "qid": "Q2287715",
+        "label": "covariant derivative",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q78044047",
+        "label": "Covariant-derivative expansion of the effective action and the Schwinger-Fock gauge condition",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q113691973",
+        "label": "Covariant derivatives of eigenfunctions along parallel tensors over space forms and a conjecture motivated by the vertex algebraic structure",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q125599526",
+        "label": "Covariant derivative of the curvature tensor of pseudo-Kählerian manifolds",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q114173516",
+        "label": "Covariant derivatives for Ehresmann connections",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q2287715": {
+      "qid": "Q2287715",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q78044047": {
+      "qid": "Q78044047",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q113691973": {
+      "qid": "Q113691973",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q125599526": {
+      "qid": "Q125599526",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q114173516": {
+      "qid": "Q114173516",
+      "types": [],
+      "domain": "unknown"
+    },
+    "search:partition of unity": [
+      {
+        "qid": "Q191690",
+        "label": "partition of unity",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q9363325",
+        "label": "partition of unity",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q107075418",
+        "label": "Partition of unity isogeometric analysis for singularly perturbed problems and fourth order differential equations containing singularities",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q126305417",
+        "label": "Partition of unity finite element for analysis of contact interface stress singularity",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q125023917",
+        "label": "Partition of unity and density: A counterexample",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q124807475",
+        "label": "Partition of Unity and Density: A Counterexample",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q117450382",
+        "label": "Partition of Unity Finite Element Method applied to exterior problems with Perfectly Matched Layers",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q129422657",
+        "label": "Partition of unity extension of functions on complex domains",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q113327486",
+        "label": "Partition of unity isogeometric analysis of two dimensional elliptic singular perturbation problems",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q191690": {
+      "qid": "Q191690",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q9363325": {
+      "qid": "Q9363325",
+      "types": [
+        {
+          "qid": "Q65943",
+          "label": "theorem"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:binomial theorem": [
+      {
+        "qid": "Q114727876",
+        "label": "binomial theorem",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q26708",
+        "label": "binomial theorem",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q127690105",
+        "label": "Binomial theorem and odd power",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q66682924",
+        "label": "Binomial theorem involving Hermite polynomials and negative-binomial theorem involving Laguerre polynomials",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q66683624",
+        "label": "Binomial theorems related to two-variable Hermite polynomials and its application in quantum optics",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q114727876": {
+      "qid": "Q114727876",
+      "types": [
+        {
+          "qid": "Q20026918",
+          "label": "mathematical theory"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:Pythagorean trigonometric identity": [
+      {
+        "qid": "Q2039117",
+        "label": "Pythagorean trigonometric identity",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q2039117": {
+      "qid": "Q2039117",
+      "types": [
+        {
+          "qid": "Q976981",
+          "label": "formula"
+        },
+        {
+          "qid": "Q58437145",
+          "label": "trigonometric identity"
+        },
+        {
+          "qid": "Q65943",
+          "label": "theorem"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:power rule": [
+      {
+        "qid": "Q1190543",
+        "label": "power rule",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q7236409",
+        "label": "Power Rulez",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q1190543": {
+      "qid": "Q1190543",
+      "types": [],
+      "domain": "unknown"
+    },
+    "rel:Q7236409": {
+      "qid": "Q7236409",
+      "types": [
+        {
+          "qid": "Q482994",
+          "label": "album"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "search:pi": [
+      {
+        "qid": "Q42722",
+        "label": "Piauí",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q25237",
+        "label": "Pisum sativum",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q2093070",
+        "label": "Pierre",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q235034",
+        "label": "University of Pittsburgh",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q41583385",
+        "label": "Pi",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q12024",
+        "label": "Pinus",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q34430",
+        "label": "Edmond Boissier",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q5188229",
+        "label": "Crossref",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q159536",
+        "label": "Piper",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q145992",
+        "label": "Picea abies",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q42722": {
+      "qid": "Q42722",
+      "types": [
+        {
+          "qid": "Q485258",
+          "label": "federative unit of Brazil"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "rel:Q25237": {
+      "qid": "Q25237",
+      "types": [
+        {
+          "qid": "Q16521",
+          "label": "taxon"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "rel:Q2093070": {
+      "qid": "Q2093070",
+      "types": [
+        {
+          "qid": "Q3409032",
+          "label": "unisex given name"
+        },
+        {
+          "qid": "Q12308941",
+          "label": "male given name"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "rel:Q235034": {
+      "qid": "Q235034",
+      "types": [
+        {
+          "qid": "Q15936437",
+          "label": "research university"
+        },
+        {
+          "qid": "Q221096",
+          "label": "public–private partnership"
+        },
+        {
+          "qid": "Q902104",
+          "label": "private university"
+        },
+        {
+          "qid": "Q23002039",
+          "label": "public educational institution of the United States"
+        },
+        {
+          "qid": "Q45400320",
+          "label": "open-access publisher"
+        }
+      ],
+      "domain": "chemistry"
+    },
+    "rel:Q41583385": {
+      "qid": "Q41583385",
+      "types": [
+        {
+          "qid": "Q101352",
+          "label": "family name"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "rel:Q12024": {
+      "qid": "Q12024",
+      "types": [
+        {
+          "qid": "Q16521",
+          "label": "taxon"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "rel:Q34430": {
+      "qid": "Q34430",
+      "types": [
+        {
+          "qid": "Q5",
+          "label": "human"
+        }
+      ],
+      "domain": "unknown"
+    },
+    "rel:Q5188229": {
+      "qid": "Q5188229",
+      "types": [
+        {
+          "qid": "Q352450",
+          "label": "agency"
+        },
+        {
+          "qid": "Q1789476",
+          "label": "bibliographic database"
+        },
+        {
+          "qid": "Q108934881",
+          "label": "open science infrastructure"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:Euler characteristic": [
+      {
+        "qid": "Q852973",
+        "label": "Euler characteristic",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q55643014",
+        "label": "Euler characteristic of an orbifold",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q41806857",
+        "label": "Euler Characteristics for Gaussian Field",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q105583342",
+        "label": "Euler characteristic and related measures for random geometric sets",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q105583340",
+        "label": "Euler characteristic in percolation theory",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q57034391",
+        "label": "Euler characteristics of oceanic sea states",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q98959848",
+        "label": "Euler characteristics",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q127310486",
+        "label": "Euler Characteristics of Crepant Resolutions of Weierstrass Models",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q60145517",
+        "label": "Euler characteristics of general linear sections and polynomial Chern classes",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115290068",
+        "label": "Euler characteristics, Akashi series and compact 𝑝-adic Lie groups",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q852973": {
+      "qid": "Q852973",
+      "types": [
+        {
+          "qid": "Q625948",
+          "label": "topological property"
+        }
+      ],
+      "domain": "math"
+    },
+    "search:del (nabla)": [],
+    "search:energy": [
+      {
+        "qid": "Q11379",
+        "label": "energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q15765728",
+        "label": "Energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q27727257",
+        "label": "Energy Research & Social Science",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q192704",
+        "label": "energy efficiency",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q115819814",
+        "label": "Energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q12482493",
+        "label": "Energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q12580966",
+        "label": "Energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q123785406",
+        "label": "Energy",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q1341441",
+        "label": "force field",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q3935690",
+        "label": "form of energy",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q11379": {
+      "qid": "Q11379",
+      "types": [
+        {
+          "qid": "Q107715",
+          "label": "physical quantity"
+        },
+        {
+          "qid": "Q1554231",
+          "label": "resource"
+        }
+      ],
+      "domain": "physics"
+    },
+    "search:combustion": [
+      {
+        "qid": "Q468455",
+        "label": "death by burning",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q133235",
+        "label": "combustion",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q135014462",
+        "label": "Combustion",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q15043642",
+        "label": "Combustion and Flame",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q15766629",
+        "label": "Proceedings of the Combustion Institute",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q3809680",
+        "label": "combustor",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q77526249",
+        "label": "Combustion",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q193470",
+        "label": "gas turbine",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q5150986",
+        "label": "Combustion",
+        "method": "wbsearch",
+        "exact": false
+      },
+      {
+        "qid": "Q15746595",
+        "label": "Combustion Science and Technology",
+        "method": "wbsearch",
+        "exact": false
+      }
+    ],
+    "rel:Q468455": {
+      "qid": "Q468455",
+      "types": [
+        {
+          "qid": "Q15169167",
+          "label": "execution method"
+        }
+      ],
+      "domain": "chemistry"
+    }
+  }
+}
