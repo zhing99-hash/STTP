@@ -1,0 +1,1206 @@
+{
+  "schema_version": "0.1",
+  "phase": "7c",
+  "note": "Thermodynamics & ideal gas vertical slice",
+  "nodes": [
+    {
+      "id": "TH:pq:energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Energy",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "E"
+      }
+    },
+    {
+      "id": "TH:un:joule",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "joule",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "J"
+      }
+    },
+    {
+      "id": "TH:un:pascal",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "pascal",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "Pa"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Ideal gas law",
+        "ntype": "formula",
+        "domain": "physics.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "PV=nRT",
+        "informal": "Pressure times volume equals moles times gas constant times temperature."
+      }
+    },
+    {
+      "id": "TH:fo:first_law",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "First law of thermodynamics",
+        "ntype": "formula",
+        "domain": "physics.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "\\Delta U = Q - W",
+        "informal": "Change in internal energy equals heat added minus work done."
+      }
+    },
+    {
+      "id": "TH:fo:boyle",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Boyle's law",
+        "ntype": "formula",
+        "domain": "physics.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "P_1 V_1 = P_2 V_2"
+      }
+    },
+    {
+      "id": "TH:fo:charles",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Charles's law",
+        "ntype": "formula",
+        "domain": "physics.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "\\frac{V_1}{T_1}=\\frac{V_2}{T_2}"
+      }
+    },
+    {
+      "id": "TH:fo:gay_lussac",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Gay-Lussac's law",
+        "ntype": "formula",
+        "domain": "physics.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "\\frac{P_1}{T_1}=\\frac{P_2}{T_2}"
+      }
+    },
+    {
+      "id": "TH:fo:carnot",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Carnot efficiency",
+        "ntype": "formula",
+        "domain": "physics.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "\\eta = 1 - \\frac{T_c}{T_h}",
+        "informal": "Maximum possible efficiency of a heat engine."
+      }
+    },
+    {
+      "id": "TH:pq:pressure",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Pressure",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "P",
+        "dimension": "M*L^-1*T^-2"
+      }
+    },
+    {
+      "id": "TH:pq:volume",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Volume",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "V",
+        "dimension": "L^3"
+      }
+    },
+    {
+      "id": "TH:pq:temperature",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Temperature",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "T",
+        "dimension": "K"
+      }
+    },
+    {
+      "id": "TH:pq:gas_const",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Gas constant",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "R",
+        "value": 8.314,
+        "dimension": "M*L^2*T^-2*mol^-1*K^-1"
+      }
+    },
+    {
+      "id": "TH:pq:internal_energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Internal energy",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "U",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "TH:pq:heat",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Heat",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "Q",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "TH:pq:n_moles",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Amount of substance",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "n",
+        "dimension": "mol"
+      }
+    },
+    {
+      "id": "TH:pq:entropy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Entropy",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "S",
+        "dimension": "M*L^2*T^-2*K^-1"
+      }
+    },
+    {
+      "id": "TH:un:kelvin",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "kelvin",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "K",
+        "dimension": "K",
+        "si_base": true
+      }
+    },
+    {
+      "id": "TH:un:cubic_meter",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "cubic meter",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "m^3",
+        "dimension": "L^3"
+      }
+    },
+    {
+      "id": "TH:un:mole",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "mole",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "mol",
+        "dimension": "mol",
+        "si_base": true
+      }
+    },
+    {
+      "id": "TH:un:j_per_k",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "joule per kelvin",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "J/K",
+        "dimension": "M*L^2*T^-2*K^-1",
+        "derived_from": "J/K"
+      }
+    },
+    {
+      "id": "TH:un:j_per_mol_k",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "joule per mole kelvin",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "symbol": "J/(mol*K)",
+        "dimension": "M*L^2*T^-2*mol^-1*K^-1",
+        "derived_from": "J/(mol*K)"
+      }
+    },
+    {
+      "id": "TH:sy:P",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "P (pressure)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "P"
+      }
+    },
+    {
+      "id": "TH:sy:V",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "V (volume)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "V"
+      }
+    },
+    {
+      "id": "TH:sy:T",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "T (temperature)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "T"
+      }
+    },
+    {
+      "id": "TH:sy:R",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "R (gas constant)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "R"
+      }
+    },
+    {
+      "id": "TH:sy:U",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "U (internal energy)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "U"
+      }
+    },
+    {
+      "id": "TH:sy:Q",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Q (heat)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "Q"
+      }
+    },
+    {
+      "id": "TH:sy:n",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "n (amount)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "n"
+      }
+    },
+    {
+      "id": "TH:sy:S",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "S (entropy)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "S"
+      }
+    },
+    {
+      "id": "TH:sy:eta",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "η (efficiency)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "latex": "\\eta"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "TH:pq:energy->PQ:energy[same_as]",
+      "source": "TH:pq:energy",
+      "target": "PQ:energy",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "TH:un:joule->UN:j[same_as]",
+      "source": "TH:un:joule",
+      "target": "UN:j",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "TH:un:pascal->CM:un:pascal[same_as]",
+      "source": "TH:un:pascal",
+      "target": "CM:un:pascal",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:sy:P[has_symbol]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:sy:P",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:sy:V[has_symbol]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:sy:V",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:sy:n[has_symbol]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:sy:n",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:sy:R[has_symbol]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:sy:R",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:sy:T[has_symbol]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:first_law->TH:sy:U[has_symbol]",
+      "source": "TH:fo:first_law",
+      "target": "TH:sy:U",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:first_law->TH:sy:Q[has_symbol]",
+      "source": "TH:fo:first_law",
+      "target": "TH:sy:Q",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:boyle->TH:sy:P[has_symbol]",
+      "source": "TH:fo:boyle",
+      "target": "TH:sy:P",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:boyle->TH:sy:V[has_symbol]",
+      "source": "TH:fo:boyle",
+      "target": "TH:sy:V",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:charles->TH:sy:V[has_symbol]",
+      "source": "TH:fo:charles",
+      "target": "TH:sy:V",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:charles->TH:sy:T[has_symbol]",
+      "source": "TH:fo:charles",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:gay_lussac->TH:sy:P[has_symbol]",
+      "source": "TH:fo:gay_lussac",
+      "target": "TH:sy:P",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:gay_lussac->TH:sy:T[has_symbol]",
+      "source": "TH:fo:gay_lussac",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:carnot->TH:sy:eta[has_symbol]",
+      "source": "TH:fo:carnot",
+      "target": "TH:sy:eta",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:carnot->TH:sy:T[has_symbol]",
+      "source": "TH:fo:carnot",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:pq:pressure[defines]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:pq:pressure",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:pq:volume[defines]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:pq:volume",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:pq:n_moles[defines]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:pq:n_moles",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:pq:gas_const[defines]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:pq:gas_const",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:pq:temperature[defines]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:pq:temperature",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:first_law->TH:pq:internal_energy[defines]",
+      "source": "TH:fo:first_law",
+      "target": "TH:pq:internal_energy",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:first_law->TH:pq:heat[defines]",
+      "source": "TH:fo:first_law",
+      "target": "TH:pq:heat",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:boyle->TH:pq:pressure[defines]",
+      "source": "TH:fo:boyle",
+      "target": "TH:pq:pressure",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:boyle->TH:pq:volume[defines]",
+      "source": "TH:fo:boyle",
+      "target": "TH:pq:volume",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:charles->TH:pq:volume[defines]",
+      "source": "TH:fo:charles",
+      "target": "TH:pq:volume",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:charles->TH:pq:temperature[defines]",
+      "source": "TH:fo:charles",
+      "target": "TH:pq:temperature",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:gay_lussac->TH:pq:pressure[defines]",
+      "source": "TH:fo:gay_lussac",
+      "target": "TH:pq:pressure",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:gay_lussac->TH:pq:temperature[defines]",
+      "source": "TH:fo:gay_lussac",
+      "target": "TH:pq:temperature",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:carnot->TH:pq:temperature[defines]",
+      "source": "TH:fo:carnot",
+      "target": "TH:pq:temperature",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:pressure->TH:un:pascal[has_unit]",
+      "source": "TH:pq:pressure",
+      "target": "TH:un:pascal",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:volume->TH:un:cubic_meter[has_unit]",
+      "source": "TH:pq:volume",
+      "target": "TH:un:cubic_meter",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:temperature->TH:un:kelvin[has_unit]",
+      "source": "TH:pq:temperature",
+      "target": "TH:un:kelvin",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:gas_const->TH:un:j_per_mol_k[has_unit]",
+      "source": "TH:pq:gas_const",
+      "target": "TH:un:j_per_mol_k",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:n_moles->TH:un:mole[has_unit]",
+      "source": "TH:pq:n_moles",
+      "target": "TH:un:mole",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:internal_energy->TH:un:joule[has_unit]",
+      "source": "TH:pq:internal_energy",
+      "target": "TH:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:heat->TH:un:joule[has_unit]",
+      "source": "TH:pq:heat",
+      "target": "TH:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:entropy->TH:un:j_per_k[has_unit]",
+      "source": "TH:pq:entropy",
+      "target": "TH:un:j_per_k",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:pq:internal_energy->TH:pq:energy[dimensionally_consistent]",
+      "source": "TH:pq:internal_energy",
+      "target": "TH:pq:energy",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "note": "U is energy"
+      }
+    },
+    {
+      "id": "TH:pq:heat->TH:pq:energy[dimensionally_consistent]",
+      "source": "TH:pq:heat",
+      "target": "TH:pq:energy",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336",
+        "note": "Q is energy"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:pq:pressure[derived_from]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:pq:pressure",
+      "type": "derived_from",
+      "kind": "P_from_PV",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "P_from_PV",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:ideal_gas->TH:pq:volume[derived_from]",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:pq:volume",
+      "type": "derived_from",
+      "kind": "V_from_PV",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "V_from_PV",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:first_law->TH:pq:internal_energy[derived_from]",
+      "source": "TH:fo:first_law",
+      "target": "TH:pq:internal_energy",
+      "type": "derived_from",
+      "kind": "U_from_first_law",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "U_from_first_law",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    },
+    {
+      "id": "TH:fo:carnot->TH:pq:temperature[derived_from]",
+      "source": "TH:fo:carnot",
+      "target": "TH:pq:temperature",
+      "type": "derived_from",
+      "kind": "eta_from_T",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "eta_from_T",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:35:28.083336"
+      }
+    }
+  ]
+}
