@@ -1,0 +1,614 @@
+[
+  {
+    "id": "MX:def:manifold",
+    "source": "MX",
+    "label": "manifold",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "A smooth n-dimensional manifold M is a second-countable Hausdorff topological space equipped with a maximal smooth atlas of charts.",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:def:tangent_space",
+    "source": "MX",
+    "label": "tangent space",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The tangent space T_p M at a point p in M is the vector space of all tangent vectors (derivations) at p.",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:def:riemannian_metric",
+    "source": "MX",
+    "label": "riemannian metric",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "A Riemannian metric g on M is a smooth assignment of a positive-definite inner product g_p on each tangent space T_p M.",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:def:levi_civita",
+    "source": "MX",
+    "label": "levi civita",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The Levi-Civita connection \\nabla is the unique torsion-free, metric-compatible affine connection on the Riemannian manifold (M,g).",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:lemma:partition_of_unity",
+    "source": "MX",
+    "label": "partition of unity",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "Given any open cover of M, there exists a smooth partition of unity subordinate to it.",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:lemma:covariant_derivative",
+    "source": "MX",
+    "label": "covariant derivative",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The covariant derivative \\nabla_X Y is tensorial (linear over C^\\infty(M)) in X and satisfies the Leibniz rule in Y.",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:thm:riemann_curvature",
+    "source": "MX",
+    "label": "riemann curvature",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The Riemann curvature tensor R measures the failure of iterated second covariant derivatives to commute; it is a (1,3)-tensor.",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:thm:gauss_bonnet",
+    "source": "MX",
+    "label": "gauss bonnet",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "For a closed orientable surface M, the integral of Gaussian curvature K over M equals 2\\pi times its Euler characteristic \\chi(M).",
+    "domain": "math.DG"
+  },
+  {
+    "id": "MX:sym:m",
+    "source": "MX",
+    "label": "manifold",
+    "type": "Symbol",
+    "symbol": "m",
+    "definition": "M denotes a smooth manifold in differential geometry.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:t_p_m",
+    "source": "MX",
+    "label": "tangent space",
+    "type": "Symbol",
+    "symbol": "t_p_m",
+    "definition": "T_p M denotes the tangent space at point p of manifold M.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:g",
+    "source": "MX",
+    "label": "metric tensor",
+    "type": "Symbol",
+    "symbol": "g",
+    "definition": "g denotes the Riemannian metric tensor on a manifold.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:nabla",
+    "source": "MX",
+    "label": "levi civita connection",
+    "type": "Symbol",
+    "symbol": "nabla",
+    "definition": "Nabla denotes the Levi-Civita connection or covariant derivative operator.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:r",
+    "source": "MX",
+    "label": "riemann curvature tensor",
+    "type": "Symbol",
+    "symbol": "r",
+    "definition": "R denotes the Riemann curvature tensor measuring non-commutativity of covariant derivatives.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:k",
+    "source": "MX",
+    "label": "gaussian curvature",
+    "type": "Symbol",
+    "symbol": "k",
+    "definition": "K denotes the Gaussian curvature of a surface.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:chi_m",
+    "source": "MX",
+    "label": "euler characteristic",
+    "type": "Symbol",
+    "symbol": "chi_m",
+    "definition": "Chi of M denotes the Euler characteristic of manifold M.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:pi",
+    "source": "MX",
+    "label": "pi",
+    "type": "Symbol",
+    "symbol": "pi",
+    "definition": "Pi is the mathematical constant, the ratio of a circle's circumference to its diameter.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:n",
+    "source": "MX",
+    "label": "dimension",
+    "type": "Symbol",
+    "symbol": "n",
+    "definition": "n denotes the dimension of a manifold.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:p",
+    "source": "MX",
+    "label": "point",
+    "type": "Symbol",
+    "symbol": "p",
+    "definition": "p denotes a point on a manifold.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:rho_alpha",
+    "source": "MX",
+    "label": "bump function",
+    "type": "Symbol",
+    "symbol": "rho_alpha",
+    "definition": "Rho alpha denotes a bump function used in a partition of unity.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:x",
+    "source": "MX",
+    "label": "variable x",
+    "type": "Symbol",
+    "symbol": "x",
+    "definition": "x denotes an independent variable.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:y",
+    "source": "MX",
+    "label": "variable y",
+    "type": "Symbol",
+    "symbol": "y",
+    "definition": "y denotes a dependent variable.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:z",
+    "source": "MX",
+    "label": "variable z",
+    "type": "Symbol",
+    "symbol": "z",
+    "definition": "z denotes a complex or spatial variable.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:sym:c",
+    "source": "MX",
+    "label": "constant",
+    "type": "Symbol",
+    "symbol": "c",
+    "definition": "c denotes an arbitrary constant.",
+    "domain": "cross"
+  },
+  {
+    "id": "MX:chem:co2",
+    "source": "MX",
+    "label": "carbon dioxide",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Carbon dioxide is a chemical molecule with formula CO2, a linear triatomic gas.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "MX:chem:methane",
+    "source": "MX",
+    "label": "methane",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Methane is a chemical molecule with formula CH4, the simplest alkane.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "MX:chem:combustion",
+    "source": "MX",
+    "label": "combustion",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Combustion is a chemical reaction of a substance with oxygen releasing heat and light.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "MX:phy:newton2",
+    "source": "MX",
+    "label": "newton's second law",
+    "type": "PhysicalQuantity",
+    "symbol": null,
+    "definition": "Newton's second law of motion states that force equals mass times acceleration, F = m a.",
+    "domain": "physics"
+  },
+  {
+    "id": "MX:phy:acceleration",
+    "source": "MX",
+    "label": "acceleration",
+    "type": "PhysicalQuantity",
+    "symbol": null,
+    "definition": "Acceleration is the rate of change of velocity with respect to time.",
+    "domain": "physics"
+  },
+  {
+    "id": "MX:phy:kinetic_energy",
+    "source": "MX",
+    "label": "kinetic energy",
+    "type": "PhysicalQuantity",
+    "symbol": null,
+    "definition": "Kinetic energy is the energy that a body possesses due to its motion.",
+    "domain": "physics"
+  },
+  {
+    "id": "MX:phy:energy",
+    "source": "MX",
+    "label": "energy",
+    "type": "PhysicalQuantity",
+    "symbol": null,
+    "definition": "Energy is the capacity to do work; it can take kinetic, potential, and other forms.",
+    "domain": "physics"
+  },
+  {
+    "id": "MX:math:binomial",
+    "source": "MX",
+    "label": "binomial theorem",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The binomial theorem gives the algebraic expansion of powers of a binomial expression.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:math:expand",
+    "source": "MX",
+    "label": "expansion",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "Expansion is the algebraic rewriting of an expression as a sum of simpler terms.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:math:pythagorean_identity",
+    "source": "MX",
+    "label": "pythagorean identity",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The Pythagorean identity states that sin^2 x + cos^2 x = 1 in trigonometry.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:math:trig_unit",
+    "source": "MX",
+    "label": "trigonometric unit circle",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The trigonometric unit circle is a circle of radius one used to define sine and cosine.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:math:derivative_power",
+    "source": "MX",
+    "label": "power function derivative",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The derivative of a power function x^n is n x raised to the power n minus one.",
+    "domain": "math"
+  },
+  {
+    "id": "MX:math:power_rule",
+    "source": "MX",
+    "label": "power rule",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The power rule gives the derivative of x^n as n x^(n-1).",
+    "domain": "math"
+  },
+  {
+    "id": "mg:stmt:1",
+    "source": "MG",
+    "label": "fundamental theorem of calculus",
+    "type": "Formula",
+    "symbol": null,
+    "definition": "The fundamental theorem of calculus links differentiation and integration of continuous functions.",
+    "domain": "math"
+  },
+  {
+    "id": "mg:stmt:2",
+    "source": "MG",
+    "label": "differentiation under the integral sign",
+    "type": "Formula",
+    "symbol": null,
+    "definition": "Differentiation under the integral sign exchanges derivative and integral operators.",
+    "domain": "math"
+  },
+  {
+    "id": "mg:stmt:3",
+    "source": "MG",
+    "label": "increment equals integral of derivative",
+    "type": "Formula",
+    "symbol": null,
+    "definition": "The increment of a function equals the integral of its derivative over an interval.",
+    "domain": "math"
+  },
+  {
+    "id": "mg:stmt:4",
+    "source": "MG",
+    "label": "definition of euler number e",
+    "type": "Formula",
+    "symbol": null,
+    "definition": "Euler's number e is defined as the limit of (1 + 1/n)^n as n tends to infinity.",
+    "domain": "math"
+  },
+  {
+    "id": "pb:newton_second",
+    "source": "PB",
+    "label": "newton's second law",
+    "type": "PhysicalQuantity",
+    "symbol": "F",
+    "definition": "Force equals mass times acceleration: F = m a.",
+    "domain": "physics"
+  },
+  {
+    "id": "pb:work",
+    "source": "PB",
+    "label": "work",
+    "type": "PhysicalQuantity",
+    "symbol": "W",
+    "definition": "Work is force times displacement: W = F d.",
+    "domain": "physics"
+  },
+  {
+    "id": "pb:gravitation",
+    "source": "PB",
+    "label": "law of gravitation",
+    "type": "PhysicalQuantity",
+    "symbol": "F",
+    "definition": "Newton's law of gravitation: F = G m1 m2 / r^2.",
+    "domain": "physics"
+  },
+  {
+    "id": "ek:element:H",
+    "source": "EK",
+    "label": "hydrogen",
+    "type": "Element",
+    "symbol": "H",
+    "definition": "Hydrogen is the lightest chemical element with atomic number 1.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "ek:element:O",
+    "source": "EK",
+    "label": "oxygen",
+    "type": "Element",
+    "symbol": "O",
+    "definition": "Oxygen is a chemical element with atomic number 8, essential for respiration.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "ek:molecule:H2",
+    "source": "EK",
+    "label": "hydrogen gas",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Hydrogen gas H2 is the diatomic molecule of hydrogen.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "ek:molecule:O2",
+    "source": "EK",
+    "label": "oxygen gas",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Oxygen gas O2 is the diatomic molecule of oxygen.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "ek:molecule:H2O",
+    "source": "EK",
+    "label": "water",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Water H2O is a molecule formed from hydrogen and oxygen.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "ek:reaction:water_formation",
+    "source": "EK",
+    "label": "water formation",
+    "type": "Reaction",
+    "symbol": null,
+    "definition": "Water formation is the chemical reaction combining hydrogen and oxygen into water.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "ek:molecule:CO2",
+    "source": "EK",
+    "label": "carbon dioxide",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Carbon dioxide is a molecule with formula CO2.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "wd:Q_manifold",
+    "source": "WD",
+    "label": "manifold",
+    "type": "MathConcept",
+    "symbol": "M",
+    "definition": "A smooth manifold is a second-countable Hausdorff topological space equipped with a maximal smooth atlas of charts.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_tangent_space",
+    "source": "WD",
+    "label": "tangent space",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The tangent space at a point is the vector space of all tangent vectors at that point on a manifold.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_riemannian_metric",
+    "source": "WD",
+    "label": "riemannian metric",
+    "type": "MathConcept",
+    "symbol": "g",
+    "definition": "A Riemannian metric is a smooth assignment of a positive-definite inner product on each tangent space.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_levi_civita",
+    "source": "WD",
+    "label": "levi civita connection",
+    "type": "MathConcept",
+    "symbol": "nabla",
+    "definition": "The Levi-Civita connection is the unique torsion-free, metric-compatible affine connection on a Riemannian manifold.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_riemann_curvature",
+    "source": "WD",
+    "label": "riemann curvature tensor",
+    "type": "MathConcept",
+    "symbol": "R",
+    "definition": "The Riemann curvature tensor measures the failure of iterated covariant derivatives to commute.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_gauss_bonnet",
+    "source": "WD",
+    "label": "gauss bonnet theorem",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "The Gauss-Bonnet theorem states that the integral of Gaussian curvature over a closed surface equals 2pi times the Euler characteristic.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_partition_of_unity",
+    "source": "WD",
+    "label": "partition of unity",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "A partition of unity is a collection of smooth functions subordinate to an open cover of a manifold.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_covariant_derivative",
+    "source": "WD",
+    "label": "covariant derivative",
+    "type": "MathConcept",
+    "symbol": "nabla",
+    "definition": "The covariant derivative is a way of differentiating vectors along manifolds compatible with the Levi-Civita connection.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_pi",
+    "source": "WD",
+    "label": "pi",
+    "type": "Symbol",
+    "symbol": "pi",
+    "definition": "Pi is the mathematical constant representing the ratio of a circle's circumference to its diameter.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_euler_number",
+    "source": "WD",
+    "label": "euler number",
+    "type": "MathConcept",
+    "symbol": null,
+    "definition": "Euler's number e is the base of the natural logarithm, defined as the limit of (1 + 1/n)^n as n tends to infinity.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_euler_characteristic",
+    "source": "WD",
+    "label": "euler characteristic",
+    "type": "MathConcept",
+    "symbol": "chi",
+    "definition": "The Euler characteristic is a topological invariant counting vertices minus edges plus faces.",
+    "domain": "math"
+  },
+  {
+    "id": "wd:Q_newton_second",
+    "source": "WD",
+    "label": "newton's second law",
+    "type": "PhysicalQuantity",
+    "symbol": "F",
+    "definition": "Newton's second law states that force equals mass times acceleration: F = m a.",
+    "domain": "physics"
+  },
+  {
+    "id": "wd:Q_work",
+    "source": "WD",
+    "label": "work",
+    "type": "PhysicalQuantity",
+    "symbol": "W",
+    "definition": "Work is the energy transferred when a force moves an object: W = F d.",
+    "domain": "physics"
+  },
+  {
+    "id": "wd:Q_gravitation",
+    "source": "WD",
+    "label": "law of gravitation",
+    "type": "PhysicalQuantity",
+    "symbol": "F",
+    "definition": "Newton's law of gravitation gives the attractive force F = G m1 m2 / r^2 between masses.",
+    "domain": "physics"
+  },
+  {
+    "id": "wd:Q_hydrogen",
+    "source": "WD",
+    "label": "hydrogen",
+    "type": "Element",
+    "symbol": "H",
+    "definition": "Hydrogen is a chemical element, the lightest, with atomic number 1.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "wd:Q_oxygen",
+    "source": "WD",
+    "label": "oxygen",
+    "type": "Element",
+    "symbol": "O",
+    "definition": "Oxygen is a chemical element with atomic number 8.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "wd:Q_water",
+    "source": "WD",
+    "label": "water",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Water is a molecule with chemical formula H2O.",
+    "domain": "chemistry"
+  },
+  {
+    "id": "wd:Q_carbon_dioxide",
+    "source": "WD",
+    "label": "carbon dioxide",
+    "type": "Molecule",
+    "symbol": null,
+    "definition": "Carbon dioxide is a molecule with formula CO2, a greenhouse gas.",
+    "domain": "chemistry"
+  }
+]
