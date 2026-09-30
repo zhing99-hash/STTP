@@ -1,0 +1,5 @@
+id,latex,informal_text,type
+mg:stmt:1,\int_a^b f(x)\,dx = F(b)-F(a),Fundamental theorem of calculus,theorem
+mg:stmt:2,\frac{d}{dx}\int_a^x f(t)\,dt = f(x),Differentiation under the integral sign,theorem
+mg:stmt:3,f(x)-f(a) = \int_a^x f'(t)\,dt,Increment equals integral of derivative,lemma
+mg:stmt:4,\lim_{n\to\infty}(1+1/n)^n = e,Definition of Euler number e,definition

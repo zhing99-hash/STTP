@@ -1,0 +1,12 @@
+{
+  "source": "physicsbabel-poc-sample",
+  "note": "极小样本，仅用于验证 PhysicsBabel 适配器（桩）映射与归一化流程",
+  "equations": [
+    {"equation_id": "pb:newton_second", "equation_str": "F = m a",
+     "symbols": ["F", "m", "a"], "domain": "mechanics", "is_named_law": true},
+    {"equation_id": "pb:work", "equation_str": "W = F d",
+     "symbols": ["W", "F", "d"], "domain": "mechanics", "is_named_law": false},
+    {"equation_id": "pb:gravitation", "equation_str": "F = G m_1 m_2 / r^2",
+     "symbols": ["F", "G", "m_1", "m_2", "r"], "domain": "gravitation", "is_named_law": true}
+  ]
+}
