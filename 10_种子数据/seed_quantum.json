@@ -1,0 +1,736 @@
+{
+  "schema_version": "0.1",
+  "phase": "7e",
+  "note": "Quantum mechanics vertical slice",
+  "nodes": [
+    {
+      "id": "QM:fo:planck",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Planck relation",
+        "ntype": "formula",
+        "domain": "physics.qm",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "E=h\\nu",
+        "informal": "Photon energy equals Planck constant times frequency."
+      }
+    },
+    {
+      "id": "QM:fo:de_broglie",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "de Broglie wavelength",
+        "ntype": "formula",
+        "domain": "physics.qm",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "\\lambda=\\frac{h}{p}",
+        "informal": "Matter waves: wavelength inversely proportional to momentum."
+      }
+    },
+    {
+      "id": "QM:fo:schrodinger",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Schrödinger equation (time-independent)",
+        "ntype": "formula",
+        "domain": "physics.qm",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "-\\frac{\\hbar^2}{2m}\\nabla^2\\psi + V\\psi = E\\psi"
+      }
+    },
+    {
+      "id": "QM:fo:uncertainty",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Heisenberg uncertainty",
+        "ntype": "formula",
+        "domain": "physics.qm",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "\\Delta x\\,\\Delta p \\geq \\frac{\\hbar}{2}"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Photoelectric effect",
+        "ntype": "formula",
+        "domain": "physics.qm",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "E_{ph}=h\\nu-\\phi"
+      }
+    },
+    {
+      "id": "QM:pq:planck_const",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Planck constant",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "h",
+        "value": 6.62607015e-34,
+        "dimension": "M*L^2*T^-1"
+      }
+    },
+    {
+      "id": "QM:pq:reduced_planck",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Reduced Planck constant",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "hbar",
+        "value": 1.054571817e-34,
+        "dimension": "M*L^2*T^-1"
+      }
+    },
+    {
+      "id": "QM:pq:frequency",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Frequency",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "nu",
+        "dimension": "T^-1"
+      }
+    },
+    {
+      "id": "QM:pq:wavelength",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Wavelength",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "lambda",
+        "dimension": "L"
+      }
+    },
+    {
+      "id": "QM:pq:work_function",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Work function",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "phi",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "QM:pq:action",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Action",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "S",
+        "dimension": "M*L^2*T^-1"
+      }
+    },
+    {
+      "id": "QM:un:hertz",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "hertz",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "Hz",
+        "dimension": "T^-1"
+      }
+    },
+    {
+      "id": "QM:un:ev",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "electronvolt",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "symbol": "eV",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "QM:sy:h",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "h (Planck)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "h"
+      }
+    },
+    {
+      "id": "QM:sy:hbar",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "ħ (reduced Planck)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "\\hbar"
+      }
+    },
+    {
+      "id": "QM:sy:nu",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "ν (frequency)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "\\nu"
+      }
+    },
+    {
+      "id": "QM:sy:lambda",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "λ (wavelength)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "\\lambda"
+      }
+    },
+    {
+      "id": "QM:sy:psi",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "ψ (wavefunction)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "\\psi"
+      }
+    },
+    {
+      "id": "QM:sy:phi",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "φ (work function)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:47.752388",
+        "latex": "\\phi"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "QM:fo:planck->QM:sy:h[has_symbol]",
+      "source": "QM:fo:planck",
+      "target": "QM:sy:h",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:planck->QM:sy:nu[has_symbol]",
+      "source": "QM:fo:planck",
+      "target": "QM:sy:nu",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:de_broglie->QM:sy:lambda[has_symbol]",
+      "source": "QM:fo:de_broglie",
+      "target": "QM:sy:lambda",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:de_broglie->QM:sy:h[has_symbol]",
+      "source": "QM:fo:de_broglie",
+      "target": "QM:sy:h",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:schrodinger->QM:sy:hbar[has_symbol]",
+      "source": "QM:fo:schrodinger",
+      "target": "QM:sy:hbar",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:schrodinger->SY:m[has_symbol]",
+      "source": "QM:fo:schrodinger",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:schrodinger->QM:sy:psi[has_symbol]",
+      "source": "QM:fo:schrodinger",
+      "target": "QM:sy:psi",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:uncertainty->QM:sy:hbar[has_symbol]",
+      "source": "QM:fo:uncertainty",
+      "target": "QM:sy:hbar",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric->QM:sy:h[has_symbol]",
+      "source": "QM:fo:photoelectric",
+      "target": "QM:sy:h",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric->QM:sy:nu[has_symbol]",
+      "source": "QM:fo:photoelectric",
+      "target": "QM:sy:nu",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric->QM:sy:phi[has_symbol]",
+      "source": "QM:fo:photoelectric",
+      "target": "QM:sy:phi",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:planck->QM:pq:planck_const[defines]",
+      "source": "QM:fo:planck",
+      "target": "QM:pq:planck_const",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:planck->QM:pq:frequency[defines]",
+      "source": "QM:fo:planck",
+      "target": "QM:pq:frequency",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:de_broglie->QM:pq:wavelength[defines]",
+      "source": "QM:fo:de_broglie",
+      "target": "QM:pq:wavelength",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:de_broglie->QM:pq:planck_const[defines]",
+      "source": "QM:fo:de_broglie",
+      "target": "QM:pq:planck_const",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:schrodinger->QM:pq:reduced_planck[defines]",
+      "source": "QM:fo:schrodinger",
+      "target": "QM:pq:reduced_planck",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:schrodinger->QM:pq:work_function[defines]",
+      "source": "QM:fo:schrodinger",
+      "target": "QM:pq:work_function",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:uncertainty->QM:pq:reduced_planck[defines]",
+      "source": "QM:fo:uncertainty",
+      "target": "QM:pq:reduced_planck",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric->QM:pq:planck_const[defines]",
+      "source": "QM:fo:photoelectric",
+      "target": "QM:pq:planck_const",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric->QM:pq:frequency[defines]",
+      "source": "QM:fo:photoelectric",
+      "target": "QM:pq:frequency",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric->QM:pq:work_function[defines]",
+      "source": "QM:fo:photoelectric",
+      "target": "QM:pq:work_function",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:pq:frequency->QM:un:hertz[has_unit]",
+      "source": "QM:pq:frequency",
+      "target": "QM:un:hertz",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:pq:work_function->QM:un:ev[has_unit]",
+      "source": "QM:pq:work_function",
+      "target": "QM:un:ev",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:pq:action->QM:un:ev[has_unit]",
+      "source": "QM:pq:action",
+      "target": "QM:un:ev",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:planck->PQ:energy[derived_from]",
+      "source": "QM:fo:planck",
+      "target": "PQ:energy",
+      "type": "derived_from",
+      "kind": "energy_from_hnu",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "energy_from_hnu",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:photoelectric->PQ:energy[derived_from]",
+      "source": "QM:fo:photoelectric",
+      "target": "PQ:energy",
+      "type": "derived_from",
+      "kind": "energy_from_photoelectric",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "energy_from_photoelectric",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:schrodinger->PQ:mass[derived_from]",
+      "source": "QM:fo:schrodinger",
+      "target": "PQ:mass",
+      "type": "derived_from",
+      "kind": "mass_in_potential",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "mass_in_potential",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    },
+    {
+      "id": "QM:fo:de_broglie->CM:pq:momentum[derived_from]",
+      "source": "QM:fo:de_broglie",
+      "target": "CM:pq:momentum",
+      "type": "derived_from",
+      "kind": "momentum_in_dispersion",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "momentum_in_dispersion",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:47.752388"
+      }
+    }
+  ]
+}

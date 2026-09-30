@@ -1,0 +1,529 @@
+{
+  "schema_version": "0.1",
+  "phase": "7f",
+  "note": "Special relativity vertical slice",
+  "nodes": [
+    {
+      "id": "RT:fo:lorentz_factor",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Lorentz factor",
+        "ntype": "formula",
+        "domain": "physics.relativity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "\\gamma=\\frac{1}{\\sqrt{1-v^2/c^2}}"
+      }
+    },
+    {
+      "id": "RT:fo:time_dilation",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Time dilation",
+        "ntype": "formula",
+        "domain": "physics.relativity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "\\Delta t'=\\gamma\\Delta t"
+      }
+    },
+    {
+      "id": "RT:fo:length_contraction",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Length contraction",
+        "ntype": "formula",
+        "domain": "physics.relativity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "L=\\frac{L_0}{\\gamma}"
+      }
+    },
+    {
+      "id": "RT:fo:rel_momentum",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Relativistic momentum",
+        "ntype": "formula",
+        "domain": "physics.relativity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "p=\\gamma m v"
+      }
+    },
+    {
+      "id": "RT:fo:mass_energy",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Mass-energy equivalence",
+        "ntype": "formula",
+        "domain": "physics.relativity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "E=mc^2",
+        "informal": "Energy equals mass times speed of light squared."
+      }
+    },
+    {
+      "id": "RT:pq:light_speed",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Speed of light",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "symbol": "c",
+        "value": 299792458,
+        "dimension": "L*T^-1"
+      }
+    },
+    {
+      "id": "RT:pq:lorentz_factor",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Lorentz factor",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "symbol": "gamma",
+        "dimension": "dimensionless"
+      }
+    },
+    {
+      "id": "RT:pq:proper_time",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Proper time",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "symbol": "tau",
+        "dimension": "T"
+      }
+    },
+    {
+      "id": "RT:un:c",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "speed of light",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "symbol": "c",
+        "dimension": "L*T^-1"
+      }
+    },
+    {
+      "id": "RT:sy:gamma",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "γ (Lorentz factor)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "\\gamma"
+      }
+    },
+    {
+      "id": "RT:sy:c",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "c (speed of light)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "c"
+      }
+    },
+    {
+      "id": "RT:sy:tau",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "τ (proper time)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "latex": "\\tau"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "RT:fo:lorentz_factor->RT:sy:gamma[has_symbol]",
+      "source": "RT:fo:lorentz_factor",
+      "target": "RT:sy:gamma",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:lorentz_factor->SY:v[has_symbol]",
+      "source": "RT:fo:lorentz_factor",
+      "target": "SY:v",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:lorentz_factor->RT:sy:c[has_symbol]",
+      "source": "RT:fo:lorentz_factor",
+      "target": "RT:sy:c",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:time_dilation->RT:sy:gamma[has_symbol]",
+      "source": "RT:fo:time_dilation",
+      "target": "RT:sy:gamma",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:length_contraction->RT:sy:gamma[has_symbol]",
+      "source": "RT:fo:length_contraction",
+      "target": "RT:sy:gamma",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:rel_momentum->RT:sy:gamma[has_symbol]",
+      "source": "RT:fo:rel_momentum",
+      "target": "RT:sy:gamma",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:rel_momentum->SY:m[has_symbol]",
+      "source": "RT:fo:rel_momentum",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:rel_momentum->SY:v[has_symbol]",
+      "source": "RT:fo:rel_momentum",
+      "target": "SY:v",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:mass_energy->SY:m[has_symbol]",
+      "source": "RT:fo:mass_energy",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:mass_energy->RT:sy:c[has_symbol]",
+      "source": "RT:fo:mass_energy",
+      "target": "RT:sy:c",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:lorentz_factor->RT:pq:lorentz_factor[defines]",
+      "source": "RT:fo:lorentz_factor",
+      "target": "RT:pq:lorentz_factor",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:time_dilation->RT:pq:proper_time[defines]",
+      "source": "RT:fo:time_dilation",
+      "target": "RT:pq:proper_time",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:time_dilation->RT:pq:lorentz_factor[defines]",
+      "source": "RT:fo:time_dilation",
+      "target": "RT:pq:lorentz_factor",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:length_contraction->RT:pq:lorentz_factor[defines]",
+      "source": "RT:fo:length_contraction",
+      "target": "RT:pq:lorentz_factor",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:rel_momentum->CM:pq:momentum[defines]",
+      "source": "RT:fo:rel_momentum",
+      "target": "CM:pq:momentum",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:mass_energy->RT:pq:light_speed[defines]",
+      "source": "RT:fo:mass_energy",
+      "target": "RT:pq:light_speed",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:mass_energy->PQ:mass[defines]",
+      "source": "RT:fo:mass_energy",
+      "target": "PQ:mass",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:mass_energy->FO:emc2[same_as]",
+      "source": "RT:fo:mass_energy",
+      "target": "FO:emc2",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "RT:pq:light_speed->SY:c[same_as]",
+      "source": "RT:pq:light_speed",
+      "target": "SY:c",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "RT:fo:rel_momentum->CM:pq:momentum[derived_from]",
+      "source": "RT:fo:rel_momentum",
+      "target": "CM:pq:momentum",
+      "type": "derived_from",
+      "kind": "relativistic_momentum",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "relativistic_momentum",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:mass_energy->PQ:mass[derived_from]",
+      "source": "RT:fo:mass_energy",
+      "target": "PQ:mass",
+      "type": "derived_from",
+      "kind": "mass_energy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "mass_energy",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    },
+    {
+      "id": "RT:fo:time_dilation->PQ:vel[derived_from]",
+      "source": "RT:fo:time_dilation",
+      "target": "PQ:vel",
+      "type": "derived_from",
+      "kind": "velocity_time",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "velocity_time",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:54:48.244844"
+      }
+    }
+  ]
+}

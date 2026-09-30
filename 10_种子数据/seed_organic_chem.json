@@ -1,0 +1,566 @@
+{
+  "schema_version": "0.1",
+  "phase": "7b",
+  "note": "Organic chemistry basics vertical slice",
+  "nodes": [
+    {
+      "id": "OM:mo:methane",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Methane",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "formula": "CH4",
+        "smiles": "C"
+      }
+    },
+    {
+      "id": "OM:mo:ethane",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Ethane",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "formula": "C2H6",
+        "smiles": "CC"
+      }
+    },
+    {
+      "id": "OM:mo:ethylene",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Ethylene",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "formula": "C2H4",
+        "smiles": "C=C"
+      }
+    },
+    {
+      "id": "OM:mo:benzene",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Benzene",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "formula": "C6H6",
+        "smiles": "c1ccccc1"
+      }
+    },
+    {
+      "id": "OM:mo:ethanol",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Ethanol",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "formula": "C2H5OH",
+        "smiles": "CCO"
+      }
+    },
+    {
+      "id": "OM:fo:combustion",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Hydrocarbon combustion",
+        "ntype": "formula",
+        "domain": "chem.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "latex": "C_xH_y + (x+\\tfrac{y}{4})O_2 \\rightarrow xCO_2 + \\tfrac{y}{2}H_2O",
+        "informal": "General combustion of a hydrocarbon."
+      }
+    },
+    {
+      "id": "OM:sy:C",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "C (carbon)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "latex": "C"
+      }
+    },
+    {
+      "id": "OM:sy:H",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "H (hydrogen)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "latex": "H"
+      }
+    },
+    {
+      "id": "OM:sy:O",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "O (oxygen)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "latex": "O"
+      }
+    },
+    {
+      "id": "OM:rx:ethane_comb",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Ethane combustion",
+        "ntype": "reaction",
+        "domain": "chemistry.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "equation": "2 C2H6 + 7 O2 -> 4 CO2 + 6 H2O",
+        "exothermic": true
+      }
+    },
+    {
+      "id": "OM:rx:ethanol_comb",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Ethanol combustion",
+        "ntype": "reaction",
+        "domain": "chemistry.thermo",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "equation": "C2H5OH + 3 O2 -> 2 CO2 + 3 H2O",
+        "exothermic": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "OM:mo:methane->MO:ch4[same_as]",
+      "source": "OM:mo:methane",
+      "target": "MO:ch4",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "OM:fo:combustion->OM:sy:C[has_symbol]",
+      "source": "OM:fo:combustion",
+      "target": "OM:sy:C",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "OM:fo:combustion->OM:sy:H[has_symbol]",
+      "source": "OM:fo:combustion",
+      "target": "OM:sy:H",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "OM:fo:combustion->OM:sy:O[has_symbol]",
+      "source": "OM:fo:combustion",
+      "target": "OM:sy:O",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "OM:mo:methane->EL:c[composed_of]",
+      "source": "OM:mo:methane",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 1
+      }
+    },
+    {
+      "id": "OM:mo:methane->EL:h[composed_of]",
+      "source": "OM:mo:methane",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 4
+      }
+    },
+    {
+      "id": "OM:mo:ethane->EL:c[composed_of]",
+      "source": "OM:mo:ethane",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 2
+      }
+    },
+    {
+      "id": "OM:mo:ethane->EL:h[composed_of]",
+      "source": "OM:mo:ethane",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 6
+      }
+    },
+    {
+      "id": "OM:mo:ethylene->EL:c[composed_of]",
+      "source": "OM:mo:ethylene",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 2
+      }
+    },
+    {
+      "id": "OM:mo:ethylene->EL:h[composed_of]",
+      "source": "OM:mo:ethylene",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 4
+      }
+    },
+    {
+      "id": "OM:mo:benzene->EL:c[composed_of]",
+      "source": "OM:mo:benzene",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 6
+      }
+    },
+    {
+      "id": "OM:mo:benzene->EL:h[composed_of]",
+      "source": "OM:mo:benzene",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 6
+      }
+    },
+    {
+      "id": "OM:mo:ethanol->EL:c[composed_of]",
+      "source": "OM:mo:ethanol",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 2
+      }
+    },
+    {
+      "id": "OM:mo:ethanol->EL:h[composed_of]",
+      "source": "OM:mo:ethanol",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 6
+      }
+    },
+    {
+      "id": "OM:mo:ethanol->EL:o[composed_of]",
+      "source": "OM:mo:ethanol",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105",
+        "count": 1
+      }
+    },
+    {
+      "id": "OM:mo:ethane->OM:rx:ethane_comb[reactant_of]",
+      "source": "OM:mo:ethane",
+      "target": "OM:rx:ethane_comb",
+      "type": "reactant_of",
+      "kind": "combustion_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "MO:o2->OM:rx:ethane_comb[reactant_of]",
+      "source": "MO:o2",
+      "target": "OM:rx:ethane_comb",
+      "type": "reactant_of",
+      "kind": "combustion_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "MO:co2->OM:rx:ethane_comb[product_of]",
+      "source": "MO:co2",
+      "target": "OM:rx:ethane_comb",
+      "type": "product_of",
+      "kind": "combustion_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "MO:h2o->OM:rx:ethane_comb[product_of]",
+      "source": "MO:h2o",
+      "target": "OM:rx:ethane_comb",
+      "type": "product_of",
+      "kind": "combustion_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "OM:mo:ethanol->OM:rx:ethanol_comb[reactant_of]",
+      "source": "OM:mo:ethanol",
+      "target": "OM:rx:ethanol_comb",
+      "type": "reactant_of",
+      "kind": "combustion_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "MO:o2->OM:rx:ethanol_comb[reactant_of]",
+      "source": "MO:o2",
+      "target": "OM:rx:ethanol_comb",
+      "type": "reactant_of",
+      "kind": "combustion_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "MO:co2->OM:rx:ethanol_comb[product_of]",
+      "source": "MO:co2",
+      "target": "OM:rx:ethanol_comb",
+      "type": "product_of",
+      "kind": "combustion_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "MO:h2o->OM:rx:ethanol_comb[product_of]",
+      "source": "MO:h2o",
+      "target": "OM:rx:ethanol_comb",
+      "type": "product_of",
+      "kind": "combustion_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "combustion_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "OM:rx:ethane_comb->OM:fo:combustion[derived_from]",
+      "source": "OM:rx:ethane_comb",
+      "target": "OM:fo:combustion",
+      "type": "derived_from",
+      "kind": "generalize",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "generalize",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    },
+    {
+      "id": "OM:rx:ethanol_comb->OM:fo:combustion[derived_from]",
+      "source": "OM:rx:ethanol_comb",
+      "target": "OM:fo:combustion",
+      "type": "derived_from",
+      "kind": "generalize",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "generalize",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:34.178105"
+      }
+    }
+  ]
+}
