@@ -1,0 +1,866 @@
+{
+  "schema_version": "0.1",
+  "phase": "7m",
+  "note": "Biochemistry vertical slice",
+  "nodes": [
+    {
+      "id": "BC:el:nitrogen",
+      "labels": [
+        "Entity",
+        "Element"
+      ],
+      "props": {
+        "name": "Nitrogen",
+        "ntype": "element",
+        "domain": "chem.element",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "symbol": "N",
+        "atomic_number": 7
+      }
+    },
+    {
+      "id": "BC:mo:glucose",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Glucose",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "C6H12O6",
+        "smiles": "C(C1C(C(C(C(O1)O)O)O)O)O"
+      }
+    },
+    {
+      "id": "BC:mo:atp",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "ATP",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "C10H16N5O13P3",
+        "smiles": "Nc1ncnc2c1ncn2[C@@H]1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H]1O"
+      }
+    },
+    {
+      "id": "BC:mo:amino_acid",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Generic amino acid",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "C2H5NO2",
+        "smiles": "N[C@@H](C)C(O)=O"
+      }
+    },
+    {
+      "id": "BC:mo:protein",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Protein (polymer)",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "(C2H3NO)n"
+      }
+    },
+    {
+      "id": "BC:mo:dna",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "DNA (abstract)",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "(C10H14N5O7P)n"
+      }
+    },
+    {
+      "id": "BC:mo:co2",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Carbon dioxide",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "CO2",
+        "smiles": "O=C=O"
+      }
+    },
+    {
+      "id": "BC:mo:h2o",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Water",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "H2O",
+        "smiles": "O"
+      }
+    },
+    {
+      "id": "BC:mo:o2",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Oxygen",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "formula": "O2",
+        "smiles": "O=O"
+      }
+    },
+    {
+      "id": "BC:rx:photosynthesis",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Photosynthesis",
+        "ntype": "reaction",
+        "domain": "biology.metabolism",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "equation": "6 CO2 + 6 H2O -> C6H12O6 + 6 O2"
+      }
+    },
+    {
+      "id": "BC:rx:respiration",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Cellular respiration",
+        "ntype": "reaction",
+        "domain": "biology.metabolism",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "equation": "C6H12O6 + 6 O2 -> 6 CO2 + 6 H2O",
+        "exothermic": true
+      }
+    },
+    {
+      "id": "BC:rx:atp_hydrolysis",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "ATP hydrolysis",
+        "ntype": "reaction",
+        "domain": "biology.energy",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "equation": "ATP + H2O -> ADP + Pi",
+        "exothermic": true
+      }
+    },
+    {
+      "id": "BC:fo:photosynthesis_eq",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Photosynthesis stoichiometry",
+        "ntype": "formula",
+        "domain": "chem.stoich",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "latex": "6CO_2+6H_2O\\rightarrow C_6H_{12}O_6+6O_2"
+      }
+    },
+    {
+      "id": "BC:fo:atp_hydrolysis_eq",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "ATP hydrolysis",
+        "ntype": "formula",
+        "domain": "chem.energy",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "latex": "ATP+H_2O\\rightarrow ADP+P_i"
+      }
+    },
+    {
+      "id": "BC:sy:C",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "C (carbon)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "latex": "C"
+      }
+    },
+    {
+      "id": "BC:sy:N",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "N (nitrogen)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "latex": "N"
+      }
+    },
+    {
+      "id": "BC:sy:P",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "P (phosphorus)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "latex": "P"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "BC:mo:co2->MO:co2[same_as]",
+      "source": "BC:mo:co2",
+      "target": "MO:co2",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "BC:mo:h2o->MO:h2o[same_as]",
+      "source": "BC:mo:h2o",
+      "target": "MO:h2o",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "BC:mo:o2->MO:o2[same_as]",
+      "source": "BC:mo:o2",
+      "target": "MO:o2",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "BC:mo:glucose->EL:c[composed_of]",
+      "source": "BC:mo:glucose",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 6
+      }
+    },
+    {
+      "id": "BC:mo:glucose->EL:h[composed_of]",
+      "source": "BC:mo:glucose",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 12
+      }
+    },
+    {
+      "id": "BC:mo:glucose->EL:o[composed_of]",
+      "source": "BC:mo:glucose",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 6
+      }
+    },
+    {
+      "id": "BC:mo:atp->EL:c[composed_of]",
+      "source": "BC:mo:atp",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 10
+      }
+    },
+    {
+      "id": "BC:mo:atp->EL:h[composed_of]",
+      "source": "BC:mo:atp",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 16
+      }
+    },
+    {
+      "id": "BC:mo:atp->BC:el:nitrogen[composed_of]",
+      "source": "BC:mo:atp",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 5
+      }
+    },
+    {
+      "id": "BC:mo:atp->EL:o[composed_of]",
+      "source": "BC:mo:atp",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 13
+      }
+    },
+    {
+      "id": "BC:mo:amino_acid->EL:c[composed_of]",
+      "source": "BC:mo:amino_acid",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 2
+      }
+    },
+    {
+      "id": "BC:mo:amino_acid->EL:h[composed_of]",
+      "source": "BC:mo:amino_acid",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 5
+      }
+    },
+    {
+      "id": "BC:mo:amino_acid->BC:el:nitrogen[composed_of]",
+      "source": "BC:mo:amino_acid",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 1
+      }
+    },
+    {
+      "id": "BC:mo:amino_acid->EL:o[composed_of]",
+      "source": "BC:mo:amino_acid",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 2
+      }
+    },
+    {
+      "id": "BC:mo:protein->EL:c[composed_of]",
+      "source": "BC:mo:protein",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 2
+      }
+    },
+    {
+      "id": "BC:mo:protein->EL:h[composed_of]",
+      "source": "BC:mo:protein",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 3
+      }
+    },
+    {
+      "id": "BC:mo:protein->BC:el:nitrogen[composed_of]",
+      "source": "BC:mo:protein",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 1
+      }
+    },
+    {
+      "id": "BC:mo:protein->EL:o[composed_of]",
+      "source": "BC:mo:protein",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 1
+      }
+    },
+    {
+      "id": "BC:mo:dna->EL:c[composed_of]",
+      "source": "BC:mo:dna",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 10
+      }
+    },
+    {
+      "id": "BC:mo:dna->EL:h[composed_of]",
+      "source": "BC:mo:dna",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 14
+      }
+    },
+    {
+      "id": "BC:mo:dna->BC:el:nitrogen[composed_of]",
+      "source": "BC:mo:dna",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 5
+      }
+    },
+    {
+      "id": "BC:mo:dna->EL:o[composed_of]",
+      "source": "BC:mo:dna",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 7
+      }
+    },
+    {
+      "id": "BC:mo:co2->EL:c[composed_of]",
+      "source": "BC:mo:co2",
+      "target": "EL:c",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 1
+      }
+    },
+    {
+      "id": "BC:mo:co2->EL:o[composed_of]",
+      "source": "BC:mo:co2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 2
+      }
+    },
+    {
+      "id": "BC:mo:h2o->EL:h[composed_of]",
+      "source": "BC:mo:h2o",
+      "target": "EL:h",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 2
+      }
+    },
+    {
+      "id": "BC:mo:h2o->EL:o[composed_of]",
+      "source": "BC:mo:h2o",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 1
+      }
+    },
+    {
+      "id": "BC:mo:o2->EL:o[composed_of]",
+      "source": "BC:mo:o2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539",
+        "count": 2
+      }
+    },
+    {
+      "id": "BC:mo:co2->BC:rx:photosynthesis[reactant_of]",
+      "source": "BC:mo:co2",
+      "target": "BC:rx:photosynthesis",
+      "type": "reactant_of",
+      "kind": "co2_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "co2_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:h2o->BC:rx:photosynthesis[reactant_of]",
+      "source": "BC:mo:h2o",
+      "target": "BC:rx:photosynthesis",
+      "type": "reactant_of",
+      "kind": "h2o_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "h2o_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:glucose->BC:rx:photosynthesis[product_of]",
+      "source": "BC:mo:glucose",
+      "target": "BC:rx:photosynthesis",
+      "type": "product_of",
+      "kind": "glucose_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "glucose_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:o2->BC:rx:photosynthesis[product_of]",
+      "source": "BC:mo:o2",
+      "target": "BC:rx:photosynthesis",
+      "type": "product_of",
+      "kind": "o2_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "o2_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:glucose->BC:rx:respiration[reactant_of]",
+      "source": "BC:mo:glucose",
+      "target": "BC:rx:respiration",
+      "type": "reactant_of",
+      "kind": "glucose_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "glucose_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:o2->BC:rx:respiration[reactant_of]",
+      "source": "BC:mo:o2",
+      "target": "BC:rx:respiration",
+      "type": "reactant_of",
+      "kind": "o2_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "o2_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:co2->BC:rx:respiration[product_of]",
+      "source": "BC:mo:co2",
+      "target": "BC:rx:respiration",
+      "type": "product_of",
+      "kind": "co2_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "co2_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:h2o->BC:rx:respiration[product_of]",
+      "source": "BC:mo:h2o",
+      "target": "BC:rx:respiration",
+      "type": "product_of",
+      "kind": "h2o_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "h2o_product",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:atp->BC:rx:atp_hydrolysis[reactant_of]",
+      "source": "BC:mo:atp",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "reactant_of",
+      "kind": "atp_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "atp_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:mo:h2o->BC:rx:atp_hydrolysis[reactant_of]",
+      "source": "BC:mo:h2o",
+      "target": "BC:rx:atp_hydrolysis",
+      "type": "reactant_of",
+      "kind": "h2o_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "h2o_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    },
+    {
+      "id": "BC:rx:photosynthesis->BC:fo:photosynthesis_eq[derived_from]",
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:fo:photosynthesis_eq",
+      "type": "derived_from",
+      "kind": "stoich_from_rx",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "stoich_from_rx",
+        "source": "curated_seed",
+        "created_at": "2026-09-30T08:35:01.972539"
+      }
+    }
+  ]
+}

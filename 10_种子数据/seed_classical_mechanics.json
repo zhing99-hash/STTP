@@ -1,0 +1,1176 @@
+{
+  "schema_version": "0.1",
+  "phase": "7a",
+  "note": "Classical mechanics vertical slice",
+  "nodes": [
+    {
+      "id": "CM:pq:mass",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Mass",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "m"
+      }
+    },
+    {
+      "id": "CM:pq:force",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Force",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "F"
+      }
+    },
+    {
+      "id": "CM:pq:accel",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Acceleration",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "a"
+      }
+    },
+    {
+      "id": "CM:pq:vel",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Velocity",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "v"
+      }
+    },
+    {
+      "id": "CM:pq:energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Energy",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "E"
+      }
+    },
+    {
+      "id": "CM:un:joule",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "joule",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "J"
+      }
+    },
+    {
+      "id": "CM:fo:momentum",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Momentum",
+        "ntype": "formula",
+        "domain": "physics.mechanics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "p=mv",
+        "informal": "Momentum equals mass times velocity."
+      }
+    },
+    {
+      "id": "CM:fo:work",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Work",
+        "ntype": "formula",
+        "domain": "physics.mechanics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "W=Fd",
+        "informal": "Work done by a constant force over a displacement."
+      }
+    },
+    {
+      "id": "CM:fo:power",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Power",
+        "ntype": "formula",
+        "domain": "physics.mechanics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "P=\\frac{W}{t}",
+        "informal": "Rate of doing work."
+      }
+    },
+    {
+      "id": "CM:fo:gravity",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Newton's law of gravitation",
+        "ntype": "formula",
+        "domain": "physics.gravitation",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "F=G\\frac{m_1 m_2}{r^2}",
+        "informal": "Gravitational force between two masses."
+      }
+    },
+    {
+      "id": "CM:fo:centripetal",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Centripetal force",
+        "ntype": "formula",
+        "domain": "physics.mechanics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "F=\\frac{mv^2}{r}",
+        "informal": "Force required for uniform circular motion."
+      }
+    },
+    {
+      "id": "CM:fo:impulse",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Impulse-momentum",
+        "ntype": "formula",
+        "domain": "physics.mechanics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "J=F\\Delta t=\\Delta p",
+        "informal": "Impulse equals change in momentum."
+      }
+    },
+    {
+      "id": "CM:pq:momentum",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Momentum",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "p",
+        "dimension": "M*L*T^-1"
+      }
+    },
+    {
+      "id": "CM:pq:work",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Work",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "W",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "CM:pq:power",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Power",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "P",
+        "dimension": "M*L^2*T^-3"
+      }
+    },
+    {
+      "id": "CM:pq:grav_const",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Gravitational constant",
+        "ntype": "constant",
+        "domain": "phys.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "G",
+        "value": 6.6743e-11,
+        "dimension": "M^-1*L^3*T^-2"
+      }
+    },
+    {
+      "id": "CM:pq:angular_momentum",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Angular momentum",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "L",
+        "dimension": "M*L^2*T^-1"
+      }
+    },
+    {
+      "id": "CM:pq:torque",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Torque",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "tau",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "CM:pq:impulse",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Impulse",
+        "ntype": "physical_quantity",
+        "domain": "phys.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "J",
+        "dimension": "M*L*T^-1"
+      }
+    },
+    {
+      "id": "CM:un:newton",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "newton",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "N",
+        "dimension": "M*L*T^-2",
+        "derived_from": "kg*m/s^2"
+      }
+    },
+    {
+      "id": "CM:un:watt",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "watt",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "W",
+        "dimension": "M*L^2*T^-3",
+        "derived_from": "J/s"
+      }
+    },
+    {
+      "id": "CM:un:pascal",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "pascal",
+        "ntype": "unit",
+        "domain": "phys.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "symbol": "Pa",
+        "dimension": "M*L^-1*T^-2",
+        "derived_from": "N/m^2"
+      }
+    },
+    {
+      "id": "CM:sy:p",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "p (momentum)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "p"
+      }
+    },
+    {
+      "id": "CM:sy:W",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "W (work)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "W"
+      }
+    },
+    {
+      "id": "CM:sy:P",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "P (power)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "P"
+      }
+    },
+    {
+      "id": "CM:sy:G",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "G (gravitational constant)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "G"
+      }
+    },
+    {
+      "id": "CM:sy:L",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "L (angular momentum)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "L"
+      }
+    },
+    {
+      "id": "CM:sy:tau",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "τ (torque)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "\\tau"
+      }
+    },
+    {
+      "id": "CM:sy:J",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "J (impulse)",
+        "ntype": "symbol",
+        "domain": "math.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "latex": "J"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "CM:pq:mass->PQ:mass[same_as]",
+      "source": "CM:pq:mass",
+      "target": "PQ:mass",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "CM:pq:force->PQ:force[same_as]",
+      "source": "CM:pq:force",
+      "target": "PQ:force",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "CM:pq:accel->PQ:accel[same_as]",
+      "source": "CM:pq:accel",
+      "target": "PQ:accel",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "CM:pq:vel->PQ:vel[same_as]",
+      "source": "CM:pq:vel",
+      "target": "PQ:vel",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "CM:pq:energy->PQ:energy[same_as]",
+      "source": "CM:pq:energy",
+      "target": "PQ:energy",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "CM:un:joule->UN:j[same_as]",
+      "source": "CM:un:joule",
+      "target": "UN:j",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "CM:fo:momentum->CM:sy:p[has_symbol]",
+      "source": "CM:fo:momentum",
+      "target": "CM:sy:p",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:momentum->SY:m[has_symbol]",
+      "source": "CM:fo:momentum",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:momentum->SY:v[has_symbol]",
+      "source": "CM:fo:momentum",
+      "target": "SY:v",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:work->CM:sy:W[has_symbol]",
+      "source": "CM:fo:work",
+      "target": "CM:sy:W",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:work->SY:f[has_symbol]",
+      "source": "CM:fo:work",
+      "target": "SY:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:power->CM:sy:P[has_symbol]",
+      "source": "CM:fo:power",
+      "target": "CM:sy:P",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:power->CM:sy:W[has_symbol]",
+      "source": "CM:fo:power",
+      "target": "CM:sy:W",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:gravity->SY:f[has_symbol]",
+      "source": "CM:fo:gravity",
+      "target": "SY:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:gravity->CM:sy:G[has_symbol]",
+      "source": "CM:fo:gravity",
+      "target": "CM:sy:G",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:gravity->SY:m[has_symbol]",
+      "source": "CM:fo:gravity",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:centripetal->SY:f[has_symbol]",
+      "source": "CM:fo:centripetal",
+      "target": "SY:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:centripetal->SY:m[has_symbol]",
+      "source": "CM:fo:centripetal",
+      "target": "SY:m",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:centripetal->SY:v[has_symbol]",
+      "source": "CM:fo:centripetal",
+      "target": "SY:v",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:impulse->CM:sy:J[has_symbol]",
+      "source": "CM:fo:impulse",
+      "target": "CM:sy:J",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:impulse->SY:f[has_symbol]",
+      "source": "CM:fo:impulse",
+      "target": "SY:f",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:momentum->CM:pq:momentum[defines]",
+      "source": "CM:fo:momentum",
+      "target": "CM:pq:momentum",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:work->CM:pq:work[defines]",
+      "source": "CM:fo:work",
+      "target": "CM:pq:work",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:power->CM:pq:power[defines]",
+      "source": "CM:fo:power",
+      "target": "CM:pq:power",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:gravity->CM:pq:grav_const[defines]",
+      "source": "CM:fo:gravity",
+      "target": "CM:pq:grav_const",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:centripetal->CM:pq:torque[defines]",
+      "source": "CM:fo:centripetal",
+      "target": "CM:pq:torque",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:impulse->CM:pq:impulse[defines]",
+      "source": "CM:fo:impulse",
+      "target": "CM:pq:impulse",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:momentum->CM:un:newton[has_unit]",
+      "source": "CM:pq:momentum",
+      "target": "CM:un:newton",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:work->CM:un:joule[has_unit]",
+      "source": "CM:pq:work",
+      "target": "CM:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:power->CM:un:watt[has_unit]",
+      "source": "CM:pq:power",
+      "target": "CM:un:watt",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:torque->CM:un:joule[has_unit]",
+      "source": "CM:pq:torque",
+      "target": "CM:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:impulse->CM:un:newton[has_unit]",
+      "source": "CM:pq:impulse",
+      "target": "CM:un:newton",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:angular_momentum->CM:un:joule[has_unit]",
+      "source": "CM:pq:angular_momentum",
+      "target": "CM:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:momentum->CM:pq:mass[dimensionally_consistent]",
+      "source": "CM:pq:momentum",
+      "target": "CM:pq:mass",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "note": "p=mv"
+      }
+    },
+    {
+      "id": "CM:pq:work->CM:pq:torque[dimensionally_consistent]",
+      "source": "CM:pq:work",
+      "target": "CM:pq:torque",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "note": "work and torque share M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "CM:pq:impulse->CM:pq:momentum[dimensionally_consistent]",
+      "source": "CM:pq:impulse",
+      "target": "CM:pq:momentum",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "note": "J=Δp"
+      }
+    },
+    {
+      "id": "CM:fo:momentum->PQ:mass[derived_from]",
+      "source": "CM:fo:momentum",
+      "target": "PQ:mass",
+      "type": "derived_from",
+      "kind": "mass_velocity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "mass_velocity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781",
+        "note": "p=mv"
+      }
+    },
+    {
+      "id": "CM:fo:momentum->PQ:vel[derived_from]",
+      "source": "CM:fo:momentum",
+      "target": "PQ:vel",
+      "type": "derived_from",
+      "kind": "mass_velocity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "mass_velocity",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:work->PQ:force[derived_from]",
+      "source": "CM:fo:work",
+      "target": "PQ:force",
+      "type": "derived_from",
+      "kind": "force_displacement",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "force_displacement",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:power->CM:pq:work[derived_from]",
+      "source": "CM:fo:power",
+      "target": "CM:pq:work",
+      "type": "derived_from",
+      "kind": "power_from_work",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "power_from_work",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:gravity->PQ:mass[derived_from]",
+      "source": "CM:fo:gravity",
+      "target": "PQ:mass",
+      "type": "derived_from",
+      "kind": "grav_mass",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "grav_mass",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:centripetal->PQ:mass[derived_from]",
+      "source": "CM:fo:centripetal",
+      "target": "PQ:mass",
+      "type": "derived_from",
+      "kind": "centripetal_mass",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "centripetal_mass",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:impulse->PQ:force[derived_from]",
+      "source": "CM:fo:impulse",
+      "target": "PQ:force",
+      "type": "derived_from",
+      "kind": "impulse_force",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "impulse_force",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:angular_momentum->CM:pq:momentum[derived_from]",
+      "source": "CM:pq:angular_momentum",
+      "target": "CM:pq:momentum",
+      "type": "derived_from",
+      "kind": "r_cross_p",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "r_cross_p",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:pq:torque->CM:pq:angular_momentum[derived_from]",
+      "source": "CM:pq:torque",
+      "target": "CM:pq:angular_momentum",
+      "type": "derived_from",
+      "kind": "r_cross_F",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "r_cross_F",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    },
+    {
+      "id": "CM:fo:work->FO:ke[derived_from]",
+      "source": "CM:fo:work",
+      "target": "FO:ke",
+      "type": "derived_from",
+      "kind": "work_energy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "work_energy",
+        "source": "curated_seed",
+        "created_at": "2026-09-29T16:34:33.661781"
+      }
+    }
+  ]
+}
