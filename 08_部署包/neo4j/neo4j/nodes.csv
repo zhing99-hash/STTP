@@ -1,0 +1,37 @@
+:ID,:LABEL,ntype,name,domain,confidence,explicit_or_inferred,source,type,local_id,latex,meaning,symbol_type,created_at,version
+MX:def:manifold,Entity;Formula;Definition,definition,definition,math.DG,1.0,explicit,mathxiv,definition,def:manifold,M,,,2026-09-28T15:33:30+08:00,v0.1
+MX:def:tangent_space,Entity;Formula;Definition,definition,definition,math.DG,1.0,explicit,mathxiv,definition,def:tangent_space,T_p M,,,2026-09-28T15:33:30+08:00,v0.1
+MX:def:riemannian_metric,Entity;Formula;Definition,definition,definition,math.DG,1.0,explicit,mathxiv,definition,def:riemannian_metric,g_{ij},,,2026-09-28T15:33:30+08:00,v0.1
+MX:def:levi_civita,Entity;Formula;Definition,definition,definition,math.DG,1.0,explicit,mathxiv,definition,def:levi_civita,\nabla,,,2026-09-28T15:33:30+08:00,v0.1
+MX:lemma:partition_of_unity,Entity;Formula;Lemma,lemma,lemma,math.DG,1.0,explicit,mathxiv,lemma,lemma:partition_of_unity,\{\rho_\alpha\},,,2026-09-28T15:33:30+08:00,v0.1
+MX:lemma:covariant_derivative,Entity;Formula;Lemma,lemma,lemma,math.DG,1.0,explicit,mathxiv,lemma,lemma:covariant_derivative,\nabla_X Y,,,2026-09-28T15:33:30+08:00,v0.1
+MX:thm:riemann_curvature,Entity;Formula;Theorem,theorem,theorem,math.DG,1.0,explicit,mathxiv,theorem,thm:riemann_curvature,"R(X,Y)Z = \nabla_X\nabla_Y Z - \nabla_Y\nabla_X Z - \nabla_{[X,Y]} Z",,,2026-09-28T15:33:30+08:00,v0.1
+MX:thm:gauss_bonnet,Entity;Formula;Theorem,theorem,theorem,math.DG,1.0,explicit,mathxiv,theorem,thm:gauss_bonnet,"\int_M K\, dA = 2\pi \chi(M)",,,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:m,Entity;Symbol,,M,math,1.0,explicit,mathxiv,,sym:m,M,Smooth n-dimensional manifold,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:t_p_m,Entity;Symbol,,T_p M,math,1.0,explicit,mathxiv,,sym:t_p_m,T_p M,Tangent space at point p in M,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:g,Entity;Symbol,,g,math,1.0,explicit,mathxiv,,sym:g,g,Riemannian metric tensor on M,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:nabla,Entity;Symbol,,\nabla,math,1.0,explicit,mathxiv,,sym:nabla,\nabla,Levi-Civita connection / covariant derivative,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:r,Entity;Symbol,,R,math,1.0,explicit,mathxiv,,sym:r,R,Riemann curvature tensor,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:k,Entity;Symbol,,K,math,1.0,explicit,mathxiv,,sym:k,K,Gaussian curvature of a surface,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:chi_m,Entity;Symbol,,\chi(M),math,1.0,explicit,mathxiv,,sym:chi_m,\chi(M),Euler characteristic of the manifold M,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:pi,Entity;Symbol,,\pi,math,1.0,explicit,mathxiv,,sym:pi,\pi,Archimedean constant pi (≈3.14159),variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:n,Entity;Symbol,,n,math,1.0,explicit,mathxiv,,sym:n,n,,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:p,Entity;Symbol,,p,math,1.0,explicit,mathxiv,,sym:p,p,,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:rho_alpha,Entity;Symbol,,\rho_\alpha,math,1.0,explicit,mathxiv,,sym:rho_alpha,\rho_\alpha,,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:x,Entity;Symbol,,X,math,1.0,explicit,mathxiv,,sym:x,X,,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:y,Entity;Symbol,,Y,math,1.0,explicit,mathxiv,,sym:y,Y,,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:z,Entity;Symbol,,Z,math,1.0,explicit,mathxiv,,sym:z,Z,,variable,2026-09-28T15:33:30+08:00,v0.1
+MX:sym:c,Entity;Symbol,symbol,C,cross,1.0,inferred,llm_hypothesis,symbol,c,,碳元素符号 C（用于碳燃烧反应）,,2026-09-28T16:17:34+08:00,v0.1
+MX:chem:co2,Entity;Molecule,molecule,CO₂,chemistry,1.0,inferred,llm_hypothesis,molecule,co2,,二氧化碳（分子）,,2026-09-28T16:17:34+08:00,v0.1
+MX:chem:methane,Entity;Molecule,molecule,CH₄,chemistry,1.0,inferred,llm_hypothesis,molecule,methane,,甲烷（分子）,,2026-09-28T16:17:34+08:00,v0.1
+MX:chem:combustion,Entity;Molecule,molecule,combustion,chemistry,1.0,inferred,llm_hypothesis,molecule,combustion,,燃烧反应（chem 范畴，语义为反应）,,2026-09-28T16:17:34+08:00,v0.1
+MX:phy:newton2,Entity;PhysicalQuantity,physical_quantity,F=ma,physics,1.0,inferred,llm_hypothesis,physical_quantity,newton2,,牛顿第二定律（力 = 质量 × 加速度）,,2026-09-28T16:17:34+08:00,v0.1
+MX:phy:acceleration,Entity;PhysicalQuantity,physical_quantity,a,physics,1.0,inferred,llm_hypothesis,physical_quantity,acceleration,,加速度,,2026-09-28T16:17:34+08:00,v0.1
+MX:phy:kinetic_energy,Entity;PhysicalQuantity,physical_quantity,E_k,physics,1.0,inferred,llm_hypothesis,physical_quantity,kinetic_energy,,动能,,2026-09-28T16:17:34+08:00,v0.1
+MX:phy:energy,Entity;PhysicalQuantity,physical_quantity,E,physics,1.0,inferred,llm_hypothesis,physical_quantity,energy,,能量,,2026-09-28T16:17:34+08:00,v0.1
+MX:math:binomial,Entity;MathConcept,math_concept,(a+b)²,math,1.0,inferred,llm_hypothesis,math_concept,binomial,,二项式展开,,2026-09-28T16:17:34+08:00,v0.1
+MX:math:expand,Entity;MathConcept,math_concept,expand,math,1.0,inferred,llm_hypothesis,math_concept,expand,,代数展开,,2026-09-28T16:17:34+08:00,v0.1
+MX:math:pythagorean_identity,Entity;MathConcept,math_concept,sin²θ+cos²θ=1,math,1.0,inferred,llm_hypothesis,math_concept,pythagorean_identity,,勾股三角恒等式,,2026-09-28T16:17:34+08:00,v0.1
+MX:math:trig_unit,Entity;MathConcept,math_concept,unit circle,math,1.0,inferred,llm_hypothesis,math_concept,trig_unit,,单位圆（三角函数）,,2026-09-28T16:17:34+08:00,v0.1
+MX:math:derivative_power,Entity;MathConcept,math_concept,d/dx(xⁿ),math,1.0,inferred,llm_hypothesis,math_concept,derivative_power,,幂函数求导,,2026-09-28T16:17:34+08:00,v0.1
+MX:math:power_rule,Entity;MathConcept,math_concept,n·xⁿ⁻¹,math,1.0,inferred,llm_hypothesis,math_concept,power_rule,,幂函数求导法则,,2026-09-28T16:17:34+08:00,v0.1
