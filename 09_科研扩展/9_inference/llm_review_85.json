@@ -1,0 +1,779 @@
+{
+  "method": "LLM 语义复核 + 符号校验(反应方程/领域知识白名单)",
+  "total_keep": 85,
+  "counts": {
+    "VERIFY": 9,
+    "REJECT": 76,
+    "KEPT": 0
+  },
+  "verified": [
+    {
+      "source": "BC:mo:atp",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP（C10H16N5O13P3）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "product_of",
+      "reason": "领域知识白名单(生物学真关联，简化方程未列)"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP（C10H16N5O13P3）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "reactant_of",
+      "reason": "领域知识白名单(生物学真关联，简化方程未列)"
+    },
+    {
+      "source": "PC:mol:280",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：carbon dioxide（CO2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "product_of",
+      "reason": "CO2 命中反应方程产物侧"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Water（H2O）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "product_of",
+      "reason": "H2O 命中反应方程产物侧"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Water（H2O）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "reactant_of",
+      "reason": "H2O 命中反应方程反应物侧"
+    },
+    {
+      "source": "PC:mol:962",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：oxidane（H2O）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "product_of",
+      "reason": "H2O 命中反应方程产物侧"
+    },
+    {
+      "source": "PC:mol:962",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：oxidane（H2O）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "reactant_of",
+      "reason": "H2O 命中反应方程反应物侧"
+    },
+    {
+      "source": "MO:o2",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Dioxygen（O2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "reactant_of",
+      "reason": "O2 命中反应方程反应物侧"
+    },
+    {
+      "source": "MO:o2",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Dioxygen（O2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "VERIFY",
+      "role": "product_of",
+      "reason": "O2 命中反应方程产物侧"
+    }
+  ],
+  "rejected": [
+    {
+      "source": "BC:mo:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Oxygen（O2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "O2 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:co2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Carbon dioxide（CO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CO2 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:glucose",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Glucose（C6H12O6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H12O6 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:rx:respiration",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：Cellular respiration（跨学科）与 ATP hydrolysis（化学）跨域关联，建议人工复核其量纲/组成/语义关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "反应→公式 为 GNN 结构伪影"
+    },
+    {
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP hydrolysis（跨学科）与 ATP hydrolysis（化学）跨域关联，建议人工复核其量纲/组成/语义关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "反应→公式 为 GNN 结构伪影"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Chlorine（Cl2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Cl2 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：Photosynthesis（跨学科）与 ATP hydrolysis（化学）跨域关联，建议人工复核其量纲/组成/语义关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "反应→公式 为 GNN 结构伪影"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Methane（CH4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CH4 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethylene（C2H4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H4 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethylene（C2H4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H4 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Methane（CH4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CH4 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Chlorine（Cl2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Cl2 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:280",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：carbon dioxide（CO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CO2 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Benzene（C6H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H6 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethene（C2H4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H4 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Benzene（C6H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H6 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：methane（CH4）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CH4 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethene（C2H4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H4 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：methane（CH4）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CH4 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Hydrogen chloride（HCl）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "HCl 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium（Na）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Na 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Chlorine（Cl2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Cl2 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium（Na）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Na 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Hydrogen chloride（HCl）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "HCl 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethane（C2H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H6 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Methane（CH4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CH4 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethylene（C2H4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H4 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethane（C2H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H6 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Generic amino acid（C2H5NO2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5NO2 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Generic amino acid（C2H5NO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5NO2 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：chlorane（ClH）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "ClH 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium chloride（NaCl）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "NaCl 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethane（C2H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H6 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Benzene（C6H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H6 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：chlorane（ClH）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "ClH 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethene（C2H4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H4 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：methane（CH4）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "CH4 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethane（C2H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H6 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：(3R,4S,5S,6R)-6-(hydroxymethyl)oxane-2,3,4,5-tetrol（C6H12O6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H12O6 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium chloride（NaCl）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "NaCl 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:sy:H",
+      "target": "OM:fo:combustion",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 H (hydrogen) 可能出现在化合物/反应式 Hydrocarbon combustion 中，构成元素—组成关联，建议以组成数据复核。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Symbol→Formula 跨域伪影(H (hydrogen)->Hydrocarbon combustion)"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Hydrogen chloride（HCl）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "HCl 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium（Na）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Na 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethane（C2H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H6 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：2-aminoacetic acid（C2H5NO2）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5NO2 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：2-aminoacetic acid（C2H5NO2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5NO2 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Sodium chloride（NaCl）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "NaCl 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Generic amino acid（C2H5NO2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5NO2 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：chlorane（ClH）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "ClH 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethanol（C2H5OH）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5OH 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethanol（C2H5OH）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5OH 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：ethane（C2H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H6 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "ek:molecule:CO2",
+      "target": "MX:chem:combustion",
+      "decision": "KEEP",
+      "hypothesis": "假设：ek:molecule:CO2（数学）与 combustion（化学）跨域关联，建议人工复核其量纲/组成/语义关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "未识别为有效关联(Entity->Molecule, ek:molecule:CO2->combustion)"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：[[(2R,3S,4R,5R)-5-(6-aminopurin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy-hydroxyphosphoryl] phosphono hydrogen phosphate（C10H16N5O13P3）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C10H16N5O13P3 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：[[(2R,3S,4R,5R)-5-(6-aminopurin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy-hydroxyphosphoryl] phosphono hydrogen phosphate（C10H16N5O13P3）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C10H16N5O13P3 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Protein (polymer)（(C2H3NO)n）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "(C2H3NO)n 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：DNA (abstract)（(C10H14N5O7P)n）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "(C10H14N5O7P)n 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：Protein (polymer)（(C2H3NO)n）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "(C2H3NO)n 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：DNA (abstract)（(C10H14N5O7P)n）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "(C10H14N5O7P)n 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：2-aminoacetic acid（C2H5NO2）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5NO2 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Ethanol（C2H5OH）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C2H5OH 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：[[(2R,3S,4R,5R)-5-(6-aminopurin-9-yl)-3,4-dihydroxyoxolan-2-yl]methoxy-hydroxyphosphoryl] phosphono hydrogen phosphate（C10H16N5O13P3）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C10H16N5O13P3 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Protein (polymer)（(C2H3NO)n）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "(C2H3NO)n 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：DNA (abstract)（(C10H14N5O7P)n）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "(C10H14N5O7P)n 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：sodium chloride（ClNa）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "ClNa 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：sodium chloride（ClNa）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "ClNa 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "BC:rx:respiration",
+      "decision": "KEEP",
+      "hypothesis": "假设：benzene（C6H6）与反应 Cellular respiration 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H6 非反应 Cellular respiration 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：benzene（C6H6）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H6 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "MO:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "decision": "KEEP",
+      "hypothesis": "假设：Dioxygen（O2）与反应 ATP hydrolysis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "O2 非反应 ATP hydrolysis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：benzene（C6H6）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "C6H6 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "BC:rx:photosynthesis",
+      "decision": "KEEP",
+      "hypothesis": "假设：sodium chloride（ClNa）与反应 Photosynthesis 同属生物化学/化学网络，可能以反应物或产物参与；建议以反应计量式进一步复核其计量关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "ClNa 非反应 Photosynthesis 的参与物(GNN 伪影)"
+    },
+    {
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:photosynthesis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：ATP hydrolysis（跨学科）与 Photosynthesis stoichiometry（化学）跨域关联，建议人工复核其量纲/组成/语义关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "反应→公式 为 GNN 结构伪影"
+    },
+    {
+      "source": "OM:sy:O",
+      "target": "IC:fo:ph",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 O (oxygen) 可能出现在化合物/反应式 pH definition 中，构成元素—组成关联，建议以组成数据复核。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Symbol→Formula 跨域伪影(O (oxygen)->pH definition)"
+    },
+    {
+      "source": "OM:sy:H",
+      "target": "IC:fo:ph",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 H (hydrogen) 可能出现在化合物/反应式 pH definition 中，构成元素—组成关联，建议以组成数据复核。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Symbol→Formula 跨域伪影(H (hydrogen)->pH definition)"
+    },
+    {
+      "source": "OM:sy:C",
+      "target": "IC:fo:ph",
+      "decision": "KEEP",
+      "hypothesis": "假设：元素 C (carbon) 可能出现在化合物/反应式 pH definition 中，构成元素—组成关联，建议以组成数据复核。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "Symbol→Formula 跨域伪影(C (carbon)->pH definition)"
+    },
+    {
+      "source": "BC:rx:respiration",
+      "target": "BC:fo:photosynthesis_eq",
+      "decision": "KEEP",
+      "hypothesis": "假设：Cellular respiration（跨学科）与 Photosynthesis stoichiometry（化学）跨域关联，建议人工复核其量纲/组成/语义关系。",
+      "verdict": "REJECT",
+      "role": null,
+      "reason": "反应→公式 为 GNN 结构伪影"
+    }
+  ],
+  "kept": []
+}
