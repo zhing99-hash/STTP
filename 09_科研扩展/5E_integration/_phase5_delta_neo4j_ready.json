@@ -1,0 +1,1343 @@
+{
+  "schema_version": "v0.1",
+  "note": "Phase 5 additive delta: 36 nodes (MERGE) + 46 new edges only",
+  "nodes": [
+    {
+      "id": "MX:def:manifold",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Definition"
+      ],
+      "props": {
+        "name": "definition",
+        "type": "definition",
+        "latex": "M",
+        "informal": "A smooth n-dimensional manifold M is a second-countable Hausdorff topological space equipped with a maximal smooth atlas of charts.",
+        "proof": null,
+        "symbols": [
+          "M",
+          "n"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:def:tangent_space",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Definition"
+      ],
+      "props": {
+        "name": "definition",
+        "type": "definition",
+        "latex": "T_p M",
+        "informal": "The tangent space T_p M at a point p in M is the vector space of all tangent vectors (derivations) at p.",
+        "proof": null,
+        "symbols": [
+          "T_p M",
+          "M",
+          "p"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:def:riemannian_metric",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Definition"
+      ],
+      "props": {
+        "name": "definition",
+        "type": "definition",
+        "latex": "g_{ij}",
+        "informal": "A Riemannian metric g on M is a smooth assignment of a positive-definite inner product g_p on each tangent space T_p M.",
+        "proof": null,
+        "symbols": [
+          "g",
+          "M",
+          "T_p M"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:def:levi_civita",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Definition"
+      ],
+      "props": {
+        "name": "definition",
+        "type": "definition",
+        "latex": "\\nabla",
+        "informal": "The Levi-Civita connection \\nabla is the unique torsion-free, metric-compatible affine connection on the Riemannian manifold (M,g).",
+        "proof": null,
+        "symbols": [
+          "\\nabla",
+          "M",
+          "g"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:lemma:partition_of_unity",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Lemma"
+      ],
+      "props": {
+        "name": "lemma",
+        "type": "lemma",
+        "latex": "\\{\\rho_\\alpha\\}",
+        "informal": "Given any open cover of M, there exists a smooth partition of unity subordinate to it.",
+        "proof": "Construct local bump functions from the smooth atlas of M and normalize by the locally finite sum.",
+        "symbols": [
+          "\\rho_\\alpha",
+          "M"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:lemma:covariant_derivative",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Lemma"
+      ],
+      "props": {
+        "name": "lemma",
+        "type": "lemma",
+        "latex": "\\nabla_X Y",
+        "informal": "The covariant derivative \\nabla_X Y is tensorial (linear over C^\\infty(M)) in X and satisfies the Leibniz rule in Y.",
+        "proof": "Follows directly from the defining properties of the Levi-Civita connection.",
+        "symbols": [
+          "\\nabla",
+          "X",
+          "Y",
+          "M"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:thm:riemann_curvature",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Theorem"
+      ],
+      "props": {
+        "name": "theorem",
+        "type": "theorem",
+        "latex": "R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{[X,Y]} Z",
+        "informal": "The Riemann curvature tensor R measures the failure of iterated second covariant derivatives to commute; it is a (1,3)-tensor.",
+        "proof": "Define R via the commutator of covariant derivatives and verify multilinearity and tensoriality in all four arguments.",
+        "symbols": [
+          "R",
+          "\\nabla",
+          "X",
+          "Y",
+          "Z"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:thm:gauss_bonnet",
+      "labels": [
+        "Entity",
+        "Formula",
+        "Theorem"
+      ],
+      "props": {
+        "name": "theorem",
+        "type": "theorem",
+        "latex": "\\int_M K\\, dA = 2\\pi \\chi(M)",
+        "informal": "For a closed orientable surface M, the integral of Gaussian curvature K over M equals 2\\pi times its Euler characteristic \\chi(M).",
+        "proof": "Triangulate M, apply the local angle-defect formula, and sum defects using a partition of unity subordinate to the triangulation.",
+        "symbols": [
+          "K",
+          "M",
+          "\\chi(M)",
+          "\\pi"
+        ],
+        "domain": "math.DG",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:m",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "M",
+        "latex": "M",
+        "meaning": "Smooth n-dimensional manifold",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:t_p_m",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "T_p M",
+        "latex": "T_p M",
+        "meaning": "Tangent space at point p in M",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:g",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "g",
+        "latex": "g",
+        "meaning": "Riemannian metric tensor on M",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:nabla",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "\\nabla",
+        "latex": "\\nabla",
+        "meaning": "Levi-Civita connection / covariant derivative",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:r",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "R",
+        "latex": "R",
+        "meaning": "Riemann curvature tensor",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:k",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "K",
+        "latex": "K",
+        "meaning": "Gaussian curvature of a surface",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:chi_m",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "\\chi(M)",
+        "latex": "\\chi(M)",
+        "meaning": "Euler characteristic of the manifold M",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:pi",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "\\pi",
+        "latex": "\\pi",
+        "meaning": "Archimedean constant pi (≈3.14159)",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:n",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "n",
+        "latex": "n",
+        "meaning": "",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:p",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "p",
+        "latex": "p",
+        "meaning": "",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:rho_alpha",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "\\rho_\\alpha",
+        "latex": "\\rho_\\alpha",
+        "meaning": "",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:x",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "X",
+        "latex": "X",
+        "meaning": "",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:y",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Y",
+        "latex": "Y",
+        "meaning": "",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:z",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Z",
+        "latex": "Z",
+        "meaning": "",
+        "scope": "local",
+        "symbol_type": "variable",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "version": "v0.1",
+        "domain": "math",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit"
+      }
+    },
+    {
+      "id": "MX:sym:c",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "ntype": "symbol",
+        "name": "C",
+        "type": "symbol",
+        "domain": "cross",
+        "meaning": "碳元素符号 C（用于碳燃烧反应）",
+        "local_id": "c",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:chem:co2",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "ntype": "molecule",
+        "name": "CO₂",
+        "type": "molecule",
+        "domain": "chemistry",
+        "meaning": "二氧化碳（分子）",
+        "local_id": "co2",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:chem:methane",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "ntype": "molecule",
+        "name": "CH₄",
+        "type": "molecule",
+        "domain": "chemistry",
+        "meaning": "甲烷（分子）",
+        "local_id": "methane",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:chem:combustion",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "ntype": "molecule",
+        "name": "combustion",
+        "type": "molecule",
+        "domain": "chemistry",
+        "meaning": "燃烧反应（chem 范畴，语义为反应）",
+        "local_id": "combustion",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:phy:newton2",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "ntype": "physical_quantity",
+        "name": "F=ma",
+        "type": "physical_quantity",
+        "domain": "physics",
+        "meaning": "牛顿第二定律（力 = 质量 × 加速度）",
+        "local_id": "newton2",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:phy:acceleration",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "ntype": "physical_quantity",
+        "name": "a",
+        "type": "physical_quantity",
+        "domain": "physics",
+        "meaning": "加速度",
+        "local_id": "acceleration",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:phy:kinetic_energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "ntype": "physical_quantity",
+        "name": "E_k",
+        "type": "physical_quantity",
+        "domain": "physics",
+        "meaning": "动能",
+        "local_id": "kinetic_energy",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:phy:energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "ntype": "physical_quantity",
+        "name": "E",
+        "type": "physical_quantity",
+        "domain": "physics",
+        "meaning": "能量",
+        "local_id": "energy",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:math:binomial",
+      "labels": [
+        "Entity",
+        "MathConcept"
+      ],
+      "props": {
+        "ntype": "math_concept",
+        "name": "(a+b)²",
+        "type": "math_concept",
+        "domain": "math",
+        "meaning": "二项式展开",
+        "local_id": "binomial",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:math:expand",
+      "labels": [
+        "Entity",
+        "MathConcept"
+      ],
+      "props": {
+        "ntype": "math_concept",
+        "name": "expand",
+        "type": "math_concept",
+        "domain": "math",
+        "meaning": "代数展开",
+        "local_id": "expand",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:math:pythagorean_identity",
+      "labels": [
+        "Entity",
+        "MathConcept"
+      ],
+      "props": {
+        "ntype": "math_concept",
+        "name": "sin²θ+cos²θ=1",
+        "type": "math_concept",
+        "domain": "math",
+        "meaning": "勾股三角恒等式",
+        "local_id": "pythagorean_identity",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:math:trig_unit",
+      "labels": [
+        "Entity",
+        "MathConcept"
+      ],
+      "props": {
+        "ntype": "math_concept",
+        "name": "unit circle",
+        "type": "math_concept",
+        "domain": "math",
+        "meaning": "单位圆（三角函数）",
+        "local_id": "trig_unit",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:math:derivative_power",
+      "labels": [
+        "Entity",
+        "MathConcept"
+      ],
+      "props": {
+        "ntype": "math_concept",
+        "name": "d/dx(xⁿ)",
+        "type": "math_concept",
+        "domain": "math",
+        "meaning": "幂函数求导",
+        "local_id": "derivative_power",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    },
+    {
+      "id": "MX:math:power_rule",
+      "labels": [
+        "Entity",
+        "MathConcept"
+      ],
+      "props": {
+        "ntype": "math_concept",
+        "name": "n·xⁿ⁻¹",
+        "type": "math_concept",
+        "domain": "math",
+        "meaning": "幂函数求导法则",
+        "local_id": "power_rule",
+        "confidence": 1.0,
+        "explicit_or_inferred": "inferred",
+        "source": "llm_hypothesis",
+        "created_at": "2026-09-28T16:17:34+08:00",
+        "version": "v0.1"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "same_as:MX:thm:gauss_bonnet->Q742833",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q742833",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:thm:riemann_curvature->Q855112",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q855112",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:def:manifold->Q3552958",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q3552958",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:def:tangent_space->Q909601",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q909601",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:def:riemannian_metric->Q7888899",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q7888899",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:def:levi_civita->Q548675",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q548675",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:lemma:covariant_derivative->Q2287715",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q2287715",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:lemma:partition_of_unity->Q9363325",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q9363325",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:math:binomial->Q114727876",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q114727876",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:math:pythagorean_identity->Q2039117",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q2039117",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:math:power_rule->Q1190543",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q1190543",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:sym:pi->Q5188229",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q5188229",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:sym:chi_m->Q852973",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q852973",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:phy:newton2->Q2397319",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q2397319",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:phy:kinetic_energy->Q46276",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q46276",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:phy:energy->Q11379",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q11379",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:chem:co2->Q1997",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q1997",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:chem:methane->Q37129",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q37129",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "same_as:MX:chem:combustion->Q468455",
+      "source": "Phase5.Wikidata",
+      "target": "WD:Q468455",
+      "type": "same_as",
+      "kind": "SAME_AS",
+      "confidence": 0.7,
+      "explicit_or_inferred": "inferred",
+      "props": {}
+    },
+    {
+      "id": "GN:inf_edge_001",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:p",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.731059,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=1.0000, sigmoid confidence=0.7311 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_002",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:pi",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.728379,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9864, sigmoid confidence=0.7284 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_003",
+      "source": "Phase5.GNN",
+      "target": "MX:math:pythagorean_identity",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.723365,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9612, sigmoid confidence=0.7234 (src_type=Symbol, tgt_type=MathConcept)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_004",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:r",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.723278,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9608, sigmoid confidence=0.7233 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_005",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:y",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.722442,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9566, sigmoid confidence=0.7224 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_006",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:n",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.719037,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9397, sigmoid confidence=0.7190 (src_type=Lemma, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_007",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:rho_alpha",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.71849,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9370, sigmoid confidence=0.7185 (src_type=Theorem, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_008",
+      "source": "Phase5.GNN",
+      "target": "MX:math:binomial",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.716279,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9261, sigmoid confidence=0.7163 (src_type=Definition, tgt_type=MathConcept)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_009",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:chi_m",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.712259,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.9064, sigmoid confidence=0.7123 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_010",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:rho_alpha",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.710301,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8968, sigmoid confidence=0.7103 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_011",
+      "source": "Phase5.GNN",
+      "target": "MX:math:expand",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.707558,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8836, sigmoid confidence=0.7076 (src_type=Symbol, tgt_type=MathConcept)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_012",
+      "source": "Phase5.GNN",
+      "target": "MX:math:expand",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.707227,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8820, sigmoid confidence=0.7072 (src_type=Definition, tgt_type=MathConcept)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_013",
+      "source": "Phase5.GNN",
+      "target": "MX:math:binomial",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.707195,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8818, sigmoid confidence=0.7072 (src_type=Symbol, tgt_type=MathConcept)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_014",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:r",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.703529,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8642, sigmoid confidence=0.7035 (src_type=Lemma, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_015",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:rho_alpha",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.701669,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8553, sigmoid confidence=0.7017 (src_type=Definition, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_016",
+      "source": "Phase5.GNN",
+      "target": "MX:math:trig_unit",
+      "type": "has_symbol",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.70107,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8524, sigmoid confidence=0.7011 (src_type=Symbol, tgt_type=MathConcept)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_017",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:x",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.698276,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8391, sigmoid confidence=0.6983 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_018",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:x",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.696684,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8316, sigmoid confidence=0.6967 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_019",
+      "source": "Phase5.GNN",
+      "target": "MX:sym:pi",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.696556,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8309, sigmoid confidence=0.6966 (src_type=Symbol, tgt_type=Symbol)"
+      }
+    },
+    {
+      "id": "GN:inf_edge_020",
+      "source": "Phase5.GNN",
+      "target": "MX:math:pythagorean_identity",
+      "type": "derived_from",
+      "kind": "llm_inferred_gnn",
+      "confidence": 0.694043,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "rationale": "GraphSAGE link-prediction: cosine-score=0.8191, sigmoid confidence=0.6940 (src_type=Molecule, tgt_type=MathConcept)"
+      }
+    },
+    {
+      "id": "AL:align_0000",
+      "source": "Phase5.EntityLinker",
+      "target": "wd:Q_pi",
+      "type": "same_as",
+      "kind": "cross_source_alignment",
+      "confidence": 0.9661,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "matched_by": [
+          "label",
+          "symbol",
+          "definition",
+          "domain"
+        ]
+      }
+    },
+    {
+      "id": "AL:align_0001",
+      "source": "Phase5.EntityLinker",
+      "target": "wd:Q_manifold",
+      "type": "same_as",
+      "kind": "cross_source_alignment",
+      "confidence": 0.8745,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "matched_by": [
+          "label",
+          "definition",
+          "domain"
+        ]
+      }
+    },
+    {
+      "id": "AL:align_0002",
+      "source": "Phase5.EntityLinker",
+      "target": "wd:Q_newton_second",
+      "type": "same_as",
+      "kind": "cross_source_alignment",
+      "confidence": 0.852,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "matched_by": [
+          "label",
+          "definition",
+          "domain"
+        ]
+      }
+    },
+    {
+      "id": "AL:align_0003",
+      "source": "Phase5.EntityLinker",
+      "target": "wd:Q_tangent_space",
+      "type": "same_as",
+      "kind": "cross_source_alignment",
+      "confidence": 0.8082,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "matched_by": [
+          "label",
+          "definition",
+          "domain"
+        ]
+      }
+    },
+    {
+      "id": "AL:align_0004",
+      "source": "Phase5.EntityLinker",
+      "target": "ek:molecule:CO2",
+      "type": "same_as",
+      "kind": "cross_source_alignment",
+      "confidence": 0.8011,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "matched_by": [
+          "label",
+          "definition",
+          "domain"
+        ]
+      }
+    },
+    {
+      "id": "AL:align_0005",
+      "source": "Phase5.EntityLinker",
+      "target": "pb:newton_second",
+      "type": "same_as",
+      "kind": "cross_source_alignment",
+      "confidence": 0.7829,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "matched_by": [
+          "label",
+          "definition",
+          "domain"
+        ]
+      }
+    },
+    {
+      "id": "AL:align_0006",
+      "source": "Phase5.EntityLinker",
+      "target": "wd:Q_carbon_dioxide",
+      "type": "same_as",
+      "kind": "cross_source_alignment",
+      "confidence": 0.7805,
+      "explicit_or_inferred": "inferred",
+      "props": {
+        "matched_by": [
+          "label",
+          "definition",
+          "domain"
+        ]
+      }
+    }
+  ]
+}
