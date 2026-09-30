@@ -1,0 +1,1380 @@
+{
+  "schema_version": "0.1",
+  "source": "ElementKG",
+  "reaction_count": 30,
+  "molecule_count": 11,
+  "nodes": [
+    {
+      "id": "EK:rxn:SYN00000",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "O=C=O.[H]O[H]>>OC(=O)O",
+        "conditions": {
+          "temp": 380.24157514368113,
+          "solvent": "water",
+          "yield": 0.87
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:CO2",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "CO2",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:H2O",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "H2O",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:H2CO3",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "H2CO3",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00001",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "C.O>>C=O",
+        "conditions": {
+          "temp": 326.41259076551734,
+          "solvent": "water",
+          "yield": 0.63
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:CH4",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "CH4",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:O2",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "O2",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00002",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "HCl.NaOH>>NaCl.O",
+        "conditions": {
+          "temp": 337.93188961381327,
+          "solvent": "water",
+          "yield": 0.7
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:HCl",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "HCl",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:NaOH",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "NaOH",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:NaCl",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "NaCl",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00003",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "H2.O2>>H2O",
+        "conditions": {
+          "temp": 372.54242080741614,
+          "solvent": "water",
+          "yield": 0.65
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:H2",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "H2",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00004",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "N2.3H2>>2NH3",
+        "conditions": {
+          "temp": 333.5278131773492,
+          "solvent": "water",
+          "yield": 0.79
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:N2",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "N2",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:mol:NH3",
+      "labels": [
+        "Molecule"
+      ],
+      "props": {
+        "name": "NH3",
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00005",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "O=C=O.[H]O[H]>>OC(=O)O",
+        "conditions": {
+          "temp": 388.33033641980757,
+          "solvent": "water",
+          "yield": 0.75
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00006",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "C.O>>C=O",
+        "conditions": {
+          "temp": 308.7934062387624,
+          "solvent": "water",
+          "yield": 0.87
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00007",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "HCl.NaOH>>NaCl.O",
+        "conditions": {
+          "temp": 351.5328625777671,
+          "solvent": "water",
+          "yield": 0.62
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00008",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "H2.O2>>H2O",
+        "conditions": {
+          "temp": 388.5377745079665,
+          "solvent": "water",
+          "yield": 0.98
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00009",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "N2.3H2>>2NH3",
+        "conditions": {
+          "temp": 375.89758897156685,
+          "solvent": "water",
+          "yield": 0.94
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00010",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "O=C=O.[H]O[H]>>OC(=O)O",
+        "conditions": {
+          "temp": 312.38874130355526,
+          "solvent": "water",
+          "yield": 0.86
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00011",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "C.O>>C=O",
+        "conditions": {
+          "temp": 387.1524625719352,
+          "solvent": "water",
+          "yield": 0.84
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00012",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "HCl.NaOH>>NaCl.O",
+        "conditions": {
+          "temp": 332.9621248624946,
+          "solvent": "water",
+          "yield": 0.55
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00013",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "H2.O2>>H2O",
+        "conditions": {
+          "temp": 328.13982310263054,
+          "solvent": "water",
+          "yield": 0.8
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00014",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "N2.3H2>>2NH3",
+        "conditions": {
+          "temp": 388.9524037612131,
+          "solvent": "water",
+          "yield": 0.97
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00015",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "O=C=O.[H]O[H]>>OC(=O)O",
+        "conditions": {
+          "temp": 333.58024162219505,
+          "solvent": "water",
+          "yield": 0.92
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00016",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "C.O>>C=O",
+        "conditions": {
+          "temp": 306.08252341977885,
+          "solvent": "water",
+          "yield": 0.89
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00017",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "HCl.NaOH>>NaCl.O",
+        "conditions": {
+          "temp": 342.68481158711984,
+          "solvent": "water",
+          "yield": 0.51
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00018",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "H2.O2>>H2O",
+        "conditions": {
+          "temp": 364.40249517330216,
+          "solvent": "water",
+          "yield": 0.7
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00019",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "N2.3H2>>2NH3",
+        "conditions": {
+          "temp": 377.7553120978256,
+          "solvent": "water",
+          "yield": 0.83
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00020",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "O=C=O.[H]O[H]>>OC(=O)O",
+        "conditions": {
+          "temp": 273.1451380529324,
+          "solvent": "water",
+          "yield": 0.74
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00021",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "C.O>>C=O",
+        "conditions": {
+          "temp": 383.18555248758315,
+          "solvent": "water",
+          "yield": 0.62
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00022",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "HCl.NaOH>>NaCl.O",
+        "conditions": {
+          "temp": 314.30095406891854,
+          "solvent": "water",
+          "yield": 0.93
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00023",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "H2.O2>>H2O",
+        "conditions": {
+          "temp": 297.2655206208036,
+          "solvent": "water",
+          "yield": 0.78
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00024",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "N2.3H2>>2NH3",
+        "conditions": {
+          "temp": 303.30422293413295,
+          "solvent": "water",
+          "yield": 0.97
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00025",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "O=C=O.[H]O[H]>>OC(=O)O",
+        "conditions": {
+          "temp": 375.0037925985435,
+          "solvent": "water",
+          "yield": 0.72
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00026",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "C.O>>C=O",
+        "conditions": {
+          "temp": 283.216618956172,
+          "solvent": "water",
+          "yield": 0.66
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00027",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "HCl.NaOH>>NaCl.O",
+        "conditions": {
+          "temp": 337.50846160011287,
+          "solvent": "water",
+          "yield": 0.96
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00028",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "H2.O2>>H2O",
+        "conditions": {
+          "temp": 286.8503464332502,
+          "solvent": "water",
+          "yield": 0.77
+        },
+        "source": "ElementKG"
+      }
+    },
+    {
+      "id": "EK:rxn:SYN00029",
+      "labels": [
+        "Reaction"
+      ],
+      "props": {
+        "reaction_smiles": "N2.3H2>>2NH3",
+        "conditions": {
+          "temp": 362.733299053095,
+          "solvent": "water",
+          "yield": 0.77
+        },
+        "source": "ElementKG"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00000",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00000",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2CO3",
+      "target": "EK:rxn:SYN00000",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CH4",
+      "target": "EK:rxn:SYN00001",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00001",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00001",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:HCl",
+      "target": "EK:rxn:SYN00002",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaOH",
+      "target": "EK:rxn:SYN00002",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaCl",
+      "target": "EK:rxn:SYN00002",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00003",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00003",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00003",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:N2",
+      "target": "EK:rxn:SYN00004",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00004",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NH3",
+      "target": "EK:rxn:SYN00004",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00005",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00005",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2CO3",
+      "target": "EK:rxn:SYN00005",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CH4",
+      "target": "EK:rxn:SYN00006",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00006",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00006",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:HCl",
+      "target": "EK:rxn:SYN00007",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaOH",
+      "target": "EK:rxn:SYN00007",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaCl",
+      "target": "EK:rxn:SYN00007",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00008",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00008",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00008",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:N2",
+      "target": "EK:rxn:SYN00009",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00009",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NH3",
+      "target": "EK:rxn:SYN00009",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00010",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00010",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2CO3",
+      "target": "EK:rxn:SYN00010",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CH4",
+      "target": "EK:rxn:SYN00011",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00011",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00011",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:HCl",
+      "target": "EK:rxn:SYN00012",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaOH",
+      "target": "EK:rxn:SYN00012",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaCl",
+      "target": "EK:rxn:SYN00012",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00013",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00013",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00013",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:N2",
+      "target": "EK:rxn:SYN00014",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00014",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NH3",
+      "target": "EK:rxn:SYN00014",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00015",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00015",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2CO3",
+      "target": "EK:rxn:SYN00015",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CH4",
+      "target": "EK:rxn:SYN00016",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00016",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00016",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:HCl",
+      "target": "EK:rxn:SYN00017",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaOH",
+      "target": "EK:rxn:SYN00017",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaCl",
+      "target": "EK:rxn:SYN00017",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00018",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00018",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00018",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:N2",
+      "target": "EK:rxn:SYN00019",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00019",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NH3",
+      "target": "EK:rxn:SYN00019",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00020",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00020",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2CO3",
+      "target": "EK:rxn:SYN00020",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CH4",
+      "target": "EK:rxn:SYN00021",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00021",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00021",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:HCl",
+      "target": "EK:rxn:SYN00022",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaOH",
+      "target": "EK:rxn:SYN00022",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaCl",
+      "target": "EK:rxn:SYN00022",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00023",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00023",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00023",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:N2",
+      "target": "EK:rxn:SYN00024",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00024",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NH3",
+      "target": "EK:rxn:SYN00024",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00025",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00025",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2CO3",
+      "target": "EK:rxn:SYN00025",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CH4",
+      "target": "EK:rxn:SYN00026",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00026",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:CO2",
+      "target": "EK:rxn:SYN00026",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:HCl",
+      "target": "EK:rxn:SYN00027",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaOH",
+      "target": "EK:rxn:SYN00027",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NaCl",
+      "target": "EK:rxn:SYN00027",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00028",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:O2",
+      "target": "EK:rxn:SYN00028",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2O",
+      "target": "EK:rxn:SYN00028",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:N2",
+      "target": "EK:rxn:SYN00029",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:H2",
+      "target": "EK:rxn:SYN00029",
+      "type": "reactant_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    },
+    {
+      "source": "EK:mol:NH3",
+      "target": "EK:rxn:SYN00029",
+      "type": "product_of",
+      "kind": "elementkg_extracted",
+      "confidence": 1.0,
+      "explicit_or_inferred": "explicit",
+      "data_source": "ElementKG"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "loaded": 25,
+  "sample_query": {
+    "reaction_id": "RA00010",
+    "reaction_smiles": "C.O>>C=O",
+    "temp_c": 122.3,
+    "solvent": "air",
+    "catalyst": "Pt",
+    "yield_pct": 83.1,
+    "components": [
+      {
+        "role": "reactant",
+        "species_id": "CH4",
+        "stoichiometry": 1.0
+      },
+      {
+        "role": "reactant",
+        "species_id": "O2",
+        "stoichiometry": 1.0
+      },
+      {
+        "role": "product",
+        "species_id": "CO2",
+        "stoichiometry": 1.0
+      }
+    ]
+  },
+  "sample_products": [
+    "CO2"
+  ]
+}
