@@ -39,6 +39,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 DELTA = os.path.join(ROOT, "06_PoC", "etl", "neo4j", "phase15_elementmerge_delta.json")
 
+# DB 边界属性消毒（Neo4j 不接受 dict / list[dict]；详见 06_PoC/neo4j_props.py 的说明）
+sys.path.insert(0, os.path.join(ROOT, "06_PoC"))
+import neo4j_props                                        # noqa: E402
+
 URI = os.environ.get("NEO4J_URI", "bolt://localhost:7687")
 USER = os.environ.get("NEO4J_USER", "neo4j")
 PW = os.environ.get("NEO4J_PASSWORD")
@@ -77,7 +81,12 @@ RETURN count(r) AS c
 
 
 def run_batched(driver, cypher, rows, label, batch=200, max_retry=6):
-    total, done = len(rows), 0
+    """返回 (成功行数, 被放弃的行数)。
+
+    ⚠ 「重试 6 次后放弃该批」是**静默降级**的高发点：脚本仍会 exit=0，日志里只有
+    几行 [retry] 容易被淹没。故这里显式把放弃的行数返回，由 main 决定退出码。
+    """
+    total, done, abandoned = len(rows), 0, 0
     for i in range(0, total, batch):
         seg = rows[i:i + batch]
         for attempt in range(max_retry):
@@ -93,10 +102,11 @@ def run_batched(driver, cypher, rows, label, batch=200, max_retry=6):
                 print(f"  [retry {attempt+1}/{max_retry}] {label} 批 {i}-{i+len(seg)} 失败: {e} (等 {wait}s)")
                 time.sleep(wait)
         else:
-            print(f"  !! {label} 批 {i} 多次重试仍失败，放弃")
+            abandoned += len(seg)
+            print(f"  !! {label} 批 {i}-{i+len(seg)} 重试 {max_retry} 次仍失败，放弃 {len(seg)} 条")
         if (i // batch) % 10 == 0:
             print(f"  进度 {label} {done}/{total}")
-    return done
+    return done, abandoned
 
 
 def main():
@@ -114,7 +124,15 @@ def main():
     edges = d.get("edges", [])
     dels = d.get("delete_edges", [])
 
+    # ⚠ 关键：在推送到 Neo4j 之前消毒属性。
+    # Neo4j 只接受 primitive / 同质 primitive 数组；delta 里可能夹带 dict（`alias_sources`）
+    # 或 list[dict]（`gnn_type_probs`），本地 NetworkX 不校验 → 推到 Aura 会**整批**失败。
+    # 2026-10-09 实测：因缺这一步，2 个边批（600 边）+ 节点批（118 元素的 period/group）被静默放弃。
+    nodes = neo4j_props.sanitize_rows(nodes, where="node")
+    edges = neo4j_props.sanitize_rows(edges, where="edge")
+
     print(f"[in] {os.path.relpath(a.delta, ROOT)}")
+    print(neo4j_props.report())
     print(f"     upsert 节点 {len(nodes)} / 待删节点 {len(del_nodes)}"
           f" / 新增·改挂边 {len(edges)} / 待删边 {len(dels)}")
     print(f"     phase: {d.get('meta', {}).get('phase')}")
@@ -161,16 +179,18 @@ def main():
             e0 = s.run("MATCH ()-[r]->() RETURN count(r) AS c").single()["c"]
         print(f"[before] Aura: {n0} 节点 / {e0} 边")
 
-        an = run_batched(driver, NODE_CYPHER, nodes, "节点 upsert", a.batch) if nodes else 0
+        an, bn = run_batched(driver, NODE_CYPHER, nodes, "节点 upsert", a.batch) if nodes else (0, 0)
         print(f"[1/4] 节点 upsert 完成 {an}/{len(nodes)}")
-        adn = (run_batched(driver, DEL_NODE_CYPHER, [{"id": i} for i in del_nodes],
-                           "删除节点", 50) if del_nodes else 0)
+        adn, bdn = (run_batched(driver, DEL_NODE_CYPHER, [{"id": i} for i in del_nodes],
+                                "删除节点", 50) if del_nodes else (0, 0))
         print(f"[2/4] 节点 DETACH DELETE 完成 {adn}/{len(del_nodes)}")
-        ae = run_batched(driver, EDGE_CYPHER, edges, "MERGE 边", a.batch) if edges else 0
+        ae, be = run_batched(driver, EDGE_CYPHER, edges, "MERGE 边", a.batch) if edges else (0, 0)
         print(f"[3/4] 边 MERGE 完成 {ae}/{len(edges)}")
         if dels:
-            add = run_batched(driver, DEL_EDGE_CYPHER, dels, "删除陈错边", a.batch)
+            add, bd = run_batched(driver, DEL_EDGE_CYPHER, dels, "删除陈错边", a.batch)
             print(f"[4/4] 边 DELETE 完成 {add}/{len(dels)}")
+        else:
+            bd = 0
 
         with driver.session(database=DB) as s:
             n1 = s.run("MATCH (n) RETURN count(n) AS c").single()["c"]
@@ -180,6 +200,14 @@ def main():
             elem = s.run("MATCH (n:Element) RETURN count(n) AS c").single()["c"]
         print(f"[after ] Aura: {n1} 节点 / {e1} 边  (Δ{n1-n0:+d} / Δ{e1-e0:+d})")
         print(f"[check ] 别名残留 {left}（应为 0） · Element 节点 {elem}（应为 118）")
+
+        lost = bn + bdn + be + bd
+        if lost:
+            print("\n" + "!" * 72)
+            print(f"!! 本步有 {lost} 条记录因批次反复失败被放弃 → **云端与本地已分叉**！")
+            print("!! 看上方 [retry] 行的异常类型；修好后重跑本步即可（MERGE 幂等，可安全重复）。")
+            print("!" * 72)
+            return 3
     finally:
         driver.close()
     return 0
