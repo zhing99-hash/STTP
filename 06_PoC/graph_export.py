@@ -61,6 +61,10 @@ DEFAULT_OUT = os.path.join(HERE, "graph_data.json")
 TYPE_PRIORITY = [
     "Symbol", "Element", "Molecule", "Reaction", "FunctionalGroup", "Constant", "PhysicalQuantity", "Unit",
     "Paper",   # Phase 8：OpenAlex 文献节点（Paper）
+    # Phase 9：Wikidata 真实世界实体。原先未登记 —— 24 个 WD 节点只能靠
+    # ``labels[0]`` 的偶然顺序被识别（2026-10-09 标签规范化审计发现），
+    # 登记后判定不再依赖顺序。
+    "WikidataEntity",
     "Definition", "Theorem", "Lemma", "Equation", "MathConcept", "Formula",
 ]
 
@@ -83,27 +87,50 @@ def pick_type(labels) -> str:
 
 
 _NS_SUBJECT = {
+    # ---- 物理 ----
     "PQ": "物理", "PB": "物理",
+    # ⚠ 修正（2026-10-09 连通性审计）：CM/QM/TH/EM 原被误标为「数学」。
+    # 它们是**物理切片**的命名空间（Classical Mechanics / Quantum Mechanics /
+    # Thermodynamics / Electromagnetism），不是数学。OP/SM/RT 此前缺失。
+    # 这些键仅在本节点 domain 为空时才生效，但错标会直接污染跨学科判定。
+    "CM": "物理", "QM": "物理", "TH": "物理", "EM": "物理",
+    "OP": "物理", "SM": "物理", "RT": "物理",
+    "UN": "物理",   # SI 单位层
+    "SY": "物理",   # 共享符号（E/m/c/F/a/v/KE，源自能量·燃烧切片）
+    "CO": "物理",   # CODATA 常量层
+    "FO": "物理",   # 能量·燃烧切片
+    # ---- 化学 ----
     "EL": "化学", "EK": "化学", "EK2": "化学", "IC": "化学", "BC": "化学",
-    "RX": "化学", "OM": "化学",
-    "MX": "数学", "MG": "数学", "MA": "数学", "MC": "数学", "CM": "数学",
-    "QM": "数学", "TH": "数学", "SY": "数学",
-    # Phase 7b 新增切片命名空间（domain 存在时不走此兜底，此处仅为鲁棒性）
-    "CE": "化学",   # Chemical Equilibrium
-    "NT": "数学",   # Number Theory
-    "PA": "数学",   # Paper（Phase 8 · OpenAlex 文献）
+    "RX": "化学", "OM": "化学", "MO": "化学", "PC": "化学",
+    "CE": "化学",   # Chemical Equilibrium（Phase 7b 新增切片）
+    # ---- 数学 ----
+    "MX": "数学", "MG": "数学", "MA": "数学", "MC": "数学",
+    "NT": "数学",   # Number Theory（Phase 7b 新增切片）
+    # ---- 文献 / 跨世界实体 ----
+    "PA": "数学",   # Paper：Phase 8 选取的是**数学文献**切片，故归数学
+    "WD": "跨学科", "wd": "跨学科",   # Wikidata 真实世界实体（跨学科桥）
 }
 
 
 def subject_of(domain: str, node_id: str = "") -> str:
     """域名 → 学科中文名（可视化填充色按学科区分）。
 
-    domain 缺失时按 id 命名空间兜底：原实现一律回退「数学」，
-    会把 ``PQ:energy`` / ``PQ:mass`` / ``PB:*`` 等物理量误标为数学，
+    优先级：**显式 domain** > **id 命名空间兜底**。
+
+    domain 缺失时按命名空间兜底：原实现一律回退「数学」，会把
+    ``PQ:energy`` / ``PQ:mass`` / ``PB:*`` 等物理量误标为数学，
     直接污染前端「跨域路径」的学科切换判定（化学→物理 会显示成 化学→数学）。
+
+    ⚠ 2026-10-09 连通性审计进一步修正 ``_NS_SUBJECT``：
+    CM/QM/TH/EM 等**物理切片**命名空间原被误标「数学」；补 MO/UN/SY/CO/WD 等键。
+
+    另：``biology.*`` 归 **化学**。本项目学科口径只有 物理/化学/数学 三类，
+    生物化学是化学的分支（``BC:rx:*`` 三条反应原因此落入「跨学科」，
+    在连通性审计里表现为 BC 命名空间「混标」并虚增跨域边）。
+    若将来引入独立「生物」层，需同步前端 TYPE_STYLE 与本映射。
     """
     d = (domain or "").strip().lower()
-    if d.startswith("chem") or d.startswith("ek"):
+    if d.startswith("chem") or d.startswith("ek") or d.startswith("bio"):
         return "化学"
     if d.startswith("phys") or d.startswith("phy") or d.startswith("pb"):
         return "物理"
@@ -112,7 +139,9 @@ def subject_of(domain: str, node_id: str = "") -> str:
     if d:
         return "跨学科"
     # domain 为空 → 用 id 命名空间兜底；未知前缀保持旧的「数学」行为，避免大面积改色
-    return _NS_SUBJECT.get((node_id or "").split(":")[0], "数学")
+    pfx = (node_id or "").split(":")[0]
+    # 命名空间大小写混用（历史数据里有 `ek:` / `pb:` 小写写法）→ 回退到大写键再查一次
+    return _NS_SUBJECT.get(pfx) or _NS_SUBJECT.get(pfx.upper(), "数学")
 
 
 def uniquify_edge_ids(edges: list) -> int:

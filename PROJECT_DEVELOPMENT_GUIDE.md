@@ -22,7 +22,7 @@ CH₄ + 2O₂ → CO₂ + 2H₂O  (Reaction)
 ```
 最终实现：从纯数学定理出发，一路推理到真实化学分子的物理化学性质，全链路可符号验证。
 
-**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **7127 节点 / 32902 边**，已开源至 GitHub。
+**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **7339 节点 / 40249 边**（Aura 云端集合级对账零差异），已开源至 GitHub。**北极星指标「跨学科连通性」已于 2026-10-09 首次仪器化**：连通分量 **1**、孤立节点 **0**、跨域边 **869 = 2.16%**（结构风险：物理占比 **71.5%**、`has_quantity` 单一类型占跨域边 **90%**、跨学科实质只在「化学 ↔ 物理」**93%**）。
 
 ---
 
@@ -34,15 +34,15 @@ URI:        neo4j+ssc://853a33bc.databases.neo4j.io
 Database:   853a33bc
 Username:   853a33bc
 Password:   （见 环境变量 / .env，禁止明文）
-总计:       7127 节点 / 32902 边
+总计:       7339 节点 / 40249 边（与本地集合级对账零差异）
 ```
 
-> ⚠️ Aura 免费实例约 5 万节点上限，当前 **7382 节点 / 40207 边**（云端与本地严格一致），连接池紧张时注意分批操作。
+> ⚠️ Aura 免费实例约 5 万节点上限，当前 **7339 节点 / 40249 边**（云端与本地集合级对账零差异），连接池紧张时注意分批操作。
 
 ### 2.2 本地可视化服务
 ```
 地址:   http://127.0.0.1:8765/
-数据:   06_PoC/graph_data_phase22.json（7382 节点 / 40207 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
+数据:   06_PoC/graph_data_phase24.json（7339 节点 / 40249 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
 前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax，**依赖已本地 vendored**，可完全离线）
 ```
 
@@ -51,7 +51,7 @@ Password:   （见 环境变量 / .env，禁止明文）
 bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_PYTHON
 ```
 > 长驻请后台启动并重定向日志，例如：`bash sttp.sh viz > .runlog/viz.log 2>&1 &`
-> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase22.json python 06_PoC/viz_server.py`
+> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase24.json python 06_PoC/viz_server.py`
 > ⚠️ 必须用系统 Python（`.env` 的 `STTP_PYTHON`）；托管 3.13 是空环境，缺依赖。
 
 ### 2.3 GitHub 仓库
@@ -130,25 +130,30 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 
 ## 四、数据模型
 
-### 4.1 节点类型（15 类）
+### 4.1 节点类型（15 类，受控词表）
 
-| 类型 | 数量（约） | 说明 | 典型 id 前缀 |
-|------|-----------|------|------------|
-| Formula | 5059 | 物理方程（PhysicsBabel 引入） | PB:fo:, MX:formula: |
-| Reaction | 809 | 化学反应 | RX:, BC:rx:, OM:rx: |
-| Molecule | 753 | 分子（含原子组成） | MO:, PC:mol:, BC:mo:, OM:mo:, IC:mo: |
-| Element | 137 | 化学元素（含原子量/周期/族） | EL:, EK:el:, IC:el: |
-| PhysicalQuantity | 105 | 物理量 | CM:pq:, MX:phy:, PB:pq:, TH:pq: |
-| Symbol | 96 | 数学/科学符号 | MX:sym: |
+| 类型 | 数量 | 说明 | 典型 id 前缀 |
+|------|------|------|------------|
+| Formula | 5082 | 物理方程（PhysicsBabel 引入） | PB:fo:, MX:formula: |
+| Reaction | 769 | 化学反应 | RX:, BC:rx:, OM:rx: |
+| Molecule | 755 | 分子（含原子组成） | MO:, PC:mol:, BC:mo:, OM:mo:, IC:mo: |
+| Paper | 181 | 文献（OpenAlex 引入，Schema v0.2） | PA:oa: |
+| PhysicalQuantity | 144 | 物理量 | CM:pq:, MX:phy:, PB:pq:, TH:pq: |
+| Element | 118 | 化学元素（含原子量/周期/族，已去重） | EK:el: |
+| Symbol | 113 | 数学/科学符号 | MX:sym: |
 | FunctionalGroup | 76 | 官能团（ElementKG 引入） | EK2:fg: |
 | Unit | 33 | 国际单位 | UN: |
 | WikidataEntity | 24 | Wikidata 对齐实体 | WD: |
-| Constant | 12 | 物理常量 | TH:un:gas_constant, MX:const: |
-| Physical_quantity | 7 | 旧标签（已尽量统一） | PQ: |
-| MathConcept | 6 | 数学概念 | MX:math: |
+| Constant | 23 | 物理常量（CODATA 2022 真实化） | TH:pq:, MX:const:, PB:pq: |
+| MathConcept | 13 | 数学概念 | MX:math: |
 | Definition | 4 | 数学定义 | MX:def: |
 | Lemma | 2 | 数学引理 | MX:lemma: |
 | Theorem | 2 | 数学定理 | MX:thm: |
+
+> ⚠️ **类型判定必须用 `graph_export.pick_type(labels)`**（传 `labels`，不是节点对象）。
+> 历史上用 `labels[0]` 统计，导致首标签恒为 `Entity` 的 1658 个节点被吞。
+> **标签收敛**：`Physical_quantity`（拼写漂移）/ `ElementEntity` / `PhysicsEntity`（外部源自造）三个表外桶
+> 已于 2026-10-09 归零（`03_知识层/normalize_labels.py`，词表 = `TYPE_PRIORITY` ∪ {Entity}）。
 
 **每个节点的结构**（raw 格式，`normalized.json`）：
 ```json
@@ -169,27 +174,35 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 }
 ```
 
-### 4.2 边类型（17 种）
+### 4.2 边类型（22 种）
 
-| 边类型 | 数量（约） | 说明 | 门控 |
-|--------|-----------|------|------|
-| has_symbol | 24267 | 公式/物理量 → 符号 | — |
+| 边类型 | 数量 | 说明 | 门控 |
+|--------|------|------|------|
+| has_symbol | 24367 | 公式/物理量 → 符号 | — |
+| has_quantity | 4385 | 分子/元素 → 物理量（摩尔质量、类药性描述符…） | R-PHY |
+| composed_of | 2664 | 分子 → 元素（含 count） | R-CHEM |
 | has_functionalgroup | 2350 | 分子 → 官能团 | — |
-| reagent_of | 1807 | 反应物 → 反应 | R-CHEM |
-| same_period | 1355 | 同周期元素 | — |
-| dimensionally_consistent | 1141 | 量纲自洽（物理方程内） | R-PHY |
-| same_family | 682 | 同族元素 | — |
-| reactant_of | 660 | 反应物 → 反应（已验证） | R-CHEM |
-| has_element | 105 | 分子 → 元素 | R-CHEM |
-| defines | 98 | 定义者 | — |
-| same_as | 97 | 跨源对齐（Wikidata / 基础库） | — |
-| product_of | 91 | 产物 → 反应（已验证） | R-CHEM |
-| composed_of | 84 | 分子 → 元素（含 count） | R-CHEM |
-| derived_from | 60 | 数学推导 | R-MATH |
-| has_quantity | 59 | 分子 → 摩尔质量物理量 | R-PHY |
-| has_unit | 41 | 物理量 → 单位 | R-PHY |
+| reagent_of | 1807 | 试剂 → 反应 | R-CHEM |
+| same_period | 1360 | 同周期元素 | — |
+| dimensionally_consistent | 1200 | 量纲自洽（物理方程内） | R-PHY |
+| reactant_of | 679 | 反应物 → 反应（已验证） | R-CHEM |
+| same_family | 374 | 同族元素（f 区实为「同系列」） | — |
+| discusses | 178 | 文献 → 概念 | — |
+| cites | 176 | 文献引用 | — |
+| defines | 138 | 定义者 | — |
+| derived_from | 120 | 数学推导 / 常量派生 | R-MATH |
+| has_element | 109 | 分子 → 元素 | R-CHEM |
+| same_as | 102 | 跨源对齐（Wikidata / 基础库） | — |
+| product_of | 99 | 产物 → 反应（已验证） | R-CHEM |
+| has_unit | 78 | 物理量 → 单位 | R-PHY |
+| related_to | 53 | GNN 待复核假设（NEEDS_REVIEW） | ⚠️ 未验证 |
+| part_of | 5 | 部分-整体 | — |
 | chemical_reaction | 2 | 反应类型标注 | — |
 | proves | 2 | 证明关系 | R-MATH |
+| releases | 1 | 放热标注 | — |
+
+> **跨域边占比 = 869 / 40249 = 2.16%**（北极星指标）；其中 `has_quantity` 一种占 **784 = 90%**
+> —— **跨域结构对单一关系类型高度依赖，是扩容器时的重点风险**。
 
 **每条边的结构**（raw 格式）：
 ```json
@@ -221,10 +234,11 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 | MX: | MathXiv 公式图谱 | MX:thm:gauss_bonnet, MX:phy:newton2 |
 | MG: | math-graph 数据集 | MG:pq:force |
 | PB: | PhysicsBabel | PB:fo:0, PB:pq:molar_mass |
-| EK: / EK2: | ElementKG OWL | EK:el:Fe, EK2:mol:molecule_977 |
+| EK: / EK2: | ElementKG OWL / 10M CSV | EK:el:Fe, EK2:mol:molecule_977 |
 | PC: | PubChem | PC:mol:280 |
+| PA: | OpenAlex（文献层） | PA:oa:W2005936791 |
 | WD: | Wikidata | WD:Q742833 |
-| EL: | 手工种子（元素） | EL:h, EL:c |
+| ~~EL:~~ | **已废弃**（A5 去重并入 `EK:el:<Symbol>`） | ~~EL:h~~ → `EK:el:H` |
 | MO: | 手工种子（分子） | MO:ch4, MO:co2 |
 | RX: | 手工种子（反应） | RX:comb_ch4 |
 | CM: | 经典力学切片 | CM:pq:mass, CM:un:pascal |
@@ -233,6 +247,11 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 | BC: | 生物化学切片 | BC:rx:respiration |
 | OM: | 有机化学切片 | OM:rx:ethane_comb |
 | IC: | 无机化学切片 | IC:rx:neutralization |
+| CE: | 化学平衡切片 | CE:fo:mass_action |
+| NT: | 数论切片 | NT:thm:euler |
+
+> ⚠️ **`EL:*` 已于 2026-10-09 全面退出**（`10_种子数据/seed_common.py` 的 `BASE_IDS` 同步改为 `EK:el:*`）。
+> 此前 `BASE_IDS` 仍写 `EL:c/h/o`，导致 42 条 `composed_of` 边**被静默丢弃**（引用不存在的 id，悬空即被过滤）。
 
 ---
 
@@ -248,18 +267,24 @@ viz = graph_export.build_graph_data(raw_json_path)  # 返回 viz 格式 dict
 #           edges[id/source/target/type/kind/confidence/explicit_or_inferred/verified/gate/evidence/rationale/domain]
 ```
 
-**type 优先级**（从 labels[0] 选主类型）：
+**type 优先级**（`TYPE_PRIORITY`，**须用 `pick_type(labels)` 判定**，勿用 `labels[0]`）：
 ```
-Symbol > Element > Molecule > Reaction > Constant >
-PhysicalQuantity > Unit > FunctionalGroup >
-Definition > Theorem > Lemma > Equation > MathConcept > Formula > Entity
+Symbol > Element > Molecule > Reaction > FunctionalGroup > Constant > PhysicalQuantity > Unit >
+Paper > WikidataEntity > Definition > Theorem > Lemma > Equation > MathConcept > Formula > （兜底 Entity）
 ```
+> `Paper`（Phase 8 OpenAlex）与 `WikidataEntity`（Phase 9）是后补登记的 —— 在登记之前，
+> 这 181 + 24 个节点只能靠 `labels[0]` 的偶然排列顺序被「碰巧」识别，属**静默依赖**。
 
-**domain → subject 着色**：
-- `chem` / `ek` → 化学
-- `phys` / `phy` / `pb` → 物理
-- `math` / `mx` / `mg` → 数学
+**domain / 命名空间 → subject 着色**（`subject_of(domain, node_id)`，优先级：**显式 domain > id 命名空间兜底**）：
+- **物理**：`phys` / `phy` / `pb`；命名空间 `PQ` `PB` `CM` `QM` `TH` `EM` `OP` `SM` `RT` `UN` `SY` `CO` `FO`
+- **化学**：`chem` / `ek` / `bio*`；命名空间 `EL` `EK` `EK2` `IC` `BC` `RX` `OM` `MO` `PC` `CE`
+- **数学**：`math` / `mx` / `mg`；命名空间 `MX` `MG` `MA` `MC` `NT` `PA`（本批 Paper 是数学文献切片）
+- **跨学科**：`WD` / `wd`（Wikidata 真实世界实体）
 - 其他 → 跨学科
+
+> ⚠️ **口径变更史（2026-10-09）**：`_NS_SUBJECT` 曾把 **`CM`/`QM`/`TH`/`EM` 标成「数学」**，
+> 直接**污染跨学科判定**（凭空造出 63 条假跨域边）。修正后跨域边从 1054 降到 991（修数据前）→ 再降到 869（修数据后）。
+> **改学科口径一定要做反向对照**，否则会把「剔除假数据」误读成「连通性退化」。
 
 ### 5.2 `06_PoC/viz_server.py` — 可视化后端
 ```
@@ -335,6 +360,53 @@ bash sttp.sh reconcile                 # 实际清理（使云端严格 == 本�
 > 以本地 `06_PoC/etl/normalized.json` 为基准：删云端独有三元组 / 删同三元组 kind 变体 /
 > **补本地独有边**（含「删后需按本地 kind 补回」兜底）。已并入推送编排的步骤 12。
 
+### 5.9 `06_PoC/connectivity_audit.py` — ★北极星连通性仪器（**2026-10-09 新增**）
+```bash
+python 06_PoC/connectivity_audit.py                    # 人读报告
+python 06_PoC/connectivity_audit.py --json out.json    # 机器读
+python 06_PoC/connectivity_audit.py --input 06_PoC/etl/normalized.json   # 指定权威 raw 图
+python 06_PoC/connectivity_audit.py --strict           # 有异常（分量>1 / 孤立>0 / 悬空 / 自环）时退码 2
+```
+> **四块输出**：① 连通分量 / 孤立节点（含每分量节点数列出）② **跨域边矩阵**（学科对 × 边类型）
+> ③ 学科分布 ④ 命名空间 × 学科一致性（`_NS_SUBJECT` 与显式 domain 是否冲突）。
+> `MX` / `PQ` 为**枢纽命名空间**（有意跨学科，白名单内不做「混标」警告）。
+> ⚠️ **指标口径会随 `graph_export.subject_of()` 变更而变** → 改口径时**必须做反向对照**，
+> 否则无法区分「连通性退化」与「假跨域边被剔除」。详见 `07_交付物/跨学科连通性审计报告_20261009.md`。
+
+### 5.10 `06_PoC/apply_delta.py` — ★通用本地 delta 应用器
+```bash
+python 06_PoC/apply_delta.py --delta <delta.json> --phase <N>            # dry-run（默认）
+python 06_PoC/apply_delta.py --delta <delta.json> --phase <N> --apply    # 实际写入
+```
+> delta schema 四段：`{meta, nodes, delete_nodes, edges, delete_edges}`。
+> 支持 upsert / 删除 / **merge** / 删边；**默认 dry-run**；执行前**自动备份** `normalized.json`；
+> 内置 **6 项自检**（悬空 / 自环 / id 唯一 / 计数 / 已存在节点 labels 不变 / 备份可回滚）。
+> **`normalized.json` 是权威基准**，改数据必须先在此 apply 通过，再谈推 Aura。
+
+### 5.11 `06_PoC/sync_seed_delta.py` — seed → 权威图**差量回灌**（**2026-10-09 新增**）
+```bash
+python 06_PoC/sync_seed_delta.py                 # 计算 seed 与权威图的差量（dry-run）
+python 06_PoC/sync_seed_delta.py --delta-only <备份.json>   # 据备份重建 delta
+```
+> 用途：`10_种子数据/` 的 `build_*.py` 改动后，**不必全量重建**，只把差量并回权威图。
+> **三类硬保护**（缺一不可）：① `VOLATILE`（`created_at` 等时间戳）**排除出 diff**，
+> 否则每次重跑都产生几百条假阳性 upsert；② 已存在节点**只改 props、不碰 labels**（种子标签是简写，会覆盖图谱权威标签）；
+> ③ **权威性守卫** —— 外部权威来源（`nist_codata`/`openalex`/`pubchem`/`chembl`/…）的属性
+> **禁止被种子降级覆盖**（实测拦住 9 处越权覆盖，如 `TH:pq:gas_const` 的 `8.314` 会被种子的粗值覆写）。
+> ⚠️ `delete_nodes` 必须输出**纯 id 字符串**，不可输出 `[{"id":...}]`（见 §9.1 静默空操作）。
+> `PAYLOAD_KEYS`（`value`/`unit`/`uncertainty`/…）走专用比对，避免把「数值+单位」误判为变更。
+
+### 5.12 `03_知识层/normalize_labels.py` — 标签受控词表收敛（**2026-10-09 新增**）
+```bash
+python 03_知识层/normalize_labels.py --dry-run    # 默认
+python 03_知识层/normalize_labels.py --apply
+python 03_知识层/normalize_labels.py --delta-only <备份.json>   # 据备份重建 delta
+```
+> 把 `Physical_quantity`（拼写漂移）/ `ElementEntity` / `PhysicsEntity`（外部源自造类型）
+> 收敛到 `graph_export.TYPE_PRIORITY` 的**受控词表 ∪ {Entity}**。
+> **词表封闭性断言**必须用**归一化后**的 labels 判定（用原始 labels 会把「待改的」误报成「遗留的」）。
+> delta 节点须带 `"props": {}`（防 `SET n += null` 报错）。
+
 ---
 
 ## 六、数据源接入方式
@@ -344,14 +416,22 @@ bash sttp.sh reconcile                 # 实际清理（使云端严格 == 本�
 | 数据源 | 类型 | 规模 | 接入脚本 | 已入 Aura |
 |--------|------|------|----------|----------|
 | MathXiv (手工策划) | 公式图谱 | 36 节点 / 52 边 | —（直接写入） | ✅ |
-| 13 个种子切片 | 垂直领域骨架 | 13 个 seed JSON | build_*.py | ✅ |
-| ElementKG OWL | 真实元素 KG | 118 元素 / 2044 边 | elementkg_ingest.py | ✅ |
-| ElementKG 10M CSV | 真实化学 KG（子集） | 800 反应 / 713 分子 | elementkg10m_ingest.py | ✅ |
-| PubChem | 真实分子 | 14 分子 | pubchem_mol_ingest.py | ✅ |
-| PhysicsBabel | 真实物理方程 | ~600 方程（~5000 待推） | physicsbabel_ingest.py | ⚠️ 部分 |
-| Wikidata | 跨源对齐 | 19 same_as 边 | wikidata_adapter.py | ✅ |
-| GNN 推断 | 链接预测 | 20 条候选边 | gnn_infer.py | ✅ |
-| Phase 9 深化 | 符号校验桥 | 188 条 | phase9_deepen.py | ✅ |
+| 13 个种子切片 | 垂直领域骨架 | 13 个 seed JSON | `10_种子数据/build_*.py` | ✅ |
+| ElementKG OWL | 真实元素 KG | 118 元素 / 2044 边 | `11_真实数据/elementkg_ingest.py` | ✅ |
+| ElementKG 10M CSV | 真实化学 KG（子集） | 800 反应 / 713 分子 | `11_真实数据/elementkg10m_ingest.py` | ✅ |
+| PhysicsBabel | 真实物理方程 | ~600 方程（~5000 待推） | `11_真实数据/physicsbabel_ingest.py` | ⚠️ 部分 |
+| Wikidata | 跨源对齐 | 19 same_as 边 | `11_真实数据/wikidata_adapter.py` | ✅ |
+| GNN 推断 | 链接预测 | 20 条候选边 | `09_科研扩展/9_inference/gnn_infer.py` | ✅ |
+| Phase 9 深化 | 符号校验桥 | 188 条 | `09_科研扩展/9_inference/phase9_deepen.py` | ✅ |
+| **OpenAlex**（Phase 8 首步） | 真实文献层 | 181 篇 Paper + 176 `cites` + 178 `discusses` | `11_真实数据/openalex_ingest.py` | ✅ |
+| **NIST CODATA 2022**（Phase 8 二期） | 真实物理常量 | 355 条解析 → 常量 13→23（含 10 个跨学科桥） | `11_真实数据/codata_ingest.py` | ✅ |
+| **PubChem 精确反查**（Phase 8 二期） | 真实分子属性 | `inchikey` 反查 713/713 命中 | `11_真实数据/pubchem_ingest.py` | ✅ |
+| **Crossref / DataCite**（Phase 8 三期） | 文献多源校验 | 163/163 DOI 核验命中 + 39 条一致性 flag | `11_真实数据/literature_validate.py` | ✅ |
+| **ChEMBL**（Phase 8 三期） | 真实药学维度 | 332/713 命中，8 个类药性描述符 → 2512 条 `has_quantity` | `11_真实数据/chembl_ingest.py` | ✅ |
+
+> **源可达性先探测**：换源前一律先跑 `python 11_真实数据/probe_sources.py`（TCP → TLS → 真实 HTTP 读响应体，多轮 × 双通道）。
+> **白名单按「域 **+ 路径**」放行，TLS 握手成功 ≠ HTTP 可达，且不可跨路径外推** ——
+> 例：`www.ebi.ac.uk/europepmc/*` 直连 3/3 通，而**同主机**的 `/chembl/*` 直连 0/3、需走代理 2/3。
 
 ### 6.2 新增数据源的标准流程
 
@@ -373,7 +453,7 @@ bash sttp.sh reconcile                 # 实际清理（使云端严格 == 本�
 
 5. 推送到 Aura
    → bash sttp.sh push <delta.json>          # 单 delta
-   → bash sttp.sh pushall --execute          # 全量重放（十三步，含对账 + 导出）
+   → bash sttp.sh pushall --execute          # 全量重放（**十六步**，含对账 + 导出）
 
 6. 对账（**推送后必做**）
    → bash sttp.sh reconcile --report-only    # 先看差异
@@ -384,6 +464,9 @@ bash sttp.sh reconcile                 # 实际清理（使云端严格 == 本�
 
 8. 重启 viz
    → bash sttp.sh viz                         # 自动读 .env 的 GRAPH_DATA_FILE
+
+9. 北极星自检（**新增/删除节点后必做**）
+   → python 06_PoC/connectivity_audit.py --strict   # 分量应=1、孤立=0、悬空/自环=0（退码 0）
 ```
 
 ---
@@ -479,9 +562,29 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 - **`getaddrinfo failed` 不等于「Aura 实例暂停」**（曾据此误报 7 轮）：先用公共解析器（UDP/53 直查 `8.8.8.8`/`1.1.1.1`）交叉验证。
   仅本机失败 → **DNS 陈旧负缓存**，`ipconfig /flushdns` 即可；仅瞬时失败 → 直接重试；公共解析器也 NXDOMAIN → 才是实例暂停（需 console.neo4j.io resume）。
 - **Cypher 25 兼容**：`MATCH (a)-[:*1..6]->(b)` 通配符变长路径不支持，须改用显式 reltype 列表或定长 `[:REL*2]`。`MATCH (a)-[r]->(b) RETURN a.id + b.id` 字符串拼接用 `||` 而非 `+`。
+- **🔴 删除可能是「静默空操作」，而且自检会与被检对象一起静默通过**（2026-10-09 发现）：
+  `delete_nodes` 若写成 `[{"id": "X"}]`，推送器二次取 `x["id"]` 会得到 `{"id":"X"}`（一个 dict），
+  拼进 Cypher 后 `MATCH` **落空但不报错** —— 结果「**Δ+0 且退码 0**」。
+  更危险的是：**残留自检用的是同一份错误的 id**，于是自检也「通过」了，故障完全隐形。
+  修复两侧：`push_element_merge.py` 加 `norm_del_ids()`（兼容 str / dict）**并新增「实删数断言」**（残留 >0 退码 3）；
+  `sync_seed_delta.py` 的 `delete_nodes` 改为输出**纯 id 字符串**。
+  **教训：自检的输入不能与被检对象是同一份来源，否则错误会「一起通过」。**
+- **🔴 `apoc.create.addLabels` 只增不减 → 云端标签会与本地分叉**：
+  用它做标签「规范化」时，旧标签会永远留在云端，本地却已替换 → 集合级对账仍会报差异。
+  推送器 `push_element_merge.py` 已新增 `--set-labels`（走 `apoc.create.setLabels`，**整体替换**），标签收敛轮必须带此开关。
+- **🔴 跨源「看似重复」的多节点先查边，不要合并**：分子层有 8 套命名空间（`MO:`/`PC:mol:`/`IC:mo:`/`BC:mo:`…）
+  看似重复，实则被 `same_as` 显式关联且带 provenance，属**有意的跨源对齐设计**。盲目合并会毁掉跨源网络。
+  已知副作用：同一实体多节点会**稀释 GNN 嵌入**；若将来要缓解，应**在 GNN 特征中注入 `same_as` 邻接**或做**连通分量级嵌入池化**，而非删节点。
 
 ### 9.2 数据生成
 
+- **🔴 种子不是权威，权威在图谱**（2026-10-09 实测）：`10_种子数据/` 是**手工策划的骨架**，其数值可能与真实源冲突。
+  例：`TH:pq:gas_const` 种子里是 `8.314`，图谱（CODATA 2022）是 `8.314462618`；`EM:pq:permittivity`/`permeability` 种子里是 2018 旧值。
+  **回灌种子差量时必须有权威性守卫**（`sync_seed_delta.py` 的 `EXTERNAL_AUTHORITY`），否则会把真实源数据降级成草稿值。
+- **🔴 改数据前先改源头**：只修图谱不改适配器/生成器，重跑 ETL 会**重新长出同一个错误**。
+  本轮 82 处学科 domain 错标、`EL:*` 悬空引用、42 个孤儿反应，全部是「改源头 + 改图谱」成对完成的。
+- **外部字段语义先验证再用**：已 5 次踩中（ElementKG 的 `HASATOMIC` 实为原子序数 / PhysicsBabel / OpenAlex 年份 / ChEMBL / Crossref 引用计数口径）。
+  **引用计数不可跨源比对或覆盖**（Crossref 口径远窄于 OpenAlex，中位比值 0.62）；**反向异常（子集 > 全集）才是真异常**。
 - **新增切片 OUT 必须是 `.json`**：构建脚本 `OUT` 变量若误设为 `.py` 会覆盖自身源码且不入扫描管线。
 - **same_as 桥接必须列白名单**：新切片 same_as 指向基础库已有节点时，悬空断言会误报。必须在 builder 中显式声明已知 id 列表。
 - **权威转换器**：所有用于 viz 和 Neo4j 的 JSON 必须经 `graph_export.build_graph_data()` 生成，禁止手工 merge（会破坏 type 字段和 domain 着色）。
@@ -519,46 +622,42 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 
 ### 🔴 高优先级（核心能力补全）
 
-**1. 补推 PhysicsBabel 5000 方程全量**
-- 状态：已解析 `physicsbabel_raw.json`（5050 节点 / 29104 边），仅部分推入 Aura
-- 操作：
-  ```powershell
-  $env:NEO4J_URI="neo4j+ssc://853a33bc.databases.neo4j.io"
-  $env:NEO4J_USER="853a33bc"
-  $env:NEO4J_PASSWORD="<凭据>"
-  $env:NEO4J_DATABASE="853a33bc"
-  python 06_PoC/robust_aura_loader.py --input 06_PoC/etl/neo4j/phase12_aura_delta.json --batch 1000
-  ```
-- 目标：Aura 节点 ~7772 / 边 ~42000
+**1. Phase 8 收尾：ElementKG 2.0 真实 dump + Vashy / ReactionAtlas**
+- 状态：Phase 8 三期满负荷落地（文献/常量/分子/药物四层），剩余候选为 **ElementKG 2.0 官方 dump**、
+  **Vashy**（物理方程侧）、**ReactionAtlas**（反应侧）
+- ⚠️ **首要约束：控物理失衡**。当前学科分布 **物理 71.5%**、跨域边 90% 依赖 `has_quantity`、
+  跨学科实质只发生在「化学 ↔ 物理」（93%）。**接物理源前必须评估它对失衡的边际影响**，
+  优先接**化学 / 数学 / 交叉学科**侧的源。
 
-**2. GNN 推断规模化重训（生成带类型的跨域边）**
-- 当前 `gnn_infer.py` 输出泛化 `related_to`，应改为输出**带类型的边**（reactant_of / has_quantity / dimensionally_consistent）
-- 方案：在 Phase 9 深化中，分子节点特征加入 `composed_of` 元素类型，物理量节点加入 `has_unit` 单位类型，使 GNN 可区分边类型
+**2. 缓解分子层多节点对 GNN 嵌入的稀释**
+- 现象：8 套分子命名空间（有意的跨源对齐）会让同一实体拆成多个节点，稀释嵌入质量
+- 方案：**不删节点**，改为在 GNN 特征中**显式注入 `same_as` 邻接**，或做**连通分量级嵌入池化**
 
 ### 🟡 中优先级（数据质量与完整性）
 
-**3. 重训 GNN 加入节点类型特征**
-- 修改 `gnn_infer.py` 特征工程：为每个节点增加 one-hot 类型向量（Element/Molecule/PhysicalQuantity/Reaction…）
-- 正样本：已有跨域边（reactant_of / has_quantity / same_period / dimensionally_consistent）
-- 预期：候选边从泛化 `related_to` 变为有类型的具体边
+**3. Phase 9 Wikidata 真实对齐（打通「公式 ↔ 世界」关键桥）**
+- 状态：`query.wikidata.org` / `en.wikipedia.org` **全域 TLS TIMEOUT**（多轮探测确认被出口白名单拦截）
+- 过渡方案（部分已落地）：用 **OpenAlex / Crossref / DataCite / PubChem** 的等价对齐能力替代
+- 注意：若哪天真能通，SPARQL 查询间隔须 ≥3s
 
-**4. 补全 `IC:el:*` 元素原子量字段**
-- 状态：137 元素中有 123 个有 `atomic_mass` / `atomic_weight`，14 个缺失（多为 `IC:el:*` 无机切片元素）
-- 影响：部分分子（如 NaCl）的摩尔质量计算失败
-- 操作：从 periodic table 补全缺失值
+**4. 文献层 2 条待人工裁定**（Phase 8 三期已标 flag、未改数）
+- `PA:oa:W2005936791` 年份（OpenAlex 2012 vs Crossref 2005，疑似 OpenAlex 错）
+- `PA:oa:W2322753244` 引用计数**反向异常**（Crossref 1342 > OpenAlex 711，而 Crossref 本应是子集）
 
-**5. 添加 `same_period` / `same_family` 批量桥接到物理量**
-- `same_period` 边目前只用于元素→元素，理论上同周期元素在化学性质上有规律（可探索 period → 电负性 trend → 推导元素性质）
+**5. 常量 / 单位 / 枚举收尾**
+- `EM:pq:coulomb_const` 的 `unit` 补全（CODATA 无直接条目，由 `k = 1/(4πε₀)` 派生）
+- `PB:pq:grav_const` / `PB:pq:planck` 的**合并**（现仅 `same_as` 对齐）—— 牵动 3000+ 条边重组
+- `chembl_availability_type` 枚举语义补全（现仅存原值 int）
+- 元素性质单位从 IUPAC 正式表核校（现为量级+常识推断，已标 `unit_inferred`）
 
 ### 🟢 低优先级（功能增强）
 
-**6. 前端：跨域路径高亮**
-- 用户选一个数学公式节点，前端高亮完整推导链到物理量→分子→元素
-- 已有 `api/path` 端点，前端加高亮样式即可
+**6. PhysicsBabel 5000 方程全量补推**（**注意：物理侧，与风险 1 冲突，建议缓做**）
+- 状态：已解析 `physicsbabel_raw.json`（5050 节点 / 29104 边），仅部分推入 Aura
+- 操作：`python 06_PoC/robust_aura_loader.py --input <delta.json> --batch 1000`
 
-**7. Wikidata 真实数据接入（Phase 5.A 已完成 19 条）**
-- `wikidata_adapter.py` 已有缓存，可扩展到全部化学/物理核心节点
-- 注意：SPARQL 查询间隔 ≥3s（WIKIDATA 限制）
+**7. `same_series` 边类型（f 区语义严格化）**
+- 现状：`same_family` 在 f 区其实表达的是「同系列」
 
 **8. 本地 Neo4j 部署**
 - 用户本机 Docker 因 CPU 虚拟化未开启不可用；若未来换机器，`08_部署包/neo4j/` 可一键部署
@@ -585,17 +684,18 @@ python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_U
 
 # 4. 启动本地可视化
 bash sttp.sh viz
-# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase22.json）
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase24.json）
 
 # 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
 bash sttp.sh export
 
-# 6. 查看图谱统计
+# 6. 查看图谱统计 / 北极星自检
 bash sttp.sh stats
+python 06_PoC/connectivity_audit.py --strict   # 分量=1 / 孤立=0 / 悬空=0 / 自环=0 → 退码 0
 
 # 7. 推新数据到 Aura（推荐用编排器，自动消毒 + 对账 + 导出）
 bash sttp.sh push <your_delta.json>       # 单 delta
-bash sttp.sh pushall --execute            # 十三步全量重放
+bash sttp.sh pushall --execute            # **十六步**全量重放
 
 # 8. 验证写入
 python 08_部署包/neo4j/verify_deploy.py
@@ -614,10 +714,15 @@ git merge origin/main
 | 修改 viz 图谱配色 | `06_PoC/graph_view.html`（`TYPE_STYLE`/`EDGE_TYPE_COLOR`） |
 | 新增节点类型 | `06_PoC/graph_export.py`（`TYPE_PRIORITY`）+ `06_PoC/graph_view.html`（`TYPE_STYLE`） |
 | 新增边类型 | `06_PoC/graph_view.html`（`EDGE_TYPE_COLOR` + 图例段） |
-| 新增种子切片 | `10_种子数据/build_*.py` → `10_种子数据/seed_*.json`，重跑 `build_phase7.py` |
+| 新增种子切片 | `10_种子数据/build_*.py` → `10_种子数据/seed_*.json`，再走 `06_PoC/sync_seed_delta.py` 回灌差量 |
 | 接入新数据源 | `11_真实数据/<source>_ingest.py`，用 `graph_export.build_graph_data()` 转换 |
+| **量北极星连通性** | `06_PoC/connectivity_audit.py`（`--strict` 退码 2） |
+| **本地应用 delta** | `06_PoC/apply_delta.py --delta <p> --phase <N> [--apply]` |
+| **seed → 权威图回灌** | `06_PoC/sync_seed_delta.py` |
+| **标签受控收敛** | `03_知识层/normalize_labels.py` |
 | 从 Aura 拉全量图 | `09_科研扩展/9_inference/export_aura.py` |
 | 健壮推 Aura | `06_PoC/robust_aura_loader.py --input <delta.json>` |
+| 推送编排（16 步） | `09_科研扩展/9_inference/push_pending.py`（`bash sttp.sh pushall`） |
 | 修复 viz 后端源 | `06_PoC/export_normalized.py` |
 | 推理层新桥 | `09_科研扩展/9_inference/phase9_deepen.py` 或 `gnn_infer.py` |
 | 更新看板 | `00_项目管理/团队分工与进度.md` |
@@ -625,3 +730,4 @@ git merge origin/main
 ---
 
 *本文件由 QClaw 生成于 2026-10-08，建议在每次 Phase 完成后更新「当前运行状态」和「已知问题」两节。*
+*最近更新：2026-10-09（跨学科连通性审计轮：新增 3 个工具、§0.1 北极星指标、§9 三项新踩坑、§10 优先级刷新）。*

@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "phase": "Phase8d-auditfix2",
+    "source": "06_PoC/sync_seed_delta.py",
+    "reason": "连通性审计收尾：接回 MX:math:power_rule 孤岛 + 删除误标为单位的 RT:un:c + 补光速单位 m/s",
+    "generated_at": "2026-10-09T14:18:56",
+    "seeds": [
+      "seed_biochem.json",
+      "seed_chem_equilibrium.json",
+      "seed_classical_mechanics.json",
+      "seed_electromagnetism.json",
+      "seed_energy_combustion.json",
+      "seed_inorganic.json",
+      "seed_math_algebra.json",
+      "seed_math_calculus.json",
+      "seed_math_geometry.json",
+      "seed_math_numbertheory.json",
+      "seed_optics.json",
+      "seed_organic_chem.json",
+      "seed_quantum.json",
+      "seed_relativity.json",
+      "seed_stat_mech.json",
+      "seed_thermo.json"
+    ]
+  },
+  "nodes": [],
+  "delete_nodes": [
+    "RT:un:c"
+  ],
+  "edges": [
+    {
+      "id": "same_as|MC:fo:power_rule|MX:math:power_rule",
+      "source": "MC:fo:power_rule",
+      "target": "MX:math:power_rule",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:18:50.594083",
+        "alignment": "manual_curation"
+      }
+    },
+    {
+      "id": "has_unit|RT:pq:light_speed|UN:mps",
+      "source": "RT:pq:light_speed",
+      "target": "UN:mps",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:18:51.136394"
+      }
+    }
+  ],
+  "delete_edges": []
+}

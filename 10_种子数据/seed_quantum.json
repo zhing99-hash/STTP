@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "E=h\\nu",
         "informal": "Photon energy equals Planck constant times frequency."
       }
@@ -34,7 +34,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "\\lambda=\\frac{h}{p}",
         "informal": "Matter waves: wavelength inversely proportional to momentum."
       }
@@ -52,7 +52,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "-\\frac{\\hbar^2}{2m}\\nabla^2\\psi + V\\psi = E\\psi"
       }
     },
@@ -69,7 +69,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "\\Delta x\\,\\Delta p \\geq \\frac{\\hbar}{2}"
       }
     },
@@ -86,7 +86,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "E_{ph}=h\\nu-\\phi"
       }
     },
@@ -103,7 +103,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "h",
         "value": 6.62607015e-34,
         "dimension": "M*L^2*T^-1"
@@ -122,7 +122,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "hbar",
         "value": 1.054571817e-34,
         "dimension": "M*L^2*T^-1"
@@ -141,7 +141,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "nu",
         "dimension": "T^-1"
       }
@@ -159,7 +159,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "lambda",
         "dimension": "L"
       }
@@ -177,7 +177,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "phi",
         "dimension": "M*L^2*T^-2"
       }
@@ -195,7 +195,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "S",
         "dimension": "M*L^2*T^-1"
       }
@@ -213,7 +213,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "Hz",
         "dimension": "T^-1"
       }
@@ -231,7 +231,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "symbol": "eV",
         "dimension": "M*L^2*T^-2"
       }
@@ -245,11 +245,11 @@
       "props": {
         "name": "h (Planck)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "h"
       }
     },
@@ -262,11 +262,11 @@
       "props": {
         "name": "ħ (reduced Planck)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "\\hbar"
       }
     },
@@ -279,11 +279,11 @@
       "props": {
         "name": "ν (frequency)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "\\nu"
       }
     },
@@ -296,11 +296,11 @@
       "props": {
         "name": "λ (wavelength)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "\\lambda"
       }
     },
@@ -313,11 +313,11 @@
       "props": {
         "name": "ψ (wavefunction)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "\\psi"
       }
     },
@@ -330,11 +330,11 @@
       "props": {
         "name": "φ (work function)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:47.752388",
+        "created_at": "2026-10-09T14:06:40.718652",
         "latex": "\\phi"
       }
     }
@@ -351,7 +351,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -365,7 +365,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -379,7 +379,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -393,7 +393,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -407,7 +407,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -421,7 +421,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -435,7 +435,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -449,7 +449,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -463,7 +463,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -477,7 +477,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -491,7 +491,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -505,7 +505,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -519,7 +519,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -533,7 +533,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -547,7 +547,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -561,7 +561,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -575,7 +575,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -589,7 +589,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -603,7 +603,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -617,7 +617,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -631,7 +631,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -645,7 +645,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -659,7 +659,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -673,7 +673,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -687,7 +687,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "energy_from_hnu",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -701,7 +701,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "energy_from_photoelectric",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -715,7 +715,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "mass_in_potential",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     },
     {
@@ -729,7 +729,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "momentum_in_dispersion",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:47.752388"
+        "created_at": "2026-10-09T14:06:40.718652"
       }
     }
   ]

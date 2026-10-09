@@ -47,12 +47,11 @@ def e(src, tgt, etype, kind, **props):
 def main():
     nodes, edges = [], []
 
-    # ---------- 元素（真实周期表数据）----------
-    nodes += [
-        n("EL:c", "element", "Carbon", "chem.element", symbol="C", atomic_number=6, atomic_mass=12.011, period=2, group=14),
-        n("EL:h", "element", "Hydrogen", "chem.element", symbol="H", atomic_number=1, atomic_mass=1.008, period=1, group=1),
-        n("EL:o", "element", "Oxygen", "chem.element", symbol="O", atomic_number=8, atomic_mass=15.999, period=2, group=16),
-    ]
+    # ---------- 元素 ----------
+    # ⚠ 2026-10-09 连通性审计修正：C/H/O 不再在本切片自建 ``EL:c/EL:h/EL:o``。
+    # A5 元素去重后，元素唯一 canonical id 是元素层的 ``EK:el:<符号>``（Phase 8 由
+    # element_reference.py 统一供数）。旧写法不但造成重复元素节点，还让本切片
+    # 7 条 composed_of 边因端点不存在被静默丢弃。此处改为**只引用不自建**。
 
     # ---------- 单位 ----------
     nodes += [
@@ -77,13 +76,13 @@ def main():
 
     # ---------- 符号 ----------
     nodes += [
-        n("SY:e", "symbol", "E (energy)", "math.symbol", latex="E"),
-        n("SY:m", "symbol", "m (mass)", "math.symbol", latex="m"),
-        n("SY:c", "symbol", "c (speed of light)", "math.symbol", latex="c"),
-        n("SY:f", "symbol", "F (force)", "math.symbol", latex="F"),
-        n("SY:a", "symbol", "a (acceleration)", "math.symbol", latex="a"),
-        n("SY:v", "symbol", "v (velocity)", "math.symbol", latex="v"),
-        n("SY:ke", "symbol", "KE (kinetic energy)", "math.symbol", latex="KE"),
+        n("SY:e", "symbol", "E (energy)", "phys.symbol", latex="E"),
+        n("SY:m", "symbol", "m (mass)", "phys.symbol", latex="m"),
+        n("SY:c", "symbol", "c (speed of light)", "phys.symbol", latex="c"),
+        n("SY:f", "symbol", "F (force)", "phys.symbol", latex="F"),
+        n("SY:a", "symbol", "a (acceleration)", "phys.symbol", latex="a"),
+        n("SY:v", "symbol", "v (velocity)", "phys.symbol", latex="v"),
+        n("SY:ke", "symbol", "KE (kinetic energy)", "phys.symbol", latex="KE"),
     ]
 
     # ---------- 公式（数学/物理）----------
@@ -135,11 +134,11 @@ def main():
     edges.append(e("PQ:force", "PQ:mass", "dimensionally_consistent", "force_mass", note="F=ma"))
     edges.append(e("PQ:ke", "PQ:energy", "dimensionally_consistent", "same_dimension", note="KE is energy"))
 
-    # 分子 -> 元素（组成）
-    comp = [("MO:ch4", "EL:c", 1), ("MO:ch4", "EL:h", 4),
-            ("MO:o2", "EL:o", 2),
-            ("MO:co2", "EL:c", 1), ("MO:co2", "EL:o", 2),
-            ("MO:h2o", "EL:h", 2), ("MO:h2o", "EL:o", 1)]
+    # 分子 -> 元素（组成）；元素 id 统一用元素层 canonical 命名空间 EK:el:<符号>
+    comp = [("MO:ch4", "EK:el:C", 1), ("MO:ch4", "EK:el:H", 4),
+            ("MO:o2", "EK:el:O", 2),
+            ("MO:co2", "EK:el:C", 1), ("MO:co2", "EK:el:O", 2),
+            ("MO:h2o", "EK:el:H", 2), ("MO:h2o", "EK:el:O", 1)]
     for mo, el, cnt in comp:
         edges.append(e(mo, el, "composed_of", "molecule_element", count=cnt))
 
@@ -164,7 +163,8 @@ def main():
 
     # ---------- 校验 ----------
     ids = {x["id"] for x in nodes}
-    known_external = {b for a, b in bridges}  # same_as 指向 Aura 已有 MX 节点
+    # 外部已有节点：same_as 指向的 Aura 既有 MX 节点 + 元素层 canonical 元素节点
+    known_external = {b for a, b in bridges} | {"EK:el:C", "EK:el:H", "EK:el:O"}
     assert len(ids) == len(nodes), f"节点 id 重复: {len(nodes)-len(ids)}"
     dangling = [x for x in edges if x["source"] not in ids | known_external
                 or x["target"] not in ids | known_external]

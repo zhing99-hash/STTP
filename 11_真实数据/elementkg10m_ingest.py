@@ -57,14 +57,28 @@ def pass1():
                 entity2mol[hv] = tv
             elif h == "Reaction" and hv not in seen_rxn:
                 seen_rxn.add(hv); rxn_order.append(hv)
-    # 选前 N 个有实体连接的 reaction (顺序无关)
+    # 选前 N 个**可解析出分子**的 reaction（顺序无关）
+    # ⚠ 原实现只要求「有参与物实体引用」，但边要靠 `entity2mol` 才能连出：
+    #   参与物只有 `SMILES_IS` 而无 `IS_MOLECULE`（如 product_9991）时，
+    #   反应解析不出任何分子 → 节点 **deg=0 成孤立死节点**（实测 800 个中 42 个如此）。
+    #   故把「可解析分子数 ≥ 1」提升为硬约束，从源头杜绝零边反应入图。
     selected = []
+    skipped_no_mol = 0
     for rxn in rxn_order:
         ent = rxn_entities.get(rxn)
-        if ent and (ent["reactants"] or ent["products"] or ent["reagents"]):
-            selected.append(rxn)
-            if len(selected) >= N_REACTIONS:
-                break
+        if not ent:
+            continue
+        ents = ent["reactants"] + ent["products"] + ent["reagents"]
+        if not ents:
+            continue
+        if not any(e in entity2mol for e in ents):
+            skipped_no_mol += 1
+            continue
+        selected.append(rxn)
+        if len(selected) >= N_REACTIONS:
+            break
+    print(f"[pass1] 跳过 {skipped_no_mol} 个「参与物无 IS_MOLECULE 映射」的 reaction"
+          f"（否则会成孤立节点）")
     keep = set(selected)
     for k in list(rxn_entities.keys()):
         if k not in keep:

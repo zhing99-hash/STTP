@@ -6,7 +6,7 @@
 #   bash sttp.sh viz          启动可视化服务 (默认 127.0.0.1:8765)
 #   bash sttp.sh export       从 Aura 反向导出 viz 快照 (默认 graph_data_aura.json)
 #   bash sttp.sh push <delta> 单 delta 健壮推送到 Aura
-#   bash sttp.sh pushall [--execute]                离线增量顺序编排（13 步：推送→对账→导出）
+#   bash sttp.sh pushall [--execute]                离线增量顺序编排（16 步：推送→对账→导出）
 #   bash sttp.sh reconcile [--dry-run|--report-only] 云端/本地边对账（默认清理，使云端==本地）
 #   bash sttp.sh probe [--only k1,k2] [--rounds N]  真实数据源可达性探测
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py

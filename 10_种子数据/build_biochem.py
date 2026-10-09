@@ -10,8 +10,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "seed_biochem.json")
 nodes, edges = [], []
 
-# 元素
-nodes.append(sc.n("BC:el:nitrogen", "element", "Nitrogen", "chem.element", symbol="N", atomic_number=7))
+# 元素：不再自建 ``BC:el:nitrogen``（与元素层 canonical ``EK:el:N`` 重复，
+# 且实测图谱中该批 composed_of 边早已指向 EK:el:N）→ 统一引用元素层。
 # 分子（co2/h2o/o2 为镜像基础库节点）
 nodes += [
     sc.n("BC:mo:glucose", "molecule", "Glucose", "chem.molecule", formula="C6H12O6", smiles="C(C1C(C(C(C(O1)O)O)O)O)O"),
@@ -36,9 +36,9 @@ nodes += [
 ]
 # 符号
 nodes += [
-    sc.n("BC:sy:C", "symbol", "C (carbon)", "math.symbol", latex="C"),
-    sc.n("BC:sy:N", "symbol", "N (nitrogen)", "math.symbol", latex="N"),
-    sc.n("BC:sy:P", "symbol", "P (phosphorus)", "math.symbol", latex="P"),
+    sc.n("BC:sy:C", "symbol", "C (carbon)", "chem.symbol", latex="C"),
+    sc.n("BC:sy:N", "symbol", "N (nitrogen)", "chem.symbol", latex="N"),
+    sc.n("BC:sy:P", "symbol", "P (phosphorus)", "chem.symbol", latex="P"),
 ]
 # 桥接基础库分子
 edges += [
@@ -46,16 +46,18 @@ edges += [
     sc.e("BC:mo:h2o", "MO:h2o", "same_as", "seed_to_existing", alignment="manual_curation"),
     sc.e("BC:mo:o2", "MO:o2", "same_as", "seed_to_existing", alignment="manual_curation"),
 ]
-# 组成（引用基础库 EL:c/h/o + 本切片氮）
+# 组成（引用元素层 canonical 元素 EK:el:C/H/O + 本切片氮）
+# ⚠ 2026-10-09 连通性审计修正：原引用 ``EL:c/h/o``，该命名空间在 A5 去重后已不存在，
+#   20 条 composed_of 边因此从未进图（被悬空断言静默丢弃）→ 改为元素层 id。
 for mo, *parts in [
-    ("BC:mo:glucose", ("EL:c", 6), ("EL:h", 12), ("EL:o", 6)),
-    ("BC:mo:atp", ("EL:c", 10), ("EL:h", 16), ("BC:el:nitrogen", 5), ("EL:o", 13)),
-    ("BC:mo:amino_acid", ("EL:c", 2), ("EL:h", 5), ("BC:el:nitrogen", 1), ("EL:o", 2)),
-    ("BC:mo:protein", ("EL:c", 2), ("EL:h", 3), ("BC:el:nitrogen", 1), ("EL:o", 1)),
-    ("BC:mo:dna", ("EL:c", 10), ("EL:h", 14), ("BC:el:nitrogen", 5), ("EL:o", 7)),
-    ("BC:mo:co2", ("EL:c", 1), ("EL:o", 2)),
-    ("BC:mo:h2o", ("EL:h", 2), ("EL:o", 1)),
-    ("BC:mo:o2", ("EL:o", 2)),
+    ("BC:mo:glucose", ("EK:el:C", 6), ("EK:el:H", 12), ("EK:el:O", 6)),
+    ("BC:mo:atp", ("EK:el:C", 10), ("EK:el:H", 16), ("EK:el:N", 5), ("EK:el:O", 13)),
+    ("BC:mo:amino_acid", ("EK:el:C", 2), ("EK:el:H", 5), ("EK:el:N", 1), ("EK:el:O", 2)),
+    ("BC:mo:protein", ("EK:el:C", 2), ("EK:el:H", 3), ("EK:el:N", 1), ("EK:el:O", 1)),
+    ("BC:mo:dna", ("EK:el:C", 10), ("EK:el:H", 14), ("EK:el:N", 5), ("EK:el:O", 7)),
+    ("BC:mo:co2", ("EK:el:C", 1), ("EK:el:O", 2)),
+    ("BC:mo:h2o", ("EK:el:H", 2), ("EK:el:O", 1)),
+    ("BC:mo:o2", ("EK:el:O", 2)),
 ]:
     for el, cnt in parts:
         edges.append(sc.e(mo, el, "composed_of", "molecule_element", count=cnt))
@@ -74,4 +76,11 @@ edges += [
 ]
 # 具体反应 -> 一般公式
 edges.append(sc.e("BC:rx:photosynthesis", "BC:fo:photosynthesis_eq", "derived_from", "stoich_from_rx"))
-sc.build_and_write(OUT, "7m", "Biochemistry vertical slice", nodes, edges)
+# 2026-10-09 连通性审计补齐：
+#   `BC:fo:atp_hydrolysis_eq` 自建库起无任何边（deg=0）→ 与 photosynthesis 对称补 derived_from
+#   三个元素符号节点 BC:sy:C/N/P 亦无人引用 → 由该公式声明其符号（ATP=C10H16N5O13P3，含 C/N/P）
+edges.append(sc.e("BC:rx:atp_hydrolysis", "BC:fo:atp_hydrolysis_eq", "derived_from", "stoich_from_rx"))
+for sym in ("C", "N", "P"):
+    edges.append(sc.e("BC:fo:atp_hydrolysis_eq", "BC:sy:%s" % sym, "has_symbol", "formula_symbol"))
+sc.build_and_write(OUT, "7m", "Biochemistry vertical slice", nodes, edges,
+                   extra_external={"EK:el:N"})

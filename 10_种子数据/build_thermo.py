@@ -55,15 +55,15 @@ nodes += [
 ]
 # 符号
 nodes += [
-    sc.n("TH:sy:P", "symbol", "P (pressure)", "math.symbol", latex="P"),
-    sc.n("TH:sy:V", "symbol", "V (volume)", "math.symbol", latex="V"),
-    sc.n("TH:sy:T", "symbol", "T (temperature)", "math.symbol", latex="T"),
-    sc.n("TH:sy:R", "symbol", "R (gas constant)", "math.symbol", latex="R"),
-    sc.n("TH:sy:U", "symbol", "U (internal energy)", "math.symbol", latex="U"),
-    sc.n("TH:sy:Q", "symbol", "Q (heat)", "math.symbol", latex="Q"),
-    sc.n("TH:sy:n", "symbol", "n (amount)", "math.symbol", latex="n"),
-    sc.n("TH:sy:S", "symbol", "S (entropy)", "math.symbol", latex="S"),
-    sc.n("TH:sy:eta", "symbol", "η (efficiency)", "math.symbol", latex=r"\eta"),
+    sc.n("TH:sy:P", "symbol", "P (pressure)", "phys.symbol", latex="P"),
+    sc.n("TH:sy:V", "symbol", "V (volume)", "phys.symbol", latex="V"),
+    sc.n("TH:sy:T", "symbol", "T (temperature)", "phys.symbol", latex="T"),
+    sc.n("TH:sy:R", "symbol", "R (gas constant)", "phys.symbol", latex="R"),
+    sc.n("TH:sy:U", "symbol", "U (internal energy)", "phys.symbol", latex="U"),
+    sc.n("TH:sy:Q", "symbol", "Q (heat)", "phys.symbol", latex="Q"),
+    sc.n("TH:sy:n", "symbol", "n (amount)", "phys.symbol", latex="n"),
+    sc.n("TH:sy:S", "symbol", "S (entropy)", "phys.symbol", latex="S"),
+    sc.n("TH:sy:eta", "symbol", "η (efficiency)", "phys.symbol", latex=r"\eta"),
 ]
 
 # 公式 -> 符号
@@ -77,6 +77,9 @@ for fo, syms in [
 ]:
     for s in syms:
         edges.append(sc.e(fo, s, "has_symbol", "formula_symbol"))
+
+# 物理量 -> 符号（2026-10-09 连通性审计补齐）：TH:sy:S（熵）原为孤立节点
+edges.append(sc.e("TH:pq:entropy", "TH:sy:S", "has_symbol", "quantity_symbol"))
 
 # 公式 -> 物理量
 for fo, pqs in [

@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "n_1\\sin\\theta_1=n_2\\sin\\theta_2"
       }
     },
@@ -33,7 +33,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "\\frac{1}{f}=\\frac{1}{u}+\\frac{1}{v}"
       }
     },
@@ -50,7 +50,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "\\frac{1}{f}=\\frac{1}{d_o}+\\frac{1}{d_i}"
       }
     },
@@ -67,7 +67,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "v=\\frac{c}{n}"
       }
     },
@@ -84,7 +84,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "n",
         "dimension": "dimensionless"
       }
@@ -102,7 +102,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "f",
         "dimension": "L"
       }
@@ -120,7 +120,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "u",
         "dimension": "L"
       }
@@ -138,7 +138,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "v",
         "dimension": "L"
       }
@@ -156,7 +156,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "m",
         "dimension": "L",
         "si_base": true
@@ -171,11 +171,11 @@
       "props": {
         "name": "n (refractive index)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "n"
       }
     },
@@ -188,11 +188,11 @@
       "props": {
         "name": "f (focal length)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "f"
       }
     },
@@ -205,11 +205,11 @@
       "props": {
         "name": "u (object distance)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "u"
       }
     },
@@ -222,11 +222,11 @@
       "props": {
         "name": "v (image distance)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "v"
       }
     },
@@ -239,11 +239,11 @@
       "props": {
         "name": "θ (angle)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "\\theta"
       }
     },
@@ -256,11 +256,11 @@
       "props": {
         "name": "c (speed of light)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "latex": "c"
       }
     }
@@ -277,7 +277,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -291,7 +291,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -305,7 +305,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -319,7 +319,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -333,7 +333,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -347,7 +347,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -361,7 +361,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -375,7 +375,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -389,7 +389,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -403,7 +403,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -417,7 +417,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -431,7 +431,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -445,7 +445,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -459,7 +459,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -473,7 +473,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -487,7 +487,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -501,7 +501,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -515,7 +515,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -529,7 +529,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -543,7 +543,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -557,7 +557,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     },
     {
@@ -571,7 +571,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "alignment": "manual_curation"
       }
     },
@@ -586,7 +586,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047",
+        "created_at": "2026-10-09T14:06:40.365397",
         "alignment": "manual_curation"
       }
     },
@@ -601,7 +601,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "speed_in_medium",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.934047"
+        "created_at": "2026-10-09T14:06:40.365397"
       }
     }
   ]

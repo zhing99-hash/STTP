@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "\\gamma=\\frac{1}{\\sqrt{1-v^2/c^2}}"
       }
     },
@@ -33,7 +33,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "\\Delta t'=\\gamma\\Delta t"
       }
     },
@@ -50,7 +50,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "L=\\frac{L_0}{\\gamma}"
       }
     },
@@ -67,7 +67,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "p=\\gamma m v"
       }
     },
@@ -84,7 +84,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "E=mc^2",
         "informal": "Energy equals mass times speed of light squared."
       }
@@ -102,7 +102,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "symbol": "c",
         "value": 299792458,
         "dimension": "L*T^-1"
@@ -121,7 +121,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "symbol": "gamma",
         "dimension": "dimensionless"
       }
@@ -139,27 +139,9 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "symbol": "tau",
         "dimension": "T"
-      }
-    },
-    {
-      "id": "RT:un:c",
-      "labels": [
-        "Entity",
-        "Unit"
-      ],
-      "props": {
-        "name": "speed of light",
-        "ntype": "unit",
-        "domain": "phys.unit",
-        "source": "curated_seed",
-        "confidence": 1.0,
-        "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
-        "symbol": "c",
-        "dimension": "L*T^-1"
       }
     },
     {
@@ -171,11 +153,11 @@
       "props": {
         "name": "γ (Lorentz factor)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "\\gamma"
       }
     },
@@ -188,11 +170,11 @@
       "props": {
         "name": "c (speed of light)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "c"
       }
     },
@@ -205,11 +187,11 @@
       "props": {
         "name": "τ (proper time)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "latex": "\\tau"
       }
     }
@@ -226,7 +208,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -240,7 +222,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -254,7 +236,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -268,7 +250,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -282,7 +264,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -296,7 +278,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -310,7 +292,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -324,7 +306,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -338,7 +320,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -352,7 +334,49 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
+      }
+    },
+    {
+      "id": "RT:pq:proper_time->RT:sy:tau[has_symbol]",
+      "source": "RT:pq:proper_time",
+      "target": "RT:sy:tau",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:18:51.136394"
+      }
+    },
+    {
+      "id": "RT:pq:proper_time->UN:s[has_unit]",
+      "source": "RT:pq:proper_time",
+      "target": "UN:s",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:18:51.136394"
+      }
+    },
+    {
+      "id": "RT:pq:light_speed->UN:mps[has_unit]",
+      "source": "RT:pq:light_speed",
+      "target": "UN:mps",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -366,7 +390,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -380,7 +404,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -394,7 +418,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -408,7 +432,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -422,7 +446,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -436,7 +460,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -450,7 +474,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -464,7 +488,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "alignment": "manual_curation"
       }
     },
@@ -479,7 +503,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844",
+        "created_at": "2026-10-09T14:18:51.136394",
         "alignment": "manual_curation"
       }
     },
@@ -494,7 +518,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "relativistic_momentum",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -508,7 +532,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "mass_energy",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     },
     {
@@ -522,7 +546,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "velocity_time",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.244844"
+        "created_at": "2026-10-09T14:18:51.136394"
       }
     }
   ]

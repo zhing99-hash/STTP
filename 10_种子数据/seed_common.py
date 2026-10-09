@@ -34,7 +34,13 @@ BASE_IDS = {
     # 单位
     "UN:kg", "UN:m", "UN:s", "UN:j", "UN:mps", "UN:mps2",
     # 分子 / 元素 / 反应
-    "MO:ch4", "MO:o2", "MO:co2", "MO:h2o", "EL:c", "EL:h", "EL:o", "RX:comb_ch4",
+    "MO:ch4", "MO:o2", "MO:co2", "MO:h2o", "RX:comb_ch4",
+    # ⚠ 元素 canonical id（2026-10-09 连通性审计修正）：
+    # A5 元素去重（138→118）把 Phase6 的 ``EL:c/EL:h/EL:o`` 并入元素层 ``EK:el:<符号>``，
+    # 但此处仍留着旧 id —— 于是 4 个切片（energy_combustion / biochem / inorganic /
+    # organic_chem）里 42 条 `composed_of` 分子→元素边全部因**端点不存在**被
+    # build_and_write / merge_seed_delta 的悬空断言静默丢弃，分子永远连不到元素层。
+    "EK:el:C", "EK:el:H", "EK:el:O",
     # 符号
     "SY:c", "SY:m", "SY:a", "SY:v", "SY:e", "SY:f", "SY:ke",
 }

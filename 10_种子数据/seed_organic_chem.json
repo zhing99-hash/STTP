@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "formula": "CH4",
         "smiles": "C"
       }
@@ -34,7 +34,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "formula": "C2H6",
         "smiles": "CC"
       }
@@ -52,7 +52,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "formula": "C2H4",
         "smiles": "C=C"
       }
@@ -70,7 +70,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "formula": "C6H6",
         "smiles": "c1ccccc1"
       }
@@ -88,7 +88,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "formula": "C2H5OH",
         "smiles": "CCO"
       }
@@ -106,7 +106,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "latex": "C_xH_y + (x+\\tfrac{y}{4})O_2 \\rightarrow xCO_2 + \\tfrac{y}{2}H_2O",
         "informal": "General combustion of a hydrocarbon."
       }
@@ -120,11 +120,11 @@
       "props": {
         "name": "C (carbon)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "latex": "C"
       }
     },
@@ -137,11 +137,11 @@
       "props": {
         "name": "H (hydrogen)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "latex": "H"
       }
     },
@@ -154,11 +154,11 @@
       "props": {
         "name": "O (oxygen)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "latex": "O"
       }
     },
@@ -175,7 +175,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "equation": "2 C2H6 + 7 O2 -> 4 CO2 + 6 H2O",
         "exothermic": true
       }
@@ -193,7 +193,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "equation": "C2H5OH + 3 O2 -> 2 CO2 + 3 H2O",
         "exothermic": true
       }
@@ -211,7 +211,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "alignment": "manual_curation"
       }
     },
@@ -226,7 +226,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -240,7 +240,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -254,13 +254,13 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
-      "id": "OM:mo:methane->EL:c[composed_of]",
+      "id": "OM:mo:methane->EK:el:C[composed_of]",
       "source": "OM:mo:methane",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -268,14 +268,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 1
       }
     },
     {
-      "id": "OM:mo:methane->EL:h[composed_of]",
+      "id": "OM:mo:methane->EK:el:H[composed_of]",
       "source": "OM:mo:methane",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -283,14 +283,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 4
       }
     },
     {
-      "id": "OM:mo:ethane->EL:c[composed_of]",
+      "id": "OM:mo:ethane->EK:el:C[composed_of]",
       "source": "OM:mo:ethane",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -298,14 +298,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 2
       }
     },
     {
-      "id": "OM:mo:ethane->EL:h[composed_of]",
+      "id": "OM:mo:ethane->EK:el:H[composed_of]",
       "source": "OM:mo:ethane",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -313,14 +313,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 6
       }
     },
     {
-      "id": "OM:mo:ethylene->EL:c[composed_of]",
+      "id": "OM:mo:ethylene->EK:el:C[composed_of]",
       "source": "OM:mo:ethylene",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -328,14 +328,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 2
       }
     },
     {
-      "id": "OM:mo:ethylene->EL:h[composed_of]",
+      "id": "OM:mo:ethylene->EK:el:H[composed_of]",
       "source": "OM:mo:ethylene",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -343,14 +343,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 4
       }
     },
     {
-      "id": "OM:mo:benzene->EL:c[composed_of]",
+      "id": "OM:mo:benzene->EK:el:C[composed_of]",
       "source": "OM:mo:benzene",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -358,14 +358,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 6
       }
     },
     {
-      "id": "OM:mo:benzene->EL:h[composed_of]",
+      "id": "OM:mo:benzene->EK:el:H[composed_of]",
       "source": "OM:mo:benzene",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -373,14 +373,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 6
       }
     },
     {
-      "id": "OM:mo:ethanol->EL:c[composed_of]",
+      "id": "OM:mo:ethanol->EK:el:C[composed_of]",
       "source": "OM:mo:ethanol",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -388,14 +388,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 2
       }
     },
     {
-      "id": "OM:mo:ethanol->EL:h[composed_of]",
+      "id": "OM:mo:ethanol->EK:el:H[composed_of]",
       "source": "OM:mo:ethanol",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -403,14 +403,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 6
       }
     },
     {
-      "id": "OM:mo:ethanol->EL:o[composed_of]",
+      "id": "OM:mo:ethanol->EK:el:O[composed_of]",
       "source": "OM:mo:ethanol",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -418,7 +418,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105",
+        "created_at": "2026-10-09T14:15:15.426438",
         "count": 1
       }
     },
@@ -433,7 +433,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -447,7 +447,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -461,7 +461,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -475,7 +475,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -489,7 +489,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -503,7 +503,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -517,7 +517,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -531,7 +531,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "combustion_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -545,7 +545,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "generalize",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     },
     {
@@ -559,7 +559,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "generalize",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:34:34.178105"
+        "created_at": "2026-10-09T14:15:15.426438"
       }
     }
   ]

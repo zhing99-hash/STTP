@@ -57,6 +57,19 @@ CALL apoc.create.addLabels(n, row.labels) YIELD node
 RETURN count(node) AS c
 """
 
+# 标签**替换**变体（--set-labels）：apoc.create.addLabels 只增不减，用于「标签规范化」
+# 会把旧标签留在节点上（本地是 PhysicalQuantity，云端变成 [Physical_quantity, PhysicalQuantity]）。
+# setLabels 是整体替换，正合「收敛到受控词表」的语义；用 WHERE row.labels IS NOT NULL 守卫，
+# 避免把不带 labels 的 delta 行的标签清空。
+NODE_CYPHER_SET_LABELS = """
+UNWIND $rows AS row
+MERGE (n:Entity {id: row.id})
+SET n += row.props
+WITH n, row WHERE row.labels IS NOT NULL
+CALL apoc.create.setLabels(n, row.labels) YIELD node
+RETURN count(node) AS c
+"""
+
 DEL_NODE_CYPHER = """
 UNWIND $rows AS row
 MATCH (n:Entity {id: row.id})
@@ -109,18 +122,43 @@ def run_batched(driver, cypher, rows, label, batch=200, max_retry=6):
     return done, abandoned
 
 
+def norm_del_ids(del_nodes):
+    """把 delete_nodes 归一为**纯 id 字符串列表**。
+
+    ⚠ 2026-10-09 实测踩坑：本推送器原先假设 delete_nodes 是字符串列表（phase15 就是），
+    但新写的 `06_PoC/sync_seed_delta.py` 产出的是 ``[{"id": ...}]``（与 `apply_delta.py`
+    的宽容口径一致）。于是 ``[{"id": i} for i in del_nodes]`` 变成
+    ``{"id": {"id": "EK2:rxn:..."}}`` —— ``MATCH (n {id: row.id})`` 拿 map 去比字符串，
+    **一条都没删，且不报错**；连下面「别名残留」自检也用同一份错 id，于是自检也一起通过。
+    这就是铁律 #10 说的「静默降级」，故此处双管齐下：先归一格式，再断言实删数。
+    """
+    out = []
+    for x in (del_nodes or []):
+        v = x if isinstance(x, str) else (x or {}).get("id")
+        if v:
+            out.append(v)
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="只打印计划，不连接数据库")
     ap.add_argument("--batch", type=int, default=200)
     ap.add_argument("--delta", default=DELTA,
                     help="delta 文件路径（默认 phase15 元素合并）")
+    ap.add_argument("--set-labels", action="store_true",
+                    help="用 apoc.create.setLabels **整体替换** labels（默认 addLabels 只增不减）。"
+                         "仅用于「标签规范化」类 delta，避免旧标签残留。")
     a = ap.parse_args()
 
     with open(a.delta, encoding="utf-8") as f:
         d = json.load(f)
     nodes = d.get("nodes", [])
-    del_nodes = d.get("delete_nodes", [])
+    raw_del = d.get("delete_nodes", [])
+    del_nodes = norm_del_ids(raw_del)
+    if raw_del and any(not isinstance(x, str) for x in raw_del):
+        print("[WARN] delete_nodes 里含非字符串条目（%s…），已归一为纯 id；"
+              "建议让 delta 生成方统一输出字符串。" % (raw_del[0],))
     edges = d.get("edges", [])
     dels = d.get("delete_edges", [])
 
@@ -140,6 +178,7 @@ def main():
 
     if a.dry_run:
         print("\n[dry-run] 将执行：")
+        print(f"  标签模式: {'setLabels（整体替换）' if a.set_labels else 'addLabels（只增）'}")
         if nodes:
             print(f"  1) MERGE+SET 节点 {len(nodes)} 个")
             for n in nodes[:5]:
@@ -179,7 +218,8 @@ def main():
             e0 = s.run("MATCH ()-[r]->() RETURN count(r) AS c").single()["c"]
         print(f"[before] Aura: {n0} 节点 / {e0} 边")
 
-        an, bn = run_batched(driver, NODE_CYPHER, nodes, "节点 upsert", a.batch) if nodes else (0, 0)
+        an, bn = (run_batched(driver, NODE_CYPHER_SET_LABELS if a.set_labels else NODE_CYPHER,
+                              nodes, "节点 upsert", a.batch) if nodes else (0, 0))
         print(f"[1/4] 节点 upsert 完成 {an}/{len(nodes)}")
         adn, bdn = (run_batched(driver, DEL_NODE_CYPHER, [{"id": i} for i in del_nodes],
                                 "删除节点", 50) if del_nodes else (0, 0))
@@ -199,13 +239,22 @@ def main():
                          ids=del_nodes).single()["c"]
             elem = s.run("MATCH (n:Element) RETURN count(n) AS c").single()["c"]
         print(f"[after ] Aura: {n1} 节点 / {e1} 边  (Δ{n1-n0:+d} / Δ{e1-e0:+d})")
-        print(f"[check ] 别名残留 {left}（应为 0） · Element 节点 {elem}（应为 118）")
+        print(f"[check ] 待删节点残留 {left}/{len(del_nodes)}（应为 0） · Element 节点 {elem}（应为 118）")
 
         lost = bn + bdn + be + bd
         if lost:
             print("\n" + "!" * 72)
             print(f"!! 本步有 {lost} 条记录因批次反复失败被放弃 → **云端与本地已分叉**！")
             print("!! 看上方 [retry] 行的异常类型；修好后重跑本步即可（MERGE 幂等，可安全重复）。")
+            print("!" * 72)
+            return 3
+        # ⚠ 实删数断言：删除语句「跑完」≠「删掉了」。上面的 adn 只是**送出的行数**，
+        # 端点匹配不上时 Cypher 不报错、也不会删任何东西（静默降级）。必须回查。
+        if del_nodes and left:
+            print("\n" + "!" * 72)
+            print(f"!! 要求删除 {len(del_nodes)} 个节点，仍有 {left} 个残留 → 云端与本地**已分叉**！")
+            print("!! 常见原因：id 格式不符（dict vs 字符串）导致 MATCH 落空，或节点缺少 :Entity 标签。")
+            print("!! 残留样例：" + str(del_nodes[:5]))
             print("!" * 72)
             return 3
     finally:

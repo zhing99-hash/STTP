@@ -42,7 +42,7 @@ if m['warnings']:
 # 抽样校验新切片节点
 def find(nid):
     return next((x for x in data["nodes"] if x["id"] == nid), None)
-for nid in ["EL:c", "UN:j", "PQ:energy", "FO:emc2", "MO:co2", "RX:comb_ch4", "MX:thm:gauss_bonnet"]:
+for nid in ["EK:el:C", "UN:j", "PQ:energy", "FO:emc2", "MO:co2", "RX:comb_ch4", "MX:thm:gauss_bonnet"]:
     nd = find(nid)
     if nd:
         print(f"  {nid:18} type={nd['type']:<18} subject={nd['subject']:<4} label={nd['label']!r}")

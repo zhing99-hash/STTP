@@ -4,66 +4,6 @@
   "note": "Inorganic chemistry vertical slice",
   "nodes": [
     {
-      "id": "IC:el:sodium",
-      "labels": [
-        "Entity",
-        "Element"
-      ],
-      "props": {
-        "name": "Sodium",
-        "ntype": "element",
-        "domain": "chem.element",
-        "source": "curated_seed",
-        "confidence": 1.0,
-        "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
-        "symbol": "Na",
-        "atomic_number": 11,
-        "atomic_mass": 22.98976928,
-        "atomic_weight": 22.98976928
-      }
-    },
-    {
-      "id": "IC:el:chlorine",
-      "labels": [
-        "Entity",
-        "Element"
-      ],
-      "props": {
-        "name": "Chlorine",
-        "ntype": "element",
-        "domain": "chem.element",
-        "source": "curated_seed",
-        "confidence": 1.0,
-        "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
-        "symbol": "Cl",
-        "atomic_number": 17,
-        "atomic_mass": 35.45,
-        "atomic_weight": 35.45
-      }
-    },
-    {
-      "id": "IC:el:iron",
-      "labels": [
-        "Entity",
-        "Element"
-      ],
-      "props": {
-        "name": "Iron",
-        "ntype": "element",
-        "domain": "chem.element",
-        "source": "curated_seed",
-        "confidence": 1.0,
-        "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
-        "symbol": "Fe",
-        "atomic_number": 26,
-        "atomic_mass": 55.845,
-        "atomic_weight": 55.845
-      }
-    },
-    {
       "id": "IC:mo:nacl",
       "labels": [
         "Entity",
@@ -76,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "formula": "NaCl",
         "smiles": "[Na+].[Cl-]"
       }
@@ -94,7 +34,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "formula": "HCl",
         "smiles": "Cl"
       }
@@ -112,7 +52,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "formula": "Cl2",
         "smiles": "ClCl"
       }
@@ -130,7 +70,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "formula": "Na",
         "smiles": "[Na]"
       }
@@ -148,7 +88,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "formula": "H2O",
         "smiles": "O"
       }
@@ -166,7 +106,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "formula": "O2",
         "smiles": "O=O"
       }
@@ -184,7 +124,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "equation": "HCl + NaOH -> NaCl + H2O",
         "exothermic": true
       }
@@ -202,7 +142,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "equation": "2 H2 + O2 -> 2 H2O",
         "exothermic": true
       }
@@ -220,7 +160,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "equation": "2 Na + Cl2 -> 2 NaCl"
       }
     },
@@ -237,7 +177,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "latex": "pH=-\\log_{10}[H^+]",
         "informal": "pH is minus log of hydrogen ion concentration."
       }
@@ -255,7 +195,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "latex": "f(Z)",
         "informal": "Properties are periodic functions of atomic number."
       }
@@ -269,11 +209,11 @@
       "props": {
         "name": "Na (sodium)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "latex": "Na"
       }
     },
@@ -286,11 +226,11 @@
       "props": {
         "name": "Cl (chlorine)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "latex": "Cl"
       }
     },
@@ -303,11 +243,11 @@
       "props": {
         "name": "Fe (iron)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "latex": "Fe"
       }
     },
@@ -320,11 +260,11 @@
       "props": {
         "name": "H (hydrogen)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "latex": "H"
       }
     }
@@ -341,7 +281,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "alignment": "manual_curation"
       }
     },
@@ -356,7 +296,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "alignment": "manual_curation"
       }
     },
@@ -371,13 +311,55 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
-      "id": "IC:mo:nacl->IC:el:sodium[composed_of]",
+      "id": "EK:el:Na->IC:sy:Na[has_symbol]",
+      "source": "EK:el:Na",
+      "target": "IC:sy:Na",
+      "type": "has_symbol",
+      "kind": "element_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "element_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.885624"
+      }
+    },
+    {
+      "id": "EK:el:Cl->IC:sy:Cl[has_symbol]",
+      "source": "EK:el:Cl",
+      "target": "IC:sy:Cl",
+      "type": "has_symbol",
+      "kind": "element_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "element_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.885624"
+      }
+    },
+    {
+      "id": "EK:el:Fe->IC:sy:Fe[has_symbol]",
+      "source": "EK:el:Fe",
+      "target": "IC:sy:Fe",
+      "type": "has_symbol",
+      "kind": "element_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "element_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.885624"
+      }
+    },
+    {
+      "id": "IC:mo:nacl->EK:el:Na[composed_of]",
       "source": "IC:mo:nacl",
-      "target": "IC:el:sodium",
+      "target": "EK:el:Na",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -385,14 +367,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 1
       }
     },
     {
-      "id": "IC:mo:nacl->IC:el:chlorine[composed_of]",
+      "id": "IC:mo:nacl->EK:el:Cl[composed_of]",
       "source": "IC:mo:nacl",
-      "target": "IC:el:chlorine",
+      "target": "EK:el:Cl",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -400,14 +382,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 1
       }
     },
     {
-      "id": "IC:mo:hcl->EL:h[composed_of]",
+      "id": "IC:mo:hcl->EK:el:H[composed_of]",
       "source": "IC:mo:hcl",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -415,14 +397,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 1
       }
     },
     {
-      "id": "IC:mo:hcl->IC:el:chlorine[composed_of]",
+      "id": "IC:mo:hcl->EK:el:Cl[composed_of]",
       "source": "IC:mo:hcl",
-      "target": "IC:el:chlorine",
+      "target": "EK:el:Cl",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -430,14 +412,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 1
       }
     },
     {
-      "id": "IC:mo:cl2->IC:el:chlorine[composed_of]",
+      "id": "IC:mo:cl2->EK:el:Cl[composed_of]",
       "source": "IC:mo:cl2",
-      "target": "IC:el:chlorine",
+      "target": "EK:el:Cl",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -445,14 +427,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 2
       }
     },
     {
-      "id": "IC:mo:na->IC:el:sodium[composed_of]",
+      "id": "IC:mo:na->EK:el:Na[composed_of]",
       "source": "IC:mo:na",
-      "target": "IC:el:sodium",
+      "target": "EK:el:Na",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -460,14 +442,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 1
       }
     },
     {
-      "id": "IC:mo:h2o->EL:h[composed_of]",
+      "id": "IC:mo:h2o->EK:el:H[composed_of]",
       "source": "IC:mo:h2o",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -475,14 +457,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 2
       }
     },
     {
-      "id": "IC:mo:h2o->EL:o[composed_of]",
+      "id": "IC:mo:h2o->EK:el:O[composed_of]",
       "source": "IC:mo:h2o",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -490,14 +472,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 1
       }
     },
     {
-      "id": "IC:mo:o2->EL:o[composed_of]",
+      "id": "IC:mo:o2->EK:el:O[composed_of]",
       "source": "IC:mo:o2",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -505,7 +487,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342",
+        "created_at": "2026-10-09T14:15:14.885624",
         "count": 2
       }
     },
@@ -520,7 +502,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "acid_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -534,7 +516,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "salt_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -548,7 +530,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "water_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -562,7 +544,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "metal_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -576,7 +558,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "halogen_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -590,7 +572,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "salt_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -604,7 +586,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "water_product",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -618,7 +600,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "oxygen_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -632,7 +614,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "ph_from_neutralization",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     },
     {
@@ -646,7 +628,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "periodic_from_synthesis",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:54:48.726342"
+        "created_at": "2026-10-09T14:15:14.885624"
       }
     }
   ]

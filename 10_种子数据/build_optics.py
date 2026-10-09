@@ -26,12 +26,12 @@ nodes += [
     sc.n("OP:un:meter", "unit", "meter", "phys.unit", symbol="m", dimension="L", si_base=True),
 ]
 nodes += [
-    sc.n("OP:sy:n", "symbol", "n (refractive index)", "math.symbol", latex="n"),
-    sc.n("OP:sy:f", "symbol", "f (focal length)", "math.symbol", latex="f"),
-    sc.n("OP:sy:u", "symbol", "u (object distance)", "math.symbol", latex="u"),
-    sc.n("OP:sy:v", "symbol", "v (image distance)", "math.symbol", latex="v"),
-    sc.n("OP:sy:theta", "symbol", "θ (angle)", "math.symbol", latex=r"\theta"),
-    sc.n("OP:sy:c", "symbol", "c (speed of light)", "math.symbol", latex="c"),
+    sc.n("OP:sy:n", "symbol", "n (refractive index)", "phys.symbol", latex="n"),
+    sc.n("OP:sy:f", "symbol", "f (focal length)", "phys.symbol", latex="f"),
+    sc.n("OP:sy:u", "symbol", "u (object distance)", "phys.symbol", latex="u"),
+    sc.n("OP:sy:v", "symbol", "v (image distance)", "phys.symbol", latex="v"),
+    sc.n("OP:sy:theta", "symbol", "θ (angle)", "phys.symbol", latex=r"\theta"),
+    sc.n("OP:sy:c", "symbol", "c (speed of light)", "phys.symbol", latex="c"),
 ]
 for fo, syms in [
     ("OP:fo:snell", ["OP:sy:n", "OP:sy:theta"]),

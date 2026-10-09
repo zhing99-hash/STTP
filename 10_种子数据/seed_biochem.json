@@ -4,26 +4,6 @@
   "note": "Biochemistry vertical slice",
   "nodes": [
     {
-      "id": "BC:el:nitrogen",
-      "labels": [
-        "Entity",
-        "Element"
-      ],
-      "props": {
-        "name": "Nitrogen",
-        "ntype": "element",
-        "domain": "chem.element",
-        "source": "curated_seed",
-        "confidence": 1.0,
-        "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
-        "symbol": "N",
-        "atomic_number": 7,
-        "atomic_mass": 14.007,
-        "atomic_weight": 14.007
-      }
-    },
-    {
       "id": "BC:mo:glucose",
       "labels": [
         "Entity",
@@ -36,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "C6H12O6",
         "smiles": "C(C1C(C(C(C(O1)O)O)O)O)O"
       }
@@ -54,7 +34,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "C10H16N5O13P3",
         "smiles": "Nc1ncnc2c1ncn2[C@@H]1O[C@H](COP(O)(O)=O)[C@@H](O)[C@H]1O"
       }
@@ -72,7 +52,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "C2H5NO2",
         "smiles": "N[C@@H](C)C(O)=O"
       }
@@ -90,7 +70,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "(C2H3NO)n"
       }
     },
@@ -107,7 +87,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "(C10H14N5O7P)n"
       }
     },
@@ -124,7 +104,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "CO2",
         "smiles": "O=C=O"
       }
@@ -142,7 +122,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "H2O",
         "smiles": "O"
       }
@@ -160,7 +140,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "formula": "O2",
         "smiles": "O=O"
       }
@@ -178,7 +158,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "equation": "6 CO2 + 6 H2O -> C6H12O6 + 6 O2"
       }
     },
@@ -195,7 +175,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "equation": "C6H12O6 + 6 O2 -> 6 CO2 + 6 H2O",
         "exothermic": true
       }
@@ -213,7 +193,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "equation": "ATP + H2O -> ADP + Pi",
         "exothermic": true
       }
@@ -231,7 +211,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "latex": "6CO_2+6H_2O\\rightarrow C_6H_{12}O_6+6O_2"
       }
     },
@@ -248,7 +228,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "latex": "ATP+H_2O\\rightarrow ADP+P_i"
       }
     },
@@ -261,11 +241,11 @@
       "props": {
         "name": "C (carbon)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "latex": "C"
       }
     },
@@ -278,11 +258,11 @@
       "props": {
         "name": "N (nitrogen)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "latex": "N"
       }
     },
@@ -295,11 +275,11 @@
       "props": {
         "name": "P (phosphorus)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "chem.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "latex": "P"
       }
     }
@@ -316,7 +296,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "alignment": "manual_curation"
       }
     },
@@ -331,7 +311,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "alignment": "manual_curation"
       }
     },
@@ -346,14 +326,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "alignment": "manual_curation"
       }
     },
     {
-      "id": "BC:mo:glucose->EL:c[composed_of]",
+      "id": "BC:mo:glucose->EK:el:C[composed_of]",
       "source": "BC:mo:glucose",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -361,14 +341,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 6
       }
     },
     {
-      "id": "BC:mo:glucose->EL:h[composed_of]",
+      "id": "BC:mo:glucose->EK:el:H[composed_of]",
       "source": "BC:mo:glucose",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -376,14 +356,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 12
       }
     },
     {
-      "id": "BC:mo:glucose->EL:o[composed_of]",
+      "id": "BC:mo:glucose->EK:el:O[composed_of]",
       "source": "BC:mo:glucose",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -391,14 +371,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 6
       }
     },
     {
-      "id": "BC:mo:atp->EL:c[composed_of]",
+      "id": "BC:mo:atp->EK:el:C[composed_of]",
       "source": "BC:mo:atp",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -406,14 +386,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 10
       }
     },
     {
-      "id": "BC:mo:atp->EL:h[composed_of]",
+      "id": "BC:mo:atp->EK:el:H[composed_of]",
       "source": "BC:mo:atp",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -421,14 +401,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 16
       }
     },
     {
-      "id": "BC:mo:atp->BC:el:nitrogen[composed_of]",
+      "id": "BC:mo:atp->EK:el:N[composed_of]",
       "source": "BC:mo:atp",
-      "target": "BC:el:nitrogen",
+      "target": "EK:el:N",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -436,14 +416,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 5
       }
     },
     {
-      "id": "BC:mo:atp->EL:o[composed_of]",
+      "id": "BC:mo:atp->EK:el:O[composed_of]",
       "source": "BC:mo:atp",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -451,14 +431,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 13
       }
     },
     {
-      "id": "BC:mo:amino_acid->EL:c[composed_of]",
+      "id": "BC:mo:amino_acid->EK:el:C[composed_of]",
       "source": "BC:mo:amino_acid",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -466,14 +446,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 2
       }
     },
     {
-      "id": "BC:mo:amino_acid->EL:h[composed_of]",
+      "id": "BC:mo:amino_acid->EK:el:H[composed_of]",
       "source": "BC:mo:amino_acid",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -481,14 +461,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 5
       }
     },
     {
-      "id": "BC:mo:amino_acid->BC:el:nitrogen[composed_of]",
+      "id": "BC:mo:amino_acid->EK:el:N[composed_of]",
       "source": "BC:mo:amino_acid",
-      "target": "BC:el:nitrogen",
+      "target": "EK:el:N",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -496,14 +476,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 1
       }
     },
     {
-      "id": "BC:mo:amino_acid->EL:o[composed_of]",
+      "id": "BC:mo:amino_acid->EK:el:O[composed_of]",
       "source": "BC:mo:amino_acid",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -511,14 +491,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 2
       }
     },
     {
-      "id": "BC:mo:protein->EL:c[composed_of]",
+      "id": "BC:mo:protein->EK:el:C[composed_of]",
       "source": "BC:mo:protein",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -526,14 +506,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 2
       }
     },
     {
-      "id": "BC:mo:protein->EL:h[composed_of]",
+      "id": "BC:mo:protein->EK:el:H[composed_of]",
       "source": "BC:mo:protein",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -541,14 +521,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 3
       }
     },
     {
-      "id": "BC:mo:protein->BC:el:nitrogen[composed_of]",
+      "id": "BC:mo:protein->EK:el:N[composed_of]",
       "source": "BC:mo:protein",
-      "target": "BC:el:nitrogen",
+      "target": "EK:el:N",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -556,14 +536,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 1
       }
     },
     {
-      "id": "BC:mo:protein->EL:o[composed_of]",
+      "id": "BC:mo:protein->EK:el:O[composed_of]",
       "source": "BC:mo:protein",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -571,14 +551,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 1
       }
     },
     {
-      "id": "BC:mo:dna->EL:c[composed_of]",
+      "id": "BC:mo:dna->EK:el:C[composed_of]",
       "source": "BC:mo:dna",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -586,14 +566,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 10
       }
     },
     {
-      "id": "BC:mo:dna->EL:h[composed_of]",
+      "id": "BC:mo:dna->EK:el:H[composed_of]",
       "source": "BC:mo:dna",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -601,14 +581,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 14
       }
     },
     {
-      "id": "BC:mo:dna->BC:el:nitrogen[composed_of]",
+      "id": "BC:mo:dna->EK:el:N[composed_of]",
       "source": "BC:mo:dna",
-      "target": "BC:el:nitrogen",
+      "target": "EK:el:N",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -616,14 +596,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 5
       }
     },
     {
-      "id": "BC:mo:dna->EL:o[composed_of]",
+      "id": "BC:mo:dna->EK:el:O[composed_of]",
       "source": "BC:mo:dna",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -631,14 +611,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 7
       }
     },
     {
-      "id": "BC:mo:co2->EL:c[composed_of]",
+      "id": "BC:mo:co2->EK:el:C[composed_of]",
       "source": "BC:mo:co2",
-      "target": "EL:c",
+      "target": "EK:el:C",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -646,14 +626,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 1
       }
     },
     {
-      "id": "BC:mo:co2->EL:o[composed_of]",
+      "id": "BC:mo:co2->EK:el:O[composed_of]",
       "source": "BC:mo:co2",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -661,14 +641,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 2
       }
     },
     {
-      "id": "BC:mo:h2o->EL:h[composed_of]",
+      "id": "BC:mo:h2o->EK:el:H[composed_of]",
       "source": "BC:mo:h2o",
-      "target": "EL:h",
+      "target": "EK:el:H",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -676,14 +656,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 2
       }
     },
     {
-      "id": "BC:mo:h2o->EL:o[composed_of]",
+      "id": "BC:mo:h2o->EK:el:O[composed_of]",
       "source": "BC:mo:h2o",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -691,14 +671,14 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 1
       }
     },
     {
-      "id": "BC:mo:o2->EL:o[composed_of]",
+      "id": "BC:mo:o2->EK:el:O[composed_of]",
       "source": "BC:mo:o2",
-      "target": "EL:o",
+      "target": "EK:el:O",
       "type": "composed_of",
       "kind": "molecule_element",
       "props": {
@@ -706,7 +686,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539",
+        "created_at": "2026-10-09T14:15:14.384643",
         "count": 2
       }
     },
@@ -721,7 +701,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "co2_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -735,7 +715,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "h2o_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -749,7 +729,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "glucose_product",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -763,7 +743,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "o2_product",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -777,7 +757,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "glucose_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -791,7 +771,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "o2_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -805,7 +785,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "co2_product",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -819,7 +799,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "h2o_product",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -833,7 +813,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "atp_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -847,7 +827,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "h2o_reactant",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     },
     {
@@ -861,7 +841,63 @@
         "explicit_or_inferred": "explicit",
         "kind": "stoich_from_rx",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.972539"
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "BC:rx:atp_hydrolysis->BC:fo:atp_hydrolysis_eq[derived_from]",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "type": "derived_from",
+      "kind": "stoich_from_rx",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "stoich_from_rx",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "BC:fo:atp_hydrolysis_eq->BC:sy:C[has_symbol]",
+      "source": "BC:fo:atp_hydrolysis_eq",
+      "target": "BC:sy:C",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "BC:fo:atp_hydrolysis_eq->BC:sy:N[has_symbol]",
+      "source": "BC:fo:atp_hydrolysis_eq",
+      "target": "BC:sy:N",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "BC:fo:atp_hydrolysis_eq->BC:sy:P[has_symbol]",
+      "source": "BC:fo:atp_hydrolysis_eq",
+      "target": "BC:sy:P",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
       }
     }
   ]

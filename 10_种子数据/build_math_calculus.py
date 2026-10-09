@@ -38,6 +38,9 @@ for fo, syms in [
 ]:
     for s in syms:
         edges.append(sc.e(fo, s, "has_symbol", "formula_symbol"))
+
+# 物理量 -> 符号（2026-10-09 连通性审计补齐）：MC:pq:order（导数的阶）原为孤立节点
+edges.append(sc.e("MC:pq:order", "MC:sy:n", "has_symbol", "quantity_symbol"))
 for fo, pqs in [
     ("MC:fo:power_rule", ["MC:pq:derivative"]),
     ("MC:fo:ftc", ["MC:pq:integral", "MC:pq:derivative"]),
@@ -47,4 +50,13 @@ for fo, pqs in [
 ]:
     for p in pqs:
         edges.append(sc.e(fo, p, "defines", "formula_quantity"))
-sc.build_and_write(OUT, "7i", "Math: calculus vertical slice", nodes, edges)
+
+# 桥接到 Aura 已有的 LLM 假设层（2026-10-09 连通性审计补齐）
+# 审计发现 ``MX:math:derivative_power`` / ``MX:math:power_rule`` / ``WD:Q1190543``
+# 构成一个 3 节点的**孤岛**（GNN 未对其提出候选边，故没有任何入边）。
+# 此处按 ``build_math_algebra`` 里 ``MA:fo:pythagoras ↔ MX:math:pythagorean_identity``
+# 的既有范式，用人工策划的 same_as 把「幂法则」接回主图。
+edges.append(sc.e("MC:fo:power_rule", "MX:math:power_rule", "same_as", "seed_to_existing",
+                  alignment="manual_curation"))
+sc.build_and_write(OUT, "7i", "Math: calculus vertical slice", nodes, edges,
+                   extra_external={"MX:math:power_rule"})

@@ -23,12 +23,15 @@ nodes += [
     sc.n("RT:pq:proper_time", "physical_quantity", "Proper time", "phys.quantity", symbol="tau", dimension="T"),
 ]
 nodes += [
-    sc.n("RT:un:c", "unit", "speed of light", "phys.unit", symbol="c", dimension="L*T^-1"),
+    # ⚠ 2026-10-09 连通性审计修正：原在此声明 ``RT:un:c``（unit / "speed of light"）。
+    # 该节点自建库起 deg=0，且与 ``RT:pq:light_speed``（Constant，同 symbol/同量纲/同数值）
+    # 语义重复 —— **光速是自然常量，不是单位**，把常量标成 Unit 会污染类型统计。
+    # 故整节点移除（改由 ``RT:pq:light_speed`` 承载），并在下方补其真实单位 m/s。
 ]
 nodes += [
-    sc.n("RT:sy:gamma", "symbol", "γ (Lorentz factor)", "math.symbol", latex=r"\gamma"),
-    sc.n("RT:sy:c", "symbol", "c (speed of light)", "math.symbol", latex="c"),
-    sc.n("RT:sy:tau", "symbol", "τ (proper time)", "math.symbol", latex=r"\tau"),
+    sc.n("RT:sy:gamma", "symbol", "γ (Lorentz factor)", "phys.symbol", latex=r"\gamma"),
+    sc.n("RT:sy:c", "symbol", "c (speed of light)", "phys.symbol", latex="c"),
+    sc.n("RT:sy:tau", "symbol", "τ (proper time)", "phys.symbol", latex=r"\tau"),
 ]
 
 for fo, syms in [
@@ -40,6 +43,14 @@ for fo, syms in [
 ]:
     for s in syms:
         edges.append(sc.e(fo, s, "has_symbol", "formula_symbol"))
+
+# 量/单位补线（2026-10-09 连通性审计补齐）
+#   RT:sy:tau（固有时符号）原为孤立 → 挂到 RT:pq:proper_time
+#   UN:s（秒）原为孤立 → 由 proper_time 声明其单位（has_unit）
+#   RT:un:c 已删除（见上）→ 光速的真实单位改由 UN:mps（m/s）承载
+edges.append(sc.e("RT:pq:proper_time", "RT:sy:tau", "has_symbol", "quantity_symbol"))
+edges.append(sc.e("RT:pq:proper_time", "UN:s", "has_unit", "quantity_unit"))
+edges.append(sc.e("RT:pq:light_speed", "UN:mps", "has_unit", "quantity_unit"))
 
 for fo, pqs in [
     ("RT:fo:lorentz_factor", ["RT:pq:lorentz_factor"]),

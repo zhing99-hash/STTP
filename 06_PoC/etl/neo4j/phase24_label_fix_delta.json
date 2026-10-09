@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "phase": "Phase8d-labels",
+    "source": "03_知识层/normalize_labels.py",
+    "reason": "标签规范化：legacy 拼写漂移（Physical_quantity→PhysicalQuantity 等） + 5.C 占位类型解析（ElementEntity→Molecule / PhysicsEntity→Formula）。推送须加 --set-labels（apoc.create.setLabels 整体替换），否则 addLabels 会留下旧标签",
+    "generated_at": "2026-10-09T14:29:31"
+  },
+  "nodes": [
+    {
+      "id": "ek:molecule:CO2",
+      "labels": [
+        "Molecule",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "pb:newton_second",
+      "labels": [
+        "Formula",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "PQ:energy",
+      "labels": [
+        "PhysicalQuantity",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "PQ:mass",
+      "labels": [
+        "PhysicalQuantity",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "PQ:c",
+      "labels": [
+        "PhysicalQuantity",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "PQ:force",
+      "labels": [
+        "PhysicalQuantity",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "PQ:accel",
+      "labels": [
+        "PhysicalQuantity",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "PQ:vel",
+      "labels": [
+        "PhysicalQuantity",
+        "Entity"
+      ],
+      "props": {}
+    },
+    {
+      "id": "PQ:ke",
+      "labels": [
+        "PhysicalQuantity",
+        "Entity"
+      ],
+      "props": {}
+    }
+  ],
+  "delete_nodes": [],
+  "edges": [],
+  "delete_edges": []
+}

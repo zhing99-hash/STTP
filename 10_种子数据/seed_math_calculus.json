@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "\\frac{d}{dx}x^n=nx^{n-1}"
       }
     },
@@ -33,7 +33,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "\\int_a^b f'(x)\\,dx=f(b)-f(a)"
       }
     },
@@ -50,7 +50,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "\\frac{d}{dx}f(g(x))=f'(g(x))\\,g'(x)"
       }
     },
@@ -67,7 +67,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "f(x)=\\sum_{n=0}^\\infty \\frac{f^{(n)}(a)}{n!}(x-a)^n"
       }
     },
@@ -84,7 +84,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "f'(x)=\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}"
       }
     },
@@ -101,7 +101,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "symbol": "f'"
       }
     },
@@ -118,7 +118,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "symbol": "\\int f"
       }
     },
@@ -135,7 +135,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "symbol": "\\lim"
       }
     },
@@ -152,7 +152,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "symbol": "n"
       }
     },
@@ -169,7 +169,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "f"
       }
     },
@@ -186,7 +186,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "g"
       }
     },
@@ -203,7 +203,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "n"
       }
     },
@@ -220,7 +220,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.371506",
+        "created_at": "2026-10-09T14:18:50.594083",
         "latex": "dx"
       }
     }
@@ -237,7 +237,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -251,7 +251,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -265,7 +265,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -279,7 +279,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -293,7 +293,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -307,7 +307,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -321,7 +321,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -335,7 +335,21 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
+      }
+    },
+    {
+      "id": "MC:pq:order->MC:sy:n[has_symbol]",
+      "source": "MC:pq:order",
+      "target": "MC:sy:n",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -349,7 +363,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -363,7 +377,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -377,7 +391,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -391,7 +405,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -405,7 +419,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -419,7 +433,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
       }
     },
     {
@@ -433,7 +447,22 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.371506"
+        "created_at": "2026-10-09T14:18:50.594083"
+      }
+    },
+    {
+      "id": "MC:fo:power_rule->MX:math:power_rule[same_as]",
+      "source": "MC:fo:power_rule",
+      "target": "MX:math:power_rule",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:18:50.594083",
+        "alignment": "manual_curation"
       }
     }
   ]

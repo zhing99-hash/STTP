@@ -44,6 +44,9 @@ for fo, syms in [
 ]:
     for s in syms:
         edges.append(sc.e(fo, s, "has_symbol", "formula_symbol"))
+
+# 物理量 -> 符号（2026-10-09 连通性审计补齐）：MG:sy:A（面积）原为孤立节点
+edges.append(sc.e("MG:pq:area", "MG:sy:A", "has_symbol", "quantity_symbol"))
 for fo, pqs in [
     ("MG:fo:law_cosines", ["MG:pq:angle"]),
     ("MG:fo:circle_area", ["MG:pq:area", "MG:pq:radius"]),

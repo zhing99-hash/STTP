@@ -24,9 +24,9 @@ nodes.append(sc.n("OM:fo:combustion", "formula", "Hydrocarbon combustion", "chem
                   informal="General combustion of a hydrocarbon."))
 # 元素符号
 nodes += [
-    sc.n("OM:sy:C", "symbol", "C (carbon)", "math.symbol", latex="C"),
-    sc.n("OM:sy:H", "symbol", "H (hydrogen)", "math.symbol", latex="H"),
-    sc.n("OM:sy:O", "symbol", "O (oxygen)", "math.symbol", latex="O"),
+    sc.n("OM:sy:C", "symbol", "C (carbon)", "chem.symbol", latex="C"),
+    sc.n("OM:sy:H", "symbol", "H (hydrogen)", "chem.symbol", latex="H"),
+    sc.n("OM:sy:O", "symbol", "O (oxygen)", "chem.symbol", latex="O"),
 ]
 # 反应
 nodes += [
@@ -43,13 +43,14 @@ edges.append(sc.e("OM:mo:methane", "MO:ch4", "same_as", "seed_to_existing", alig
 for s in ["OM:sy:C", "OM:sy:H", "OM:sy:O"]:
     edges.append(sc.e("OM:fo:combustion", s, "has_symbol", "formula_symbol"))
 
-# 分子 -> 元素组成（引用基础图谱 EL:*）
+# 分子 -> 元素组成（引用元素层 canonical 元素 EK:el:<符号>）
+# ⚠ 2026-10-09 连通性审计修正：原引用 ``EL:c/h/o``（A5 去重后已不存在）→ 全部边被静默丢弃
 comp = [
-    ("OM:mo:methane", ("EL:c", 1), ("EL:h", 4)),
-    ("OM:mo:ethane", ("EL:c", 2), ("EL:h", 6)),
-    ("OM:mo:ethylene", ("EL:c", 2), ("EL:h", 4)),
-    ("OM:mo:benzene", ("EL:c", 6), ("EL:h", 6)),
-    ("OM:mo:ethanol", ("EL:c", 2), ("EL:h", 6), ("EL:o", 1)),
+    ("OM:mo:methane", ("EK:el:C", 1), ("EK:el:H", 4)),
+    ("OM:mo:ethane", ("EK:el:C", 2), ("EK:el:H", 6)),
+    ("OM:mo:ethylene", ("EK:el:C", 2), ("EK:el:H", 4)),
+    ("OM:mo:benzene", ("EK:el:C", 6), ("EK:el:H", 6)),
+    ("OM:mo:ethanol", ("EK:el:C", 2), ("EK:el:H", 6), ("EK:el:O", 1)),
 ]
 for mo, *parts in comp:
     for el, cnt in parts:

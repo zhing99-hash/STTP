@@ -57,13 +57,13 @@ nodes += [
 ]
 # 符号（新）
 nodes += [
-    sc.n("CM:sy:p", "symbol", "p (momentum)", "math.symbol", latex="p"),
-    sc.n("CM:sy:W", "symbol", "W (work)", "math.symbol", latex="W"),
-    sc.n("CM:sy:P", "symbol", "P (power)", "math.symbol", latex="P"),
-    sc.n("CM:sy:G", "symbol", "G (gravitational constant)", "math.symbol", latex="G"),
-    sc.n("CM:sy:L", "symbol", "L (angular momentum)", "math.symbol", latex="L"),
-    sc.n("CM:sy:tau", "symbol", "τ (torque)", "math.symbol", latex=r"\tau"),
-    sc.n("CM:sy:J", "symbol", "J (impulse)", "math.symbol", latex="J"),
+    sc.n("CM:sy:p", "symbol", "p (momentum)", "phys.symbol", latex="p"),
+    sc.n("CM:sy:W", "symbol", "W (work)", "phys.symbol", latex="W"),
+    sc.n("CM:sy:P", "symbol", "P (power)", "phys.symbol", latex="P"),
+    sc.n("CM:sy:G", "symbol", "G (gravitational constant)", "phys.symbol", latex="G"),
+    sc.n("CM:sy:L", "symbol", "L (angular momentum)", "phys.symbol", latex="L"),
+    sc.n("CM:sy:tau", "symbol", "τ (torque)", "phys.symbol", latex=r"\tau"),
+    sc.n("CM:sy:J", "symbol", "J (impulse)", "phys.symbol", latex="J"),
 ]
 
 # 公式 -> 符号
@@ -77,6 +77,12 @@ for fo, syms in [
 ]:
     for s in syms:
         edges.append(sc.e(fo, s, "has_symbol", "formula_symbol"))
+
+# 物理量 -> 符号（2026-10-09 连通性审计补齐）
+# 原实现只给「公式」挂符号，`CM:sy:L`（角动量）与 `CM:sy:tau`（力矩）声明后无人引用
+# → 两个孤立节点（deg=0）。这里挂到对应物理量上（语义：该量的符号是 L / τ）。
+for pq, s in [("CM:pq:angular_momentum", "CM:sy:L"), ("CM:pq:torque", "CM:sy:tau")]:
+    edges.append(sc.e(pq, s, "has_symbol", "quantity_symbol"))
 
 # 公式 -> 物理量
 for fo, pqs in [

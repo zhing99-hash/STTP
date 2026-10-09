@@ -160,6 +160,9 @@ for fo, syms in SYM.items():
     for s in syms:
         edges.append(sc.e(fo, s, "has_symbol", "formula_symbol"))
 
+# 物理量 -> 符号（2026-10-09 连通性审计补齐）：CE:sy:c（物质的量浓度）原为孤立节点
+edges.append(sc.e("CE:pq:concentration", "CE:sy:c", "has_symbol", "quantity_symbol"))
+
 # 公式 -> 物理量（defines）
 DEF = [
     ("CE:fo:mass_action", "CE:pq:equilibrium_constant"),

@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "E"
       }
     },
@@ -33,7 +33,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "J"
       }
     },
@@ -50,7 +50,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "Pa"
       }
     },
@@ -67,7 +67,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "PV=nRT",
         "informal": "Pressure times volume equals moles times gas constant times temperature."
       }
@@ -85,7 +85,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "\\Delta U = Q - W",
         "informal": "Change in internal energy equals heat added minus work done."
       }
@@ -103,7 +103,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "P_1 V_1 = P_2 V_2"
       }
     },
@@ -120,7 +120,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "\\frac{V_1}{T_1}=\\frac{V_2}{T_2}"
       }
     },
@@ -137,7 +137,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "\\frac{P_1}{T_1}=\\frac{P_2}{T_2}"
       }
     },
@@ -154,7 +154,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "\\eta = 1 - \\frac{T_c}{T_h}",
         "informal": "Maximum possible efficiency of a heat engine."
       }
@@ -172,7 +172,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "P",
         "dimension": "M*L^-1*T^-2"
       }
@@ -190,7 +190,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "V",
         "dimension": "L^3"
       }
@@ -208,7 +208,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "T",
         "dimension": "K"
       }
@@ -226,7 +226,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "R",
         "value": 8.314,
         "dimension": "M*L^2*T^-2*mol^-1*K^-1"
@@ -245,7 +245,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "U",
         "dimension": "M*L^2*T^-2"
       }
@@ -263,7 +263,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "Q",
         "dimension": "M*L^2*T^-2"
       }
@@ -281,7 +281,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "n",
         "dimension": "mol"
       }
@@ -299,7 +299,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "S",
         "dimension": "M*L^2*T^-2*K^-1"
       }
@@ -317,7 +317,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "K",
         "dimension": "K",
         "si_base": true
@@ -336,7 +336,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "m^3",
         "dimension": "L^3"
       }
@@ -354,7 +354,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "mol",
         "dimension": "mol",
         "si_base": true
@@ -373,7 +373,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "J/K",
         "dimension": "M*L^2*T^-2*K^-1",
         "derived_from": "J/K"
@@ -392,7 +392,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "symbol": "J/(mol*K)",
         "dimension": "M*L^2*T^-2*mol^-1*K^-1",
         "derived_from": "J/(mol*K)"
@@ -407,11 +407,11 @@
       "props": {
         "name": "P (pressure)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "P"
       }
     },
@@ -424,11 +424,11 @@
       "props": {
         "name": "V (volume)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "V"
       }
     },
@@ -441,11 +441,11 @@
       "props": {
         "name": "T (temperature)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "T"
       }
     },
@@ -458,11 +458,11 @@
       "props": {
         "name": "R (gas constant)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "R"
       }
     },
@@ -475,11 +475,11 @@
       "props": {
         "name": "U (internal energy)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "U"
       }
     },
@@ -492,11 +492,11 @@
       "props": {
         "name": "Q (heat)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "Q"
       }
     },
@@ -509,11 +509,11 @@
       "props": {
         "name": "n (amount)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "n"
       }
     },
@@ -526,11 +526,11 @@
       "props": {
         "name": "S (entropy)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "S"
       }
     },
@@ -543,11 +543,11 @@
       "props": {
         "name": "η (efficiency)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "latex": "\\eta"
       }
     }
@@ -564,7 +564,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "alignment": "manual_curation"
       }
     },
@@ -579,7 +579,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "alignment": "manual_curation"
       }
     },
@@ -594,7 +594,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "alignment": "manual_curation"
       }
     },
@@ -609,7 +609,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -623,7 +623,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -637,7 +637,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -651,7 +651,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -665,7 +665,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -679,7 +679,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -693,7 +693,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -707,7 +707,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -721,7 +721,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -735,7 +735,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -749,7 +749,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -763,7 +763,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -777,7 +777,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -791,7 +791,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -805,7 +805,21 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
+      }
+    },
+    {
+      "id": "TH:pq:entropy->TH:sy:S[has_symbol]",
+      "source": "TH:pq:entropy",
+      "target": "TH:sy:S",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -819,7 +833,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -833,7 +847,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -847,7 +861,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -861,7 +875,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -875,7 +889,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -889,7 +903,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -903,7 +917,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -917,7 +931,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -931,7 +945,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -945,7 +959,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -959,7 +973,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -973,7 +987,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -987,7 +1001,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1001,7 +1015,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1015,7 +1029,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1029,7 +1043,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1043,7 +1057,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1057,7 +1071,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1071,7 +1085,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1085,7 +1099,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1099,7 +1113,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1113,7 +1127,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1127,7 +1141,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "derived",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "note": "U is energy"
       }
     },
@@ -1142,7 +1156,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "derived",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336",
+        "created_at": "2026-10-09T14:06:43.503885",
         "note": "Q is energy"
       }
     },
@@ -1157,7 +1171,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "P_from_PV",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1171,7 +1185,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "V_from_PV",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1185,7 +1199,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "U_from_first_law",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     },
     {
@@ -1199,7 +1213,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "eta_from_T",
         "source": "curated_seed",
-        "created_at": "2026-09-29T16:35:28.083336"
+        "created_at": "2026-10-09T14:06:43.503885"
       }
     }
   ]

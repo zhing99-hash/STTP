@@ -44,18 +44,18 @@ nodes += [
     sc.n("EM:un:weber", "unit", "weber", "phys.unit", symbol="Wb", dimension="M*L^2*T^-2*I^-1"),
 ]
 nodes += [
-    sc.n("EM:sy:Q", "symbol", "Q (charge)", "math.symbol", latex="Q"),
-    sc.n("EM:sy:I", "symbol", "I (current)", "math.symbol", latex="I"),
-    sc.n("EM:sy:V", "symbol", "V (voltage)", "math.symbol", latex="V"),
-    sc.n("EM:sy:E", "symbol", "E (electric field)", "math.symbol", latex="E"),
-    sc.n("EM:sy:B", "symbol", "B (magnetic field)", "math.symbol", latex="B"),
-    sc.n("EM:sy:R", "symbol", "R (resistance)", "math.symbol", latex="R"),
-    sc.n("EM:sy:L", "symbol", "L (inductance)", "math.symbol", latex="L"),
-    sc.n("EM:sy:eps", "symbol", "ε (emf)", "math.symbol", latex=r"\varepsilon"),
-    sc.n("EM:sy:Phi", "symbol", "Φ (flux)", "math.symbol", latex=r"\Phi"),
-    sc.n("EM:sy:k", "symbol", "k (Coulomb constant)", "math.symbol", latex="k"),
-    sc.n("EM:sy:eps0", "symbol", "ε₀ (permittivity)", "math.symbol", latex=r"\varepsilon_0"),
-    sc.n("EM:sy:mu0", "symbol", "μ₀ (permeability)", "math.symbol", latex=r"\mu_0"),
+    sc.n("EM:sy:Q", "symbol", "Q (charge)", "phys.symbol", latex="Q"),
+    sc.n("EM:sy:I", "symbol", "I (current)", "phys.symbol", latex="I"),
+    sc.n("EM:sy:V", "symbol", "V (voltage)", "phys.symbol", latex="V"),
+    sc.n("EM:sy:E", "symbol", "E (electric field)", "phys.symbol", latex="E"),
+    sc.n("EM:sy:B", "symbol", "B (magnetic field)", "phys.symbol", latex="B"),
+    sc.n("EM:sy:R", "symbol", "R (resistance)", "phys.symbol", latex="R"),
+    sc.n("EM:sy:L", "symbol", "L (inductance)", "phys.symbol", latex="L"),
+    sc.n("EM:sy:eps", "symbol", "ε (emf)", "phys.symbol", latex=r"\varepsilon"),
+    sc.n("EM:sy:Phi", "symbol", "Φ (flux)", "phys.symbol", latex=r"\Phi"),
+    sc.n("EM:sy:k", "symbol", "k (Coulomb constant)", "phys.symbol", latex="k"),
+    sc.n("EM:sy:eps0", "symbol", "ε₀ (permittivity)", "phys.symbol", latex=r"\varepsilon_0"),
+    sc.n("EM:sy:mu0", "symbol", "μ₀ (permeability)", "phys.symbol", latex=r"\mu_0"),
 ]
 
 for fo, syms in [
@@ -68,6 +68,9 @@ for fo, syms in [
 ]:
     for s in syms:
         edges.append(sc.e(fo, s, "has_symbol", "formula_symbol"))
+
+# 物理量 -> 符号（2026-10-09 连通性审计补齐）：EM:sy:L（电感）原为孤立节点
+edges.append(sc.e("EM:pq:inductance", "EM:sy:L", "has_symbol", "quantity_symbol"))
 
 for fo, pqs in [
     ("EM:fo:coulomb", ["EM:pq:charge", "EM:pq:coulomb_const"]),

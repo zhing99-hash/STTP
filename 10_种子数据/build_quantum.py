@@ -30,12 +30,12 @@ nodes += [
     sc.n("QM:un:ev", "unit", "electronvolt", "phys.unit", symbol="eV", dimension="M*L^2*T^-2"),
 ]
 nodes += [
-    sc.n("QM:sy:h", "symbol", "h (Planck)", "math.symbol", latex="h"),
-    sc.n("QM:sy:hbar", "symbol", "ħ (reduced Planck)", "math.symbol", latex=r"\hbar"),
-    sc.n("QM:sy:nu", "symbol", "ν (frequency)", "math.symbol", latex=r"\nu"),
-    sc.n("QM:sy:lambda", "symbol", "λ (wavelength)", "math.symbol", latex=r"\lambda"),
-    sc.n("QM:sy:psi", "symbol", "ψ (wavefunction)", "math.symbol", latex=r"\psi"),
-    sc.n("QM:sy:phi", "symbol", "φ (work function)", "math.symbol", latex=r"\phi"),
+    sc.n("QM:sy:h", "symbol", "h (Planck)", "phys.symbol", latex="h"),
+    sc.n("QM:sy:hbar", "symbol", "ħ (reduced Planck)", "phys.symbol", latex=r"\hbar"),
+    sc.n("QM:sy:nu", "symbol", "ν (frequency)", "phys.symbol", latex=r"\nu"),
+    sc.n("QM:sy:lambda", "symbol", "λ (wavelength)", "phys.symbol", latex=r"\lambda"),
+    sc.n("QM:sy:psi", "symbol", "ψ (wavefunction)", "phys.symbol", latex=r"\psi"),
+    sc.n("QM:sy:phi", "symbol", "φ (work function)", "phys.symbol", latex=r"\phi"),
 ]
 
 for fo, syms in [

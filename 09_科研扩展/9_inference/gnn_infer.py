@@ -94,6 +94,10 @@ print("    节点 %d / 边 %d" % (N, len(edges)))
 
 
 def norm_type(t):
+    # ⚠ 遗留兼容（防御性 no-op）：`Physical_quantity` 这个拼写漂移已于 2026-10-09
+    # 由 `03_知识层/normalize_labels.py` 在**源头**收敛为受控词表的 `PhysicalQuantity`
+    # （并已断言「全图主类型 ∈ 受控词表」）。此处保留映射只是为了让本模块在旧快照上
+    # 也能跑；若将来它再次命中，说明源头又漂了 —— 应回去修源头而非依赖这里。
     return "PhysicalQuantity" if t == "Physical_quantity" else t
 
 

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """**全部离线增量**的顺序推送编排（可安全重复执行）。
 
-2026-10-09 起累计**十一项修复**已成功推送到 Aura（云端与本地严格一致：
-7382 节点 / 40207 边）。本编排保留为**幂等重放通道** —— 换实例、回滚、
+2026-10-09 起累计**十四项修复**已推送到 Aura（云端与本地严格一致。
+最初推到 7382 节点 / 40207 边；本轮连通性审计收尾后本地为 7339 节点 / 40249 边）。
+本编排保留为**幂等重放通道** —— 换实例、回滚、
 或将来新增 delta 时直接重跑即可。各步骤：
 
     1) 元素层数据质量修复 -> 06_PoC/etl/neo4j/phase13_elementfix_delta.json
@@ -41,15 +42,32 @@
                               （命中分子补 chembl_id / max_phase / first_approval /
                                 ATC / 类药性描述符；**纯属性增强，0 新增节点/边**）
 
-推送**之后**还有两个收尾步（共 **13 步**）：
+   12) 连通性审计修复     -> 06_PoC/etl/neo4j/phase23_audit_fix_delta.json
+                              （82 处符号学科标注纠偏[math.symbol→phys/chem.symbol] +
+                                14 条元素/量符号接线边 + 2 条边 + **DETACH DELETE
+                                42 个孤儿 EK2:rxn 反应节点**。由
+                                `06_PoC/sync_seed_delta.py` 从重跑后的 seed 生成）
+   13) 连通性审计收尾     -> 06_PoC/etl/neo4j/phase24_audit_fix_delta.json
+                              （MC:fo:power_rule-[same_as]->MX:math:power_rule 接回
+                                3 节点孤岛 + RT:pq:light_speed-[has_unit]->UN:mps +
+                                **DETACH DELETE RT:un:c**（把光速常量误标成 Unit））
+   14) 标签规范化         -> 06_PoC/etl/neo4j/phase24_label_fix_delta.json
+                              （9 个节点标签收敛到受控词表：Physical_quantity→
+                                PhysicalQuantity ×7、ElementEntity→Molecule、
+                                PhysicsEntity→Formula。由
+                                `03_知识层/normalize_labels.py` 生成。**注意**：
+                                推送器以 (source,type,target) 为边主键，标签更新走
+                                节点 SET，不受边主键影响）
 
-   12) 边对账（**清**）  -> 06_PoC/reconcile_aura_edges.py
+推送**之后**还有两个收尾步（共 **16 步**）：
+
+   15) 边对账（**清**）  -> 06_PoC/reconcile_aura_edges.py
                             （以本地 normalized.json 为准，删云端独有的历史残留三元组、
                               删同三元组 kind 不一致的变体、补本地独有边。**推送只能加，
                               历史上被替换掉的旧方案残留不会被自动清理** —— 2026-10-09
                               实测云端多 155 个唯一三元组 + 39 条 kind 变体。
                               用 --skip-reconcile 跳过）
-   13) 反向导出（**快照**）-> 09_科研扩展/9_inference/export_aura.py
+   16) 反向导出（**快照**）-> 09_科研扩展/9_inference/export_aura.py
                             （产出 viz 快照，默认 06_PoC/graph_data_aura.json。
                               用 --skip-export 跳过）
 
@@ -88,6 +106,9 @@ CODATA_DELTA = os.path.join(NEO4J_DIR, "phase18b_codata_delta.json")
 PUBCHEM_DELTA = os.path.join(NEO4J_DIR, "phase19_pubchem_delta.json")
 LIT_DELTA = os.path.join(NEO4J_DIR, "phase21_literature_delta.json")
 CHEMBL_DELTA = os.path.join(NEO4J_DIR, "phase22_chembl_delta.json")
+AUDIT_FIX = os.path.join(NEO4J_DIR, "phase23_audit_fix_delta.json")
+AUDIT_FIX2 = os.path.join(NEO4J_DIR, "phase24_audit_fix_delta.json")
+LABEL_FIX = os.path.join(NEO4J_DIR, "phase24_label_fix_delta.json")
 # 通用 delta 推送器（upsert 节点 / DETACH DELETE / MERGE 边 / DELETE 边）
 PUSH_DELTA = os.path.join(ROOT, "11_真实数据", "push_element_merge.py")
 LOADER = os.path.join(ROOT, "06_PoC", "robust_aura_loader.py")
@@ -136,6 +157,9 @@ def main():
     pubchem = load_json(PUBCHEM_DELTA)
     lit = load_json(LIT_DELTA)
     chembl = load_json(CHEMBL_DELTA)
+    audit = load_json(AUDIT_FIX)
+    audit2 = load_json(AUDIT_FIX2)
+    labelfix = load_json(LABEL_FIX)
 
     print("待推送离线增量（自 2026-10-08 离线起累计）")
     print("-" * 74)
@@ -161,9 +185,15 @@ def main():
           % (len(lit.get("nodes", [])), len(lit.get("edges", []))))
     print("  步骤 11 ChEMBL 药物层     节点 %-4d 边 %d（chembl_id / max_phase / ATC / 类药性）"
           % (len(chembl.get("nodes", [])), len(chembl.get("edges", []))))
-    print("  步骤 12 云端/本地边对账  %s（删残留/kind 变体 + 补本地独有边）"
+    print("  步骤 12 连通性审计修复   节点改 %-4d 边 %-4d 删节点 %d（学科标注纠偏 + 接线边 + 清孤儿）"
+          % (len(audit.get("nodes", [])), len(audit.get("edges", [])), len(audit.get("delete_nodes", []))))
+    print("  步骤 13 连通性审计收尾   边 %-4d 删节点 %d（接回 MX:math 孤岛 + 删误标单位）"
+          % (len(audit2.get("edges", [])), len(audit2.get("delete_nodes", []))))
+    print("  步骤 14 标签规范化       节点 %-4d（legacy 标签 → 受控词表）"
+          % len(labelfix.get("nodes", [])))
+    print("  步骤 15 云端/本地边对账  %s（删残留/kind 变体 + 补本地独有边）"
           % os.path.relpath(RECONCILE, ROOT))
-    print("  步骤 13 反向导出 viz 快照 %s（默认 graph_data_aura.json）"
+    print("  步骤 16 反向导出 viz 快照 %s（默认 graph_data_aura.json）"
           % os.path.relpath(EXPORT, ROOT))
     print("-" * 74)
     print("  顺序理由 1  步骤 2 的带类型边引用步骤 1 创建的节点（EK2:el:* 等）。")
@@ -176,7 +206,7 @@ def main():
     print("  顺序理由 5  步骤 9 修正的 composed_of 边以 EK:el:* 为端点，需在步骤 3（元素去重）")
     print("              之后；Aura 推边主键是 (source,type,target) 的 MERGE，故能命中步骤 3")
     print("              改挂后的既有边（边被修正 count，其余元数据保留）。")
-    print("  注意 1      推送完成后务必执行步骤 12/13（对账 + 反向导出）；否则本地快照与 Aura 分叉：")
+    print("  注意 1      推送完成后务必执行步骤 15/16（对账 + 反向导出）；否则本地快照与 Aura 分叉：")
     print("              (a) 历史残留只增不减，云端会慢慢变成「本地 ∪ 历代废弃物」；")
     print("              (b) 下一次 export 会读到分叉后的云端数据。")
     print("  注意 2      Aura 免费实例连接池有限，边分批 %d/批；失败自动重连重试。" % a.batch)
@@ -206,11 +236,17 @@ def main():
     run([PY, PUSH_DELTA, "--delta", PUBCHEM_DELTA, "--batch", str(a.batch)], "步骤 9 · PubChem 分子校验 + count 修正")
     run([PY, PUSH_DELTA, "--delta", LIT_DELTA, "--batch", str(a.batch)], "步骤 10 · 文献层多源交叉校验（Crossref/DataCite）")
     run([PY, PUSH_DELTA, "--delta", CHEMBL_DELTA, "--batch", str(a.batch)], "步骤 11 · ChEMBL 化学·药物层")
+    run([PY, PUSH_DELTA, "--delta", AUDIT_FIX, "--batch", str(a.batch)],
+        "步骤 12 · 连通性审计修复（学科标注 + 接线边 + 清孤儿）")
+    run([PY, PUSH_DELTA, "--delta", AUDIT_FIX2, "--batch", str(a.batch)],
+        "步骤 13 · 连通性审计收尾（孤岛接回 + 删误标节点）")
+    run([PY, PUSH_DELTA, "--delta", LABEL_FIX, "--batch", str(a.batch), "--set-labels"],
+        "步骤 14 · 标签规范化（受控词表收敛；setLabels 整体替换）")
     if not a.skip_reconcile:
         run([PY, RECONCILE, "--batch", str(a.batch)],
-            "步骤 12 · 云端/本地边对账（清理到严格一致）")
+            "步骤 15 · 云端/本地边对账（清理到严格一致）")
     if not a.skip_export:
-        run([PY, EXPORT], "步骤 13 · 从 Aura 反向导出 viz 快照")
+        run([PY, EXPORT], "步骤 16 · 从 Aura 反向导出 viz 快照")
     print("\n[DONE] 全部离线增量推送完成。建议再跑：bash sttp.sh check")
 
 

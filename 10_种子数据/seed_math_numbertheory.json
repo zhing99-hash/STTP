@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "a\\equiv b\\pmod{n}\\iff n\\mid(a-b)",
         "informal": "同余式定义：a、b 之差被 n 整除。"
       }
@@ -34,7 +34,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "a^{\\varphi(n)}\\equiv 1\\pmod{n}\\quad(\\gcd(a,n)=1)",
         "informal": "若 a 与 n 互质，则 a 的 φ(n) 次幂模 n 余 1。"
       }
@@ -52,7 +52,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "a^{p-1}\\equiv 1\\pmod{p}",
         "informal": "欧拉定理在 n 为素数时的特例（φ(p)=p−1）。"
       }
@@ -70,7 +70,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "x\\equiv a_i\\pmod{n_i}\\ \\Rightarrow\\ \\exists!\\,x\\ \\big(\\mathrm{mod}\\ \\textstyle\\prod_i n_i\\big)",
         "informal": "两两互质的模下，同余方程组有唯一解。"
       }
@@ -88,7 +88,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "(p-1)!\\equiv-1\\pmod{p}",
         "informal": "p 为素数的充要条件：(p−1)! ≡ −1 (mod p)。"
       }
@@ -106,7 +106,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "n=\\prod_{i}p_i^{e_i}",
         "informal": "任一大于 1 的整数可唯一分解为素数幂之积。"
       }
@@ -124,7 +124,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "\\gcd(a,b)=\\gcd(b,\\ a\\bmod b)",
         "informal": "辗转相除求最大公因数。"
       }
@@ -142,7 +142,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "\\sum_{n=1}^{\\infty}\\frac{1}{n^{2}}=\\frac{\\pi^{2}}{6}",
         "informal": "欧拉解决的级数求和，把数论/分析结果与 π 联系起来。"
       }
@@ -160,7 +160,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "(\\mathbb{Z}/n\\mathbb{Z})^{\\times}=\\{a\\bmod n:\\gcd(a,n)=1\\}",
         "informal": "模 n 的单位构成的乘法群，阶为 φ(n)，是欧拉定理的群论表述。"
       }
@@ -178,7 +178,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "informal": "整数上的等价关系。"
       }
     },
@@ -195,7 +195,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "informal": "模运算（有限域/环上的算术）。"
       }
     },
@@ -212,7 +212,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "informal": "φ(n) 为小于 n 且与 n 互质的正整数个数。"
       }
     },
@@ -229,7 +229,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "informal": "大于 1 且仅被 1 与自身整除的整数。"
       }
     },
@@ -246,7 +246,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "informal": "两整数最大的公共因数。"
       }
     },
@@ -263,7 +263,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "a"
       }
     },
@@ -280,7 +280,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "n"
       }
     },
@@ -297,7 +297,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "p"
       }
     },
@@ -314,7 +314,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "\\varphi(n)"
       }
     },
@@ -331,7 +331,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "\\equiv"
       }
     },
@@ -348,7 +348,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "latex": "\\mathbb{Z}"
       }
     }
@@ -365,7 +365,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -379,7 +379,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -393,7 +393,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -407,7 +407,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -421,7 +421,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -435,7 +435,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -449,7 +449,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -463,7 +463,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -477,7 +477,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -491,7 +491,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -505,7 +505,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -519,7 +519,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -533,7 +533,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -547,7 +547,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -561,7 +561,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -575,7 +575,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -589,7 +589,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -603,7 +603,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -617,7 +617,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -631,7 +631,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -645,7 +645,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -659,7 +659,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -673,7 +673,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -687,7 +687,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -701,7 +701,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -715,7 +715,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -729,7 +729,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -743,7 +743,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -757,7 +757,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -771,7 +771,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -785,7 +785,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -799,7 +799,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_concept",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -813,7 +813,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_concept",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -827,7 +827,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_concept",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -841,7 +841,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_concept",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -855,7 +855,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_concept",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -869,7 +869,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "special_case",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "note": "φ(p)=p−1，故费马小定理是欧拉定理的特例"
       }
     },
@@ -884,7 +884,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "built_on_congruence",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -898,7 +898,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "built_on_congruence",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -912,7 +912,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "built_on_congruence",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -926,7 +926,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "group_form_of_euler",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -940,7 +940,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "built_on_congruence",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -954,7 +954,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "totient_of_prime",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -968,7 +968,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "coprime_factorization",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912"
+        "created_at": "2026-10-09T14:06:46.546790"
       }
     },
     {
@@ -982,7 +982,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "eponym_euler",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.922912",
+        "created_at": "2026-10-09T14:06:46.546790",
         "note": "两者均冠名欧拉；此边表达跨子领域的命名/历史关联"
       }
     }

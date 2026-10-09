@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "S=k_B\\ln W",
         "informal": "Entropy equals Boltzmann constant times log of microstates."
       }
@@ -34,7 +34,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "f(v)\\propto v^2 e^{-mv^2/(2k_B T)}"
       }
     },
@@ -51,7 +51,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "Z=\\sum_i e^{-E_i/(k_B T)}"
       }
     },
@@ -68,7 +68,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "PV=\\tfrac{2}{3}N\\langle E_k\\rangle"
       }
     },
@@ -85,7 +85,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "k_B",
         "value": 1.380649e-23,
         "dimension": "M*L^2*T^-2*K^-1"
@@ -104,7 +104,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "W",
         "dimension": "dimensionless"
       }
@@ -122,7 +122,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "Z",
         "dimension": "dimensionless"
       }
@@ -140,7 +140,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "S",
         "dimension": "M*L^2*T^-2*K^-1"
       }
@@ -158,7 +158,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "J/K",
         "dimension": "M*L^2*T^-2*K^-1",
         "derived_from": "J/K"
@@ -173,11 +173,11 @@
       "props": {
         "name": "k_B (Boltzmann constant)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "k_B"
       }
     },
@@ -190,11 +190,11 @@
       "props": {
         "name": "W (microstates)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "W"
       }
     },
@@ -207,11 +207,11 @@
       "props": {
         "name": "Z (partition)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "Z"
       }
     },
@@ -224,11 +224,11 @@
       "props": {
         "name": "T (temperature)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "T"
       }
     },
@@ -241,11 +241,11 @@
       "props": {
         "name": "S (entropy)",
         "ntype": "symbol",
-        "domain": "math.symbol",
+        "domain": "phys.symbol",
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "latex": "S"
       }
     }
@@ -262,7 +262,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -276,7 +276,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -290,7 +290,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -304,7 +304,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -318,7 +318,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -332,7 +332,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -346,7 +346,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -360,7 +360,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -374,7 +374,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -388,7 +388,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -402,7 +402,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -416,7 +416,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -430,7 +430,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -444,7 +444,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -458,7 +458,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -472,7 +472,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     },
     {
@@ -486,7 +486,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "alignment": "manual_curation"
       }
     },
@@ -501,7 +501,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "seed_to_existing",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035",
+        "created_at": "2026-10-09T14:06:42.571782",
         "alignment": "manual_curation"
       }
     },
@@ -516,7 +516,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "stat_to_thermo",
         "source": "curated_seed",
-        "created_at": "2026-09-30T08:35:01.450035"
+        "created_at": "2026-10-09T14:06:42.571782"
       }
     }
   ]

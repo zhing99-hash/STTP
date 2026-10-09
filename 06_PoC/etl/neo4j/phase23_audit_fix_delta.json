@@ -1,0 +1,791 @@
+{
+  "meta": {
+    "phase": "Phase8c-auditfix",
+    "source": "06_PoC/sync_seed_delta.py",
+    "reason": "连通性审计修复：82 处符号学科标注纠偏 + 13 条元素/量符号接线边 + 切片本地元素命名空间统一回 EK:el:*（消除重复元素）+ 清 42 个孤儿 EK2 反应",
+    "generated_at": "2026-10-09T14:16:11",
+    "seeds": [
+      "seed_biochem.json",
+      "seed_chem_equilibrium.json",
+      "seed_classical_mechanics.json",
+      "seed_electromagnetism.json",
+      "seed_energy_combustion.json",
+      "seed_inorganic.json",
+      "seed_math_algebra.json",
+      "seed_math_calculus.json",
+      "seed_math_geometry.json",
+      "seed_math_numbertheory.json",
+      "seed_optics.json",
+      "seed_organic_chem.json",
+      "seed_quantum.json",
+      "seed_relativity.json",
+      "seed_stat_mech.json",
+      "seed_thermo.json"
+    ]
+  },
+  "nodes": [
+    {
+      "id": "BC:sy:C",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "BC:sy:N",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "BC:sy:P",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "CM:sy:p",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "CM:sy:W",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "CM:sy:P",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "CM:sy:G",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "CM:sy:L",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "CM:sy:tau",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "CM:sy:J",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:Q",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:I",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:V",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:E",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:B",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:R",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:L",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:eps",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:Phi",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:k",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:eps0",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "EM:sy:mu0",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "UN:kg",
+      "props": {
+        "domain": "phys.unit"
+      }
+    },
+    {
+      "id": "UN:m",
+      "props": {
+        "domain": "phys.unit"
+      }
+    },
+    {
+      "id": "UN:s",
+      "props": {
+        "domain": "phys.unit"
+      }
+    },
+    {
+      "id": "UN:j",
+      "props": {
+        "domain": "phys.unit"
+      }
+    },
+    {
+      "id": "UN:mps",
+      "props": {
+        "domain": "phys.unit"
+      }
+    },
+    {
+      "id": "UN:mps2",
+      "props": {
+        "domain": "phys.unit"
+      }
+    },
+    {
+      "id": "PQ:energy",
+      "props": {
+        "domain": "phys.quantity"
+      }
+    },
+    {
+      "id": "PQ:mass",
+      "props": {
+        "domain": "phys.quantity"
+      }
+    },
+    {
+      "id": "PQ:c",
+      "props": {
+        "domain": "phys.quantity"
+      }
+    },
+    {
+      "id": "PQ:force",
+      "props": {
+        "domain": "phys.quantity"
+      }
+    },
+    {
+      "id": "PQ:accel",
+      "props": {
+        "domain": "phys.quantity"
+      }
+    },
+    {
+      "id": "PQ:vel",
+      "props": {
+        "domain": "phys.quantity"
+      }
+    },
+    {
+      "id": "PQ:ke",
+      "props": {
+        "domain": "phys.quantity"
+      }
+    },
+    {
+      "id": "SY:e",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SY:m",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SY:c",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SY:f",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SY:a",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SY:v",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SY:ke",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "MO:ch4",
+      "props": {
+        "domain": "chem.molecule"
+      }
+    },
+    {
+      "id": "MO:o2",
+      "props": {
+        "domain": "chem.molecule"
+      }
+    },
+    {
+      "id": "MO:co2",
+      "props": {
+        "domain": "chem.molecule"
+      }
+    },
+    {
+      "id": "MO:h2o",
+      "props": {
+        "domain": "chem.molecule"
+      }
+    },
+    {
+      "id": "IC:sy:Na",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "IC:sy:Cl",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "IC:sy:Fe",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "IC:sy:H",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "OP:sy:n",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "OP:sy:f",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "OP:sy:u",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "OP:sy:v",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "OP:sy:theta",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "OP:sy:c",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "OM:sy:C",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "OM:sy:H",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "OM:sy:O",
+      "props": {
+        "domain": "chem.symbol"
+      }
+    },
+    {
+      "id": "QM:sy:h",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "QM:sy:hbar",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "QM:sy:nu",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "QM:sy:lambda",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "QM:sy:psi",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "QM:sy:phi",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "RT:sy:gamma",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "RT:sy:c",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "RT:sy:tau",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SM:sy:k_B",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SM:sy:W",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SM:sy:Z",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SM:sy:T",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "SM:sy:S",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:P",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:V",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:T",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:R",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:U",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:Q",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:n",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:S",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    },
+    {
+      "id": "TH:sy:eta",
+      "props": {
+        "domain": "phys.symbol"
+      }
+    }
+  ],
+  "delete_nodes": [
+    "EK2:rxn:reaction_100009",
+    "EK2:rxn:reaction_10003",
+    "EK2:rxn:reaction_100038",
+    "EK2:rxn:reaction_100051",
+    "EK2:rxn:reaction_100074",
+    "EK2:rxn:reaction_100076",
+    "EK2:rxn:reaction_100124",
+    "EK2:rxn:reaction_100155",
+    "EK2:rxn:reaction_10017",
+    "EK2:rxn:reaction_100194",
+    "EK2:rxn:reaction_100230",
+    "EK2:rxn:reaction_100246",
+    "EK2:rxn:reaction_10026",
+    "EK2:rxn:reaction_100266",
+    "EK2:rxn:reaction_100345",
+    "EK2:rxn:reaction_10035",
+    "EK2:rxn:reaction_100351",
+    "EK2:rxn:reaction_100353",
+    "EK2:rxn:reaction_100373",
+    "EK2:rxn:reaction_100393",
+    "EK2:rxn:reaction_100402",
+    "EK2:rxn:reaction_100439",
+    "EK2:rxn:reaction_100442",
+    "EK2:rxn:reaction_100447",
+    "EK2:rxn:reaction_10045",
+    "EK2:rxn:reaction_100455",
+    "EK2:rxn:reaction_100499",
+    "EK2:rxn:reaction_100505",
+    "EK2:rxn:reaction_100524",
+    "EK2:rxn:reaction_100532",
+    "EK2:rxn:reaction_100544",
+    "EK2:rxn:reaction_10056",
+    "EK2:rxn:reaction_100577",
+    "EK2:rxn:reaction_100580",
+    "EK2:rxn:reaction_10059",
+    "EK2:rxn:reaction_100590",
+    "EK2:rxn:reaction_100593",
+    "EK2:rxn:reaction_100596",
+    "EK2:rxn:reaction_100619",
+    "EK2:rxn:reaction_10068",
+    "EK2:rxn:reaction_100688",
+    "EK2:rxn:reaction_100694"
+  ],
+  "edges": [
+    {
+      "id": "derived_from|BC:rx:atp_hydrolysis|BC:fo:atp_hydrolysis_eq",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:fo:atp_hydrolysis_eq",
+      "type": "derived_from",
+      "kind": "stoich_from_rx",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "stoich_from_rx",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "has_symbol|BC:fo:atp_hydrolysis_eq|BC:sy:C",
+      "source": "BC:fo:atp_hydrolysis_eq",
+      "target": "BC:sy:C",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "has_symbol|BC:fo:atp_hydrolysis_eq|BC:sy:N",
+      "source": "BC:fo:atp_hydrolysis_eq",
+      "target": "BC:sy:N",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "has_symbol|BC:fo:atp_hydrolysis_eq|BC:sy:P",
+      "source": "BC:fo:atp_hydrolysis_eq",
+      "target": "BC:sy:P",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.384643"
+      }
+    },
+    {
+      "id": "has_symbol|CE:pq:concentration|CE:sy:c",
+      "source": "CE:pq:concentration",
+      "target": "CE:sy:c",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:46.910526"
+      }
+    },
+    {
+      "id": "has_symbol|CM:pq:angular_momentum|CM:sy:L",
+      "source": "CM:pq:angular_momentum",
+      "target": "CM:sy:L",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:38.396690"
+      }
+    },
+    {
+      "id": "has_symbol|CM:pq:torque|CM:sy:tau",
+      "source": "CM:pq:torque",
+      "target": "CM:sy:tau",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:38.396690"
+      }
+    },
+    {
+      "id": "has_symbol|EM:pq:inductance|EM:sy:L",
+      "source": "EM:pq:inductance",
+      "target": "EM:sy:L",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:39.341911"
+      }
+    },
+    {
+      "id": "has_symbol|EK:el:Na|IC:sy:Na",
+      "source": "EK:el:Na",
+      "target": "IC:sy:Na",
+      "type": "has_symbol",
+      "kind": "element_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "element_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.885624"
+      }
+    },
+    {
+      "id": "has_symbol|EK:el:Cl|IC:sy:Cl",
+      "source": "EK:el:Cl",
+      "target": "IC:sy:Cl",
+      "type": "has_symbol",
+      "kind": "element_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "element_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.885624"
+      }
+    },
+    {
+      "id": "has_symbol|EK:el:Fe|IC:sy:Fe",
+      "source": "EK:el:Fe",
+      "target": "IC:sy:Fe",
+      "type": "has_symbol",
+      "kind": "element_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "element_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:15:14.885624"
+      }
+    },
+    {
+      "id": "has_symbol|MC:pq:order|MC:sy:n",
+      "source": "MC:pq:order",
+      "target": "MC:sy:n",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:45.826474"
+      }
+    },
+    {
+      "id": "has_symbol|MG:pq:area|MG:sy:A",
+      "source": "MG:pq:area",
+      "target": "MG:sy:A",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:46.184164"
+      }
+    },
+    {
+      "id": "has_symbol|RT:pq:proper_time|RT:sy:tau",
+      "source": "RT:pq:proper_time",
+      "target": "RT:sy:tau",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:41.643351"
+      }
+    },
+    {
+      "id": "has_unit|RT:pq:proper_time|UN:s",
+      "source": "RT:pq:proper_time",
+      "target": "UN:s",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:41.643351"
+      }
+    },
+    {
+      "id": "has_symbol|TH:pq:entropy|TH:sy:S",
+      "source": "TH:pq:entropy",
+      "target": "TH:sy:S",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:43.503885"
+      }
+    }
+  ],
+  "delete_edges": []
+}

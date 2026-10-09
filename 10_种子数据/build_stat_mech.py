@@ -26,11 +26,11 @@ nodes += [
     sc.n("SM:un:j_per_k", "unit", "joule per kelvin", "phys.unit", symbol="J/K", dimension="M*L^2*T^-2*K^-1", derived_from="J/K"),
 ]
 nodes += [
-    sc.n("SM:sy:k_B", "symbol", "k_B (Boltzmann constant)", "math.symbol", latex="k_B"),
-    sc.n("SM:sy:W", "symbol", "W (microstates)", "math.symbol", latex="W"),
-    sc.n("SM:sy:Z", "symbol", "Z (partition)", "math.symbol", latex="Z"),
-    sc.n("SM:sy:T", "symbol", "T (temperature)", "math.symbol", latex="T"),
-    sc.n("SM:sy:S", "symbol", "S (entropy)", "math.symbol", latex="S"),
+    sc.n("SM:sy:k_B", "symbol", "k_B (Boltzmann constant)", "phys.symbol", latex="k_B"),
+    sc.n("SM:sy:W", "symbol", "W (microstates)", "phys.symbol", latex="W"),
+    sc.n("SM:sy:Z", "symbol", "Z (partition)", "phys.symbol", latex="Z"),
+    sc.n("SM:sy:T", "symbol", "T (temperature)", "phys.symbol", latex="T"),
+    sc.n("SM:sy:S", "symbol", "S (entropy)", "phys.symbol", latex="S"),
 ]
 for fo, syms in [
     ("SM:fo:boltzmann", ["SM:sy:k_B", "SM:sy:W", "SM:sy:S"]),

@@ -209,6 +209,46 @@ CONST_ALIAS = {
 
 
 # ----------------------------------------------------------------------------
+# 常量定义关系 + 单位（2026-10-09 跨学科连通性审计补齐）
+# ----------------------------------------------------------------------------
+# ⚠ 缺陷背景：原实现**只给新常量建节点、未建任何边** → 10 个所谓「跨学科桥常量」
+#    在图上全部 deg=0，不可达、不参与 GNN 消息传递，**桥接价值实际未落地**。
+#    连通性审计（06_PoC/connectivity_audit.py）把这一问题暴露出来。
+# 下列关系全部取自 **CODATA/NIST 标准定义式**（非猜测），方向 `a --derived_from--> b`
+# 读作「a 由 b 导出 / 以 b 定义」，note 写明定义式以便复核。
+CONST_DERIV = [
+    ("TH:pq:gas_const",        "CO:pq:avogadro",          "R = N_A·k_B"),
+    ("TH:pq:gas_const",        "SM:pq:boltz_const",       "R = N_A·k_B"),
+    ("CE:pq:faraday_const",    "CO:pq:avogadro",          "F = N_A·e"),
+    ("CE:pq:faraday_const",    "CO:pq:elementary_charge", "F = N_A·e"),
+    ("CO:pq:atomic_mass",      "CO:pq:avogadro",          "m_u = M_u/N_A"),
+    ("CO:pq:fine_structure",   "CO:pq:elementary_charge", "α = e²/(4πε₀ħc)"),
+    ("CO:pq:fine_structure",   "EM:pq:permittivity",      "α = e²/(4πε₀ħc)"),
+    ("CO:pq:fine_structure",   "QM:pq:reduced_planck",    "α = e²/(4πε₀ħc)"),
+    ("CO:pq:fine_structure",   "RT:pq:light_speed",       "α = e²/(4πε₀ħc)"),
+    ("CO:pq:stefan_boltzmann", "SM:pq:boltz_const",       "σ = 2π⁵k⁴/(15h³c²)"),
+    ("CO:pq:stefan_boltzmann", "QM:pq:planck_const",      "σ = 2π⁵k⁴/(15h³c²)"),
+    ("CO:pq:stefan_boltzmann", "RT:pq:light_speed",       "σ = 2π⁵k⁴/(15h³c²)"),
+    ("CO:pq:vacuum_impedance", "EM:pq:permeability",      "Z_0 = μ₀c"),
+    ("CO:pq:vacuum_impedance", "RT:pq:light_speed",       "Z_0 = μ₀c"),
+    ("CO:pq:rydberg",          "CO:pq:fine_structure",    "R_∞ = α²m_e c/(2h)"),
+    ("CO:pq:rydberg",          "CO:pq:electron_mass",     "R_∞ = α²m_e c/(2h)"),
+    ("CO:pq:rydberg",          "QM:pq:planck_const",      "R_∞ = α²m_e c/(2h)"),
+    ("CO:pq:rydberg",          "RT:pq:light_speed",       "R_∞ = α²m_e c/(2h)"),
+]
+
+# 常量 → 图谱既有 Unit 节点（单位取自 CODATA 表 `unit` 列）
+CONST_UNIT = [
+    ("CO:pq:elementary_charge", "EM:un:coulomb", "C"),
+    ("CO:pq:electron_mass",     "UN:kg",         "kg"),
+    ("CO:pq:proton_mass",       "UN:kg",         "kg"),
+    ("CO:pq:atomic_mass",       "UN:kg",         "kg"),
+    ("CO:pq:standard_gravity",  "UN:mps2",       "m/s^2"),
+    ("CO:pq:vacuum_impedance",  "EM:un:ohm",     "ohm"),
+]
+
+
+# ----------------------------------------------------------------------------
 def load_raw():
     if not os.path.exists(RAW):
         print("[ERR] 缺少 %s，先跑 --fetch" % os.path.basename(RAW))
@@ -375,6 +415,41 @@ def cmd_build(_a):
             },
         })
 
+    # 4) 常量「定义关系 + 单位」边（2026-10-09 连通性审计补齐；消除新常量孤立问题）
+    #    没有这一步，新增的 10 个常量就是 deg=0 的死节点。
+    n_deriv = n_unit = 0
+    for a, b, note in CONST_DERIV:
+        if a not in byid or b not in byid:
+            print("  [WARN] 常量定义边端点缺失，跳过：%s -> %s" % (a, b))
+            continue
+        edges.append({
+            "id": "derived_from|%s|%s" % (a, b),
+            "source": a, "target": b, "type": "derived_from",
+            "kind": "constant_derivation",
+            "props": {
+                "explicit_or_inferred": "explicit", "confidence": 0.99,
+                "source": SOURCE_TAG, "relation_source": "CODATA/NIST 标准定义式",
+                "definition": note, "kind": "constant_derivation",
+                "note": "常量间的定义关系（%s）" % note,
+            },
+        })
+        n_deriv += 1
+    for a, b, unit in CONST_UNIT:
+        if a not in byid or b not in byid:
+            print("  [WARN] 常量单位边端点缺失，跳过：%s -> %s" % (a, b))
+            continue
+        edges.append({
+            "id": "has_unit|%s|%s" % (a, b),
+            "source": a, "target": b, "type": "has_unit",
+            "kind": "constant_unit",
+            "props": {
+                "explicit_or_inferred": "explicit", "confidence": 0.99,
+                "source": SOURCE_TAG, "unit": unit, "kind": "constant_unit",
+                "note": "CODATA 表列出的单位",
+            },
+        })
+        n_unit += 1
+
     delta = {
         "meta": {
             "phase": "Phase8b-codata",
@@ -390,8 +465,8 @@ def cmd_build(_a):
     out = os.path.join(ROOT, "06_PoC", "etl", "neo4j", "phase18b_codata_delta.json")
     json.dump(delta, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("  delta 已写出：%s" % os.path.relpath(out, ROOT))
-    print("    修正既有常量 %d 个 / 新增常量 %d 个 / 跨源对齐边 %d 条"
-          % (len(upd_nodes), len(new_nodes), len(edges)))
+    print("    修正既有常量 %d 个 / 新增常量 %d 个 / 跨源对齐边 %d 条 / 定义边 %d 条 / 单位边 %d 条"
+          % (len(upd_nodes), len(new_nodes), len(edges) - n_deriv - n_unit, n_deriv, n_unit))
     for n in new_nodes:
         print("      + %-26s %-30s %s %s" % (n["id"], n["props"]["name"][:30],
                                             ("%g" % n["props"]["value"])[:14], n["props"]["unit"] or ""))

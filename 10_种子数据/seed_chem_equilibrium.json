@@ -16,7 +16,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "K=\\frac{[C]^{c}[D]^{d}}{[A]^{a}[B]^{b}}",
         "informal": "对 aA+bB ⇌ cC+dD，平衡常数等于产物浓度幂之积比反应物浓度幂之积。"
       }
@@ -34,7 +34,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "Q=\\frac{[C]^{c}[D]^{d}}{[A]^{a}[B]^{b}}",
         "informal": "与 K 同形，但用任意时刻浓度；平衡时 Q=K，Q<K 反应正向、Q>K 逆向。"
       }
@@ -52,7 +52,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "\\Delta G^{\\circ}=-RT\\ln K",
         "informal": "标准吉布斯自由能变与平衡常数的定量关系（热力学与化学的桥梁）。"
       }
@@ -70,7 +70,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "\\Delta G=\\Delta G^{\\circ}+RT\\ln Q",
         "informal": "任意组成下的反应吉布斯自由能；ΔG<0 自发正向。"
       }
@@ -88,7 +88,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "\\text{system shifts to oppose the disturbance}",
         "informal": "体系受扰动时平衡向抵消该扰动的方向移动（浓度/压强/温度）。"
       }
@@ -106,7 +106,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "pH=-\\log_{10}[H^{+}]",
         "informal": "pH 为氢离子浓度的负常用对数。"
       }
@@ -124,7 +124,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "pOH=-\\log_{10}[OH^{-}]",
         "informal": "pOH 为氢氧根浓度的负常用对数。"
       }
@@ -142,7 +142,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "K_w=[H^{+}][OH^{-}]=1.0\\times10^{-14}",
         "informal": "25 ℃ 纯水中 Kw=1.0×10⁻¹⁴，故 pH+pOH=14。"
       }
@@ -160,7 +160,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "K_a=\\frac{[H^{+}][A^{-}]}{[HA]}",
         "informal": "弱酸解离常数，表征酸强度。"
       }
@@ -178,7 +178,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "pH=pK_a+\\log_{10}\\frac{[A^{-}]}{[HA]}",
         "informal": "缓冲溶液 pH 计算式，同样建立在对数之上。"
       }
@@ -196,7 +196,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "K_{sp}=[A^{+}]^{m}[B^{-}]^{n}",
         "informal": "难溶电解质饱和溶液中离子浓度幂之积，与溶解度互为换算。"
       }
@@ -214,7 +214,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "E=E^{\\circ}-\\frac{RT}{nF}\\ln Q",
         "informal": "电池电动势与浓度/分压的定量关系（化学↔电化学↔热力学）。"
       }
@@ -232,7 +232,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "k=A\\,e^{-E_a/(RT)}",
         "informal": "速率常数随温度呈指数增长（化学↔数学指数↔热力学）。"
       }
@@ -250,7 +250,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "K",
         "dimension": "1",
         "informal": "无量纲（严格为活度商，理想稀溶液近似为浓度商）。"
@@ -269,7 +269,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "Q",
         "dimension": "1"
       }
@@ -287,7 +287,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "G",
         "dimension": "M*L^2*T^-2"
       }
@@ -305,7 +305,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "G°",
         "dimension": "M*L^2*T^-2"
       }
@@ -323,7 +323,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "pH",
         "dimension": "1"
       }
@@ -341,7 +341,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "Ka",
         "dimension": "1"
       }
@@ -359,7 +359,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "pKa",
         "dimension": "1"
       }
@@ -377,7 +377,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "Ksp",
         "dimension": "1"
       }
@@ -395,7 +395,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "c",
         "dimension": "N*L^-3"
       }
@@ -413,7 +413,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "E",
         "dimension": "M*L^2*T^-3*I^-1"
       }
@@ -431,7 +431,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "k"
       }
     },
@@ -448,7 +448,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "Ea",
         "dimension": "M*L^2*T^-2"
       }
@@ -466,7 +466,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "F",
         "value": 96485.33212,
         "unit": "C/mol",
@@ -486,7 +486,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "symbol": "mol/L",
         "dimension": "N*L^-3",
         "derived_from": "mol/dm^3"
@@ -505,7 +505,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "K"
       }
     },
@@ -522,7 +522,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "Q"
       }
     },
@@ -539,7 +539,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "G"
       }
     },
@@ -556,7 +556,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "\\mathrm{pH}"
       }
     },
@@ -573,7 +573,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "K_a"
       }
     },
@@ -590,7 +590,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "K_{sp}"
       }
     },
@@ -607,7 +607,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "c"
       }
     },
@@ -624,7 +624,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "k"
       }
     },
@@ -641,7 +641,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "E_a"
       }
     },
@@ -658,7 +658,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "F"
       }
     },
@@ -675,7 +675,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "latex": "[\\,]"
       }
     },
@@ -692,7 +692,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "formula": "NH3",
         "smiles": "N"
       }
@@ -710,7 +710,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "equation": "N2 + 3 H2 <=> 2 NH3",
         "reversible": true,
         "exothermic": true,
@@ -730,7 +730,7 @@
         "source": "curated_seed",
         "confidence": 1.0,
         "explicit_or_inferred": "explicit",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "equation": "2 H2O <=> H3O+ + OH-",
         "reversible": true
       }
@@ -748,7 +748,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -762,7 +762,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -776,7 +776,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -790,7 +790,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -804,7 +804,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -818,7 +818,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -832,7 +832,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -846,7 +846,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -860,7 +860,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -874,7 +874,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -888,7 +888,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -902,7 +902,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -916,7 +916,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -930,7 +930,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -944,7 +944,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -958,7 +958,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -972,7 +972,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -986,7 +986,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1000,7 +1000,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1014,7 +1014,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1028,7 +1028,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1042,7 +1042,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1056,7 +1056,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1070,7 +1070,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1084,7 +1084,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1098,7 +1098,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1112,7 +1112,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1126,7 +1126,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1140,7 +1140,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1154,7 +1154,21 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_symbol",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
+      }
+    },
+    {
+      "id": "CE:pq:concentration->CE:sy:c[has_symbol]",
+      "source": "CE:pq:concentration",
+      "target": "CE:sy:c",
+      "type": "has_symbol",
+      "kind": "quantity_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1168,7 +1182,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1182,7 +1196,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1196,7 +1210,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1210,7 +1224,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1224,7 +1238,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1238,7 +1252,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1252,7 +1266,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1266,7 +1280,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1280,7 +1294,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1294,7 +1308,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "formula_quantity",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1308,7 +1322,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1322,7 +1336,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1336,7 +1350,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1350,7 +1364,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "quantity_unit",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1364,7 +1378,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "thermo_gas_const",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "ΔG°=−RT lnK 使用摩尔气体常数 R"
       }
     },
@@ -1379,7 +1393,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "gibbs_from_entropy",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "G=H−TS：吉布斯自由能源于熵/焓"
       }
     },
@@ -1394,7 +1408,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "gibbs_is_energy",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "alignment": "manual_curation",
         "note": "吉布斯自由能是一种能量，锚到物理能量量"
       }
@@ -1410,7 +1424,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "chem_to_physicsbabel",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "alignment": "manual_curation",
         "note": "化学浓度与 PhysicsBabel 的 concentration 同义"
       }
@@ -1426,7 +1440,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "conc_from_moles",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "c=n/V：浓度由物质的量与体积定义"
       }
     },
@@ -1441,7 +1455,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "conc_from_volume",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1455,7 +1469,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "log_definition",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "pH/pOH 的 p 函数即 −log₁₀，建立在对数运算之上"
       }
     },
@@ -1470,7 +1484,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "log_definition_buffer",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1484,7 +1498,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "exp_base_e",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "Arrhenius 的指数项以自然常数 e 为底"
       }
     },
@@ -1499,7 +1513,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "nernst_potential",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "Nernst 方程给出电池电动势（电位）"
       }
     },
@@ -1514,7 +1528,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "same_concept",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "alignment": "manual_curation",
         "note": "两切片均定义 pH，此处显式归一为同一概念"
       }
@@ -1530,7 +1544,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "principle_of_equilibrium",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1544,7 +1558,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "equilibrium_reaction",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1558,7 +1572,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "le_chatelier_haber",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1572,7 +1586,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "kw_from_autoionization",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1586,7 +1600,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "nitrogen_reactant",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1600,7 +1614,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "hydrogen_reactant",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1614,7 +1628,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "ammonia_product",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1628,7 +1642,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "count": 1
       }
     },
@@ -1643,7 +1657,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "molecule_element",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "count": 3
       }
     },
@@ -1658,7 +1672,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "water_reactant",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433"
+        "created_at": "2026-10-09T14:06:46.910526"
       }
     },
     {
@@ -1672,7 +1686,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "derived",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "同能量量纲 M*L^2*T^-2"
       }
     },
@@ -1687,7 +1701,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "derived",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "吉布斯自由能与能量同量纲"
       }
     },
@@ -1702,7 +1716,7 @@
         "explicit_or_inferred": "explicit",
         "kind": "derived",
         "source": "curated_seed",
-        "created_at": "2026-10-09T08:54:02.662433",
+        "created_at": "2026-10-09T14:06:46.910526",
         "note": "K 与 Q 同形同量纲"
       }
     }

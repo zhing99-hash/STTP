@@ -3,7 +3,7 @@
   "phase": "Phase8b-codata",
   "source": "11_真实数据/codata_ingest.py",
   "reason": "NIST CODATA 2022 权威常量真实化：补 unit/uncertainty/出处 + 值修正 + 新增跨学科桥常量 + 跨源对齐",
-  "generated_at": "2026-10-09T09:35:16"
+  "generated_at": "2026-10-09T14:08:25"
  },
  "nodes": [
   {
@@ -32,7 +32,7 @@
     "codata_quantity": "Newtonian constant of gravitation",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -61,7 +61,7 @@
     "codata_quantity": "molar gas constant",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -90,7 +90,7 @@
     "codata_quantity": "vacuum electric permittivity",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -119,7 +119,7 @@
     "codata_quantity": "vacuum mag. permeability",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -148,7 +148,7 @@
     "codata_quantity": "Planck constant",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -177,7 +177,7 @@
     "codata_quantity": "reduced Planck constant",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -206,7 +206,7 @@
     "codata_quantity": "speed of light in vacuum",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -235,7 +235,7 @@
     "codata_quantity": "Boltzmann constant",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   },
   {
@@ -264,287 +264,7 @@
     "codata_quantity": "Faraday constant",
     "codata_year": 2022,
     "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:avogadro",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:avogadro",
-    "name": "Avogadro constant",
-    "symbol": "N_A",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 6.02214076e+23,
-    "unit": "mol^-1",
-    "uncertainty": null,
-    "value_exact": true,
-    "value_truncated": false,
-    "value_raw": "6.022 140 76 e23",
-    "codata_quantity": "Avogadro constant",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:elementary_charge",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:elementary_charge",
-    "name": "elementary charge",
-    "symbol": "e",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 1.602176634e-19,
-    "unit": "C",
-    "uncertainty": null,
-    "value_exact": true,
-    "value_truncated": false,
-    "value_raw": "1.602 176 634 e-19",
-    "codata_quantity": "elementary charge",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:electron_mass",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:electron_mass",
-    "name": "electron mass",
-    "symbol": "m_e",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 9.1093837139e-31,
-    "unit": "kg",
-    "uncertainty": 2.8e-40,
-    "value_exact": false,
-    "value_truncated": false,
-    "value_raw": "9.109 383 7139 e-31",
-    "codata_quantity": "electron mass",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:proton_mass",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:proton_mass",
-    "name": "proton mass",
-    "symbol": "m_p",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 1.67262192595e-27,
-    "unit": "kg",
-    "uncertainty": 5.2e-37,
-    "value_exact": false,
-    "value_truncated": false,
-    "value_raw": "1.672 621 925 95 e-27",
-    "codata_quantity": "proton mass",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:vacuum_impedance",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:vacuum_impedance",
-    "name": "characteristic impedance of vacuum",
-    "symbol": "Z_0",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 376.730313412,
-    "unit": "ohm",
-    "uncertainty": 5.9e-08,
-    "value_exact": false,
-    "value_truncated": false,
-    "value_raw": "376.730 313 412",
-    "codata_quantity": "characteristic impedance of vacuum",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:stefan_boltzmann",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:stefan_boltzmann",
-    "name": "Stefan-Boltzmann constant",
-    "symbol": "sigma",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 5.670374419e-08,
-    "unit": "W m^-2 K^-4",
-    "uncertainty": null,
-    "value_exact": true,
-    "value_truncated": true,
-    "value_raw": "5.670 374 419... e-8",
-    "codata_quantity": "Stefan-Boltzmann constant",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:rydberg",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:rydberg",
-    "name": "Rydberg constant",
-    "symbol": "R_inf",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 10973731.568157,
-    "unit": "m^-1",
-    "uncertainty": 1.2e-05,
-    "value_exact": false,
-    "value_truncated": false,
-    "value_raw": "10 973 731.568 157",
-    "codata_quantity": "Rydberg constant",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:atomic_mass",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:atomic_mass",
-    "name": "atomic mass constant",
-    "symbol": "m_u",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 1.66053906892e-27,
-    "unit": "kg",
-    "uncertainty": 5.2e-37,
-    "value_exact": false,
-    "value_truncated": false,
-    "value_raw": "1.660 539 068 92 e-27",
-    "codata_quantity": "atomic mass constant",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:fine_structure",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:fine_structure",
-    "name": "fine-structure constant",
-    "symbol": "alpha",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 0.0072973525643,
-    "unit": null,
-    "uncertainty": 1.1e-12,
-    "value_exact": false,
-    "value_truncated": false,
-    "value_raw": "7.297 352 5643 e-3",
-    "codata_quantity": "fine-structure constant",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
-   }
-  },
-  {
-   "id": "CO:pq:standard_gravity",
-   "labels": [
-    "Constant",
-    "Entity"
-   ],
-   "props": {
-    "id": "CO:pq:standard_gravity",
-    "name": "standard acceleration of gravity",
-    "symbol": "g_n",
-    "ntype": "constant",
-    "domain": "physics",
-    "value": 9.80665,
-    "unit": "m s^-2",
-    "uncertainty": null,
-    "value_exact": true,
-    "value_truncated": false,
-    "value_raw": "9.806 65",
-    "codata_quantity": "standard acceleration of gravity",
-    "codata_year": 2022,
-    "confidence": 0.99,
-    "explicit_or_inferred": "explicit",
-    "source": "nist_codata_2022",
-    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
-    "created_at": "2026-10-09T09:35:16",
-    "verified_at": "2026-10-09T09:35:16"
+    "verified_at": "2026-10-09T14:08:25"
    }
   }
  ],
@@ -580,6 +300,384 @@
     "confidence": 0.95,
     "kind": "cross_source_alignment",
     "note": "PhysicsBabel 常量符号与权威 CODATA 常量同指一物理量"
+   }
+  },
+  {
+   "id": "derived_from|TH:pq:gas_const|CO:pq:avogadro",
+   "source": "TH:pq:gas_const",
+   "target": "CO:pq:avogadro",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "R = N_A·k_B",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（R = N_A·k_B）"
+   }
+  },
+  {
+   "id": "derived_from|TH:pq:gas_const|SM:pq:boltz_const",
+   "source": "TH:pq:gas_const",
+   "target": "SM:pq:boltz_const",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "R = N_A·k_B",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（R = N_A·k_B）"
+   }
+  },
+  {
+   "id": "derived_from|CE:pq:faraday_const|CO:pq:avogadro",
+   "source": "CE:pq:faraday_const",
+   "target": "CO:pq:avogadro",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "F = N_A·e",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（F = N_A·e）"
+   }
+  },
+  {
+   "id": "derived_from|CE:pq:faraday_const|CO:pq:elementary_charge",
+   "source": "CE:pq:faraday_const",
+   "target": "CO:pq:elementary_charge",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "F = N_A·e",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（F = N_A·e）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:atomic_mass|CO:pq:avogadro",
+   "source": "CO:pq:atomic_mass",
+   "target": "CO:pq:avogadro",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "m_u = M_u/N_A",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（m_u = M_u/N_A）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:fine_structure|CO:pq:elementary_charge",
+   "source": "CO:pq:fine_structure",
+   "target": "CO:pq:elementary_charge",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "α = e²/(4πε₀ħc)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（α = e²/(4πε₀ħc)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:fine_structure|EM:pq:permittivity",
+   "source": "CO:pq:fine_structure",
+   "target": "EM:pq:permittivity",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "α = e²/(4πε₀ħc)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（α = e²/(4πε₀ħc)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:fine_structure|QM:pq:reduced_planck",
+   "source": "CO:pq:fine_structure",
+   "target": "QM:pq:reduced_planck",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "α = e²/(4πε₀ħc)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（α = e²/(4πε₀ħc)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:fine_structure|RT:pq:light_speed",
+   "source": "CO:pq:fine_structure",
+   "target": "RT:pq:light_speed",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "α = e²/(4πε₀ħc)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（α = e²/(4πε₀ħc)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:stefan_boltzmann|SM:pq:boltz_const",
+   "source": "CO:pq:stefan_boltzmann",
+   "target": "SM:pq:boltz_const",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "σ = 2π⁵k⁴/(15h³c²)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（σ = 2π⁵k⁴/(15h³c²)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:stefan_boltzmann|QM:pq:planck_const",
+   "source": "CO:pq:stefan_boltzmann",
+   "target": "QM:pq:planck_const",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "σ = 2π⁵k⁴/(15h³c²)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（σ = 2π⁵k⁴/(15h³c²)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:stefan_boltzmann|RT:pq:light_speed",
+   "source": "CO:pq:stefan_boltzmann",
+   "target": "RT:pq:light_speed",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "σ = 2π⁵k⁴/(15h³c²)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（σ = 2π⁵k⁴/(15h³c²)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:vacuum_impedance|EM:pq:permeability",
+   "source": "CO:pq:vacuum_impedance",
+   "target": "EM:pq:permeability",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "Z_0 = μ₀c",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（Z_0 = μ₀c）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:vacuum_impedance|RT:pq:light_speed",
+   "source": "CO:pq:vacuum_impedance",
+   "target": "RT:pq:light_speed",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "Z_0 = μ₀c",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（Z_0 = μ₀c）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:rydberg|CO:pq:fine_structure",
+   "source": "CO:pq:rydberg",
+   "target": "CO:pq:fine_structure",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "R_∞ = α²m_e c/(2h)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（R_∞ = α²m_e c/(2h)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:rydberg|CO:pq:electron_mass",
+   "source": "CO:pq:rydberg",
+   "target": "CO:pq:electron_mass",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "R_∞ = α²m_e c/(2h)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（R_∞ = α²m_e c/(2h)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:rydberg|QM:pq:planck_const",
+   "source": "CO:pq:rydberg",
+   "target": "QM:pq:planck_const",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "R_∞ = α²m_e c/(2h)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（R_∞ = α²m_e c/(2h)）"
+   }
+  },
+  {
+   "id": "derived_from|CO:pq:rydberg|RT:pq:light_speed",
+   "source": "CO:pq:rydberg",
+   "target": "RT:pq:light_speed",
+   "type": "derived_from",
+   "kind": "constant_derivation",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "relation_source": "CODATA/NIST 标准定义式",
+    "definition": "R_∞ = α²m_e c/(2h)",
+    "kind": "constant_derivation",
+    "note": "常量间的定义关系（R_∞ = α²m_e c/(2h)）"
+   }
+  },
+  {
+   "id": "has_unit|CO:pq:elementary_charge|EM:un:coulomb",
+   "source": "CO:pq:elementary_charge",
+   "target": "EM:un:coulomb",
+   "type": "has_unit",
+   "kind": "constant_unit",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "unit": "C",
+    "kind": "constant_unit",
+    "note": "CODATA 表列出的单位"
+   }
+  },
+  {
+   "id": "has_unit|CO:pq:electron_mass|UN:kg",
+   "source": "CO:pq:electron_mass",
+   "target": "UN:kg",
+   "type": "has_unit",
+   "kind": "constant_unit",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "unit": "kg",
+    "kind": "constant_unit",
+    "note": "CODATA 表列出的单位"
+   }
+  },
+  {
+   "id": "has_unit|CO:pq:proton_mass|UN:kg",
+   "source": "CO:pq:proton_mass",
+   "target": "UN:kg",
+   "type": "has_unit",
+   "kind": "constant_unit",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "unit": "kg",
+    "kind": "constant_unit",
+    "note": "CODATA 表列出的单位"
+   }
+  },
+  {
+   "id": "has_unit|CO:pq:atomic_mass|UN:kg",
+   "source": "CO:pq:atomic_mass",
+   "target": "UN:kg",
+   "type": "has_unit",
+   "kind": "constant_unit",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "unit": "kg",
+    "kind": "constant_unit",
+    "note": "CODATA 表列出的单位"
+   }
+  },
+  {
+   "id": "has_unit|CO:pq:standard_gravity|UN:mps2",
+   "source": "CO:pq:standard_gravity",
+   "target": "UN:mps2",
+   "type": "has_unit",
+   "kind": "constant_unit",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "unit": "m/s^2",
+    "kind": "constant_unit",
+    "note": "CODATA 表列出的单位"
+   }
+  },
+  {
+   "id": "has_unit|CO:pq:vacuum_impedance|EM:un:ohm",
+   "source": "CO:pq:vacuum_impedance",
+   "target": "EM:un:ohm",
+   "type": "has_unit",
+   "kind": "constant_unit",
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "confidence": 0.99,
+    "source": "nist_codata_2022",
+    "unit": "ohm",
+    "kind": "constant_unit",
+    "note": "CODATA 表列出的单位"
    }
   }
  ],
