@@ -58,10 +58,13 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 ```
 仓库:   https://github.com/zhing99-hash/STTP
 分支:   main
-最新:   8c3a448（Aura 属性消毒 + 边对账工具）—— 已 push，本地领先 0
+最新:   9498fe0（跨学科连通性审计：仪器化 + 7 类源头修复 + 2 处推送基础设施修复）—— 已 push，本地 == 远端
+上游:   8c3a448 → fb5f402 → 9498fe0
 ```
-> ⚠️ 直连 GitHub 被出口白名单拦（0/3），**必须走出口代理**（见 §8.3）。代理端口**会变**，用前先 `netstat -ano | grep LISTEN` 确认。
-> ⚠️ **切勿设 `GIT_TERMINAL_PROMPT=0`** —— 会让 `git-credential-manager` 拒绝供凭据。历史成功率约 1/3，脚本里请带重试循环。
+> ⚠️ 直连 GitHub 被出口白名单拦（0/3），**必须走出口代理**（见 §9.5）。代理端口**会变**，用前先 **逐端口实测枚举**
+> （`for p in $(netstat -ano | grep -i listening | grep 127.0.0.1: | sed 's/.*://' | sort -n -u); do curl -x http://127.0.0.1:$p -s -o /dev/null -w "$p %{http_code}\n" -m 8 https://github.com/; done`）。
+> 本轮可用端口 **10808**（历史 `50515`→`53307`→`51347`→`10808`）。
+> ⚠️ **切勿设 `GIT_TERMINAL_PROMPT=0`** —— 会让 `git-credential-manager` 拒绝供凭据。历史成功率约 1/3，脚本里**务必带重试循环**（大提交单次推送可能 >2 分钟，**请后台跑**）。
 
 ---
 
@@ -613,6 +616,11 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 - **默认 `cose` 力导布局卡死**：超过 5000 条边时，同步模拟卡死主线程导致页面"加载超时"。已修复：默认布局改为 `concentric`（瞬时）；大图（>5000 边）时力导入口加护栏；新增 `fcose` 快速力导（CDN 可用）。
 - **CDN 离线降级**：本机无网时 Cytoscape.js / MathJax CDN 不可达，页面自动降级为纯文本。
 - **新节点类型须同步配色**：`TYPE_PRIORITY`（`graph_export.py`）和 `TYPE_STYLE`（`graph_view.html`）须同时修改；新边类型须同时加 `EDGE_TYPE_COLOR` 和图例段。
+- **🔴 长驻服务读的是「启动那一刻」的图 —— 文件对了不等于接口对了**（2026-10-09 收尾复核发现）：
+  `viz_server.py` 在启动时把 `normalized.json` 一次性载入内存。本轮把标签规范化写回文件后，
+  `/api/stats` 仍在返回**旧标签**（仍能数出 `ElementEntity 1` / `PhysicsEntity 1` / `Physical_quantity 7` 三个表外桶），
+  而**节点数/边数与新数据完全相同** —— 这种「**计数相同、内容不同**」最容易骗过「按计数验收」的习惯。
+  **规则：① 数据一改就重启所有消费它的长驻服务；② 验收要打到接口层（`curl /api/stats`），不能只看文件。**
 
 ---
 
