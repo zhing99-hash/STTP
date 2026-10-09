@@ -398,7 +398,12 @@ def molecule_formula(mid):
     for v in (n.get("formula"), p.get("formula"), p.get("molecular_formula"), n.get("label")):
         if v:
             s = str(v).translate(SUB_MAP).replace(" ", "")
-            s = re.sub(r"[\^]?\d*[+\-\u2212]+\d*$", "", s)
+            # 剥离电荷后缀。**切勿**用 `\d*[+-]\d*$` —— 开头那个 `\d*` 会贪婪吞掉
+            # 「末尾元素的下标」：`CHO2-` -> `CHO`（O 原子数退化为 1）、
+            # `Cr2O7-2` -> `Cr2O`（O 退化为 1）。曾据此污染 19 条 composed_of 的 count。
+            # 电荷只可能是「^ 分隔的上标式」或「直接以 [+-]\d* 结尾」两种形态。
+            s = re.sub(r"\^\d*[+\-\u2212]+\d*$", "", s)   # 如 SO4^2-
+            s = re.sub(r"[+\-\u2212]\d*$", "", s)          # 如 CHO2- / Cr2O7-2 / Al+3
             if FORMULA_RE.fullmatch(s):
                 return s
     return ""

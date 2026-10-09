@@ -47,9 +47,16 @@ ELEM_RE = re.compile(r"([A-Z][a-z]?)(\d*)")
 
 
 def parse_formula(formula: str):
-    """CO2 -> {C:1, O:2}; C10H16N5O13P3 -> {C:10,H:16,N:5,O:13,P:3}"""
+    """CO2 -> {C:1, O:2}; C10H16N5O13P3 -> {C:10,H:16,N:5,O:13,P:3}
+
+    先剥离电荷后缀：`CHO2-` / `Cr2O7-2` / `Al+3`。**不可**用 `\d*[+-]\d*$` 一把剥 ——
+    其开头的 `\d*` 会吞掉末尾元素下标（`CHO2-` -> `CHO`，O 退化为 1）。
+    """
+    s = str(formula or "").strip()
+    s = re.sub(r"\^\d*[+\-\u2212]+\d*$", "", s)
+    s = re.sub(r"[+\-\u2212]\d*$", "", s)
     comp = {}
-    for sym, num in ELEM_RE.findall(formula):
+    for sym, num in ELEM_RE.findall(s):
         n = int(num) if num else 1
         comp[sym] = comp.get(sym, 0) + n
     return comp
