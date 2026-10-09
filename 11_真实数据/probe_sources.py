@@ -53,6 +53,18 @@ TARGETS = [
     # 本轮候选：化学层
     ("chembl",     "ChEMBL（化学·药物分子层）",     "www.ebi.ac.uk",             "/chembl/api/data/molecule.json?limit=1",               (200,)),
     ("uniprot",    "UniProt（蛋白层候选）",         "rest.uniprot.org",          "/uniprotkb/search?query=insulin&size=1&format=json",   (200,)),
+    # ── 2026-10-09 扩充：化学侧候选（北极星失衡 → 优先补化学/数学） ──────────────
+    ("chebi",      "ChEBI（化学本体·EBI OLS4）",    "www.ebi.ac.uk",             "/ols4/api/ontologies/chebi",                           (200,)),
+    ("chebi_terms","ChEBI 术语（EBI OLS4 检索）",   "www.ebi.ac.uk",             "/ols4/api/select?q=water&ontology=chebi&size=1",       (200,)),
+    ("kegg",       "KEGG（化合物/反应/酶·REST）",   "rest.kegg.jp",              "/info",                                                (200,)),
+    ("pubchem2",   "PubChem PUG-REST（化学·扩展）", "pubchem.ncbi.nlm.nih.gov",  "/rest/pug/compound/cid/2244/property/MolecularFormula,ExactMass/JSON", (200,)),
+    ("webbook",    "NIST Chemistry WebBook（热化学）","webbook.nist.gov",        "/chemistry/",                                          (200,)),
+    ("rhea",       "Rhea（EBI 反应库）",            "www.rhea-db.org",           "/rhea?query=EC:1.1.1.1&columns=rhea-id&format=tsv&limit=1", (200,)),
+    ("rcsb",       "RCSB PDB（结构生物学）",        "data.rcsb.org",             "/rest/v1/core/entry/4HHB",                             (200,)),
+    # ── 2026-10-09 扩充：数学侧候选 ────────────────────────────────────────────
+    ("dlmf",       "NIST DLMF（数学函数公式库）",   "dlmf.nist.gov",             "/",                                                    (200,)),
+    ("oeis",       "OEIS（整数序列百科）",          "oeis.org",                  "/search?q=1,2,3&fmt=json",                             (200,)),
+    ("zbmath",     "zbMATH Open（数学文摘 API）",   "api.zbmath.org",            "/v1/document/_search?search_string=derivative&results_per_page=1", (200,)),
     # 已知被拦（对照，用于确认判定口径有效）
     ("wikidata",   "Wikidata（已知被拦·对照）",     "query.wikidata.org",        "/sparql?query=SELECT%20*%20WHERE%7B%7D%20LIMIT%201&format=json", (200,)),
 ]

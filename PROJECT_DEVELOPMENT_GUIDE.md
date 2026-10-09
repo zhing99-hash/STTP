@@ -22,7 +22,7 @@ CH₄ + 2O₂ → CO₂ + 2H₂O  (Reaction)
 ```
 最终实现：从纯数学定理出发，一路推理到真实化学分子的物理化学性质，全链路可符号验证。
 
-**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **7339 节点 / 40249 边**（Aura 云端集合级对账零差异），已开源至 GitHub。**北极星指标「跨学科连通性」已于 2026-10-09 首次仪器化**：连通分量 **1**、孤立节点 **0**、跨域边 **869 = 2.16%**（结构风险：物理占比 **71.5%**、`has_quantity` 单一类型占跨域边 **90%**、跨学科实质只在「化学 ↔ 物理」**93%**）。
+**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **9656 节点 / 49881 边**（Aura 云端集合级对账零差异），已开源至 GitHub。**北极星指标「跨学科连通性」已于 2026-10-09 首次仪器化**：连通分量 **1**、孤立节点 **0**；**学科均衡经 Phase 26 治理** —— 物理占比 **71.5% → 54.3%**；**但跨域边绝对数仍 869（占比 2.16% → 1.74%，被化学侧分母摊薄）**，`has_quantity` 仍占 **90%**、跨学科实质只在「化学 ↔ 物理」**93%** —— **下一步应专做「跨域桥」而非继续补量**。
 
 ---
 
@@ -34,15 +34,15 @@ URI:        neo4j+ssc://853a33bc.databases.neo4j.io
 Database:   853a33bc
 Username:   853a33bc
 Password:   （见 环境变量 / .env，禁止明文）
-总计:       7339 节点 / 40249 边（与本地集合级对账零差异）
+总计:       9656 节点 / 49881 边（与本地集合级对账零差异）
 ```
 
-> ⚠️ Aura 免费实例约 5 万节点上限，当前 **7339 节点 / 40249 边**（云端与本地集合级对账零差异），连接池紧张时注意分批操作。
+> ⚠️ Aura 免费实例约 5 万节点上限，当前 **9656 节点 / 49881 边**（云端与本地集合级对账零差异）；扩容（如 Rhea 全库 1.9 万条反应）前先估算增量并分批推。
 
 ### 2.2 本地可视化服务
 ```
 地址:   http://127.0.0.1:8765/
-数据:   06_PoC/graph_data_phase24.json（7339 节点 / 40249 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
+数据:   06_PoC/graph_data_phase26.json（9656 节点 / 49881 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
 前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax，**依赖已本地 vendored**，可完全离线）
 ```
 
@@ -51,7 +51,7 @@ Password:   （见 环境变量 / .env，禁止明文）
 bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_PYTHON
 ```
 > 长驻请后台启动并重定向日志，例如：`bash sttp.sh viz > .runlog/viz.log 2>&1 &`
-> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase24.json python 06_PoC/viz_server.py`
+> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase26.json python 06_PoC/viz_server.py`
 > ⚠️ 必须用系统 Python（`.env` 的 `STTP_PYTHON`）；托管 3.13 是空环境，缺依赖。
 
 ### 2.3 GitHub 仓库
@@ -138,10 +138,10 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 | 类型 | 数量 | 说明 | 典型 id 前缀 |
 |------|------|------|------------|
 | Formula | 5082 | 物理方程（PhysicsBabel 引入） | PB:fo:, MX:formula: |
-| Reaction | 769 | 化学反应 | RX:, BC:rx:, OM:rx: |
-| Molecule | 755 | 分子（含原子组成） | MO:, PC:mol:, BC:mo:, OM:mo:, IC:mo: |
+| **Molecule** | **2133** | 分子（含原子组成）｜Phase 26 +1378 ChEBI 化合物 | MO:, PC:mol:, **CH:cpd:**, EK2:mol:, BC:mo:, OM:mo:, IC:mo: |
+| **Reaction** | **1708** | 化学反应｜Phase 26 +939 Rhea 反应（带 EC 号） | **RH:rxn:**, RX:, EK2:rxn:, BC:rx:, OM:rx: |
 | Paper | 181 | 文献（OpenAlex 引入，Schema v0.2） | PA:oa: |
-| PhysicalQuantity | 144 | 物理量 | CM:pq:, MX:phy:, PB:pq:, TH:pq: |
+| PhysicalQuantity | 144 | 物理量 | CM:pq:, MX:phy:, PB:pq:, TH:pq:, PQ: |
 | Element | 118 | 化学元素（含原子量/周期/族，已去重） | EK:el: |
 | Symbol | 113 | 数学/科学符号 | MX:sym: |
 | FunctionalGroup | 76 | 官能团（ElementKG 引入） | EK2:fg: |
@@ -157,6 +157,7 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 > 历史上用 `labels[0]` 统计，导致首标签恒为 `Entity` 的 1658 个节点被吞。
 > **标签收敛**：`Physical_quantity`（拼写漂移）/ `ElementEntity` / `PhysicsEntity`（外部源自造）三个表外桶
 > 已于 2026-10-09 归零（`03_知识层/normalize_labels.py`，词表 = `TYPE_PRIORITY` ∪ {Entity}）。
+> 上表 15 类**全部 ∈ 受控词表**；Phase 26 新增的 `RH:`/`CH:` 节点复用 `Reaction`/`Molecule` 两个既有类型（**零 schema 改动**）。
 
 **每个节点的结构**（raw 格式，`normalized.json`）：
 ```json
@@ -182,21 +183,21 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 | 边类型 | 数量 | 说明 | 门控 |
 |--------|------|------|------|
 | has_symbol | 24367 | 公式/物理量 → 符号 | — |
+| **composed_of** | **7756** | 分子 → 元素（含 count；Phase 26 +5092 ChEBI 分子式） | R-CHEM |
 | has_quantity | 4385 | 分子/元素 → 物理量（摩尔质量、类药性描述符…） | R-PHY |
-| composed_of | 2664 | 分子 → 元素（含 count） | R-CHEM |
+| **reactant_of** | **2753** | 反应物 → 反应（Phase 26 +2074 Rhea） | R-CHEM |
+| **product_of** | **2559** | 产物 → 反应（Phase 26 +2460 Rhea） | R-CHEM |
 | has_functionalgroup | 2350 | 分子 → 官能团 | — |
 | reagent_of | 1807 | 试剂 → 反应 | R-CHEM |
 | same_period | 1360 | 同周期元素 | — |
 | dimensionally_consistent | 1200 | 量纲自洽（物理方程内） | R-PHY |
-| reactant_of | 679 | 反应物 → 反应（已验证） | R-CHEM |
 | same_family | 374 | 同族元素（f 区实为「同系列」） | — |
 | discusses | 178 | 文献 → 概念 | — |
 | cites | 176 | 文献引用 | — |
 | defines | 138 | 定义者 | — |
 | derived_from | 120 | 数学推导 / 常量派生 | R-MATH |
 | has_element | 109 | 分子 → 元素 | R-CHEM |
-| same_as | 102 | 跨源对齐（Wikidata / 基础库） | — |
-| product_of | 99 | 产物 → 反应（已验证） | R-CHEM |
+| **same_as** | **108** | 跨源对齐（Wikidata / 基础库 / **ChEBI 名称桥**） | — |
 | has_unit | 78 | 物理量 → 单位 | R-PHY |
 | related_to | 53 | GNN 待复核假设（NEEDS_REVIEW） | ⚠️ 未验证 |
 | part_of | 5 | 部分-整体 | — |
@@ -204,7 +205,7 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 | proves | 2 | 证明关系 | R-MATH |
 | releases | 1 | 放热标注 | — |
 
-> **跨域边占比 = 869 / 40249 = 2.16%**（北极星指标）；其中 `has_quantity` 一种占 **784 = 90%**
+> **跨域边 = 869 条 / 49881 边 = 1.74%**（北极星指标，**须与绝对数成对读**：分子未变、占比被 Phase 26 化学侧分母摊薄）；其中 `has_quantity` 一种占 **784 = 90%**
 > —— **跨域结构对单一关系类型高度依赖，是扩容器时的重点风险**。
 
 **每条边的结构**（raw 格式）：
@@ -239,6 +240,8 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 | PB: | PhysicsBabel | PB:fo:0, PB:pq:molar_mass |
 | EK: / EK2: | ElementKG OWL / 10M CSV | EK:el:Fe, EK2:mol:molecule_977 |
 | PC: | PubChem | PC:mol:280 |
+| **RH:** | **Rhea（EBI 反应库，Phase 26）** | **RH:rxn:10000** |
+| **CH:** | **ChEBI（化学本体，Phase 26）** | **CH:cpd:15377**（水） |
 | PA: | OpenAlex（文献层） | PA:oa:W2005936791 |
 | WD: | Wikidata | WD:Q742833 |
 | ~~EL:~~ | **已废弃**（A5 去重并入 `EK:el:<Symbol>`） | ~~EL:h~~ → `EK:el:H` |
@@ -431,6 +434,12 @@ python 03_知识层/normalize_labels.py --delta-only <备份.json>   # 据备份
 | **PubChem 精确反查**（Phase 8 二期） | 真实分子属性 | `inchikey` 反查 713/713 命中 | `11_真实数据/pubchem_ingest.py` | ✅ |
 | **Crossref / DataCite**（Phase 8 三期） | 文献多源校验 | 163/163 DOI 核验命中 + 39 条一致性 flag | `11_真实数据/literature_validate.py` | ✅ |
 | **ChEMBL**（Phase 8 三期） | 真实药学维度 | 332/713 命中，8 个类药性描述符 → 2512 条 `has_quantity` | `11_真实数据/chembl_ingest.py` | ✅ |
+| **Rhea + ChEBI**（**Phase 26**） | **真实化学·反应层（控物理失衡）** | **939 反应（带 EC 号）+ 1378 ChEBI 化合物** → `RH:rxn:*` / `CH:cpd:*`，`reactant_of` 2074 + `product_of` 2460 + `composed_of` 5092 + `same_as` 5 | **`11_真实数据/rhea_ingest.py`** | ✅ |
+
+> **Phase 26 设计要点**：Rhea 方程以 `=` 明确分隔反应物/产物 → 复用既有 `reactant_of`/`product_of`，**零 schema 改动**；
+> 额外按 **20 个核心代谢物**（水/ATP/NAD⁺/葡萄糖…）检索，保证化学子图锚定既有分子层；
+> 内置**防孤岛守卫**（只留「至少一个参与物能锚定主图」的反应）与**部分结构**区分（含 R 占位符的分子式仍建 `composed_of`，标 `partial_structure`）。
+> 实测踩坑：**Rhea 的 `chebi-id` 列按首次出现顺序去重**；**ChEBI 的 `obo_xref` 不含 PubChem CID**（改用人工策划名称桥）。
 
 > **源可达性先探测**：换源前一律先跑 `python 11_真实数据/probe_sources.py`（TCP → TLS → 真实 HTTP 读响应体，多轮 × 双通道）。
 > **白名单按「域 **+ 路径**」放行，TLS 握手成功 ≠ HTTP 可达，且不可跨路径外推** ——
@@ -633,7 +642,7 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 **1. Phase 8 收尾：ElementKG 2.0 真实 dump + Vashy / ReactionAtlas**
 - 状态：Phase 8 三期满负荷落地（文献/常量/分子/药物四层），剩余候选为 **ElementKG 2.0 官方 dump**、
   **Vashy**（物理方程侧）、**ReactionAtlas**（反应侧）
-- ⚠️ **首要约束：控物理失衡**。当前学科分布 **物理 71.5%**、跨域边 90% 依赖 `has_quantity`、
+- ⚠️ **首要约束：从「控物理失衡」转为「产跨域桥」**。物理占比已由 Phase 26（Rhea+ChEBI 化学侧）从 **71.5% 压到 54.3%**；但跨域边绝对数仍 **869**、90% 依赖 `has_quantity`、**数学↔物理仅 29 条** ——
   跨学科实质只发生在「化学 ↔ 物理」（93%）。**接物理源前必须评估它对失衡的边际影响**，
   优先接**化学 / 数学 / 交叉学科**侧的源。
 
@@ -692,7 +701,7 @@ python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_U
 
 # 4. 启动本地可视化
 bash sttp.sh viz
-# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase24.json）
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase26.json）
 
 # 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
 bash sttp.sh export

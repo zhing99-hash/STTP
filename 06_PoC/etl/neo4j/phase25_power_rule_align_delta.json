@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "phase": "phase25",
+    "source": "06_PoC/sync_seed_delta.py",
+    "reason": "老板裁定：MX:math:derivative_power 显式对齐到 MC:fo:power_rule",
+    "generated_at": "2026-10-09T14:58:18",
+    "seeds": [
+      "seed_math_calculus.json"
+    ]
+  },
+  "nodes": [],
+  "delete_nodes": [],
+  "edges": [
+    {
+      "id": "same_as|MC:fo:power_rule|MX:math:derivative_power",
+      "source": "MC:fo:power_rule",
+      "target": "MX:math:derivative_power",
+      "type": "same_as",
+      "kind": "seed_to_existing",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "seed_to_existing",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T14:58:03.879656",
+        "alignment": "manual_curation",
+        "alignment_note": "同一幂法则的左侧表达式概念 d/dx(xⁿ)，与右半 MX:math:power_rule 成对"
+      }
+    }
+  ],
+  "delete_edges": []
+}

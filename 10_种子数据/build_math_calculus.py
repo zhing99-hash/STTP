@@ -58,5 +58,12 @@ for fo, pqs in [
 # 的既有范式，用人工策划的 same_as 把「幂法则」接回主图。
 edges.append(sc.e("MC:fo:power_rule", "MX:math:power_rule", "same_as", "seed_to_existing",
                   alignment="manual_curation"))
+# 2026-10-09 追加（老板裁定）：``MX:math:derivative_power`` 名为 ``d/dx(xⁿ)``，是同一幂法则的
+# **左侧表达式概念**；``MX:math:power_rule`` 名为 ``n·xⁿ⁻¹``，是**右侧结果概念**。二者同属
+# LLM 假设层的两半（已由 ``proves`` 相连），此处各自与人工策划的 ``MC:fo:power_rule`` 建
+# ``same_as``，构成完整三角对齐。
+edges.append(sc.e("MC:fo:power_rule", "MX:math:derivative_power", "same_as", "seed_to_existing",
+                  alignment="manual_curation",
+                  alignment_note="同一幂法则的左侧表达式概念 d/dx(xⁿ)，与右半 MX:math:power_rule 成对"))
 sc.build_and_write(OUT, "7i", "Math: calculus vertical slice", nodes, edges,
-                   extra_external={"MX:math:power_rule"})
+                   extra_external={"MX:math:power_rule", "MX:math:derivative_power"})

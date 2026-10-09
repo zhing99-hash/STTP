@@ -9,6 +9,7 @@ elementkg_synthetic_corpus_40w/
 06_PoC/graph_data_full.json
 06_PoC/etl/neo4j/*_aura_delta.json
 11_真实数据/*_raw.json
+11_真实数据/*_cache.json
 11_真实数据/physicsbabel_circuits.parquet
 
 # ===== Python 缓存 / 临时 =====

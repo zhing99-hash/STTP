@@ -103,6 +103,8 @@ _NS_SUBJECT = {
     "EL": "化学", "EK": "化学", "EK2": "化学", "IC": "化学", "BC": "化学",
     "RX": "化学", "OM": "化学", "MO": "化学", "PC": "化学",
     "CE": "化学",   # Chemical Equilibrium（Phase 7b 新增切片）
+    "RH": "化学",   # Rhea 反应（Phase 26 新增真实源）
+    "CH": "化学",   # ChEBI 化合物（Phase 26 新增真实源）
     # ---- 数学 ----
     "MX": "数学", "MG": "数学", "MA": "数学", "MC": "数学",
     "NT": "数学",   # Number Theory（Phase 7b 新增切片）
