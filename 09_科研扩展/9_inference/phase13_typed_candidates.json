@@ -1,0 +1,1867 @@
+{
+  "source_graph": "06_PoC\\graph_data_phase13.json",
+  "avg_MRR": 0.7037,
+  "relations": {
+    "composed_of": {
+      "n_edges": 84,
+      "n_test": 8,
+      "MRR": 0.8125,
+      "Hits@10": 1.0
+    },
+    "defines": {
+      "n_edges": 98,
+      "n_test": 9,
+      "MRR": 0.8889,
+      "Hits@10": 1.0
+    },
+    "derived_from": {
+      "n_edges": 60,
+      "n_test": 6,
+      "MRR": 0.6806,
+      "Hits@10": 1.0
+    },
+    "dimensionally_consistent": {
+      "n_edges": 1141,
+      "n_test": 114,
+      "MRR": 0.8202,
+      "Hits@10": 1.0
+    },
+    "has_element": {
+      "n_edges": 109,
+      "n_test": 10,
+      "MRR": 1.0,
+      "Hits@10": 1.0
+    },
+    "has_functionalgroup": {
+      "n_edges": 2350,
+      "n_test": 200,
+      "MRR": 0.8505,
+      "Hits@10": 1.0
+    },
+    "has_quantity": {
+      "n_edges": 59,
+      "n_test": 5,
+      "MRR": 0.7,
+      "Hits@10": 1.0
+    },
+    "has_symbol": {
+      "n_edges": 24267,
+      "n_test": 200,
+      "MRR": 0.7903,
+      "Hits@10": 1.0
+    },
+    "has_unit": {
+      "n_edges": 41,
+      "n_test": 4,
+      "MRR": 0.875,
+      "Hits@10": 1.0
+    },
+    "product_of": {
+      "n_edges": 91,
+      "n_test": 9,
+      "MRR": 0.2428,
+      "Hits@10": 0.6667
+    },
+    "reactant_of": {
+      "n_edges": 660,
+      "n_test": 66,
+      "MRR": 0.3537,
+      "Hits@10": 0.697
+    },
+    "reagent_of": {
+      "n_edges": 1807,
+      "n_test": 180,
+      "MRR": 0.7846,
+      "Hits@10": 1.0
+    },
+    "same_as": {
+      "n_edges": 98,
+      "n_test": 9,
+      "MRR": 0.4519,
+      "Hits@10": 0.8889
+    },
+    "same_family": {
+      "n_edges": 682,
+      "n_test": 68,
+      "MRR": 0.7418,
+      "Hits@10": 1.0
+    },
+    "same_period": {
+      "n_edges": 1355,
+      "n_test": 135,
+      "MRR": 0.5625,
+      "Hits@10": 1.0
+    }
+  },
+  "type_distribution": {
+    "composed_of": 2610,
+    "has_quantity": 725,
+    "dimensionally_consistent": 58,
+    "related_to": 49,
+    "defines": 25,
+    "has_unit": 25,
+    "derived_from": 25,
+    "has_symbol": 25,
+    "same_as": 21,
+    "reactant_of": 16,
+    "same_period": 14,
+    "product_of": 7
+  },
+  "gate_verified": 3404,
+  "gate_override": 49,
+  "n_edges": 3600,
+  "partA": [
+    {
+      "source": "PQ:accel",
+      "target": "PB:pq:gravity",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:concentration",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:thermal_diff",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:grav_const",
+      "target": "PB:pq:luminance",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:grav_const",
+      "target": "PB:pq:illuminance",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:amount",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:torque",
+      "target": "PQ:energy",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:molar_mass",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:illuminance",
+      "target": "PB:pq:planck",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:luminance",
+      "target": "PB:pq:planck",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:grav_const",
+      "target": "PB:pq:concentration",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:thermal_diff",
+      "target": "PQ:c",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PQ:c",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:concentration",
+      "target": "PQ:c",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:grav_const",
+      "target": "PB:pq:thermal_diff",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PQ:c",
+      "target": "PB:pq:amount",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:lum_intensity",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PQ:c",
+      "target": "PB:pq:molar_mass",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:heat_capacity",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:entropy",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:illuminance",
+      "target": "PQ:c",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:luminance",
+      "target": "PQ:c",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:grav_const",
+      "target": "PQ:c",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:planck",
+      "target": "PB:pq:cat_activity",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PB:pq:grav_const",
+      "target": "PB:pq:amount",
+      "gnn_type": "dimensionally_consistent",
+      "gnn_prob": 1.0,
+      "final_type": "dimensionally_consistent",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:el:chlorine",
+      "target": "EL:o",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:el:chlorine",
+      "target": "EL:c",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:el:chlorine",
+      "target": "EL:h",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:el:nitrogen",
+      "target": "EL:h",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:el:nitrogen",
+      "target": "EL:c",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:el:nitrogen",
+      "target": "EL:o",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:el:sodium",
+      "target": "EL:h",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:el:sodium",
+      "target": "EL:c",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:el:sodium",
+      "target": "EL:o",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:un:j_per_k",
+      "target": "UN:m",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:un:j_per_k",
+      "target": "UN:j",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "SM:un:j_per_k",
+      "target": "UN:m",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "SM:un:j_per_k",
+      "target": "UN:j",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OP:un:meter",
+      "target": "UN:j",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:un:pascal",
+      "target": "UN:m",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:un:pascal",
+      "target": "UN:j",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EK:el:H",
+      "target": "EL:o",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EK:el:H",
+      "target": "EL:c",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EK:el:C",
+      "target": "EL:h",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EK:el:O",
+      "target": "EL:h",
+      "gnn_type": "same_as",
+      "gnn_prob": 1.0,
+      "final_type": "same_as",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:euler_identity",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "TH:un:pascal",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "TH:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "CM:pq:power",
+      "target": "TH:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:inductance",
+      "target": "TH:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:capacitance",
+      "target": "TH:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:inductance",
+      "target": "TH:un:pascal",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:capacitance",
+      "target": "TH:un:pascal",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "CM:un:joule",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MG:pq:area",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "CM:pq:power",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:capacitance",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:inductance",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:resistance",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:mag_flux",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "OP:un:meter",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "QM:un:ev",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "CM:un:watt",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "SM:fo:boltzmann",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:fo:ohm",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "CM:pq:power",
+      "target": "TH:un:pascal",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "QM:pq:action",
+      "target": "SM:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "EM:un:farad",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "EM:un:henry",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "EM:un:weber",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:pq:gas_const",
+      "target": "EM:un:ohm",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:pq:resistance",
+      "target": "TH:un:j_per_k",
+      "gnn_type": "has_unit",
+      "gnn_prob": 1.0,
+      "final_type": "has_unit",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:fo:faraday",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MC:fo:ftc",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:euler_identity",
+      "target": "MG:pq:angle",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "MX:def:tangent_space",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:binomial",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MX:def:tangent_space",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:euler_identity",
+      "target": "SM:pq:boltz_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MG:fo:circle_area",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:euler_identity",
+      "target": "MG:pq:volume",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:fo:ideal_gas",
+      "target": "MG:pq:angle",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "MX:def:manifold",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MX:def:manifold",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:fo:ideal_gas",
+      "target": "SM:pq:boltz_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:fo:first_law",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "IC:rx:synthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:gauss_bonnet",
+      "target": "MX:lemma:covariant_derivative",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:fo:ideal_gas",
+      "target": "MG:pq:volume",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MG:fo:sphere_vol",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OM:fo:combustion",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "IC:rx:synthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "MX:def:riemannian_metric",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MX:def:riemannian_metric",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "CM:fo:power",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "IC:rx:synthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "IC:rx:synthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:co2",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:h2o",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:euler_identity",
+      "target": "MC:pq:derivative",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OP:fo:refr_speed",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:co2",
+      "target": "IC:rx:synthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:ch4",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MC:fo:limit_def",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "MX:lemma:partition_of_unity",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:gauss_bonnet",
+      "target": "MX:def:tangent_space",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:h2o",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:gauss_bonnet",
+      "target": "MX:def:levi_civita",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MG:fo:euler_poly",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "EM:fo:ohm",
+      "target": "SM:pq:boltz_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:o2",
+      "target": "IC:rx:synthesis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:glucose",
+      "target": "IC:rx:synthesis",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:ch4",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:rx:respiration",
+      "gnn_type": "product_of",
+      "gnn_prob": 1.0,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "SM:fo:boltzmann",
+      "target": "MG:pq:volume",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "TH:fo:ideal_gas",
+      "target": "MC:pq:derivative",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MC:fo:chain_rule",
+      "target": "TH:pq:gas_const",
+      "gnn_type": "defines",
+      "gnn_prob": 1.0,
+      "final_type": "defines",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:gauss_bonnet",
+      "target": "MX:def:manifold",
+      "gnn_type": "derived_from",
+      "gnn_prob": 1.0,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:tangent_space",
+      "target": "MX:math:binomial",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9999,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:respiration",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9999,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:photosynthesis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9999,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:partition_of_unity",
+      "target": "MX:def:tangent_space",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9999,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:partition_of_unity",
+      "target": "MX:def:levi_civita",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9999,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:levi_civita",
+      "target": "MX:math:binomial",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9999,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9997,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9997,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9997,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:tangent_space",
+      "target": "MX:math:pythagorean_identity",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9997,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:co2",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9997,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:riemannian_metric",
+      "target": "MX:math:binomial",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9996,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:partition_of_unity",
+      "target": "MX:def:riemannian_metric",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9996,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:tangent_space",
+      "target": "MX:math:expand",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9996,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:levi_civita",
+      "target": "MX:math:expand",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9996,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "RX:comb_ch4",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9995,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9995,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:ch4",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9994,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9993,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:glucose",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9993,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9993,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:manifold",
+      "target": "MX:math:pythagorean_identity",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9992,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PQ:ke",
+      "target": "TH:pq:internal_energy",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9991,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:co2",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9991,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:riemannian_metric",
+      "target": "MX:math:expand",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.999,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "OM:rx:ethanol_comb",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9989,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:chem:co2",
+      "target": "MX:math:binomial",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9989,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:o2",
+      "target": "IC:rx:neutralization",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9989,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:levi_civita",
+      "target": "MX:math:pythagorean_identity",
+      "gnn_type": "derived_from",
+      "gnn_prob": 0.9989,
+      "final_type": "derived_from",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "RX:comb_ch4",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9988,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "RX:comb_ch4",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9987,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "CM:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9985,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "MX:chem:combustion",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9985,
+      "final_type": "has_quantity",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "CM:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9985,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "BC:mo:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9983,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "CM:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9983,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "TH:pq:internal_energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9981,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "IC:mo:o2",
+      "target": "BC:rx:atp_hydrolysis",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9981,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.998,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "CM:pq:mass",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9978,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "TH:pq:internal_energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9977,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "CM:pq:mass",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9977,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "OM:rx:ethane_comb",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9976,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "IC:rx:redox",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9976,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "OM:rx:ethanol_comb",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9975,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:o2",
+      "target": "RX:comb_ch4",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9975,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9973,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "CM:pq:mass",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9973,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "IC:mo:o2",
+      "target": "RX:comb_ch4",
+      "gnn_type": "reactant_of",
+      "gnn_prob": 0.9971,
+      "final_type": "related_to",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PC:mol:24526",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9968,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "TH:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9968,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "TH:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9966,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "MX:chem:methane",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9963,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "TH:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9961,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9955,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9954,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MG:sy:pi",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9945,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MX:sym:g",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9942,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MA:sy:pi",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9941,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:chem:combustion",
+      "target": "TH:pq:internal_energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9939,
+      "final_type": "has_quantity",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "CM:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9937,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MC:sy:f",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9932,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "TH:sy:T",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9923,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9921,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "TH:pq:internal_energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.992,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "MO:ch4",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9918,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "CM:pq:energy",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9918,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "MX:chem:co2",
+      "target": "PQ:ke",
+      "gnn_type": "has_quantity",
+      "gnn_prob": 0.9914,
+      "final_type": "has_quantity",
+      "status": "VERIFIED"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "MX:sym:g",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9912,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "TH:sy:T",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9912,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "SY:m",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9907,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MG:sy:theta",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9904,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "SY:m",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9903,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "QM:sy:hbar",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9896,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "MC:sy:f",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9896,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:euler_identity",
+      "target": "MX:sym:nabla",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9891,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "QM:sy:hbar",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9885,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "SM:sy:k_B",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9884,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MA:fo:euler_identity",
+      "target": "MX:sym:y",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.988,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:def:tangent_space",
+      "target": "TH:sy:T",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9871,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "SM:sy:k_B",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9868,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "MX:sym:t_p_m",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9864,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "SY:f",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9863,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "MG:sy:theta",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9863,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "TH:sy:P",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9859,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "TH:sy:V",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9856,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:lemma:covariant_derivative",
+      "target": "OP:sy:n",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9852,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    },
+    {
+      "source": "MX:thm:riemann_curvature",
+      "target": "SY:f",
+      "gnn_type": "has_symbol",
+      "gnn_prob": 0.9847,
+      "final_type": "has_symbol",
+      "status": "NEEDS_REVIEW"
+    }
+  ]
+}

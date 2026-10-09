@@ -9,10 +9,10 @@ import json
 import os
 import sys
 
-sys.path.insert(0, r"C:\Users\Administrator\.qclaw\workspace\01tuopu\06_PoC")
+sys.path.insert(0, r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\06_PoC")
 import graph_export
 
-ROOT = r"C:\Users\Administrator\.qclaw\workspace\01tuopu"
+ROOT = r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP"
 SEED = os.path.join(ROOT, r"10_种子数据")
 ETL = os.path.join(ROOT, r"06_PoC\etl\neo4j")
 

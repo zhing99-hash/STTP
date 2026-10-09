@@ -1,0 +1,6482 @@
+{
+  "meta": {
+    "phase": "A7-periodic-table",
+    "source": "03_知识层/normalize_periodic.py",
+    "reason": "元素周期表位置（period/group/block/series）对齐 IUPAC 权威表；修正 O 的 atomic_number；删除 308 条语义错误的 same_family 边",
+    "truth_source": "11_真实数据/element_reference.py",
+    "node_count": 118,
+    "delete_edge_count": 308
+  },
+  "nodes": [
+    {
+      "id": "EK:el:Sc",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Sc",
+        "melting_point": 1541.0,
+        "boiling_point": 2830.0,
+        "density": 2985.0,
+        "discovered_year": 1879.0,
+        "abundance": 3e-06,
+        "electron_config": "2,8,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 633.1,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "transitionMetals"
+        ],
+        "hardness": 750.0,
+        "atomic_radius": 184.0,
+        "heat_capacity": 567.0,
+        "conductivity": 16.0,
+        "electron_affinity": 18.1,
+        "atomic_weight": 44.955908,
+        "domain": "chem.element",
+        "electronegativity": 1.36,
+        "name": "Scandium",
+        "id": "EK:el:Sc",
+        "state": "solid",
+        "atomic_number": 21,
+        "bulk_modulus": 57.0,
+        "atomic_mass": 44.955908,
+        "period": 4,
+        "block": "d",
+        "group": 3,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ts",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ts",
+        "domain": "chem.element",
+        "id": "EK:el:Ts",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 294.0,
+        "atomic_number": 117,
+        "name": "Tennessine",
+        "atomic_mass": 294.0,
+        "period": 7,
+        "block": "p",
+        "group": 17,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:B",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "B",
+        "melting_point": 2075.0,
+        "boiling_point": 4000.0,
+        "density": 2460.0,
+        "discovered_year": 1808.0,
+        "abundance": 1e-07,
+        "electron_config": "2,3",
+        "source": "ElementKG2.0",
+        "ionization_energy": 800.6,
+        "ntype": "element",
+        "families": [
+          "metalloids"
+        ],
+        "atomic_radius": 87.0,
+        "heat_capacity": 1030.0,
+        "conductivity": 27.0,
+        "electron_affinity": 26.7,
+        "atomic_weight": 10.81,
+        "domain": "chem.element",
+        "electronegativity": 2.04,
+        "name": "Boron",
+        "id": "EK:el:B",
+        "state": "solid",
+        "atomic_number": 5,
+        "bulk_modulus": 320.0,
+        "atomic_mass": 10.81,
+        "weight": 10.81,
+        "ek_element_id": "E9",
+        "ek_atomic_raw": 5,
+        "ek_name_raw": "Boron",
+        "same_as_aliases": [
+          "EK2:el:B"
+        ],
+        "alias_sources": {
+          "EK2:el:B": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "period": 2,
+        "block": "p",
+        "group": 13,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Mg",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Mg",
+        "melting_point": 650.0,
+        "boiling_point": 1090.0,
+        "density": 1738.0,
+        "discovered_year": 1755.0,
+        "abundance": 0.06,
+        "electron_config": "2,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 737.7,
+        "ntype": "element",
+        "families": [
+          "alkalineEarthMetals",
+          "nonferrousLightMetals"
+        ],
+        "hardness": 260.0,
+        "atomic_radius": 145.0,
+        "heat_capacity": 1020.0,
+        "conductivity": 160.0,
+        "electron_affinity": 0.0,
+        "atomic_weight": 24.305,
+        "domain": "chem.element",
+        "electronegativity": 1.31,
+        "name": "Magnesium",
+        "id": "EK:el:Mg",
+        "state": "solid",
+        "atomic_number": 12,
+        "bulk_modulus": 45.0,
+        "atomic_mass": 24.305,
+        "period": 3,
+        "block": "s",
+        "group": 2,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Sn",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Sn",
+        "melting_point": 231.93,
+        "boiling_point": 2602.0,
+        "density": 7310.0,
+        "discovered_year": "3000BCE",
+        "abundance": 4e-07,
+        "electron_config": "2,8,18,18,4",
+        "source": "ElementKG2.0",
+        "ionization_energy": 708.6,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals",
+          "postTransitionMetals"
+        ],
+        "hardness": 51.0,
+        "atomic_radius": 145.0,
+        "heat_capacity": 217.0,
+        "conductivity": 67.0,
+        "electron_affinity": 107.3,
+        "atomic_weight": 118.71,
+        "domain": "chem.element",
+        "electronegativity": 1.96,
+        "name": "Tin",
+        "id": "EK:el:Sn",
+        "state": "solid",
+        "atomic_number": 50,
+        "bulk_modulus": 58.0,
+        "atomic_mass": 118.71,
+        "period": 5,
+        "block": "p",
+        "group": 14,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Au",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Au",
+        "melting_point": 1064.18,
+        "boiling_point": 2856.0,
+        "density": 19300.0,
+        "discovered_year": "2500BCE",
+        "abundance": 6e-08,
+        "electron_config": "2,8,18,32,18,1",
+        "source": "ElementKG2.0",
+        "ionization_energy": 890.1,
+        "ntype": "element",
+        "families": [
+          "nobleMetals",
+          "transitionMetals"
+        ],
+        "hardness": 25.0,
+        "atomic_radius": 174.0,
+        "heat_capacity": 129.1,
+        "conductivity": 320.0,
+        "electron_affinity": 222.8,
+        "atomic_weight": 196.966569,
+        "domain": "chem.element",
+        "electronegativity": 2.54,
+        "name": "Gold",
+        "id": "EK:el:Au",
+        "state": "solid",
+        "atomic_number": 79,
+        "bulk_modulus": 220.0,
+        "atomic_mass": 196.966569,
+        "period": 6,
+        "block": "d",
+        "group": 11,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Mo",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Mo",
+        "melting_point": 2623.0,
+        "abundance": 5e-07,
+        "electron_config": "2,8,18,13,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 190.0,
+        "conductivity": 139.0,
+        "electronegativity": 2.16,
+        "id": "EK:el:Mo",
+        "state": "solid",
+        "atomic_number": 42,
+        "bulk_modulus": 230.0,
+        "period": 5,
+        "boiling_point": 4639.0,
+        "density": 10280.0,
+        "discovered_year": 1781.0,
+        "ionization_energy": 684.3,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals",
+          "transitionMetals"
+        ],
+        "hardness": 1500.0,
+        "heat_capacity": 251.0,
+        "electron_affinity": 71.9,
+        "atomic_weight": 95.95,
+        "domain": "chem.element",
+        "name": "Molybdenum",
+        "atomic_mass": 95.95,
+        "block": "d",
+        "group": 6,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:U",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "U",
+        "melting_point": 1135.0,
+        "period": 7,
+        "boiling_point": 3900.0,
+        "density": 19050.0,
+        "discovered_year": 1789.0,
+        "abundance": 2e-08,
+        "electron_config": "2,8,18,32,21,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 597.6,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "hardness": 2400.0,
+        "heat_capacity": 116.0,
+        "conductivity": 27.0,
+        "atomic_weight": 238.02891,
+        "domain": "chem.element",
+        "electronegativity": 1.38,
+        "name": "Uranium",
+        "id": "EK:el:U",
+        "state": "solid",
+        "atomic_number": 92,
+        "bulk_modulus": 100.0,
+        "atomic_mass": 238.02891,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cs",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cs",
+        "melting_point": 28.44,
+        "abundance": 8e-08,
+        "electron_config": "2,8,18,18,8,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 298.0,
+        "conductivity": 36.0,
+        "electronegativity": 0.79,
+        "id": "EK:el:Cs",
+        "state": "solid",
+        "atomic_number": 55,
+        "bulk_modulus": 1.6,
+        "period": 6,
+        "boiling_point": 671.0,
+        "density": 1879.0,
+        "discovered_year": 1860.0,
+        "ionization_energy": 375.7,
+        "ntype": "element",
+        "families": [
+          "alkaliMetals",
+          "rareLightMetal"
+        ],
+        "hardness": 0.14,
+        "heat_capacity": 242.0,
+        "electron_affinity": 45.5,
+        "atomic_weight": 132.90545196,
+        "domain": "chem.element",
+        "name": "Caesium",
+        "atomic_mass": 132.90545196,
+        "block": "s",
+        "group": 1,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Be",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Be",
+        "melting_point": 1287.0,
+        "abundance": 1e-07,
+        "electron_config": "2,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 112.0,
+        "conductivity": 190.0,
+        "electronegativity": 1.57,
+        "id": "EK:el:Be",
+        "state": "solid",
+        "atomic_number": 4,
+        "bulk_modulus": 130.0,
+        "period": 2,
+        "boiling_point": 2470.0,
+        "density": 1848.0,
+        "discovered_year": 1797.0,
+        "ionization_energy": 899.5,
+        "ntype": "element",
+        "families": [
+          "alkalineEarthMetals",
+          "rareLightMetal"
+        ],
+        "hardness": 600.0,
+        "heat_capacity": 1820.0,
+        "electron_affinity": 0.0,
+        "atomic_weight": 9.0121831,
+        "domain": "chem.element",
+        "name": "Beryllium",
+        "atomic_mass": 9.0121831,
+        "block": "s",
+        "group": 2,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Tc",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Tc",
+        "melting_point": 2157.0,
+        "period": 5,
+        "boiling_point": 4265.0,
+        "density": 11500.0,
+        "discovered_year": 1937.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,13,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 702.0,
+        "ntype": "element",
+        "families": [
+          "rareRadioactiveMetals",
+          "transitionMetals"
+        ],
+        "atomic_radius": 183.0,
+        "heat_capacity": 63.0,
+        "conductivity": 51.0,
+        "electron_affinity": 53.0,
+        "atomic_weight": 98.0,
+        "domain": "chem.element",
+        "electronegativity": 1.9,
+        "name": "Technetium",
+        "id": "EK:el:Tc",
+        "state": "solid",
+        "atomic_number": 43,
+        "atomic_mass": 98.0,
+        "block": "d",
+        "group": 7,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Tm",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Tm",
+        "melting_point": 1545.0,
+        "abundance": 1e-08,
+        "electron_config": "2,8,18,31,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 222.0,
+        "conductivity": 17.0,
+        "electronegativity": 1.25,
+        "id": "EK:el:Tm",
+        "state": "solid",
+        "atomic_number": 69,
+        "bulk_modulus": 45.0,
+        "period": 6,
+        "boiling_point": 1950.0,
+        "density": 9320.0,
+        "discovered_year": 1879.0,
+        "ionization_energy": 596.7,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "hardness": 471.0,
+        "heat_capacity": 160.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 168.93422,
+        "domain": "chem.element",
+        "name": "Thulium",
+        "atomic_mass": 168.93422,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Sr",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Sr",
+        "melting_point": 776.9,
+        "period": 5,
+        "boiling_point": 1382.0,
+        "density": 2630.0,
+        "discovered_year": 1790.0,
+        "abundance": 4e-06,
+        "electron_config": "2,8,18,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 549.5,
+        "ntype": "element",
+        "families": [
+          "alkalineEarthMetals",
+          "nonferrousLightMetals"
+        ],
+        "atomic_radius": 219.0,
+        "heat_capacity": 300.0,
+        "conductivity": 35.0,
+        "electron_affinity": 5.03,
+        "atomic_weight": 87.62,
+        "domain": "chem.element",
+        "electronegativity": 0.95,
+        "name": "Strontium",
+        "id": "EK:el:Sr",
+        "state": "solid",
+        "atomic_number": 38,
+        "atomic_mass": 87.62,
+        "block": "s",
+        "group": 2,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:I",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "I",
+        "melting_point": 113.7,
+        "period": 5,
+        "boiling_point": 184.3,
+        "density": 4940.0,
+        "discovered_year": 1811.0,
+        "abundance": 1e-07,
+        "electron_config": "2,8,18,18,7",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1008.4,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 115.0,
+        "heat_capacity": 429.0,
+        "conductivity": 0.449,
+        "electron_affinity": 295.2,
+        "atomic_weight": 126.90447,
+        "domain": "chem.element",
+        "electronegativity": 2.66,
+        "name": "Iodine",
+        "id": "EK:el:I",
+        "state": "solid",
+        "atomic_number": 53,
+        "bulk_modulus": 7.7,
+        "atomic_mass": 126.90447,
+        "weight": 126.90447,
+        "ek_element_id": "E48",
+        "ek_atomic_raw": 53,
+        "ek_name_raw": "Iodine",
+        "same_as_aliases": [
+          "EK2:el:I"
+        ],
+        "alias_sources": {
+          "EK2:el:I": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "block": "p",
+        "group": 17,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Li",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Li",
+        "melting_point": 180.54,
+        "period": 2,
+        "boiling_point": 1342.0,
+        "density": 535.0,
+        "discovered_year": 1817.0,
+        "abundance": 6e-07,
+        "electron_config": "2,1",
+        "source": "ElementKG2.0",
+        "ionization_energy": 520.2,
+        "ntype": "element",
+        "families": [
+          "alkaliMetals",
+          "rareLightMetal"
+        ],
+        "atomic_radius": 167.0,
+        "heat_capacity": 3570.0,
+        "conductivity": 85.0,
+        "electron_affinity": 59.6,
+        "atomic_weight": 6.94,
+        "domain": "chem.element",
+        "electronegativity": 0.98,
+        "name": "Lituium",
+        "id": "EK:el:Li",
+        "state": "solid",
+        "atomic_number": 3,
+        "bulk_modulus": 11.0,
+        "atomic_mass": 6.94,
+        "block": "s",
+        "group": 1,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cd",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cd",
+        "melting_point": 321.07,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,18,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 161.0,
+        "conductivity": 97.0,
+        "electronegativity": 1.69,
+        "id": "EK:el:Cd",
+        "state": "solid",
+        "atomic_number": 48,
+        "bulk_modulus": 42.0,
+        "period": 5,
+        "boiling_point": 766.9,
+        "density": 8650.0,
+        "discovered_year": 1817.0,
+        "ionization_energy": 867.8,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals",
+          "transitionMetals"
+        ],
+        "hardness": 203.0,
+        "heat_capacity": 230.0,
+        "electron_affinity": 0.0,
+        "atomic_weight": 112.414,
+        "domain": "chem.element",
+        "name": "Cadmium",
+        "atomic_mass": 112.414,
+        "block": "d",
+        "group": 12,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Hg",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Hg",
+        "melting_point": -38.83,
+        "period": 6,
+        "boiling_point": 356.73,
+        "density": 13534.0,
+        "discovered_year": "1500BCE",
+        "abundance": 1e-07,
+        "electron_config": "2,8,18,32,18,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1007.1,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals",
+          "transitionMetals"
+        ],
+        "atomic_radius": 171.0,
+        "heat_capacity": 139.5,
+        "conductivity": 8.3,
+        "electron_affinity": 0.0,
+        "atomic_weight": 200.59,
+        "domain": "chem.element",
+        "electronegativity": 2.0,
+        "name": "Mercury",
+        "id": "EK:el:Hg",
+        "state": "liquid",
+        "atomic_number": 80,
+        "bulk_modulus": 25.0,
+        "atomic_mass": 200.59,
+        "block": "d",
+        "group": 12,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Si",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Si",
+        "melting_point": 1414.0,
+        "period": 3,
+        "boiling_point": 2900.0,
+        "density": 2330.0,
+        "discovered_year": 1824.0,
+        "abundance": 0.07,
+        "electron_config": "2,8,4",
+        "source": "ElementKG2.0",
+        "ionization_energy": 786.5,
+        "ntype": "element",
+        "families": [
+          "metalloids"
+        ],
+        "atomic_radius": 111.0,
+        "heat_capacity": 710.0,
+        "conductivity": 150.0,
+        "electron_affinity": 133.6,
+        "atomic_weight": 28.085,
+        "domain": "chem.element",
+        "electronegativity": 1.9,
+        "name": "Silicon",
+        "id": "EK:el:Si",
+        "state": "solid",
+        "atomic_number": 14,
+        "bulk_modulus": 100.0,
+        "atomic_mass": 28.085,
+        "weight": 28.085,
+        "ek_element_id": "E98",
+        "ek_atomic_raw": 14,
+        "ek_name_raw": "Silicon",
+        "same_as_aliases": [
+          "EK2:el:Si"
+        ],
+        "alias_sources": {
+          "EK2:el:Si": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "block": "p",
+        "group": 14,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Sg",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Sg",
+        "period": 7,
+        "discovered_year": 1974.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,32,12,2",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "transitionMetals"
+        ],
+        "atomic_weight": 269.0,
+        "domain": "chem.element",
+        "name": "Seaborgium",
+        "id": "EK:el:Sg",
+        "atomic_number": 106,
+        "atomic_mass": 269.0,
+        "block": "d",
+        "group": 6,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:S",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "S",
+        "melting_point": 115.21,
+        "period": 3,
+        "boiling_point": 444.72,
+        "density": 1960.0,
+        "discovered_year": 500.0,
+        "abundance": 0.05,
+        "electron_config": "2,8,6",
+        "source": "ElementKG2.0",
+        "ionization_energy": 999.6,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 88.0,
+        "heat_capacity": 705.0,
+        "conductivity": 0.205,
+        "electron_affinity": 200.0,
+        "atomic_weight": 32.06,
+        "domain": "chem.element",
+        "electronegativity": 2.58,
+        "name": "Sulfur",
+        "id": "EK:el:S",
+        "state": "solid",
+        "atomic_number": 16,
+        "bulk_modulus": 7.7,
+        "atomic_mass": 32.06,
+        "weight": 32.06,
+        "ek_element_id": "E93",
+        "ek_atomic_raw": 16,
+        "ek_name_raw": "Sulfur",
+        "same_as_aliases": [
+          "EK2:el:S"
+        ],
+        "alias_sources": {
+          "EK2:el:S": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "block": "p",
+        "group": 16,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:N",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "N",
+        "melting_point": -210.1,
+        "period": 2,
+        "boiling_point": -195.8,
+        "density": 1.251,
+        "discovered_year": 1772.0,
+        "abundance": 0.1,
+        "electron_config": "2,5",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1402.3,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 56.0,
+        "heat_capacity": 1040.0,
+        "conductivity": 0.02583,
+        "electron_affinity": 7.0,
+        "atomic_weight": 14.007,
+        "domain": "chem.element",
+        "electronegativity": 3.04,
+        "name": "Nitrogen",
+        "id": "EK:el:N",
+        "state": "gas",
+        "atomic_number": 7,
+        "atomic_mass": 14.007,
+        "explicit_or_inferred": "explicit",
+        "confidence": 1.0,
+        "created_at": "2026-09-30T08:35:01.972539",
+        "weight": 14.007,
+        "ek_element_id": "E64",
+        "ek_atomic_raw": 7,
+        "ek_name_raw": "Nitrogen",
+        "same_as_aliases": [
+          "BC:el:nitrogen",
+          "EK2:el:N"
+        ],
+        "alias_sources": {
+          "BC:el:nitrogen": "curated_seed",
+          "EK2:el:N": "ElementKG2.0"
+        },
+        "merged_node_count": 3,
+        "block": "p",
+        "group": 15,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:La",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "La",
+        "melting_point": 919.9,
+        "period": 6,
+        "boiling_point": 3464.0,
+        "density": 6146.0,
+        "discovered_year": 1839.0,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,18,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 538.1,
+        "ntype": "element",
+        "families": [
+          "lanthanides",
+          "lightRareEarthMetals"
+        ],
+        "hardness": 363.0,
+        "heat_capacity": 195.0,
+        "conductivity": 13.0,
+        "electron_affinity": 48.0,
+        "atomic_weight": 138.90547,
+        "domain": "chem.element",
+        "electronegativity": 1.1,
+        "name": "Lanthanum",
+        "id": "EK:el:La",
+        "state": "solid",
+        "atomic_number": 57,
+        "bulk_modulus": 28.0,
+        "atomic_mass": 138.90547,
+        "block": "d",
+        "group": 3,
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Sb",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Sb",
+        "melting_point": 630.63,
+        "abundance": 4e-08,
+        "electron_config": "2,8,18,18,5",
+        "source": "ElementKG2.0",
+        "atomic_radius": 133.0,
+        "conductivity": 24.0,
+        "electronegativity": 2.05,
+        "id": "EK:el:Sb",
+        "state": "solid",
+        "atomic_number": 51,
+        "bulk_modulus": 42.0,
+        "period": 5,
+        "boiling_point": 1587.0,
+        "density": 6697.0,
+        "discovered_year": "3000BCE",
+        "ionization_energy": 834.0,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals"
+        ],
+        "hardness": 294.0,
+        "heat_capacity": 207.0,
+        "electron_affinity": 103.2,
+        "atomic_weight": 121.76,
+        "domain": "chem.element",
+        "name": "Antimony",
+        "atomic_mass": 121.76,
+        "block": "p",
+        "group": 15,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:As",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "As",
+        "melting_point": 816.9,
+        "abundance": 8e-07,
+        "electron_config": "2,8,18,5",
+        "source": "ElementKG2.0",
+        "atomic_radius": 114.0,
+        "conductivity": 50.0,
+        "electronegativity": 2.18,
+        "id": "EK:el:As",
+        "state": "solid",
+        "atomic_number": 33,
+        "bulk_modulus": 22.0,
+        "period": 4,
+        "boiling_point": 614.0,
+        "density": 5727.0,
+        "discovered_year": 1250.0,
+        "ionization_energy": 947.0,
+        "ntype": "element",
+        "families": [
+          "metalloids"
+        ],
+        "hardness": 1440.0,
+        "heat_capacity": 328.0,
+        "electron_affinity": 78.0,
+        "atomic_weight": 74.921595,
+        "domain": "chem.element",
+        "name": "Arsenic",
+        "atomic_mass": 74.921595,
+        "block": "p",
+        "group": 15,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Sm",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Sm",
+        "melting_point": 1072.0,
+        "abundance": 5e-07,
+        "electron_config": "2,8,18,24,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 238.0,
+        "conductivity": 13.0,
+        "electronegativity": 1.17,
+        "id": "EK:el:Sm",
+        "state": "solid",
+        "atomic_number": 62,
+        "bulk_modulus": 38.0,
+        "period": 6,
+        "boiling_point": 1803.0,
+        "density": 7353.0,
+        "discovered_year": 1879.0,
+        "ionization_energy": 544.5,
+        "ntype": "element",
+        "families": [
+          "lanthanides",
+          "lightRareEarthMetals"
+        ],
+        "hardness": 441.0,
+        "heat_capacity": 196.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 150.36,
+        "domain": "chem.element",
+        "name": "Samarium",
+        "atomic_mass": 150.36,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Re",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Re",
+        "melting_point": 3186.0,
+        "abundance": 2e-08,
+        "electron_config": "2,8,18,32,13,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 188.0,
+        "conductivity": 48.0,
+        "electronegativity": 1.9,
+        "id": "EK:el:Re",
+        "state": "solid",
+        "atomic_number": 75,
+        "bulk_modulus": 370.0,
+        "period": 6,
+        "boiling_point": 5596.0,
+        "density": 21020.0,
+        "discovered_year": 1925.0,
+        "ionization_energy": 760.0,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals",
+          "transitionMetals"
+        ],
+        "hardness": 1320.0,
+        "heat_capacity": 137.0,
+        "electron_affinity": 14.5,
+        "atomic_weight": 186.207,
+        "domain": "chem.element",
+        "name": "Rhenium",
+        "atomic_mass": 186.207,
+        "block": "d",
+        "group": 7,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Fe",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Fe",
+        "melting_point": 1538.0,
+        "period": 4,
+        "boiling_point": 2861.0,
+        "density": 7874.0,
+        "discovered_year": "2000BCE",
+        "abundance": 0.11,
+        "electron_config": "2,8,14,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 762.5,
+        "ntype": "element",
+        "families": [
+          "blackMetals",
+          "ferrousMetals",
+          "transitionMetals"
+        ],
+        "hardness": 490.0,
+        "atomic_radius": 156.0,
+        "heat_capacity": 449.0,
+        "conductivity": 80.0,
+        "electron_affinity": 15.7,
+        "atomic_weight": 55.845,
+        "domain": "chem.element",
+        "name": "Iron",
+        "id": "EK:el:Fe",
+        "state": "solid",
+        "atomic_number": 26,
+        "bulk_modulus": 170.0,
+        "atomic_mass": 55.845,
+        "explicit_or_inferred": "explicit",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T16:54:48.726342",
+        "same_as_aliases": [
+          "IC:el:iron"
+        ],
+        "alias_sources": {
+          "IC:el:iron": "curated_seed"
+        },
+        "merged_node_count": 2,
+        "block": "d",
+        "group": 8,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Er",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Er",
+        "melting_point": 1497.0,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,30,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 226.0,
+        "conductivity": 15.0,
+        "electronegativity": 1.24,
+        "id": "EK:el:Er",
+        "state": "solid",
+        "atomic_number": 68,
+        "bulk_modulus": 44.0,
+        "period": 6,
+        "boiling_point": 2868.0,
+        "density": 9066.0,
+        "discovered_year": 1842.0,
+        "ionization_energy": 589.3,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "hardness": 814.0,
+        "heat_capacity": 168.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 167.259,
+        "domain": "chem.element",
+        "name": "Erbium",
+        "atomic_mass": 167.259,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Y",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Y",
+        "melting_point": 1526.0,
+        "abundance": 7e-07,
+        "electron_config": "2,8,18,9,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 212.0,
+        "conductivity": 17.0,
+        "electronegativity": 1.22,
+        "id": "EK:el:Y",
+        "state": "solid",
+        "atomic_number": 39,
+        "bulk_modulus": 41.0,
+        "period": 5,
+        "boiling_point": 3345.0,
+        "density": 4472.0,
+        "discovered_year": 1794.0,
+        "ionization_energy": 600.0,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals"
+        ],
+        "hardness": 589.0,
+        "heat_capacity": 298.0,
+        "electron_affinity": 29.6,
+        "atomic_weight": 88.90584,
+        "domain": "chem.element",
+        "name": "Yttrium",
+        "atomic_mass": 88.90584,
+        "block": "d",
+        "group": 3,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ag",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ag",
+        "melting_point": 961.78,
+        "abundance": 6e-08,
+        "electron_config": "2,8,18,18,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 165.0,
+        "conductivity": 430.0,
+        "electronegativity": 1.93,
+        "id": "EK:el:Ag",
+        "state": "solid",
+        "atomic_number": 47,
+        "bulk_modulus": 100.0,
+        "period": 5,
+        "boiling_point": 2162.0,
+        "density": 10490.0,
+        "discovered_year": "3000BCE",
+        "ionization_energy": 731.0,
+        "ntype": "element",
+        "families": [
+          "nobleMetals",
+          "transitionMetals"
+        ],
+        "hardness": 24.5,
+        "heat_capacity": 235.0,
+        "electron_affinity": 125.6,
+        "atomic_weight": 107.8682,
+        "domain": "chem.element",
+        "name": "Silver",
+        "atomic_mass": 107.8682,
+        "block": "d",
+        "group": 11,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ac",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ac",
+        "melting_point": 1050.0,
+        "period": 7,
+        "boiling_point": 3200.0,
+        "density": 10070.0,
+        "discovered_year": 1899.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,18,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 499.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "heat_capacity": 120.0,
+        "conductivity": 12.0,
+        "atomic_weight": 227.0,
+        "domain": "chem.element",
+        "electronegativity": 1.1,
+        "name": "Actinium",
+        "id": "EK:el:Ac",
+        "state": "solid",
+        "atomic_number": 89,
+        "atomic_mass": 227.0,
+        "block": "d",
+        "group": 3,
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cr",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cr",
+        "melting_point": 1907.0,
+        "abundance": 0.0015,
+        "electron_config": "2,8,13,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 166.0,
+        "conductivity": 94.0,
+        "electronegativity": 1.66,
+        "id": "EK:el:Cr",
+        "state": "solid",
+        "atomic_number": 24,
+        "bulk_modulus": 160.0,
+        "period": 4,
+        "boiling_point": 2671.0,
+        "density": 7190.0,
+        "discovered_year": 1797.0,
+        "ionization_energy": 652.9,
+        "ntype": "element",
+        "families": [
+          "blackMetals",
+          "transitionMetals"
+        ],
+        "hardness": 1120.0,
+        "heat_capacity": 448.0,
+        "electron_affinity": 64.3,
+        "atomic_weight": 51.9961,
+        "domain": "chem.element",
+        "name": "Chromium",
+        "atomic_mass": 51.9961,
+        "block": "d",
+        "group": 6,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ni",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ni",
+        "melting_point": 1455.0,
+        "abundance": 0.006,
+        "electron_config": "2,8,16,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 149.0,
+        "conductivity": 91.0,
+        "electronegativity": 1.91,
+        "id": "EK:el:Ni",
+        "state": "solid",
+        "atomic_number": 28,
+        "bulk_modulus": 180.0,
+        "period": 4,
+        "boiling_point": 2913.0,
+        "density": 8908.0,
+        "discovered_year": 1751.0,
+        "ionization_energy": 737.1,
+        "ntype": "element",
+        "families": [
+          "ferrousMetals",
+          "nonferrousHeavyMetals",
+          "transitionMetals"
+        ],
+        "hardness": 700.0,
+        "heat_capacity": 445.0,
+        "electron_affinity": 112.0,
+        "atomic_weight": 58.6934,
+        "domain": "chem.element",
+        "name": "Nickel",
+        "atomic_mass": 58.6934,
+        "block": "d",
+        "group": 10,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Pd",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Pd",
+        "melting_point": 1554.9,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,18",
+        "source": "ElementKG2.0",
+        "atomic_radius": 169.0,
+        "conductivity": 72.0,
+        "electronegativity": 2.2,
+        "id": "EK:el:Pd",
+        "state": "solid",
+        "atomic_number": 46,
+        "bulk_modulus": 180.0,
+        "period": 5,
+        "boiling_point": 2963.0,
+        "density": 12023.0,
+        "discovered_year": 1803.0,
+        "ionization_energy": 804.4,
+        "ntype": "element",
+        "families": [
+          "platinumGroupMetals",
+          "transitionMetals"
+        ],
+        "hardness": 37.3,
+        "heat_capacity": 240.0,
+        "electron_affinity": 53.7,
+        "atomic_weight": 106.42,
+        "domain": "chem.element",
+        "name": "Palladium",
+        "atomic_mass": 106.42,
+        "block": "d",
+        "group": 10,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:F",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "F",
+        "melting_point": -220.0,
+        "period": 2,
+        "boiling_point": -188.1,
+        "density": 1.696,
+        "discovered_year": 1886.0,
+        "abundance": 4e-05,
+        "electron_config": "2,7",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1681.0,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 42.0,
+        "heat_capacity": 824.0,
+        "conductivity": 0.0277,
+        "electron_affinity": 328.0,
+        "atomic_weight": 18.9984,
+        "domain": "chem.element",
+        "electronegativity": 3.98,
+        "name": "Fluorine",
+        "id": "EK:el:F",
+        "state": "gas",
+        "atomic_number": 9,
+        "atomic_mass": 18.9984,
+        "weight": 18.9984,
+        "ek_element_id": "E34",
+        "ek_atomic_raw": 9,
+        "ek_name_raw": "Fluorine",
+        "same_as_aliases": [
+          "EK2:el:F"
+        ],
+        "alias_sources": {
+          "EK2:el:F": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "block": "p",
+        "group": 17,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Fm",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Fm",
+        "melting_point": 1500.0,
+        "period": 7,
+        "discovered_year": 1952.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,30,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 627.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 257.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Fermium",
+        "id": "EK:el:Fm",
+        "state": "solid",
+        "atomic_number": 100,
+        "atomic_mass": 257.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cl",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cl",
+        "melting_point": -101.5,
+        "period": 3,
+        "boiling_point": -34.04,
+        "density": 3.214,
+        "discovered_year": 1774.0,
+        "abundance": 0.0001,
+        "electron_config": "2,8,7",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1251.2,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 79.0,
+        "heat_capacity": 478.2,
+        "conductivity": 0.0089,
+        "electron_affinity": 349.0,
+        "atomic_weight": 35.45,
+        "domain": "chem.element",
+        "electronegativity": 3.16,
+        "name": "Chlorine",
+        "id": "EK:el:Cl",
+        "state": "gas",
+        "atomic_number": 17,
+        "bulk_modulus": 1.1,
+        "atomic_mass": 35.45,
+        "explicit_or_inferred": "explicit",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T16:54:48.726342",
+        "weight": 35.45,
+        "ek_element_id": "E21",
+        "ek_atomic_raw": 17,
+        "ek_name_raw": "Chlorine",
+        "same_as_aliases": [
+          "EK2:el:Cl",
+          "IC:el:chlorine"
+        ],
+        "alias_sources": {
+          "IC:el:chlorine": "curated_seed",
+          "EK2:el:Cl": "ElementKG2.0"
+        },
+        "merged_node_count": 3,
+        "block": "p",
+        "group": 17,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Xe",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Xe",
+        "melting_point": -111.8,
+        "period": 5,
+        "boiling_point": -108.0,
+        "density": 5.9,
+        "discovered_year": 1898.0,
+        "abundance": 1e-06,
+        "electron_config": "2,8,18,18,8",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1170.4,
+        "ntype": "element",
+        "families": [
+          "nobleGasses"
+        ],
+        "atomic_radius": 108.0,
+        "heat_capacity": 158.32,
+        "conductivity": 0.00565,
+        "electron_affinity": 0.0,
+        "atomic_weight": 131.293,
+        "domain": "chem.element",
+        "electronegativity": 2.6,
+        "name": "Xenon",
+        "id": "EK:el:Xe",
+        "state": "gas",
+        "atomic_number": 54,
+        "atomic_mass": 131.293,
+        "block": "p",
+        "group": 18,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ir",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ir",
+        "melting_point": 2466.0,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,32,15,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 180.0,
+        "conductivity": 150.0,
+        "electronegativity": 2.2,
+        "id": "EK:el:Ir",
+        "state": "solid",
+        "atomic_number": 77,
+        "bulk_modulus": 320.0,
+        "period": 6,
+        "boiling_point": 4428.0,
+        "density": 22560.0,
+        "discovered_year": 1803.0,
+        "ionization_energy": 880.0,
+        "ntype": "element",
+        "families": [
+          "platinumGroupMetals",
+          "transitionMetals"
+        ],
+        "hardness": 1670.0,
+        "heat_capacity": 131.0,
+        "electron_affinity": 151.0,
+        "atomic_weight": 192.217,
+        "domain": "chem.element",
+        "name": "Iridium",
+        "atomic_mass": 192.217,
+        "block": "d",
+        "group": 9,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Al",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Al",
+        "melting_point": 660.32,
+        "abundance": 0.005,
+        "electron_config": "2,8,3",
+        "source": "ElementKG2.0",
+        "atomic_radius": 118.0,
+        "conductivity": 235.0,
+        "electronegativity": 1.61,
+        "id": "EK:el:Al",
+        "state": "solid",
+        "atomic_number": 13,
+        "bulk_modulus": 76.0,
+        "period": 3,
+        "boiling_point": 2519.0,
+        "density": 2700.0,
+        "discovered_year": 1825.0,
+        "ionization_energy": 577.5,
+        "ntype": "element",
+        "families": [
+          "nonferrousLightMetals",
+          "postTransitionMetals"
+        ],
+        "hardness": 245.0,
+        "heat_capacity": 904.0,
+        "electron_affinity": 42.5,
+        "atomic_weight": 26.9815385,
+        "domain": "chem.element",
+        "name": "Aluminium",
+        "atomic_mass": 26.9815385,
+        "weight": 26.9815385,
+        "ek_element_id": "E3",
+        "ek_atomic_raw": 13,
+        "ek_name_raw": "Aluminium",
+        "same_as_aliases": [
+          "EK2:el:Al"
+        ],
+        "alias_sources": {
+          "EK2:el:Al": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "block": "p",
+        "group": 13,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ga",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ga",
+        "melting_point": 29.76,
+        "period": 4,
+        "boiling_point": 2204.0,
+        "density": 5904.0,
+        "discovered_year": 1875.0,
+        "abundance": 1e-06,
+        "electron_config": "2,8,18,3",
+        "source": "ElementKG2.0",
+        "ionization_energy": 578.8,
+        "ntype": "element",
+        "families": [
+          "postTransitionMetals",
+          "rareScatteredMetals"
+        ],
+        "hardness": 60.0,
+        "atomic_radius": 136.0,
+        "heat_capacity": 371.0,
+        "conductivity": 29.0,
+        "electron_affinity": 28.9,
+        "atomic_weight": 69.723,
+        "domain": "chem.element",
+        "electronegativity": 1.81,
+        "name": "Gallium",
+        "id": "EK:el:Ga",
+        "state": "solid",
+        "atomic_number": 31,
+        "atomic_mass": 69.723,
+        "block": "p",
+        "group": 13,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:K",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "K",
+        "melting_point": 63.38,
+        "abundance": 0.0003,
+        "electron_config": "2,8,8,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 243.0,
+        "conductivity": 100.0,
+        "electronegativity": 0.82,
+        "id": "EK:el:K",
+        "state": "solid",
+        "atomic_number": 19,
+        "bulk_modulus": 3.1,
+        "period": 4,
+        "boiling_point": 758.9,
+        "density": 856.0,
+        "discovered_year": 1807.0,
+        "ionization_energy": 418.8,
+        "ntype": "element",
+        "families": [
+          "alkaliMetals",
+          "nonferrousLightMetals"
+        ],
+        "hardness": 0.363,
+        "heat_capacity": 757.0,
+        "electron_affinity": 48.4,
+        "atomic_weight": 39.0983,
+        "domain": "chem.element",
+        "name": "Potassium",
+        "atomic_mass": 39.0983,
+        "block": "s",
+        "group": 1,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ca",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ca",
+        "melting_point": 841.9,
+        "abundance": 0.007,
+        "electron_config": "2,8,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 194.0,
+        "conductivity": 200.0,
+        "electronegativity": 1.0,
+        "id": "EK:el:Ca",
+        "state": "solid",
+        "atomic_number": 20,
+        "bulk_modulus": 17.0,
+        "period": 4,
+        "boiling_point": 1484.0,
+        "density": 1550.0,
+        "discovered_year": 1808.0,
+        "ionization_energy": 589.8,
+        "ntype": "element",
+        "families": [
+          "alkalineEarthMetals",
+          "nonferrousLightMetals"
+        ],
+        "hardness": 167.0,
+        "heat_capacity": 631.0,
+        "electron_affinity": 2.37,
+        "atomic_weight": 40.078,
+        "domain": "chem.element",
+        "name": "Calcium",
+        "atomic_mass": 40.078,
+        "block": "s",
+        "group": 2,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:V",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "V",
+        "melting_point": 1910.0,
+        "abundance": 0.0001,
+        "electron_config": "2,8,11,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 171.0,
+        "conductivity": 31.0,
+        "electronegativity": 1.63,
+        "id": "EK:el:V",
+        "state": "solid",
+        "atomic_number": 23,
+        "bulk_modulus": 160.0,
+        "period": 4,
+        "boiling_point": 3407.0,
+        "density": 6110.0,
+        "discovered_year": 1801.0,
+        "ionization_energy": 650.9,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals",
+          "transitionMetals"
+        ],
+        "hardness": 628.0,
+        "heat_capacity": 489.0,
+        "electron_affinity": 50.6,
+        "atomic_weight": 50.9415,
+        "domain": "chem.element",
+        "name": "Vanadium",
+        "atomic_mass": 50.9415,
+        "block": "d",
+        "group": 5,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ho",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ho",
+        "melting_point": 1474.0,
+        "abundance": 5e-08,
+        "electron_config": "2,8,18,29,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 226.0,
+        "conductivity": 16.0,
+        "electronegativity": 1.23,
+        "id": "EK:el:Ho",
+        "state": "solid",
+        "atomic_number": 67,
+        "bulk_modulus": 40.0,
+        "period": 6,
+        "boiling_point": 2700.0,
+        "density": 8795.0,
+        "discovered_year": 1878.0,
+        "ionization_energy": 581.0,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "hardness": 746.0,
+        "heat_capacity": 165.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 164.93033,
+        "domain": "chem.element",
+        "name": "Holmium",
+        "atomic_mass": 164.93033,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Pm",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Pm",
+        "melting_point": 1100.0,
+        "period": 6,
+        "boiling_point": 3000.0,
+        "density": 7264.0,
+        "discovered_year": 1945.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,23,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 540.0,
+        "ntype": "element",
+        "families": [
+          "lanthanides",
+          "lightRareEarthMetals"
+        ],
+        "atomic_radius": 205.0,
+        "conductivity": 15.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 145.0,
+        "domain": "chem.element",
+        "name": "Promethium",
+        "id": "EK:el:Pm",
+        "state": "solid",
+        "atomic_number": 61,
+        "bulk_modulus": 33.0,
+        "atomic_mass": 145.0,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ne",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ne",
+        "melting_point": -248.6,
+        "period": 2,
+        "boiling_point": -246.1,
+        "density": 0.9,
+        "discovered_year": 1898.0,
+        "abundance": 0.13,
+        "electron_config": "2,8",
+        "source": "ElementKG2.0",
+        "ionization_energy": 2080.7,
+        "ntype": "element",
+        "families": [
+          "nobleGasses"
+        ],
+        "atomic_radius": 38.0,
+        "heat_capacity": 1030.0,
+        "conductivity": 0.0491,
+        "electron_affinity": 0.0,
+        "atomic_weight": 20.1797,
+        "domain": "chem.element",
+        "name": "Neon",
+        "id": "EK:el:Ne",
+        "state": "gas",
+        "atomic_number": 10,
+        "atomic_mass": 20.1797,
+        "block": "p",
+        "group": 18,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cu",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cu",
+        "melting_point": 1084.62,
+        "abundance": 6e-06,
+        "electron_config": "2,8,18,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 145.0,
+        "conductivity": 400.0,
+        "electronegativity": 1.9,
+        "id": "EK:el:Cu",
+        "state": "solid",
+        "atomic_number": 29,
+        "bulk_modulus": 140.0,
+        "period": 4,
+        "boiling_point": 2562.0,
+        "density": 8960.0,
+        "discovered_year": "8000BCE",
+        "ionization_energy": 745.5,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals",
+          "transitionMetals"
+        ],
+        "hardness": 874.0,
+        "heat_capacity": 384.4,
+        "electron_affinity": 118.4,
+        "atomic_weight": 63.546,
+        "domain": "chem.element",
+        "name": "Copper",
+        "atomic_mass": 63.546,
+        "block": "d",
+        "group": 11,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ra",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ra",
+        "melting_point": 700.0,
+        "period": 7,
+        "boiling_point": 1737.0,
+        "density": 5000.0,
+        "discovered_year": 1898.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,18,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 509.3,
+        "ntype": "element",
+        "families": [
+          "alkalineEarthMetals",
+          "rareRadioactiveMetals"
+        ],
+        "heat_capacity": 92.0,
+        "conductivity": 19.0,
+        "atomic_weight": 226.0,
+        "domain": "chem.element",
+        "electronegativity": 0.9,
+        "name": "Radium",
+        "id": "EK:el:Ra",
+        "state": "solid",
+        "atomic_number": 88,
+        "atomic_mass": 226.0,
+        "block": "s",
+        "group": 2,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ta",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ta",
+        "melting_point": 3017.0,
+        "abundance": 8e-09,
+        "electron_config": "2,8,18,32,11,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 200.0,
+        "conductivity": 57.0,
+        "electronegativity": 1.5,
+        "id": "EK:el:Ta",
+        "state": "solid",
+        "atomic_number": 73,
+        "bulk_modulus": 200.0,
+        "period": 6,
+        "boiling_point": 5458.0,
+        "density": 16650.0,
+        "discovered_year": 1802.0,
+        "ionization_energy": 761.0,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals",
+          "transitionMetals"
+        ],
+        "hardness": 800.0,
+        "heat_capacity": 140.0,
+        "electron_affinity": 31.0,
+        "atomic_weight": 180.94788,
+        "domain": "chem.element",
+        "name": "Tantalum",
+        "atomic_mass": 180.94788,
+        "block": "d",
+        "group": 5,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ti",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ti",
+        "melting_point": 1668.0,
+        "abundance": 0.0003,
+        "electron_config": "2,8,10,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 176.0,
+        "conductivity": 22.0,
+        "electronegativity": 1.54,
+        "id": "EK:el:Ti",
+        "state": "solid",
+        "atomic_number": 22,
+        "bulk_modulus": 110.0,
+        "period": 4,
+        "boiling_point": 3287.0,
+        "density": 4507.0,
+        "discovered_year": 1791.0,
+        "ionization_energy": 658.8,
+        "ntype": "element",
+        "families": [
+          "rareLightMetal",
+          "transitionMetals"
+        ],
+        "hardness": 716.0,
+        "heat_capacity": 520.0,
+        "electron_affinity": 7.6,
+        "atomic_weight": 47.867,
+        "domain": "chem.element",
+        "name": "Titanium",
+        "atomic_mass": 47.867,
+        "block": "d",
+        "group": 4,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Co",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Co",
+        "melting_point": 1495.0,
+        "abundance": 0.0003,
+        "electron_config": "2,8,15,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 152.0,
+        "conductivity": 100.0,
+        "electronegativity": 1.88,
+        "id": "EK:el:Co",
+        "state": "solid",
+        "atomic_number": 27,
+        "bulk_modulus": 180.0,
+        "period": 4,
+        "boiling_point": 2900.0,
+        "density": 8900.0,
+        "discovered_year": 1735.0,
+        "ionization_energy": 760.4,
+        "ntype": "element",
+        "families": [
+          "ferrousMetals",
+          "nonferrousHeavyMetals",
+          "transitionMetals"
+        ],
+        "hardness": 700.0,
+        "heat_capacity": 421.0,
+        "electron_affinity": 63.7,
+        "atomic_weight": 58.933194,
+        "domain": "chem.element",
+        "name": "Cobalt",
+        "atomic_mass": 58.933194,
+        "block": "d",
+        "group": 9,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Rh",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Rh",
+        "melting_point": 1964.0,
+        "abundance": 6e-08,
+        "electron_config": "2,8,18,16,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 173.0,
+        "conductivity": 150.0,
+        "electronegativity": 2.28,
+        "id": "EK:el:Rh",
+        "state": "solid",
+        "atomic_number": 45,
+        "bulk_modulus": 380.0,
+        "period": 5,
+        "boiling_point": 3695.0,
+        "density": 12450.0,
+        "discovered_year": 1803.0,
+        "ionization_energy": 719.7,
+        "ntype": "element",
+        "families": [
+          "platinumGroupMetals",
+          "transitionMetals"
+        ],
+        "hardness": 1100.0,
+        "heat_capacity": 240.0,
+        "electron_affinity": 109.7,
+        "atomic_weight": 102.9055,
+        "domain": "chem.element",
+        "name": "Rhodium",
+        "atomic_mass": 102.9055,
+        "block": "d",
+        "group": 9,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Lu",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Lu",
+        "melting_point": 1663.0,
+        "abundance": 1e-08,
+        "electron_config": "2,8,18,32,9,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 217.0,
+        "conductivity": 16.0,
+        "electronegativity": 1.27,
+        "id": "EK:el:Lu",
+        "state": "solid",
+        "atomic_number": 71,
+        "bulk_modulus": 48.0,
+        "period": 6,
+        "boiling_point": 3402.0,
+        "density": 9841.0,
+        "discovered_year": 1907.0,
+        "ionization_energy": 523.5,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "hardness": 893.0,
+        "heat_capacity": 154.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 174.9668,
+        "domain": "chem.element",
+        "name": "Lutetium",
+        "atomic_mass": 174.9668,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Dy",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Dy",
+        "melting_point": 1412.0,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,28,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 228.0,
+        "conductivity": 11.0,
+        "electronegativity": 1.22,
+        "id": "EK:el:Dy",
+        "state": "solid",
+        "atomic_number": 66,
+        "bulk_modulus": 41.0,
+        "period": 6,
+        "boiling_point": 2567.0,
+        "density": 8551.0,
+        "discovered_year": 1886.0,
+        "ionization_energy": 573.0,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "hardness": 500.0,
+        "heat_capacity": 167.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 162.5,
+        "domain": "chem.element",
+        "name": "Dysprosium",
+        "atomic_mass": 162.5,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:At",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "At",
+        "melting_point": 302.0,
+        "period": 6,
+        "boiling_point": 350.0,
+        "discovered_year": 1940.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,18,7",
+        "source": "ElementKG2.0",
+        "ionization_energy": 890.0,
+        "ntype": "element",
+        "families": [
+          "metalloids"
+        ],
+        "atomic_radius": 127.0,
+        "conductivity": 2.0,
+        "electron_affinity": 270.1,
+        "atomic_weight": 210.0,
+        "domain": "chem.element",
+        "electronegativity": 2.2,
+        "name": "Astatine",
+        "id": "EK:el:At",
+        "state": "solid",
+        "atomic_number": 85,
+        "atomic_mass": 210.0,
+        "block": "p",
+        "group": 17,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Md",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Md",
+        "melting_point": 830.0,
+        "period": 7,
+        "discovered_year": 1955.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,31,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 635.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 258.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Mendelevium",
+        "id": "EK:el:Md",
+        "state": "solid",
+        "atomic_number": 101,
+        "atomic_mass": 258.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Zn",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Zn",
+        "melting_point": 419.53,
+        "abundance": 3e-05,
+        "electron_config": "2,8,18,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 142.0,
+        "conductivity": 120.0,
+        "electronegativity": 1.65,
+        "id": "EK:el:Zn",
+        "state": "solid",
+        "atomic_number": 30,
+        "bulk_modulus": 70.0,
+        "period": 4,
+        "boiling_point": 906.9,
+        "density": 7140.0,
+        "discovered_year": 1500.0,
+        "ionization_energy": 906.4,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals",
+          "transitionMetals"
+        ],
+        "hardness": 412.0,
+        "heat_capacity": 388.0,
+        "electron_affinity": 0.0,
+        "atomic_weight": 65.38,
+        "domain": "chem.element",
+        "name": "Zinc",
+        "atomic_mass": 65.38,
+        "block": "d",
+        "group": 12,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Te",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Te",
+        "melting_point": 449.51,
+        "abundance": 9e-07,
+        "electron_config": "2,8,18,18,6",
+        "source": "ElementKG2.0",
+        "atomic_radius": 123.0,
+        "conductivity": 3.0,
+        "electronegativity": 2.1,
+        "id": "EK:el:Te",
+        "state": "solid",
+        "atomic_number": 52,
+        "bulk_modulus": 65.0,
+        "period": 5,
+        "boiling_point": 987.9,
+        "density": 6240.0,
+        "discovered_year": 1783.0,
+        "ionization_energy": 869.3,
+        "ntype": "element",
+        "families": [
+          "metalloids"
+        ],
+        "hardness": 180.0,
+        "heat_capacity": 201.0,
+        "electron_affinity": 190.2,
+        "atomic_weight": 127.6,
+        "domain": "chem.element",
+        "name": "Tellurium",
+        "atomic_mass": 127.6,
+        "block": "p",
+        "group": 16,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:In",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "In",
+        "melting_point": 156.6,
+        "period": 5,
+        "boiling_point": 2072.0,
+        "density": 7310.0,
+        "discovered_year": 1863.0,
+        "abundance": 3e-08,
+        "electron_config": "2,8,18,18,3",
+        "source": "ElementKG2.0",
+        "ionization_energy": 558.3,
+        "ntype": "element",
+        "families": [
+          "postTransitionMetals",
+          "rareScatteredMetals"
+        ],
+        "hardness": 8.83,
+        "atomic_radius": 156.0,
+        "heat_capacity": 233.0,
+        "conductivity": 82.0,
+        "electron_affinity": 28.9,
+        "atomic_weight": 114.818,
+        "domain": "chem.element",
+        "electronegativity": 1.78,
+        "name": "Indium",
+        "id": "EK:el:In",
+        "state": "solid",
+        "atomic_number": 49,
+        "atomic_mass": 114.818,
+        "block": "p",
+        "group": 13,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Se",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Se",
+        "melting_point": 221.0,
+        "abundance": 3e-06,
+        "electron_config": "2,8,18,6",
+        "source": "ElementKG2.0",
+        "atomic_radius": 103.0,
+        "conductivity": 0.52,
+        "electronegativity": 2.55,
+        "id": "EK:el:Se",
+        "state": "solid",
+        "atomic_number": 34,
+        "bulk_modulus": 8.3,
+        "period": 4,
+        "boiling_point": 685.0,
+        "density": 4819.0,
+        "discovered_year": 1817.0,
+        "ionization_energy": 941.0,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "hardness": 736.0,
+        "heat_capacity": 321.2,
+        "electron_affinity": 195.0,
+        "atomic_weight": 78.971,
+        "domain": "chem.element",
+        "name": "Selenium",
+        "atomic_mass": 78.971,
+        "block": "p",
+        "group": 16,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Kr",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Kr",
+        "melting_point": -157.36,
+        "period": 4,
+        "boiling_point": -153.22,
+        "density": 3.75,
+        "discovered_year": 1898.0,
+        "abundance": 4e-06,
+        "electron_config": "2,8,18,8",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1350.8,
+        "ntype": "element",
+        "families": [
+          "nobleGasses"
+        ],
+        "atomic_radius": 88.0,
+        "heat_capacity": 248.05,
+        "conductivity": 0.00943,
+        "electron_affinity": 0.0,
+        "atomic_weight": 83.798,
+        "domain": "chem.element",
+        "electronegativity": 3.0,
+        "name": "Krypton",
+        "id": "EK:el:Kr",
+        "state": "gas",
+        "atomic_number": 36,
+        "atomic_mass": 83.798,
+        "block": "p",
+        "group": 18,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Pb",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Pb",
+        "melting_point": 327.46,
+        "abundance": 1e-06,
+        "electron_config": "2,8,18,32,18,4",
+        "source": "ElementKG2.0",
+        "atomic_radius": 154.0,
+        "conductivity": 35.0,
+        "electronegativity": 2.33,
+        "id": "EK:el:Pb",
+        "state": "solid",
+        "atomic_number": 82,
+        "bulk_modulus": 46.0,
+        "period": 6,
+        "boiling_point": 1749.0,
+        "density": 11340.0,
+        "discovered_year": "4000BCE",
+        "ionization_energy": 715.6,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals",
+          "postTransitionMetals"
+        ],
+        "hardness": 38.3,
+        "heat_capacity": 127.0,
+        "electron_affinity": 35.1,
+        "atomic_weight": 207.2,
+        "domain": "chem.element",
+        "name": "Lead",
+        "atomic_mass": 207.2,
+        "block": "p",
+        "group": 14,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Po",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Po",
+        "melting_point": 255.0,
+        "period": 6,
+        "boiling_point": 961.9,
+        "density": 9196.0,
+        "discovered_year": 1898.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,18,6",
+        "source": "ElementKG2.0",
+        "ionization_energy": 812.1,
+        "ntype": "element",
+        "families": [
+          "postTransitionMetals",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_radius": 135.0,
+        "electron_affinity": 183.3,
+        "atomic_weight": 209.0,
+        "domain": "chem.element",
+        "electronegativity": 2.0,
+        "name": "Polonium",
+        "id": "EK:el:Po",
+        "state": "solid",
+        "atomic_number": 84,
+        "atomic_mass": 209.0,
+        "block": "p",
+        "group": 16,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:No",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "No",
+        "melting_point": 830.0,
+        "period": 7,
+        "discovered_year": 1958.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,32,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 642.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 259.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Nobelium",
+        "id": "EK:el:No",
+        "state": "solid",
+        "atomic_number": 102,
+        "atomic_mass": 259.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ru",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ru",
+        "melting_point": 2334.0,
+        "abundance": 4e-07,
+        "electron_config": "2,8,18,15,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 178.0,
+        "conductivity": 120.0,
+        "electronegativity": 2.2,
+        "id": "EK:el:Ru",
+        "state": "solid",
+        "atomic_number": 44,
+        "bulk_modulus": 220.0,
+        "period": 5,
+        "boiling_point": 4150.0,
+        "density": 12370.0,
+        "discovered_year": 1844.0,
+        "ionization_energy": 710.2,
+        "ntype": "element",
+        "families": [
+          "nobleMetals",
+          "transitionMetals"
+        ],
+        "hardness": 2160.0,
+        "heat_capacity": 238.0,
+        "electron_affinity": 101.3,
+        "atomic_weight": 101.07,
+        "domain": "chem.element",
+        "name": "Ruthenium",
+        "atomic_mass": 101.07,
+        "block": "d",
+        "group": 8,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cf",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cf",
+        "melting_point": 899.9,
+        "period": 7,
+        "density": 15100.0,
+        "discovered_year": 1950.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,28,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 608.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 251.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Californium",
+        "id": "EK:el:Cf",
+        "state": "solid",
+        "atomic_number": 98,
+        "atomic_mass": 251.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Rb",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Rb",
+        "melting_point": 39.31,
+        "abundance": 1e-06,
+        "electron_config": "2,8,18,8,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 265.0,
+        "conductivity": 58.0,
+        "electronegativity": 0.82,
+        "id": "EK:el:Rb",
+        "state": "solid",
+        "atomic_number": 37,
+        "bulk_modulus": 2.5,
+        "period": 5,
+        "boiling_point": 688.0,
+        "density": 1532.0,
+        "discovered_year": 1861.0,
+        "ionization_energy": 403.0,
+        "ntype": "element",
+        "families": [
+          "alkaliMetals",
+          "rareLightMetal"
+        ],
+        "hardness": 0.216,
+        "heat_capacity": 364.0,
+        "electron_affinity": 46.9,
+        "atomic_weight": 85.4678,
+        "domain": "chem.element",
+        "name": "Rubidium",
+        "atomic_mass": 85.4678,
+        "block": "s",
+        "group": 1,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cm",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cm",
+        "melting_point": 1345.0,
+        "period": 7,
+        "boiling_point": 3110.0,
+        "density": 13510.0,
+        "discovered_year": 1944.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,25,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 581.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 247.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Curium",
+        "id": "EK:el:Cm",
+        "state": "solid",
+        "atomic_number": 96,
+        "atomic_mass": 247.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Gd",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Gd",
+        "melting_point": 1313.0,
+        "period": 6,
+        "boiling_point": 3250.0,
+        "density": 7901.0,
+        "discovered_year": 1880.0,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,25,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 593.4,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "atomic_radius": 233.0,
+        "heat_capacity": 240.0,
+        "conductivity": 11.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 157.25,
+        "domain": "chem.element",
+        "electronegativity": 1.2,
+        "name": "Gadolinium",
+        "id": "EK:el:Gd",
+        "state": "solid",
+        "atomic_number": 64,
+        "bulk_modulus": 38.0,
+        "atomic_mass": 157.25,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Eu",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Eu",
+        "melting_point": 821.9,
+        "period": 6,
+        "boiling_point": 1500.0,
+        "density": 5244.0,
+        "discovered_year": 1901.0,
+        "abundance": 5e-08,
+        "electron_config": "2,8,18,25,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 547.1,
+        "ntype": "element",
+        "families": [
+          "lanthanides",
+          "lightRareEarthMetals"
+        ],
+        "atomic_radius": 231.0,
+        "heat_capacity": 182.0,
+        "conductivity": 14.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 151.964,
+        "domain": "chem.element",
+        "name": "Europium",
+        "id": "EK:el:Eu",
+        "state": "solid",
+        "atomic_number": 63,
+        "bulk_modulus": 8.3,
+        "atomic_mass": 151.964,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Mc",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Mc",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Mc",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 290.0,
+        "atomic_number": 115,
+        "name": "Moscovium",
+        "atomic_mass": 290.0,
+        "block": "p",
+        "group": 15,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:H",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "H",
+        "melting_point": -259.1,
+        "boiling_point": -252.9,
+        "density": 0.0899,
+        "discovered_year": 1766.0,
+        "abundance": 75.0,
+        "electron_config": 1.0,
+        "source": "ElementKG2.0",
+        "ionization_energy": 1312.0,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 53.0,
+        "heat_capacity": 14300.0,
+        "conductivity": 0.1805,
+        "electron_affinity": 72.8,
+        "atomic_weight": 1.008,
+        "domain": "chem.element",
+        "electronegativity": 2.2,
+        "name": "Hydrogen",
+        "id": "EK:el:H",
+        "state": "gas",
+        "atomic_number": 1,
+        "atomic_mass": 1.008,
+        "explicit_or_inferred": "explicit",
+        "period": 1,
+        "confidence": 1.0,
+        "created_at": "2026-09-29T15:23:25.250577",
+        "group": 1,
+        "weight": 1.008,
+        "ek_element_id": "E42",
+        "ek_atomic_raw": 1,
+        "ek_name_raw": "Hydrogen",
+        "same_as_aliases": [
+          "EK2:el:H",
+          "EL:h"
+        ],
+        "alias_sources": {
+          "EL:h": "curated_seed/energy_combustion",
+          "EK2:el:H": "ElementKG2.0"
+        },
+        "merged_node_count": 3,
+        "block": "s",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Pr",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Pr",
+        "melting_point": 930.9,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,21,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 247.0,
+        "conductivity": 13.0,
+        "electronegativity": 1.13,
+        "id": "EK:el:Pr",
+        "state": "solid",
+        "atomic_number": 59,
+        "bulk_modulus": 29.0,
+        "period": 6,
+        "boiling_point": 3290.0,
+        "density": 6640.0,
+        "discovered_year": 1885.0,
+        "ionization_energy": 527.0,
+        "ntype": "element",
+        "families": [
+          "lanthanides",
+          "lightRareEarthMetals"
+        ],
+        "hardness": 481.0,
+        "heat_capacity": 193.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 140.90766,
+        "domain": "chem.element",
+        "name": "Praseodymium",
+        "atomic_mass": 140.90766,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:O",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "O",
+        "melting_point": -218.0,
+        "period": 2,
+        "boiling_point": -183.0,
+        "density": 1.429,
+        "discovered_year": 1774.0,
+        "abundance": 1.0,
+        "electron_config": "2,6",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1313.9,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 48.0,
+        "heat_capacity": 919.0,
+        "conductivity": 0.02658,
+        "electron_affinity": 141.0,
+        "atomic_weight": 15.999,
+        "domain": "chem.element",
+        "electronegativity": 3.44,
+        "name": "Oxygen",
+        "id": "EK:el:O",
+        "state": "Gas",
+        "atomic_number": 8,
+        "atomic_mass": 15.999,
+        "explicit_or_inferred": "explicit",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T15:23:25.250577",
+        "group": 16,
+        "weight": 15.999,
+        "ek_element_id": "E73",
+        "ek_atomic_raw": 16,
+        "ek_name_raw": "Oxygen",
+        "same_as_aliases": [
+          "EK2:el:O",
+          "EL:o"
+        ],
+        "alias_sources": {
+          "EL:o": "curated_seed/energy_combustion",
+          "EK2:el:O": "ElementKG2.0"
+        },
+        "merged_node_count": 3,
+        "block": "p",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Na",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Na",
+        "melting_point": 97.72,
+        "abundance": 0.0002,
+        "electron_config": "2,8,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 190.0,
+        "conductivity": 140.0,
+        "electronegativity": 0.93,
+        "id": "EK:el:Na",
+        "state": "solid",
+        "atomic_number": 11,
+        "bulk_modulus": 6.3,
+        "period": 3,
+        "boiling_point": 882.9,
+        "density": 968.0,
+        "discovered_year": 1807.0,
+        "ionization_energy": 495.8,
+        "ntype": "element",
+        "families": [
+          "alkaliMetals",
+          "nonferrousLightMetals"
+        ],
+        "hardness": 0.69,
+        "heat_capacity": 1230.0,
+        "electron_affinity": 52.8,
+        "atomic_weight": 22.98976928,
+        "domain": "chem.element",
+        "name": "Sodium",
+        "atomic_mass": 22.98976928,
+        "explicit_or_inferred": "explicit",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T16:54:48.726342",
+        "same_as_aliases": [
+          "IC:el:sodium"
+        ],
+        "alias_sources": {
+          "IC:el:sodium": "curated_seed"
+        },
+        "merged_node_count": 2,
+        "block": "s",
+        "group": 1,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Hf",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Hf",
+        "melting_point": 2233.0,
+        "abundance": 7e-08,
+        "electron_config": "2,8,18,32,10,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 208.0,
+        "conductivity": 23.0,
+        "electronegativity": 1.3,
+        "id": "EK:el:Hf",
+        "state": "solid",
+        "atomic_number": 72,
+        "bulk_modulus": 110.0,
+        "period": 6,
+        "boiling_point": 4603.0,
+        "density": 13310.0,
+        "discovered_year": 1923.0,
+        "ionization_energy": 658.5,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals",
+          "transitionMetals"
+        ],
+        "hardness": 1700.0,
+        "heat_capacity": 144.0,
+        "electron_affinity": 0.0,
+        "atomic_weight": 178.486,
+        "domain": "chem.element",
+        "name": "Hafnium",
+        "atomic_mass": 178.486,
+        "block": "d",
+        "group": 4,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Tl",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Tl",
+        "melting_point": 304.0,
+        "abundance": 5e-08,
+        "electron_config": "2,8,18,32,18,3",
+        "source": "ElementKG2.0",
+        "atomic_radius": 156.0,
+        "conductivity": 46.0,
+        "electronegativity": 1.62,
+        "id": "EK:el:Tl",
+        "state": "solid",
+        "atomic_number": 81,
+        "bulk_modulus": 43.0,
+        "period": 6,
+        "boiling_point": 1473.0,
+        "density": 11850.0,
+        "discovered_year": 1861.0,
+        "ionization_energy": 589.4,
+        "ntype": "element",
+        "families": [
+          "postTransitionMetals",
+          "rareScatteredMetals"
+        ],
+        "hardness": 26.4,
+        "heat_capacity": 129.0,
+        "electron_affinity": 19.2,
+        "atomic_weight": 204.38,
+        "domain": "chem.element",
+        "name": "Thallium",
+        "atomic_mass": 204.38,
+        "block": "p",
+        "group": 13,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Nb",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Nb",
+        "melting_point": 2477.0,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,12,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 198.0,
+        "conductivity": 54.0,
+        "electronegativity": 1.6,
+        "id": "EK:el:Nb",
+        "state": "solid",
+        "atomic_number": 41,
+        "bulk_modulus": 170.0,
+        "period": 5,
+        "boiling_point": 4744.0,
+        "density": 8570.0,
+        "discovered_year": 1801.0,
+        "ionization_energy": 652.1,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals",
+          "transitionMetals"
+        ],
+        "hardness": 736.0,
+        "heat_capacity": 265.0,
+        "electron_affinity": 86.1,
+        "atomic_weight": 92.90637,
+        "domain": "chem.element",
+        "name": "Niobium",
+        "atomic_mass": 92.90637,
+        "block": "d",
+        "group": 5,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Es",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Es",
+        "melting_point": 859.9,
+        "period": 7,
+        "discovered_year": 1952.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,29,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 619.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 252.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Einsteinium",
+        "id": "EK:el:Es",
+        "state": "solid",
+        "atomic_number": 99,
+        "atomic_mass": 252.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Br",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Br",
+        "melting_point": -7.35,
+        "period": 4,
+        "boiling_point": 58.9,
+        "density": 3120.0,
+        "discovered_year": 1826.0,
+        "abundance": 7e-07,
+        "electron_config": "2,8,18,7",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1139.9,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 94.0,
+        "heat_capacity": 947.3,
+        "conductivity": 0.12,
+        "electron_affinity": 324.6,
+        "atomic_weight": 79.904,
+        "domain": "chem.element",
+        "electronegativity": 2.96,
+        "name": "Bromine",
+        "id": "EK:el:Br",
+        "state": "liquid",
+        "atomic_number": 35,
+        "bulk_modulus": 1.9,
+        "atomic_mass": 79.904,
+        "weight": 79.904,
+        "ek_element_id": "E15",
+        "ek_atomic_raw": 35,
+        "ek_name_raw": "Bromine",
+        "same_as_aliases": [
+          "EK2:el:Br"
+        ],
+        "alias_sources": {
+          "EK2:el:Br": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "block": "p",
+        "group": 17,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ce",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ce",
+        "melting_point": 797.9,
+        "period": 6,
+        "boiling_point": 3360.0,
+        "density": 6689.0,
+        "discovered_year": 1803.0,
+        "abundance": 1e-06,
+        "electron_config": "2,8,18,19,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 534.4,
+        "ntype": "element",
+        "families": [
+          "lanthanides",
+          "lightRareEarthMetals"
+        ],
+        "hardness": 412.0,
+        "heat_capacity": 192.0,
+        "conductivity": 11.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 140.116,
+        "domain": "chem.element",
+        "electronegativity": 1.12,
+        "name": "Cerium",
+        "id": "EK:el:Ce",
+        "state": "solid",
+        "atomic_number": 58,
+        "bulk_modulus": 22.0,
+        "atomic_mass": 140.116,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Zr",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Zr",
+        "melting_point": 1855.0,
+        "period": 5,
+        "boiling_point": 4409.0,
+        "density": 6511.0,
+        "discovered_year": 1789.0,
+        "abundance": 5e-06,
+        "electron_config": "2,8,18,10,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 640.1,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals"
+        ],
+        "hardness": 650.0,
+        "atomic_radius": 206.0,
+        "heat_capacity": 278.0,
+        "conductivity": 23.0,
+        "electron_affinity": 41.1,
+        "atomic_weight": 91.224,
+        "domain": "chem.element",
+        "electronegativity": 1.33,
+        "name": "Zirconium",
+        "id": "EK:el:Zr",
+        "state": "solid",
+        "atomic_number": 40,
+        "atomic_mass": 91.224,
+        "block": "d",
+        "group": 4,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Bi",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Bi",
+        "melting_point": 271.3,
+        "abundance": 7e-08,
+        "electron_config": "2,8,18,32,18,5",
+        "source": "ElementKG2.0",
+        "atomic_radius": 143.0,
+        "conductivity": 8.0,
+        "electronegativity": 2.02,
+        "id": "EK:el:Bi",
+        "state": "solid",
+        "atomic_number": 83,
+        "bulk_modulus": 31.0,
+        "period": 6,
+        "boiling_point": 1564.0,
+        "density": 9780.0,
+        "discovered_year": 1400.0,
+        "ionization_energy": 703.0,
+        "ntype": "element",
+        "families": [
+          "nonferrousHeavyMetals",
+          "postTransitionMetals"
+        ],
+        "hardness": 94.2,
+        "heat_capacity": 122.0,
+        "electron_affinity": 91.2,
+        "atomic_weight": 208.9804,
+        "domain": "chem.element",
+        "name": "Bismuth",
+        "atomic_mass": 208.9804,
+        "block": "p",
+        "group": 15,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Mn",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Mn",
+        "melting_point": 1246.0,
+        "abundance": 0.0008,
+        "electron_config": "2,8,13,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 161.0,
+        "conductivity": 7.8,
+        "electronegativity": 1.55,
+        "id": "EK:el:Mn",
+        "state": "solid",
+        "atomic_number": 25,
+        "bulk_modulus": 120.0,
+        "period": 4,
+        "boiling_point": 2061.0,
+        "density": 7470.0,
+        "discovered_year": 1774.0,
+        "ionization_energy": 717.3,
+        "ntype": "element",
+        "families": [
+          "blackMetals",
+          "transitionMetals"
+        ],
+        "hardness": 196.0,
+        "heat_capacity": 479.0,
+        "electron_affinity": 0.0,
+        "atomic_weight": 54.938044,
+        "domain": "chem.element",
+        "name": "Manganese",
+        "atomic_mass": 54.938044,
+        "block": "d",
+        "group": 7,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:P",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "P",
+        "melting_point": 44.15,
+        "period": 3,
+        "boiling_point": 280.5,
+        "density": 1823.0,
+        "discovered_year": 1669.0,
+        "abundance": 0.0007,
+        "electron_config": "2,8,5",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1011.8,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 98.0,
+        "heat_capacity": 769.7,
+        "conductivity": 0.236,
+        "electron_affinity": 72.0,
+        "atomic_weight": 30.973761998,
+        "domain": "chem.element",
+        "electronegativity": 2.19,
+        "name": "Phosphorus",
+        "id": "EK:el:P",
+        "state": "solid",
+        "atomic_number": 15,
+        "bulk_modulus": 11.0,
+        "atomic_mass": 30.973761998,
+        "weight": 30.973761998,
+        "ek_element_id": "E76",
+        "ek_atomic_raw": 15,
+        "ek_name_raw": "Phosphorus",
+        "same_as_aliases": [
+          "EK2:el:P"
+        ],
+        "alias_sources": {
+          "EK2:el:P": "ElementKG2.0"
+        },
+        "merged_node_count": 2,
+        "block": "p",
+        "group": 15,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Am",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Am",
+        "melting_point": 1176.0,
+        "period": 7,
+        "boiling_point": 2011.0,
+        "density": 13670.0,
+        "discovered_year": 1944.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,25,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 578.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "conductivity": 10.0,
+        "atomic_weight": 243.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Americium",
+        "id": "EK:el:Am",
+        "state": "solid",
+        "atomic_number": 95,
+        "atomic_mass": 243.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ar",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ar",
+        "melting_point": -189.0,
+        "period": 3,
+        "boiling_point": -186.0,
+        "density": 1.784,
+        "discovered_year": 1894.0,
+        "abundance": 0.02,
+        "electron_config": "2,8,8",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1520.6,
+        "ntype": "element",
+        "families": [
+          "nobleGasses"
+        ],
+        "atomic_radius": 71.0,
+        "heat_capacity": 520.33,
+        "conductivity": 0.01772,
+        "electron_affinity": 0.0,
+        "atomic_weight": 39.948,
+        "domain": "chem.element",
+        "name": "Argon",
+        "id": "EK:el:Ar",
+        "state": "gas",
+        "atomic_number": 18,
+        "atomic_mass": 39.948,
+        "block": "p",
+        "group": 18,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Th",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Th",
+        "melting_point": 1750.0,
+        "period": 7,
+        "boiling_point": 4820.0,
+        "density": 11724.0,
+        "discovered_year": 1829.0,
+        "abundance": 4e-08,
+        "electron_config": "2,8,18,32,18,10,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 587.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "hardness": 400.0,
+        "heat_capacity": 118.0,
+        "conductivity": 54.0,
+        "atomic_weight": 232.0377,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Thorium",
+        "id": "EK:el:Th",
+        "state": "solid",
+        "atomic_number": 90,
+        "bulk_modulus": 54.0,
+        "atomic_mass": 232.0377,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Os",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Os",
+        "melting_point": 3033.0,
+        "period": 6,
+        "boiling_point": 5012.0,
+        "density": 22590.0,
+        "discovered_year": 1803.0,
+        "abundance": 3e-07,
+        "electron_config": "2,8,18,32,14,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 840.0,
+        "ntype": "element",
+        "families": [
+          "nobleMetals",
+          "transitionMetals"
+        ],
+        "hardness": 3920.0,
+        "atomic_radius": 185.0,
+        "heat_capacity": 130.0,
+        "conductivity": 88.0,
+        "electron_affinity": 106.1,
+        "atomic_weight": 190.23,
+        "domain": "chem.element",
+        "electronegativity": 2.2,
+        "name": "Osmium",
+        "id": "EK:el:Os",
+        "state": "solid",
+        "atomic_number": 76,
+        "atomic_mass": 190.23,
+        "block": "d",
+        "group": 8,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Rg",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Rg",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Rg",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 282.0,
+        "atomic_number": 111,
+        "name": "Roentgenium",
+        "atomic_mass": 282.0,
+        "block": "d",
+        "group": 11,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Pu",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Pu",
+        "melting_point": 640.0,
+        "period": 7,
+        "boiling_point": 3230.0,
+        "density": 19816.0,
+        "discovered_year": 1940.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,24,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 548.7,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "conductivity": 6.0,
+        "atomic_weight": 244.0,
+        "domain": "chem.element",
+        "electronegativity": 1.28,
+        "name": "Plutonium",
+        "id": "EK:el:Pu",
+        "state": "solid",
+        "atomic_number": 94,
+        "atomic_mass": 244.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ba",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ba",
+        "melting_point": 730.0,
+        "period": 6,
+        "boiling_point": 1870.0,
+        "density": 3510.0,
+        "discovered_year": 1808.0,
+        "abundance": 1e-06,
+        "electron_config": "2,8,18,18,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 502.9,
+        "ntype": "element",
+        "families": [
+          "alkalineEarthMetals",
+          "nonferrousLightMetals"
+        ],
+        "atomic_radius": 253.0,
+        "heat_capacity": 205.0,
+        "conductivity": 18.0,
+        "electron_affinity": 13.95,
+        "atomic_weight": 137.327,
+        "domain": "chem.element",
+        "electronegativity": 0.89,
+        "name": "Barium",
+        "id": "EK:el:Ba",
+        "state": "solid",
+        "atomic_number": 56,
+        "bulk_modulus": 9.6,
+        "atomic_mass": 137.327,
+        "block": "s",
+        "group": 2,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Tb",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Tb",
+        "melting_point": 1356.0,
+        "period": 6,
+        "boiling_point": 3230.0,
+        "density": 8219.0,
+        "discovered_year": 1843.0,
+        "abundance": 5e-08,
+        "electron_config": "2,8,18,27,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 565.8,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "hardness": 677.0,
+        "atomic_radius": 225.0,
+        "heat_capacity": 182.0,
+        "conductivity": 11.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 158.92535,
+        "domain": "chem.element",
+        "name": "Terbium",
+        "id": "EK:el:Tb",
+        "state": "solid",
+        "atomic_number": 65,
+        "bulk_modulus": 38.7,
+        "atomic_mass": 158.92535,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Lr",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Lr",
+        "melting_point": 1600.0,
+        "period": 7,
+        "discovered_year": 1961.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,32,8,3",
+        "source": "ElementKG2.0",
+        "ionization_energy": 470.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 266.0,
+        "domain": "chem.element",
+        "name": "Lawrencium",
+        "id": "EK:el:Lr",
+        "state": "solid",
+        "atomic_number": 103,
+        "atomic_mass": 266.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Nd",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Nd",
+        "melting_point": 1021.0,
+        "abundance": 1e-06,
+        "electron_config": "2,8,18,22,8,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 206.0,
+        "conductivity": 17.0,
+        "electronegativity": 1.14,
+        "id": "EK:el:Nd",
+        "state": "solid",
+        "atomic_number": 60,
+        "bulk_modulus": 32.0,
+        "period": 6,
+        "boiling_point": 3100.0,
+        "density": 7010.0,
+        "discovered_year": 1885.0,
+        "ionization_energy": 533.1,
+        "ntype": "element",
+        "families": [
+          "lanthanides",
+          "lightRareEarthMetals"
+        ],
+        "hardness": 265.0,
+        "heat_capacity": 190.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 144.242,
+        "domain": "chem.element",
+        "name": "Neodymium",
+        "atomic_mass": 144.242,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Rf",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Rf",
+        "period": 7,
+        "discovered_year": 1964.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,32,10,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 580.0,
+        "ntype": "element",
+        "families": [
+          "transitionMetals"
+        ],
+        "atomic_weight": 267.0,
+        "domain": "chem.element",
+        "name": "Rutherfordium",
+        "id": "EK:el:Rf",
+        "atomic_number": 104,
+        "atomic_mass": 267.0,
+        "block": "d",
+        "group": 4,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:W",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "W",
+        "melting_point": 3422.0,
+        "abundance": 5e-08,
+        "electron_config": "2,8,18,32,12,2",
+        "source": "ElementKG2.0",
+        "atomic_radius": 193.0,
+        "conductivity": 170.0,
+        "electronegativity": 2.36,
+        "id": "EK:el:W",
+        "state": "solid",
+        "atomic_number": 74,
+        "bulk_modulus": 310.0,
+        "period": 6,
+        "boiling_point": 5555.0,
+        "density": 19250.0,
+        "discovered_year": 1783.0,
+        "ionization_energy": 770.0,
+        "ntype": "element",
+        "families": [
+          "rareRefractoryMetals",
+          "transitionMetals"
+        ],
+        "hardness": 2570.0,
+        "heat_capacity": 132.0,
+        "electron_affinity": 78.6,
+        "atomic_weight": 183.84,
+        "domain": "chem.element",
+        "name": "Tungsten",
+        "atomic_mass": 183.84,
+        "block": "d",
+        "group": 6,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ds",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ds",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Ds",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 281.0,
+        "atomic_number": 110,
+        "name": "Darmstadtium",
+        "atomic_mass": 281.0,
+        "block": "d",
+        "group": 10,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Bk",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Bk",
+        "melting_point": 1050.0,
+        "period": 7,
+        "density": 14780.0,
+        "discovered_year": 1949.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,27,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 601.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "conductivity": 10.0,
+        "atomic_weight": 247.0,
+        "domain": "chem.element",
+        "electronegativity": 1.3,
+        "name": "Berkelium",
+        "id": "EK:el:Bk",
+        "state": "solid",
+        "atomic_number": 97,
+        "atomic_mass": 247.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Yb",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Yb",
+        "melting_point": 818.9,
+        "period": 6,
+        "boiling_point": 1196.0,
+        "density": 6570.0,
+        "discovered_year": 1878.0,
+        "abundance": 2e-07,
+        "electron_config": "2,8,18,32,8,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 603.4,
+        "ntype": "element",
+        "families": [
+          "heavyRareEarthMetals",
+          "lanthanides"
+        ],
+        "hardness": 343.0,
+        "atomic_radius": 222.0,
+        "heat_capacity": 154.0,
+        "conductivity": 39.0,
+        "electron_affinity": 50.0,
+        "atomic_weight": 173.045,
+        "domain": "chem.element",
+        "name": "Ytterbium",
+        "id": "EK:el:Yb",
+        "state": "solid",
+        "atomic_number": 70,
+        "bulk_modulus": 31.0,
+        "atomic_mass": 173.045,
+        "block": "f",
+        "series": "lanthanide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Hs",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Hs",
+        "period": 7,
+        "discovered_year": 1984.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,32,14,2",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "transitionMetals"
+        ],
+        "atomic_weight": 270.0,
+        "domain": "chem.element",
+        "name": "Hassium",
+        "id": "EK:el:Hs",
+        "atomic_number": 108,
+        "atomic_mass": 270.0,
+        "block": "d",
+        "group": 8,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Pt",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Pt",
+        "melting_point": 1768.3,
+        "abundance": 5e-07,
+        "electron_config": "2,8,18,32,17,1",
+        "source": "ElementKG2.0",
+        "atomic_radius": 177.0,
+        "conductivity": 72.0,
+        "electronegativity": 2.28,
+        "id": "EK:el:Pt",
+        "state": "solid",
+        "atomic_number": 78,
+        "bulk_modulus": 230.0,
+        "period": 6,
+        "boiling_point": 3825.0,
+        "density": 21540.0,
+        "discovered_year": 1735.0,
+        "ionization_energy": 870.0,
+        "ntype": "element",
+        "families": [
+          "platinumGroupMetals",
+          "transitionMetals"
+        ],
+        "hardness": 392.0,
+        "heat_capacity": 133.0,
+        "electron_affinity": 205.3,
+        "atomic_weight": 195.084,
+        "domain": "chem.element",
+        "name": "Platinum",
+        "atomic_mass": 195.084,
+        "block": "d",
+        "group": 10,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Rn",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Rn",
+        "melting_point": -71.1,
+        "period": 6,
+        "boiling_point": -61.85,
+        "density": 9.73,
+        "discovered_year": 1900.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,18,8",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1037.0,
+        "ntype": "element",
+        "families": [
+          "nobleGasses"
+        ],
+        "atomic_radius": 120.0,
+        "heat_capacity": 93.65,
+        "conductivity": 0.00361,
+        "electron_affinity": 0.0,
+        "atomic_weight": 222.0,
+        "domain": "chem.element",
+        "name": "Radon",
+        "id": "EK:el:Rn",
+        "state": "gas",
+        "atomic_number": 86,
+        "atomic_mass": 222.0,
+        "block": "p",
+        "group": 18,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:C",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "C",
+        "melting_point": 3642.0,
+        "period": 2,
+        "boiling_point": 3642.0,
+        "density": 2260.0,
+        "discovered_year": "3750BCE",
+        "abundance": 0.5,
+        "electron_config": "2,4",
+        "source": "ElementKG2.0",
+        "ionization_energy": 1086.5,
+        "ntype": "element",
+        "families": [
+          "reactiveNonmetals"
+        ],
+        "atomic_radius": 67.0,
+        "heat_capacity": 710.0,
+        "conductivity": 140.0,
+        "electron_affinity": 153.9,
+        "atomic_weight": 12.011,
+        "domain": "chem.element",
+        "electronegativity": 2.55,
+        "name": "Carbon",
+        "id": "EK:el:C",
+        "state": "solid",
+        "atomic_number": 6,
+        "bulk_modulus": 33.0,
+        "atomic_mass": 12.011,
+        "explicit_or_inferred": "explicit",
+        "confidence": 1.0,
+        "created_at": "2026-09-29T15:23:25.250577",
+        "group": 14,
+        "weight": 12.011,
+        "ek_element_id": "E16",
+        "ek_atomic_raw": 6,
+        "ek_name_raw": "Carbon",
+        "same_as_aliases": [
+          "EK2:el:C",
+          "EL:c"
+        ],
+        "alias_sources": {
+          "EL:c": "curated_seed/energy_combustion",
+          "EK2:el:C": "ElementKG2.0"
+        },
+        "merged_node_count": 3,
+        "block": "p",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Ge",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Ge",
+        "melting_point": 938.25,
+        "period": 4,
+        "boiling_point": 2820.0,
+        "density": 5323.0,
+        "discovered_year": 1886.0,
+        "abundance": 2e-05,
+        "electron_config": "2,8,18,4",
+        "source": "ElementKG2.0",
+        "ionization_energy": 762.0,
+        "ntype": "element",
+        "families": [
+          "rareScatteredMetals"
+        ],
+        "atomic_radius": 125.0,
+        "heat_capacity": 321.4,
+        "conductivity": 60.0,
+        "electron_affinity": 119.0,
+        "atomic_weight": 72.63,
+        "domain": "chem.element",
+        "electronegativity": 2.01,
+        "name": "Germanium",
+        "id": "EK:el:Ge",
+        "state": "solid",
+        "atomic_number": 32,
+        "atomic_mass": 72.63,
+        "block": "p",
+        "group": 14,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Np",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Np",
+        "melting_point": 644.0,
+        "period": 7,
+        "boiling_point": 4000.0,
+        "density": 20450.0,
+        "discovered_year": 1940.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,22,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 604.5,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "conductivity": 6.0,
+        "atomic_weight": 237.0,
+        "domain": "chem.element",
+        "electronegativity": 1.36,
+        "name": "Neptunium",
+        "id": "EK:el:Np",
+        "state": "solid",
+        "atomic_number": 93,
+        "atomic_mass": 237.0,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Fl",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Fl",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Fl",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 289.0,
+        "atomic_number": 114,
+        "name": "Flerovium",
+        "atomic_mass": 289.0,
+        "block": "p",
+        "group": 14,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Pa",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Pa",
+        "melting_point": 1572.0,
+        "period": 7,
+        "boiling_point": 4000.0,
+        "density": 15370.0,
+        "discovered_year": 1913.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,20,9,2",
+        "source": "ElementKG2.0",
+        "ionization_energy": 568.0,
+        "ntype": "element",
+        "families": [
+          "actinides",
+          "rareRadioactiveMetals"
+        ],
+        "heat_capacity": 99.1,
+        "conductivity": 47.0,
+        "atomic_weight": 231.03588,
+        "domain": "chem.element",
+        "electronegativity": 1.5,
+        "name": "Protactinium",
+        "id": "EK:el:Pa",
+        "state": "solid",
+        "atomic_number": 91,
+        "atomic_mass": 231.03588,
+        "block": "f",
+        "series": "actinide",
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:He",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "He",
+        "period": 1,
+        "boiling_point": -269.0,
+        "density": 0.1785,
+        "discovered_year": 1895.0,
+        "abundance": 0.007,
+        "electron_config": 2.0,
+        "source": "ElementKG2.0",
+        "ionization_energy": 2372.3,
+        "ntype": "element",
+        "families": [
+          "nobleGasses"
+        ],
+        "atomic_radius": 31.0,
+        "heat_capacity": 5193.1,
+        "conductivity": 0.1513,
+        "electron_affinity": 0.0,
+        "atomic_weight": 4.002602,
+        "domain": "chem.element",
+        "name": "Helium",
+        "id": "EK:el:He",
+        "state": "gas",
+        "atomic_number": 2,
+        "atomic_mass": 4.002602,
+        "block": "s",
+        "group": 18,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Lv",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Lv",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Lv",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 293.0,
+        "atomic_number": 116,
+        "name": "Livermorium",
+        "atomic_mass": 293.0,
+        "block": "p",
+        "group": 16,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Og",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Og",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Og",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 294.0,
+        "atomic_number": 118,
+        "name": "Oganesson",
+        "atomic_mass": 294.0,
+        "block": "p",
+        "group": 18,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Db",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Db",
+        "period": 7,
+        "discovered_year": 1967.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,32,11,2",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "transitionMetals"
+        ],
+        "atomic_weight": 268.0,
+        "domain": "chem.element",
+        "name": "Dubnium",
+        "id": "EK:el:Db",
+        "atomic_number": 105,
+        "atomic_mass": 268.0,
+        "block": "d",
+        "group": 5,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Fr",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Fr",
+        "melting_point": 20.9,
+        "period": 7,
+        "boiling_point": 650.0,
+        "discovered_year": 1939.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,18,8,1",
+        "source": "ElementKG2.0",
+        "ionization_energy": 380.0,
+        "ntype": "element",
+        "families": [
+          "alkaliMetals",
+          "rareRadioactiveMetals"
+        ],
+        "atomic_weight": 223.0,
+        "domain": "chem.element",
+        "electronegativity": 0.7,
+        "name": "Francium",
+        "id": "EK:el:Fr",
+        "state": "solid",
+        "atomic_number": 87,
+        "atomic_mass": 223.0,
+        "block": "s",
+        "group": 1,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Mt",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Mt",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Mt",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 278.0,
+        "atomic_number": 109,
+        "name": "Meitnerium",
+        "atomic_mass": 278.0,
+        "block": "d",
+        "group": 9,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Nh",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Nh",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Nh",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 286.0,
+        "atomic_number": 113,
+        "name": "Nihonium",
+        "atomic_mass": 286.0,
+        "block": "p",
+        "group": 13,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Cn",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Cn",
+        "period": 7,
+        "domain": "chem.element",
+        "id": "EK:el:Cn",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "element"
+        ],
+        "atomic_weight": 285.0,
+        "atomic_number": 112,
+        "name": "Copernicium",
+        "atomic_mass": 285.0,
+        "block": "d",
+        "group": 12,
+        "periodic_source": "element_reference_iupac"
+      }
+    },
+    {
+      "id": "EK:el:Bh",
+      "labels": [
+        "Element",
+        "Entity"
+      ],
+      "props": {
+        "symbol": "Bh",
+        "period": 7,
+        "discovered_year": 1981.0,
+        "abundance": 0.0,
+        "electron_config": "2,8,18,32,32,13,2",
+        "source": "ElementKG2.0",
+        "ntype": "element",
+        "families": [
+          "transitionMetals"
+        ],
+        "atomic_weight": 270.0,
+        "domain": "chem.element",
+        "name": "Bohrium",
+        "id": "EK:el:Bh",
+        "atomic_number": 107,
+        "atomic_mass": 270.0,
+        "block": "d",
+        "group": 7,
+        "periodic_source": "element_reference_iupac"
+      }
+    }
+  ],
+  "delete_nodes": [],
+  "edges": [],
+  "delete_edges": [
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Ho",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sc",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:U",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:U",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:U",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tm",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:La",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:La",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:La",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:La",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:La",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:La",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:La",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Fm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Es",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Lr",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Bk",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Sm",
+      "target": "EK:el:Pa",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Er",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Er",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Y",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Y",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Y",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Y",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Y",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Y",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Y",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ac",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ac",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Ho",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Fm",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ho",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Fm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pm",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lu",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lu",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lu",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lu",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lu",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Fm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Es",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Bk",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Dy",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Md",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:No",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:No",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:No",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Cf",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Cf",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Cf",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Cm",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Eu",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Fm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Es",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Bk",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pr",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Ho",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Pm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Ce",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Tb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Nd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Es",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Fm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Ce",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Am",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Th",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Sm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Ho",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Pm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Dy",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Pr",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Ce",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Tb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Nd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pu",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Fm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Tb",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Ho",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Pm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Dy",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Pr",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Ce",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Tb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Nd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Lr",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Fm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Md",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Am",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Th",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Bk",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Nd",
+      "target": "EK:el:Np",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Ho",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Pm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Ce",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Tb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Bk",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Yb",
+      "target": "EK:el:U",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Yb",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Yb",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Yb",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Yb",
+      "target": "EK:el:No",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Yb",
+      "target": "EK:el:Cf",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Yb",
+      "target": "EK:el:Cm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Np",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Np",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Np",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Np",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Np",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Np",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Np",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Sc",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Tm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:La",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Er",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Y",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Ac",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Ho",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Pm",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Lu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Dy",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Gd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Eu",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Pr",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Ce",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Tb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Nd",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    },
+    {
+      "source": "EK:el:Pa",
+      "target": "EK:el:Yb",
+      "type": "same_family",
+      "kind": "ek_same_family"
+    }
+  ]
+}

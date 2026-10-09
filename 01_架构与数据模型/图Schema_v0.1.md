@@ -267,3 +267,59 @@ graph TD
 
 - v0.1 聚焦核心 8 类节点 + 11 类边，覆盖推导依赖、量纲一致、反应关联三大主轴。
 - 后续版本（v0.2+）可增：`Theorem`、`ProofStep`、`Dataset`、`Experiment` 节点，以及 `cites`、`contradicts`、`calibrated_by` 等边，支撑更强的假设生成闭环。
+
+---
+
+## 8. v0.2 增补（Phase 8 · 真实文献层）
+
+> 落地时间：2026-10-09 ｜ 对应实现：`11_真实数据/openalex_ingest.py`（`--fetch` / `--build`）
+
+Phase 8「真实 ETL 规模化」引入**文献层**：把真实学术文献作为一等实体接入图谱，
+使「公式 ↔ 概念 ↔ 学科」之外增加「**谁在研究它**」这一维度。
+
+### 8.1 新增节点：`Paper`（学术文献）
+
+| 字段 | 类型 | 必填 | 说明 | 示例 |
+|---|---|---|---|---|
+| `id` | string | ✅ | 全局唯一 ID | `PA:oa:W1555475515` |
+| `name` / `title` | string | ✅ | 论文标题 | Unsolved Problems in Number Theory |
+| `doi` | string | ⬜ | DOI | `https://doi.org/10.1007/…` |
+| `openalex_id` | string | ✅ | OpenAlex work id | `W1555475515` |
+| `year` | int | ⬜ | 出版年 | 1994 |
+| `pub_type` | enum | ⬜ | article/book/… | `article` |
+| `cited_by` | int | ⬜ | 被引次数 | 1204 |
+| `authors` | list[string] | ⬜ | 作者名列表 | `["Richard K. Guy"]` |
+| `venue` | string | ⬜ | 发表载体 | Journal of Number Theory |
+| `primary_topic` | string | ⬜ | OpenAlex 主主题 | Analytic Number Theory Research |
+| `subfield` / `field` | string | ⬜ | 子领域 / 领域 | Algebra and Number Theory / Mathematics |
+| `oa_status` | string | ⬜ | 开放获取状态 | closed / gold / green |
+| `domain` | enum | ✅ | 学科（本层恒为 `math`） | `math` |
+| `source` | string | ✅ | 来源系统 | `openalex` |
+| `created_at` / `version` | — | ✅ | 通用字段 | — |
+
+### 8.2 新增边类型
+
+| 边类型 | 起点 → 终点 | 语义 | `explicit_or_inferred` | 来源 |
+|---|---|---|---|---|
+| `cites` | Paper → Paper | 论文引用（真实引文关系） | `explicit` | OpenAlex `referenced_works` |
+| `discusses` | Paper → MathConcept | 论文主题对齐到数学概念 | `inferred` | 主题→概念映射 |
+| `part_of` | MathConcept → MathConcept | 概念包含（数论 ⊃ 素数/同余/…） | `inferred` | 领域公理 |
+
+### 8.3 数据源与可达性约束（重要）
+
+- **arXiv 官方 API 不可用**：`export.arxiv.org/api/query` 被沙箱出口白名单**按路径**拦截
+  （TLS 可握手但响应 0 字节超时）；而 `arxiv.org/abs|list` 网页可达。
+- **本层改用 OpenAlex**（`api.openalex.org`，CC0 授权，可达）：它是覆盖 arXiv 预印本与
+  正式出版物的开放学术图谱，含 works / 引用 / 主题，字段完整、可批量拉取。
+- **不使用 OpenAlex 的 `concepts` 字段做概念匹配**：该字段存在明显消歧错误
+  （`Prime (order theory)`、`Ring (chemistry)`、`Calculus (dental)`、`Dentistry`），
+  用它匹配 `NT:mc:prime` 会把序理论论文错误挂到数论素数上。本层改用质量更高的
+  `primary_topic`（新主题体系）做**粗粒度、语义正确**的领域对齐，宁可桥接稀疏也不臆造。
+
+### 8.4 落库与验证
+
+- 并入方式：`06_PoC/merge_seed_delta.py --seeds 11_真实数据/seed_papers_openalex.json --phase 18`
+  （append-only + 三重断言 + 边 id 归一）。
+- 首批规模：181 `Paper` + 176 `cites` + 178 `discusses` + 5 `part_of`（另有 2 个领域概念节点）。
+
+---

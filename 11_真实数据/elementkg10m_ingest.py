@@ -15,7 +15,7 @@ from collections import defaultdict, Counter
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 csv.field_size_limit(10**9)
 
-SRC = r"C:\Users\Administrator\.qclaw\workspace\01tuopu\公共数据集\10m_elementkg_release.csv"
+SRC = r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\公共数据集\10m_elementkg_release.csv"
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "elementkg10m_raw.json")
 N_REACTIONS = 800
@@ -28,17 +28,12 @@ SKELETON_FORMULA = {
     "C6H12O6": "PC:mol:5793", "C10H16N5O13P3": "PC:mol:5957", "C2H5NO2": "PC:mol:750",
 }
 
-ATOMIC_TO_SYMBOL = {1:"H",2:"He",3:"Li",4:"Be",5:"B",6:"C",7:"N",8:"O",9:"F",10:"Ne",11:"Na",
-    12:"Mg",13:"Al",14:"Si",15:"P",16:"S",17:"Cl",18:"Ar",19:"K",20:"Ca",21:"Sc",22:"Ti",23:"V",
-    24:"Cr",25:"Mn",26:"Fe",27:"Co",28:"Ni",29:"Cu",30:"Zn",31:"Ga",32:"Ge",33:"As",34:"Se",
-    35:"Br",36:"Kr",37:"Rb",38:"Sr",39:"Y",40:"Zr",41:"Nb",42:"Mo",43:"Tc",44:"Ru",45:"Rh",
-    46:"Pd",47:"Ag",48:"Cd",49:"In",50:"Sn",51:"Sb",52:"Te",53:"I",54:"Xe",55:"Cs",56:"Ba",
-    57:"La",58:"Ce",59:"Pr",60:"Nd",61:"Pm",62:"Sm",63:"Eu",64:"Gd",65:"Tb",66:"Dy",67:"Ho",
-    68:"Er",69:"Tm",70:"Yb",71:"Lu",72:"Hf",73:"Ta",74:"W",75:"Re",76:"Os",77:"Ir",78:"Pt",
-    79:"Au",80:"Hg",81:"Tl",82:"Pb",83:"Bi",84:"Po",85:"At",86:"Rn",87:"Fr",88:"Ra",89:"Ac",
-    90:"Th",91:"Pa",92:"U",93:"Np",94:"Pu",95:"Am",96:"Cm",97:"Bk",98:"Cf",99:"Es",100:"Fm",
-    101:"Md",102:"No",103:"Lr",104:"Rf",105:"Db",106:"Sg",107:"Bh",108:"Hs",109:"Mt",110:"Ds",
-    111:"Rg",112:"Cn",113:"Nh",114:"Fl",115:"Mc",116:"Lv",117:"Ts",118:"Og"}
+# 权威元素参考表（同一目录）：符号 / 名称 / 原子序数 / 标准原子量
+from element_reference import BY_Z as _EL_BY_Z, by_symbol as _el_by_symbol
+
+# 原子序数 -> 符号（兜底用；注意 ElementKG 的 HASATOMIC 对个别元素给的是族号而非序数）
+ATOMIC_TO_SYMBOL = {z: r["symbol"] for z, r in _EL_BY_Z.items()}
+
 
 
 def pass1():
@@ -111,9 +106,14 @@ def pass2(selected, rxn_entities, entity2mol, need_mols):
             elif h == "element" and tt == "literal":
                 elem_props.setdefault(hv, {}); _set_elem_prop(elem_props[hv], rel, tv)
 
+    # 符号解析：优先用权威 NAME_IS（_set_elem_prop 已写入）；
+    # 仅当源数据没有 NAME_IS 时才回退到原子序数反查，并显式告警。
     for eid, p in elem_props.items():
-        if "atomic" in p and "symbol" not in p:
-            p["symbol"] = ATOMIC_TO_SYMBOL.get(p["atomic"])
+        if not p.get("symbol"):
+            if "atomic" in p:
+                p["symbol"] = ATOMIC_TO_SYMBOL.get(p["atomic"])
+                print(f"[WARN] 元素 {eid} 缺 NAME_IS，回退按 HASATOMIC={p['atomic']} "
+                      f"推断符号 {p.get('symbol')!r}（该字段可能是族号，须人工复核）")
 
     # 节点
     for mid, p in mols.items():
@@ -137,10 +137,22 @@ def pass2(selected, rxn_entities, entity2mol, need_mols):
         sym = p.get("symbol")
         if not sym:
             continue
+        ref = _el_by_symbol(sym)
+        # ElementKG 的 HASATOMIC 对个别元素给的是「族号」而非原子序数
+        # （如 Oxygen 记 16 = 16 族）。故原子序数/名称优先取权威参考表，
+        # 源值原样保留在 ek_atomic_raw / ek_name_raw 以便追溯。
+        z = ref["atomic_number"] if ref else p.get("atomic")
+        w = p.get("weight")
+        if w in (None, 0) and ref:
+            w = ref["atomic_weight"]
         nodes.append({"id": f"EK2:el:{sym}", "labels": ["Entity", "Element"],
                       "props": {"domain": "chem.element", "ntype": "element", "source": "ElementKG2.0",
-                                "name": p.get("name"), "atomic_number": p.get("atomic"),
-                                "weight": p.get("weight"), "symbol": sym, "ek_element_id": eid}})
+                                "name": (ref["name"] if ref else None) or p.get("name"),
+                                "atomic_number": z,
+                                "atomic_weight": w, "weight": w, "symbol": sym,
+                                "ek_element_id": eid,
+                                "ek_atomic_raw": p.get("atomic"),
+                                "ek_name_raw": p.get("name")}})
         edges.append({"id": f"same_as:EK2:el:{sym}->EK:el:{sym}", "source": f"EK2:el:{sym}",
                       "target": f"EK:el:{sym}", "type": "same_as", "kind": "elementkg_bridge",
                       "props": {"confidence": 0.95, "explicit_or_inferred": "inferred",
@@ -217,7 +229,12 @@ def _set_mol_prop(p, rel, tv):
 
 
 def _set_elem_prop(p, rel, tv):
-    if rel == "HASNAME":
+    if rel == "NAME_IS":
+        # ★ 权威符号字段。此前漏读，导致改用 HASATOMIC 反查：ElementKG 对 Oxygen
+        #   的 HASATOMIC=16 实为「族号」(16 族)，反查得 "S"，与 Sulfur(E93) 撞 id，
+        #   氧元素整条丢失。见 00_项目管理/下一步开发计划_20261008.md 缺陷 1。
+        p["symbol"] = tv.strip()
+    elif rel == "HASNAME":
         p["name"] = tv
     elif rel == "HASATOMIC":
         try: p["atomic"] = int(float(tv))

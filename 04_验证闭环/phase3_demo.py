@@ -42,7 +42,7 @@ if sys.platform == "win32":
 # -----------------------------------------------------------------------------
 ROOT = os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))
-)  # 01tuopu/
+)  # STTP/
 ETL_DIR = os.path.join(ROOT, "06_PoC", "etl")
 NORMALIZED_JSON = os.path.join(ETL_DIR, "normalized.json")
 OUT_JSON = os.path.join(ETL_DIR, "with_inferred.json")

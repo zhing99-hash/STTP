@@ -9,6 +9,7 @@
 端点
 ----
     GET /                        → graph_view.html
+    GET /vendor/<file>           → 本地化的前端依赖（Cytoscape / fcose / MathJax；A4）
     GET /graph_data.json         → 导出的图谱数据（缺失时即时调用 graph_export）
     GET /api/neighbors?node=<id> → queries.get_neighbors（返回 {node, neighbors, edges}）
     GET /api/path?src=<id>&dst=<id> → queries.paths_between（返回 {paths}）
@@ -34,7 +35,6 @@ author: 可视化与前端专家 | 2026-09-28
 
 from __future__ import annotations
 
-import io
 import json
 import os
 import sys
@@ -42,26 +42,46 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
 # Windows 控制台 UTF-8 修复
+# 约定（A5 轮教训）：**原地 reconfigure()**，绝不替换 sys.stdout 对象。
+# `sys.stdout = io.TextIOWrapper(sys.stdout.buffer, ...)` 会让旧 wrapper 进入 GC，
+# 其 __del__ 连带关闭同一个底层 fd，此后进程内所有 print 抛
+# `ValueError: I/O operation on closed file` —— 长驻服务会静默变成"端口在监听但响应为空"。
 if sys.platform == "win32":
-    try:
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
-    except Exception:
-        pass
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+    del _stream
 
 # ---------------------------------------------------------------------------
 # 路径常量
 # ---------------------------------------------------------------------------
-HERE = os.path.dirname(os.path.abspath(__file__))          # 01tuopu/06_PoC
-ROOT = os.path.dirname(HERE)                                # 01tuopu
+HERE = os.path.dirname(os.path.abspath(__file__))          # STTP/06_PoC
+ROOT = os.path.dirname(HERE)                                # STTP
 KNOWLEDGE_DIR = os.path.join(ROOT, "03_知识层")             # queries.py 所在
 ETL_DIR = os.path.join(HERE, "etl")
 WITH_INFERRED = os.path.join(ETL_DIR, "with_inferred.json")
 NORMALIZED = os.path.join(ETL_DIR, "normalized.json")
 GRAPH_DATA = os.environ.get("GRAPH_DATA_FILE", os.path.join(HERE, "graph_data.json"))
 HTML_FILE = os.path.join(HERE, "graph_view.html")
+VENDOR_DIR = os.path.join(HERE, "vendor")                   # A4：本地化的前端依赖（Cytoscape / MathJax）
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = int(os.environ.get("PORT", "8765"))
+
+# /vendor/* 允许的扩展名 -> MIME（白名单，避免任意文件外泄）
+VENDOR_MIME = {
+    ".js": "application/javascript; charset=utf-8",
+    ".mjs": "application/javascript; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".map": "application/json; charset=utf-8",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".ttf": "font/ttf",
+    ".svg": "image/svg+xml",
+    ".txt": "text/plain; charset=utf-8",
+}
 
 # 把 03_知识层 注入 sys.path，使 `import queries` 可用
 if KNOWLEDGE_DIR not in sys.path:
@@ -108,9 +128,10 @@ def get_backend():
             _BACKEND = q.get_backend("nx", input_path=path)
             print(f"[OK] NetworkX 后端就绪：{_BACKEND.node_count} 节点 / "
                   f"{_BACKEND.edge_count} 边（源：{os.path.basename(path)}）")
-        except Exception as e:  # noqa: BLE001
+        except BaseException as e:  # noqa: BLE001  # 含 SystemExit（queries 缺源会 sys.exit）
             _BACKEND = False
-            print(f"[WARN] NetworkX 后端初始化失败（{type(e).__name__}: {e}）")
+            print(f"[WARN] NetworkX 后端初始化失败（{type(e).__name__}: {e}），"
+                  f"API 将降级；/graph_data.json 不受影响。")
     return _BACKEND or None
 
 
@@ -120,13 +141,16 @@ def graph_stats() -> dict:
     if b is not None:
         try:
             from collections import Counter
+            import graph_export  # 同目录：类型解析口径必须与权威转换器一致
             ntypes = Counter()
             etypes = Counter()
             verified = 0
             eoi = Counter()
             for _, d in b.G.nodes(data=True):
-                labels = d.get("labels") or []
-                ntypes[labels[0] if labels else "Unknown"] += 1
+                # 不能直接用 labels[0]：图里 1658 个节点的 labels 是 ["Entity", "Reaction"]，
+                # 首标签恒为 Entity，会把 Reaction/Molecule/Symbol 全统计成 Entity，
+                # 与 graph_data_phaseNN.json 的类型分布对不上。改用权威 pick_type。
+                ntypes[graph_export.pick_type(d.get("labels"))] += 1
             for _, _, _, d in b.G.edges(keys=True, data=True):
                 etypes[d.get("type", "")] += 1
                 eoi[d.get("explicit_or_inferred", "")] += 1
@@ -217,6 +241,26 @@ class VizHandler(BaseHTTPRequestHandler):
         except FileNotFoundError:
             self._json(404, {"error": f"not found: {os.path.basename(path)}"})
 
+    def _static(self, rel: str, base_dir: str):
+        """安全地发送 base_dir 下的静态文件（A4：/vendor/* 用）。
+
+        防目录穿越：解析后的绝对路径必须落在 base_dir 内；扩展名走白名单。
+        """
+        base = os.path.realpath(base_dir)
+        target = os.path.realpath(os.path.join(base, rel.lstrip("/")))
+        if target != base and not target.startswith(base + os.sep):
+            return self._json(403, {"error": "forbidden path"})
+        ext = os.path.splitext(target)[1].lower()
+        ctype = VENDOR_MIME.get(ext)
+        if ctype is None:
+            return self._json(403, {"error": f"extension not allowed: {ext or '(none)'}"})
+        try:
+            with open(target, "rb") as f:
+                body = f.read()
+        except FileNotFoundError:
+            return self._json(404, {"error": f"not found: {rel}"})
+        self._send(200, body, ctype)
+
     # ---- 日志：静音默认打印，保留简洁访问日志 ----
     def log_message(self, fmt, *args):  # noqa: A003
         print(f"  [HTTP] {self.address_string()} {fmt % args}")
@@ -237,6 +281,10 @@ class VizHandler(BaseHTTPRequestHandler):
         try:
             if route in ("/", "/index.html", "/graph_view.html"):
                 return self._html(200, HTML_FILE)
+
+            # A4：本地化的前端依赖（Cytoscape / fcose / MathJax），支持完全离线渲染
+            if route == "/vendor" or route.startswith("/vendor/"):
+                return self._static(parsed.path[len("/vendor"):], VENDOR_DIR)
 
             if route == "/graph_data.json":
                 return self._json(200, load_graph_data())

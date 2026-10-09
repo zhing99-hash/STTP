@@ -20,7 +20,7 @@
 
 运行
 ----
-    cd 01tuopu/03_知识层
+    cd STTP/03_知识层
     python preflight_neo4j.py
     # 可选：设置环境变量探测真实实例
     set NEO4J_URI=bolt://localhost:7687

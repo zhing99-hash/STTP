@@ -18,7 +18,9 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-09-29T16:54:48.726342",
         "symbol": "Na",
-        "atomic_number": 11
+        "atomic_number": 11,
+        "atomic_mass": 22.98976928,
+        "atomic_weight": 22.98976928
       }
     },
     {
@@ -36,7 +38,9 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-09-29T16:54:48.726342",
         "symbol": "Cl",
-        "atomic_number": 17
+        "atomic_number": 17,
+        "atomic_mass": 35.45,
+        "atomic_weight": 35.45
       }
     },
     {
@@ -54,7 +58,9 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-09-29T16:54:48.726342",
         "symbol": "Fe",
-        "atomic_number": 26
+        "atomic_number": 26,
+        "atomic_mass": 55.845,
+        "atomic_weight": 55.845
       }
     },
     {

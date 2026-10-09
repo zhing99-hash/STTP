@@ -2,7 +2,7 @@
 ## 项目开发指南（WorkBuddy 接手手册）
 > 适用对象：接手本项目继续开发的 Agent 或工程师
 > 生成时间：2026-10-08
-> 项目根目录：`C:\Users\Administrator\.qclaw\workspace\01tuopu`
+> 项目根目录：`C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP`
 
 ---
 
@@ -419,8 +419,8 @@ $env:VIZ_PORT        = "8765"
 
 ### 8.2 .env 文件位置
 
-- 本地私用：`C:\Users\Administrator\.qclaw\workspace\01tuopu\.env`（已 gitignore）
-- 开源模板：`C:\Users\Administrator\.qclaw\workspace\01tuopu\08_部署包\neo4j\.env.example`
+- 本地私用：`C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\.env`（已 gitignore）
+- 开源模板：`C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\08_部署包\neo4j\.env.example`
 
 ---
 

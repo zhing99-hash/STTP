@@ -11,7 +11,7 @@
 import json, os, re, collections
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(HERE))  # 01tuopu
+ROOT = os.path.dirname(os.path.dirname(HERE))  # STTP
 FULL = os.path.join(ROOT, "06_PoC", "graph_data_full.json")
 RAW = os.path.join(HERE, "phase9_raw.json")
 OUT_RAW = os.path.join(HERE, "phase9_refined_raw.json")

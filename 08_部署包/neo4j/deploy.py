@@ -394,7 +394,7 @@ def print_success(password: str) -> None:
               RETURN [n IN nodes(p) | n.id] AS path LIMIT 5;
 
   🚀 如何接前端（viz_server.py，无需改动）
-     cd 01tuopu/06_PoC
+     cd STTP/06_PoC
      python viz_server.py --port 8765
      # queries.py 的 get_backend("auto") 会自动检测 Neo4j，
      # 可达则走 Cypher；不可达则回退 NetworkX 兜底。

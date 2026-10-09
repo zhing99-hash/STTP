@@ -27,25 +27,29 @@ author: 可视化与前端专家 | 2026-09-28
 from __future__ import annotations
 
 import argparse
-import io
 import json
 import os
 import sys
 from collections import Counter
 
 # Windows 控制台 UTF-8 修复，避免中文统计输出乱码
+# 注意：必须用 reconfigure() 原地改编码，**不能**用
+#   sys.stdout = io.TextIOWrapper(sys.stdout.buffer, ...)
+# 因为旧 wrapper 被 GC 时会连带关掉同一个底层 fd，此后所有 print 都会抛
+# "I/O operation on closed file"。本模块会被长驻服务 import（viz_server 的
+# /api/stats 与降级路径），一旦踩到就会让服务对**所有**请求失联（连访问日志都打不出）。
 if sys.platform == "win32":
-    try:
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
-    except Exception:
-        pass
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
 
 # ---------------------------------------------------------------------------
 # 路径常量
 # ---------------------------------------------------------------------------
-HERE = os.path.dirname(os.path.abspath(__file__))          # 01tuopu/06_PoC
-ROOT = os.path.dirname(HERE)                                # 01tuopu
+HERE = os.path.dirname(os.path.abspath(__file__))          # STTP/06_PoC
+ROOT = os.path.dirname(HERE)                                # STTP
 ETL_DIR = os.path.join(HERE, "etl")
 DEFAULT_WITH_INFERRED = os.path.join(ETL_DIR, "with_inferred.json")
 DEFAULT_NORMALIZED = os.path.join(ETL_DIR, "normalized.json")
@@ -56,12 +60,14 @@ DEFAULT_OUT = os.path.join(HERE, "graph_data.json")
 # 注：Unit 用于 Phase 6 单位节点（能量/燃烧切片）。
 TYPE_PRIORITY = [
     "Symbol", "Element", "Molecule", "Reaction", "FunctionalGroup", "Constant", "PhysicalQuantity", "Unit",
+    "Paper",   # Phase 8：OpenAlex 文献节点（Paper）
     "Definition", "Theorem", "Lemma", "Equation", "MathConcept", "Formula",
 ]
 
 # 原始 kind → explicit_or_inferred 兜底映射（与 03_知识层/README 一致）
 EXPLICIT_KINDS = {
     "explicit_citation", "defines", "reactant_of", "product_of", "part_of",
+    "cites",   # Phase 8：OpenAlex 真实引用
 }
 
 
@@ -76,8 +82,26 @@ def pick_type(labels) -> str:
     return "Unknown"          # 仅当源数据既无 labels 也无 type 时兜底
 
 
-def subject_of(domain: str) -> str:
-    """域名 → 学科中文名（可视化填充色按学科区分）。"""
+_NS_SUBJECT = {
+    "PQ": "物理", "PB": "物理",
+    "EL": "化学", "EK": "化学", "EK2": "化学", "IC": "化学", "BC": "化学",
+    "RX": "化学", "OM": "化学",
+    "MX": "数学", "MG": "数学", "MA": "数学", "MC": "数学", "CM": "数学",
+    "QM": "数学", "TH": "数学", "SY": "数学",
+    # Phase 7b 新增切片命名空间（domain 存在时不走此兜底，此处仅为鲁棒性）
+    "CE": "化学",   # Chemical Equilibrium
+    "NT": "数学",   # Number Theory
+    "PA": "数学",   # Paper（Phase 8 · OpenAlex 文献）
+}
+
+
+def subject_of(domain: str, node_id: str = "") -> str:
+    """域名 → 学科中文名（可视化填充色按学科区分）。
+
+    domain 缺失时按 id 命名空间兜底：原实现一律回退「数学」，
+    会把 ``PQ:energy`` / ``PQ:mass`` / ``PB:*`` 等物理量误标为数学，
+    直接污染前端「跨域路径」的学科切换判定（化学→物理 会显示成 化学→数学）。
+    """
     d = (domain or "").strip().lower()
     if d.startswith("chem") or d.startswith("ek"):
         return "化学"
@@ -85,7 +109,41 @@ def subject_of(domain: str) -> str:
         return "物理"
     if d.startswith("math") or d.startswith("mx") or d.startswith("mg"):
         return "数学"
-    return "跨学科" if d else "数学"
+    if d:
+        return "跨学科"
+    # domain 为空 → 用 id 命名空间兜底；未知前缀保持旧的「数学」行为，避免大面积改色
+    return _NS_SUBJECT.get((node_id or "").split(":")[0], "数学")
+
+
+def uniquify_edge_ids(edges: list) -> int:
+    """保证边 id 全局唯一（就地把撞号的边改名），返回被改名的条数。
+
+    为什么必须做：Cytoscape.js 要求元素 id 唯一，重复 id 会导致渲染异常；
+    NetworkX 的 ``MultiDiGraph.add_edge(key=id)`` 也会把撞号的边**静默折叠**。
+
+    撞号来源：Aura 侧边 id 约定为 ``type|source|target``，不含 ``kind``；
+    同一 (type, source, target) 上若存在不同 kind 的边（如 curated_seed 的
+    explicit 边与 PhysicsBabel 的 inferred 边），id 就撞了。
+    这里保留第一条原名，后续撞号者追加 ``|kind``（再撞则加 ``#n``）。
+    """
+    used = set()
+    fixed = 0
+    for e in edges:
+        eid = e.get("id")
+        if eid is None:
+            eid = "%s|%s|%s" % (e.get("type") or "", e.get("source") or "", e.get("target") or "")
+            e["id"] = eid
+        if eid in used:
+            kind = e.get("kind") or "unknown"
+            cand, n = "%s|%s" % (eid, kind), 2
+            while cand in used:
+                cand = "%s|%s#%d" % (eid, kind, n)
+                n += 1
+            e["id"] = cand
+            eid = cand
+            fixed += 1
+        used.add(eid)
+    return fixed
 
 
 def _resolve_input(path: str | None) -> str:
@@ -120,7 +178,7 @@ def build_graph_data(src_path: str) -> dict:
             "label": (props.get("name") or n.get("local_id") or n.get("id")),
             "type": ntype,                                  # ← 来自 labels，非空
             "labels": labels,
-            "subject": subject_of(props.get("domain")),
+            "subject": subject_of(props.get("domain"), str(n.get("id") or "")),
             "domain": props.get("domain", ""),
             "formula": props.get("latex") or "",            # LaTeX（供 MathJax）
             "confidence": props.get("confidence"),
@@ -149,9 +207,17 @@ def build_graph_data(src_path: str) -> dict:
             "evidence": props.get("verification_evidence") or props.get("evidence"),
             "rationale": props.get("rationale"),
             "domain": props.get("domain"),
+            # 化学计量数等数值属性透传（否则 viz 投影丢字段，下游按 count=1 误算摩尔质量）
+            **({k: props[k] for k in ("count", "value", "unit", "element_symbol")
+                if props.get(k) is not None}),
         })
 
     # ------------------------ 统计 meta ------------------------
+    id_fixed = uniquify_edge_ids(edges_out)     # 保证 viz 快照边 id 唯一（见函数 docstring）
+    dupe_nodes = [n["id"] for n, c in Counter(nd["id"] for nd in nodes_out).items() if c > 1]
+    if dupe_nodes:
+        warnings.append(f"节点 id 重复 {len(dupe_nodes)} 个：{dupe_nodes[:5]}")
+
     ntype_counter = Counter(nd["type"] for nd in nodes_out)
     etype_counter = Counter(ed["type"] for ed in edges_out)
     kind_counter = Counter(ed["kind"] for ed in edges_out)
@@ -170,6 +236,7 @@ def build_graph_data(src_path: str) -> dict:
         "source_file": os.path.basename(src_path),
         "node_count": len(nodes_out),
         "edge_count": len(edges_out),
+        "edge_id_collisions_fixed": id_fixed,
         "node_types": dict(sorted(ntype_counter.items())),
         "edge_types": dict(sorted(etype_counter.items())),
         "edge_kinds": dict(sorted(kind_counter.items())),

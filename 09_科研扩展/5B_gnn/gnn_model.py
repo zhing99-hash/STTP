@@ -28,7 +28,7 @@ import torch.nn.functional as F
 # Paths
 # ----------------------------------------------------------------------------
 SCRIPT_DIR = Path(__file__).resolve().parent
-REPO_ROOT = SCRIPT_DIR.parent.parent  # .../01tuopu
+REPO_ROOT = SCRIPT_DIR.parent.parent  # .../STTP
 DATA_PATH = REPO_ROOT / "06_PoC" / "etl" / "neo4j" / "neo4j_ready.json"
 
 SEED = 20260928

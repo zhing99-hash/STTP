@@ -18,7 +18,7 @@
 
 运行
 ----
-    cd 01tuopu/03_知识层
+    cd STTP/03_知识层
     set NEO4J_URI=bolt://localhost:7687
     set NEO4J_PASSWORD=yourpassword
     python verify_deploy.py

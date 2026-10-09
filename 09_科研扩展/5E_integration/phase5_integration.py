@@ -19,7 +19,7 @@ import json
 import os
 from datetime import datetime
 
-ROOT = r"C:\Users\Administrator\.qclaw\workspace\01tuopu"
+ROOT = r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP"
 BASE = os.path.join(ROOT, "06_PoC", "etl", "neo4j", "neo4j_ready.json")
 OUT_NEO4J = os.path.join(ROOT, "06_PoC", "etl", "neo4j", "phase5_neo4j_ready.json")
 OUT_VIZ = os.path.join(ROOT, "06_PoC", "graph_data_phase5.json")

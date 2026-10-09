@@ -1,0 +1,17 @@
+{
+  "scenario": "offline",
+  "results": {
+    "cytoscape": "function",
+    "layoutBase": "function",
+    "coseBase": "object",
+    "cytoscapeFcose": "function",
+    "MathJax": "object",
+    "nodes": 7364,
+    "edges": 37687,
+    "fcose_registered": true,
+    "mathjax_render": "svg-ok",
+    "dom_alive": true
+  },
+  "blocked": [],
+  "external_refs": []
+}

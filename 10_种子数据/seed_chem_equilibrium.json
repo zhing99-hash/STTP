@@ -1,0 +1,1710 @@
+{
+  "schema_version": "0.1",
+  "phase": "7h",
+  "note": "Chemical equilibrium vertical slice",
+  "nodes": [
+    {
+      "id": "CE:fo:mass_action",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Law of mass action (equilibrium constant)",
+        "ntype": "formula",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "K=\\frac{[C]^{c}[D]^{d}}{[A]^{a}[B]^{b}}",
+        "informal": "对 aA+bB ⇌ cC+dD，平衡常数等于产物浓度幂之积比反应物浓度幂之积。"
+      }
+    },
+    {
+      "id": "CE:fo:reaction_quotient",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Reaction quotient",
+        "ntype": "formula",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "Q=\\frac{[C]^{c}[D]^{d}}{[A]^{a}[B]^{b}}",
+        "informal": "与 K 同形，但用任意时刻浓度；平衡时 Q=K，Q<K 反应正向、Q>K 逆向。"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_standard",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Standard Gibbs energy and equilibrium constant",
+        "ntype": "formula",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "\\Delta G^{\\circ}=-RT\\ln K",
+        "informal": "标准吉布斯自由能变与平衡常数的定量关系（热力学与化学的桥梁）。"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_reaction",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Gibbs energy at arbitrary composition",
+        "ntype": "formula",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "\\Delta G=\\Delta G^{\\circ}+RT\\ln Q",
+        "informal": "任意组成下的反应吉布斯自由能；ΔG<0 自发正向。"
+      }
+    },
+    {
+      "id": "CE:fo:le_chatelier",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Le Chatelier's principle",
+        "ntype": "formula",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "\\text{system shifts to oppose the disturbance}",
+        "informal": "体系受扰动时平衡向抵消该扰动的方向移动（浓度/压强/温度）。"
+      }
+    },
+    {
+      "id": "CE:fo:ph",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "pH definition",
+        "ntype": "formula",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "pH=-\\log_{10}[H^{+}]",
+        "informal": "pH 为氢离子浓度的负常用对数。"
+      }
+    },
+    {
+      "id": "CE:fo:poh",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "pOH definition",
+        "ntype": "formula",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "pOH=-\\log_{10}[OH^{-}]",
+        "informal": "pOH 为氢氧根浓度的负常用对数。"
+      }
+    },
+    {
+      "id": "CE:fo:kw",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Water autoionization constant",
+        "ntype": "formula",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "K_w=[H^{+}][OH^{-}]=1.0\\times10^{-14}",
+        "informal": "25 ℃ 纯水中 Kw=1.0×10⁻¹⁴，故 pH+pOH=14。"
+      }
+    },
+    {
+      "id": "CE:fo:ka",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Acid dissociation constant",
+        "ntype": "formula",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "K_a=\\frac{[H^{+}][A^{-}]}{[HA]}",
+        "informal": "弱酸解离常数，表征酸强度。"
+      }
+    },
+    {
+      "id": "CE:fo:henderson",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Henderson–Hasselbalch equation",
+        "ntype": "formula",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "pH=pK_a+\\log_{10}\\frac{[A^{-}]}{[HA]}",
+        "informal": "缓冲溶液 pH 计算式，同样建立在对数之上。"
+      }
+    },
+    {
+      "id": "CE:fo:ksp",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Solubility product",
+        "ntype": "formula",
+        "domain": "chem.solubility",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "K_{sp}=[A^{+}]^{m}[B^{-}]^{n}",
+        "informal": "难溶电解质饱和溶液中离子浓度幂之积，与溶解度互为换算。"
+      }
+    },
+    {
+      "id": "CE:fo:nernst",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Nernst equation",
+        "ntype": "formula",
+        "domain": "chem.electrochem",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "E=E^{\\circ}-\\frac{RT}{nF}\\ln Q",
+        "informal": "电池电动势与浓度/分压的定量关系（化学↔电化学↔热力学）。"
+      }
+    },
+    {
+      "id": "CE:fo:arrhenius",
+      "labels": [
+        "Entity",
+        "Formula"
+      ],
+      "props": {
+        "name": "Arrhenius equation",
+        "ntype": "formula",
+        "domain": "chem.kinetics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "k=A\\,e^{-E_a/(RT)}",
+        "informal": "速率常数随温度呈指数增长（化学↔数学指数↔热力学）。"
+      }
+    },
+    {
+      "id": "CE:pq:equilibrium_constant",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Equilibrium constant",
+        "ntype": "physical_quantity",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "K",
+        "dimension": "1",
+        "informal": "无量纲（严格为活度商，理想稀溶液近似为浓度商）。"
+      }
+    },
+    {
+      "id": "CE:pq:reaction_quotient",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Reaction quotient",
+        "ntype": "physical_quantity",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "Q",
+        "dimension": "1"
+      }
+    },
+    {
+      "id": "CE:pq:gibbs_energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Gibbs free energy",
+        "ntype": "physical_quantity",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "G",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "CE:pq:gibbs_std",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Standard Gibbs free energy change",
+        "ntype": "physical_quantity",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "G°",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "CE:pq:ph",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "pH",
+        "ntype": "physical_quantity",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "pH",
+        "dimension": "1"
+      }
+    },
+    {
+      "id": "CE:pq:ka",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Acid dissociation constant",
+        "ntype": "physical_quantity",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "Ka",
+        "dimension": "1"
+      }
+    },
+    {
+      "id": "CE:pq:pka",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "pKa",
+        "ntype": "physical_quantity",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "pKa",
+        "dimension": "1"
+      }
+    },
+    {
+      "id": "CE:pq:ksp",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Solubility product",
+        "ntype": "physical_quantity",
+        "domain": "chem.solubility",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "Ksp",
+        "dimension": "1"
+      }
+    },
+    {
+      "id": "CE:pq:concentration",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Molar concentration",
+        "ntype": "physical_quantity",
+        "domain": "chem.quantity",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "c",
+        "dimension": "N*L^-3"
+      }
+    },
+    {
+      "id": "CE:pq:cell_potential",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Cell potential",
+        "ntype": "physical_quantity",
+        "domain": "chem.electrochem",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "E",
+        "dimension": "M*L^2*T^-3*I^-1"
+      }
+    },
+    {
+      "id": "CE:pq:rate_constant",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Reaction rate constant",
+        "ntype": "physical_quantity",
+        "domain": "chem.kinetics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "k"
+      }
+    },
+    {
+      "id": "CE:pq:activation_energy",
+      "labels": [
+        "Entity",
+        "PhysicalQuantity"
+      ],
+      "props": {
+        "name": "Activation energy",
+        "ntype": "physical_quantity",
+        "domain": "chem.kinetics",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "Ea",
+        "dimension": "M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "CE:pq:faraday_const",
+      "labels": [
+        "Entity",
+        "Constant"
+      ],
+      "props": {
+        "name": "Faraday constant",
+        "ntype": "constant",
+        "domain": "chem.constant",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "F",
+        "value": 96485.33212,
+        "unit": "C/mol",
+        "dimension": "I*T*N^-1"
+      }
+    },
+    {
+      "id": "CE:un:molar",
+      "labels": [
+        "Entity",
+        "Unit"
+      ],
+      "props": {
+        "name": "mole per litre",
+        "ntype": "unit",
+        "domain": "chem.unit",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "symbol": "mol/L",
+        "dimension": "N*L^-3",
+        "derived_from": "mol/dm^3"
+      }
+    },
+    {
+      "id": "CE:sy:K",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "K (equilibrium constant)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "K"
+      }
+    },
+    {
+      "id": "CE:sy:Q",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "Q (reaction quotient)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "Q"
+      }
+    },
+    {
+      "id": "CE:sy:G",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "G (Gibbs energy)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "G"
+      }
+    },
+    {
+      "id": "CE:sy:pH",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "pH",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "\\mathrm{pH}"
+      }
+    },
+    {
+      "id": "CE:sy:Ka",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "K_a (acid constant)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "K_a"
+      }
+    },
+    {
+      "id": "CE:sy:Ksp",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "K_sp (solubility product)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "K_{sp}"
+      }
+    },
+    {
+      "id": "CE:sy:c",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "c (molar concentration)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "c"
+      }
+    },
+    {
+      "id": "CE:sy:k",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "k (rate constant)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "k"
+      }
+    },
+    {
+      "id": "CE:sy:Ea",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "E_a (activation energy)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "E_a"
+      }
+    },
+    {
+      "id": "CE:sy:F",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "F (Faraday constant)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "F"
+      }
+    },
+    {
+      "id": "CE:sy:conc",
+      "labels": [
+        "Entity",
+        "Symbol"
+      ],
+      "props": {
+        "name": "[ ] (molarity bracket)",
+        "ntype": "symbol",
+        "domain": "chem.symbol",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "latex": "[\\,]"
+      }
+    },
+    {
+      "id": "CE:mo:nh3",
+      "labels": [
+        "Entity",
+        "Molecule"
+      ],
+      "props": {
+        "name": "Ammonia",
+        "ntype": "molecule",
+        "domain": "chem.molecule",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "formula": "NH3",
+        "smiles": "N"
+      }
+    },
+    {
+      "id": "CE:rx:haber",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Haber process (equilibrium)",
+        "ntype": "reaction",
+        "domain": "chem.equilibrium",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "equation": "N2 + 3 H2 <=> 2 NH3",
+        "reversible": true,
+        "exothermic": true,
+        "note": "工业合成氨；升温不利正向（放热）、加压有利（体积减小）。"
+      }
+    },
+    {
+      "id": "CE:rx:water_autoionization",
+      "labels": [
+        "Entity",
+        "Reaction"
+      ],
+      "props": {
+        "name": "Water autoionization",
+        "ntype": "reaction",
+        "domain": "chem.acidbase",
+        "source": "curated_seed",
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "equation": "2 H2O <=> H3O+ + OH-",
+        "reversible": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "CE:fo:mass_action->CE:sy:K[has_symbol]",
+      "source": "CE:fo:mass_action",
+      "target": "CE:sy:K",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:mass_action->CE:sy:conc[has_symbol]",
+      "source": "CE:fo:mass_action",
+      "target": "CE:sy:conc",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:reaction_quotient->CE:sy:Q[has_symbol]",
+      "source": "CE:fo:reaction_quotient",
+      "target": "CE:sy:Q",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:reaction_quotient->CE:sy:conc[has_symbol]",
+      "source": "CE:fo:reaction_quotient",
+      "target": "CE:sy:conc",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_standard->CE:sy:G[has_symbol]",
+      "source": "CE:fo:gibbs_standard",
+      "target": "CE:sy:G",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_standard->TH:sy:R[has_symbol]",
+      "source": "CE:fo:gibbs_standard",
+      "target": "TH:sy:R",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_standard->TH:sy:T[has_symbol]",
+      "source": "CE:fo:gibbs_standard",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_reaction->CE:sy:G[has_symbol]",
+      "source": "CE:fo:gibbs_reaction",
+      "target": "CE:sy:G",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_reaction->CE:sy:Q[has_symbol]",
+      "source": "CE:fo:gibbs_reaction",
+      "target": "CE:sy:Q",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_reaction->TH:sy:R[has_symbol]",
+      "source": "CE:fo:gibbs_reaction",
+      "target": "TH:sy:R",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_reaction->TH:sy:T[has_symbol]",
+      "source": "CE:fo:gibbs_reaction",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ph->CE:sy:pH[has_symbol]",
+      "source": "CE:fo:ph",
+      "target": "CE:sy:pH",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ph->CE:sy:conc[has_symbol]",
+      "source": "CE:fo:ph",
+      "target": "CE:sy:conc",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:poh->CE:sy:pH[has_symbol]",
+      "source": "CE:fo:poh",
+      "target": "CE:sy:pH",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:poh->CE:sy:conc[has_symbol]",
+      "source": "CE:fo:poh",
+      "target": "CE:sy:conc",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:kw->CE:sy:K[has_symbol]",
+      "source": "CE:fo:kw",
+      "target": "CE:sy:K",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:kw->CE:sy:conc[has_symbol]",
+      "source": "CE:fo:kw",
+      "target": "CE:sy:conc",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ka->CE:sy:Ka[has_symbol]",
+      "source": "CE:fo:ka",
+      "target": "CE:sy:Ka",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ka->CE:sy:conc[has_symbol]",
+      "source": "CE:fo:ka",
+      "target": "CE:sy:conc",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:henderson->CE:sy:pH[has_symbol]",
+      "source": "CE:fo:henderson",
+      "target": "CE:sy:pH",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:henderson->CE:sy:Ka[has_symbol]",
+      "source": "CE:fo:henderson",
+      "target": "CE:sy:Ka",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ksp->CE:sy:Ksp[has_symbol]",
+      "source": "CE:fo:ksp",
+      "target": "CE:sy:Ksp",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ksp->CE:sy:conc[has_symbol]",
+      "source": "CE:fo:ksp",
+      "target": "CE:sy:conc",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:nernst->CE:sy:F[has_symbol]",
+      "source": "CE:fo:nernst",
+      "target": "CE:sy:F",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:nernst->TH:sy:R[has_symbol]",
+      "source": "CE:fo:nernst",
+      "target": "TH:sy:R",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:nernst->TH:sy:T[has_symbol]",
+      "source": "CE:fo:nernst",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:arrhenius->CE:sy:k[has_symbol]",
+      "source": "CE:fo:arrhenius",
+      "target": "CE:sy:k",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:arrhenius->CE:sy:Ea[has_symbol]",
+      "source": "CE:fo:arrhenius",
+      "target": "CE:sy:Ea",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:arrhenius->TH:sy:T[has_symbol]",
+      "source": "CE:fo:arrhenius",
+      "target": "TH:sy:T",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:arrhenius->MA:sy:e[has_symbol]",
+      "source": "CE:fo:arrhenius",
+      "target": "MA:sy:e",
+      "type": "has_symbol",
+      "kind": "formula_symbol",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_symbol",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:mass_action->CE:pq:equilibrium_constant[defines]",
+      "source": "CE:fo:mass_action",
+      "target": "CE:pq:equilibrium_constant",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:reaction_quotient->CE:pq:reaction_quotient[defines]",
+      "source": "CE:fo:reaction_quotient",
+      "target": "CE:pq:reaction_quotient",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_standard->CE:pq:gibbs_std[defines]",
+      "source": "CE:fo:gibbs_standard",
+      "target": "CE:pq:gibbs_std",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_reaction->CE:pq:gibbs_energy[defines]",
+      "source": "CE:fo:gibbs_reaction",
+      "target": "CE:pq:gibbs_energy",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ph->CE:pq:ph[defines]",
+      "source": "CE:fo:ph",
+      "target": "CE:pq:ph",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ka->CE:pq:ka[defines]",
+      "source": "CE:fo:ka",
+      "target": "CE:pq:ka",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:henderson->CE:pq:pka[defines]",
+      "source": "CE:fo:henderson",
+      "target": "CE:pq:pka",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ksp->CE:pq:ksp[defines]",
+      "source": "CE:fo:ksp",
+      "target": "CE:pq:ksp",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:nernst->CE:pq:cell_potential[defines]",
+      "source": "CE:fo:nernst",
+      "target": "CE:pq:cell_potential",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:arrhenius->CE:pq:rate_constant[defines]",
+      "source": "CE:fo:arrhenius",
+      "target": "CE:pq:rate_constant",
+      "type": "defines",
+      "kind": "formula_quantity",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "formula_quantity",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:pq:concentration->CE:un:molar[has_unit]",
+      "source": "CE:pq:concentration",
+      "target": "CE:un:molar",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:pq:gibbs_energy->TH:un:joule[has_unit]",
+      "source": "CE:pq:gibbs_energy",
+      "target": "TH:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:pq:gibbs_std->TH:un:joule[has_unit]",
+      "source": "CE:pq:gibbs_std",
+      "target": "TH:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:pq:activation_energy->TH:un:joule[has_unit]",
+      "source": "CE:pq:activation_energy",
+      "target": "TH:un:joule",
+      "type": "has_unit",
+      "kind": "quantity_unit",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "quantity_unit",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_standard->TH:pq:gas_const[derived_from]",
+      "source": "CE:fo:gibbs_standard",
+      "target": "TH:pq:gas_const",
+      "type": "derived_from",
+      "kind": "thermo_gas_const",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "thermo_gas_const",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "ΔG°=−RT lnK 使用摩尔气体常数 R"
+      }
+    },
+    {
+      "id": "CE:fo:gibbs_standard->TH:pq:entropy[derived_from]",
+      "source": "CE:fo:gibbs_standard",
+      "target": "TH:pq:entropy",
+      "type": "derived_from",
+      "kind": "gibbs_from_entropy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "gibbs_from_entropy",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "G=H−TS：吉布斯自由能源于熵/焓"
+      }
+    },
+    {
+      "id": "CE:pq:gibbs_energy->PQ:energy[same_as]",
+      "source": "CE:pq:gibbs_energy",
+      "target": "PQ:energy",
+      "type": "same_as",
+      "kind": "gibbs_is_energy",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "gibbs_is_energy",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "alignment": "manual_curation",
+        "note": "吉布斯自由能是一种能量，锚到物理能量量"
+      }
+    },
+    {
+      "id": "CE:pq:concentration->PB:pq:concentration[same_as]",
+      "source": "CE:pq:concentration",
+      "target": "PB:pq:concentration",
+      "type": "same_as",
+      "kind": "chem_to_physicsbabel",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "chem_to_physicsbabel",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "alignment": "manual_curation",
+        "note": "化学浓度与 PhysicsBabel 的 concentration 同义"
+      }
+    },
+    {
+      "id": "CE:pq:concentration->TH:pq:n_moles[derived_from]",
+      "source": "CE:pq:concentration",
+      "target": "TH:pq:n_moles",
+      "type": "derived_from",
+      "kind": "conc_from_moles",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "conc_from_moles",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "c=n/V：浓度由物质的量与体积定义"
+      }
+    },
+    {
+      "id": "CE:pq:concentration->TH:pq:volume[derived_from]",
+      "source": "CE:pq:concentration",
+      "target": "TH:pq:volume",
+      "type": "derived_from",
+      "kind": "conc_from_volume",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "conc_from_volume",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:ph->MA:fo:log_product[derived_from]",
+      "source": "CE:fo:ph",
+      "target": "MA:fo:log_product",
+      "type": "derived_from",
+      "kind": "log_definition",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "log_definition",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "pH/pOH 的 p 函数即 −log₁₀，建立在对数运算之上"
+      }
+    },
+    {
+      "id": "CE:fo:henderson->MA:fo:log_product[derived_from]",
+      "source": "CE:fo:henderson",
+      "target": "MA:fo:log_product",
+      "type": "derived_from",
+      "kind": "log_definition_buffer",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "log_definition_buffer",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:fo:arrhenius->MA:pq:euler_e[derived_from]",
+      "source": "CE:fo:arrhenius",
+      "target": "MA:pq:euler_e",
+      "type": "derived_from",
+      "kind": "exp_base_e",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "exp_base_e",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "Arrhenius 的指数项以自然常数 e 为底"
+      }
+    },
+    {
+      "id": "CE:fo:nernst->EM:pq:voltage[derived_from]",
+      "source": "CE:fo:nernst",
+      "target": "EM:pq:voltage",
+      "type": "derived_from",
+      "kind": "nernst_potential",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "nernst_potential",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "Nernst 方程给出电池电动势（电位）"
+      }
+    },
+    {
+      "id": "CE:fo:ph->IC:fo:ph[same_as]",
+      "source": "CE:fo:ph",
+      "target": "IC:fo:ph",
+      "type": "same_as",
+      "kind": "same_concept",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "same_concept",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "alignment": "manual_curation",
+        "note": "两切片均定义 pH，此处显式归一为同一概念"
+      }
+    },
+    {
+      "id": "CE:fo:le_chatelier->CE:fo:mass_action[related_to]",
+      "source": "CE:fo:le_chatelier",
+      "target": "CE:fo:mass_action",
+      "type": "related_to",
+      "kind": "principle_of_equilibrium",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "principle_of_equilibrium",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:rx:haber->CE:fo:mass_action[derived_from]",
+      "source": "CE:rx:haber",
+      "target": "CE:fo:mass_action",
+      "type": "derived_from",
+      "kind": "equilibrium_reaction",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "equilibrium_reaction",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:rx:haber->CE:fo:le_chatelier[derived_from]",
+      "source": "CE:rx:haber",
+      "target": "CE:fo:le_chatelier",
+      "type": "derived_from",
+      "kind": "le_chatelier_haber",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "le_chatelier_haber",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:rx:water_autoionization->CE:fo:kw[derived_from]",
+      "source": "CE:rx:water_autoionization",
+      "target": "CE:fo:kw",
+      "type": "derived_from",
+      "kind": "kw_from_autoionization",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "kw_from_autoionization",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "EK:el:N->CE:rx:haber[reactant_of]",
+      "source": "EK:el:N",
+      "target": "CE:rx:haber",
+      "type": "reactant_of",
+      "kind": "nitrogen_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "nitrogen_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "EK:el:H->CE:rx:haber[reactant_of]",
+      "source": "EK:el:H",
+      "target": "CE:rx:haber",
+      "type": "reactant_of",
+      "kind": "hydrogen_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "hydrogen_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:mo:nh3->CE:rx:haber[product_of]",
+      "source": "CE:mo:nh3",
+      "target": "CE:rx:haber",
+      "type": "product_of",
+      "kind": "ammonia_product",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "ammonia_product",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:mo:nh3->EK:el:N[composed_of]",
+      "source": "CE:mo:nh3",
+      "target": "EK:el:N",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "count": 1
+      }
+    },
+    {
+      "id": "CE:mo:nh3->EK:el:H[composed_of]",
+      "source": "CE:mo:nh3",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "kind": "molecule_element",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "molecule_element",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "count": 3
+      }
+    },
+    {
+      "id": "MO:h2o->CE:rx:water_autoionization[reactant_of]",
+      "source": "MO:h2o",
+      "target": "CE:rx:water_autoionization",
+      "type": "reactant_of",
+      "kind": "water_reactant",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "water_reactant",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433"
+      }
+    },
+    {
+      "id": "CE:pq:gibbs_energy->CE:pq:activation_energy[dimensionally_consistent]",
+      "source": "CE:pq:gibbs_energy",
+      "target": "CE:pq:activation_energy",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "同能量量纲 M*L^2*T^-2"
+      }
+    },
+    {
+      "id": "CE:pq:gibbs_energy->PQ:energy[dimensionally_consistent]",
+      "source": "CE:pq:gibbs_energy",
+      "target": "PQ:energy",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "吉布斯自由能与能量同量纲"
+      }
+    },
+    {
+      "id": "CE:pq:equilibrium_constant->CE:pq:reaction_quotient[dimensionally_consistent]",
+      "source": "CE:pq:equilibrium_constant",
+      "target": "CE:pq:reaction_quotient",
+      "type": "dimensionally_consistent",
+      "kind": "derived",
+      "props": {
+        "confidence": 1.0,
+        "explicit_or_inferred": "explicit",
+        "kind": "derived",
+        "source": "curated_seed",
+        "created_at": "2026-10-09T08:54:02.662433",
+        "note": "K 与 Q 同形同量纲"
+      }
+    }
+  ]
+}

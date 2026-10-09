@@ -11,8 +11,8 @@ import os
 import shutil
 import sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))          # 01tuopu/06_PoC
-ROOT = os.path.dirname(HERE)                                # 01tuopu
+HERE = os.path.dirname(os.path.abspath(__file__))          # STTP/06_PoC
+ROOT = os.path.dirname(HERE)                                # STTP
 RAW = os.path.join(ROOT, "11_真实数据", "elementkg_raw.json")
 VIZ_OUT = os.path.join(HERE, "graph_data_phase8.json")
 AURA_DELTA = os.path.join(HERE, "etl", "neo4j", "phase8_aura_delta.json")

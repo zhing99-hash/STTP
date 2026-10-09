@@ -4,7 +4,7 @@
 为「公式知识图谱项目」实现 Phase 3：LLM 推断边生成 + 三道门禁校验闭环。
 
 ## 项目根目录
-`C:\Users\Administrator\.qclaw\workspace\01tuopu\04_验证闭环\`
+`C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\04_验证闭环\`
 
 ## 交付物清单
 

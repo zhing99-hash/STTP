@@ -37,4 +37,10 @@ Thumbs.db
 06_PoC/etl/with_inferred.json
 06_PoC/etl/normalized.json
 06_PoC/etl/normalized.jsonl
+# 合并前的自动备份（每个约 20 MB，仅本地回溯用，不入库）
+06_PoC/etl/normalized.before_*.json
 
+# 长驻服务运行日志（本机）
+.runlog/
+# Kuzu 演示数据库产物（本机）—— kuzu_db 实为文件，用 kuzu_db* 同时覆盖文件 / 目录 / .wal
+06_PoC/etl/kuzu_db*

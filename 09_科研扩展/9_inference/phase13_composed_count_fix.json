@@ -1,0 +1,593 @@
+{
+  "nodes": [],
+  "edges": [
+    {
+      "source": "MO:ch4",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 4,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "MO:ch4",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "MO:o2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "MO:co2",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "MO:co2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "MO:h2o",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 4,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:methane",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:ethane",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 4,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:ethylene",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:benzene",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "OM:mo:ethanol",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "IC:el:sodium",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:nacl",
+      "target": "IC:el:chlorine",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:hcl",
+      "target": "IC:el:chlorine",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:cl2",
+      "target": "IC:el:chlorine",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:na",
+      "target": "IC:el:sodium",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:h2o",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:h2o",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "IC:mo:o2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:glucose",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 12,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:glucose",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:glucose",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 16,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 10,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 13,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:atp",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "count": 5,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 5,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:amino_acid",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:protein",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:dna",
+      "target": "BC:el:nitrogen",
+      "type": "composed_of",
+      "count": 1.0,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:co2",
+      "target": "EL:c",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:co2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:h2o",
+      "target": "EL:h",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:h2o",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "BC:mo:o2",
+      "target": "EL:o",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:962",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:962",
+      "target": "EK:el:O",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:280",
+      "target": "EK:el:O",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:280",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 4,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:297",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:977",
+      "target": "EK:el:O",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:6324",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 4,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:6325",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:241",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:702",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:702",
+      "target": "EK:el:O",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:702",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "EK:el:Cl",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5234",
+      "target": "EK:el:Na",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "EK:el:Cl",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:313",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:24526",
+      "target": "EK:el:Cl",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 12,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "EK:el:O",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5793",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 6,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "EK:el:N",
+      "type": "composed_of",
+      "count": 5,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 16,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "EK:el:O",
+      "type": "composed_of",
+      "count": 13,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "EK:el:P",
+      "type": "composed_of",
+      "count": 3,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:5957",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 10,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "EK:el:N",
+      "type": "composed_of",
+      "count": 1,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "EK:el:H",
+      "type": "composed_of",
+      "count": 5,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "EK:el:O",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    },
+    {
+      "source": "PC:mol:750",
+      "target": "EK:el:C",
+      "type": "composed_of",
+      "count": 2,
+      "count_source": "Phase13.formula"
+    }
+  ]
+}

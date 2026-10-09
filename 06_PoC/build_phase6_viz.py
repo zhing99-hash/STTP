@@ -1,8 +1,8 @@
 import sys, os, json
-sys.path.insert(0, r"C:\Users\Administrator\.qclaw\workspace\01tuopu\06_PoC")
+sys.path.insert(0, r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\06_PoC")
 import graph_export
 
-ROOT = r"C:\Users\Administrator\.qclaw\workspace\01tuopu"
+ROOT = r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP"
 ready = json.load(open(os.path.join(ROOT, r"06_PoC\etl\neo4j\phase5_neo4j_ready.json"), encoding="utf-8"))
 seed  = json.load(open(os.path.join(ROOT, r"10_种子数据\seed_energy_combustion.json"), encoding="utf-8"))
 

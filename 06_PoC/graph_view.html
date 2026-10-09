@@ -5,12 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>公式知识图谱 · 拓扑浏览（Phase 4 · 真实数据）</title>
 
-<!-- Cytoscape.js（CDN；离线时自动降级为纯文本标签，不崩溃） -->
-<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
-<!-- fcose 快速力导布局（可选，联网时生效；离线自动跳过） -->
-<script src="https://cdn.jsdelivr.net/npm/cytoscape-fcose/cytoscape-fcose.js"></script>
+<!-- ============================================================
+     A4 · 前端依赖本地化：一律「本地 vendor 优先，缺失才回退 CDN」。
+     vendor/ 由 06_PoC/vendor/fetch_vendor.py 下载（见该脚本注释）。
+     这样断网 / CDN 不可达时仍能完整渲染；本地文件若缺失，onerror 触发 CDN 兜底。
+     ============================================================ -->
 
-<!-- MathJax（CDN，用于详情面板的 LaTeX 渲染；离线时降级为纯文本公式） -->
+<!-- Cytoscape.js（图渲染内核） -->
+<script src="vendor/cytoscape.min.js" onerror="window.__v_cy=1"></script>
+<script>
+if (window.__v_cy || !window.cytoscape) {
+  document.write('<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"><\/script>');
+}
+</script>
+
+<!-- fcose 快速力导布局（可选；缺失时自动降级为内置 cose 布局）
+     依赖链必须按序加载：layout-base -> cose-base -> cytoscape-fcose
+     （fcose 的 UMD 工厂链是 factory(root.layoutBase) / factory(root.coseBase)，
+       少任一环都会静默拿到 undefined —— 历史上页面只引了 fcose 一个文件，
+       所以 fcose 其实从未真正生效过，一直悄悄退回内置 cose。） -->
+<script src="vendor/layout-base.js" onerror="window.__v_lb=1"></script>
+<script src="vendor/cose-base.js" onerror="window.__v_cb=1"></script>
+<script src="vendor/cytoscape-fcose.js" onerror="window.__v_fc=1"></script>
+<script>
+if (window.__v_fc || !window.cytoscapeFcose) {
+  document.write('<script src="https://cdn.jsdelivr.net/npm/layout-base@2.0.1/layout-base.js"><\/script>');
+  document.write('<script src="https://cdn.jsdelivr.net/npm/cose-base@2.2.0/cose-base.js"><\/script>');
+  document.write('<script src="https://cdn.jsdelivr.net/npm/cytoscape-fcose@2.2.0/cytoscape-fcose.js"><\/script>');
+}
+</script>
+
+<!-- MathJax（详情面板 LaTeX 渲染）。
+     选 tex-svg 而非 tex-mml-chtml：SVG 输出把字形路径内嵌进 DOM，
+     不需要额外下载 30+ 个 woff 字体文件，单个文件即自包含 —— 这是能真正离线的前提。 -->
 <script>
   window.MathJax = {
     tex: {
@@ -21,7 +48,12 @@
     startup: { typeset: false }   // 详情面板按需手动 typeset
   };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="vendor/tex-svg.js" onerror="window.__v_mj=1"></script>
+<script>
+if (window.__v_mj || !window.MathJax) {
+  document.write('<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"><\/script>');
+}
+</script>
 
 <style>
   :root {
@@ -35,7 +67,7 @@
     background: var(--bg); color: var(--text);
     display: grid;
     grid-template-columns: 244px 1fr 328px;
-    grid-template-rows: 48px 1fr 132px;
+    grid-template-rows: 48px 1fr 178px;
     grid-template-areas:
       "header header header"
       "left   canvas right"
@@ -102,7 +134,35 @@
   #bottom .pathrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   #bottom input[type=text] { width: 240px; }
   #path-status { font-size: 11.5px; color: var(--muted); margin-top: 7px; }
-  #path-list { font-size: 11.5px; margin-top: 6px; max-height: 52px; overflow: auto; }
+  #path-list { font-size: 11.5px; margin-top: 6px; max-height: 104px; overflow: auto; }
+
+  /* 底栏：跨域路径高亮（A3） */
+  #bottom input[type=text] { width: 206px; }
+  .pathlegend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .pathlegend .pl { display: inline-flex; align-items: center; gap: 6px; }
+  .pl-src::before   { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 3px solid #38d9a9; }
+  .pl-dst::before   { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 3px solid #ff8787; }
+  .pl-mid::before   { content: ""; width: 10px; height: 10px; border-radius: 50%; border: 3px solid #ffd166; }
+  .pl-hop::before   { content: ""; width: 22px; border-top: 3px solid #ffd166; }
+  .pl-cross::before { content: ""; width: 22px; border-top: 3px solid #e94bf0; }
+  .pathcard {
+    border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; margin: 5px 0;
+    cursor: pointer; background: var(--panel-2);
+  }
+  .pathcard:hover { background: #2c3850; }
+  .pathcard.active { border-color: #ffd166; box-shadow: 0 0 0 1px #ffd166 inset; }
+  .pathcard .phead { font-size: 10.5px; color: var(--muted); margin-bottom: 4px; }
+  .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+  .pn {
+    padding: 1px 7px; border-radius: 10px; border: 1px solid var(--line);
+    background: #0b0f15; white-space: nowrap; font-size: 11.5px;
+  }
+  .pn i { font-style: normal; font-size: 9.5px; color: var(--muted); margin-left: 5px; }
+  .pn-src { border-color: #38d9a9; color: #9ef0d5; }
+  .pn-dst { border-color: #ff8787; color: #ffc4c4; }
+  .pn-mid { border-color: #ffd166; color: #ffe6a8; }
+  .ph { font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .ph-cross { color: #f39cf7; font-weight: 600; }
 
   /* 悬浮 tooltip（边信息） */
   #tooltip {
@@ -194,18 +254,28 @@
   </div>
 </aside>
 
-<!-- 底栏：路径查询（调用后端 /api/path，失败时前端 BFS 兜底） -->
+<!-- 底栏：跨域路径高亮（调用后端 /api/path，失败时前端 BFS 兜底） -->
 <footer id="bottom">
   <div class="pathrow">
-    <span class="pill">路径查询:</span>
-    <input type="text" id="path-src" placeholder="起点 id（如 MX:thm:gauss_bonnet）" />
+    <span class="pill">跨域路径:</span>
+    <input type="text" id="path-src" placeholder="起点 id（如 EK2:el:C）" />
     <span>→</span>
-    <input type="text" id="path-dst" placeholder="终点 id（如 MX:def:manifold）" />
-    <button class="toolbtn" id="btn-path">高亮最短路径</button>
+    <input type="text" id="path-dst" placeholder="终点 id（如 PQ:energy）" />
+    <button class="toolbtn" id="btn-path">高亮路径</button>
+    <button class="toolbtn" id="btn-pick-src" title="把画布当前选中的节点设为起点（也可 Shift+点击节点）">↓取选中为起点</button>
+    <button class="toolbtn" id="btn-pick-dst" title="把画布当前选中的节点设为终点（也可 Alt+点击节点）">↓取选中为终点</button>
+    <button class="toolbtn" id="btn-path-swap" title="交换起点与终点">⇄</button>
     <button class="toolbtn" id="btn-path-clear">清除高亮</button>
     <span class="note" id="api-status">API: 检测中 …</span>
   </div>
-  <div id="path-status">优先调用后端 <code>/api/path</code>；无后端时自动前端 BFS 兜底（有向，≤5 跳）。</div>
+  <div class="pathlegend">
+    <span class="pl pl-src">起点</span>
+    <span class="pl pl-dst">终点</span>
+    <span class="pl pl-mid">中间节点</span>
+    <span class="pl pl-hop">同域跳（实线·带边类型标签）</span>
+    <span class="pl pl-cross">跨域跳（学科改变）</span>
+  </div>
+  <div id="path-status">优先调用后端 <code>/api/path</code>；无后端时自动前端 BFS 兜底（有向，≤5 跳）。点击下方任一路径卡片即可切换高亮。</div>
   <div id="path-list"></div>
 </footer>
 
@@ -225,6 +295,7 @@ const TYPE_STYLE = {
   "Lemma":            { color: "#bcbd22", shape: "round-rectangle" },
   "Equation":         { color: "#1f77b4", shape: "round-rectangle" },
   "MathConcept":      { color: "#9467bd", shape: "ellipse" },
+  "Paper":            { color: "#4e79a7", shape: "tag" },        // Phase 8 OpenAlex 文献
   "Symbol":           { color: "#8c564b", shape: "diamond" },
   "PhysicalQuantity": { color: "#e377c2", shape: "hexagon" },
   "Molecule":         { color: "#2ca02c", shape: "triangle" },
@@ -261,7 +332,10 @@ const EDGE_TYPE_COLOR = {
   "has_functionalgroup":     "#c5b0d5",     // Phase 8.B 分子->官能团
   "has_element":             "#ffbb78",     // Phase 8.B 官能团->元素
   "has_quantity":           "#1abc9c",     // Phase 9 分子-质量物理量桥(已验证)
-  "related_to":            "#e67e22"      // Phase 9 GNN 跨域假设(待复核)
+  "related_to":            "#e67e22",     // Phase 9 GNN 跨域假设(待复核)
+  "cites":                 "#9c755f",     // Phase 8 OpenAlex 真实引用
+  "discusses":             "#8c6bb1",     // Phase 8 论文->主题概念对齐
+  "part_of":               "#b07aa1"      // Phase 8 概念包含(数论->素数...)
 };
 
 // explicit_or_inferred → 颜色（按来源着色：实线蓝=explicit，虚线橙=inferred）
@@ -457,7 +531,26 @@ function initCy(){
       { selector: ".dim", style: { "opacity": 0.10, "text-opacity": 0.12 } },
       { selector: ".hidden", style: { "display": "none" } },
       { selector: "node.hl", style: { "border-color": "#ffd166", "border-width": 6 } },
-      { selector: "edge.hl", style: { "opacity": 1, "width": 6, "line-color": "#ffd166", "target-arrow-color": "#ffd166", "line-style": "solid", "z-index": 99 } }
+      { selector: "edge.hl", style: { "opacity": 1, "width": 6, "line-color": "#ffd166", "target-arrow-color": "#ffd166", "line-style": "solid", "z-index": 99 } },
+
+      // ── A3 跨域路径高亮：起点 / 终点 / 中间节点角色区分 ──
+      // 注意：这些选择器排在 node.hl / edge.hl 之后，同优先级下「后写者胜」
+      { selector: "node.p-src", style: {
+          "border-color": "#38d9a9", "border-width": 9,
+          "overlay-color": "#38d9a9", "overlay-opacity": 0.20, "overlay-padding": 12 } },
+      { selector: "node.p-dst", style: {
+          "border-color": "#ff8787", "border-width": 9,
+          "overlay-color": "#ff8787", "overlay-opacity": 0.20, "overlay-padding": 12 } },
+      { selector: "node.p-mid", style: { "border-color": "#ffd166", "border-width": 7 } },
+      { selector: "edge.p-hop, edge.p-cross", style: {
+          "line-style": "solid", "opacity": 1, "z-index": 100,
+          "label": "data(type)", "font-size": 9, "color": "#e6edf3",
+          "text-rotation": "autorotate", "text-outline-color": "#0b0f15", "text-outline-width": 2,
+          "text-background-color": "#0b0f15", "text-background-opacity": 0.78, "text-background-padding": 2 } },
+      { selector: "edge.p-hop", style: {
+          "width": 6, "line-color": "#ffd166", "target-arrow-color": "#ffd166" } },
+      { selector: "edge.p-cross", style: {
+          "width": 8, "line-color": "#e94bf0", "target-arrow-color": "#e94bf0" } }
     ],
     layout: { name: "concentric", animate: false, padding: 60, concentric: n => (n.degree() + 1), minNodeSpacing: 30, levelWidth: () => 1, startAngle: Math.PI / 6 }
   });
@@ -572,10 +665,20 @@ function renderDetail(node){
 function bindEvents(){
   cy.on("tap", "node", evt => {
     const node = evt.target;
+    const oe = evt.originalEvent || {};
+    // Shift+点击 → 设为起点；Alt+点击 → 设为终点（快速挑两个端点，不必手打 id）
+    if (oe.shiftKey){ setEndpoint("src", node.id()); return; }
+    if (oe.altKey){ setEndpoint("dst", node.id()); return; }
     renderDetail(node);
     const related = node.closedNeighborhood();
     cy.elements().addClass("dim");
     related.removeClass("dim");
+    // 若点中的是高亮链上的节点，别把整条链压暗
+    if (node.hasClass("p-src") || node.hasClass("p-dst") || node.hasClass("p-mid")){
+      cy.elements().filter(e => e.hasClass("p-src") || e.hasClass("p-dst") ||
+                                e.hasClass("p-mid") || e.hasClass("p-hop") || e.hasClass("p-cross"))
+                   .removeClass("dim");
+    }
   });
 
   cy.on("tap", evt => {
@@ -689,8 +792,25 @@ function doSearch(){
 }
 
 /* =========================================================================
- * 8. 路径查询（优先后端 /api/path；失败则前端 BFS 兜底）
+ * 8. 跨域路径高亮（优先后端 /api/path；失败则前端 BFS 兜底）
+ *    - 起点 / 终点 / 中间节点分别着色：p-src（青） / p-dst（红） / p-mid（金）
+ *    - 路径边按「是否跨学科」区分：p-hop 同域跳（金色） / p-cross 跨域跳（品红）
+ *    - 路径边带 type 标签 → 整条链可在画布上直接读
  * ========================================================================= */
+const SUBJ_SHORT = { "数学": "数", "物理": "物", "化学": "化", "跨学科": "跨" };
+
+function subjShort(s){ return SUBJ_SHORT[s] || "跨"; }
+
+function pathNodeLabel(id){
+  const n = cy.getElementById(id);
+  return (n.nonempty() && n.data("label")) ? n.data("label") : shortId(id);
+}
+
+function pathNodeSubject(id){
+  const n = cy.getElementById(id);
+  return n.nonempty() ? (n.data("subject") || "跨学科") : "跨学科";
+}
+
 function bfsDirected(src, dst, maxHops){
   if (src === dst) return [[src]];
   const adj = {};
@@ -716,23 +836,175 @@ function bfsDirected(src, dst, maxHops){
   return results;
 }
 
+/* 相邻节点对 → 代表边（同向优先，其次取置信度最高的那条）。
+ * 36k 边若每跳都全表扫描会很慢，故建一次无向索引，之后 O(1) 查询。 */
+let _edgeIdx = null;
+function edgeIndex(){
+  if (_edgeIdx) return _edgeIdx;
+  _edgeIdx = new Map();
+  const push = (k, e) => {
+    if (!_edgeIdx.has(k)) _edgeIdx.set(k, []);
+    _edgeIdx.get(k).push(e);
+  };
+  EDGES.forEach(e => {
+    push(e.source + "\u0000" + e.target, e);
+    push(e.target + "\u0000" + e.source, e);
+  });
+  return _edgeIdx;
+}
+
+function pickEdge(a, b){
+  const cands = edgeIndex().get(a + "\u0000" + b);
+  if (!cands || !cands.length) return null;
+  let best = cands[0], bestScore = -1;
+  cands.forEach(e => {
+    const conf = (e.confidence == null ? 0.5 : e.confidence);
+    const sc = ((e.source === a && e.target === b) ? 1000 : 0) + conf;
+    if (sc > bestScore){ bestScore = sc; best = e; }
+  });
+  return best;
+}
+
+/** 把节点序列展开成 hop 明细（边类型 / 方向 / 是否跨域）。 */
+function buildHops(pathNodes){
+  const hops = [];
+  for (let i = 1; i < pathNodes.length; i++){
+    const a = pathNodes[i - 1], b = pathNodes[i];
+    const e = pickEdge(a, b);
+    const sa = pathNodeSubject(a), sb = pathNodeSubject(b);
+    hops.push({
+      from: a, to: b,
+      type: e ? (e.type || e.kind || "") : "",
+      eid: e ? e.id : null,
+      forward: e ? (e.source === a) : true,
+      conf: e ? Number(e.confidence == null ? 0.5 : e.confidence).toFixed(2) : "—",
+      cross: (sa !== sb) && sa !== "跨学科" && sb !== "跨学科"
+    });
+  }
+  return hops;
+}
+
+function countCross(pathNodes){
+  return buildHops(pathNodes).filter(h => h.cross).length;
+}
+
+function clearPathHighlight(){
+  cy.elements().removeClass("dim hl p-src p-dst p-mid p-hop p-cross");
+  document.querySelectorAll(".pathcard.active").forEach(el => el.classList.remove("active"));
+}
+
+/** 只给两个端点打角色标记（「取选中为起点/终点」的即时反馈）。 */
+function applyEndpointClasses(){
+  const s = document.getElementById("path-src").value.trim();
+  const t = document.getElementById("path-dst").value.trim();
+  cy.nodes().removeClass("p-src p-dst");
+  if (s){ const n = cy.getElementById(s); if (n.nonempty()) n.removeClass("dim").addClass("p-src"); }
+  if (t){ const n = cy.getElementById(t); if (n.nonempty()) n.removeClass("dim").addClass("p-dst"); }
+}
+
+/** 把画布上当前选中的节点填入起点/终点框。 */
+function pickSelectedAs(which){
+  const sel = cy.$("node:selected");
+  const status = document.getElementById("path-status");
+  if (sel.empty()){
+    status.textContent = "请先在画布上点选一个节点，再点该按钮（也可 Shift+点击节点设为起点、Alt+点击设为终点）。";
+    return;
+  }
+  const id = sel[0].id();
+  setEndpoint(which, id);
+}
+
+function setEndpoint(which, id){
+  const inp = document.getElementById(which === "src" ? "path-src" : "path-dst");
+  inp.value = id;
+  applyEndpointClasses();
+  document.getElementById("path-status").textContent =
+    `已设${which === "src" ? "起点" : "终点"}：${id}（${pathNodeSubject(id)}）`;
+}
+
+/**
+ * 高亮一条路径。
+ * @returns {{nodes:number, edges:number, cross:number, missing:string[]}}
+ */
 function highlightPath(pathNodes){
-  cy.elements().removeClass("dim hl");
+  clearPathHighlight();
   cy.elements().addClass("dim");
+  const n = pathNodes.length;
+  const hops = buildHops(pathNodes);
   const eles = cy.collection();
+  const missing = [];
+
   pathNodes.forEach((id, i) => {
-    const n = cy.getElementById(id);
-    if (n.nonempty()) eles.merge(n);
-    if (i > 0){
-      const prev = pathNodes[i - 1];
-      cy.edges().forEach(e => {
-        if (e.data("source") === prev && e.data("target") === id) eles.merge(e);
-      });
+    const node = cy.getElementById(id);
+    if (node.empty()){ missing.push(id); return; }
+    node.addClass(i === 0 ? "p-src" : (i === n - 1 ? "p-dst" : "p-mid"));
+    eles.merge(node);
+  });
+
+  let cross = 0, hitEdges = 0;
+  hops.forEach(h => {
+    if (h.cross) cross++;
+    const e = h.eid ? cy.getElementById(h.eid) : null;
+    if (e && e.nonempty()){
+      e.addClass(h.cross ? "p-cross" : "p-hop");
+      eles.merge(e);
+      hitEdges++;
     }
   });
-  eles.removeClass("dim").addClass("hl");
-  cy.animate({ fit: { eles: eles, padding: 60 } }, { duration: 400 });
-  return eles.length;
+
+  eles.removeClass("dim");  // 角色 class 自带描边/配色，不叠加 .hl 以免覆盖
+  if (eles.nonempty()) cy.animate({ fit: { eles: eles, padding: 70 } }, { duration: 400 });
+  return { nodes: n, edges: hitEdges, cross, missing };
+}
+
+/** 把一条路径渲染成「节点[学科] ─→ 边类型 ─→ 节点[学科]」的可读链条。 */
+function renderChain(pathNodes){
+  const n = pathNodes.length;
+  const hops = buildHops(pathNodes);
+  const parts = [];
+  pathNodes.forEach((id, i) => {
+    const role = i === 0 ? "src" : (i === n - 1 ? "dst" : "mid");
+    const sj = pathNodeSubject(id);
+    parts.push(
+      `<span class="pn pn-${role}" title="${escapeHtml(id)} · ${escapeHtml(sj)}">` +
+        `${escapeHtml(pathNodeLabel(id))}<i>${escapeHtml(subjShort(sj))}</i></span>`
+    );
+    if (i < hops.length){
+      const h = hops[i];
+      const tip = `${h.type || "?"} · ${h.from} → ${h.to} · conf ${h.conf}` + (h.cross ? " · 跨域" : "");
+      parts.push(
+        `<span class="ph ${h.cross ? "ph-cross" : ""}" title="${escapeHtml(tip)}">` +
+          `${h.forward ? "─→" : "←─"} ${escapeHtml(h.type || "?")}${h.cross ? " ⚡" : ""}</span>`
+      );
+    }
+  });
+  return `<div class="chain">${parts.join("")}</div>`;
+}
+
+/** 渲染候选路径卡片；点击卡片即切换高亮。 */
+function renderPathList(paths, activeIdx){
+  const list = document.getElementById("path-list");
+  list.innerHTML = paths.slice(0, 8).map((p, i) => {
+    const cross = countCross(p);
+    const head = `路径 ${i + 1} · ${p.length - 1} 跳` +
+      (cross ? ` · <b style="color:#f39cf7">${cross} 次跨域</b>` : " · 全程同域");
+    return `<div class="pathcard${i === activeIdx ? " active" : ""}" data-idx="${i}">` +
+           `<div class="phead">${head}</div>${renderChain(p)}</div>`;
+  }).join("");
+
+  const total = paths.length;
+  list.querySelectorAll(".pathcard").forEach(card => {
+    card.addEventListener("click", () => {
+      const i = parseInt(card.getAttribute("data-idx"), 10);
+      const p = paths[i];
+      if (!p) return;
+      const st = highlightPath(p);
+      renderPathList(paths, i);
+      const crossTxt = st.cross ? ` · <b style="color:#f39cf7">${st.cross} 次跨域</b>` : " · 全程同域";
+      document.getElementById("path-status").textContent =
+        `已高亮路径 ${i + 1}／共 ${total} 条（${p.length - 1} 跳${crossTxt}）。`;
+    });
+  });
 }
 
 async function runPath(){
@@ -741,33 +1013,45 @@ async function runPath(){
   const status = document.getElementById("path-status");
   const list = document.getElementById("path-list");
   list.innerHTML = "";
-  if (!s || !t){ status.textContent = "请输入起点与终点节点 id。"; return; }
+  if (!s || !t){
+    status.textContent = "请输入起点与终点节点 id（或选中节点后点「取选中为起点/终点」）。";
+    return;
+  }
+
+  const absent = [s, t].filter(id => cy.getElementById(id).empty());
+  if (absent.length){
+    clearPathHighlight();
+    status.textContent = `✗ 渲染图中不存在节点：${absent.join("、")}（id 需完整，如 EK2:el:C / PQ:energy）。`;
+    return;
+  }
 
   let paths = null, via = "";
   try {
     const r = await fetch(`./api/path?src=${encodeURIComponent(s)}&dst=${encodeURIComponent(t)}`, { cache: "no-store" });
     if (r.ok){
       const j = await r.json();
-      if (Array.isArray(j.paths)){ paths = j.paths; via = "后端 /api/path"; }
+      if (Array.isArray(j.paths) && j.paths.length){ paths = j.paths; via = "后端 /api/path"; }
     }
   } catch (e) { /* 无后端 → 走兜底 */ }
 
   if (!paths || !paths.length){
     paths = bfsDirected(s, t, 5);
-    via = "前端 BFS 兜底（有向 ≤5 跳）";
+    if (paths.length) via = "前端 BFS 兜底（有向 ≤5 跳）";
   }
 
   if (!paths || !paths.length){
-    cy.elements().removeClass("dim hl");
-    status.textContent = `${via} · 未找到 ${s} → ${t} 的路径。`;
+    clearPathHighlight();
+    status.textContent = `${via || "路径查询"} · 未找到 ${s} → ${t} 的有向路径（可检查边方向，或放宽跳数上限）。`;
     return;
   }
 
-  const shortest = paths.slice().sort((a, b) => a.length - b.length)[0];
-  highlightPath(shortest);
-  status.textContent = `${via} · 共 ${paths.length} 条路径，已高亮最短路径（${shortest.length - 1} 跳）。`;
-  list.innerHTML = paths.slice(0, 5).map(p =>
-    `<div>· ${p.map(escapeHtml).join(" → ")}</div>`).join("");
+  const ordered = paths.slice().sort((a, b) => a.length - b.length);
+  const st = highlightPath(ordered[0]);
+  renderPathList(ordered, 0);
+  const crossTxt = st.cross ? `，其中 <b style="color:#f39cf7">${st.cross} 次跨域（学科发生切换）</b>` : "，全程同域";
+  status.textContent = `${via} · 共 ${ordered.length} 条路径；已高亮最短的一条（${ordered[0].length - 1} 跳${crossTxt}）。`;
+  if (!st.edges) status.textContent += " ⚠ 该链在渲染图中找不到对应边。";
+  if (st.missing.length) status.textContent += ` ⚠ ${st.missing.length} 个中间节点不在渲染图中。`;
 }
 
 /* =========================================================================
@@ -907,13 +1191,22 @@ async function boot(){
     if (ev.key === "Enter") doSearch();
   });
   document.getElementById("btn-search").addEventListener("click", doSearch);
-  document.getElementById("btn-path").addEventListener("click", runPath);
+  document.getElementById("btn-path").addEventListener("click", () => runPath());
+  document.getElementById("btn-pick-src").addEventListener("click", () => pickSelectedAs("src"));
+  document.getElementById("btn-pick-dst").addEventListener("click", () => pickSelectedAs("dst"));
+  document.getElementById("btn-path-swap").addEventListener("click", () => {
+    const a = document.getElementById("path-src"), b = document.getElementById("path-dst");
+    const tmp = a.value; a.value = b.value; b.value = tmp;
+    applyEndpointClasses();
+    if (a.value.trim() && b.value.trim()) runPath();
+  });
   document.getElementById("btn-path-clear").addEventListener("click", () => {
-    cy.elements().removeClass("dim hl");
+    clearPathHighlight();
     document.getElementById("path-list").innerHTML = "";
+    document.getElementById("path-status").textContent = "已清除路径高亮。";
   });
   document.getElementById("btn-fit").addEventListener("click", () => {
-    cy.elements().removeClass("dim hl"); cy.fit(undefined, 40);
+    clearPathHighlight(); cy.fit(undefined, 40);
   });
   document.getElementById("btn-reset").addEventListener("click", () => {
     state.ntypes = new Set(ntypes);
@@ -924,7 +1217,9 @@ async function boot(){
     document.getElementById("f-ghost").checked = true;
     document.querySelectorAll('#left input[type=checkbox]').forEach(c => c.checked = true);
     document.getElementById("f-verified").checked = false;
-    cy.elements().removeClass("dim hl hidden");
+    clearPathHighlight();
+    cy.elements().removeClass("hidden");
+    document.getElementById("path-list").innerHTML = "";
     cy.fit(undefined, 40);
   });
   document.getElementById("sel-layout").addEventListener("change", ev => setLayout(ev.target.value));

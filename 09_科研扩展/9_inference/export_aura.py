@@ -4,7 +4,7 @@ import json, os, sys
 from neo4j import GraphDatabase
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(os.path.dirname(HERE))  # 01tuopu
+ROOT = os.path.dirname(os.path.dirname(HERE))  # STTP
 OUT = os.path.join(ROOT, "06_PoC", "graph_data_phase12.json")
 TMP = os.path.join(ROOT, "06_PoC", "_phase12_export_raw.json")
 

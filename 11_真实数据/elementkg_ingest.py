@@ -21,6 +21,9 @@ import os
 from collections import defaultdict
 from rdflib import Graph, RDF, OWL, Namespace, Literal
 
+# 权威元素参考表（同一目录），用于补全 OWL 缺失的字段
+from element_reference import by_symbol as _el_by_symbol, BY_SYMBOL as _EL_BY_SYMBOL
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 OWL_PATH = os.path.join(HERE, "elementkg.owl")
 OUT = os.path.join(HERE, "elementkg_raw.json")
@@ -53,6 +56,27 @@ def is_element(s, types):
         if any(k in low for k in ['metal', 'gasse', 'nonmetal', 'earth', 'loid', 'actinite', 'lanthan']):
             return True
     return False
+
+
+def family_key(sym):
+    """IUPAC 族归属键：有族号用族号，f 区用 series。
+
+    ElementKG 的 `hasFamily*` 把「3 族(Sc/Y/La/Ac) + 镧系(Ce–Lu) + 锕系(Th–Lr)」
+    并成一个 32 元"族"，与 IUPAC 18 族口径不符——故 family 边一律按权威表校正。
+    """
+    r = _EL_BY_SYMBOL.get(sym) if sym else None
+    if not r:
+        return None
+    if r["group"] is not None:
+        return ("g", r["group"])
+    if r["series"]:
+        return ("series", r["series"])
+    return None
+
+
+def period_of(sym):
+    r = _EL_BY_SYMBOL.get(sym) if sym else None
+    return r["period"] if r else None
 
 
 def main():
@@ -101,15 +125,47 @@ def main():
                 tgt = sym2ek.get(ln(o))
                 if tgt and tgt != ek_id:
                     if pn.startswith("hasPeriod"):
-                        try:
-                            period = int(pn[len("hasPeriod"):])
-                            props.setdefault("period", period)
-                        except Exception:
-                            pass
-                        rel_pairs["same_period"].add(frozenset({ek_id, tgt}))
+                        # 周期号统一由权威表给出（见下方 ref 段）；此处仅收敛边
+                        if period_of(sym) is not None and period_of(sym) == period_of(ln(o)):
+                            rel_pairs["same_period"].add(frozenset({ek_id, tgt}))
                     elif pn.startswith("hasFamily"):
-                        rel_pairs["same_family"].add(frozenset({ek_id, tgt}))
+                        # 按 IUPAC 18 族校正：跨族（含 f 区与 3 族混淆）不入边
+                        ku, kv = family_key(sym), family_key(ln(o))
+                        if ku is not None and ku == kv:
+                            rel_pairs["same_family"].add(frozenset({ek_id, tgt}))
                     # hasState* 过密(近全连通团)，改为节点属性 state，不入边
+
+        # 权威参考表对齐：OWL 对超重元素（Cn/Ds/Fl/Lv/Mc/Mt/Nh/Og/Rg/Ts）缺
+        # hasWeight / hasAtomic / hasName 字面量；且 hasAtomic 对个别元素是
+        # 「族号」而非原子序数（典型如 Oxygen 记为 16）——故原子序数一律以
+        # 权威表为准，并顺带补全 period / group / block / series。
+        ref = _el_by_symbol(sym)
+        if ref:
+            filled = []
+            for key, val in (("atomic_weight", ref["atomic_weight"]),
+                             ("name", ref["name"])):
+                if props.get(key) in (None, ""):
+                    props[key] = val
+                    filled.append(key)
+            if props.get("atomic_number") != ref["atomic_number"]:
+                if props.get("atomic_number") is not None and "ek_atomic_raw" not in props:
+                    props["ek_atomic_raw"] = props["atomic_number"]
+                props["atomic_number"] = ref["atomic_number"]
+                filled.append("atomic_number")
+            # 周期表位置（IUPAC）：period / group / block / series
+            props["period"] = ref["period"]
+            if ref["group"] is not None:
+                props["group"] = ref["group"]
+            else:
+                props.pop("group", None)
+            props["block"] = ref["block"]
+            if ref["series"]:
+                props["series"] = ref["series"]
+            else:
+                props.pop("series", None)
+            props["periodic_source"] = "element_reference_iupac"
+            if filled:
+                props["reference_filled"] = ",".join(filled)
         nodes.append({"id": ek_id, "labels": ["Entity", "Element"], "props": props})
 
     # same_as 桥接现有骨架 EL:* 节点（按符号大小写不敏感）

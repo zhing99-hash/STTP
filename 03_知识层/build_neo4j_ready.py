@@ -26,7 +26,7 @@ Neo4j 数据集：
 
 运行
 ----
-    cd 01tuopu/03_知识层
+    cd STTP/03_知识层
     python build_neo4j_ready.py
 """
 

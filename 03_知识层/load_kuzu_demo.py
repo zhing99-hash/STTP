@@ -10,9 +10,17 @@ Phase 2 图库化真实执行演示（嵌入式 Cypher 引擎 Kuzu，无需 Java
 Kuzu 作为本地开发态的嵌入式 Cypher 引擎，用于在此环境给出真实执行证据；
 其 Cypher 语法与 Neo4j 高度兼容，查询可平移。
 
-运行：python load_kuzu_demo.py
+幂等性（A9）
+-----------
+DDL 一律 `IF NOT EXISTS`，数据写入一律 `MERGE`（节点按 id、边按 (起点, 类型, 终点)），
+因此**反复运行不会报 `Node already exists`，也不会重复灌数据**。
+默认在既有库上增量对齐；需要从零重建时显式加 `--fresh`（会先删库）。
+
+运行：python load_kuzu_demo.py            # 幂等：复用/对齐既有库
+      python load_kuzu_demo.py --fresh    # 先删库再全量重建
 依赖：kuzu
 """
+import argparse
 import os
 import json
 import shutil
@@ -33,26 +41,39 @@ def rel_name(etype):
 def main():
     import kuzu
 
+    ap = argparse.ArgumentParser(description="Kuzu 嵌入式图库演示（幂等）")
+    ap.add_argument("--fresh", action="store_true",
+                    help="先删除既有库再全量重建；默认在既有库上幂等对齐")
+    ap.add_argument("--db", default=DB_DIR, help=f"图库路径（默认 {DB_DIR}）")
+    ap.add_argument("--limit", type=int, default=0, help="只灌前 N 个节点/N 条边（调试用，0=全部）")
+    args = ap.parse_args()
+    db_dir = os.path.abspath(args.db)
+
     if not os.path.exists(NORMALIZED):
         raise SystemExit(f"[ERROR] 未找到 {NORMALIZED}，请先运行 etl_pipeline.py")
 
     data = json.load(open(NORMALIZED, encoding="utf-8"))
     nodes = data["nodes"]
     edges = data["edges"]
+    if args.limit:
+        keep = {n["id"] for n in nodes[: args.limit]}
+        nodes = nodes[: args.limit]
+        edges = [e for e in edges if e["source"] in keep and e["target"] in keep]
 
-    # 清理旧库（Kuzu 在 Windows 上以单文件形式存储），保证可重复运行
-    if os.path.exists(DB_DIR):
-        if os.path.isdir(DB_DIR):
-            shutil.rmtree(DB_DIR)
+    # --fresh：显式删库（Kuzu 在 Windows 上可能以单目录或单文件形式存储）
+    if args.fresh and os.path.exists(db_dir):
+        if os.path.isdir(db_dir):
+            shutil.rmtree(db_dir)
         else:
-            os.remove(DB_DIR)
+            os.remove(db_dir)
+        print(f"[0] --fresh：已清除旧库 {db_dir}")
 
-    db = kuzu.Database(DB_DIR)
+    db = kuzu.Database(db_dir)
     conn = kuzu.Connection(db)
 
-    print("[1] 建立节点表 Node ...")
+    print("[1] 建立节点表 Node（IF NOT EXISTS）...")
     conn.execute(
-        "CREATE NODE TABLE Node("
+        "CREATE NODE TABLE IF NOT EXISTS Node("
         "id STRING, name STRING, ntype STRING, latex STRING, "
         "informal STRING, confidence DOUBLE, labels STRING, "
         "PRIMARY KEY(id))"
@@ -60,23 +81,24 @@ def main():
 
     # 为每个出现的边类型建一张关系表，统一引用 Node
     edge_types = sorted({e["type"] for e in edges})
-    print(f"[2] 为 {len(edge_types)} 种边类型建立关系表: {edge_types}")
+    print(f"[2] 为 {len(edge_types)} 种边类型建立关系表（IF NOT EXISTS）: {edge_types}")
     for et in edge_types:
         rname = rel_name(et)
         conn.execute(
-            f"CREATE REL TABLE {rname}("
+            f"CREATE REL TABLE IF NOT EXISTS {rname}("
             f"FROM Node TO Node, kind STRING, confidence DOUBLE, "
             f"explicit_or_inferred STRING, source STRING)"
         )
 
-    print(f"[3] 灌入 {len(nodes)} 个节点 ...")
+    print(f"[3] 对齐 {len(nodes)} 个节点（MERGE by id）...")
     for n in nodes:
         p = n.get("props", {})
         labels = n.get("labels", [])
         labels_str = ";".join(labels) if isinstance(labels, list) else str(labels)
         conn.execute(
-            "CREATE (:Node {id:$id, name:$name, ntype:$ntype, latex:$latex, "
-            "informal:$informal, confidence:$conf, labels:$labels})",
+            "MERGE (x:Node {id:$id}) "
+            "SET x.name=$name, x.ntype=$ntype, x.latex=$latex, "
+            "x.informal=$informal, x.confidence=$conf, x.labels=$labels",
             {
                 "id": n["id"],
                 "name": str(p.get("name", n.get("local_id", ""))),
@@ -88,14 +110,15 @@ def main():
             },
         )
 
-    print(f"[4] 灌入 {len(edges)} 条边 ...")
+    print(f"[4] 对齐 {len(edges)} 条边（MERGE by 起点/类型/终点）...")
     for e in edges:
         p = e.get("props", {})
         rname = rel_name(e["type"])
         conn.execute(
             f"MATCH (a:Node {{id:$sid}}), (b:Node {{id:$eid}}) "
-            f"CREATE (a)-[:{rname} {{kind:$kind, confidence:$conf, "
-            f"explicit_or_inferred:$eoi, source:$src}}]->(b)",
+            f"MERGE (a)-[r:{rname}]->(b) "
+            f"SET r.kind=$kind, r.confidence=$conf, "
+            f"r.explicit_or_inferred=$eoi, r.source=$src",
             {
                 "sid": e["source"],
                 "eid": e["target"],

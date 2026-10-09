@@ -13,7 +13,7 @@ USER = os.environ.get("NEO4J_USER", "neo4j")
 PW = os.environ.get("NEO4J_PASSWORD", "formula_graph_2026")
 DB = os.environ.get("NEO4J_DATABASE", "neo4j")
 
-HERE = "C:\\Users\\Administrator\\.qclaw\\workspace\\01tuopu\\09_科研扩展\\9_inference"
+HERE = os.path.dirname(os.path.abspath(__file__))
 REVIEW = json.load(open(HERE + "\\llm_review_85.json", encoding="utf-8"))
 
 verify = REVIEW["verified"]

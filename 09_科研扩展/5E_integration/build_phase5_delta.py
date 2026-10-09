@@ -9,7 +9,7 @@ import json
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ETL = r"C:\Users\Administrator\.qclaw\workspace\01tuopu\06_PoC\etl\neo4j"
+ETL = r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\06_PoC\etl\neo4j"
 
 BASE = os.path.join(ETL, "neo4j_ready.json")
 PH5 = os.path.join(ETL, "phase5_neo4j_ready.json")

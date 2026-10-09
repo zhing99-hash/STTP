@@ -1,0 +1,3165 @@
+{
+  "nodes": [],
+  "edges": [
+    {
+      "id": "P9D:has_quantity:MO:ch4->PB:pq:molar_mass",
+      "source": "MO:ch4",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 16.043,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:MO:o2->PB:pq:molar_mass",
+      "source": "MO:o2",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 31.998,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:MO:co2->PB:pq:molar_mass",
+      "source": "MO:co2",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 44.009,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:MO:h2o->PB:pq:molar_mass",
+      "source": "MO:h2o",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 18.015,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:OM:mo:methane->PB:pq:molar_mass",
+      "source": "OM:mo:methane",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 16.043,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:OM:mo:ethane->PB:pq:molar_mass",
+      "source": "OM:mo:ethane",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 30.07,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:OM:mo:ethylene->PB:pq:molar_mass",
+      "source": "OM:mo:ethylene",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.054,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:OM:mo:benzene->PB:pq:molar_mass",
+      "source": "OM:mo:benzene",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 78.114,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:OM:mo:ethanol->PB:pq:molar_mass",
+      "source": "OM:mo:ethanol",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 46.069,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:IC:mo:nacl->PB:pq:molar_mass",
+      "source": "IC:mo:nacl",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 58.4398,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:IC:mo:hcl->PB:pq:molar_mass",
+      "source": "IC:mo:hcl",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 36.458,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:IC:mo:cl2->PB:pq:molar_mass",
+      "source": "IC:mo:cl2",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 70.9,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:IC:mo:na->PB:pq:molar_mass",
+      "source": "IC:mo:na",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 22.9898,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:IC:mo:h2o->PB:pq:molar_mass",
+      "source": "IC:mo:h2o",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 18.015,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:IC:mo:o2->PB:pq:molar_mass",
+      "source": "IC:mo:o2",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 31.998,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:BC:mo:glucose->PB:pq:molar_mass",
+      "source": "BC:mo:glucose",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 180.156,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:BC:mo:co2->PB:pq:molar_mass",
+      "source": "BC:mo:co2",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 44.009,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:BC:mo:h2o->PB:pq:molar_mass",
+      "source": "BC:mo:h2o",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 18.015,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:BC:mo:o2->PB:pq:molar_mass",
+      "source": "BC:mo:o2",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 31.998,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:962->PB:pq:molar_mass",
+      "source": "PC:mol:962",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 18.015,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:280->PB:pq:molar_mass",
+      "source": "PC:mol:280",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 44.009,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:297->PB:pq:molar_mass",
+      "source": "PC:mol:297",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 16.043,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:977->PB:pq:molar_mass",
+      "source": "PC:mol:977",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 31.998,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:6324->PB:pq:molar_mass",
+      "source": "PC:mol:6324",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 30.07,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:6325->PB:pq:molar_mass",
+      "source": "PC:mol:6325",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.054,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:241->PB:pq:molar_mass",
+      "source": "PC:mol:241",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 78.114,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:702->PB:pq:molar_mass",
+      "source": "PC:mol:702",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 46.069,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:5234->PB:pq:molar_mass",
+      "source": "PC:mol:5234",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 58.4398,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:313->PB:pq:molar_mass",
+      "source": "PC:mol:313",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 36.458,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:24526->PB:pq:molar_mass",
+      "source": "PC:mol:24526",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 70.9,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:5793->PB:pq:molar_mass",
+      "source": "PC:mol:5793",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 180.156,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:5957->PB:pq:molar_mass",
+      "source": "PC:mol:5957",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 507.1813,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:PC:mol:750->PB:pq:molar_mass",
+      "source": "PC:mol:750",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 75.067,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG2->PB:pq:molar_mass",
+      "source": "EK2:fg:FG2",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 29.018,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG32->PB:pq:molar_mass",
+      "source": "EK2:fg:FG32",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.01,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG52->PB:pq:molar_mass",
+      "source": "EK2:fg:FG52",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 13.019,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG46->PB:pq:molar_mass",
+      "source": "EK2:fg:FG46",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 30.006,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG44->PB:pq:molar_mass",
+      "source": "EK2:fg:FG44",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 26.018,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG27->PB:pq:molar_mass",
+      "source": "EK2:fg:FG27",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.01,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG26->PB:pq:molar_mass",
+      "source": "EK2:fg:FG26",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 29.018,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG5->PB:pq:molar_mass",
+      "source": "EK2:fg:FG5",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 13.019,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG41->PB:pq:molar_mass",
+      "source": "EK2:fg:FG41",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.01,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG64->PB:pq:molar_mass",
+      "source": "EK2:fg:FG64",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 44.084,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG42->PB:pq:molar_mass",
+      "source": "EK2:fg:FG42",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 29.018,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG63->PB:pq:molar_mass",
+      "source": "EK2:fg:FG63",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 26.018,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG36->PB:pq:molar_mass",
+      "source": "EK2:fg:FG36",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 17.007,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG66->PB:pq:molar_mass",
+      "source": "EK2:fg:FG66",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.999,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG4->PB:pq:molar_mass",
+      "source": "EK2:fg:FG4",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 13.019,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG47->PB:pq:molar_mass",
+      "source": "EK2:fg:FG47",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 30.006,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG58->PB:pq:molar_mass",
+      "source": "EK2:fg:FG58",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.015,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG60->PB:pq:molar_mass",
+      "source": "EK2:fg:FG60",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 27.026,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG28->PB:pq:molar_mass",
+      "source": "EK2:fg:FG28",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.01,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG3->PB:pq:molar_mass",
+      "source": "EK2:fg:FG3",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 29.018,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG1->PB:pq:molar_mass",
+      "source": "EK2:fg:FG1",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 14.007,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG80->PB:pq:molar_mass",
+      "source": "EK2:fg:FG80",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 18.9984,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG69->PB:pq:molar_mass",
+      "source": "EK2:fg:FG69",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 17.007,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG18->PB:pq:molar_mass",
+      "source": "EK2:fg:FG18",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.01,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG55->PB:pq:molar_mass",
+      "source": "EK2:fg:FG55",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 46.9728,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG10->PB:pq:molar_mass",
+      "source": "EK2:fg:FG10",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 26.018,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG56->PB:pq:molar_mass",
+      "source": "EK2:fg:FG56",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 47.9808,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG59->PB:pq:molar_mass",
+      "source": "EK2:fg:FG59",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 27.026,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG81->PB:pq:molar_mass",
+      "source": "EK2:fg:FG81",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 261.2569,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG71->PB:pq:molar_mass",
+      "source": "EK2:fg:FG71",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.999,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG35->PB:pq:molar_mass",
+      "source": "EK2:fg:FG35",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 17.007,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG25->PB:pq:molar_mass",
+      "source": "EK2:fg:FG25",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 42.017,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG79->PB:pq:molar_mass",
+      "source": "EK2:fg:FG79",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 35.45,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG9->PB:pq:molar_mass",
+      "source": "EK2:fg:FG9",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 13.019,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG54->PB:pq:molar_mass",
+      "source": "EK2:fg:FG54",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 30.9738,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG72->PB:pq:molar_mass",
+      "source": "EK2:fg:FG72",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 14.007,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG43->PB:pq:molar_mass",
+      "source": "EK2:fg:FG43",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 30.006,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG16->PB:pq:molar_mass",
+      "source": "EK2:fg:FG16",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 26.809,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG30->PB:pq:molar_mass",
+      "source": "EK2:fg:FG30",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.999,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG62->PB:pq:molar_mass",
+      "source": "EK2:fg:FG62",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.015,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG37->PB:pq:molar_mass",
+      "source": "EK2:fg:FG37",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 42.017,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG82->PB:pq:molar_mass",
+      "source": "EK2:fg:FG82",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 126.9045,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG70->PB:pq:molar_mass",
+      "source": "EK2:fg:FG70",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.999,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG38->PB:pq:molar_mass",
+      "source": "EK2:fg:FG38",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 42.017,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG21->PB:pq:molar_mass",
+      "source": "EK2:fg:FG21",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.01,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG17->PB:pq:molar_mass",
+      "source": "EK2:fg:FG17",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 42.017,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG68->PB:pq:molar_mass",
+      "source": "EK2:fg:FG68",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.999,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG78->PB:pq:molar_mass",
+      "source": "EK2:fg:FG78",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 79.904,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG31->PB:pq:molar_mass",
+      "source": "EK2:fg:FG31",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 15.999,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG49->PB:pq:molar_mass",
+      "source": "EK2:fg:FG49",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 28.01,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG65->PB:pq:molar_mass",
+      "source": "EK2:fg:FG65",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 17.007,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:has_quantity:EK2:fg:FG40->PB:pq:molar_mass",
+      "source": "EK2:fg:FG40",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "molecule_molar_mass",
+      "props": {
+        "quantity": "molar_mass",
+        "value": 42.017,
+        "unit": "g/mol",
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-PHY",
+        "rationale": "molar mass = Σ atomic_weight × count (composition x element weights)",
+        "missing_elements": [],
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->MO:ch4",
+      "source": "RX:comb_ch4",
+      "target": "MO:ch4",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->OM:mo:methane",
+      "source": "RX:comb_ch4",
+      "target": "OM:mo:methane",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->PC:mol:297",
+      "source": "RX:comb_ch4",
+      "target": "PC:mol:297",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->MO:o2",
+      "source": "RX:comb_ch4",
+      "target": "MO:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->IC:mo:o2",
+      "source": "RX:comb_ch4",
+      "target": "IC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->BC:mo:o2",
+      "source": "RX:comb_ch4",
+      "target": "BC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->PC:mol:977",
+      "source": "RX:comb_ch4",
+      "target": "PC:mol:977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:RX:comb_ch4->EK2:mol:molecule_977",
+      "source": "RX:comb_ch4",
+      "target": "EK2:mol:molecule_977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->MO:co2",
+      "source": "RX:comb_ch4",
+      "target": "MO:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->BC:mo:co2",
+      "source": "RX:comb_ch4",
+      "target": "BC:mo:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->PC:mol:280",
+      "source": "RX:comb_ch4",
+      "target": "PC:mol:280",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->MO:h2o",
+      "source": "RX:comb_ch4",
+      "target": "MO:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->IC:mo:h2o",
+      "source": "RX:comb_ch4",
+      "target": "IC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->BC:mo:h2o",
+      "source": "RX:comb_ch4",
+      "target": "BC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->PC:mol:962",
+      "source": "RX:comb_ch4",
+      "target": "PC:mol:962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:RX:comb_ch4->EK2:mol:molecule_962",
+      "source": "RX:comb_ch4",
+      "target": "EK2:mol:molecule_962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethane_comb->OM:mo:ethane",
+      "source": "OM:rx:ethane_comb",
+      "target": "OM:mo:ethane",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethane_comb->PC:mol:6324",
+      "source": "OM:rx:ethane_comb",
+      "target": "PC:mol:6324",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethane_comb->MO:o2",
+      "source": "OM:rx:ethane_comb",
+      "target": "MO:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethane_comb->IC:mo:o2",
+      "source": "OM:rx:ethane_comb",
+      "target": "IC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethane_comb->BC:mo:o2",
+      "source": "OM:rx:ethane_comb",
+      "target": "BC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethane_comb->PC:mol:977",
+      "source": "OM:rx:ethane_comb",
+      "target": "PC:mol:977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethane_comb->EK2:mol:molecule_977",
+      "source": "OM:rx:ethane_comb",
+      "target": "EK2:mol:molecule_977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->MO:co2",
+      "source": "OM:rx:ethane_comb",
+      "target": "MO:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->BC:mo:co2",
+      "source": "OM:rx:ethane_comb",
+      "target": "BC:mo:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->PC:mol:280",
+      "source": "OM:rx:ethane_comb",
+      "target": "PC:mol:280",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->MO:h2o",
+      "source": "OM:rx:ethane_comb",
+      "target": "MO:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->IC:mo:h2o",
+      "source": "OM:rx:ethane_comb",
+      "target": "IC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->BC:mo:h2o",
+      "source": "OM:rx:ethane_comb",
+      "target": "BC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->PC:mol:962",
+      "source": "OM:rx:ethane_comb",
+      "target": "PC:mol:962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethane_comb->EK2:mol:molecule_962",
+      "source": "OM:rx:ethane_comb",
+      "target": "EK2:mol:molecule_962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethanol_comb->OM:mo:ethanol",
+      "source": "OM:rx:ethanol_comb",
+      "target": "OM:mo:ethanol",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethanol_comb->MO:o2",
+      "source": "OM:rx:ethanol_comb",
+      "target": "MO:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethanol_comb->IC:mo:o2",
+      "source": "OM:rx:ethanol_comb",
+      "target": "IC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethanol_comb->BC:mo:o2",
+      "source": "OM:rx:ethanol_comb",
+      "target": "BC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethanol_comb->PC:mol:977",
+      "source": "OM:rx:ethanol_comb",
+      "target": "PC:mol:977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:OM:rx:ethanol_comb->EK2:mol:molecule_977",
+      "source": "OM:rx:ethanol_comb",
+      "target": "EK2:mol:molecule_977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->MO:co2",
+      "source": "OM:rx:ethanol_comb",
+      "target": "MO:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->BC:mo:co2",
+      "source": "OM:rx:ethanol_comb",
+      "target": "BC:mo:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->PC:mol:280",
+      "source": "OM:rx:ethanol_comb",
+      "target": "PC:mol:280",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->MO:h2o",
+      "source": "OM:rx:ethanol_comb",
+      "target": "MO:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->IC:mo:h2o",
+      "source": "OM:rx:ethanol_comb",
+      "target": "IC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->BC:mo:h2o",
+      "source": "OM:rx:ethanol_comb",
+      "target": "BC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->PC:mol:962",
+      "source": "OM:rx:ethanol_comb",
+      "target": "PC:mol:962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:OM:rx:ethanol_comb->EK2:mol:molecule_962",
+      "source": "OM:rx:ethanol_comb",
+      "target": "EK2:mol:molecule_962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:neutralization->IC:mo:hcl",
+      "source": "IC:rx:neutralization",
+      "target": "IC:mo:hcl",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:neutralization->IC:mo:nacl",
+      "source": "IC:rx:neutralization",
+      "target": "IC:mo:nacl",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:neutralization->MO:h2o",
+      "source": "IC:rx:neutralization",
+      "target": "MO:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:neutralization->IC:mo:h2o",
+      "source": "IC:rx:neutralization",
+      "target": "IC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:neutralization->BC:mo:h2o",
+      "source": "IC:rx:neutralization",
+      "target": "BC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:neutralization->PC:mol:962",
+      "source": "IC:rx:neutralization",
+      "target": "PC:mol:962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:neutralization->EK2:mol:molecule_962",
+      "source": "IC:rx:neutralization",
+      "target": "EK2:mol:molecule_962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:redox->MO:o2",
+      "source": "IC:rx:redox",
+      "target": "MO:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:redox->IC:mo:o2",
+      "source": "IC:rx:redox",
+      "target": "IC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:redox->BC:mo:o2",
+      "source": "IC:rx:redox",
+      "target": "BC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:redox->PC:mol:977",
+      "source": "IC:rx:redox",
+      "target": "PC:mol:977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:redox->EK2:mol:molecule_977",
+      "source": "IC:rx:redox",
+      "target": "EK2:mol:molecule_977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:redox->MO:h2o",
+      "source": "IC:rx:redox",
+      "target": "MO:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:redox->IC:mo:h2o",
+      "source": "IC:rx:redox",
+      "target": "IC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:redox->BC:mo:h2o",
+      "source": "IC:rx:redox",
+      "target": "BC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:redox->PC:mol:962",
+      "source": "IC:rx:redox",
+      "target": "PC:mol:962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:redox->EK2:mol:molecule_962",
+      "source": "IC:rx:redox",
+      "target": "EK2:mol:molecule_962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:synthesis->IC:mo:na",
+      "source": "IC:rx:synthesis",
+      "target": "IC:mo:na",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:synthesis->EK2:mol:molecule_5360545",
+      "source": "IC:rx:synthesis",
+      "target": "EK2:mol:molecule_5360545",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:synthesis->IC:mo:cl2",
+      "source": "IC:rx:synthesis",
+      "target": "IC:mo:cl2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:synthesis->PC:mol:24526",
+      "source": "IC:rx:synthesis",
+      "target": "PC:mol:24526",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:IC:rx:synthesis->EK2:mol:molecule_24526",
+      "source": "IC:rx:synthesis",
+      "target": "EK2:mol:molecule_24526",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:IC:rx:synthesis->IC:mo:nacl",
+      "source": "IC:rx:synthesis",
+      "target": "IC:mo:nacl",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->MO:co2",
+      "source": "BC:rx:photosynthesis",
+      "target": "MO:co2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->BC:mo:co2",
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:mo:co2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->PC:mol:280",
+      "source": "BC:rx:photosynthesis",
+      "target": "PC:mol:280",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->MO:h2o",
+      "source": "BC:rx:photosynthesis",
+      "target": "MO:h2o",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->IC:mo:h2o",
+      "source": "BC:rx:photosynthesis",
+      "target": "IC:mo:h2o",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->BC:mo:h2o",
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:mo:h2o",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->PC:mol:962",
+      "source": "BC:rx:photosynthesis",
+      "target": "PC:mol:962",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:photosynthesis->EK2:mol:molecule_962",
+      "source": "BC:rx:photosynthesis",
+      "target": "EK2:mol:molecule_962",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:photosynthesis->BC:mo:glucose",
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:mo:glucose",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:photosynthesis->PC:mol:5793",
+      "source": "BC:rx:photosynthesis",
+      "target": "PC:mol:5793",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:photosynthesis->MO:o2",
+      "source": "BC:rx:photosynthesis",
+      "target": "MO:o2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:photosynthesis->IC:mo:o2",
+      "source": "BC:rx:photosynthesis",
+      "target": "IC:mo:o2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:photosynthesis->BC:mo:o2",
+      "source": "BC:rx:photosynthesis",
+      "target": "BC:mo:o2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:photosynthesis->PC:mol:977",
+      "source": "BC:rx:photosynthesis",
+      "target": "PC:mol:977",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:photosynthesis->EK2:mol:molecule_977",
+      "source": "BC:rx:photosynthesis",
+      "target": "EK2:mol:molecule_977",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:respiration->BC:mo:glucose",
+      "source": "BC:rx:respiration",
+      "target": "BC:mo:glucose",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:respiration->PC:mol:5793",
+      "source": "BC:rx:respiration",
+      "target": "PC:mol:5793",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:respiration->MO:o2",
+      "source": "BC:rx:respiration",
+      "target": "MO:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:respiration->IC:mo:o2",
+      "source": "BC:rx:respiration",
+      "target": "IC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:respiration->BC:mo:o2",
+      "source": "BC:rx:respiration",
+      "target": "BC:mo:o2",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:respiration->PC:mol:977",
+      "source": "BC:rx:respiration",
+      "target": "PC:mol:977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:respiration->EK2:mol:molecule_977",
+      "source": "BC:rx:respiration",
+      "target": "EK2:mol:molecule_977",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->MO:co2",
+      "source": "BC:rx:respiration",
+      "target": "MO:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->BC:mo:co2",
+      "source": "BC:rx:respiration",
+      "target": "BC:mo:co2",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->PC:mol:280",
+      "source": "BC:rx:respiration",
+      "target": "PC:mol:280",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->MO:h2o",
+      "source": "BC:rx:respiration",
+      "target": "MO:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->IC:mo:h2o",
+      "source": "BC:rx:respiration",
+      "target": "IC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->BC:mo:h2o",
+      "source": "BC:rx:respiration",
+      "target": "BC:mo:h2o",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->PC:mol:962",
+      "source": "BC:rx:respiration",
+      "target": "PC:mol:962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:product_of:BC:rx:respiration->EK2:mol:molecule_962",
+      "source": "BC:rx:respiration",
+      "target": "EK2:mol:molecule_962",
+      "type": "product_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation RHS (product)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:atp_hydrolysis->MO:h2o",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "MO:h2o",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:atp_hydrolysis->IC:mo:h2o",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "IC:mo:h2o",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:atp_hydrolysis->BC:mo:h2o",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "BC:mo:h2o",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:atp_hydrolysis->PC:mol:962",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "PC:mol:962",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    },
+    {
+      "id": "P9D:reactant_of:BC:rx:atp_hydrolysis->EK2:mol:molecule_962",
+      "source": "BC:rx:atp_hydrolysis",
+      "target": "EK2:mol:molecule_962",
+      "type": "reactant_of",
+      "kind": "reaction_role",
+      "props": {
+        "confidence": 1.0,
+        "verified": true,
+        "verification_gate": "R-CHEM",
+        "rationale": "parsed from reaction equation LHS (reactant)",
+        "explicit_or_inferred": "inferred",
+        "source": "Phase9.deepen"
+      }
+    }
+  ]
+}

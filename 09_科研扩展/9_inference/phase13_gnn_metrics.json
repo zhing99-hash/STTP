@@ -1,0 +1,122 @@
+{
+  "source_graph": "06_PoC\\graph_data_phase13.json",
+  "avg_MRR": 0.7037,
+  "relations": {
+    "composed_of": {
+      "n_edges": 84,
+      "n_test": 8,
+      "MRR": 0.8125,
+      "Hits@10": 1.0
+    },
+    "defines": {
+      "n_edges": 98,
+      "n_test": 9,
+      "MRR": 0.8889,
+      "Hits@10": 1.0
+    },
+    "derived_from": {
+      "n_edges": 60,
+      "n_test": 6,
+      "MRR": 0.6806,
+      "Hits@10": 1.0
+    },
+    "dimensionally_consistent": {
+      "n_edges": 1141,
+      "n_test": 114,
+      "MRR": 0.8202,
+      "Hits@10": 1.0
+    },
+    "has_element": {
+      "n_edges": 109,
+      "n_test": 10,
+      "MRR": 1.0,
+      "Hits@10": 1.0
+    },
+    "has_functionalgroup": {
+      "n_edges": 2350,
+      "n_test": 200,
+      "MRR": 0.8505,
+      "Hits@10": 1.0
+    },
+    "has_quantity": {
+      "n_edges": 59,
+      "n_test": 5,
+      "MRR": 0.7,
+      "Hits@10": 1.0
+    },
+    "has_symbol": {
+      "n_edges": 24267,
+      "n_test": 200,
+      "MRR": 0.7903,
+      "Hits@10": 1.0
+    },
+    "has_unit": {
+      "n_edges": 41,
+      "n_test": 4,
+      "MRR": 0.875,
+      "Hits@10": 1.0
+    },
+    "product_of": {
+      "n_edges": 91,
+      "n_test": 9,
+      "MRR": 0.2428,
+      "Hits@10": 0.6667
+    },
+    "reactant_of": {
+      "n_edges": 660,
+      "n_test": 66,
+      "MRR": 0.3537,
+      "Hits@10": 0.697
+    },
+    "reagent_of": {
+      "n_edges": 1807,
+      "n_test": 180,
+      "MRR": 0.7846,
+      "Hits@10": 1.0
+    },
+    "same_as": {
+      "n_edges": 98,
+      "n_test": 9,
+      "MRR": 0.4519,
+      "Hits@10": 0.8889
+    },
+    "same_family": {
+      "n_edges": 682,
+      "n_test": 68,
+      "MRR": 0.7418,
+      "Hits@10": 1.0
+    },
+    "same_period": {
+      "n_edges": 1355,
+      "n_test": 135,
+      "MRR": 0.5625,
+      "Hits@10": 1.0
+    }
+  },
+  "type_distribution": {
+    "composed_of": 2610,
+    "has_quantity": 725,
+    "dimensionally_consistent": 58,
+    "related_to": 49,
+    "defines": 25,
+    "has_unit": 25,
+    "derived_from": 25,
+    "has_symbol": 25,
+    "same_as": 21,
+    "reactant_of": 16,
+    "same_period": 14,
+    "product_of": 7
+  },
+  "gate_verified": 3404,
+  "gate_override": 49,
+  "n_edges": 3600,
+  "part_b_breakdown": {
+    "B1": 2610,
+    "B5": 700,
+    "B3": 33,
+    "B4": 23,
+    "B2": 14,
+    "B6": 1
+  },
+  "count_fix": 84
+}

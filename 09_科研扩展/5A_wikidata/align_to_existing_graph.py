@@ -20,7 +20,7 @@ import json
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))  # 01tuopu
+ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))  # STTP
 POCH_DATA = os.path.join(ROOT, "06_PoC", "etl", "neo4j", "neo4j_ready.json")
 CACHE_PATH = os.path.join(HERE, "data", "wikidata_cache.json")
 OUT_PATH = os.path.join(HERE, "same_as_edges.json")

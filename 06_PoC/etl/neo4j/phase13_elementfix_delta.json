@@ -1,0 +1,1131 @@
+{
+ "meta": {
+  "phase": "element-fix",
+  "source": "apply_element_fix.py",
+  "reason": "修复 EK2 符号解析致氧元素丢失 + 补全 14 个元素原子量",
+  "note": "节点属性更新需用 push_element_fix.py（robust_aura_loader 只写边）"
+ },
+ "nodes": [
+  {
+   "id": "EK2:el:O",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Oxygen",
+    "atomic_number": 8,
+    "atomic_weight": 15.999,
+    "weight": 15.999,
+    "symbol": "O",
+    "ek_element_id": "E73",
+    "ek_atomic_raw": 16,
+    "ek_name_raw": "Oxygen",
+    "atomic_mass": 15.999
+   }
+  },
+  {
+   "id": "EK2:el:Br",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Bromine",
+    "atomic_number": 35,
+    "atomic_weight": 79.904,
+    "weight": 79.904,
+    "symbol": "Br",
+    "ek_element_id": "E15",
+    "ek_atomic_raw": 35,
+    "ek_name_raw": "Bromine",
+    "atomic_mass": 79.904
+   }
+  },
+  {
+   "id": "EK2:el:C",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Carbon",
+    "atomic_number": 6,
+    "atomic_weight": 12.011,
+    "weight": 12.011,
+    "symbol": "C",
+    "ek_element_id": "E16",
+    "ek_atomic_raw": 6,
+    "ek_name_raw": "Carbon",
+    "atomic_mass": 12.011
+   }
+  },
+  {
+   "id": "EK2:el:Cl",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Chlorine",
+    "atomic_number": 17,
+    "atomic_weight": 35.45,
+    "weight": 35.45,
+    "symbol": "Cl",
+    "ek_element_id": "E21",
+    "ek_atomic_raw": 17,
+    "ek_name_raw": "Chlorine",
+    "atomic_mass": 35.45
+   }
+  },
+  {
+   "id": "EK2:el:Al",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Aluminium",
+    "atomic_number": 13,
+    "atomic_weight": 26.9815385,
+    "weight": 26.9815385,
+    "symbol": "Al",
+    "ek_element_id": "E3",
+    "ek_atomic_raw": 13,
+    "ek_name_raw": "Aluminium",
+    "atomic_mass": 26.9815385
+   }
+  },
+  {
+   "id": "EK2:el:F",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Fluorine",
+    "atomic_number": 9,
+    "atomic_weight": 18.9984,
+    "weight": 18.9984,
+    "symbol": "F",
+    "ek_element_id": "E34",
+    "ek_atomic_raw": 9,
+    "ek_name_raw": "Fluorine",
+    "atomic_mass": 18.9984
+   }
+  },
+  {
+   "id": "EK2:el:H",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Hydrogen",
+    "atomic_number": 1,
+    "atomic_weight": 1.008,
+    "weight": 1.008,
+    "symbol": "H",
+    "ek_element_id": "E42",
+    "ek_atomic_raw": 1,
+    "ek_name_raw": "Hydrogen",
+    "atomic_mass": 1.008
+   }
+  },
+  {
+   "id": "EK2:el:I",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Iodine",
+    "atomic_number": 53,
+    "atomic_weight": 126.90447,
+    "weight": 126.90447,
+    "symbol": "I",
+    "ek_element_id": "E48",
+    "ek_atomic_raw": 53,
+    "ek_name_raw": "Iodine",
+    "atomic_mass": 126.90447
+   }
+  },
+  {
+   "id": "EK2:el:N",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Nitrogen",
+    "atomic_number": 7,
+    "atomic_weight": 14.007,
+    "weight": 14.007,
+    "symbol": "N",
+    "ek_element_id": "E64",
+    "ek_atomic_raw": 7,
+    "ek_name_raw": "Nitrogen",
+    "atomic_mass": 14.007
+   }
+  },
+  {
+   "id": "EK2:el:P",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Phosphorus",
+    "atomic_number": 15,
+    "atomic_weight": 30.973761998,
+    "weight": 30.973761998,
+    "symbol": "P",
+    "ek_element_id": "E76",
+    "ek_atomic_raw": 15,
+    "ek_name_raw": "Phosphorus",
+    "atomic_mass": 30.973761998
+   }
+  },
+  {
+   "id": "EK2:el:B",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Boron",
+    "atomic_number": 5,
+    "atomic_weight": 10.81,
+    "weight": 10.81,
+    "symbol": "B",
+    "ek_element_id": "E9",
+    "ek_atomic_raw": 5,
+    "ek_name_raw": "Boron",
+    "atomic_mass": 10.81
+   }
+  },
+  {
+   "id": "EK2:el:S",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Sulfur",
+    "atomic_number": 16,
+    "atomic_weight": 32.06,
+    "weight": 32.06,
+    "symbol": "S",
+    "ek_element_id": "E93",
+    "ek_atomic_raw": 16,
+    "ek_name_raw": "Sulfur",
+    "atomic_mass": 32.06
+   }
+  },
+  {
+   "id": "EK2:el:Si",
+   "labels": [
+    "Entity",
+    "Element"
+   ],
+   "props": {
+    "domain": "chem.element",
+    "ntype": "element",
+    "source": "ElementKG2.0",
+    "name": "Silicon",
+    "atomic_number": 14,
+    "atomic_weight": 28.085,
+    "weight": 28.085,
+    "symbol": "Si",
+    "ek_element_id": "E98",
+    "ek_atomic_raw": 14,
+    "ek_name_raw": "Silicon",
+    "atomic_mass": 28.085
+   }
+  },
+  {
+   "id": "EK:el:Ts",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Ts",
+    "domain": "chem.element",
+    "id": "EK:el:Ts",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 294.0,
+    "atomic_number": 117,
+    "name": "Tennessine",
+    "atomic_mass": 294.0
+   }
+  },
+  {
+   "id": "EK:el:Mc",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Mc",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Mc",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 290.0,
+    "atomic_number": 115,
+    "name": "Moscovium",
+    "atomic_mass": 290.0
+   }
+  },
+  {
+   "id": "EK:el:Rg",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Rg",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Rg",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 282.0,
+    "atomic_number": 111,
+    "name": "Roentgenium",
+    "atomic_mass": 282.0
+   }
+  },
+  {
+   "id": "EK:el:Ds",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Ds",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Ds",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 281.0,
+    "atomic_number": 110,
+    "name": "Darmstadtium",
+    "atomic_mass": 281.0
+   }
+  },
+  {
+   "id": "EK:el:Fl",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Fl",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Fl",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 289.0,
+    "atomic_number": 114,
+    "name": "Flerovium",
+    "atomic_mass": 289.0
+   }
+  },
+  {
+   "id": "EK:el:Lv",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Lv",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Lv",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 293.0,
+    "atomic_number": 116,
+    "name": "Livermorium",
+    "atomic_mass": 293.0
+   }
+  },
+  {
+   "id": "EK:el:Og",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Og",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Og",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 294.0,
+    "atomic_number": 118,
+    "name": "Oganesson",
+    "atomic_mass": 294.0
+   }
+  },
+  {
+   "id": "EK:el:Mt",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Mt",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Mt",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 278.0,
+    "atomic_number": 109,
+    "name": "Meitnerium",
+    "atomic_mass": 278.0
+   }
+  },
+  {
+   "id": "EK:el:Nh",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Nh",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Nh",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 286.0,
+    "atomic_number": 113,
+    "name": "Nihonium",
+    "atomic_mass": 286.0
+   }
+  },
+  {
+   "id": "EK:el:Cn",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "symbol": "Cn",
+    "period": 7,
+    "domain": "chem.element",
+    "id": "EK:el:Cn",
+    "source": "ElementKG2.0",
+    "ntype": "element",
+    "families": [
+     "element"
+    ],
+    "atomic_weight": 285.0,
+    "atomic_number": 112,
+    "name": "Copernicium",
+    "atomic_mass": 285.0
+   }
+  },
+  {
+   "id": "IC:el:sodium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "symbol": "Na",
+    "domain": "chem.element",
+    "confidence": 1.0,
+    "name": "Sodium",
+    "created_at": "2026-09-29T16:54:48.726342",
+    "id": "IC:el:sodium",
+    "source": "curated_seed",
+    "ntype": "element",
+    "atomic_number": 11,
+    "atomic_weight": 22.98976928,
+    "atomic_mass": 22.98976928
+   }
+  },
+  {
+   "id": "IC:el:chlorine",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "symbol": "Cl",
+    "domain": "chem.element",
+    "confidence": 1.0,
+    "name": "Chlorine",
+    "created_at": "2026-09-29T16:54:48.726342",
+    "id": "IC:el:chlorine",
+    "source": "curated_seed",
+    "ntype": "element",
+    "atomic_number": 17,
+    "atomic_weight": 35.45,
+    "atomic_mass": 35.45
+   }
+  },
+  {
+   "id": "IC:el:iron",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "symbol": "Fe",
+    "domain": "chem.element",
+    "confidence": 1.0,
+    "name": "Iron",
+    "created_at": "2026-09-29T16:54:48.726342",
+    "id": "IC:el:iron",
+    "source": "curated_seed",
+    "ntype": "element",
+    "atomic_number": 26,
+    "atomic_weight": 55.845,
+    "atomic_mass": 55.845
+   }
+  },
+  {
+   "id": "BC:el:nitrogen",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "props": {
+    "explicit_or_inferred": "explicit",
+    "symbol": "N",
+    "domain": "chem.element",
+    "confidence": 1.0,
+    "name": "Nitrogen",
+    "created_at": "2026-09-30T08:35:01.972539",
+    "id": "BC:el:nitrogen",
+    "source": "curated_seed",
+    "ntype": "element",
+    "atomic_number": 7,
+    "atomic_weight": 14.007,
+    "atomic_mass": 14.007
+   }
+  }
+ ],
+ "edges": [
+  {
+   "id": "same_as|EK2:el:O|EK:el:O",
+   "source": "EK2:el:O",
+   "target": "EK:el:O",
+   "type": "same_as",
+   "kind": "elementkg_bridge",
+   "props": {
+    "confidence": 0.95,
+    "explicit_or_inferred": "inferred",
+    "source": "ElementKG2.0",
+    "alignment": "atomic_number",
+    "kind": "elementkg_bridge"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG16|EK2:el:O",
+   "source": "EK2:fg:FG16",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG17|EK2:el:O",
+   "source": "EK2:fg:FG17",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG18|EK2:el:O",
+   "source": "EK2:fg:FG18",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG2|EK2:el:O",
+   "source": "EK2:fg:FG2",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG21|EK2:el:O",
+   "source": "EK2:fg:FG21",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG25|EK2:el:O",
+   "source": "EK2:fg:FG25",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG26|EK2:el:O",
+   "source": "EK2:fg:FG26",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG27|EK2:el:O",
+   "source": "EK2:fg:FG27",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG28|EK2:el:O",
+   "source": "EK2:fg:FG28",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG3|EK2:el:O",
+   "source": "EK2:fg:FG3",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG31|EK2:el:O",
+   "source": "EK2:fg:FG31",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG32|EK2:el:O",
+   "source": "EK2:fg:FG32",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG35|EK2:el:O",
+   "source": "EK2:fg:FG35",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG36|EK2:el:O",
+   "source": "EK2:fg:FG36",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG37|EK2:el:O",
+   "source": "EK2:fg:FG37",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG38|EK2:el:O",
+   "source": "EK2:fg:FG38",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG41|EK2:el:O",
+   "source": "EK2:fg:FG41",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG42|EK2:el:O",
+   "source": "EK2:fg:FG42",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG43|EK2:el:O",
+   "source": "EK2:fg:FG43",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG46|EK2:el:O",
+   "source": "EK2:fg:FG46",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG47|EK2:el:O",
+   "source": "EK2:fg:FG47",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG49|EK2:el:O",
+   "source": "EK2:fg:FG49",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG55|EK2:el:O",
+   "source": "EK2:fg:FG55",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG56|EK2:el:O",
+   "source": "EK2:fg:FG56",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG64|EK2:el:O",
+   "source": "EK2:fg:FG64",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG68|EK2:el:O",
+   "source": "EK2:fg:FG68",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG69|EK2:el:O",
+   "source": "EK2:fg:FG69",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG70|EK2:el:O",
+   "source": "EK2:fg:FG70",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  },
+  {
+   "id": "has_element|EK2:fg:FG71|EK2:el:O",
+   "source": "EK2:fg:FG71",
+   "target": "EK2:el:O",
+   "type": "has_element",
+   "kind": "real",
+   "props": {
+    "confidence": 0.9,
+    "explicit_or_inferred": "explicit",
+    "source": "ElementKG2.0",
+    "kind": "real"
+   }
+  }
+ ],
+ "delete_edges": [
+  {
+   "source": "EK2:fg:FG2",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG32",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG46",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG27",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG26",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG41",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG64",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG42",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG36",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG47",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG28",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG3",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG18",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG55",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG56",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG35",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG25",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG43",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG16",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG37",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG38",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG21",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG17",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG31",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  },
+  {
+   "source": "EK2:fg:FG49",
+   "target": "EK2:el:S",
+   "type": "has_element",
+   "kind": "real"
+  }
+ ]
+}

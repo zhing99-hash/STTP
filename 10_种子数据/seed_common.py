@@ -19,6 +19,9 @@ TYPE_LABEL = {
     "element": "Element", "unit": "Unit", "physical_quantity": "PhysicalQuantity",
     "symbol": "Symbol", "formula": "Formula", "molecule": "Molecule",
     "reaction": "Reaction", "constant": "Constant",
+    # MathConcept：图 Schema v0.1 已声明（mathconcept:<ns>:<slug>），
+    # 且 graph_export.TYPE_PRIORITY 与 graph_view.TYPE_STYLE 均已支持，故零 schema 改动可用。
+    "mathconcept": "MathConcept",
 }
 
 # 基础图谱(Phase5 + Phase6)中已存在的 canonical id：

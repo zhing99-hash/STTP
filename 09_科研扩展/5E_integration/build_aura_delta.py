@@ -13,8 +13,8 @@ import json
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-R = os.path.normpath(r"C:\Users\Administrator\.qclaw\workspace\01tuopu\09_科研扩展")
-ETL = os.path.normpath(r"C:\Users\Administrator\.qclaw\workspace\01tuopu\06_PoC\etl\neo4j")
+R = os.path.normpath(r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\09_科研扩展")
+ETL = os.path.normpath(r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\06_PoC\etl\neo4j")
 OUT = os.path.join(HERE, "_aura_delta.json")
 
 

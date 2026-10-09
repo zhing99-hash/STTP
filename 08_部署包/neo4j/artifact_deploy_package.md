@@ -4,7 +4,7 @@
 将已有的 Neo4j 部署准备产物封装为自包含、可拷贝到任意本机一键跑起 Neo4j（含图谱数据）的本地可执行部署包。
 
 ## 产物位置
-`C:\Users\Administrator\.qclaw\workspace\01tuopu\08_部署包\neo4j\`
+`C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\08_部署包\neo4j\`
 
 ## 包内文件（11 个，全部可移植，依赖 01tuopu 外部）
 
