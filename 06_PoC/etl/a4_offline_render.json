@@ -6,8 +6,8 @@
     "coseBase": "object",
     "cytoscapeFcose": "function",
     "MathJax": "object",
-    "nodes": 7374,
-    "edges": 37695,
+    "nodes": 7382,
+    "edges": 40207,
     "fcose_registered": true,
     "mathjax_render": "svg-ok",
     "dom_alive": true

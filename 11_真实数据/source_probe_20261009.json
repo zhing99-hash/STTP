@@ -1,0 +1,270 @@
+{
+  "probed_at": "2026-10-09 10:12:43",
+  "proxy": [
+    "127.0.0.1",
+    53307
+  ],
+  "results": [
+    {
+      "key": "openalex",
+      "label": "OpenAlex（基线·已知可达）",
+      "host": "api.openalex.org",
+      "path": "/works?per-page=1",
+      "direct": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "proxy": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "best": "OK"
+    },
+    {
+      "key": "nist",
+      "label": "NIST CODATA（基线·已知可达）",
+      "host": "physics.nist.gov",
+      "path": "/cuu/Constants/Table/allascii.txt",
+      "direct": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "proxy": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "best": "OK"
+    },
+    {
+      "key": "crossref",
+      "label": "Crossref（文献层候选）",
+      "host": "api.crossref.org",
+      "path": "/works?rows=1",
+      "direct": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "proxy": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "best": "OK"
+    },
+    {
+      "key": "datacite",
+      "label": "DataCite（文献层候选）",
+      "host": "api.datacite.org",
+      "path": "/dois?page[size]=1",
+      "direct": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "proxy": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "best": "OK"
+    },
+    {
+      "key": "s2",
+      "label": "Semantic Scholar（文献候选）",
+      "host": "api.semanticscholar.org",
+      "path": "/graph/v1/paper/search?query=test&limit=1",
+      "direct": {
+        "verdict": "PATH_BLOCK",
+        "ok": 0,
+        "rounds": 3,
+        "layers": [
+          "PATH_BLOCK",
+          "PATH_BLOCK",
+          "PATH_BLOCK"
+        ],
+        "detail": null
+      },
+      "proxy": {
+        "verdict": "PATH_BLOCK",
+        "ok": 0,
+        "rounds": 3,
+        "layers": [
+          "PATH_BLOCK",
+          "PATH_BLOCK",
+          "PATH_BLOCK"
+        ],
+        "detail": null
+      },
+      "best": "PATH_BLOCK"
+    },
+    {
+      "key": "europepmc",
+      "label": "EuropePMC（文献候选）",
+      "host": "www.ebi.ac.uk",
+      "path": "/europepmc/webservices/rest/search?query=test&format=json&pageSize=1",
+      "direct": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "proxy": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "best": "OK"
+    },
+    {
+      "key": "chembl",
+      "label": "ChEMBL（化学·药物分子层）",
+      "host": "www.ebi.ac.uk",
+      "path": "/chembl/api/data/molecule.json?limit=1",
+      "direct": {
+        "verdict": "PATH_BLOCK",
+        "ok": 0,
+        "rounds": 3,
+        "layers": [
+          "PATH_BLOCK",
+          "PATH_BLOCK",
+          "PATH_BLOCK"
+        ],
+        "detail": null
+      },
+      "proxy": {
+        "verdict": "FLAKY",
+        "ok": 2,
+        "rounds": 3,
+        "layers": [
+          "PATH_BLOCK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "best": "FLAKY"
+    },
+    {
+      "key": "uniprot",
+      "label": "UniProt（蛋白层候选）",
+      "host": "rest.uniprot.org",
+      "path": "/uniprotkb/search?query=insulin&size=1&format=json",
+      "direct": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "proxy": {
+        "verdict": "OK",
+        "ok": 3,
+        "rounds": 3,
+        "layers": [
+          "OK",
+          "OK",
+          "OK"
+        ],
+        "detail": "http 200 · 256 B body"
+      },
+      "best": "OK"
+    },
+    {
+      "key": "wikidata",
+      "label": "Wikidata（已知被拦·对照）",
+      "host": "query.wikidata.org",
+      "path": "/sparql?query=SELECT%20*%20WHERE%7B%7D%20LIMIT%201&format=json",
+      "direct": {
+        "verdict": "TLS_BLOCK",
+        "ok": 0,
+        "rounds": 3,
+        "layers": [
+          "TLS_BLOCK",
+          "TLS_BLOCK",
+          "TLS_BLOCK"
+        ],
+        "detail": null
+      },
+      "proxy": {
+        "verdict": "PATH_BLOCK",
+        "ok": 0,
+        "rounds": 3,
+        "layers": [
+          "PATH_BLOCK",
+          "PATH_BLOCK",
+          "PATH_BLOCK"
+        ],
+        "detail": null
+      },
+      "best": "TLS_BLOCK"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """**全部离线增量**的顺序推送编排（网络恢复后执行）。
 
-本机自 2026-10-08 起离线，累计九项修复只落在本地，Aura 仍是旧数据：
+本机自 2026-10-08 起离线，累计**十一项修复**只落在本地，Aura 仍是旧数据：
 
     1) 元素层数据质量修复 -> 06_PoC/etl/neo4j/phase13_elementfix_delta.json
                               （氧元素回图 + EK2:el:S 纠正 + 14 个元素原子量）
@@ -32,6 +32,12 @@
                                 + 修正 19 条 composed_of 的 count。**必须排在步骤 3 之后**
                                 —— 修正边引用 EK:el:* 规范节点，且云端 Aura 推边主键为
                                 (source,type,target) 的 MERGE，故可命中步骤 3 改挂后的边）
+   10) 文献层多源交叉校验 -> 06_PoC/etl/neo4j/phase21_literature_delta.json
+                              （163 篇 Paper 补 Crossref/DataCite 独立核验字段
+                                + 39 条一致性 flag；**纯属性增强，0 新增节点/边**）
+   11) ChEMBL 化学·药物层 -> 06_PoC/etl/neo4j/phase22_chembl_delta.json
+                              （命中分子补 chembl_id / max_phase / first_approval /
+                                ATC / 类药性描述符；**纯属性增强，0 新增节点/边**）
 
 **顺序不可颠倒**，原因见每步注释。全部脚本幂等，可安全重跑。
 
@@ -65,6 +71,8 @@ SEED_DELTA = os.path.join(NEO4J_DIR, "phase17_seed_delta.json")
 PAPER_DELTA = os.path.join(NEO4J_DIR, "phase18_seed_delta.json")
 CODATA_DELTA = os.path.join(NEO4J_DIR, "phase18b_codata_delta.json")
 PUBCHEM_DELTA = os.path.join(NEO4J_DIR, "phase19_pubchem_delta.json")
+LIT_DELTA = os.path.join(NEO4J_DIR, "phase21_literature_delta.json")
+CHEMBL_DELTA = os.path.join(NEO4J_DIR, "phase22_chembl_delta.json")
 # 通用 delta 推送器（upsert 节点 / DETACH DELETE / MERGE 边 / DELETE 边）
 PUSH_DELTA = os.path.join(ROOT, "11_真实数据", "push_element_merge.py")
 LOADER = os.path.join(ROOT, "06_PoC", "robust_aura_loader.py")
@@ -108,6 +116,8 @@ def main():
     paper = load_json(PAPER_DELTA)
     codata = load_json(CODATA_DELTA)
     pubchem = load_json(PUBCHEM_DELTA)
+    lit = load_json(LIT_DELTA)
+    chembl = load_json(CHEMBL_DELTA)
 
     print("待推送离线增量（自 2026-10-08 离线起累计）")
     print("-" * 74)
@@ -129,7 +139,11 @@ def main():
           % (len(codata.get("nodes", [])), len(codata.get("edges", []))))
     print("  步骤 9  PubChem 分子校验  节点 %-4d 边 %d（补 pubchem_cid + 修正 19 条 count）"
           % (len(pubchem.get("nodes", [])), len(pubchem.get("edges", []))))
-    print("  步骤 10 反向导出权威快照  %s" % os.path.relpath(EXPORT, ROOT))
+    print("  步骤 10 文献层多源校验   节点 %-4d 边 %d（Crossref/DataCite 独立核验 + flag）"
+          % (len(lit.get("nodes", [])), len(lit.get("edges", []))))
+    print("  步骤 11 ChEMBL 药物层     节点 %-4d 边 %d（chembl_id / max_phase / ATC / 类药性）"
+          % (len(chembl.get("nodes", [])), len(chembl.get("edges", []))))
+    print("  步骤 12 反向导出权威快照  %s" % os.path.relpath(EXPORT, ROOT))
     print("-" * 74)
     print("  顺序理由 1  步骤 2 的带类型边引用步骤 1 创建的节点（EK2:el:* 等）。")
     print("  顺序理由 2  步骤 3 会 DETACH DELETE 步骤 1 创建的 EK2:el:* 别名节点，")
@@ -144,8 +158,9 @@ def main():
     print("  注意 1      推送完成后务必执行最后一步（反向导出）；否则本地快照与 Aura 分叉，")
     print("              下一次 export 会用 Aura 旧数据覆盖本地修复。")
     print("  注意 2      Aura 免费实例连接池有限，边分批 %d/批；失败自动重连重试。" % a.batch)
-    print("  注意 3      步骤 6–9 均与步骤 1–5 无强依赖（除步骤 9 需在 3 之后），位置可调；")
+    print("  注意 3      步骤 6–11 均与步骤 1–5 无强依赖（除步骤 9 需在 3 之后），位置可调；")
     print("              但步骤 7 必须在步骤 6 之后（part_of 引用 NT:mc:*）。")
+    print("              步骤 10/11 为**纯属性增强**（0 新增节点/边），位置任意，放最后最安全。")
 
     if not a.execute:
         print("\n[DRY-RUN] 未连接数据库。加 --execute 实际推送。")
@@ -165,8 +180,10 @@ def main():
     run([PY, PUSH_DELTA, "--delta", PAPER_DELTA, "--batch", str(a.batch)], "步骤 7 · Phase 8 真实文献子图")
     run([PY, PUSH_DELTA, "--delta", CODATA_DELTA, "--batch", str(a.batch)], "步骤 8 · NIST CODATA 常量真实化")
     run([PY, PUSH_DELTA, "--delta", PUBCHEM_DELTA, "--batch", str(a.batch)], "步骤 9 · PubChem 分子校验 + count 修正")
+    run([PY, PUSH_DELTA, "--delta", LIT_DELTA, "--batch", str(a.batch)], "步骤 10 · 文献层多源交叉校验（Crossref/DataCite）")
+    run([PY, PUSH_DELTA, "--delta", CHEMBL_DELTA, "--batch", str(a.batch)], "步骤 11 · ChEMBL 化学·药物层")
     if not a.skip_export:
-        run([PY, EXPORT], "步骤 10 · 从 Aura 反向导出权威快照")
+        run([PY, EXPORT], "步骤 12 · 从 Aura 反向导出权威快照")
     print("\n[DONE] 全部离线增量推送完成。建议再跑：bash sttp.sh check")
 
 

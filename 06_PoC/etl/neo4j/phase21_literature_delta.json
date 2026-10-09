@@ -1,0 +1,3104 @@
+{
+ "meta": {
+  "name": "phase22_literature_validate",
+  "source": "crossref+datacite",
+  "description": "文献层多源交叉校验：Crossref / DataCite 独立核验 DOI 元数据（只记 flag，不改 OpenAlex 原值）",
+  "built_at": "2026-10-09T10:20:39",
+  "generated_by": "11_真实数据/literature_validate.py --build"
+ },
+ "nodes": [
+  {
+   "id": "PA:oa:W1022649828",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1975,
+    "crossref_cited_by": 642,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Institute of Mathematics, Polish Academy of Sciences",
+    "issn": "0065-1036",
+    "crossref_container_title": "Acta Arithmetica",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W116906459",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1989,
+    "crossref_cited_by": 126,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Societe Mathematique de France",
+    "issn": "0249-633X",
+    "crossref_container_title": "Mémoires de la Société mathématique de France",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W1480319329",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1962,
+    "crossref_cited_by": 715,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Duke University Press",
+    "issn": "0019-2082",
+    "crossref_container_title": "Illinois Journal of Mathematics",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W1494748022",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1991,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Informa UK Limited",
+    "issn": "0025-5572",
+    "crossref_container_title": "The Mathematical Gazette",
+    "crossref_author_count": 2,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W1495550473",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1976,
+    "crossref_cited_by": 69,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "Springer Berlin Heidelberg",
+    "issn": "0172-6056",
+    "crossref_container_title": "Undergraduate Texts in Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W1498769399",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1980,
+    "crossref_cited_by": 542,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "Springer New York",
+    "issn": "0072-5285",
+    "crossref_container_title": "Graduate Texts in Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W1511466171",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1955,
+    "crossref_cited_by": 14,
+    "crossref_reference_count": 6,
+    "crossref_type": "journal-article",
+    "publisher": "Cambridge University Press (CUP)",
+    "issn": "0027-7630",
+    "crossref_container_title": "Nagoya Mathematical Journal",
+    "crossref_author_count": 3,
+    "license_url": "https://www.cambridge.org/core/terms"
+   }
+  },
+  {
+   "id": "PA:oa:W1512374421",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1515528048",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1911,
+    "crossref_cited_by": 1,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0026-9255",
+    "crossref_container_title": "Monatshefte für Mathematik und Physik",
+    "license_url": "http://www.springer.com/tdm",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W1535294931",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1960,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0016-0032",
+    "crossref_container_title": "Journal of the Franklin Institute",
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W1538733621",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1551313231",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1554315206",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1558352842",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1559850722",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1979,
+    "crossref_cited_by": 287,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "Springer Berlin Heidelberg",
+    "issn": "0075-8434",
+    "crossref_container_title": "Lecture Notes in Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm",
+    "doi_check_flags": [
+     "venue_variant"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W1561067506",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1563216928",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1567653974",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1933,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0028-0836",
+    "crossref_container_title": "Nature",
+    "license_url": "https://www.springernature.com/gp/researchers/text-and-data-mining",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W1573797068",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1955,
+    "crossref_cited_by": 155,
+    "crossref_reference_count": 4,
+    "crossref_type": "journal-article",
+    "publisher": "Cambridge University Press (CUP)",
+    "issn": "0027-7630",
+    "crossref_container_title": "Nagoya Mathematical Journal",
+    "crossref_author_count": 1,
+    "license_url": "https://www.cambridge.org/core/terms"
+   }
+  },
+  {
+   "id": "PA:oa:W1587827544",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1958,
+    "crossref_cited_by": 37,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Duke University Press",
+    "issn": "0019-2082",
+    "crossref_container_title": "Illinois Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1602931685",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1603686988",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1608067750",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1971,
+    "crossref_cited_by": 189,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "Springer Berlin Heidelberg",
+    "issn": "0075-8434",
+    "crossref_container_title": "Lecture Notes in Mathematics",
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W1633336122",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1999,
+    "crossref_cited_by": 370,
+    "crossref_reference_count": 15,
+    "crossref_type": "journal-article",
+    "publisher": "Duke University Press",
+    "issn": "0012-7094",
+    "crossref_container_title": "Duke Mathematical Journal",
+    "crossref_author_count": 3
+   }
+  },
+  {
+   "id": "PA:oa:W1667848118",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1998,
+    "crossref_cited_by": 228,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "International Press of Boston",
+    "issn": "1095-0761",
+    "crossref_container_title": "Advances in Theoretical and Mathematical Physics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1964053266",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1977,
+    "crossref_cited_by": 392,
+    "crossref_reference_count": 3,
+    "crossref_type": "journal-article",
+    "publisher": "Society for Industrial & Applied Mathematics (SIAM)",
+    "issn": "0097-5397",
+    "crossref_container_title": "SIAM Journal on Computing",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W1964560425",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1957,
+    "crossref_cited_by": 297,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6826",
+    "crossref_container_title": "Proceedings of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1967061303",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1987,
+    "crossref_cited_by": 2,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0025-5718",
+    "crossref_container_title": "Mathematics of Computation",
+    "crossref_author_count": 2,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W1968319543",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1941,
+    "crossref_cited_by": 271,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6107",
+    "crossref_container_title": "Journal of the London Mathematical Society",
+    "crossref_author_count": 2,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1"
+   }
+  },
+  {
+   "id": "PA:oa:W1969338287",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1963,
+    "crossref_cited_by": 592,
+    "crossref_reference_count": 24,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-5874",
+    "crossref_container_title": "Mathematische Zeitschrift",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W1970120137",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2008,
+    "crossref_cited_by": 350,
+    "crossref_reference_count": 20,
+    "crossref_type": "journal-article",
+    "publisher": "OMICS Publishing Group",
+    "issn": "1736-5279",
+    "crossref_container_title": "Journal of Generalized Lie Theory and Applications",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W1971509177",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1963,
+    "crossref_cited_by": 720,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1972786864",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W1975994261",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1988,
+    "crossref_cited_by": 372,
+    "crossref_reference_count": 9,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6826",
+    "crossref_container_title": "Proceedings of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1979411774",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1989,
+    "crossref_cited_by": 713,
+    "crossref_reference_count": 10,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0010-3616",
+    "crossref_container_title": "Communications in Mathematical Physics",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W1982438618",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1927,
+    "crossref_cited_by": 301,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6115",
+    "crossref_container_title": "Proceedings of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1"
+   }
+  },
+  {
+   "id": "PA:oa:W1983373140",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1965,
+    "crossref_cited_by": 899,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W1983444175",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1982,
+    "crossref_cited_by": 340,
+    "crossref_reference_count": 14,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0016-2663",
+    "crossref_container_title": "Functional Analysis and Its Applications",
+    "crossref_author_count": 1,
+    "license_url": "https://www.springernature.com/gp/researchers/text-and-data-mining"
+   }
+  },
+  {
+   "id": "PA:oa:W1986155058",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1990,
+    "crossref_cited_by": 280,
+    "crossref_reference_count": 12,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 2,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W1987023204",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1999,
+    "crossref_cited_by": 979,
+    "crossref_reference_count": 12,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 2,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W1989182750",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 63,
+    "crossref_reference_count": 14,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1990858621",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 261,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Mathematical Sciences Publishers",
+    "issn": "0030-8730",
+    "crossref_container_title": "Pacific Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1991451613",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1892,
+    "crossref_cited_by": 629,
+    "crossref_reference_count": 3,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0026-9255",
+    "crossref_container_title": "Monatshefte für Mathematik und Physik",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W1992930621",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2003,
+    "crossref_cited_by": 237,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6115",
+    "crossref_container_title": "Proceedings of the London Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W1993515438",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1975,
+    "crossref_cited_by": 255,
+    "crossref_reference_count": 9,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-5831",
+    "crossref_container_title": "Mathematische Annalen",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W1998033277",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1976,
+    "crossref_cited_by": 442,
+    "crossref_reference_count": 5,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0020-9910",
+    "crossref_container_title": "Inventiones Mathematicae",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W1998777945",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1980,
+    "crossref_cited_by": 561,
+    "crossref_reference_count": 6,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0022-314X",
+    "crossref_container_title": "Journal of Number Theory",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2000117364",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1992,
+    "crossref_cited_by": 290,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Mathematical Sciences Publishers",
+    "issn": "0030-8730",
+    "crossref_container_title": "Pacific Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2001058510",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1985,
+    "crossref_cited_by": 298,
+    "crossref_reference_count": 5,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2001093624",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1993,
+    "crossref_cited_by": 341,
+    "crossref_reference_count": 12,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-5831",
+    "crossref_container_title": "Mathematische Annalen",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2002257546",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1988,
+    "crossref_cited_by": 920,
+    "crossref_reference_count": 3,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2002649361",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1970,
+    "crossref_cited_by": 86,
+    "crossref_reference_count": 25,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0006-3835",
+    "crossref_container_title": "BIT",
+    "crossref_author_count": 3,
+    "license_url": "http://www.springer.com/tdm",
+    "doi_check_flags": [
+     "venue_variant"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2005936791",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_title": "Prime Numbers",
+    "crossref_year": 2005,
+    "crossref_cited_by": 19,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "Springer-Verlag",
+    "license_url": "http://www.springer.com/tdm",
+    "doi_check_flags": [
+     "title_mismatch",
+     "year_mismatch",
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2006988548",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1964,
+    "crossref_cited_by": 123,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "0002-9947",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2007343403",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1958,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 2,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2011149060",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1980,
+    "crossref_cited_by": 480,
+    "crossref_reference_count": 23,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2012857639",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1976,
+    "crossref_cited_by": 435,
+    "crossref_reference_count": 18,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0022-0000",
+    "crossref_container_title": "Journal of Computer and System Sciences",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2016319756",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 249,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2017096836",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1936,
+    "crossref_cited_by": 59,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2018339436",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1992,
+    "crossref_cited_by": 242,
+    "crossref_reference_count": 71,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0020-9910",
+    "crossref_container_title": "Inventiones Mathematicae",
+    "crossref_author_count": 2,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2018637547",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1997,
+    "crossref_cited_by": 155,
+    "crossref_reference_count": 28,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0370-2693",
+    "crossref_container_title": "Physics Letters B",
+    "crossref_author_count": 2,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2021356075",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1981,
+    "crossref_cited_by": 354,
+    "crossref_reference_count": 8,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0021-2172",
+    "crossref_container_title": "Israel Journal of Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2023897267",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1960,
+    "crossref_cited_by": 736,
+    "crossref_reference_count": 14,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2025038761",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 1,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 2,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2025620888",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1893,
+    "crossref_cited_by": 142,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6115",
+    "crossref_container_title": "Proceedings of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1"
+   }
+  },
+  {
+   "id": "PA:oa:W2026135074",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1953,
+    "crossref_cited_by": 131,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0003-889X",
+    "crossref_container_title": "Archiv der Mathematik",
+    "crossref_author_count": 2,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2029641002",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1974,
+    "crossref_cited_by": 315,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "AIP Publishing",
+    "issn": "0031-9228",
+    "crossref_container_title": "Physics Today",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2030962554",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1957,
+    "crossref_cited_by": 28,
+    "crossref_reference_count": 2,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6826",
+    "crossref_container_title": "Proceedings of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2033549448",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1997,
+    "crossref_cited_by": 252,
+    "crossref_reference_count": 17,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2034577609",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1990,
+    "crossref_cited_by": 14,
+    "crossref_reference_count": 81,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "0894-0347",
+    "crossref_container_title": "Journal of the American Mathematical Society",
+    "crossref_author_count": 2,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2039225816",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1978,
+    "crossref_cited_by": 720,
+    "crossref_reference_count": 82,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0001-8708",
+    "crossref_container_title": "Advances in Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2040477106",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1894,
+    "crossref_cited_by": 426,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "MathDoc/Centre Mersenne",
+    "issn": "2258-7519",
+    "crossref_container_title": "Annales de la Faculté des sciences de Toulouse : Mathématiques",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2040790258",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1987,
+    "crossref_cited_by": 270,
+    "crossref_reference_count": 75,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "0025-5718",
+    "crossref_container_title": "Mathematics of Computation",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2042779968",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 614,
+    "crossref_reference_count": 4,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2043347825",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1960,
+    "crossref_cited_by": 419,
+    "crossref_reference_count": 11,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2044413922",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1998,
+    "crossref_cited_by": 735,
+    "crossref_reference_count": 75,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0343-6993",
+    "crossref_container_title": "The Mathematical Intelligencer",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2046535123",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1998,
+    "crossref_cited_by": 538,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "International Press of Boston",
+    "issn": "1073-2780",
+    "crossref_container_title": "Mathematical Research Letters",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2046909537",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 334,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1947-6221",
+    "crossref_container_title": "Memoirs of the American Mathematical Society",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2048395321",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1977,
+    "crossref_cited_by": 387,
+    "crossref_reference_count": 31,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0010-3616",
+    "crossref_container_title": "Communications in Mathematical Physics",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2049707341",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2018,
+    "crossref_cited_by": 27,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "CRC Press",
+    "crossref_author_count": 1,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2050151425",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1960,
+    "crossref_cited_by": 370,
+    "crossref_reference_count": 9,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2052076085",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 3,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2052137086",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2005,
+    "crossref_cited_by": 351,
+    "crossref_reference_count": 44,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0010-4655",
+    "crossref_container_title": "Computer Physics Communications",
+    "crossref_author_count": 2,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2054577666",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1981,
+    "crossref_cited_by": 317,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2055287268",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1962,
+    "crossref_cited_by": 165,
+    "crossref_reference_count": 16,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2057182494",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1961,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 3,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2058590036",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1916,
+    "crossref_cited_by": 260,
+    "crossref_reference_count": 72,
+    "crossref_type": "journal-article",
+    "publisher": "International Press of Boston",
+    "issn": "0001-5962",
+    "crossref_container_title": "Acta Mathematica",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2067370016",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1948,
+    "crossref_cited_by": 512,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2068184834",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1996,
+    "crossref_cited_by": 349,
+    "crossref_reference_count": 34,
+    "crossref_type": "journal-article",
+    "publisher": "Duke University Press",
+    "issn": "0012-7094",
+    "crossref_container_title": "Duke Mathematical Journal",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2068217923",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1982,
+    "crossref_cited_by": 327,
+    "crossref_reference_count": 18,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0016-2663",
+    "crossref_container_title": "Functional Analysis and Its Applications",
+    "crossref_author_count": 2,
+    "license_url": "https://www.springernature.com/gp/researchers/text-and-data-mining"
+   }
+  },
+  {
+   "id": "PA:oa:W2068865899",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1978,
+    "crossref_cited_by": 265,
+    "crossref_reference_count": 6,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0002-5232",
+    "crossref_container_title": "Algebra and Logic",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2069185213",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1976,
+    "crossref_cited_by": 366,
+    "crossref_reference_count": 29,
+    "crossref_type": "journal-article",
+    "publisher": "AIP Publishing",
+    "issn": "0022-2488",
+    "crossref_container_title": "Journal of Mathematical Physics",
+    "crossref_author_count": 4
+   }
+  },
+  {
+   "id": "PA:oa:W2069572455",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1957,
+    "crossref_cited_by": 740,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6826",
+    "crossref_container_title": "Proceedings of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2070352980",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1962,
+    "crossref_cited_by": 15,
+    "crossref_reference_count": 5,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-5831",
+    "crossref_container_title": "Mathematische Annalen",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2070991255",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1964,
+    "crossref_cited_by": 851,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2071056578",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1975,
+    "crossref_cited_by": 84,
+    "crossref_reference_count": 0,
+    "crossref_type": "proceedings-article",
+    "publisher": "ACM Press",
+    "crossref_container_title": "Proceedings of seventh annual ACM symposium on Theory of computing  - STOC '75",
+    "crossref_author_count": 1,
+    "license_url": "https://www.acm.org/publications/policies/copyright_policy#Background"
+   }
+  },
+  {
+   "id": "PA:oa:W2071743058",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1923,
+    "crossref_cited_by": 503,
+    "crossref_reference_count": 71,
+    "crossref_type": "journal-article",
+    "publisher": "International Press of Boston",
+    "issn": "0001-5962",
+    "crossref_container_title": "Acta Mathematica",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2072534883",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1999,
+    "crossref_cited_by": 263,
+    "crossref_reference_count": 70,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-9485",
+    "crossref_container_title": "Bulletin of the American Mathematical Society",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2072557074",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1993,
+    "crossref_cited_by": 302,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2073761272",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1973,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 2,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2075424595",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1995,
+    "crossref_cited_by": 486,
+    "crossref_reference_count": 18,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-5874",
+    "crossref_container_title": "Mathematische Zeitschrift",
+    "crossref_author_count": 2,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2076508310",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1952,
+    "crossref_cited_by": 681,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6115",
+    "crossref_container_title": "Proceedings of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1"
+   }
+  },
+  {
+   "id": "PA:oa:W2076597612",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1960,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0016-0032",
+    "crossref_container_title": "Journal of the Franklin Institute",
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2077055049",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1916,
+    "crossref_cited_by": 1047,
+    "crossref_reference_count": 14,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-5831",
+    "crossref_container_title": "Mathematische Annalen",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2077357353",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2006,
+    "crossref_cited_by": 474,
+    "crossref_reference_count": 45,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 3,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/",
+    "doi_check_flags": [
+     "year_mismatch"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2078929121",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1975,
+    "crossref_cited_by": 273,
+    "crossref_reference_count": 70,
+    "crossref_type": "journal-article",
+    "publisher": "American Physical Society (APS)",
+    "issn": "0034-6861",
+    "crossref_container_title": "Reviews of Modern Physics",
+    "crossref_author_count": 3,
+    "license_url": "http://link.aps.org/licenses/aps-default-license"
+   }
+  },
+  {
+   "id": "PA:oa:W2080328683",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1975,
+    "crossref_cited_by": 330,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Mathematical Sciences Publishers",
+    "issn": "0030-8730",
+    "crossref_container_title": "Pacific Journal of Mathematics",
+    "crossref_author_count": 3
+   }
+  },
+  {
+   "id": "PA:oa:W2081163625",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1948,
+    "crossref_cited_by": 551,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "National Academy of Sciences",
+    "issn": "0027-8424",
+    "crossref_container_title": "Proceedings of the National Academy of Sciences",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2082077150",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 441,
+    "crossref_reference_count": 9,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2082149578",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1954,
+    "crossref_cited_by": 291,
+    "crossref_reference_count": 4,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0025-5793",
+    "crossref_container_title": "Mathematika",
+    "crossref_author_count": 1,
+    "license_url": "http://onlinelibrary.wiley.com/termsAndConditions#vor"
+   }
+  },
+  {
+   "id": "PA:oa:W2082647537",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1909,
+    "crossref_cited_by": 439,
+    "crossref_reference_count": 3,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0009-725X",
+    "crossref_container_title": "Rendiconti del Circolo Matematico di Palermo",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2085860546",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1958,
+    "crossref_cited_by": 437,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Mathematical Sciences Publishers",
+    "issn": "0030-8730",
+    "crossref_container_title": "Pacific Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2086346829",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1977,
+    "crossref_cited_by": 438,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2086445647",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1965,
+    "crossref_cited_by": 80,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "0002-9947",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2087736116",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1974,
+    "crossref_cited_by": 1174,
+    "crossref_reference_count": 10,
+    "crossref_type": "journal-article",
+    "publisher": "MathDoc/Centre Mersenne",
+    "issn": "0073-8301",
+    "crossref_container_title": "Publications Mathématiques de l'IHÉS",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2090521335",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1999,
+    "crossref_cited_by": 397,
+    "crossref_reference_count": 12,
+    "crossref_type": "journal-article",
+    "publisher": "World Scientific Pub Co Pte Ltd",
+    "issn": "0217-751X",
+    "crossref_container_title": "International Journal of Modern Physics A",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2093144183",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1972,
+    "crossref_cited_by": 348,
+    "crossref_reference_count": 52,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0001-8708",
+    "crossref_container_title": "Advances in Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2094054391",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2001,
+    "crossref_cited_by": 359,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6115",
+    "crossref_container_title": "Proceedings of the London Mathematical Society",
+    "crossref_author_count": 3,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1"
+   }
+  },
+  {
+   "id": "PA:oa:W2094630731",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1993,
+    "crossref_cited_by": 410,
+    "crossref_reference_count": 9,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-5831",
+    "crossref_container_title": "Mathematische Annalen",
+    "crossref_author_count": 2,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2095393613",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2000,
+    "crossref_cited_by": 473,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0010-3616",
+    "crossref_container_title": "Communications in Mathematical Physics",
+    "crossref_author_count": 2,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2097673562",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2008,
+    "crossref_cited_by": 374,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Annals of Mathematics",
+    "issn": "0003-486X",
+    "crossref_container_title": "Annals of Mathematics",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2099916937",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1977,
+    "crossref_cited_by": 517,
+    "crossref_reference_count": 10,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-6850",
+    "crossref_container_title": "Transactions of the American Mathematical Society",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2100864874",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2009,
+    "crossref_cited_by": 9,
+    "crossref_reference_count": 15,
+    "crossref_type": "journal-article",
+    "publisher": "Cambridge University Press (CUP)",
+    "issn": "0305-0041",
+    "crossref_container_title": "Mathematical Proceedings of the Cambridge Philosophical Society",
+    "crossref_author_count": 2,
+    "license_url": "https://www.cambridge.org/core/terms",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2101208183",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1954,
+    "crossref_cited_by": 374,
+    "crossref_reference_count": 3,
+    "crossref_type": "journal-article",
+    "publisher": "Cambridge University Press (CUP)",
+    "issn": "0305-0041",
+    "crossref_container_title": "Mathematical Proceedings of the Cambridge Philosophical Society",
+    "crossref_author_count": 2,
+    "license_url": "https://www.cambridge.org/core/terms"
+   }
+  },
+  {
+   "id": "PA:oa:W2102265874",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1970,
+    "crossref_cited_by": 323,
+    "crossref_reference_count": 6,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0025-2611",
+    "crossref_container_title": "Manuscripta Mathematica",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2106226212",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W2108900323",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1953,
+    "crossref_cited_by": 310,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6107",
+    "crossref_container_title": "Journal of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1"
+   }
+  },
+  {
+   "id": "PA:oa:W2114145385",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2004,
+    "crossref_cited_by": 519,
+    "crossref_reference_count": 15,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0022-4049",
+    "crossref_container_title": "Journal of Pure and Applied Algebra",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2126692863",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2000,
+    "crossref_cited_by": 459,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0010-3616",
+    "crossref_container_title": "Communications in Mathematical Physics",
+    "crossref_author_count": 2,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2132202780",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1984,
+    "crossref_cited_by": 276,
+    "crossref_reference_count": 25,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 2,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2132714173",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1991,
+    "crossref_cited_by": 263,
+    "crossref_reference_count": 13,
+    "crossref_type": "journal-article",
+    "publisher": "Cambridge University Press (CUP)",
+    "issn": "0017-0895",
+    "crossref_container_title": "Glasgow Mathematical Journal",
+    "crossref_author_count": 1,
+    "license_url": "https://www.cambridge.org/core/terms"
+   }
+  },
+  {
+   "id": "PA:oa:W2145201379",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1978,
+    "crossref_cited_by": 596,
+    "crossref_reference_count": 40,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0001-8708",
+    "crossref_container_title": "Advances in Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2150462872",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2014,
+    "crossref_cited_by": 261,
+    "crossref_reference_count": 13,
+    "crossref_type": "journal-article",
+    "publisher": "Annals of Mathematics",
+    "issn": "0003-486X",
+    "crossref_container_title": "Annals of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2159341052",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2004,
+    "crossref_cited_by": 580,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Annals of Mathematics",
+    "issn": "0003-486X",
+    "crossref_container_title": "Annals of Mathematics",
+    "crossref_author_count": 3
+   }
+  },
+  {
+   "id": "PA:oa:W2161613033",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1995,
+    "crossref_cited_by": 331,
+    "crossref_reference_count": 95,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0304-3975",
+    "crossref_container_title": "Theoretical Computer Science",
+    "crossref_author_count": 3,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W21857574",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1908,
+    "crossref_cited_by": 607,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Walter de Gruyter GmbH",
+    "issn": "0075-4102",
+    "crossref_container_title": "Journal für die reine und angewandte Mathematik (Crelles Journal)",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W225736130",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1982,
+    "crossref_cited_by": 431,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Institute of Mathematics, Polish Academy of Sciences",
+    "issn": "0065-1036",
+    "crossref_container_title": "Acta Arithmetica",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2313163255",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1971,
+    "crossref_cited_by": 295,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W2316437449",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1913,
+    "crossref_cited_by": 327,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2320881711",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1945,
+    "crossref_cited_by": 343,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2321770537",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1977,
+    "crossref_cited_by": 29,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2322753244",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1958,
+    "crossref_cited_by": 1342,
+    "crossref_reference_count": 9,
+    "crossref_type": "journal-article",
+    "publisher": "Informa UK Limited",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 1,
+    "doi_check_flags": [
+     "citation_reverse_anomaly"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2323777246",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1936,
+    "crossref_cited_by": 965,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2324192779",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1912,
+    "crossref_cited_by": 7,
+    "crossref_reference_count": 5,
+    "crossref_type": "journal-article",
+    "publisher": "Informa UK Limited",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 1,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2327767063",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1881,
+    "crossref_cited_by": 663,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9327",
+    "crossref_container_title": "American Journal of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2328519477",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1969,
+    "crossref_cited_by": 114,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2330062860",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1959,
+    "crossref_cited_by": 1,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 3,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2334322021",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1972,
+    "crossref_cited_by": 342,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2335187233",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1981,
+    "crossref_cited_by": 341,
+    "crossref_reference_count": 50,
+    "crossref_type": "journal-article",
+    "publisher": "MathDoc/Centre Mersenne",
+    "issn": "0073-8301",
+    "crossref_container_title": "Publications Mathématiques de l'IHÉS",
+    "crossref_author_count": 1,
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2335584542",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1939,
+    "crossref_cited_by": 427,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W2486137719",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1991,
+    "crossref_cited_by": 85,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "Springer Berlin Heidelberg",
+    "issn": "0938-0396",
+    "crossref_container_title": "Encyclopaedia of Mathematical Sciences",
+    "license_url": "http://www.springer.com/tdm"
+   }
+  },
+  {
+   "id": "PA:oa:W2492284202",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W2527733283",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1967,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6107",
+    "crossref_container_title": "Journal of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2569091092",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1988,
+    "crossref_cited_by": 2,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0025-5718",
+    "crossref_container_title": "Mathematics of Computation",
+    "crossref_author_count": 3,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2571887050",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1988,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6093",
+    "crossref_container_title": "Bulletin of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2573623072",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1974,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6093",
+    "crossref_container_title": "Bulletin of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2577779281",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1988,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6093",
+    "crossref_container_title": "Bulletin of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2593837161",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1970,
+    "crossref_cited_by": 97,
+    "crossref_reference_count": 27,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0021-8693",
+    "crossref_container_title": "Journal of Algebra",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W2595399821",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1970,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Wiley",
+    "issn": "0024-6093",
+    "crossref_container_title": "Bulletin of the London Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "http://doi.wiley.com/10.1002/tdm_license_1.1",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2595945369",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2009,
+    "crossref_cited_by": 2,
+    "crossref_reference_count": 0,
+    "crossref_type": "book",
+    "publisher": "Springer New York",
+    "license_url": "https://www.springernature.com/gp/researchers/text-and-data-mining",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2606984140",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "datacite",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1993,
+    "datacite_cited_by": 2,
+    "publisher": "Fondation L'Enseignement Mathématique",
+    "datacite_resource_type": "Text",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2791520396",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W2889227750",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W2911329779",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1980,
+    "crossref_cited_by": 10,
+    "crossref_reference_count": 4,
+    "crossref_type": "journal-article",
+    "publisher": "Cambridge University Press (CUP)",
+    "issn": "0013-0915",
+    "crossref_container_title": "Proceedings of the Edinburgh Mathematical Society",
+    "crossref_author_count": 1,
+    "license_url": "https://www.cambridge.org/core/terms",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2986001730",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1979,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0049-4925",
+    "crossref_container_title": "The Two-Year College Mathematics Journal",
+    "crossref_author_count": 2,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W2992916319",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1983,
+    "crossref_cited_by": 482,
+    "crossref_reference_count": 22,
+    "crossref_type": "journal-article",
+    "publisher": "Springer Science and Business Media LLC",
+    "issn": "0016-2663",
+    "crossref_container_title": "Functional Analysis and Its Applications",
+    "crossref_author_count": 1,
+    "license_url": "https://www.springernature.com/gp/researchers/text-and-data-mining"
+   }
+  },
+  {
+   "id": "PA:oa:W3000697522",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "datacite",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2020,
+    "datacite_cited_by": 0,
+    "publisher": "Utah State University",
+    "datacite_resource_type": "Text",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W3010207593",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1954,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0012-9682",
+    "crossref_container_title": "Econometrica",
+    "crossref_author_count": 3,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W3021014091",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W3031984517",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W3037555746",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 2000,
+    "crossref_cited_by": 903,
+    "crossref_reference_count": 6,
+    "crossref_type": "journal-article",
+    "publisher": "World Scientific Pub Co Pte Ltd",
+    "issn": "0217-751X",
+    "crossref_container_title": "International Journal of Modern Physics A",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W3139709023",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1953,
+    "crossref_cited_by": 252,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0003-486X",
+    "crossref_container_title": "The Annals of Mathematics",
+    "crossref_author_count": 2
+   }
+  },
+  {
+   "id": "PA:oa:W3175367423",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1946,
+    "crossref_cited_by": 0,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Informa UK Limited",
+    "issn": "0025-5572",
+    "crossref_container_title": "The Mathematical Gazette",
+    "crossref_author_count": 1,
+    "license_url": "https://www.cambridge.org/core/terms",
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W4212875219",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1929,
+    "crossref_cited_by": 35,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "American Mathematical Society (AMS)",
+    "issn": "1088-9485",
+    "crossref_container_title": "Bulletin of the American Mathematical Society",
+    "crossref_author_count": 1,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W4213269858",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1977,
+    "crossref_cited_by": 1814,
+    "crossref_reference_count": 24,
+    "crossref_type": "journal-article",
+    "publisher": "Elsevier BV",
+    "issn": "0001-8708",
+    "crossref_container_title": "Advances in Mathematics",
+    "crossref_author_count": 1,
+    "license_url": "https://www.elsevier.com/tdm/userlicense/1.0/"
+   }
+  },
+  {
+   "id": "PA:oa:W4241324437",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1973,
+    "crossref_cited_by": 376,
+    "crossref_reference_count": 0,
+    "crossref_type": "other",
+    "publisher": "American Mathematical Society",
+    "issn": "2324-707X",
+    "crossref_container_title": "Proceedings of Symposia in Pure Mathematics",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W4244648453",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1912,
+    "crossref_cited_by": 31,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "Informa UK Limited",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 1
+   }
+  },
+  {
+   "id": "PA:oa:W4249421000",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1956,
+    "crossref_cited_by": 471,
+    "crossref_reference_count": 0,
+    "crossref_type": "monograph",
+    "publisher": "American Mathematical Society",
+    "issn": "0065-9258",
+    "crossref_container_title": "Colloquium Publications",
+    "crossref_author_count": 1,
+    "doi_check_flags": [
+     "venue_variant"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W4296292757",
+   "props": {
+    "doi_verified": true,
+    "doi_verified_via": "crossref",
+    "doi_verified_at": "2026-10-09T10:20:39",
+    "doi_verified_source": "crossref+datacite",
+    "crossref_year": 1970,
+    "crossref_cited_by": 1,
+    "crossref_reference_count": 0,
+    "crossref_type": "journal-article",
+    "publisher": "JSTOR",
+    "issn": "0002-9890",
+    "crossref_container_title": "The American Mathematical Monthly",
+    "crossref_author_count": 4,
+    "doi_check_flags": [
+     "citation_caliber_gap"
+    ]
+   }
+  },
+  {
+   "id": "PA:oa:W584788542",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  },
+  {
+   "id": "PA:oa:W591591544",
+   "props": {
+    "doi_crossref_checked": true,
+    "doi_check_result": "no_doi",
+    "doi_checked_at": "2026-10-09T10:20:39"
+   }
+  }
+ ],
+ "delete_nodes": [],
+ "edges": [],
+ "delete_edges": []
+}
