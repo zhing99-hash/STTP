@@ -37,30 +37,31 @@ Password:   （见 环境变量 / .env，禁止明文）
 总计:       7127 节点 / 32902 边
 ```
 
-> ⚠️ Aura 免费实例约 5 万节点上限，当前 7127 节点，连接池紧张时注意分批操作。
+> ⚠️ Aura 免费实例约 5 万节点上限，当前 **7382 节点 / 40207 边**（云端与本地严格一致），连接池紧张时注意分批操作。
 
 ### 2.2 本地可视化服务
 ```
 地址:   http://127.0.0.1:8765/
-状态:   运行中
-数据:   graph_data_phase12.json（7127 节点 / 32902 边）
-前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax CDN）
+数据:   06_PoC/graph_data_phase22.json（7382 节点 / 40207 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
+前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax，**依赖已本地 vendored**，可完全离线）
 ```
 
-**启动命令**（在项目根目录）：
-```powershell
-$env:GRAPH_DATA_FILE = "06_PoC\graph_data_phase12.json"
-python 06_PoC/viz_server.py
+**启动命令**（在项目根目录，**推荐**）：
+```bash
+bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_PYTHON
 ```
+> 长驻请后台启动并重定向日志，例如：`bash sttp.sh viz > .runlog/viz.log 2>&1 &`
+> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase22.json python 06_PoC/viz_server.py`
+> ⚠️ 必须用系统 Python（`.env` 的 `STTP_PYTHON`）；托管 3.13 是空环境，缺依赖。
 
 ### 2.3 GitHub 仓库
 ```
 仓库:   https://github.com/zhing99-hash/STTP
 分支:   main
-Commit: e9062a0c7943e2257bbf9d08eed6521ee60a5b1f
-远程已推送，README.md / LICENSE 已就位
-SSH 密钥已生成（id_ed25519_sttp.pub），公钥待添加到 GitHub
+最新:   8c3a448（Aura 属性消毒 + 边对账工具）—— 已 push，本地领先 0
 ```
+> ⚠️ 直连 GitHub 被出口白名单拦（0/3），**必须走出口代理**（见 §8.3）。代理端口**会变**，用前先 `netstat -ano | grep LISTEN` 确认。
+> ⚠️ **切勿设 `GIT_TERMINAL_PROMPT=0`** —— 会让 `git-credential-manager` 拒绝供凭据。历史成功率约 1/3，脚本里请带重试循环。
 
 ---
 
@@ -304,14 +305,35 @@ python 09_科研扩展/9_inference/phase9_deepen.py
 # 输出：phase9_deepen_edges.json（nodes=[], edges=188）
 ```
 
-### 5.6 `09_科研扩展/9_inference/export_aura.py` — 从 Aura 导出权威图
-```powershell
-# 从 Aura 拉取全量图，生成：
-#   1. raw 格式 → 06_PoC/etl/normalized.json（viz 后端源）
-#   2. viz 格式 → 06_PoC/graph_data_phase12.json（可视化数据）
-python 09_科研扩展/9_inference/export_aura.py
+### 5.6 `09_科研扩展/9_inference/export_aura.py` — 从 Aura 反向导出 viz 快照
+```bash
+# 从 Aura 拉取全量图 → viz 格式 → 06_PoC/graph_data_aura.json（默认）
+bash sttp.sh export
+python 09_科研扩展/9_inference/export_aura.py --out 06_PoC/xxx.json   # 自定义输出
 ```
-> 用于：Aura 数据更新后同步本地快照；viz 后端源损坏后重建。
+> 用于：Aura 更新后同步本地快照；排查云端与本地是否一致。
+> ⚠️ **输出必须避开 `graph_data_phase<N>.json` 命名** —— 那是历史快照，反向导出覆盖它们会让历史不可回溯。
+> 脚本**内置守卫**：目标形如 `graph_data_phase<N>.json` 时直接拒绝（除非 `--force`）。
+> ⚠️ 本脚本产出 **viz 格式**（含 `schema`/`meta`），与权威 raw 图 `06_PoC/etl/normalized.json`（仅 `nodes`/`edges`）**不是同一格式，不可互相覆盖**。
+
+### 5.7 `06_PoC/neo4j_props.py` — DB 边界属性消毒（**推 Aura 前必过**）
+```python
+import neo4j_props
+props = neo4j_props.sanitize_props(raw_props, where="edge")   # 嵌套容器 → json.dumps（无损）
+```
+> Neo4j 属性值只接受 primitive / 同质 primitive 数组。本地 NetworkX **不校验**，
+> 所以 `dict` / `list[dict]` 会在本地一路无事、**只在推 Aura 时让整批事务失败**。
+> 已接入 `11_真实数据/push_element_merge.py` 与 `06_PoC/robust_aura_loader.py`。
+> ⚠️ 新增推送器时**务必同样接入**，否则会重演 2026-10-09「exit=0 但静默丢 600 边」的事故。
+
+### 5.8 `06_PoC/reconcile_aura_edges.py` — 云端/本地边对账
+```bash
+bash sttp.sh reconcile --report-only   # 只报告差异
+bash sttp.sh reconcile                 # 实际清理（使云端严格 == 本地）
+```
+> 推送**只能加**：历史上被替换掉的旧方案残留（如 Phase 11 的 `kind=reaction_role`）不会被自动清除。
+> 以本地 `06_PoC/etl/normalized.json` 为基准：删云端独有三元组 / 删同三元组 kind 变体 /
+> **补本地独有边**（含「删后需按本地 kind 补回」兜底）。已并入推送编排的步骤 12。
 
 ---
 
@@ -341,20 +363,27 @@ python 09_科研扩展/9_inference/export_aura.py
    → 生成 graph_data_*.json（用于 viz）
 
 3. 构造 Aura 增量 JSON
-   → {nodes: [...], edges: [...]}，新节点不与已有节点重复
-   → 保存为 06_PoC/etl/neo4j/phase*_aura_delta.json
+   → {nodes: [...], edges: [...], delete_nodes: [...], delete_edges: [...]}
+   → 保存为 06_PoC/etl/neo4j/phase*_delta.json
+   → ⚠️ 属性值只能是 primitive / 同质 primitive 数组；嵌套容器先过 `neo4j_props.sanitize_props`
 
-4. 推送到 Aura
-   → python 06_PoC/robust_aura_loader.py --input 06_PoC/etl/neo4j/phase*_aura_delta.json
+4. 先在本地 apply 并验收（**改数据前必做**）
+   → python 06_PoC/apply_delta.py --delta <p> --phase <N> [--apply]
+   → 本地 normalized.json 是**权威基准**；对账/快照都以它为准
 
-5. 验证
-   → python 08_部署包/neo4j/verify_deploy.py
+5. 推送到 Aura
+   → bash sttp.sh push <delta.json>          # 单 delta
+   → bash sttp.sh pushall --execute          # 全量重放（十三步，含对账 + 导出）
 
-6. 从 Aura 导出权威快照
-   → python 09_科研扩展/9_inference/export_aura.py
+6. 对账（**推送后必做**）
+   → bash sttp.sh reconcile --report-only    # 先看差异
+   → bash sttp.sh reconcile                  # 清理到云端 == 本地
 
-7. 重启 viz
-   → python 06_PoC/viz_server.py（设 GRAPH_DATA_FILE）
+7. 反向导出 viz 快照
+   → bash sttp.sh export                     # 默认 → 06_PoC/graph_data_aura.json（**勿覆盖 graph_data_phase<N>.json**）
+
+8. 重启 viz
+   → bash sttp.sh viz                         # 自动读 .env 的 GRAPH_DATA_FILE
 ```
 
 ---
@@ -410,9 +439,10 @@ $env:NEO4J_USER      = "853a33bc"
 $env:NEO4J_PASSWORD  = "<从 MEMORY.md 或 .env 读取>"
 $env:NEO4J_DATABASE  = "853a33bc"
 
-# viz 服务（可选）
-$env:GRAPH_DATA_FILE = "06_PoC\graph_data_phase12.json"
+# viz 服务（可选，也可直接 bash sttp.sh viz 自动读 .env）
+$env:GRAPH_DATA_FILE = "06_PoC\graph_data_phase22.json"
 $env:VIZ_PORT        = "8765"
+$env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Python311\python.exe"
 ```
 
 > ⚠️ 密码必须从 MEMORY.md 或 `.env` 文件读取，**禁止硬编码**写入脚本。`08_部署包/neo4j/.env.example` 是模板，`08_部署包/neo4j/.env` 应含真实凭据（已从开源仓库移除）。
@@ -433,6 +463,21 @@ $env:VIZ_PORT        = "8765"
 - **Aura 连接池耗尽**：多个进程同时连 Aura 时会出现 `ConnectionAcquisitionTimeoutError`。操作前关掉竞争进程，操作完成后导出快照。
 - **Aura 唯一约束为 Entity.id**：同一 id 的节点重复写入会触发 `IndexEntryConflictException`。增量 JSON 中的节点若已存在于 Aura，须从 nodes 列表中排除（边仍按 id 引用，MATCH 到已有节点）。
 - **apoc.merge.relationship 按 (起点, 终点, 类型, kind) 去重**：同一对节点在同一类型下重复推只会保留一条，属正确行为。
+  ⚠️ 反之亦然：**同三元组但 `kind` 不同会各存一条边**（identProps 带 `kind`）。判断「边是否重复」时不能只看 `(source,type,target)`。
+- **🔴 嵌套属性会让整批事务失败，且旧推送器会静默吞掉**（2026-10-09 事故）：Neo4j 属性值只接受 primitive / 同质 primitive 数组。
+  delta 里若夹带 `dict` / `list[dict]`（本地 NetworkX 不校验），推送时**整批失败**，重试 6 次后放弃该批却仍 `exit 0`。
+  实际损失：`phase13` 的 `gnn_type_probs`(list[dict]) 丢 **600 条边**、`phase15/16` 的 `alias_sources`(dict) 让 **118 个元素的 period/group 全未写入**。
+  修复：新增 `06_PoC/neo4j_props.py`，在 DB 边界 `sanitize_props()`（嵌套容器 → `json.dumps`，**无损**，本地图谱不动）；
+  并让「放弃批次」**返回非零退出码**（编排器会中止后续步骤）。**新写推送器必须接入。**
+- **🔴 推送只能加，不会减 —— 必须对账**：历史上被替换掉的旧方案残留（Phase 11 的 `kind=reaction_role` 等）会一直留在云端，
+  云端逐渐变成「本地 ∪ 历代废弃物」。用 `06_PoC/reconcile_aura_edges.py`（`bash sttp.sh reconcile`）以本地为基准清理。
+- **🔴 云端与本地「计数相等」≠「内容相等」**：开工时云端 7127/33090 与本地旧 phase12 数字一致，
+  但云端已含 155 条本地没有的残留边。**对账必须做集合级比对（三元组集合），不能只看 count。**
+- **🔴 反向导出不要覆盖 `graph_data_phase<N>.json`**：`export_aura.py` 曾硬编码输出到 `graph_data_phase12.json`，
+  而推送编排每次跑都调用它 → 历史快照被反复重写、不可回溯。现默认输出 `graph_data_aura.json`，
+  并内置守卫拒绝写入 phase 快照命名（除非 `--force`）。
+- **`getaddrinfo failed` 不等于「Aura 实例暂停」**（曾据此误报 7 轮）：先用公共解析器（UDP/53 直查 `8.8.8.8`/`1.1.1.1`）交叉验证。
+  仅本机失败 → **DNS 陈旧负缓存**，`ipconfig /flushdns` 即可；仅瞬时失败 → 直接重试；公共解析器也 NXDOMAIN → 才是实例暂停（需 console.neo4j.io resume）。
 - **Cypher 25 兼容**：`MATCH (a)-[:*1..6]->(b)` 通配符变长路径不支持，须改用显式 reltype 列表或定长 `[:REL*2]`。`MATCH (a)-[r]->(b) RETURN a.id + b.id` 字符串拼接用 `||` 而非 `+`。
 
 ### 9.2 数据生成
@@ -539,25 +584,18 @@ $env:NEO4J_DATABASE  = "853a33bc"
 python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_URI',auth=('$env:NEO4J_USER','$env:NEO4J_PASSWORD')); print(list(d.session().run('RETURN 1 as x'))); d.close()"
 
 # 4. 启动本地可视化
-$env:GRAPH_DATA_FILE = "06_PoC\graph_data_phase12.json"
-python 06_PoC/viz_server.py
-# 浏览器打开 http://127.0.0.1:8765/
+bash sttp.sh viz
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase22.json）
 
-# 5. 从 Aura 同步最新权威图到本地
-python 09_科研扩展/9_inference/export_aura.py
-# 产出：06_PoC/etl/normalized.json + 06_PoC/graph_data_phase12.json
+# 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
+bash sttp.sh export
 
 # 6. 查看图谱统计
-python -c "
-import json
-g=json.load(open('06_PoC/graph_data_phase12.json',encoding='utf-8'))
-print(f\"节点: {len(g['nodes'])}, 边: {len(g['edges'])}\")
-from collections import Counter; print(Counter(n['type'] for n in g['nodes']).most_common(8))
-print(Counter(e['type'] for e in g['edges']).most_common(8))
-"
+bash sttp.sh stats
 
-# 7. 推新数据到 Aura
-python 06_PoC/robust_aura_loader.py --input <your_delta.json>
+# 7. 推新数据到 Aura（推荐用编排器，自动消毒 + 对账 + 导出）
+bash sttp.sh push <your_delta.json>       # 单 delta
+bash sttp.sh pushall --execute            # 十三步全量重放
 
 # 8. 验证写入
 python 08_部署包/neo4j/verify_deploy.py

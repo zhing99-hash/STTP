@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 # ============================================================================
 # STTP 项目一体化入口
-#   bash sttp.sh check    连通性 + 图谱数据自检
-#   bash sttp.sh stats    打印本地图谱规模与类型分布
-#   bash sttp.sh viz      启动可视化服务 (默认 127.0.0.1:8765)
-#   bash sttp.sh export   从 Aura 反向导出权威图到 06_PoC/etl/normalized.json
-#   bash sttp.sh push <delta.json>   健壮推送到 Aura
-#   bash sttp.sh verify   跑仓库自带 verify_deploy.py
+#   bash sttp.sh check        连通性 + 图谱数据自检
+#   bash sttp.sh stats        打印本地图谱规模与类型分布
+#   bash sttp.sh viz          启动可视化服务 (默认 127.0.0.1:8765)
+#   bash sttp.sh export       从 Aura 反向导出 viz 快照 (默认 graph_data_aura.json)
+#   bash sttp.sh push <delta> 单 delta 健壮推送到 Aura
+#   bash sttp.sh pushall [--execute]                离线增量顺序编排（13 步：推送→对账→导出）
+#   bash sttp.sh reconcile [--dry-run|--report-only] 云端/本地边对账（默认清理，使云端==本地）
+#   bash sttp.sh probe [--only k1,k2] [--rounds N]  真实数据源可达性探测
+#   bash sttp.sh verify       跑仓库自带 verify_deploy.py
+# 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
 set -u
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -28,7 +32,7 @@ if [ -f "$ROOT/.env" ]; then
 fi
 
 PY="${STTP_PYTHON:-python}"
-GRAPH="${GRAPH_DATA_FILE:-06_PoC/graph_data_phase12.json}"
+GRAPH="${GRAPH_DATA_FILE:-06_PoC/graph_data_phase22.json}"
 PORT="${VIZ_PORT:-8765}"
 
 case "${1:-help}" in
@@ -90,15 +94,28 @@ EOF
     GRAPH_DATA_FILE="$GRAPH" VIZ_PORT="$PORT" "$PY" 06_PoC/viz_server.py
     ;;
   export)
-    "$PY" 09_科研扩展/9_inference/export_aura.py
+    shift
+    "$PY" 09_科研扩展/9_inference/export_aura.py "$@"
     ;;
   push)
     "$PY" 06_PoC/robust_aura_loader.py --input "${2:?用法: bash sttp.sh push <delta.json>}"
+    ;;
+  pushall)
+    shift
+    "$PY" 09_科研扩展/9_inference/push_pending.py "$@"
+    ;;
+  reconcile)
+    shift
+    "$PY" 06_PoC/reconcile_aura_edges.py "$@"
+    ;;
+  probe)
+    shift
+    "$PY" 11_真实数据/probe_sources.py "$@"
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py
     ;;
   *)
-    sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
+    awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"
     ;;
 esac

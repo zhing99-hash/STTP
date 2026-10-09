@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-"""**全部离线增量**的顺序推送编排（网络恢复后执行）。
+"""**全部离线增量**的顺序推送编排（可安全重复执行）。
 
-本机自 2026-10-08 起离线，累计**十一项修复**只落在本地，Aura 仍是旧数据：
+2026-10-09 起累计**十一项修复**已成功推送到 Aura（云端与本地严格一致：
+7382 节点 / 40207 边）。本编排保留为**幂等重放通道** —— 换实例、回滚、
+或将来新增 delta 时直接重跑即可。各步骤：
 
     1) 元素层数据质量修复 -> 06_PoC/etl/neo4j/phase13_elementfix_delta.json
                               （氧元素回图 + EK2:el:S 纠正 + 14 个元素原子量）
@@ -39,12 +41,25 @@
                               （命中分子补 chembl_id / max_phase / first_approval /
                                 ATC / 类药性描述符；**纯属性增强，0 新增节点/边**）
 
+推送**之后**还有两个收尾步（共 **13 步**）：
+
+   12) 边对账（**清**）  -> 06_PoC/reconcile_aura_edges.py
+                            （以本地 normalized.json 为准，删云端独有的历史残留三元组、
+                              删同三元组 kind 不一致的变体、补本地独有边。**推送只能加，
+                              历史上被替换掉的旧方案残留不会被自动清理** —— 2026-10-09
+                              实测云端多 155 个唯一三元组 + 39 条 kind 变体。
+                              用 --skip-reconcile 跳过）
+   13) 反向导出（**快照**）-> 09_科研扩展/9_inference/export_aura.py
+                            （产出 viz 快照，默认 06_PoC/graph_data_aura.json。
+                              用 --skip-export 跳过）
+
 **顺序不可颠倒**，原因见每步注释。全部脚本幂等，可安全重跑。
 
 用法：
     python 09_科研扩展/9_inference/push_pending.py            # 打印计划（不连库）
     python 09_科研扩展/9_inference/push_pending.py --execute  # 实际推送
     python 09_科研扩展/9_inference/push_pending.py --execute --skip-export
+    python 09_科研扩展/9_inference/push_pending.py --execute --skip-reconcile
 """
 import os
 import sys
@@ -76,6 +91,7 @@ CHEMBL_DELTA = os.path.join(NEO4J_DIR, "phase22_chembl_delta.json")
 # 通用 delta 推送器（upsert 节点 / DETACH DELETE / MERGE 边 / DELETE 边）
 PUSH_DELTA = os.path.join(ROOT, "11_真实数据", "push_element_merge.py")
 LOADER = os.path.join(ROOT, "06_PoC", "robust_aura_loader.py")
+RECONCILE = os.path.join(ROOT, "06_PoC", "reconcile_aura_edges.py")
 EXPORT = os.path.join(HERE, "export_aura.py")
 
 
@@ -101,7 +117,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--execute", action="store_true", help="实际推送（默认只打印计划）")
     ap.add_argument("--batch", type=int, default=500, help="边分批大小（Aura 免费实例建议 <=1000）")
-    ap.add_argument("--skip-export", action="store_true", help="推送后不从 Aura 反向导出权威快照")
+    ap.add_argument("--skip-reconcile", action="store_true",
+                    help="推送后不做云端/本地边对账（默认会做，使云端严格==本地）")
+    ap.add_argument("--skip-export", action="store_true", help="推送后不从 Aura 反向导出 viz 快照")
     a = ap.parse_args()
 
     typed = load_json(TYPED_DELTA)
@@ -143,7 +161,10 @@ def main():
           % (len(lit.get("nodes", [])), len(lit.get("edges", []))))
     print("  步骤 11 ChEMBL 药物层     节点 %-4d 边 %d（chembl_id / max_phase / ATC / 类药性）"
           % (len(chembl.get("nodes", [])), len(chembl.get("edges", []))))
-    print("  步骤 12 反向导出权威快照  %s" % os.path.relpath(EXPORT, ROOT))
+    print("  步骤 12 云端/本地边对账  %s（删残留/kind 变体 + 补本地独有边）"
+          % os.path.relpath(RECONCILE, ROOT))
+    print("  步骤 13 反向导出 viz 快照 %s（默认 graph_data_aura.json）"
+          % os.path.relpath(EXPORT, ROOT))
     print("-" * 74)
     print("  顺序理由 1  步骤 2 的带类型边引用步骤 1 创建的节点（EK2:el:* 等）。")
     print("  顺序理由 2  步骤 3 会 DETACH DELETE 步骤 1 创建的 EK2:el:* 别名节点，")
@@ -155,12 +176,15 @@ def main():
     print("  顺序理由 5  步骤 9 修正的 composed_of 边以 EK:el:* 为端点，需在步骤 3（元素去重）")
     print("              之后；Aura 推边主键是 (source,type,target) 的 MERGE，故能命中步骤 3")
     print("              改挂后的既有边（边被修正 count，其余元数据保留）。")
-    print("  注意 1      推送完成后务必执行最后一步（反向导出）；否则本地快照与 Aura 分叉，")
-    print("              下一次 export 会用 Aura 旧数据覆盖本地修复。")
+    print("  注意 1      推送完成后务必执行步骤 12/13（对账 + 反向导出）；否则本地快照与 Aura 分叉：")
+    print("              (a) 历史残留只增不减，云端会慢慢变成「本地 ∪ 历代废弃物」；")
+    print("              (b) 下一次 export 会读到分叉后的云端数据。")
     print("  注意 2      Aura 免费实例连接池有限，边分批 %d/批；失败自动重连重试。" % a.batch)
     print("  注意 3      步骤 6–11 均与步骤 1–5 无强依赖（除步骤 9 需在 3 之后），位置可调；")
     print("              但步骤 7 必须在步骤 6 之后（part_of 引用 NT:mc:*）。")
     print("              步骤 10/11 为**纯属性增强**（0 新增节点/边），位置任意，放最后最安全。")
+    print("  注意 4      步骤 12 的判定基准是本地 06_PoC/etl/normalized.json —— 请确保所有 delta")
+    print("              都已先本地 apply，否则对账会把「尚未本地化的新边」当成残留删掉。")
 
     if not a.execute:
         print("\n[DRY-RUN] 未连接数据库。加 --execute 实际推送。")
@@ -182,8 +206,11 @@ def main():
     run([PY, PUSH_DELTA, "--delta", PUBCHEM_DELTA, "--batch", str(a.batch)], "步骤 9 · PubChem 分子校验 + count 修正")
     run([PY, PUSH_DELTA, "--delta", LIT_DELTA, "--batch", str(a.batch)], "步骤 10 · 文献层多源交叉校验（Crossref/DataCite）")
     run([PY, PUSH_DELTA, "--delta", CHEMBL_DELTA, "--batch", str(a.batch)], "步骤 11 · ChEMBL 化学·药物层")
+    if not a.skip_reconcile:
+        run([PY, RECONCILE, "--batch", str(a.batch)],
+            "步骤 12 · 云端/本地边对账（清理到严格一致）")
     if not a.skip_export:
-        run([PY, EXPORT], "步骤 12 · 从 Aura 反向导出权威快照")
+        run([PY, EXPORT], "步骤 13 · 从 Aura 反向导出 viz 快照")
     print("\n[DONE] 全部离线增量推送完成。建议再跑：bash sttp.sh check")
 
 
