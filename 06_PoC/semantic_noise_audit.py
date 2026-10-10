@@ -29,6 +29,18 @@ Phase 31（第 21 轮「复算维度全覆盖」）新增/扩展
       **从未**被真量纲复算过（`A1` 存在却被命名缺口卡成「不可判定」，静默退化）→ 关掉
       缺口后一次抓出 8 条量纲互斥的假边。此处为**独立第二实现**。
 
+Phase 32（第 22 轮「Claim/Evidence 对象化」）新增
+--------------------------------------------------
+  R9 证据链良构 + 独立抽验（R9a 良构；R9b 对自称 `symbol_in_source` 的证据用本脚本
+     `has_symbol` 独立重算）。
+
+Phase 33（第 23 轮「T9-i 证据独立攻坚」）新增 —— **对新增的两类独立证据做独立重算**
+------------------------------------------------------------------------------
+  R10 `equation_species_cross_source`：用**自带**方程切分/物种归一再算侧别；
+      与判级模型 `reaction_side_cross_check` **同判据、独立实现**。
+  R11 `codata_definition_recompute`：用**自带**定义式表再算常量派生。
+      ⚠ 二者都带**双向正对照**（正确→True / 错误→False），确保审计器**真的能报错**（铁律 #43）。
+
 三态（铁律 spirit：不可判定 ≠ 假）
 ----------------------------------
   源无表达式 / 端点无 symbol / 量纲查不到 → **不可判定**（`None`），**不撤**。
@@ -43,6 +55,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import math
 import os
 import re
 import sys
@@ -196,6 +209,98 @@ def has_symbol(node, sym):
     return any(c and _norm_text(c) in t for c in cands)
 
 
+# ===================== R10 / R11（Phase 33 · 自带实现，不 import 判级模型） =====================
+# R10 化学反应侧别**跨源**校验：用本脚本**自带**的方程切分与物种归一，独立重算
+#     「参与物是否只出现在归属侧」。与 `verification_model.reaction_side_cross_check`
+#     **同判据、独立实现** —— 若某条边自称 `equation_species_cross_source` 却在此重算为否，
+#     即为**候选反驳**（铁律 #43：审计器必须允许它报错）。
+# ⚠ 分隔符必须要求**两侧空白**（` \+ `）：否则 `NAD(+)`/`Fe(2+)` 的电荷号会被误切
+#   （这正是 Phase 33 判级模型初版的一个 bug，此处独立实现必须避开同一坑）。
+_RXN_EQ_SPLIT = re.compile(r" = ")
+_RXN_TERM_SPLIT = re.compile(r" \+ ")
+_RXN_PAREN_AUDIT = re.compile(r"\([^)]*\)")
+
+
+def _audit_canon(x) -> str:
+    s = str(x).lower()
+    s = _RXN_PAREN_AUDIT.sub("", s)
+    return s.replace(" ", "").replace("-", "").replace("+", "")
+
+
+def rxn_side_check(part_node, rxn_node, is_reactant):
+    """自带实现：True=只在归属侧 / False=只在相反侧 / None=不可判定。"""
+    eq = props_of(rxn_node).get("equation")
+    if not eq or " = " not in str(eq):
+        return None
+    lhs, rhs = str(eq).split(" = ", 1)
+    L = [_audit_canon(x) for x in _RXN_TERM_SPLIT.split(lhs) if x.strip()]
+    R = [_audit_canon(x) for x in _RXN_TERM_SPLIT.split(rhs) if x.strip()]
+    cs, os_ = (L, R) if is_reactant else (R, L)
+    pp = props_of(part_node)
+    lab = _audit_canon(pp.get("name") or "")
+    fml = _audit_canon(pp.get("formula") or "")
+    lh, lw = bool(lab) and lab in cs, bool(lab) and lab in os_
+    if lh and lw:
+        return None
+    if lw and not lh:
+        return False
+    if lh:
+        return True
+    fh, fw = bool(fml) and fml in cs, bool(fml) and fml in os_
+    if fh and fw:
+        return None
+    if fw:
+        return False
+    if fh:
+        if cs.count(fml) > 1:
+            return None
+        return True
+    return None
+
+
+# R11 CODATA 常量定义式数值复算：**自带**定义式表（独立于判级模型）。
+_AUDIT_CODATA_DEFS = {
+    "R = N_A·k_B": (["CO:pq:avogadro", "SM:pq:boltz_const"],
+                    lambda v: v[0] * v[1]),
+    "F = N_A·e": (["CO:pq:avogadro", "CO:pq:elementary_charge"],
+                  lambda v: v[0] * v[1]),
+    "m_u = M_u/N_A": (["CO:pq:avogadro"],
+                      lambda v: 1e-3 / v[0]),
+    "α = e²/(4πε₀ħc)": (["CO:pq:elementary_charge", "EM:pq:permittivity",
+                         "QM:pq:reduced_planck", "RT:pq:light_speed"],
+                        lambda v: v[0] ** 2 / (4 * math.pi * v[1] * v[2] * v[3])),
+    "σ = 2π⁵k⁴/(15h³c²)": (["SM:pq:boltz_const", "QM:pq:planck_const", "RT:pq:light_speed"],
+                           lambda v: 2 * math.pi ** 5 * v[0] ** 4 / (15 * v[1] ** 3 * v[2] ** 2)),
+    "Z_0 = μ₀c": (["EM:pq:permeability", "RT:pq:light_speed"],
+                  lambda v: v[0] * v[1]),
+    "R_∞ = α²m_e c/(2h)": (["CO:pq:fine_structure", "CO:pq:electron_mass",
+                            "RT:pq:light_speed", "QM:pq:planck_const"],
+                           lambda v: v[0] ** 2 * v[1] * v[2] / (2 * v[3])),
+}
+
+
+def codata_check(node_by_id, src_id, defn):
+    """自带实现：True=复算一致 / False=不一致 / None=不可判定。"""
+    spec = _AUDIT_CODATA_DEFS.get(defn)
+    if spec is None:
+        return None
+    ins, fn = spec
+    vals = []
+    for i in ins:
+        v = props_of(node_by_id.get(i)).get("value")
+        if v is None:
+            return None
+        vals.append(float(v))
+    rec = props_of(node_by_id.get(src_id)).get("value")
+    if rec is None:
+        return None
+    try:
+        calc = fn(vals)
+    except Exception:                                      # noqa: BLE001
+        return None
+    return abs(calc - float(rec)) / max(abs(float(rec)), 1e-30) <= 1e-6
+
+
 # ------------------------------------------------------------------------- 主逻辑
 MODEL_KINDS = {"gnn_typed_verified", "gnn_typed_inferred", "llm_inferred",
                "llm_inferred_gnn", "llm_review", "llm_review_gnn"}
@@ -330,6 +435,27 @@ def run(path=NORM):
                 findings["R9b_symbol_evidence_stale"].append(
                     (e["id"], ts, "证据自称符号复算但独立重算为缺席"))
 
+    # ---- R10 / R11：对 Phase 33 新增的两类**独立证据**做**独立重算**（自带实现）----
+    #      R10：凡自称 `equation_species_cross_source` 的边，本脚本独立重算侧别 → 若不为「只在归属侧」= 候选反驳
+    #      R11：凡自称 `codata_definition_recompute` 的边，本脚本独立复算定义式 → 若不一致 = 候选反驳
+    n_r10 = n_r11 = 0
+    for e in E:
+        p = props_of(e)
+        sc = p.get("verification_scope")
+        if sc == "equation_species_cross_source":
+            n_r10 += 1
+            got = rxn_side_check(N.get(e["source"]), N.get(e["target"]),
+                                 e.get("type") == "reactant_of")
+            if got is not True:
+                findings["R10_reaction_side_recheck_failed"].append(
+                    (e["id"], e.get("type"), "独立重算=%s" % got, src_of(e)))
+        elif sc == "codata_definition_recompute":
+            n_r11 += 1
+            got = codata_check(N, e["source"], p.get("definition"))
+            if got is not True:
+                findings["R11_codata_recheck_failed"].append(
+                    (e["id"], "codata_definition", "独立重算=%s" % got, src_of(e)))
+
     # ---- 汇报 ----
     print("=" * 92)
     print("语义边确定性反驳审计 —— %s" % os.path.relpath(path, ROOT))
@@ -353,6 +479,28 @@ def run(path=NORM):
     _pc_bad = [(a, b, _norm_text(a)) for a, b in _pc if _norm_text(a) != b]
     print("   正对照 · 包装命令剥壳：%s"
           % ("✅ 全部符合预期" if not _pc_bad else "❌ 不符 %s" % _pc_bad))
+
+    print("\n【R10/R11 独立证据重算（Phase 33 · 独立实现）】")
+    print("   R10 自称跨源侧别校验 %d 条，独立重算不为「只在归属侧」%d 条"
+          % (n_r10, len(findings.get("R10_reaction_side_recheck_failed", []))))
+    print("   R11 自称 CODATA 定义式复算 %d 条，独立重算不一致 %d 条"
+          % (n_r11, len(findings.get("R11_codata_recheck_failed", []))))
+    # 正对照（铁律 #31：新判据必须配正对照，且要能**双向**报错）
+    _pc_rxn = {
+        "reactant-ok": rxn_side_check({"props": {"name": "H2O"}},
+                                      {"props": {"equation": "H2O + CO2 = H2CO3"}}, True),
+        "product-wrong": rxn_side_check({"props": {"name": "H2O"}},
+                                        {"props": {"equation": "H2O + CO2 = H2CO3"}}, False),
+    }
+    _pc_cod = {
+        "def-ok": codata_check(N, "TH:pq:gas_const", "R = N_A·k_B"),
+        "def-wrong": codata_check(N, "CO:pq:elementary_charge", "R = N_A·k_B"),
+    }
+    pc_ok = (_pc_rxn == {"reactant-ok": True, "product-wrong": False}
+             and _pc_cod == {"def-ok": True, "def-wrong": False})
+    print("   正对照 · R10 侧别（%s）/ R11 定义式（%s）：%s"
+          % (_pc_rxn, _pc_cod, "✅ 双向符合预期" if pc_ok else "❌ 不符"))
+
     tot = sum(len(v) for v in findings.values())
     print("\n合计候选反驳 %d 条" % tot)
     return findings, undecidable

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""门禁「非真空」自检（Non-vacuous Gate Self-Check）—— Phase 31 + Phase 32
+"""门禁「非真空」自检（Non-vacuous Gate Self-Check）—— Phase 31 + Phase 32 + Phase 33
 ==========================================================================
 目的（铁律 #14 / #16 / #20 / #38）：
     「一条**永远不会红**的断言不是断言」—— 必须证明新增的 `graph_scan`
@@ -15,6 +15,8 @@
                 (p) dim_consistent_recompute
     Phase 32 —— (q) evidence_traceable（rule_checked 边无独立证据 → FAIL）
                 (r) evidence_wellformed（非法 kind / 覆盖率跌破下限 → FAIL）
+                (s) no_repr_residue（Python repr 容器残留 → FAIL）
+    Phase 33 —— (t) level_scope_reproducible（落库档位 ≠ 重算 → FAIL）
 
 用法：python 06_PoC/_gate_selfcheck_phase31.py
 退出码：0 = 全部符合预期（真空即 1）。
@@ -70,7 +72,8 @@ for cid, scan in (("P1-den-main-symbol-expr-evidenced", "n"),
                   ("P1-den-main-dim-consistent-recompute", "p"),
                   ("P1-den-main-evidence-traceable", "q"),
                   ("P1-den-main-evidence-wellformed", "r"),
-                  ("P1-den-main-no-repr-residue", "s")):
+                  ("P1-den-main-no-repr-residue", "s"),
+                  ("P1-den-main-level-scope-reproducible", "t")):
     st, det = fg.run_case(_case(cid), graph0)
     _check("baseline(%s) %s" % (scan, cid), st, "PASS")
 
@@ -281,11 +284,33 @@ if pair_absent:
     _check("ctrl(s) 合法 JSON 不误报 -> PASS", st, "PASS")
     print("      detail: %s" % det)
 
+# ------------------------- 8) (t) 落库档位与重算不一致
+print("\n== 8) (t) 注入「落库 level ≠ 重算 level」的边 → 必须 FAIL ==")
+if graph0.get("edges"):
+    g = copy.deepcopy(graph0)
+    tgt = g["edges"][0]
+    tgt.setdefault("props", {})["verification_level"] = "human_reviewed"   # 全图无此档 → 必与重算不符
+    print("   注入素材：%s（落库 level 篡改为 human_reviewed）" % tgt.get("id"))
+    st, det = fg.run_case(_case("P1-den-main-level-scope-reproducible"), g)
+    _check("inject(t) 落库≠重算 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+# ------------------------- 8b) (t) 正对照：篡改 scope 也可红
+print("\n== 8b) (t) 注入「落库 scope ≠ 重算 scope」→ 必须 FAIL ==")
+if graph0.get("edges"):
+    g = copy.deepcopy(graph0)
+    tgt = g["edges"][1]
+    tgt.setdefault("props", {})["verification_scope"] = "bogus_scope_xyz"
+    print("   注入素材：%s（落库 scope 篡改为 bogus_scope_xyz）" % tgt.get("id"))
+    st, det = fg.run_case(_case("P1-den-main-level-scope-reproducible"), g)
+    _check("inject(t) scope 不一致 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
 # --------------------------------------------------------------------- 汇总
 print("\n" + "-" * 74)
 if fails:
     print("汇总：❌ 非真空自检未通过 %d 项：%s" % (len(fails), fails))
     sys.exit(1)
-print("汇总：✅ 6 条不变量（n/o/p/q/r/s）全部**可红**（正对照 PASS + 注入缺陷 FAIL）"
+print("汇总：✅ 7 条不变量（n/o/p/q/r/s/t）全部**可红**（正对照 PASS + 注入缺陷 FAIL）"
       "—— 非真空，门禁有效")
 sys.exit(0)

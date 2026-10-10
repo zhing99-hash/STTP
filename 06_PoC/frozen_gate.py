@@ -726,6 +726,32 @@ def run_case(case, graph):
             return ("PASS" if not bad else "FAIL"), \
                 "扫描 %d 个属性值，repr 残留 %d 条：%s" % (n_scanned, len(bad), bad[:3])
 
+        # (t) **判级可重算重现**（Phase 33 · 铁律 #25）：全图每条边**落库**的
+        #     `verification_level` / `verification_scope` / `verifier` 必须与
+        #     `verification_model.classify_all` **重算**的结果**逐条一致**。
+        #     为什么必须断言：这是「落库档位 = 模型产物」的唯一全局守卫。此前每一轮只靠
+        #     delta 生成器**一次性自检**，一旦有人手改存档、或判级模型漂移，就会产生
+        #     「落库 ≠ 重算」的**静默不一致**（第 19 轮实测 157 条，铁律 #23）。
+        #     本轮把 T4/T6 的 2791 条升档落库后，此断言证明**全部 48712 条**都能被重算重现。
+        #     ⚠ `in scan` 而非 `scan.get(...)`（空字典是假值 → 会静默退化为 SKIP，铁律 #20/#37）。
+        if "level_scope_reproducible" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            nodes = graph.get("nodes") or []
+            edges = graph.get("edges") or []
+            res, _ctx = vm.classify_all(nodes, edges)
+            bad, n_seen = [], 0
+            for e, r in res:
+                n_seen += 1
+                p = e.get("props") or {}
+                for k in ("verification_level", "verification_scope", "verifier"):
+                    if p.get(k) != r.get(k):
+                        bad.append((e.get("type"), e.get("source"), e.get("target"),
+                                    "%s: 落库 %r ≠ 重算 %r" % (k, p.get(k), r.get(k))))
+                        break
+            return ("PASS" if not bad else "FAIL"), \
+                "重算覆盖 %d 条，落库≠重算 %d 条：%s" % (n_seen, len(bad), bad[:3])
+
         return "SKIP", "未知 scan"
 
     return "SKIP", "未知 kind：%s" % kind

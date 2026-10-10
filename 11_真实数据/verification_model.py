@@ -45,6 +45,7 @@ import argparse
 import ast
 import collections
 import json
+import math
 import os
 import re
 import sys
@@ -179,6 +180,9 @@ SCOPE_KIND = {
     "exp_base_e_usage": ("recompute", True),
     "pi_constant_usage": ("recompute", True),
     "trig_identity_usage": ("recompute", True),
+    # ---- Phase 33：常量定义式数值复算 + 反应侧别跨源校验 ----
+    "codata_definition_recompute": ("recompute", True),
+    "codata_definition_mismatch": ("rebuttal", False),
     # ---- 跨源一致 → cross_source / indep=True ----
     "formula_count_cross_source": ("cross_source", True),
     "molar_mass_cross_source": ("cross_source", True),
@@ -186,6 +190,8 @@ SCOPE_KIND = {
     "inchikey_exact_match": ("cross_source", True),
     "inchikey_cross_source": ("cross_source", True),
     "multi_source_alignment": ("cross_source", True),
+    "equation_species_cross_source": ("cross_source", True),
+    "equation_species_mismatch": ("rebuttal", False),
     # ---- by_construction：构造性产生（无判断空间）→ construction / indep=False ----
     "symbol_scan_from_text": ("construction", False),
     "formula_only": ("construction", False),
@@ -500,6 +506,122 @@ def unit_dim_of_symbol(sym):
         return dict(_UNIT_SI[s])
     s2 = s.replace("(", "").replace(")", "")
     return dict(_UNIT_SI[s2]) if s2 in _UNIT_SI else None
+
+
+# ---------------------------------- 化学反应侧别「跨源」校验（Phase 33 · A12）
+# 命题（第 23 轮）：T4「反应物/生成物归属」长期停在 `source_asserted`（Rhea/ChEBI 自述）。
+#   朴素解法「重解析方程」是**同源自证**——适配器正是由 `equation` 串推出 `n_left` 再切
+#   `chebi-id` 列（`rhea_ingest.py` 第 355~378 行），重解一遍只是复述（铁律 #14）。
+#   真·独立路径：**Rhea 的 `Equation` 列（物种文本） × ChEBI 本体的 `label`/`formula`**
+#   —— 两个**不同数据库**。用后者校验前者给出的侧别：参与物只应出现在**归属侧**。
+# ★ 铁律 #14：判据只读**方程串**与**参与物属性**，绝不读已存 `verification_level`。
+_RXN_PLUS = re.compile(r" \+ ")           # ⚠ 必须要求两侧空白：否则 `NAD(+)` 的电荷号会被误切
+_RXN_PAREN = re.compile(r"\([^)]*\)")
+
+
+def _canon_species(x) -> str:
+    """物种串归一：小写、去括注 `(in)/(out)/(+)/(n)`、去空格与正负号。"""
+    s = str(x).lower()
+    s = _RXN_PAREN.sub("", s)
+    return s.replace(" ", "").replace("-", "").replace("+", "")
+
+
+def split_equation(eq):
+    """把 `A + B = C + D` 切成 (左物种[], 右物种[])；无 ` = ` 返回 (None, None)。"""
+    if not eq or " = " not in eq:
+        return None, None
+    lhs, rhs = str(eq).split(" = ", 1)
+    f = lambda s: [x.strip() for x in _RXN_PLUS.split(s) if x.strip()]
+    return f(lhs), f(rhs)
+
+
+def reaction_side_cross_check(part_node, rxn_node, is_reactant: bool):
+    """参与物（ChEBI）在反应方程（Rhea）中的侧别是否与边一致。
+
+    返回 `(ok, strength, why)`：
+      ok=True  —— label（强）或 formula（弱）**只出现在归属侧**；
+      ok=False —— 只出现在**相反侧**（确定性矛盾）；
+      ok=None  —— 不可判定（无方程 / 两侧都出现 / 同侧重复 / 泛称无法匹配）→ **不升档**。
+    """
+    rp = (rxn_node or {}).get("props") or {}
+    lhs, rhs = split_equation(rp.get("equation"))
+    if lhs is None:
+        return None, "", "反应节点无方程串"
+    pp = (part_node or {}).get("props") or {}
+    lab = _canon_species(pp.get("name") or "")
+    fml = _canon_species(pp.get("formula") or "")
+    L = [_canon_species(x) for x in lhs]
+    R = [_canon_species(x) for x in rhs]
+    cs, os_ = (L, R) if is_reactant else (R, L)
+    side = "反应物（左）" if is_reactant else "生成物（右）"
+    lh, lw = bool(lab) and lab in cs, bool(lab) and lab in os_
+    if lh and lw:
+        return None, "", "label「%s」两侧都出现（同物异名/催化剂，歧义）" % pp.get("name")
+    if lw and not lh:
+        return False, "", "label「%s」只出现在相反侧（与「%s」矛盾）" % (pp.get("name"), side)
+    if lh:
+        return True, "label", "label「%s」仅在%s出现；相反侧无" % (pp.get("name"), side)
+    fh, fw = bool(fml) and fml in cs, bool(fml) and fml in os_
+    if fh and fw:
+        return None, "", "formula「%s」两侧都出现（歧义）" % pp.get("formula")
+    if fw:
+        return False, "", "formula「%s」只出现在相反侧（与「%s」矛盾）" % (pp.get("formula"), side)
+    if fh:
+        if cs.count(fml) > 1:      # 同侧同式多物种 → 可能指代他物（宁缺勿滥）
+            return None, "", "formula「%s」在归属侧重复出现（可能指代他物，歧义）" % pp.get("formula")
+        return True, "formula", "formula「%s」仅在%s出现（label 未命中）" % (pp.get("formula"), side)
+    return None, "", "label/formula 均未在方程中出现（泛称，无法匹配）"
+
+
+# ---------------------------------- CODATA 常量定义式「数值复算」（Phase 33 · A13）
+# 命题：`derived_from (kind=constant_derivation)` 断言「常量 A 由定义式给出（输入 B）」
+#   —— 定义式与常量值均为**外部事实**（SI 定义 / CODATA），与「谁提的边」无关。
+#   把被派生常量的**记录值**与「读输入常量值代入定义式」的独立复算比对（铁律 #26）。
+# ★ 铁律 #14：只读节点 `value` 与 `definition` 串，绝不读已存判级。
+# `M_u`（摩尔质量常数）= 1 g/mol = 1e-3 kg/mol（SI 定义值，非图上节点，故内联）。
+_CODATA_DEFS = {
+    "R = N_A·k_B": (["CO:pq:avogadro", "SM:pq:boltz_const"],
+                    lambda v: v[0] * v[1]),
+    "F = N_A·e": (["CO:pq:avogadro", "CO:pq:elementary_charge"],
+                  lambda v: v[0] * v[1]),
+    "m_u = M_u/N_A": (["CO:pq:avogadro"],
+                      lambda v: 1e-3 / v[0]),
+    "α = e²/(4πε₀ħc)": (["CO:pq:elementary_charge", "EM:pq:permittivity",
+                         "QM:pq:reduced_planck", "RT:pq:light_speed"],
+                        lambda v: v[0] ** 2 / (4 * math.pi * v[1] * v[2] * v[3])),
+    "σ = 2π⁵k⁴/(15h³c²)": (["SM:pq:boltz_const", "QM:pq:planck_const", "RT:pq:light_speed"],
+                           lambda v: 2 * math.pi ** 5 * v[0] ** 4 / (15 * v[1] ** 3 * v[2] ** 2)),
+    "Z_0 = μ₀c": (["EM:pq:permeability", "RT:pq:light_speed"],
+                  lambda v: v[0] * v[1]),
+    "R_∞ = α²m_e c/(2h)": (["CO:pq:fine_structure", "CO:pq:electron_mass",
+                            "RT:pq:light_speed", "QM:pq:planck_const"],
+                           lambda v: v[0] ** 2 * v[1] * v[2] / (2 * v[3])),
+}
+_CODATA_REL_TOL = 1e-6
+
+
+def codata_derivation_recheck(node_by_id, src_id, defn):
+    """返回 `(ok, why)`：定义式未登记 / 输入缺值 → `(None, ...)`（不判定，不猜）。"""
+    spec = _CODATA_DEFS.get(defn)
+    if spec is None:
+        return None, "定义式未登记：%s" % defn
+    ins, fn = spec
+    vals = []
+    for i in ins:
+        v = ((node_by_id.get(i) or {}).get("props") or {}).get("value")
+        if v is None:
+            return None, "输入常量缺值：%s" % i
+        vals.append(float(v))
+    rec = ((node_by_id.get(src_id) or {}).get("props") or {}).get("value")
+    if rec is None:
+        return None, "被派生常量缺值"
+    try:
+        calc = fn(vals)
+    except Exception as ex:                                   # noqa: BLE001
+        return None, "定义式求值异常(%s)" % ex
+    rel = abs(calc - float(rec)) / max(abs(float(rec)), 1e-30)
+    ok = rel <= _CODATA_REL_TOL
+    return ok, "%s ⇒ 复算 %.10g vs 记录 %.10g（rel %.1e）" % (defn, calc, float(rec), rel)
 
 
 # ---- 数学算子存在性（数学桥的确定性证据）----
@@ -893,6 +1015,34 @@ def classify(e: dict, ctx: dict):
                  detail="目标标识 %s 不在源结构化表达式中（模型产物，可确定性反驳）"
                         % ctx["derived_support_ok"][eid][1])
 
+    # A12 化学反应侧别**跨源**校验（Phase 33）：Rhea 方程 × ChEBI label/formula。
+    #     判据只读方程串与参与物属性（铁律 #14），两源独立（Rhea vs ChEBI 本体）。
+    #     ⚠ 三态：**只出现在归属侧**才升档；歧义（两侧都出现）/同侧重复/泛称无法匹配 → 落 B 段
+    #       按来源定级；只在相反侧 → 确定性矛盾（实测 0 条）。
+    if t in ("reactant_of", "product_of") and ctx["rxn_side_ok"].get(eid) is not None:
+        ok, strength, why = ctx["rxn_side_ok"][eid]
+        if ok is True:
+            return R("cross_source", "equation_species_cross_source",
+                     "verification_model.reaction_side_cross_check(Rhea 方程 × ChEBI %s)" % strength,
+                     detail="%s（跨源：Rhea 方程串 × ChEBI 本体 %s）" % (why, strength))
+        if ok is False:
+            return R("unverified", "equation_species_mismatch",
+                     "verification_model.reaction_side_cross_check(Rhea 方程 × ChEBI)",
+                     why, detail=why)
+
+    # A13 CODATA 常量定义式**数值复算**（Phase 33）：读输入常量值代入定义式，与被派生常量记录值比对。
+    #     定义式与常量值均为外部事实（SI 定义 / CODATA），与「谁提的边」无关（铁律 #26）。
+    if t == "derived_from" and ctx["codata_def_ok"].get(eid) is not None:
+        ok, why = ctx["codata_def_ok"][eid]
+        if ok is True:
+            return R("rule_checked", "codata_definition_recompute",
+                     "verification_model.codata_derivation_recheck(CODATA 定义式)",
+                     detail="定义式独立复算一致：%s" % why)
+        if ok is False:
+            return R("unverified", "codata_definition_mismatch",
+                     "verification_model.codata_derivation_recheck(CODATA 定义式)",
+                     why, detail=why)
+
     # ================= B. 无独立复算可用：按提出者 / 来源定级 =================
     # B1 模型产物（GNN 链接预测 / LLM 推断）—— **不构成验证**
     if kind in MODEL_KINDS or ("GNN" in src) or ("LLM" in src) \
@@ -1061,6 +1211,8 @@ def build_ctx(nodes, edges):
         "math_ok": {},          # eid -> (ok, scope, why)：数学桥「算子存在性」复算
         "sym_expr_ok": {},      # eid -> (ok, why)：has_symbol 目标符号是否在源结构化表达式（Phase 31）
         "derived_support_ok": {},  # eid -> (ok, why)：derived_from（**仅模型产物**）目标是否有结构化支撑
+        "rxn_side_ok": {},      # eid -> (ok, strength, why)：反应侧别跨源校验（Phase 33）
+        "codata_def_ok": {},    # eid -> (ok, why)：CODATA 常量定义式数值复算（Phase 33）
         "bugs": collections.defaultdict(list),
     }
 
@@ -1288,6 +1440,17 @@ def build_ctx(nodes, edges):
                 snode = node_by_id.get(src) or {}
                 sym = target_symbol(node_by_id.get(tgt) or {})
                 ctx["derived_support_ok"][eid] = (symbol_in_source(snode, sym), "sym=%s" % sym)
+
+        # (j) 化学反应侧别**跨源**校验（Phase 33）：Rhea 方程串 × ChEBI 本体 label/formula。
+        #     判据只读方程与参与物属性（铁律 #14）；两源**独立**（不同数据库）。
+        if t in ("reactant_of", "product_of"):
+            ctx["rxn_side_ok"][eid] = reaction_side_cross_check(
+                node_by_id.get(src), node_by_id.get(tgt), t == "reactant_of")
+
+        # (k) CODATA 常量定义式**数值复算**（Phase 33）：读输入常量值代入定义式，与被派生常量记录值比对。
+        if t == "derived_from" and (p.get("kind") or e.get("kind")) == "constant_derivation":
+            ctx["codata_def_ok"][eid] = codata_derivation_recheck(
+                node_by_id, src, p.get("definition"))
     return ctx
 
 

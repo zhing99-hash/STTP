@@ -14,6 +14,7 @@
 #   bash sttp.sh t7 [--legacy-t7]                   北极星 T7 跨域桥达标率（含反向对照）
 #   bash sttp.sh recompute [--apply]                生成 Phase 31 复算全覆盖 delta（默认 dry-run）
 #   bash sttp.sh evidence [--dry]                   生成 Phase 32 Claim/Evidence 对象化 delta
+#   bash sttp.sh indep [--dry]                      生成 Phase 33 T9-i 证据独立攻坚 delta
 #   bash sttp.sh noise                              独立实现的语义噪声审计器（跨实现交叉核对）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
@@ -150,6 +151,12 @@ EOF
     # （非破坏性，只加字段 claim/verification_evidence/evidence_at；默认 dry-run）
     shift
     "$PY" 11_真实数据/phase32_evidence_delta.py "$@"
+    ;;
+  indep)
+    # Phase 33 T9-i 证据独立攻坚：ChEBI×Rhea 跨源侧别校验 + CODATA 定义式数值复算，
+    # 把 T4/T6 的 source_asserted 升为**独立证据**（非破坏性，只更新判级与证据对象；默认 dry-run）
+    shift
+    "$PY" 11_真实数据/phase33_indep_delta.py "$@"
     ;;
   noise)
     # 独立实现的语义噪声审计器（只读，用于与 verification_model 交叉核对）

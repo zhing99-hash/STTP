@@ -3,8 +3,8 @@
   "name": "冻结反例集（Frozen Counterexamples）",
   "purpose": "已知错误模式的回归门禁：任何一条被判『已证实 / 应存在』即视为回归失败。与 connectivity_audit.py 并列。",
   "created": "2026-10-10",
-  "phase": 32,
-  "ref": "07_交付物/Phase32_Claim_Evidence对象化报告_20261010.md",
+  "phase": 33,
+  "ref": "07_交付物/Phase33_T9i证据独立攻坚报告_20261010.md",
   "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严。Phase 29 追加跨域桥断言：『桥必须有证据』与『桥不得自相矛盾』，两者都带正对照（含 min_count 防空真通过） | Phase 30 追加『语义边去伪』断言：单位量纲一致/唯一、model 边目标符号必须出现于源表达式、数学桥必须有算子证据；并补『每摩尔/表达式-only』两处判据校准的正反例。 | Phase 30 再追加『真孤岛冻结』断言：连通分量必须逐节点等于 known_islands.json 的并集（撤回假边后暴露的 4 个真孤岛），新增孤岛即回归。",
   "kinds": [
    "dim_table",
@@ -1796,6 +1796,16 @@
    "desc": "全图任何 props 值不得是「Python repr 化的容器」—— 即形如 `[...]`/`{...}`、**不是合法 JSON**、却能被 `ast.literal_eval` 还原为 list/dict 的字符串。这是「属性形态 → 静默降级」的指纹（`str({'a':1})` 产出单引号 repr，下游 `json.loads` 静默失败）。Phase 32 引入嵌套 `verification_evidence` 后，任何一处 `str()` 强转都会立刻制造残留 → 必须有守卫钉死。",
    "scan": {
     "no_repr_residue": {}
+   },
+   "expect": "ZERO"
+  },
+  {
+   "id": "P1-den-main-level-scope-reproducible",
+   "p0": "P1-den",
+   "kind": "graph_scan",
+   "desc": "全图每条边**落库**的 `verification_level`/`verification_scope`/`verifier` 必须与`verification_model.classify_all` **重算**逐条一致（铁律 #25：落库档位必须能被重算重现）。这是「落库 = 模型产物」的唯一全局守卫 —— 防止手改存档 / 判级漂移造成「落库 ≠ 重算」的静默不一致（第 19 轮实测 157 条，铁律 #23）。Phase 33 把 T4/T6的 2791 条升档落库后，此断言证明 48712 条全部可重算重现。",
+   "scan": {
+    "level_scope_reproducible": {}
    },
    "expect": "ZERO"
   }
