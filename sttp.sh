@@ -18,6 +18,9 @@
 #   bash sttp.sh alias [--dry]                      生成 Phase 34 T4 跨源名称对齐 delta（ChEBI 同义词）
 #   bash sttp.sh synfetch                          拉取 ChEBI OLS4 同义词缓存（Phase 34）
 #   bash sttp.sh noise                              独立实现的语义噪声审计器（跨实现交叉核对）
+#   bash sttp.sh scopeaudit                         北极星口径自审 + 占位实体审计（Phase 35，只读）
+#   bash sttp.sh mnxrecov                           MetaNetX 对 Rhea 反应覆盖率现算（Phase 35，只读）
+#   bash sttp.sh reach35                            第二源可达性穷举侦察（Phase 35，只读）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -175,6 +178,21 @@ EOF
     # 独立实现的语义噪声审计器（只读，用于与 verification_model 交叉核对）
     shift
     "$PY" 06_PoC/semantic_noise_audit.py "$@"
+    ;;
+  scopeaudit)
+    # Phase 35 北极星口径自审：分母内/外占比 + 反向对照 + 占位实体审计（只读）
+    shift
+    "$PY" 06_PoC/_recon_phase35_scope.py "$@"
+    ;;
+  mnxrecov)
+    # Phase 35 MetaNetX 对 Rhea 反应的覆盖率现算（只读；铁律 #44 数字由仪器现算）
+    shift
+    "$PY" 06_PoC/_recon_phase35_mnx_recov.py "$@"
+    ;;
+  reach35)
+    # Phase 35 第二源可达性穷举侦察（只读 HTTP 探测；铁律 #34 负结果优先）
+    shift
+    "$PY" 06_PoC/_recon_phase35_reachability.py "$@"
     ;;
   gatecheck)
     # 门禁「非真空」自检：注入已知假边，断言不变量真的会红（铁律 #14）

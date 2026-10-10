@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""门禁「非真空」自检（Non-vacuous Gate Self-Check）—— Phase 31 + Phase 32 + Phase 33
+"""门禁「非真空」自检（Non-vacuous Gate Self-Check）—— Phase 31 ~ Phase 35
 ==========================================================================
 目的（铁律 #14 / #16 / #20 / #38）：
     「一条**永远不会红**的断言不是断言」—— 必须证明新增的 `graph_scan`
@@ -18,6 +18,8 @@
                 (s) no_repr_residue（Python repr 容器残留 → FAIL）
     Phase 33 —— (t) level_scope_reproducible（落库档位 ≠ 重算 → FAIL）
     Phase 34 —— (u) residual_accounted（T4 残差**未归类** → FAIL）
+    Phase 35 —— (v) independence_accounted（**达标但非独立**且理由未登记 → FAIL）
+                (w) scope_accounted（**不在任务族**的边类型理由未登记 → FAIL）
 
 用法：python 06_PoC/_gate_selfcheck_phase31.py
 退出码：0 = 全部符合预期（真空即 1）。
@@ -327,11 +329,50 @@ st, det = fg.run_case(_case("P1-den-main-residual-accounted"), g)
 _check("inject(u) T4 残差未归类 -> FAIL", st, "FAIL")
 print("      detail: %s" % det)
 
+# ------------------------- 10) (v) 非独立证据「未归类」
+print("\n== 10) (v) 注入「拿不到独立证据却说不清为什么」的达标边 → 必须 FAIL ==")
+g = copy.deepcopy(graph0)
+g["nodes"].append({"id": "TEST:cpd:p1", "type": "molecule",
+                   "props": {"source": "TEST_UNKNOWN_SRC", "name": "p1"}})
+g["nodes"].append({"id": "TEST:cpd:p2", "type": "molecule",
+                   "props": {"source": "TEST_UNKNOWN_SRC", "name": "p2"}})
+# same_period 属 T1（门槛 rule_checked）；证据存在但 indep=False，且该类型的理由未登记
+g["edges"].append({
+    "id": "TEST|same_period|TEST:cpd:p1|TEST:cpd:p2",
+    "type": "same_period", "source": "TEST:cpd:p1", "target": "TEST:cpd:p2",
+    "kind": "manual",
+    "props": {"kind": "manual", "source": "TEST_SRC",
+              "verification_level": "rule_checked",
+              "verification_scope": "TODO_UNREGISTERED",
+              "verifier": "test_runner",
+              "verification_evidence": [{"kind": "recompute", "indep": False,
+                                         "detail": "注入用例", "impl": "test_runner"}]},
+})
+st, det = fg.run_case(_case("P1-den-main-independence-accounted"), g)
+_check("inject(v) 非独立未归类 -> FAIL", st, "FAIL")
+print("      detail: %s" % det)
+
+# ------------------------- 11) (w) 分母外类型「未归类」
+print("\n== 11) (w) 注入「不在任务族、理由也未登记」的新边类型 → 必须 FAIL ==")
+g = copy.deepcopy(graph0)
+g["nodes"].append({"id": "TEST:a", "type": "molecule", "props": {"name": "a"}})
+g["nodes"].append({"id": "TEST:b", "type": "molecule", "props": {"name": "b"}})
+g["edges"].append({
+    "id": "TEST|bogus_relation|TEST:a|TEST:b",
+    "type": "bogus_relation", "source": "TEST:a", "target": "TEST:b",
+    "kind": "manual",
+    "props": {"kind": "manual", "verification_level": "source_asserted",
+              "verification_scope": "source_assertion"},
+})
+st, det = fg.run_case(_case("P1-den-main-scope-accounted"), g)
+_check("inject(w) 分母外类型未归类 -> FAIL", st, "FAIL")
+print("      detail: %s" % det)
+
 # --------------------------------------------------------------------- 汇总
 print("\n" + "-" * 74)
 if fails:
     print("汇总：❌ 非真空自检未通过 %d 项：%s" % (len(fails), fails))
     sys.exit(1)
-print("汇总：✅ 8 条不变量（n/o/p/q/r/s/t/u）全部**可红**（正对照 PASS + 注入缺陷 FAIL）"
+print("汇总：✅ 10 条不变量（n/o/p/q/r/s/t/u/v/w）全部**可红**（正对照 PASS + 注入缺陷 FAIL）"
       "—— 非真空，门禁有效")
 sys.exit(0)

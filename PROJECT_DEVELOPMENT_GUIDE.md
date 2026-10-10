@@ -735,7 +735,8 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
   直接 `run_case(case, mutated_graph)` 注入已知假边，断言不变量**真的会 FAIL**（正对照 PASS + 注入缺陷 FAIL）。
 - **一条永远不会红的断言不是断言**；`PASS` 只说明「当前没红」，不说明「有能力红」。
   同理：`scan.get()` 遇**空字典**（假值）会让断言**静默退化为 SKIP** —— **SKIP 比 FAIL 更危险**（FAIL 有人查，SKIP 无人看）。
-- **Phase 34 扩到 8 条不变量（n/o/p/q/r/s/t/u）**，全部经注入式自检证明**可红**。
+- **Phase 34 扩到 8 条不变量（n/o/p/q/r/s/t/u）**，**Phase 35 再扩到 10 条（n…w）**，
+  全部经注入式自检证明**可红**。
 
 **1d. ✅ T9-i 证据独立攻坚（Phase 33 · 第 23 轮，已完成）**
 - **T9-i 由 85.9% → 92.8%**（37564/40484）；升档 **+2791**（T4 跨源 2773 + T6 复算 18）、**降级 0**；规模 **9657/48712 零变化**。
@@ -765,6 +766,39 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 - 相关工具：`11_真实数据/{phase34_alias_delta,chebi_synonym_fetch}.py`；`sttp.sh {alias,synfetch}`。
 - **下一轮建议**：**SABIO-RK / MetaCyc 批量端点可达性侦察**（若可行则攻 T4 余 1321，⚠ 先侦察再投入）
   或 **T8 第二文献索引**（354 条）。
+  → **已由 Phase 35 消化（侦察全部负结果 → 改轨），见 1f**。
+
+**1f. ✅ 北极星口径自审 与 T9-i 天花板量化（Phase 35 · 第 25 轮，已完成 · 纯仪器轮）**
+- **零数据变更**（规模 **9657/48712** 不变）；本轮的交付是**度量本身的诚实性**。
+- **起点 → 改轨**：按 **#34/#48** 先做**只读穷举侦察**（`_recon_phase35_reachability.py`，20 探测点）
+  → **六条第二「反应」源 + 四条第二「文献」索引全部负结果** → 改轨。
+  - KEGG `link/rhea/ec` **400**；Reactome Rhea 映射 **404**；SABIO-RK 老 REST **已下线**（返回 SPA 外壳）；
+    BioCyc/MetaCyc 返回首页；zbMATH/DBLP/OpenAIRE/DataCite **不可达**；Semantic Scholar 覆盖 **1/14**；
+    Crossref **同源**（`cites` 取自 OpenAlex，Crossref 是其上游，#45）；Wikidata **严格零命中**。
+  - **★ `HTTP 200` ≠ 数据可用**：SABIO-RK / zbMATH / BioCyc 三者状态码都是 200 而数据不可用 ⇒ **侦察必须看响应体**。
+  - **★ 数字订正（#44）**：MNX 全库 Rhea 反应 **456 → 实测 1836**；但**结论不变** ——
+    覆盖本图 Rhea **45/939 = 4.8%**、覆盖 T4 残差 **5/269 = 1.9%**（**「有第二个库」≠「有第二个源」**）。
+- **★ 核心发现①（新铁律 #50）**：**北极星的分母是「选择」的结果** ——
+  headline **99.6%** 的分母（并集 40590 / 逐族求和 **40628**，差 **38** = 38 条 T7∩学科族双边）
+  **排除了 8122 条边（16.7%）**，其中 **99.6% 是弱证据**；同口径扩到全图（+`has_quantity`/
+  `has_functionalgroup`/`reagent_of`/`has_element`，门槛 `rule_checked`）→ **83.5%**。
+  → **报北极星必须同时披露**：① 分母构造 ② 分母外占比 ③ **反向对照**。
+- **★ 核心发现②**：**T9-i 天花板可精确清算**（1702 条**零未归类**）——按类型 T4 **1284** / T8 **354** / T6 **64**；
+  按理由 `same_source_elementkg` 707 / `placeholder_complex` 246 / `naming_variant_no_second_source` 220 /
+  `no_second_subject_index` 178 / `no_independent_citation_index` 176 / … → **不是「工作量」而是「天花板」**。
+- **★ 核心发现③（从未被测量过的维度）**：ElementKG2.0 **匿名占位实体 836 个 / 1547 节点**，
+  **牵连 4979 条边（全图 10.2%）语义不可读**，其中 **分母内 713 条**（达标却无法表述结论）。
+  判据**必须叠加 `EK2:` 命名空间约束**（否则把 `WD:` 真实体未存名误判为占位）。
+- **仪器化**：`verification_model.py` 新增 **T1–T8 任务族唯一权威表**（`TASK_FAMILIES`/`tasks_of`/`tasks_passed`，
+  铁律 #36 同源）+ `INDEP_REASONS`/`SCOPE_REASONS` + `indep_reason()`/`scope_reason()`/`is_placeholder_entity()`；
+  门禁 **72 → 74**（+**(v) `independence_accounted`** / +**(w) `scope_accounted`**）；
+  非真空自检 **8 → 10 条不变量**；独立审计器 +**R13/R14**（首跑报 **47** → 修实现 → **0**，铁律 #43 真捕获）；
+  北极星仪器新增**「口径披露」块**。
+- **新纪律**：#50（分母是选择的结果，见上）+ 三条补强：**可达性必须看响应体**、
+  **「有第二个库」≠「有第二个源」**、**仪器必须用 `$STTP_PYTHON`**（否则门禁静默降级为 SKIP）。
+- 相关工具：`06_PoC/_recon_phase35_{scope,reachability,mnx_recov}.py`；`sttp.sh {scopeaudit,mnxrecov,reach35}`。
+- **下一轮建议**：**占位实体「补名」可行性侦察** → 攻 4979 条中的分母内 **713** 条
+  （唯一能同时改善北极星**可表述性**与 T7/T9 的方向）。
 
 **2. 缓解分子层多节点对 GNN 嵌入的稀释**
 - 现象：8 套分子命名空间（有意的跨源对齐）会让同一实体拆成多个节点，稀释嵌入质量
@@ -829,9 +863,11 @@ bash sttp.sh export
 # 6. 查看图谱统计 / 北极星自检
 bash sttp.sh stats
 python 06_PoC/connectivity_audit.py --strict   # 分量=6 / 5 岛 / 29 节点 → FROZEN-OK 退码 0（已知岛已冻结）
-python 06_PoC/frozen_gate.py                   # 冻结反例集门禁 → PASS 72 / FAIL 0 / SKIP 0
-python 06_PoC/task_trust_audit.py              # 北极星：正确且可追溯 99.6%；T9 可追溯 100% / T9-i 独立 85.9%
-bash sttp.sh gatecheck                         # 门禁非真空自检（6 条不变量全部可红）
+python 06_PoC/frozen_gate.py                   # 冻结反例集门禁 → PASS 74 / FAIL 0 / SKIP 0
+python 06_PoC/task_trust_audit.py              # 北极星：正确且可追溯 99.6%；T9 可追溯 100% / T9-i 独立 95.8%
+python 06_PoC/semantic_noise_audit.py          # 独立实现的审计器 → 候选反驳 0（R13/R14 交叉核对）
+bash sttp.sh scopeaudit                        # 北极星口径自审：分母外 16.7%；反向对照 83.5%；占位实体 4979 边
+bash sttp.sh gatecheck                         # 门禁非真空自检（10 条不变量全部可红）
 
 # 7. 推新数据到 Aura（推荐用编排器，自动消毒 + 对账 + 导出）
 bash sttp.sh push <your_delta.json>       # 单 delta
@@ -857,6 +893,8 @@ git merge origin/main
 | 新增种子切片 | `10_种子数据/build_*.py` → `10_种子数据/seed_*.json`，再走 `06_PoC/sync_seed_delta.py` 回灌差量 |
 | 接入新数据源 | `11_真实数据/<source>_ingest.py`，用 `graph_export.build_graph_data()` 转换 |
 | **量北极星连通性** | `06_PoC/connectivity_audit.py`（`--strict` 退码 2） |
+| **量北极星口径（分母审）** | `06_PoC/_recon_phase35_scope.py`（`bash sttp.sh scopeaudit`） |
+| **独立审计器（跨实现）** | `06_PoC/semantic_noise_audit.py`（`bash sttp.sh noise`） |
 | **本地应用 delta** | `06_PoC/apply_delta.py --delta <p> --phase <N> [--apply]` |
 | **seed → 权威图回灌** | `06_PoC/sync_seed_delta.py` |
 | **标签受控收敛** | `03_知识层/normalize_labels.py` |
@@ -870,4 +908,5 @@ git merge origin/main
 ---
 
 *本文件由 QClaw 生成于 2026-10-08，建议在每次 Phase 完成后更新「当前运行状态」和「已知问题」两节。*
-*最近更新：2026-10-09（跨学科连通性审计轮：新增 3 个工具、§0.1 北极星指标、§9 三项新踩坑、§10 优先级刷新）。*
+*最近更新：2026-10-10（Phase 35 · 第 25 轮：新增 §1f 北极星口径自审；门禁 72→74；非真空自检 8→10 条；
+新增 `scopeaudit`/`mnxrecov`/`reach35` 三个只读命令；新铁律 #50「北极星的分母是选择的结果」）。*

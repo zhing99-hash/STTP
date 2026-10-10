@@ -709,6 +709,157 @@ def residual_reason(edge, node_by_id) -> str:
     return "UNCLASSIFIED"
 
 
+# =============================================================================
+# Phase 35（第 25 轮）· 两项**横向**清算 —— 把 A14 的「理由码」思路推广到全图
+# -----------------------------------------------------------------------------
+# 背景：第 25 轮只读侦察证明「T9-i 的非独立残差」与「北极星分母之外的边」都是
+# **结构性** 的（外部第二源全部不可达 / 同源 / 零覆盖）。结论既然是负结果，
+# 就必须 **清算**（铁律 #30「不可判定 ≠ 可以放过」、铁律 #34「负结果优先」）：
+#   ① `independence_reason` —— T1–T8 **达标边**中「有资格独立却拿不到独立证据」的理由；
+#   ② `scope_reason`        —— 全图每条边**为何不在北极星分母**里的理由。
+# 两项都由门禁不变量 (v)/(w) 调用（**单一口径**，铁律 #36），并由独立审计器 R13/R14
+# 用**自带实现**重算（铁律 #43）。
+# =============================================================================
+
+# ① 非独立理由码（受控枚举）
+INDEP_REASONS = (
+    # —— 同源（提出者即唯一来源）——
+    "same_source_elementkg",              # ElementKG2.0 自述，无方程串，SMILES 亦同源
+    "same_source_curated",                # 项目自策划（curated_seed）
+    # —— 第一源侧（Rhea 方程文本）不可跨源：承接 residual_reason 的 4 码 ——
+    "generic_class",
+    "polymer_residue",
+    "placeholder_complex",
+    "naming_variant_no_second_source",
+    # —— 第二源**不存在或零覆盖**（第 25 轮穷举证伪）——
+    "no_independent_citation_index",      # T8 cites：Crossref/OpenCitations **上游于 OpenAlex**
+    "no_second_subject_index",            # T8 discusses：Wikidata P921 覆盖 0 命中
+    "source_text_only",                   # T6 derived_from：仅文献文本（mathxiv），无第二源
+    "unit_name_not_in_reference",         # T6 has_unit：单位名不在 CODATA 真值表
+)
+
+# ② 「不在北极星分母」的理由码（**按边类型**记账；类型级，便于新类型出现时门禁变红）
+SCOPE_REASONS = (
+    "task_family",                        # 属 T1–T8 任务族（在分母内）
+    "gnn_link_prediction",                # GNN 链接预测产物（非知识断言）
+    "symbol_binding",                     # 定义↔符号绑定，非「跨域结论」
+    "ekg_relation_not_in_task_set",       # ElementKG2.0 关系，未纳入固定任务集
+    "descriptor_assertion_not_in_task_set",  # 物性描述值断言（如 分子→Mass），未纳入
+    "identity_not_in_task_set",           # same_as 同一性合并边
+    "structure_not_in_task_set",          # part_of / same_formula_as 等结构边
+)
+
+# 边类型 → 不在分母的理由（**唯一权威表**）。**新增边类型若未登记 → 门禁 (w) FAIL**。
+SCOPE_TYPE_REASONS = {
+    "has_quantity": "descriptor_assertion_not_in_task_set",
+    "has_functionalgroup": "ekg_relation_not_in_task_set",
+    "reagent_of": "ekg_relation_not_in_task_set",
+    "has_element": "ekg_relation_not_in_task_set",
+    "defines": "symbol_binding",
+    "related_to": "gnn_link_prediction",
+    "proves": "gnn_link_prediction",
+    "same_as": "identity_not_in_task_set",
+    "part_of": "structure_not_in_task_set",
+    "same_formula_as": "structure_not_in_task_set",
+    "chemical_reaction": "structure_not_in_task_set",
+}
+
+
+def indep_reason(edge, node_by_id) -> str:
+    """T1–T8 **达标但非独立**边的「拿不到独立证据」理由码。
+
+    - 已有独立证据 → `""`
+    - 未归类 → `"UNCLASSIFIED"`（门禁 (v) 会红）
+    """
+    evs = (edge.get("props") or {}).get("verification_evidence")
+    evs = evs if isinstance(evs, list) else []
+    if any(e.get("indep") for e in evs):
+        return ""
+    t = edge.get("type")
+    if t in ("reactant_of", "product_of"):
+        return residual_reason(edge, node_by_id)
+    if t == "cites":
+        return "no_independent_citation_index"
+    if t == "discusses":
+        return "no_second_subject_index"
+    pp = (node_by_id.get(edge.get("source")) or {}).get("props") or {}
+    tp = (node_by_id.get(edge.get("target")) or {}).get("props") or {}
+    if t == "derived_from":
+        if str(pp.get("source") or tp.get("source") or "").startswith("curated_seed"):
+            return "same_source_curated"
+        return "source_text_only"
+    if t == "has_unit":
+        if str(pp.get("source") or "").startswith("curated_seed"):
+            return "same_source_curated"
+        return "unit_name_not_in_reference"
+    return "UNCLASSIFIED"
+
+
+def scope_reason(edge, node_by_id, in_task: bool) -> str:
+    """边的「为何在/不在北极星分母」理由码（类型级）。`in_task=True` → `task_family`。"""
+    if in_task:
+        return "task_family"
+    t = edge.get("type")
+    if t in SCOPE_TYPE_REASONS:
+        return SCOPE_TYPE_REASONS[t]
+    if (edge.get("props") or {}).get("verification_scope") == "model_link_prediction":
+        return "gnn_link_prediction"
+    return "UNCLASSIFIED"
+
+
+# 占位实体：ElementKG2.0 的匿名节点（`FG52` / `reaction_1` / `molecule_1000` / `name=None`）
+_PLACEHOLDER_RE = re.compile(r"^(FG|reaction|molecule|mol|rxn|rx)[_\-]?\d+$", re.I)
+
+
+def is_placeholder_entity(name) -> bool:
+    """端点名字是否为**匿名占位**（形如 FG52 / reaction_1 / molecule_1000，或空）。"""
+    s = str(name).strip() if name is not None else ""
+    if not s:
+        return True
+    return bool(_PLACEHOLDER_RE.match(s))
+
+
+# =============================================================================
+# 北极星任务族 T1–T8 的**唯一权威定义**（铁律 #36：判据同源写在「仪器」与「门禁」两处）
+# -----------------------------------------------------------------------------
+# `task_trust_audit.py`（仪器）与 `frozen_gate.py`（门禁）都**只从本表取判据**，
+# 避免「仪器一套口径、门禁另一套口径」的静默分叉。
+# =============================================================================
+TASK_FAMILIES = (
+    ("T1", "rule_checked",    ("same_period", "same_family")),
+    ("T2", "rule_checked",    ("composed_of",)),
+    ("T3", "rule_checked",    ("dimensionally_consistent",)),
+    ("T4", "source_asserted", ("reactant_of", "product_of")),
+    ("T5", "rule_checked",    ("has_symbol",)),
+    ("T6", "source_asserted", ("derived_from", "has_unit")),
+    ("T7", "rule_checked",    None),          # 跨域（**任意边类型**），须给学科映射
+    ("T8", "source_asserted", ("cites", "discusses")),
+)
+TASK_TYPES = frozenset(t for _f, _l, ts in TASK_FAMILIES if ts for t in ts)
+_TASK_MINLV = {f: lv for f, lv, _ts in TASK_FAMILIES}
+
+
+def tasks_of(edge, subj_map=None):
+    """该边所属的任务族 id 列表（T7 = 跨域，需 `subj_map: node_id -> 学科`）。"""
+    out = []
+    t = edge.get("type")
+    for fam, _lv, types in TASK_FAMILIES:
+        if types and t in types:
+            out.append(fam)
+    if subj_map is not None:
+        s = subj_map.get(edge.get("source"))
+        d = subj_map.get(edge.get("target"))
+        if s and d and s != d:
+            out.append("T7")
+    return out
+
+
+def tasks_passed(edge, subj_map=None):
+    """该边**达标**的任务族（`level ≥ 该族门槛`）—— 即 T9 的分母成员。"""
+    rank = RANK.get((edge.get("props") or {}).get("verification_level"), -1)
+    return [f for f in tasks_of(edge, subj_map) if rank >= RANK[_TASK_MINLV[f]]]
+
+
 # ---- 数学算子存在性（数学桥的确定性证据）----
 # 每条：scope 名 -> (判据正则, 允许的目标数学对象集合)。
 # 「公式 F 使用了数学工具 M」当且仅当 **F 的表达式中出现了 M 所辖的算子/常量** ——

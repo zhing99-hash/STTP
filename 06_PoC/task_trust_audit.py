@@ -209,6 +209,59 @@ def main():
     print("    → 口径留档（铁律 #16）：T1–T8 口径不变（与 Phase 31 可比，%.1f%%）；" % star)
     print("       T9 是**新增的横向不变量**，不改变 T1–T8 的分母，故 headline 数字保持可比。")
 
+    # ---------------- ★ 口径披露（Phase 35 · 铁律 #50） ----------------
+    #   铁律 #41 已经确立「可追溯 ≠ 独立 → 两个口径必须同时打印」。
+    #   第 25 轮把它推广到**分母本身**：北极星的分母**是选择的结果** ——
+    #   T1–T8 是一张**被选中的**任务族表，全图还有相当比例的边**不在分母内**。
+    #   不披露这一点，headline 就会被读成「全图可信度」。故本仪器必须**同时打印**：
+    #     ① 分母内/外占比（**并集**与**逐族求和**两种数法都给出）；② 分母外逐族理由；
+    #     ③ 分母外弱证据占比；④ 占位实体边（端点匿名）占比；
+    #     ⑤ **反向对照**（把分母外的大族纳入后的口径，与 headline 并列，不得单读）。
+    # -- T9-i 非独立残差的「为何不可独立」逐类清算（Phase 35 · 铁律 #30/#34）--
+    _ni = [e for e in ok_edges if not has_indep_ev(e)]
+    _rc = collections.Counter(vm.indep_reason(e, node_by_id) for e in _ni)
+    print("\n  【T9-i 非独立 %d 条的「为何不可独立」逐类清算（Phase 35）】" % len(_ni))
+    for _k, _v in _rc.most_common():
+        print("    %-40s %6d" % (_k or "（已独立）", _v))
+    print("    ⚠ 未归类 %d 条（门禁 (v) `independence_accounted` 断言为 0）"
+          % sum(_v for _k, _v in _rc.items() if _k not in vm.INDEP_REASONS))
+    print("\n  【★ 口径披露 · 北极星的分母是选择的结果（Phase 35 · 铁律 #50）】")
+    _subj = {n["id"]: graph_export.subject_of((n.get("props") or {}).get("domain"), n["id"])
+             for n in nodes}
+    in_den = [e for e in edges if vm.tasks_of(e, _subj)]
+    out_den = [e for e in edges if not vm.tasks_of(e, _subj)]
+    print("    全图边 %d ｜ 分母（**并集**）%d ／ 分母（**逐族求和**，headline 所用）%d"
+          " ｜ **分母外 %d（%.1f%%）**"
+          % (len(edges), len(in_den), tot_e, len(out_den),
+             100.0 * len(out_den) / max(len(edges), 1)))
+    rc = collections.Counter(vm.scope_reason(e, node_by_id, False) for e in out_den)
+    print("    分母外逐族理由：%s" % dict(rc.most_common()))
+    weak_out = [e for e in out_den
+                if vm.RANK.get((e.get("props") or {}).get("verification_level"), -1)
+                < vm.RANK["rule_checked"]]
+    print("    分母外**弱证据**（< rule_checked）：%d / %d = **%.1f%%**"
+          % (len(weak_out), len(out_den), 100.0 * len(weak_out) / max(len(out_den), 1)))
+    ph = [e for e in edges
+          if any((node_by_id.get(e.get(s)) or {}).get("id", "").startswith("EK2:")
+                 and vm.is_placeholder_entity(
+                     ((node_by_id.get(e.get(s)) or {}).get("props") or {}).get("name"))
+                 for s in ("source", "target"))]
+    print("    **占位实体边**（端点为 ElementKG2.0 匿名节点 `FG52`/`reaction_1`/`molecule_1000`）："
+          "%d（全图 %.1f%%）—— 语义**不可读**，既非「正确」也非「错误」"
+          % (len(ph), 100.0 * len(ph) / max(len(edges), 1)))
+    # 反向对照：把分母外的大族纳入，门槛按 rule_checked（与 headline 同为**逐族求和**基)
+    _ext_types = {"has_quantity": "rule_checked", "has_functionalgroup": "rule_checked",
+                  "reagent_of": "rule_checked", "has_element": "rule_checked"}
+    ext = [e for e in out_den if e["type"] in _ext_types]
+    n_ext_ok = sum(1 for e in ext
+                   if vm.RANK.get((e.get("props") or {}).get("verification_level"), -1)
+                   >= vm.RANK[_ext_types[e["type"]]])
+    den2, num2 = tot_e + len(ext), tot_ok + n_ext_ok
+    print("    【反向对照 · 口径扩展】+has_quantity/has_functionalgroup/reagent_of/has_element，门槛 rule_checked：")
+    print("       分母 %d（+%d），达标 %d = **%.1f%%**  ← 现口径 %.1f%% ｜ **两个口径不得单读**"
+          % (den2, len(ext), num2, 100.0 * num2 / max(den2, 1), star))
+    print("    ⚠ 口径**未改**（铁律 #16：改口径须留反向对照）；本块仅作**披露**，headline 仍为 %.1f%%。" % star)
+
     # ---------------- 反向对照：旧口径 T7 vs 新口径 T7（铁律 #16） ----------------
     cross_all = [e for e in edges if is_cross(e)]
     legacy = [e for e in edges if is_cross_legacy(e)]

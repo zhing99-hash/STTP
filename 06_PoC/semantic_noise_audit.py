@@ -39,6 +39,8 @@ Phase 33（第 23 轮「T9-i 证据独立攻坚」）新增 —— **对新增�
   R10 `equation_species_cross_source`：用**自带**方程切分/物种归一再算侧别；
       与判级模型 `reaction_side_cross_check` **同判据、独立实现**。
   R11 `codata_definition_recompute`：用**自带**定义式表再算常量派生。
+  R13 T1–T8 达标边的**非独立理由**清算（Phase 35 · 自带任务族表与理由码表）；
+  R14 全图**分母外**边的理由清算（Phase 35 · 自带学科映射与类型码表）。
       ⚠ 二者都带**双向正对照**（正确→True / 错误→False），确保审计器**真的能报错**（铁律 #43）。
 
 三态（铁律 spirit：不可判定 ≠ 假）
@@ -534,6 +536,157 @@ def run(path=NORM):
         if reason == "UNCLASSIFIED":
             findings["R12_unclassified_residual"].append((e["id"], rsrc, sc))
 
+    # ---- R13 / R14：两项**横向清算**（Phase 35 · 本脚本自带实现，不 import 判级模型）----
+    #   R13 `independence_accounted`：T1–T8 **达标边**中凡证据不独立者，其理由须落在受控枚举。
+    #   R14 `scope_accounted`       ：全图凡**不在任务族**的边，其「为何不在分母」须落在受控枚举。
+    #   ★ 口径必须与判级侧**同口径、独立实现**（铁律 #36 + #43）：本脚本自带任务族表、
+    #     自带学科映射、自带理由码表 —— 若两侧口径分叉，这里会立刻报「候选反驳」。
+    _A_TASK = {                                    # 边类型 → (族, 门槛)
+        "same_period": ("T1", 4), "same_family": ("T1", 4),
+        "composed_of": ("T2", 4), "dimensionally_consistent": ("T3", 4),
+        "reactant_of": ("T4", 2), "product_of": ("T4", 2),
+        "has_symbol": ("T5", 4), "derived_from": ("T6", 2), "has_unit": ("T6", 2),
+        "cites": ("T8", 2), "discusses": ("T8", 2),
+    }
+    _A_RANK = {"unverified": 0, "model_inferred": 1, "source_asserted": 2,
+               "by_construction": 3, "rule_checked": 4, "cross_source": 5,
+               "human_reviewed": 6}
+    _A_SCOPE_TYPE = {                              # 不在分母的理由（自带副本）
+        "has_quantity": "descriptor_assertion_not_in_task_set",
+        "has_functionalgroup": "ekg_relation_not_in_task_set",
+        "reagent_of": "ekg_relation_not_in_task_set",
+        "has_element": "ekg_relation_not_in_task_set",
+        "defines": "symbol_binding", "related_to": "gnn_link_prediction",
+        "proves": "gnn_link_prediction", "same_as": "identity_not_in_task_set",
+        "part_of": "structure_not_in_task_set",
+        "same_formula_as": "structure_not_in_task_set",
+        "chemical_reaction": "structure_not_in_task_set",
+    }
+    _A_INDEP = {"same_source_elementkg", "same_source_curated", "generic_class",
+                "polymer_residue", "placeholder_complex", "naming_variant_no_second_source",
+                "no_independent_citation_index", "no_second_subject_index",
+                "source_text_only", "unit_name_not_in_reference"}
+    _A_PH = __import__("re").compile(r"^(FG|reaction|molecule|mol|rxn|rx)[_\-]?\d+$", __import__("re").I)
+
+    def _a_disc(nid):                              # 自带学科映射（与 graph_export 独立实现）
+        # ⚠ 口径=**数据规格**：`domain` 优先；为空时按 id 命名空间兜底（表须与
+        #   `graph_export._NS_SUBJECT` **同步**）。★ 第 25 轮实录：本函数最初**漏了兜底**，
+        #   R13 当场误报 47 条候选反驳 —— 这是铁律 #43「审计器必须允许它报错」的**首次真捕获**：
+        #   实现差异会被误读为「数据反驳」，故口径规格必须**显式且同源**。
+        d = (props_of(N.get(nid)).get("domain") or "").strip().lower()
+        if d.startswith(("chem", "ek", "bio")):
+            return "化学"
+        if d.startswith(("phys", "phy", "pb")):
+            return "物理"
+        if d.startswith(("math", "mx", "mg")):
+            return "数学"
+        if d:
+            return "跨学科"
+        pfx = str(nid or "").split(":")[0]
+        return _A_NS.get(pfx) or _A_NS.get(pfx.upper(), "数学")
+
+    _A_NS = {
+        "PQ": "物理", "PB": "物理", "CM": "物理", "QM": "物理", "TH": "物理",
+        "EM": "物理", "OP": "物理", "SM": "物理", "RT": "物理", "UN": "物理",
+        "SY": "物理", "CO": "物理", "FO": "物理",
+        "EL": "化学", "EK": "化学", "EK2": "化学", "IC": "化学", "BC": "化学",
+        "RX": "化学", "OM": "化学", "MO": "化学", "PC": "化学", "CE": "化学",
+        "RH": "化学", "CH": "化学",
+        "MX": "数学", "MG": "数学", "MA": "数学", "MC": "数学", "NT": "数学",
+        "PA": "数学",
+        "WD": "跨学科", "wd": "跨学科",
+    }
+
+    def _a_ph(nid):
+        nm = props_of(N.get(nid)).get("name")
+        s = str(nm).strip() if nm is not None else ""
+        return str(nid).startswith("EK2:") and (not s or bool(_A_PH.match(s)))
+
+    def _a_indep(e):                               # 非独立理由（自带实现）
+        p = props_of(e)
+        evs = p.get("verification_evidence")
+        evs = evs if isinstance(evs, list) else []
+        if any(x.get("indep") for x in evs):
+            return ""
+        t = e["type"]
+        if t in ("reactant_of", "product_of"):
+            rp, pp = props_of(N.get(e["target"])), props_of(N.get(e["source"]))
+            rsrc = rp.get("source") or "-"
+            if rsrc == "ElementKG2.0":
+                return "same_source_elementkg"
+            if str(rsrc).startswith("curated_seed"):
+                return "same_source_curated"
+            if rsrc == "Rhea":
+                if pp.get("is_generic"):
+                    return "generic_class"
+                if pp.get("is_polymer"):
+                    return "polymer_residue"
+                if rp.get("equation") and "[" in str(rp.get("equation")):
+                    return "placeholder_complex"
+                return "naming_variant_no_second_source"
+            return "UNCLASSIFIED"
+        if t == "cites":
+            return "no_independent_citation_index"
+        if t == "discusses":
+            return "no_second_subject_index"
+        if t == "derived_from":
+            return ("same_source_curated"
+                    if str(props_of(N.get(e["source"])).get("source") or "").startswith("curated_seed")
+                    else "source_text_only")
+        if t == "has_unit":
+            return ("same_source_curated"
+                    if str(props_of(N.get(e["source"])).get("source") or "").startswith("curated_seed")
+                    else "unit_name_not_in_reference")
+        return "UNCLASSIFIED"
+
+    def _a_scope(e):                               # 「不在分母」理由（自带实现）
+        p = props_of(e)
+        r = _A_SCOPE_TYPE.get(e["type"])
+        if r is None and p.get("verification_scope") == "model_link_prediction":
+            r = "gnn_link_prediction"
+        return r or "UNCLASSIFIED"
+
+    def _a_in_task(e):
+        return bool(_A_TASK.get(e["type"])) or (_a_disc(e["source"]) != _a_disc(e["target"]))
+
+    n_r13 = n_r14 = n_ph_edge = 0
+    r13_reason, r14_reason = collections.Counter(), collections.Counter()
+    for e in E:
+        p = props_of(e)
+        if not _a_in_task(e):
+            n_r14 += 1
+            n_ph_edge += 1 if (_a_ph(e["source"]) or _a_ph(e["target"])) else 0
+            r = _a_scope(e)
+            r14_reason[r] += 1
+            if r == "UNCLASSIFIED":
+                findings["R14_unclassified_scope"].append((e.get("type"), e.get("id"),
+                                                           "UNCLASSIFIED"))
+            continue
+        # ⚠ 达标判定 = 「任一族门槛满足」；T7（跨域）门槛 = rule_checked(4)。
+        #   第 25 轮实录：本行最初写成 `if fam and lv < fam[1]: continue`，对**仅靠 T7 达标**
+        #   的边**漏检门槛** → 47 条 model_inferred 跨域边被错当达标边 → 误报 47 条候选反驳。
+        #   两处bug合起来说明：**审计器的第一价值是「逼口径显式化」**（铁律 #43）。
+        lv = _A_RANK.get(p.get("verification_level"), -1)
+        fam = _A_TASK.get(e["type"])
+        cross = _a_disc(e["source"]) != _a_disc(e["target"])
+        passed = (fam is not None and lv >= fam[1]) or (cross and lv >= 4)
+        if not passed:
+            continue
+        n_r13 += 1
+        r = _a_indep(e)
+        if not r:
+            continue
+        r13_reason[r] += 1
+        if r == "UNCLASSIFIED":
+            findings["R13_unclassified_independent"].append((e.get("type"), e.get("id"), r))
+
+    # 正对照（铁律 #31/#43：新判据必须能**双向**报错 —— 不是「永远不报」的摆设）
+    _pc_scope = _a_scope({"type": "bogus_relation", "props": {}})
+    _pc_indep = _a_indep({"type": "bogus_type", "props": {"verification_evidence": []}})
+    _pc_ctrl = {"unknown-scope-type": _pc_scope, "unknown-indep-type": _pc_indep}
+    pc_r13_ok = (_pc_ctrl["unknown-scope-type"] == "UNCLASSIFIED"
+                 and _pc_ctrl["unknown-indep-type"] == "UNCLASSIFIED")
+
     # ---- 汇报 ----
     print("=" * 92)
     print("语义边确定性反驳审计 —— %s" % os.path.relpath(path, ROOT))
@@ -542,6 +695,8 @@ def run(path=NORM):
     for k in sorted(findings):
         rows = findings[k]
         def _k(r):
+            if k.startswith(("R13", "R14")):
+                return r[-1]                      # 理由码
             return r[3] if k.startswith(("R1", "R2")) else (r[5] if len(r) > 5 else "-")
         kc = collections.Counter(_k(r) for r in rows)
         print("\n【%s】%d 条   按 kind：%s" % (k, len(rows), dict(kc)))
@@ -565,6 +720,12 @@ def run(path=NORM):
           % (n_r11, len(findings.get("R11_codata_recheck_failed", []))))
     print("   R12 T4 残差清算 %d 条，未归类 %d 条   按理由：%s"
           % (n_r12, len(findings.get("R12_unclassified_residual", [])), dict(r12_reason)))
+    print("   R13 T1–T8 达标边 %d 条，非独立理由未归类 %d 条   按理由：%s"
+          % (n_r13, len(findings.get("R13_unclassified_independent", [])), dict(r13_reason)))
+    print("   R14 分母外边 %d 条（占位实体边 %d），理由未归类 %d 条   按理由：%s"
+          % (n_r14, n_ph_edge, len(findings.get("R14_unclassified_scope", [])), dict(r14_reason)))
+    print("   正对照 · R13/R14 清算表可报错（未知类型/未知来源 → %s）：%s"
+          % (_pc_ctrl, "✅ 符合预期" if pc_r13_ok else "❌ 不符"))
     # 正对照（铁律 #31：新判据必须配正对照，且要能**双向**报错）
     _pc_rxn = {
         "reactant-ok": rxn_side_check({"props": {"name": "H2O"}},

@@ -61,6 +61,13 @@ except Exception as e:                                   # noqa: BLE001
     vm = None
     print("[WARN] verification_model 不可用：%s" % e)
 
+sys.path.insert(0, HERE)
+try:
+    import graph_export as gx                            # Phase 35 口径披露（跨域判定）
+except Exception as e:                                   # noqa: BLE001
+    gx = None
+    print("[WARN] graph_export 不可用：%s" % e)
+
 
 # --------------------------------------------------------------- helpers
 def qname(nid):
@@ -778,6 +785,71 @@ def run_case(case, graph):
             return ("PASS" if not bad else "FAIL"), \
                 "T4 残差 %d 条，未归类 %d 条：%s  %s" % (
                     n_seen, len(bad), bad[:3], dict(reasons))
+
+        # (v) **非独立证据必须清算到位**（Phase 35 · 铁律 #30/#34 的**横向**推广）：
+        #     T1–T8 的**达标边**（= 北极星与 T9 的分母）中，凡**证据不独立**者，其
+        #     「为什么拿不到独立证据」必须落在 `vm.INDEP_REASONS` 受控枚举内 —— **零未归类**。
+        #     第 25 轮穷举证明：T4（Rhea 方程侧别）与 T8（cites/discusses）**根本没有可达的
+        #     第二源**，属结构性缺口。负结果既然无法消灭，就必须**记账**，否则会随新源引入
+        #     静默漂移。判据由 `vm.indep_reason` **单一提供**（铁律 #36）。
+        #     ⚠ `in scan` 而非 `scan.get(...)`（空字典是假值 → 静默退化为 SKIP，铁律 #20/#37）。
+        if "independence_accounted" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            subj = {n["id"]: gx.subject_of((n.get("props") or {}).get("domain"), n["id"])
+                    for n in (graph.get("nodes") or [])} if gx else None
+            bad, n_seen, n_indep = [], 0, 0
+            reasons = collections.Counter()
+            for e in (graph.get("edges") or []):
+                if not vm.tasks_passed(e, subj):
+                    continue
+                n_seen += 1
+                rs = vm.indep_reason(e, n_by_id)
+                if rs == "":
+                    n_indep += 1
+                    continue
+                reasons[rs] += 1
+                if rs not in vm.INDEP_REASONS:
+                    bad.append((e.get("type"), e.get("source"), e.get("target"), rs))
+            return ("PASS" if not bad else "FAIL"), \
+                "T1–T8 达标边 %d 条；独立 %d；**非独立 %d 条**，未归类 %d 条：%s  %s" % (
+                    n_seen, n_indep, n_seen - n_indep, len(bad), bad[:3], dict(reasons))
+
+        # (w) **北极星分母必须显式记账**（Phase 35 · 铁律 #16 的机器化）：
+        #     全图**每一条边**要么属 T1–T8 任务族（在分母内），要么其「为何不在分母」必须
+        #     能在 `vm.SCOPE_TYPE_REASONS` 里找到理由 —— **零未归类类型**。
+        #     为什么必须断言：北极星的分母是**选择的结果**。没有这条不变式，新引入的边族
+        #     会**静默地**不进分母（分母外比例上升却无人知晓）。本断言把「分母的选择」
+        #     变成**可见、可审、新增即红**。
+        if "scope_accounted" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            subj = {n["id"]: gx.subject_of((n.get("props") or {}).get("domain"), n["id"])
+                    for n in (graph.get("nodes") or [])} if gx else None
+            bad, n_in, n_ph = [], 0, 0
+            reasons = collections.Counter()
+            edges_all = graph.get("edges") or []
+            for e in edges_all:
+                in_task = bool(vm.tasks_of(e, subj))
+                n_in += 1 if in_task else 0
+                rs = vm.scope_reason(e, n_by_id, in_task)
+                reasons[rs] += 1
+                if rs not in vm.SCOPE_REASONS:
+                    bad.append((e.get("type"), rs))
+                if not in_task:
+                    for side in ("source", "target"):
+                        nm = ((n_by_id.get(e.get(side)) or {}).get("props") or {}).get("name")
+                        if (n_by_id.get(e.get(side)) or {}).get("id", "").startswith("EK2:") \
+                                and vm.is_placeholder_entity(nm):
+                            n_ph += 1
+                            break
+            n_out = len(edges_all) - n_in
+            return ("PASS" if not bad else "FAIL"), \
+                "全图 %d 边；分母内 %d；**分母外 %d（%.1f%%）**；占位实体边 %d；未归类 %d 条：%s  %s" % (
+                    len(edges_all), n_in, n_out, 100.0 * n_out / max(len(edges_all), 1),
+                    n_ph, len(bad), bad[:3], dict(reasons))
 
         return "SKIP", "未知 scan"
 

@@ -3,8 +3,8 @@
   "name": "冻结反例集（Frozen Counterexamples）",
   "purpose": "已知错误模式的回归门禁：任何一条被判『已证实 / 应存在』即视为回归失败。与 connectivity_audit.py 并列。",
   "created": "2026-10-10",
-  "phase": 34,
-  "ref": "07_交付物/Phase34_T4跨源名称对齐报告_20261010.md",
+  "phase": 35,
+  "ref": "07_交付物/Phase35_北极星口径自审与T9i天花板报告_20261010.md",
   "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严。Phase 29 追加跨域桥断言：『桥必须有证据』与『桥不得自相矛盾』，两者都带正对照（含 min_count 防空真通过） | Phase 30 追加『语义边去伪』断言：单位量纲一致/唯一、model 边目标符号必须出现于源表达式、数学桥必须有算子证据；并补『每摩尔/表达式-only』两处判据校准的正反例。 | Phase 30 再追加『真孤岛冻结』断言：连通分量必须逐节点等于 known_islands.json 的并集（撤回假边后暴露的 4 个真孤岛），新增孤岛即回归。",
   "kinds": [
    "dim_table",
@@ -1816,6 +1816,26 @@
    "desc": "T4 残差（`reactant_of`/`product_of` 且非 cross_source/mismatch 的边）必须**清算到位**：每条边「不可独立复算的理由」须落在受控枚举 `same_source_elementkg|same_source_curated|generic_class|polymer_residue|placeholder_complex|naming_variant_no_second_source` 内 —— **零未归类**。落地铁律 #30（不可判定 ≠ 可以放过）与 #34（负结果也是交付物）：Phase 34 把 1218 条 T4 残差升为跨源独立证据后，余下残差必须**逐类有据可查**，不允许有「说不清为什么没验证」的边。判据由 `verification_model.residual_reason` 单一提供（铁律 #36），独立审计器 R12 用自带实现重算同一口径（铁律 #43）。",
    "scan": {
     "residual_accounted": {}
+   },
+   "expect": "ZERO"
+  },
+  {
+   "id": "P1-den-main-independence-accounted",
+   "p0": "P1-den",
+   "kind": "graph_scan",
+   "desc": "T1–T8 **达标边**（= 北极星与 T9 的分母）中，凡**证据不独立**者，其「为什么拿不到独立证据」必须落在受控枚举 `same_source_elementkg|same_source_curated|generic_class|polymer_residue|placeholder_complex|naming_variant_no_second_source|no_independent_citation_index|no_second_subject_index|source_text_only|unit_name_not_in_reference` 内 —— **零未归类**。第 25 轮穷举证明：T4（Rhea 方程侧别）与 T8（cites/discusses）**根本没有可达的第二源**（KEGG/Reactome/SABIO-RK/MetaNetX/Wikidata 全部负结果）—— 属**结构性**缺口。负结果既然无法消灭，就必须**记账**，否则会随新源引入静默漂移。判据由 `verification_model.indep_reason` 单一提供（铁律 #36），独立审计器 R13 用自带实现重算同一口径（铁律 #43）。",
+   "scan": {
+    "independence_accounted": {}
+   },
+   "expect": "ZERO"
+  },
+  {
+   "id": "P1-den-main-scope-accounted",
+   "p0": "P1-den",
+   "kind": "graph_scan",
+   "desc": "北极星的分母**是选择的结果**（铁律 #50）：全图**每一条边**要么属 T1–T8 任务族（在分母内），要么其「为何不在分母」必须能在 `verification_model.SCOPE_TYPE_REASONS` 里找到理由 —— **零未归类类型**。没有这条不变式，新引入的边族会**静默地**不进分母（分母外比例上升却无人知晓）。本断言把「分母的选择」变成**可见、可审、新增即红**；门禁 detail 同时打印 分母内/分母外占比 与 占位实体边数。",
+   "scan": {
+    "scope_accounted": {}
    },
    "expect": "ZERO"
   }
