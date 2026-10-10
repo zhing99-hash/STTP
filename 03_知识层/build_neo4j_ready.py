@@ -98,6 +98,8 @@ NODE_COLUMNS = [
 REL_COLUMNS = [
     ":START_ID", ":END_ID", ":TYPE", "id", "confidence",
     "explicit_or_inferred", "source", "kind", "evidence", "created_at",
+    # Phase 32：Claim/Evidence 一等对象（结构化 → JSON 串，可往返解析）
+    "claim", "verification_evidence", "evidence_at",
 ]
 
 
@@ -179,6 +181,25 @@ def node_row(rec: dict) -> Dict[str, str]:
     }
 
 
+def _csv_encode(v) -> str:
+    """结构化值 → **可反向解析**的 JSON 串（Phase 32 根治「repr 串生成链」）。
+
+    ⚠ 本函数替换了原先的 `str(p.get("evidence", ""))`：对 dict / list 用 `str()` 会产出
+    **Python repr**（单引号 / True/False/None），不是合法 JSON → 下游静默拿到不可解析串。
+    本轮引入的 `verification_evidence` 是**嵌套对象列表**，若走 `str()` 必然退化为 repr。
+    """
+    import json as _json
+    if v is None:
+        return ""
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (list, tuple, set)):
+        return _json.dumps(list(v), ensure_ascii=False)
+    if isinstance(v, dict):
+        return _json.dumps(v, ensure_ascii=False, sort_keys=True)
+    return str(v)
+
+
 def edge_row(edge: dict) -> Dict[str, str]:
     p = edge.get("props", {}) or {}
     return {
@@ -186,12 +207,16 @@ def edge_row(edge: dict) -> Dict[str, str]:
         ":END_ID": edge["target"],
         ":TYPE": edge["type"],
         "id": edge.get("id", ""),
-        "confidence": str(p.get("confidence", "")),
-        "explicit_or_inferred": str(p.get("explicit_or_inferred", "")),
-        "source": str(p.get("source", "")),
-        "kind": str(edge.get("kind", p.get("kind", ""))),
-        "evidence": str(p.get("evidence", "")),
-        "created_at": str(p.get("created_at", "")),
+        "confidence": _csv_encode(p.get("confidence")),
+        "explicit_or_inferred": _csv_encode(p.get("explicit_or_inferred")),
+        "source": _csv_encode(p.get("source")),
+        "kind": _csv_encode(edge.get("kind", p.get("kind", ""))),
+        "evidence": _csv_encode(p.get("evidence")),
+        "created_at": _csv_encode(p.get("created_at")),
+        # Phase 32：Claim/Evidence 一等对象列（结构化 → JSON，可往返）
+        "claim": _csv_encode(p.get("claim")),
+        "verification_evidence": _csv_encode(p.get("verification_evidence")),
+        "evidence_at": _csv_encode(p.get("evidence_at")),
     }
 
 

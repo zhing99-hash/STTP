@@ -132,11 +132,35 @@ def gid(source_key: str, local_id: str) -> str:
     return f"{abbr}:{local_id}"
 
 
+def _csv_encode(v: Any) -> str:
+    """结构化值 → **可反向解析**的 JSON 串（Phase 32 根治「repr 串生成链」）。
+
+    ⚠ 绝不能对 dict / list 用 `str()`：那产出的是 **Python repr**（单引号、True/False/None），
+    **不是合法 JSON** —— 下游 `json.loads` 静默失败，属性形态在链路上「漂移」为不可解析字符串
+    （「属性形态 → 静默降级」，即 repr 串生成链）。JSON 可 `json.loads` 往返，repr 不可。
+    """
+    if v is None:
+        return ""
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (list, tuple, set)):
+        return json.dumps(list(v), ensure_ascii=False)
+    if isinstance(v, dict):
+        return json.dumps(v, ensure_ascii=False, sort_keys=True)
+    return str(v)
+
+
 def _join_list(v: Any) -> str:
-    """列表属性 -> CSV 单元格（分号分隔）。"""
+    """列表属性 -> CSV 单元格。
+
+    标量列表用分号分隔；**一旦含结构体**（dict/list）则整体走 JSON —— 否则
+    `";".join(str(x))` 会把 dict 变成 repr 串（Phase 32 修复）。
+    """
     if v is None:
         return ""
     if isinstance(v, (list, tuple, set)):
+        if any(isinstance(x, (dict, list, tuple, set)) for x in v):
+            return json.dumps(list(v), ensure_ascii=False)
         return ";".join(str(x) for x in v)
     return str(v)
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Phase 31 · 门禁「非真空」自检（Non-vacuous Gate Self-Check）
-==============================================================
-目的（铁律 #14 / #16 / #20）：
-    「一条**永远不会红**的断言不是断言」—— 必须证明新增的 3 条 `graph_scan`
+"""门禁「非真空」自检（Non-vacuous Gate Self-Check）—— Phase 31 + Phase 32
+==========================================================================
+目的（铁律 #14 / #16 / #20 / #38）：
+    「一条**永远不会红**的断言不是断言」—— 必须证明新增的 `graph_scan`
     不变量在**注入缺陷时真的会 FAIL**，否则它就是 SKIP 的伪装（假通过）。
 
 做法（**独立于校验器实现**）：
@@ -11,9 +11,10 @@
     同时用**未注入的原图**做正对照，断言判为 PASS。
 
 覆盖：
-    (n) symbol_expr_evidenced        —— 注入 scope=symbol_expr_recompute 但源无该符号
-    (o) model_semantic_target_present—— 注入 GNN 假 `has_symbol`（目标符号缺席）
-    (p) dim_consistent_recompute     —— 注入量纲互斥的假 `dimensionally_consistent`
+    Phase 31 —— (n) symbol_expr_evidenced / (o) model_semantic_target_present /
+                (p) dim_consistent_recompute
+    Phase 32 —— (q) evidence_traceable（rule_checked 边无独立证据 → FAIL）
+                (r) evidence_wellformed（非法 kind / 覆盖率跌破下限 → FAIL）
 
 用法：python 06_PoC/_gate_selfcheck_phase31.py
 退出码：0 = 全部符合预期（真空即 1）。
@@ -66,7 +67,10 @@ def _node(i):
 print("== 0) 正对照：未注入的原图必须全部 PASS ==")
 for cid, scan in (("P1-den-main-symbol-expr-evidenced", "n"),
                   ("P1-den-main-model-semantic-target-present", "o"),
-                  ("P1-den-main-dim-consistent-recompute", "p")):
+                  ("P1-den-main-dim-consistent-recompute", "p"),
+                  ("P1-den-main-evidence-traceable", "q"),
+                  ("P1-den-main-evidence-wellformed", "r"),
+                  ("P1-den-main-no-repr-residue", "s")):
     st, det = fg.run_case(_case(cid), graph0)
     _check("baseline(%s) %s" % (scan, cid), st, "PASS")
 
@@ -157,10 +161,131 @@ else:
     _check("inject(p) 量纲互斥假 dc -> FAIL", st, "FAIL")
     print("      detail: %s" % det)
 
+# --------------------------------- 5) (q) rule_checked 边缺独立证据
+print("\n== 5) (q) 注入 level=rule_checked 但**无证据链**的边 → 必须 FAIL ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST",
+                  "verification_level": "rule_checked",
+                  "verification_scope": "symbol_expr_recompute",
+                  "verifier": "verification_model.symbol_in_source"},
+    })
+    st, det = fg.run_case(_case("P1-den-main-evidence-traceable"), g)
+    _check("inject(q) rule_checked 无证据链 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+print("\n== 5b) (q) 注入**有证据但 indep=假**的 rule_checked 边 → 必须 FAIL ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST",
+                  "verification_level": "rule_checked",
+                  "verification_scope": "symbol_expr_recompute",
+                  "verifier": "verification_model.symbol_in_source",
+                  "verification_evidence": [
+                      {"kind": "source_assertion", "impl": "verification_model.symbol_in_source",
+                       "detail": "自称复算但实为来源自述", "indep": False}]},
+    })
+    st, det = fg.run_case(_case("P1-den-main-evidence-traceable"), g)
+    _check("inject(q) 证据非独立 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+print("\n== 5c) (q) 注入证据 impl 与 verifier **不一致**的边 → 必须 FAIL ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST",
+                  "verification_level": "rule_checked",
+                  "verification_scope": "symbol_expr_recompute",
+                  "verifier": "verification_model.symbol_in_source",
+                  "verification_evidence": [
+                      {"kind": "recompute", "impl": "someone.else.entirely",
+                       "detail": "证据实现与判级实现不符", "indep": True}]},
+    })
+    st, det = fg.run_case(_case("P1-den-main-evidence-traceable"), g)
+    _check("inject(q) impl 不符 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+# --------------------------------- 6) (r) 证据对象不良构
+print("\n== 6) (r) 注入**非法 kind** 的证据对象 → 必须 FAIL ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST", "verification_level": "model_inferred",
+                  "verification_evidence": [
+                      {"kind": "bogus_kind", "impl": "x", "detail": "y", "indep": True}]},
+    })
+    st, det = fg.run_case(_case("P1-den-main-evidence-wellformed"), g)
+    _check("inject(r) 非法 kind -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+print("\n== 6b) (r) 注入**覆盖率跌破下限**（新增无边证据的边）→ 必须 FAIL ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST", "verification_level": "model_inferred"},
+    })
+    st, det = fg.run_case(_case("P1-den-main-evidence-wellformed"), g)
+    _check("inject(r) 覆盖跌破下限 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+print("\n== 6c) (r) 注入 indep 与 kind **不配对** 的证据 → 必须 FAIL ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST", "verification_level": "source_asserted",
+                  "verification_evidence": [
+                      {"kind": "source_assertion", "impl": "x", "detail": "z", "indep": True}]},
+    })
+    st, det = fg.run_case(_case("P1-den-main-evidence-wellformed"), g)
+    _check("inject(r) indep/kind 不配对 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+# --------------------------------- 7) (s) repr 串残留
+print("\n== 7) (s) 注入 **Python repr 化的容器**（`str(dict)`）→ 必须 FAIL ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST", "verification_level": "model_inferred",
+                  "poisoned": str({"a": 1, "b": [2, 3]})},   # ← str() 强转的正确写法=repr 串
+    })
+    st, det = fg.run_case(_case("P1-den-main-no-repr-residue"), g)
+    _check("inject(s) repr 残留 -> FAIL", st, "FAIL")
+    print("      detail: %s" % det)
+
+print("\n== 7b) (s) 正对照：**合法 JSON 串** 不得误报 ==")
+if pair_absent:
+    g = copy.deepcopy(graph0)
+    g["edges"].append({
+        "id": "TEST|has_symbol|%s|%s" % (a["id"], t["id"]),
+        "type": "has_symbol", "source": a["id"], "target": t["id"], "kind": "manual",
+        "props": {"kind": "manual", "source": "TEST", "verification_level": "model_inferred",
+                  "legit": json.dumps({"a": 1, "b": [2, 3]})},   # ← 合法 JSON，不应误报
+    })
+    st, det = fg.run_case(_case("P1-den-main-no-repr-residue"), g)
+    _check("ctrl(s) 合法 JSON 不误报 -> PASS", st, "PASS")
+    print("      detail: %s" % det)
+
 # --------------------------------------------------------------------- 汇总
 print("\n" + "-" * 74)
 if fails:
     print("汇总：❌ 非真空自检未通过 %d 项：%s" % (len(fails), fails))
     sys.exit(1)
-print("汇总：✅ 3 条不变量全部**可红**（正对照 PASS + 注入缺陷 FAIL）—— 非真空，门禁有效")
+print("汇总：✅ 6 条不变量（n/o/p/q/r/s）全部**可红**（正对照 PASS + 注入缺陷 FAIL）"
+      "—— 非真空，门禁有效")
 sys.exit(0)

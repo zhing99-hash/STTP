@@ -449,8 +449,16 @@ python 03_知识层/normalize_labels.py --delta-only <备份.json>   # 据备份
 **动机**：铁律 #14 —— 自检输入若与被检对象同源会一起静默通过。故反例集**独立于校验器实现**，
 且**每条含正对照**（应当成立者必须成立），防门禁过严。
 
-**组成**：`frozen_counterexamples.json`（12 条，覆盖 5 条 P0）+ `frozen_gate.py`
-（区分「主图结果层扫描」与「校验器层动态调用」；**门禁因缺依赖降级时记 SKIP 而非 PASS** —— 铁律 #13）。
+**组成**：`frozen_counterexamples.json`（**70 条**，覆盖 5 条 P0 + Phase 28~32 新增不变量）
++ `frozen_gate.py`（区分「主图结果层扫描」与「校验器层动态调用」；**门禁因缺依赖降级时记 SKIP 而非 PASS** —— 铁律 #13）。
+
+**不变量分组（截至 Phase 32）**：a–h（Phase 27 P0 修复）/ i–p（Phase 28~31 分层可信性、桥证据、跨字段自洽）
+/ **(q) `evidence_traceable`**（`is_strict` 边须有独立证据链，Phase 32）/ **(r) `evidence_wellformed`**
+（全图证据对象良构、`kind ∈ EVIDENCE_KINDS`、`indep` 与 `kind` 配对）/ **(s) `no_repr_residue`**
+（全图 props 无「Python repr 化容器」残留，Phase 32）/ `island_freeze`（已知孤岛冻结核对，Phase 30）。
+
+**非真空自检**：`bash sttp.sh gatecheck` → `06_PoC/_gate_selfcheck_phase31.py`（Phase 31+32），
+**不改门禁代码**、注入已知缺陷，断言 6 条不变量（n/o/p/q/r/s）**真的会红**（正对照 PASS + 注入 FAIL）。
 
 **用法**：`$PY 06_PoC/frozen_gate.py [--json]`；退出码 0 = 全通过，1 = 有回归。
 
@@ -701,14 +709,17 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
   ⚠️ **本轮最重要的结构性结论**：**「被信任」不等于「被验证」** —— 人工策划 / 来源断言的边
   **同样是「从未被检验过的断言」**（策划 `has_symbol` 199 条、`derived_from` 127 条此前从未被复算）。
 
-**1b. ★ Claim / Evidence 完整对象化（第 22 轮建议）**
-- 把 `{claim, evidence[], verification_scope, verifier, timestamp}` 做成**一等对象**（含独立 `evidence[]` 列表），
-  支持**逐条溯源与撤销留痕**；`evidence[]` 目前**仅落到跨域桥边**，尚未推广全图。
-- 一并补 **`reconcile_aura_edges.py` 的「属性维」对账**（现只比三元组，是结构性盲区）。
-- ⚠️ **铁律 #36（Phase 31）**：**复算规则必须同源写在「判级」与「门禁」两处** ——
-  否则出现「**门禁会红、判级模型撤不掉**」的僵局（Phase 30 的 R1/R2 只写在 delta 生成器里，模型侧没有）。
-- ✅ **`repr` 串生成链已在第 21 轮侦察中关闭**（Phase 28 delta 已恢复，**零残留**，不再顺延）。
-- 备选 **B**：**`source_asserted` 攻坚**（13795 条 / 28.3%，绝对收益最高）；备选 **C**：**孤岛消除**（29 节点，天花板低）。
+**1b. ✅ Claim / Evidence 完整对象化（Phase 32 · 第 22 轮，已完成）**
+- `{claim, evidence[], level, verifier, evidence_at}` 已成**一等对象**，**全图覆盖 100%**（48712 条边 / 49635 条证据）。
+- **核心洞察**：「`verified` 标签」≠「证据」—— `verification_level/scope/verifier` 只是「谁验的 / 怎么验的」的名字，
+  **证据本身（判据轨迹）从未落库**，这正是北极星「且证据可追溯」长期**无仪器**的根因。
+- **同源设计（铁律 #37）**：`kind`/`indep` 由 `scope` 唯一决定（`SCOPE_KIND`），`detail` 由判定现场经
+  `R(..., detail=...)` 给出，`build_evidence()` **只搬用不重推** → 证据语义与档位构造上不可能分歧。
+- 新增 **T9 证据可追溯（100.0%）** 与 **T9-i 证据独立（85.9%）** 两个**分列**口径；
+  **T9=100% 绝不能掩盖 T9-i=85.9%**（下一轮靶子）。
+- 门禁 **67 → 70**（+q/r/s）；`repr` 串生成链**已源头根治**（`_csv_encode`）。
+- 相关工具：`11_真实数据/phase32_evidence_delta.py`；`sttp.sh evidence`。
+- **下一轮建议**：**T9-i 证据独立攻坚**（对可复算子集补独立复算）或 `source_asserted` 攻坚（13795 条 / 28.3%）。
 
 **1c. ★ 门禁「非真空」自检（Phase 31 新增，已固化）**
 - `bash sttp.sh gatecheck` → `06_PoC/_gate_selfcheck_phase31.py`：**不改门禁代码**，
@@ -771,14 +782,17 @@ python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_U
 
 # 4. 启动本地可视化
 bash sttp.sh viz
-# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase31.json）
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase32.json）
 
 # 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
 bash sttp.sh export
 
 # 6. 查看图谱统计 / 北极星自检
 bash sttp.sh stats
-python 06_PoC/connectivity_audit.py --strict   # 分量=1 / 孤立=0 / 悬空=0 / 自环=0 → 退码 0
+python 06_PoC/connectivity_audit.py --strict   # 分量=6 / 5 岛 / 29 节点 → FROZEN-OK 退码 0（已知岛已冻结）
+python 06_PoC/frozen_gate.py                   # 冻结反例集门禁 → PASS 70 / FAIL 0 / SKIP 0
+python 06_PoC/task_trust_audit.py              # 北极星：正确且可追溯 99.6%；T9 可追溯 100% / T9-i 独立 85.9%
+bash sttp.sh gatecheck                         # 门禁非真空自检（6 条不变量全部可红）
 
 # 7. 推新数据到 Aura（推荐用编排器，自动消毒 + 对账 + 导出）
 bash sttp.sh push <your_delta.json>       # 单 delta

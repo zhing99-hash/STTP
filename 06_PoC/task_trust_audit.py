@@ -128,6 +128,7 @@ def main():
 
     rows = []
     tot_e = tot_ok = 0
+    ok_edges = []          # T1–T8 的**达标边**集合（供 T9 复用）
     for tid, name, desc, minlv, pred in TASKS:
         if tid == "T7":
             sel = [e for e in edges if (is_cross_legacy(e) if a.legacy_t7 else is_cross(e))]
@@ -150,6 +151,7 @@ def main():
                      "desc": desc})
         tot_e += n
         tot_ok += len(ok)
+        ok_edges.extend(ok)
         tag = " / ".join("%s×%d" % (k, v) for k, v in gap.most_common(2)) or "-"
         print("  %-4s %-22s %8d %7.1f%% %8d %7.1f%%   %s"
               % (tid, name, n, cov, len(ok), rate, tag))
@@ -157,6 +159,55 @@ def main():
     print("  " + "-" * 96)
     star = 100.0 * tot_ok / tot_e if tot_e else 0.0
     print("  %-27s %8d %8s %8d %7.1f%%   ← **北极星**" % ("合计", tot_e, "-", tot_ok, star))
+
+    # ---------------- T9 证据可追溯（Phase 32 新增 · 横向不变量） ----------------
+    #   北极星原话是「跨域结论正确**且证据可追溯**」—— 但第 18~21 轮**只仪器化了「正确」**
+    #   （T1–T8 的档位），「证据可追溯」长期**无仪器**（实测 `evidence` 仅 1.18% 覆盖）。
+    #   T9 把它补齐，并**区分两级**（可追溯 ≠ 独立，不得混为一谈）：
+    #     T9   证据**可追溯**：挂有证据对象 + `detail` 非空 + `impl == verifier`（同源保证）
+    #     T9-i 证据**独立**  ：证据链含 ≥1 条 `indep=True`（与门禁 `evidence_traceable` 同源）
+    #   ⚠ T9-i 是**下一轮的靶子**：T4/T6/T8 的最低档是 `source_asserted`（单一来源断言），
+    #     这些边「达标」却不「独立」—— 必须如实报告，不得用 T9=100% 掩盖。
+    def _evs(e):
+        evs = (e.get("props") or {}).get("verification_evidence")
+        return evs if isinstance(evs, list) else []
+
+    def has_traceable_ev(e):
+        return any(isinstance(it, dict) and it.get("detail")
+                   and it.get("impl") == (e.get("props") or {}).get("verifier")
+                   for it in _evs(e))
+
+    def has_indep_ev(e):
+        return any(isinstance(it, dict) and it.get("indep") and it.get("detail")
+                   and it.get("impl") == (e.get("props") or {}).get("verifier")
+                   for it in _evs(e))
+
+    t9_tr = [e for e in ok_edges if has_traceable_ev(e)]
+    t9_in = [e for e in ok_edges if has_indep_ev(e)]
+    t9_rate = 100.0 * len(t9_tr) / len(ok_edges) if ok_edges else 0.0
+    t9i_rate = 100.0 * len(t9_in) / len(ok_edges) if ok_edges else 0.0
+    n_cov_all = sum(1 for e in edges if _evs(e))
+    n_indep_all = sum(1 for e in edges if has_indep_ev(e))
+    print("\n  【T9 证据可追溯（Phase 32 新增 · 横向不变量）】")
+    print("    北极星原文含「**证据可追溯**」，但第 18–21 轮只仪器化了「正确」（T1–T8 档位）。")
+    print("    ⚠ 「可追溯」≠「独立」—— 两级分列，不得用前者掩盖后者。")
+    print("    %-42s %8s %8s %8s" % ("指标", "分母", "达标", "比例"))
+    print("    %-42s %8d %8d %7.1f%%"
+          % ("T9  达标边证据**可追溯**（detail+impl≡verifier）", len(ok_edges), len(t9_tr), t9_rate))
+    print("    %-42s %8d %8d %7.1f%%   ← **下一轮靶子**（T4/T6/T8 门槛=source_asserted）"
+          % ("T9-i 其中证据**独立**（indep=真）", len(ok_edges), len(t9_in), t9i_rate))
+    print("    %-42s %8d %8d %7.1f%%   ← 全图证据对象覆盖率（Phase 31 为 1.2%%）"
+          % ("（横向）全图边带证据对象", len(edges), n_cov_all,
+             100.0 * n_cov_all / len(edges) if edges else 0.0))
+    print("    %-42s %8d %8d %7.1f%%   ← 全图「有独立可追溯证据」的边"
+          % ("（横向）全图边带独立证据", len(edges), n_indep_all,
+             100.0 * n_indep_all / len(edges) if edges else 0.0))
+    print("    → **北极星（正确且可追溯）** = %.1f%% × %.1f%% = %.1f%%"
+          % (star, t9_rate, star * t9_rate / 100.0))
+    print("    → 若按**独立**证据严口径：%.1f%% × %.1f%% = %.1f%%（← 这就是下一轮的提升空间）"
+          % (star, t9i_rate, star * t9i_rate / 100.0))
+    print("    → 口径留档（铁律 #16）：T1–T8 口径不变（与 Phase 31 可比，%.1f%%）；" % star)
+    print("       T9 是**新增的横向不变量**，不改变 T1–T8 的分母，故 headline 数字保持可比。")
 
     # ---------------- 反向对照：旧口径 T7 vs 新口径 T7（铁律 #16） ----------------
     cross_all = [e for e in edges if is_cross(e)]
@@ -213,7 +264,15 @@ def main():
 
     if a.json:
         json.dump({"graph": os.path.relpath(a.graph, ROOT), "north_star_pct": round(star, 2),
-                   "tasks": rows, "levels": dict(lv_all)},
+                   "tasks": rows, "levels": dict(lv_all),
+                   "T9_evidence_traceable": {
+                       "ok_edges": len(ok_edges), "traceable": len(t9_tr),
+                       "traceable_rate_pct": round(t9_rate, 2),
+                       "independent": len(t9_in), "independent_rate_pct": round(t9i_rate, 2),
+                       "graph_evidence_coverage_pct": round(100.0 * n_cov_all / len(edges), 2)
+                       if edges else 0.0,
+                       "graph_independent_evidence_pct": round(100.0 * n_indep_all / len(edges), 2)
+                       if edges else 0.0}},
                   open(a.json, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
         print("结果 ->", a.json)
     return 0

@@ -13,6 +13,7 @@
 #   bash sttp.sh webbook [--limit N|--only A,B]     抓取 NIST WebBook 热化学数据
 #   bash sttp.sh t7 [--legacy-t7]                   北极星 T7 跨域桥达标率（含反向对照）
 #   bash sttp.sh recompute [--apply]                生成 Phase 31 复算全覆盖 delta（默认 dry-run）
+#   bash sttp.sh evidence [--dry]                   生成 Phase 32 Claim/Evidence 对象化 delta
 #   bash sttp.sh noise                              独立实现的语义噪声审计器（跨实现交叉核对）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
@@ -143,6 +144,12 @@ EOF
     # （默认 dry-run；加 --apply 交给 apply_delta 落盘）
     shift
     "$PY" 11_真实数据/phase31_recompute_delta.py "$@"
+    ;;
+  evidence)
+    # Phase 32 Claim/Evidence 完整对象化：把已算出的证据明细持久化为一等对象
+    # （非破坏性，只加字段 claim/verification_evidence/evidence_at；默认 dry-run）
+    shift
+    "$PY" 11_真实数据/phase32_evidence_delta.py "$@"
     ;;
   noise)
     # 独立实现的语义噪声审计器（只读，用于与 verification_model 交叉核对）

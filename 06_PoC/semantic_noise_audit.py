@@ -143,10 +143,22 @@ def sym_of(node):
 #   故 `\nu` -> `nu`、`\nabla` -> `nabla`、`\mathcal{E}` -> `mathcalE`（保留语义）。
 _LATEX_CMD = re.compile(r"\\([A-Za-z]+)")
 _STRIP = re.compile(r"[\\{}$\s]+")
+# ⚠ 包装命令**先剥壳取内容**（Phase 32 修复）：`\mathrm{pH}` 应归一为 `pH`（≠ `mathrmpH`），
+#   否则与 `verification_model._norm_latex` 的约定不一致 → **假阳性**（实测 2 条：
+#   `CE:fo:ph --has_symbol--> CE:sy:pH`，源 latex 明文含 `pH`，符号却是 `\mathrm{pH}`）。
+#   铁律 #31「包装命令须剥壳」在**第二个实现**上的复现 —— 两实现必须共用同一归一化约定
+#   （独立性在于**判据逻辑**，不在于文本归一化）。
+_WRAP = re.compile(r"\\(?:mathrm|text|operatorname|mbox|textrm|mathbf|mathit"
+                   r"|mathcal|mathsf|mathtt|mathbb)\s*\{([^{}]*)\}")
 
 
 def _norm_text(s):
-    return _STRIP.sub("", _LATEX_CMD.sub(r"\1", str(s)))
+    t = str(s)
+    prev = None
+    while prev != t:                       # 迭代剥壳（支持 \text{\mathrm{x}} 嵌套）
+        prev = t
+        t = _WRAP.sub(r"\1", t)
+    return _STRIP.sub("", _LATEX_CMD.sub(r"\1", t))
 
 
 def declared_symbols(node):
@@ -279,6 +291,45 @@ def run(path=NORM):
             findings["R7_dim_consistent_mismatch"].append(
                 (e["id"], na, nb, kind_of(e), src_of(e)))
 
+    # ---- R9：证据链良构 + 独立抽验（Phase 32 新增）----
+    #     独立于 `verification_model`：**自带** indep-kind 枚举与符号复算，不 import 判级模型。
+    #       R9a 良构：level>=rule_checked 的边必须带 ≥1 条 {indep=真, detail 非空, impl==verifier}
+    #       R9b 抽验：证据 `impl` 自称 `symbol_in_source` 的，**用本脚本的 has_symbol 重算**
+    #                目标符号是否真在源表达式里（若否 → 候选反驳，说明证据是伪造/失效的）
+    STRICT = {"rule_checked", "cross_source", "human_reviewed"}
+    INDEP_KINDS = {"recompute", "cross_source"}          # 自带枚举（不 import）
+    n_strict = n_ok_ev = 0
+    n_recheck = 0
+    for e in E:
+        p = props_of(e)
+        lv = p.get("verification_level")
+        if lv not in STRICT:
+            continue
+        n_strict += 1
+        evs = p.get("verification_evidence")
+        if not isinstance(evs, list):
+            findings["R9a_evidence_missing"].append((e["id"], lv, "无证据链"))
+            continue
+        good = [it for it in evs if isinstance(it, dict) and it.get("indep")
+                and it.get("detail") and it.get("impl") == p.get("verifier")]
+        if not good:
+            findings["R9a_evidence_missing"].append((e["id"], lv, "无独立证据/impl 不符"))
+            continue
+        n_ok_ev += 1
+        # R9b：对「自称符号复算」的证据**独立重算**
+        for it in good:
+            if "symbol_in_source" not in str(it.get("impl")):
+                continue
+            tn, sn = N.get(e["target"]), N.get(e["source"])
+            ts = sym_of(tn)
+            if not sn or not ts:
+                continue
+            n_recheck += 1
+            got = has_symbol(sn, ts)
+            if got is False:
+                findings["R9b_symbol_evidence_stale"].append(
+                    (e["id"], ts, "证据自称符号复算但独立重算为缺席"))
+
     # ---- 汇报 ----
     print("=" * 92)
     print("语义边确定性反驳审计 —— %s" % os.path.relpath(path, ROOT))
@@ -293,6 +344,15 @@ def run(path=NORM):
         for r in rows[:14]:
             print("   -", r)
     print("\n【不可判定（不撤）】", dict(undecidable))
+    print("\n【R9 证据链（Phase 32 · 独立实现）】")
+    print("   level>=rule_checked %d 条；带独立证据链 %d 条（%.1f%%）；独立重算抽验 %d 条"
+          % (n_strict, n_ok_ev, 100.0 * n_ok_ev / n_strict if n_strict else 0.0, n_recheck))
+    # 正对照（铁律 #31：收紧/修改判据必须配正对照）—— 冻结本轮修掉的「包装命令未剥壳」缺陷
+    _pc = [("\\mathrm{pH}", "pH"), ("\\text{mass}", "mass"), ("\\operatorname{log}", "log"),
+           ("x_{i}", "x_i")]
+    _pc_bad = [(a, b, _norm_text(a)) for a, b in _pc if _norm_text(a) != b]
+    print("   正对照 · 包装命令剥壳：%s"
+          % ("✅ 全部符合预期" if not _pc_bad else "❌ 不符 %s" % _pc_bad))
     tot = sum(len(v) for v in findings.values())
     print("\n合计候选反驳 %d 条" % tot)
     return findings, undecidable

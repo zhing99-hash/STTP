@@ -601,10 +601,134 @@ def run_case(case, graph):
             return ("PASS" if not bad else "FAIL"), \
                 "可判定 %d 条，量纲互斥 %d 条：%s" % (n_dec, len(bad), bad[:3])
 
+        # (q) **证据可追溯**（Phase 32）：凡 `level >= rule_checked` 的边，必须携带
+        #     ≥1 条**独立证据**（`verification_evidence[].indep == True`），且该条证据的
+        #     `impl` 必须与边的 `verifier` **一致**、`detail` **非空**。
+        #     为什么必须断言：`indep` 是北极星「跨域结论正确且**证据可追溯**」的直接判据 ——
+        #     没有它，「rule_checked」只是一个**标签**；有了它，才可沿证据链追到具体判据。
+        #     同时断言**覆盖率下限**：防止将来某次改动把证据链悄悄清空（静默退化为「零条」）。
+        # ⚠ `in scan` 而非 `scan.get(...)`（空字典是假值 → 会静默退化为 SKIP，铁律 #20/#37）。
+        if "evidence_traceable" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            bad, n_strict, n_cov = [], 0, 0
+            for e in graph["edges"]:
+                p = e.get("props") or {}
+                lv = p.get("verification_level")
+                if not vm.is_strict(lv):
+                    continue
+                n_strict += 1
+                evs = p.get("verification_evidence")
+                if not isinstance(evs, list) or not evs:
+                    bad.append((e["source"], e.get("type"), e["target"], "无证据链"))
+                    continue
+                n_cov += 1
+                good = [it for it in evs if isinstance(it, dict) and it.get("indep")
+                        and it.get("detail") and it.get("impl") == p.get("verifier")]
+                if not good:
+                    bad.append((e["source"], e.get("type"), e["target"], "无独立证据/impl 不符"))
+            lo = float(scan["evidence_traceable"].get("min_ratio", 1.0))
+            fails = []
+            if bad:
+                fails.append("缺独立证据 %d 条：%s" % (len(bad), bad[:3]))
+            if n_strict and (n_cov / float(n_strict)) < lo:
+                fails.append("覆盖率 %.1f%% < 下限 %.1f%%" % (100.0 * n_cov / n_strict, 100.0 * lo))
+            return ("PASS" if not fails else "FAIL"), \
+                "level>=rule_checked %d 条；带证据链 %d 条（%.1f%%）；缺独立证据 %d 条%s" % (
+                    n_strict, n_cov, (100.0 * n_cov / n_strict if n_strict else 0.0), len(bad),
+                    "" if not fails else "  ← " + "; ".join(fails))
+
+        # (r) **证据对象良构**（Phase 32）：全图每条边的 `verification_evidence`（若存在）必须
+        #     ① 非空；② 每条 `kind ∈ EVIDENCE_KINDS`；③ `detail` 非空；④ `indep` 与
+        #     `kind` **语义配对合法**（`recompute`/`cross_source` 必为独立；其余必为非独立）。
+        #     并断言**全图证据覆盖率**下限（本轮由 1.18% → 100%，防止回退）。
+        if "evidence_wellformed" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            indep_kinds = {"recompute", "cross_source"}
+            bad, n_with, tot = [], 0, 0
+            for e in graph["edges"]:
+                tot += 1
+                evs = (e.get("props") or {}).get("verification_evidence")
+                if evs is None:
+                    continue
+                n_with += 1
+                if not isinstance(evs, list) or not evs:
+                    bad.append((e["source"], e.get("type"), e["target"], "空/非列表"))
+                    continue
+                for it in evs:
+                    if not isinstance(it, dict):
+                        bad.append((e["source"], e.get("type"), e["target"], "非对象条目"))
+                        break
+                    if it.get("kind") not in vm.EVIDENCE_KINDS:
+                        bad.append((e["source"], e.get("type"), e["target"],
+                                    "非法 kind=%s" % it.get("kind")))
+                        break
+                    if not it.get("detail"):
+                        bad.append((e["source"], e.get("type"), e["target"], "detail 空"))
+                        break
+                    if bool(it.get("indep")) != (it.get("kind") in indep_kinds):
+                        bad.append((e["source"], e.get("type"), e["target"],
+                                    "indep 与 kind 不配对（%s/%s）"
+                                    % (it.get("kind"), it.get("indep"))))
+                        break
+            lo = float(scan["evidence_wellformed"].get("min_ratio", 1.0))
+            fails = []
+            if bad:
+                fails.append("不良构 %d 条：%s" % (len(bad), bad[:3]))
+            if tot and (n_with / float(tot)) < lo:
+                fails.append("覆盖率 %.1f%% < 下限 %.1f%%" % (100.0 * n_with / tot, 100.0 * lo))
+            return ("PASS" if not fails else "FAIL"), \
+                "证据对象覆盖 %d / %d（%.1f%%）；不良构 %d 条%s" % (
+                    n_with, tot, (100.0 * n_with / tot if tot else 0.0), len(bad),
+                    "" if not fails else "  ← " + "; ".join(fails))
+
+        # (s) **repr 串零残留**（Phase 32）：全图任何 props 值不得是「Python repr 化的
+        #     容器」—— 即形如 `[...]` / `{...}`、**不是合法 JSON**、却能被 `ast.literal_eval`
+        #     还原为 list/dict 的字符串。这正是「属性形态 → 静默降级」的指纹
+        #     （`str({'a':1})` 产出单引号 repr，下游 `json.loads` 静默失败）。
+        #     为什么现在加：本轮引入 `verification_evidence`（**嵌套对象列表**）后，
+        #     任何一处 `str()` 强转都会立刻制造 repr 残留 —— 必须有守卫把它钉死。
+        if "no_repr_residue" in scan:
+            import json as _json
+            import ast as _ast
+            bad, n_scanned = [], 0
+
+            def _is_repr(s):
+                if not isinstance(s, str):
+                    return False
+                t = s.strip()
+                if len(t) < 3 or t[0] not in "[{" or t[-1] not in "]}":
+                    return False
+                if (t[0], t[-1]) not in (("[", "]"), ("{", "}")):
+                    return False
+                try:
+                    _json.loads(t)
+                    return False            # 合法 JSON → 正常
+                except Exception:
+                    pass
+                try:
+                    got = _ast.literal_eval(t)
+                    return isinstance(got, (list, dict))
+                except Exception:
+                    return False
+
+            for e in graph["edges"]:
+                for k, v in (e.get("props") or {}).items():
+                    n_scanned += 1
+                    if _is_repr(v):
+                        bad.append(("edge", e.get("type"), k, str(v)[:40]))
+            for n in graph.get("nodes") or []:
+                for k, v in (n.get("props") or {}).items():
+                    n_scanned += 1
+                    if _is_repr(v):
+                        bad.append(("node", n.get("id"), k, str(v)[:40]))
+            return ("PASS" if not bad else "FAIL"), \
+                "扫描 %d 个属性值，repr 残留 %d 条：%s" % (n_scanned, len(bad), bad[:3])
+
         return "SKIP", "未知 scan"
 
     return "SKIP", "未知 kind：%s" % kind
-
 
 def main():
     ap = argparse.ArgumentParser()

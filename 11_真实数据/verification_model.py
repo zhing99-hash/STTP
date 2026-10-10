@@ -128,6 +128,103 @@ def is_strict(level: str) -> bool:
     return RANK.get(level, -1) >= STRICT_MIN
 
 
+# ------------------------------------------------------- Claim/Evidence 一等对象（Phase 32）
+# 背景（第 21 轮遗留⑤）：`verification_level/scope/verifier` 已 100% 覆盖，但那是**标签**
+#   —— 「谁验的 / 怎么验的」的**名字**，不是**证据数据**。实测 `evidence` 仅 1.18%（575 条，
+#   且 400 条是字符串、175 条是 list，形态不统一）；`created_at` 仅 1.9%。
+# 本轮把「断言 + 证据链」做成**一等对象**，逐条可溯源：
+#     claim                —— 断言的可读陈述（人可读，机器以 (source,type,target) 为准）
+#     verification_evidence —— 证据链（list of {kind, impl, detail, indep}）
+#     evidence_at          —— 证据生成时刻
+#
+# ★ 关键设计：`indep`（是否**独立于提出者**）是北极星「证据可追溯」的判据 ——
+#     A 段确定性复算 / 第二独立源 → `True`；来源自述 / 模型预测 / 构造律 → `False`。
+#     不变量：level ≥ rule_checked ⟺ ≥1 条 `indep=True` 的证据（见 frozen_gate `evidence_traceable`）。
+#
+# ★ 铁律 #36（同源）：本表**由 scope 唯一决定** kind/indep，而 scope 由 `classify` 唯一给出，
+#    ⇒ 证据的「档位语义」与判级模型**构造上不可能分歧**。
+EVIDENCE_KINDS = [
+    "recompute",         # 与提出者无关的确定性复算（A 段）
+    "cross_source",      # ≥2 独立来源一致
+    "source_assertion",  # 单一来源 / 策划直接断言（未独立复核）
+    "model_prediction",  # GNN / LLM 推断
+    "construction",      # 权威表 / 定义构造性产生
+    "rebuttal",          # 判否：记录推翻该断言的判据
+]
+
+# scope -> (kind, indep)。**未列出的 scope** 按 level 兜底（见 _fallback_kind）。
+SCOPE_KIND = {
+    # ---- A 段：确定性复算（与提出者无关）→ recompute / indep=True ----
+    "dimensional_strict_equal": ("recompute", True),
+    "dimensional_mismatch": ("rebuttal", False),
+    "period_authority_equal": ("recompute", True),
+    "period_mismatch": ("rebuttal", False),
+    "family_authority_equal": ("recompute", True),
+    "family_mismatch": ("rebuttal", False),
+    "formula_count_independent_recheck": ("recompute", True),
+    "formula_count_node_recheck": ("recompute", True),
+    "formula_count_mismatch": ("rebuttal", False),
+    "formula_participation_membership": ("recompute", True),
+    "formula_participation_not_found": ("rebuttal", False),
+    "molar_mass_independent_recompute": ("recompute", True),
+    "molar_mass_mismatch": ("rebuttal", False),
+    "rationale_target_mismatch": ("rebuttal", False),
+    "unit_dimension_recompute": ("recompute", True),
+    "unit_dimension_mismatch": ("rebuttal", False),
+    "webbook_unit_dimension_recompute": ("recompute", True),
+    "webbook_unit_dimension_mismatch": ("rebuttal", False),
+    "symbol_expr_recompute": ("recompute", True),
+    "semantic_target_absent": ("rebuttal", False),
+    "log_rule_usage": ("recompute", True),
+    "exp_base_e_usage": ("recompute", True),
+    "pi_constant_usage": ("recompute", True),
+    "trig_identity_usage": ("recompute", True),
+    # ---- 跨源一致 → cross_source / indep=True ----
+    "formula_count_cross_source": ("cross_source", True),
+    "molar_mass_cross_source": ("cross_source", True),
+    "webbook_multi_reference_agreement": ("cross_source", True),
+    "inchikey_exact_match": ("cross_source", True),
+    "inchikey_cross_source": ("cross_source", True),
+    "multi_source_alignment": ("cross_source", True),
+    # ---- by_construction：构造性产生（无判断空间）→ construction / indep=False ----
+    "symbol_scan_from_text": ("construction", False),
+    "formula_only": ("construction", False),
+    "schema_axiom": ("construction", False),
+    # ---- 模型产物 → model_prediction / indep=False ----
+    "model_link_prediction": ("model_prediction", False),
+    "latex_normalized_only": ("model_prediction", False),
+    # ---- 来源自述 → source_assertion / indep=False ----
+    "source_assertion": ("source_assertion", False),
+    "manual_curation": ("source_assertion", False),
+    "equation_sidedness": ("source_assertion", False),
+    "published_descriptor_value": ("source_assertion", False),
+    "bibliographic_metadata": ("source_assertion", False),
+    "codata_derivation": ("source_assertion", False),
+    "codata_unit": ("source_assertion", False),
+    "name_exact_match": ("source_assertion", False),
+    "composition_source": ("source_assertion", False),
+    # ---- 未分类 ----
+    "unclassified": ("rebuttal", False),
+}
+
+
+def _fallback_kind(level: str) -> "tuple[str, bool]":
+    """未登记 scope 的兜底（按 level 定 kind）—— 保证证据**永不缺 kind**。"""
+    if level == "human_reviewed":
+        return ("recompute", True)
+    if level == "cross_source":
+        return ("cross_source", True)
+    if level == "rule_checked":
+        return ("recompute", True)
+    if level == "by_construction":
+        return ("construction", False)
+    if level == "model_inferred":
+        return ("model_prediction", False)
+    if level == "source_asserted":
+        return ("source_assertion", False)
+    return ("rebuttal", False)
+
+
 # 「门禁名」与「实测范围」的合法配对表 —— 用于识别**虚假归因**
 # （例：`has_symbol` 挂着 `R-PHY`，却从未跑过量纲门禁 → 归因与范围不符）
 GATE_SCOPE_OK = {
@@ -589,26 +686,37 @@ def classify(e: dict, ctx: dict):
     src = p.get("source") or ""
     eid = e.get("id") or "%s|%s|%s" % (t, e.get("source"), e.get("target"))
 
-    def R(level, scope, verifier, note=None):
+    def R(level, scope, verifier, note=None, detail=None):
+        """构造判级结果。
+
+        `note`   —— 判否/存疑时的**理由**（历史字段，保持向后兼容）。
+        `detail` —— **证据明细**（Phase 32）：无论判过还是判否，都记录**被判定的那个事实**
+                    （如「独立解析 CH4 中 C=1 vs 记录 1」）。它是 Claim/Evidence 一等对象的
+                    载荷；`build_evidence` 直接取用，**不重新推导**（铁律 #36：同源）。
+        """
         out = {"verification_level": level, "verification_scope": scope,
                "verifier": verifier}
         if note:
             out["note"] = note
+        if detail:
+            out["detail"] = detail
         return out
 
     # ================= A. 确定性复算（与提出者无关） =================
     # A1 量—量量纲一致
     if t == "dimensionally_consistent":
         if kind == "dimension_table":
-            return R("rule_checked", "dimensional_strict_equal", "dimension_table.py")
+            return R("rule_checked", "dimensional_strict_equal", "dimension_table.py",
+                     detail="量纲真值表直接给出（构造性）")
         ok, why = ctx["dim_ok"].get(eid, (None, ""))
         if ok is True:
             return R("rule_checked", "dimensional_strict_equal",
-                     "verification_model.dimension_table")
+                     "verification_model.dimension_table",
+                     detail="独立复算量纲一致：%s" % why)
         if ok is False:
             return R("unverified", "dimensional_mismatch",
                      "verification_model.dimension_table",
-                     "独立复算量纲不一致：%s" % why)
+                     "独立复算量纲不一致：%s" % why, detail=why)
 
     # A2 周期表位置（元素—元素）
     if t in ("same_period", "same_family"):
@@ -616,10 +724,11 @@ def classify(e: dict, ctx: dict):
         ok, why = ctx[key].get(eid, (None, ""))
         if ok is True:
             return R("rule_checked", "%s_authority_equal" % t.split("_")[1],
-                     "element_reference.py")
+                     "element_reference.py",
+                     detail="权威表比对一致：%s" % why)
         if ok is False:
             return R("unverified", "%s_mismatch" % t.split("_")[1],
-                     "element_reference.py", why)
+                     "element_reference.py", why, detail=why)
 
     # A3 分子组成：独立解析分子式复算 count
     #   关键区分：**式串的来源**决定可信上限（避免把「模型自述的分子式」洗成已验证）
@@ -634,19 +743,23 @@ def classify(e: dict, ctx: dict):
         if aok is True and auth_field == "pubchem_formula" \
                 and not (p.get("from_formula") and p.get("source") == "PubChem"):
             return R("cross_source", "formula_count_cross_source",
-                     "PubChem(pubchem_formula) × 图内组成边")
+                     "PubChem(pubchem_formula) × 图内组成边",
+                     detail="%s；并与节点权威式 pubchem_formula=%s 复核一致" % (why, auth))
         if ok is True:
             # Phase 31：证据起点不同 → 单列 scope（不作 cross_source，也不冒充「边自带式」）
             if via == "node_formula":
                 return R("rule_checked", "formula_count_node_recheck",
-                         "verification_model.parse_formula_independent(源节点 formula)")
+                         "verification_model.parse_formula_independent(源节点 formula)",
+                         detail=why)
             return R("rule_checked", "formula_count_independent_recheck",
-                     "verification_model.parse_formula_independent")
+                     "verification_model.parse_formula_independent",
+                     detail=why)
         if ok is False:
             return R("unverified", "formula_count_mismatch",
-                     "verification_model.parse_formula_independent", why)
+                     "verification_model.parse_formula_independent", why, detail=why)
         if kind == "pubchem_composition":
-            return R("cross_source", "inchikey_cross_source", "PubChem/curated")
+            return R("cross_source", "inchikey_cross_source", "PubChem/curated",
+                     detail="PubChem index 命中（inchikey 精确匹配）")
 
     # A4 公式—参与量（PhysicsBabel has_symbol）
     if t == "has_symbol" and src == "PhysicsBabel" and kind == "real":
@@ -655,10 +768,13 @@ def classify(e: dict, ctx: dict):
         for cc in cand:
             if cc and (e.get("source"), dm.canon(cc).lower()) in ctx["formula_members"]:
                 return R("rule_checked", "formula_participation_membership",
-                         "verification_model.formula_members")
+                         "verification_model.formula_members",
+                         detail="%s ∈ dim_exponents(%s)（独立读公式的齐次系数表）"
+                                % (cc, p.get("rationale") or e.get("source")))
         return R("unverified", "formula_participation_not_found",
                  "verification_model.formula_members",
-                 "该量不在公式 exponents 中且与记录键不符（陈旧错挂，待清理）")
+                 "该量不在公式 exponents 中且与记录键不符（陈旧错挂，待清理）",
+                 detail="候选键 %s 均未出现在源公式 dim_exponents 中" % (cand,))
 
     # A5 跨域桥 · 分子 → 摩尔质量物理量（Phase9.B5 / Phase13.Gate.B5）
     #    证据 = 「元素原子量 × 独立解析的化学式计数」复算 == 记录值（与提出者无关）
@@ -666,13 +782,15 @@ def classify(e: dict, ctx: dict):
         ok, cross, why = ctx["mass_ok"][eid]
         if ok is True and cross:
             return R("cross_source", "molar_mass_cross_source",
-                     "element_reference.py × PubChem(pubchem_molecular_weight)", why)
+                     "element_reference.py × PubChem(pubchem_molecular_weight)", why, detail=why)
         if ok is True:
             return R("rule_checked", "molar_mass_independent_recompute",
-                     "verification_model.parse_formula_independent × element_reference.py", why)
+                     "verification_model.parse_formula_independent × element_reference.py",
+                     why, detail=why)
         if ok is False:
             return R("unverified", "molar_mass_mismatch",
-                     "verification_model.parse_formula_independent × element_reference.py", why)
+                     "verification_model.parse_formula_independent × element_reference.py",
+                     why, detail=why)
 
     # A6 跨域桥 · rationale 声称的「类」与目标物理量真量纲自洽性
     #    **一条理由被粘贴到多个互斥目标**（质量 + 动能 + 内能…）→ 自相矛盾 → 不成立
@@ -681,7 +799,10 @@ def classify(e: dict, ctx: dict):
         if ok is False:
             return R("unverified", "rationale_target_mismatch",
                      "verification_model.dimension_table",
-                     "理由声称「%s类」，与目标物理量真量纲不符：%s" % (label, why))
+                     "理由声称「%s类」，与目标物理量真量纲不符：%s" % (label, why),
+                     detail="理由声称「%s类」vs 目标真量纲 %s" % (label, why))
+        # ⚠ ok is True 时**不新增升档**（本轮只做对象化，不改判级口径）；
+        #   该情形继续落 B 段按来源定级 —— 其证据仍由 build_evidence 以「来源自述」记录。
 
     # A7 跨域桥 · NIST WebBook 热化学（Phase 29 接入）
     #    证据是**外源的确定性判据**，不是「谁提的」：
@@ -702,16 +823,22 @@ def classify(e: dict, ctx: dict):
             return R("unverified", "webbook_unit_dimension_mismatch",
                      "NIST WebBook × dimension_table(单位量纲)",
                      "单位 `%s` 解析为 %s，但目标量 %s 真量纲为 %s"
-                     % (p.get("unit"), _drop(want), qn, _drop(got)))
+                     % (p.get("unit"), _drop(want), qn, _drop(got)),
+                     detail="单位 `%s`→%s vs 目标 %s→%s"
+                            % (p.get("unit"), _drop(want), qn, _drop(got)))
         else:
             nref = int(p.get("n_references") or 0)
             if nref >= 2:
                 return R("cross_source", "webbook_multi_reference_agreement",
                          "NIST WebBook(≥2 独立文献) × dimension_table",
-                         "单位量纲独立复算通过；%d 条独立文献吻合" % nref)
+                         "单位量纲独立复算通过；%d 条独立文献吻合" % nref,
+                         detail="单位 `%s`→%s == 目标 %s→%s；%d 条独立文献吻合"
+                                % (p.get("unit"), _drop(want), qn, _drop(got), nref))
             return R("rule_checked", "webbook_unit_dimension_recompute",
                      "NIST WebBook × dimension_table(单位量纲)",
-                     "单位 `%s` 经量纲表独立复算一致" % p.get("unit"))
+                     "单位 `%s` 经量纲表独立复算一致" % p.get("unit"),
+                     detail="单位 `%s`→%s == 目标 %s→%s"
+                            % (p.get("unit"), _drop(want), qn, _drop(got)))
 
     # A8 单位—量纲（Phase 30）：`has_unit` 的确定性复算
     #     「量 Q 有单位 U」⟺ dim(Q) == dim(U)。两者都是外部事实，可复算。
@@ -719,17 +846,20 @@ def classify(e: dict, ctx: dict):
         ok, why = ctx["unit_ok"].get(eid, (None, ""))
         if ok is True:
             return R("rule_checked", "unit_dimension_recompute",
-                     "dimension_table(量纲) × 单位符号解析", why)
+                     "dimension_table(量纲) × 单位符号解析", why,
+                     detail="量纲复算一致：%s" % why)
         if ok is False:
             return R("unverified", "unit_dimension_mismatch",
                      "dimension_table(量纲) × 单位符号解析",
-                     "单位量纲与物理量真量纲不符：%s" % why)
+                     "单位量纲与物理量真量纲不符：%s" % why,
+                     detail="量纲不符：%s" % why)
 
     # A9 数学桥（Phase 30）：源公式**含**目标数学对象所辖的算子 → 确定性证据
     #     例：`pH=-\\log_{10}[H^+]` 含对数算子 → 与对数律 `MA:fo:log_product` 的桥成立。
     if t in ("derived_from", "has_symbol") and ctx["math_ok"].get(eid, (None,))[0] is True:
         _ok, _scope, _why = ctx["math_ok"][eid]
-        return R("rule_checked", _scope, "verification_model.math_operator_presence", _why)
+        return R("rule_checked", _scope, "verification_model.math_operator_presence", _why,
+                 detail=_why)
 
     # A10 公式—符号（Phase 31）：**目标符号字面出现于源的结构化表达式** → 确定性复算。
     #     把 A4（只覆盖 PhysicsBabel 公式）推广到**任意来源**——由 A4 扩为通用规则后，
@@ -742,7 +872,9 @@ def classify(e: dict, ctx: dict):
         return R("rule_checked", "symbol_expr_recompute",
                  "verification_model.symbol_in_source",
                  "目标符号 %s 出现于源公式的结构化表达式（latex/formula/symbols）"
-                 % ctx["sym_expr_ok"][eid][1])
+                 % ctx["sym_expr_ok"][eid][1],
+                 detail="%s ∈ 源结构化表达式（latex/formula/symbols）"
+                        % ctx["sym_expr_ok"][eid][1])
 
     # A11 模型产物语义边的「目标缺席」反驳（Phase 31）：**仅模型产物** —— 目标标识在源的
     #     **结构化表达式**里毫无支撑 → 撤。适用于 `defines`/`has_symbol`/`derived_from`。
@@ -757,80 +889,162 @@ def classify(e: dict, ctx: dict):
         return R("unverified", "semantic_target_absent",
                  "verification_model.symbol_in_source",
                  "模型断言的目标在源的结构化表达式中无支撑（%s）"
-                 % ctx["derived_support_ok"][eid][1])
+                 % ctx["derived_support_ok"][eid][1],
+                 detail="目标标识 %s 不在源结构化表达式中（模型产物，可确定性反驳）"
+                        % ctx["derived_support_ok"][eid][1])
 
-    # ================= B. 无独立复算可用：按提出者 / 来源定级 =================    # B1 模型产物（GNN 链接预测 / LLM 推断）—— **不构成验证**
+    # ================= B. 无独立复算可用：按提出者 / 来源定级 =================
+    # B1 模型产物（GNN 链接预测 / LLM 推断）—— **不构成验证**
     if kind in MODEL_KINDS or ("GNN" in src) or ("LLM" in src) \
             or ("gnn" in kind) or ("llm" in kind):
         return R("model_inferred", "model_link_prediction", src or kind,
-                 "GNN/LLM 预测，非验证")
+                 "GNN/LLM 预测，非验证",
+                 detail="模型预测产物（kind=%s / source=%s）；**不构成验证**" % (kind or "-", src or "-"))
 
     # B2 仓库内人工策划
     if src.startswith("curated_seed"):
-        if t in ("reactant_of", "product_of"):
-            return R("source_asserted", "manual_curation", "curated_seed")
-        if t == "has_unit":
-            return R("source_asserted", "manual_curation", "curated_seed")
-        return R("source_asserted", "manual_curation", "curated_seed")
+        return R("source_asserted", "manual_curation", "curated_seed",
+                 detail="仓库内策划种子（curated_seed）直接断言；未做独立复核")
 
     # B3 化学反应方向
     if t in ("reactant_of", "product_of"):
         if kind in ("rhea_reactant", "rhea_product"):
-            return R("source_asserted", "equation_sidedness", "Rhea/ChEBI")
+            return R("source_asserted", "equation_sidedness", "Rhea/ChEBI",
+                     detail="Rhea/ChEBI 反应方程的方向（kind=%s）" % kind)
         if kind == "real_reaction":
-            return R("source_asserted", "source_assertion", src or "ElementKG2.0")
-        return R("source_asserted", "source_assertion", src or "unknown")
+            return R("source_asserted", "source_assertion", src or "ElementKG2.0",
+                     detail="来源 %s 直接断言反应方向" % (src or "ElementKG2.0"))
+        return R("source_asserted", "source_assertion", src or "unknown",
+                 detail="来源 %s 直接断言反应方向（kind=%s）" % (src or "unknown", kind or "-"))
 
     # B4 物理量 / 单位
     if t == "has_quantity":
         if src == "chembl_api":
-            return R("source_asserted", "published_descriptor_value", "ChEMBL API")
-        return R("source_asserted", "source_assertion", src or "unknown")
+            return R("source_asserted", "published_descriptor_value", "ChEMBL API",
+                     detail="ChEMBL 已发表描述符值（kind=%s）" % (kind or "-"))
+        return R("source_asserted", "source_assertion", src or "unknown",
+                 detail="来源 %s 直接断言「分子—物理量」关联" % (src or "unknown"))
     if t == "has_unit":
         if kind == "constant_unit":
-            return R("source_asserted", "codata_unit", "NIST CODATA")
-        return R("source_asserted", "source_assertion", src or "unknown")
+            return R("source_asserted", "codata_unit", "NIST CODATA",
+                     detail="NIST CODATA 常数单位（kind=constant_unit）")
+        return R("source_asserted", "source_assertion", src or "unknown",
+                 detail="来源 %s 直接断言「量—单位」关联" % (src or "unknown"))
 
     # B5 同义 / 等价边
     if t == "has_symbol":
         # 非 PhysicsBabel 的 has_symbol（符号扫描类）：由文本扫描确定性产生
-        return R("by_construction", "symbol_scan_from_text", src or "etl_pipeline.py")
+        return R("by_construction", "symbol_scan_from_text", src or "etl_pipeline.py",
+                 detail="由文本符号扫描确定性产生（源=%s）" % (src or "etl_pipeline.py"))
     if t == "same_as":
         if kind == "pubchem_bridge":
-            return R("cross_source", "inchikey_exact_match", "PubChem")
+            return R("cross_source", "inchikey_exact_match", "PubChem",
+                     detail="PubChem InChIKey 精确匹配（kind=pubchem_bridge）")
         if kind == "cross_source_alignment":
-            return R("cross_source", "multi_source_alignment", "cross_source_alignment")
+            return R("cross_source", "multi_source_alignment", "cross_source_alignment",
+                     detail="跨源对齐（kind=cross_source_alignment）")
         if kind == "chebi_name_bridge":
-            return R("source_asserted", "name_exact_match", "ChEBI label")
-        return R("source_asserted", "manual_curation", src or "curated_seed")
+            return R("source_asserted", "name_exact_match", "ChEBI label",
+                     detail="ChEBI 标签名精确匹配（kind=chebi_name_bridge）")
+        return R("source_asserted", "manual_curation", src or "curated_seed",
+                 detail="来源 %s 断言同义（kind=%s）" % (src or "curated_seed", kind or "-"))
     if t == "same_formula_as":
         # Phase 27 已把边类型收窄为「分子式相同」——声明范围内为真
         return R("by_construction", "formula_only",
-                 "elementkg10m_ingest.py(skeleton)")
+                 "elementkg10m_ingest.py(skeleton)",
+                 detail="构造性：边类型收窄为「分子式相同」（kind=skeleton）")
     if t == "same_latex_normalized":
-        return R("model_inferred", "latex_normalized_only", "gnn_infer.py(norm_latex)")
+        return R("model_inferred", "latex_normalized_only", "gnn_infer.py(norm_latex)",
+                 detail="仅 LaTeX 归一化后同形（GNM 归一），**不构成验证**")
 
     # B6 常量派生 / 文献 / schema
     if t == "derived_from" and kind == "constant_derivation":
-        return R("source_asserted", "codata_derivation", "NIST CODATA")
+        return R("source_asserted", "codata_derivation", "NIST CODATA",
+                 detail="NIST CODATA 常数派生（kind=constant_derivation）")
     if t in ("cites", "discusses", "defines") and src in ("openalex", "mathxiv",
                                                          "openalex-topic-align"):
-        return R("source_asserted", "bibliographic_metadata", src)
+        return R("source_asserted", "bibliographic_metadata", src,
+                 detail="文献元数据（源=%s）" % src)
     if t == "derived_from" and src == "mathxiv":
-        return R("source_asserted", "bibliographic_metadata", "mathxiv")
+        return R("source_asserted", "bibliographic_metadata", "mathxiv",
+                 detail="文献元数据（源=mathxiv）")
     if t == "part_of" and src == "schema-axiom":
-        return R("by_construction", "schema_axiom", "schema-axiom")
+        return R("by_construction", "schema_axiom", "schema-axiom",
+                 detail="schema 公理（源=schema-axiom）")
 
     # B7 其它外部源断言
     if src in ("ElementKG2.0", "ElementKG", "ChEBI", "PubChem", "rhea_chebi",
                "nist_codata_2022", "chembl_api"):
-        return R("source_asserted", "source_assertion", src)
+        return R("source_asserted", "source_assertion", src,
+                 detail="外部源 %s 直接断言（未做独立复核）" % src)
 
     # B8 连来源都没有 → 不猜
-    return R("unverified", "unclassified", src or "unknown")
+    return R("unverified", "unclassified", src or "unknown",
+             detail="无来源、无判据 → 不猜（unclassified）")
 
 
 # --------------------------------------------------------------------------- 独立复算
+# ------------------------------------------- Claim/Evidence 一等对象（Phase 32）
+# 断言的可读陈述模板（人可读；机器以 (source,type,target) 为准）
+_CLAIM_TEMPLATES = {
+    "has_symbol": "「{s}」的符号集合包含「{t}」",
+    "composed_of": "「{s}」含 {n} 个「{t}」",
+    "dimensionally_consistent": "「{s}」与「{t}」量纲一致",
+    "has_unit": "物理量「{s}」的单位是「{t}」",
+    "has_quantity": "「{s}」与物理量「{t}」相关",
+    "derived_from": "「{s}」派生自「{t}」",
+    "defines": "「{s}」定义「{t}」",
+    "same_as": "「{s}」与「{t}」同义/等价",
+    "same_formula_as": "「{s}」与「{t}」分子式相同",
+    "same_latex_normalized": "「{s}」与「{t}」LaTeX 归一化后同形",
+    "part_of": "「{s}」属于「{t}」",
+    "same_period": "元素「{s}」与「{t}」同周期",
+    "same_family": "元素「{s}」与「{t}」同族",
+    "reactant_of": "「{s}」是「{t}」的反应物",
+    "product_of": "「{s}」是「{t}」的反应产物",
+    "cites": "「{s}」引用「{t}」",
+    "discusses": "「{s}」讨论「{t}」",
+}
+
+
+def _node_disp(node) -> str:
+    """节点的可读名（name → symbol → id 末段）。"""
+    p = (node or {}).get("props") or {}
+    return str(p.get("name") or p.get("symbol")
+               or ((node or {}).get("id") or "").split(":")[-1])
+
+
+def claim_of(e: dict, node_by_id: dict) -> str:
+    """把边转成**可读断言**（Claim）。"""
+    t = e.get("type")
+    s = _node_disp(node_by_id.get(e.get("source")))
+    o = _node_disp(node_by_id.get(e.get("target")))
+    tmpl = _CLAIM_TEMPLATES.get(t)
+    if tmpl:
+        if "{n}" in tmpl:
+            n = (e.get("props") or {}).get("count")
+            return tmpl.format(s=s, t=o, n=(n if n is not None else "?"))
+        return tmpl.format(s=s, t=o)
+    return "「%s」--%s-->「%s」" % (s, t, o)
+
+
+def build_evidence(r: dict) -> list:
+    """由判级结果构造**证据链**（list of {kind, impl, detail, indep}）。
+
+    ★ 与 `classify` **同源**（铁律 #36）：`kind`/`indep` 由 `scope` 唯一决定（`SCOPE_KIND`），
+      `detail` 由 `classify` 在**判定现场**给出 —— 此处**不重新推导**，
+      ⇒ 证据语义与档位**构造上不可能分歧**（这正是第 21 轮 A11 的教训）。
+
+    证据链**永不缺 kind**：未登记 scope 由 `_fallback_kind(level)` 兜底。
+    """
+    lv = r.get("verification_level")
+    sc = r.get("verification_scope")
+    ver = r.get("verifier") or "-"
+    kind, indep = SCOPE_KIND.get(sc) or _fallback_kind(lv)
+    detail = r.get("detail") or r.get("note") or ""
+    return [{"kind": kind, "impl": ver, "detail": detail, "indep": bool(indep)}]
+
+
 def build_ctx(nodes, edges):
     node_by_id = {n["id"]: n for n in nodes}
     ctx = {
