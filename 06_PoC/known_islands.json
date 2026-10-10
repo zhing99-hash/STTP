@@ -1,14 +1,15 @@
 {
  "meta": {
-  "phase": 30,
+  "phase": 31,
   "created": "2026-10-10",
   "theme": "跨域桥去伪存真 —— 真孤岛冻结清单",
   "finding": "Phase 30 撤回 81 条「可被确定性反驳」的假语义边后暴露：下列 4 个连通分量（共 26 节点）在撤回前**唯一**与主图的连接就是那些假边 —— 微积分簇仅靠 3 条 `defines→TH:pq:gas_const`（链式法则/FTC/极限定义「定义」气体常数）、几何三角簇仅靠 2 条 `defines→MG:pq:angle`（Euler 恒等式/理想气体状态方程「定义」角度）、电感与电容簇仅靠 4 条假 `has_unit`（`gas_const→henry/farad`、`inductance/capacitance→j_per_k/pascal`）。撤回后它们成为**真孤岛**。",
+  "finding_phase31": "**第二例（同构）**：Phase 31 撤回 48 条假边（含 39 条模型产物语义边 —— 目标在源的结构化表达式中缺席）后，**第 5 个孤岛**（`MX:math:binomial` / `MX:math:expand` / `WD:Q114727876`，3 节点）浮现：这 3 个节点此前与主图的**全部**外部连接都是模型假边（`MX:def:manifold|tangent_space|levi_civita|riemannian_metric|chem:co2 → MX:math:binomial|expand` 共 9 条 `derived_from` + `MX:sym:n → MX:math:binomial` 1 条 `has_symbol`）。撤净后它们只余簇内 2 条边（`binomial --derived_from--> expand`、`binomial --same_as--> WD:Q114727876`）。**再次印证：结构指标同样会被假边污染** —— 撤回假边 = 恢复真相，不是退化；**不为指标好看而补无证据的边**。",
   "policy": "真孤岛**一律不做假连接**（本轮的教训正是「不要为了指标好看而编造边」）。任何**新增**孤岛（不在本清单内）或清单外节点进入孤岛 → 视为回归，门禁 FAIL。若要消除某个孤岛，必须补一条**有证据**的边（如算子桥）并同步更新本文件。",
-  "max_components": 5,
+  "max_components": 6,
   "min_component_size": 100,
-  "island_count": 4,
-  "island_nodes_total": 26
+  "island_count": 5,
+  "island_nodes_total": 29
  },
  "islands": [
   {
@@ -67,6 +68,17 @@
    "nodes": [
     "EM:pq:capacitance",
     "EM:un:farad"
+   ]
+  },
+  {
+   "id": "island-mathconcept-algebra",
+   "size": 3,
+   "subject": "跨学科",
+   "why": "Phase 31 新浮现（第二例同构）：二项式概念 `(a+b)²` + 代数展开概念 + 1 个 Wikidata 实体。这 3 个节点与主图的**全部**外部连接都是模型产物假边（9 条 `derived_from`（源为 `MX:def:manifold` / `MX:def:tangent_space` / `MX:def:levi_civita` / `MX:def:riemannian_metric` / `MX:chem:co2`）+ 1 条 `has_symbol`（`MX:sym:n`）—— 「流形/切空间/黎曼度量/CO₂ **派生自**二项式」全是 GraphSAGE 噪声）。撤净后只剩簇内 2 条边。**不补无证据的边**。",
+   "nodes": [
+    "MX:math:binomial",
+    "MX:math:expand",
+    "WD:Q114727876"
    ]
   }
  ]

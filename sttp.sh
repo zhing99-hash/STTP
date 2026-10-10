@@ -12,6 +12,9 @@
 #   bash sttp.sh bridge [--dry] [--out <p>]         生成跨域桥 delta（Phase 29）
 #   bash sttp.sh webbook [--limit N|--only A,B]     抓取 NIST WebBook 热化学数据
 #   bash sttp.sh t7 [--legacy-t7]                   北极星 T7 跨域桥达标率（含反向对照）
+#   bash sttp.sh recompute [--apply]                生成 Phase 31 复算全覆盖 delta（默认 dry-run）
+#   bash sttp.sh noise                              独立实现的语义噪声审计器（跨实现交叉核对）
+#   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -135,10 +138,21 @@ EOF
     shift
     "$PY" 11_真实数据/phase30_dedup_delta.py "$@"
     ;;
+  recompute)
+    # Phase 31 复算维度全覆盖：确定性复算从「仅模型产物」推广到所有来源的语义边
+    # （默认 dry-run；加 --apply 交给 apply_delta 落盘）
+    shift
+    "$PY" 11_真实数据/phase31_recompute_delta.py "$@"
+    ;;
   noise)
     # 独立实现的语义噪声审计器（只读，用于与 verification_model 交叉核对）
     shift
     "$PY" 06_PoC/semantic_noise_audit.py "$@"
+    ;;
+  gatecheck)
+    # 门禁「非真空」自检：注入已知假边，断言不变量真的会红（铁律 #14）
+    shift
+    "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

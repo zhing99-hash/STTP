@@ -135,6 +135,44 @@ ALIAS = {
     "speed": "velocity",
     "gravity": "acceleration",     # 重力加速度
     "torque": "torque",
+
+    # ---- Phase 31：关闭「展示名 → 规范名」的**系统性命名缺口** ----
+    # 背景：图上物理量多用**展示名**（`Electric charge` / `Speed of light` / `Focal length`），
+    #   真值表用 snake_case；不映射则 `dim_of` 返回 None → A1（量—量量纲）/A8（单位—量纲）
+    #   复算**静默退化为「不可判定」**（铁律 #23），使本可确定性判定的边停在 `model_inferred`。
+    #   实测：168 个物理量节点中 **84 个（50%）** 查不到量纲，是复算落地不上去的**唯一瓶颈**。
+    # 收录原则（宁缺勿滥，铁律 #28）：**只收语义确定无疑的「同义命名 / 规范译名」**，
+    #   不含任何需要物理推理才能确定的映射；每个映射都在 `06_PoC/frozen_counterexamples.json`
+    #   有正对照（dimension_table.ALIAS[...] == 该量真量纲）。
+    # 电磁（EM）
+    "electric_charge": "charge",
+    "electric_current": "current",
+    "electric_field": "efield",
+    "magnetic_field": "bfield",
+    "vacuum_permittivity": "permittivity",
+    "vacuum_permeability": "permeability",
+    "electromotive_force": "voltage",          # 电动势与电压同量纲
+    "magnetic_flux": "mag_flux",
+    # 量子 / 相对论（QM / RT）
+    "planck_constant": "planck",
+    "reduced_planck_constant": "planck",       # ħ = h/2π，与 h 同量纲
+    "wavelength": "length",
+    "proper_time": "time",
+    "speed_of_light": "light_speed",
+    # 统计（SM）
+    "boltzmann_constant": "boltzmann",
+    "statistical_entropy": "entropy",
+    # 力学 / 热力学（CM / TH / MG / OP）
+    "gravitational_constant": "grav_const",
+    "amount_of_substance": "amount",
+    "radius": "length",
+    "focal_length": "length",
+    "object_distance": "length",
+    "image_distance": "length",
+    # 化学热力学（CE）
+    "gibbs_free_energy": "energy",
+    # 光度（OP）—— J 基已入库；`luminance`/`illuminance` 需派生式，本轮**不建**（宁缺勿滥）
+    "lum_intensity": "luminous_intensity",
 }
 
 

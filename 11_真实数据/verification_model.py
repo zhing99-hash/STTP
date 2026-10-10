@@ -435,7 +435,15 @@ def math_op_of(text):
 def expr_of_node(node) -> str:
     """节点的「表达式」文本（latex / formula）—— 数学桥与符号复算的判据来源。"""
     p = (node or {}).get("props") or {}
-    return " ".join(str(p.get(k)) for k in ("latex", "formula") if p.get(k))
+    parts = [str(p[k]) for k in ("latex", "formula") if p.get(k)]
+    if not parts:
+        # 铁律 #29 的同类回退：**字段缺失 ≠ 不可用** —— 无公式字段时，名称本身可能就是
+        #   化学式（`MX:chem:co2` 的 name=`CO₂`）。`formula_from_name` 是**保守**回退
+        #   （下标归一后须能被独立解析器接受才认，自然语言名一律不认）。
+        fn = formula_from_name(p.get("name"))
+        if fn:
+            parts.append(fn)
+    return " ".join(parts)
 
 
 def declared_symbols(node):
@@ -450,21 +458,33 @@ def declared_symbols(node):
 
 
 def target_symbol(node):
-    """目标实体的符号：`symbol` → `latex` → 名称首段（`T (temperature)` → `T`）。"""
+    """目标实体的符号：`symbol` → `latex` → 名称首段（`T (temperature)` → `T`）。
+
+    Phase 31 增补：正则取不出时（名称以 `(` 起头，如 `MX:math:binomial` 的 name=`(a+b)²`）
+    **回退为整名** —— 这类节点的 `name` 本身就是其表达式，弃之会令复算**静默退化为不可判定**
+    （CO₂ 的一条假桥正是这样逃掉的）。
+    """
     p = (node or {}).get("props") or {}
     for k in ("symbol", "latex"):
         if p.get(k):
             return str(p[k]).strip()
-    m = re.match(r"^([^\s(]+)", str(p.get("name") or "").strip())
-    return m.group(1) if m else None
+    nm = str(p.get("name") or "").strip()
+    m = re.match(r"^([^\s(]+)", nm)
+    if m:
+        return m.group(1)
+    return nm or None
 
 
 _LATEX_CMD = re.compile(r"\\([A-Za-z]+)")
 _STRIP = re.compile(r"[\\{}$\s]+")
+# Phase 31：`\mathrm{pH}` / `\text{...}` 等**包装类命令**要先剥壳取内容，否则
+#   `\mathrm{pH}` → `mathrmpH` 会与源式里的 `pH` **对不上**（实测 `CE:fo:ph` 等 3 条假 MISS）。
+_WRAP_CMD = re.compile(r"\\(?:mathrm|text|operatorname|mbox|textrm)\s*\{([^{}]*)\}")
 
 
 def _norm_latex(s):
-    return _STRIP.sub("", _LATEX_CMD.sub(r"\1", str(s)))
+    s = _WRAP_CMD.sub(r"\1", str(s))
+    return _STRIP.sub("", _LATEX_CMD.sub(r"\1", s))
 
 
 def symbol_in_source(src_node, sym):
@@ -608,7 +628,7 @@ def classify(e: dict, ctx: dict):
     #   · 仅有模型侧 rationale 中的式串 → 内部一致但**无外部锚**，仍记 model_inferred
     if t == "composed_of":
         aok, auth, auth_field = ctx["composed_auth_ok"].get(eid, (None, None, None))
-        ok, why = ctx["composed_ok"].get(eid, (None, ""))
+        ok, why, via = ctx["composed_ok"].get(eid, (None, "", None))
         # 第二源必须**真的独立**：节点权威式为 `pubchem_formula`（PubChem），
         # 且边自身没有取自同一 PubChem 的 `from_formula`
         if aok is True and auth_field == "pubchem_formula" \
@@ -616,6 +636,10 @@ def classify(e: dict, ctx: dict):
             return R("cross_source", "formula_count_cross_source",
                      "PubChem(pubchem_formula) × 图内组成边")
         if ok is True:
+            # Phase 31：证据起点不同 → 单列 scope（不作 cross_source，也不冒充「边自带式」）
+            if via == "node_formula":
+                return R("rule_checked", "formula_count_node_recheck",
+                         "verification_model.parse_formula_independent(源节点 formula)")
             return R("rule_checked", "formula_count_independent_recheck",
                      "verification_model.parse_formula_independent")
         if ok is False:
@@ -707,6 +731,34 @@ def classify(e: dict, ctx: dict):
         _ok, _scope, _why = ctx["math_ok"][eid]
         return R("rule_checked", _scope, "verification_model.math_operator_presence", _why)
 
+    # A10 公式—符号（Phase 31）：**目标符号字面出现于源的结构化表达式** → 确定性复算。
+    #     把 A4（只覆盖 PhysicsBabel 公式）推广到**任意来源**——由 A4 扩为通用规则后，
+    #     人工策划的 `Mass-energy equivalence --has_symbol--> E`（latex 含 `E=mc^2`）等
+    #     不再停在 `source_asserted`（「被信任」），而是 `rule_checked`（「被验证」）。
+    #     ⚠ **只升不撤**：`symbol_in_source` 判否（False）**不足以反驳** —— 实测 22 条判否
+    #       全部是**记号变体**（`Q` vs latex 里的 `q_1`、`ε` vs `\\mathcal{E}`、`u` vs `d_o`、
+    #       `[\\,]` 括号记号），**并非错误**。用它撤边会误伤（铁律 #31：收紧判据须配正对照）。
+    if t == "has_symbol" and ctx["sym_expr_ok"].get(eid, (None,))[0] is True:
+        return R("rule_checked", "symbol_expr_recompute",
+                 "verification_model.symbol_in_source",
+                 "目标符号 %s 出现于源公式的结构化表达式（latex/formula/symbols）"
+                 % ctx["sym_expr_ok"][eid][1])
+
+    # A11 模型产物语义边的「目标缺席」反驳（Phase 31）：**仅模型产物** —— 目标标识在源的
+    #     **结构化表达式**里毫无支撑 → 撤。适用于 `defines`/`has_symbol`/`derived_from`。
+    #     闸门：`ctx["derived_support_ok"]` **只为**模型产物建档 ⇒ 85 条合法 `derived_from`
+    #       与全部人工策划 `has_symbol`/`defines` **查不到条目 ⇒ 不可能被误撤**。
+    #     判据只读 latex/formula/symbols（**不读散文**，铁律 #31）。
+    #     与门禁 `semantic_target_present` **共用同一条谓词**（同一函数 `symbol_in_source`），
+    #       故「模型判级」与「门禁验收」在构造上不可能分歧。
+    #     注：判「有支撑」**不升档** —— 同式共现 ≠ 派生关系（宁缺勿滥）。
+    if t in ("defines", "has_symbol", "derived_from") \
+            and ctx["derived_support_ok"].get(eid, (None,))[0] is False:
+        return R("unverified", "semantic_target_absent",
+                 "verification_model.symbol_in_source",
+                 "模型断言的目标在源的结构化表达式中无支撑（%s）"
+                 % ctx["derived_support_ok"][eid][1])
+
     # ================= B. 无独立复算可用：按提出者 / 来源定级 =================    # B1 模型产物（GNN 链接预测 / LLM 推断）—— **不构成验证**
     if kind in MODEL_KINDS or ("GNN" in src) or ("LLM" in src) \
             or ("gnn" in kind) or ("llm" in kind):
@@ -793,6 +845,8 @@ def build_ctx(nodes, edges):
         "hq_class_ok": {},      # eid -> (ok, class_label, why)：rationale 声称类 vs 目标量纲
         "unit_ok": {},          # eid -> (ok, why)：has_unit 单位量纲 vs 物理量真量纲
         "math_ok": {},          # eid -> (ok, scope, why)：数学桥「算子存在性」复算
+        "sym_expr_ok": {},      # eid -> (ok, why)：has_symbol 目标符号是否在源结构化表达式（Phase 31）
+        "derived_support_ok": {},  # eid -> (ok, why)：derived_from（**仅模型产物**）目标是否有结构化支撑
         "bugs": collections.defaultdict(list),
     }
 
@@ -831,9 +885,11 @@ def build_ctx(nodes, edges):
         if t == "composed_of":
             sym = sym_of_el_id(tgt)
             f = p.get("from_formula")
+            via = "edge_from_formula"
             if not f:
                 m = _FORMULA_IN_RATIONALE.search(str(p.get("rationale") or ""))
                 f = m.group(1) if m else None
+                via = "edge_rationale"
             cnt = p.get("count")
             # 节点上的**权威分子式**：`pubchem_formula`（PubChem 交叉源）优先，其次 `formula`
             nprops = node_by_id.get(src, {}).get("props") or {}
@@ -843,23 +899,28 @@ def build_ctx(nodes, edges):
                 auth, auth_field = nprops["formula"], "formula"
             else:
                 auth, auth_field = None, None
+            # Phase 31 兜底：边自身无式串，但**源节点带 `formula`**（如 `MO:ch4.formula=CH4`）
+            #   —— 「CH4 含 4 个 H」这一断言仍可由节点声明式**确定性复算**，只是证据链起点是
+            #   节点而非边；故单列 scope（`formula_count_node_recheck`）以示区别、不作 cross_source。
+            if not f and nprops.get("formula"):
+                f, via = nprops["formula"], "node_formula"
             if not sym or cnt is None:
-                ctx["composed_ok"][eid] = (None, "无计数可复算")
+                ctx["composed_ok"][eid] = (None, "无计数可复算", via)
                 continue
             if f is None:
-                ctx["composed_ok"][eid] = (None, "无分子式串可复算")
+                ctx["composed_ok"][eid] = (None, "无分子式串可复算", via)
             else:
                 try:
                     comp = parse_formula_independent(f)
                     got = comp.get(sym)
                     ok = (got is not None and float(got) == float(cnt))
                     ctx["composed_ok"][eid] = (
-                        ok, "%s: 独立解析 %s=%s vs 记录 %s (from %s)" % (sym, sym, got, cnt, f))
+                        ok, "%s: 独立解析 %s=%s vs 记录 %s (from %s)" % (sym, sym, got, cnt, f), via)
                     if not ok:
                         ctx["bugs"]["composed_of_count_mismatch"].append(
                             (eid, f, sym, cnt, got))
                 except Exception as ex:
-                    ctx["composed_ok"][eid] = (None, "分子式不可独立解析(%s)" % ex)
+                    ctx["composed_ok"][eid] = (None, "分子式不可独立解析(%s)" % ex, via)
             # 第二道：与节点权威分子式复核（可判定 → 说明是「式串陈旧」而非「计数错」）
             if auth:
                 try:
@@ -988,6 +1049,31 @@ def build_ctx(nodes, edges):
             else:
                 ctx["math_ok"][eid] = (None, hits[0] if hits else "",
                                        "算子命中但目标未被覆盖" if hits else "源表达式无数学算子")
+
+        # (h) has_symbol（Phase 31）：目标符号是否出现于源的**结构化表达式**（latex/formula/symbols）
+        #     意义：把 A4（只认 PhysicsBabel 公式）推广到**任意来源**——人工策划的
+        #     「公式 X 用到符号 Y」同样是**可确定性复算**的（Y 字面在 X 的 latex 里）。
+        #     ⚠ 三态：True 才升档；False **本轮一律不据此撤边**（见 classify 的 A10 注释）。
+        if t == "has_symbol":
+            snode = node_by_id.get(src) or {}
+            sym = target_symbol(node_by_id.get(tgt) or {})
+            ctx["sym_expr_ok"][eid] = (symbol_in_source(snode, sym), "sym=%s" % sym)
+
+        # (i) **模型产物语义边**（defines / has_symbol / derived_from）：目标标识是否出现于
+        #     源的**结构化表达式**（Phase 31）。闸门与门禁 `semantic_target_present` 共用同一条
+        #     谓词（kind/source 判定「模型产物」），确保**判级模型与门禁自洽**。
+        #     为何要推广到 has_symbol/defines：Phase 30 的 R1/R2 只写在 **delta 生成器**里，
+        #     判级模型没有 —— 于是当 `target_symbol` 改进后新暴露出 3 条「目标缺席」的模型边
+        #     （`MX:sym:n`←`MX:math:binomial` 等），门禁立刻 FAIL 而模型无规则可撤。
+        if t in ("defines", "has_symbol", "derived_from"):
+            k = p.get("kind") or e.get("kind") or ""
+            s = p.get("source") or ""
+            is_model = (k in MODEL_KINDS) or ("GNN" in s) or ("LLM" in s) \
+                or ("gnn" in k) or ("llm" in k)
+            if is_model:
+                snode = node_by_id.get(src) or {}
+                sym = target_symbol(node_by_id.get(tgt) or {})
+                ctx["derived_support_ok"][eid] = (symbol_in_source(snode, sym), "sym=%s" % sym)
     return ctx
 
 
@@ -1109,7 +1195,8 @@ def audit(path=NORM):
     no = sum(1 for v in d.values() if v[0] is False)
     na = sum(1 for v in d.values() if v[0] is None)
     print("  %-14s 自洽 %5d / 自相矛盾 %4d / 不可判定 %5d" % ("hq_class_ok", yes, no, na))
-    for key, lab in (("unit_ok", "unit_ok"), ("math_ok", "math_ok")):
+    for key, lab in (("unit_ok", "unit_ok"), ("math_ok", "math_ok"),
+                     ("sym_expr_ok", "sym_expr_ok"), ("derived_support_ok", "derived_ok")):
         d = ctx[key]
         yes = sum(1 for v in d.values() if v[0] is True)
         no = sum(1 for v in d.values() if v[0] is False)

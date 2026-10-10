@@ -512,6 +512,95 @@ def run_case(case, graph):
                     sum(1 for c in comps if len(c) < 100), len(actual),
                     "" if not fails else "  ← " + "; ".join(fails))
 
+        # (n) 符号复算必须有**真证据**（Phase 31）：凡 `verification_scope ==
+        #     symbol_expr_recompute` 的边，其目标符号**必须真的**出现在源的结构化表达式中。
+        #     为什么必须断言：`symbol_expr_recompute` 是**升级**用的 scope（source_asserted →
+        #     rule_checked）。若判据被改坏成「无条件命中」，会**批量虚高**（铁律 #23 的镜像：
+        #     不只看「落库==重算」，还要看「重算本身有没有证据」）。同时断言**数量下限**，
+        #     防止将来某次改动把证据链悄悄清空（那会静默退化为「零条」，无仪器则无人知）。
+        if "symbol_expr_evidenced" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            bad, n_seen = [], 0
+            for e in graph["edges"]:
+                if (e.get("props") or {}).get("verification_scope") != "symbol_expr_recompute":
+                    continue
+                n_seen += 1
+                sn, tn = n_by_id.get(e["source"]), n_by_id.get(e["target"])
+                if not sn or not tn:
+                    bad.append((e["source"], e["target"], "端点缺失"))
+                    continue
+                if vm.symbol_in_source(sn, vm.target_symbol(tn)) is not True:
+                    bad.append((e["source"], vm.target_symbol(tn), e.get("type")))
+            lo = int(scan["symbol_expr_evidenced"].get("min_count", 0))
+            fails = []
+            if bad:
+                fails.append("无证据 %d 条：%s" % (len(bad), bad[:3]))
+            if n_seen < lo:
+                fails.append("条数 %d < 下限 %d（证据链疑似被清空）" % (n_seen, lo))
+            return ("PASS" if not fails else "FAIL"), \
+                "symbol_expr_recompute %d 条（需≥%d），无证据 %d 条%s" % (
+                    n_seen, lo, len(bad), "" if not fails else "  ← " + "; ".join(fails))
+
+        # (o) **模型产物语义边**目标必须可验证（Phase 31）：`defines`/`has_symbol`/
+        #     `derived_from` 的**模型产物**边，其目标标识**不得**在源的结构化表达式中缺席。
+        #     这是 Phase 30 `semantic_target_present` 的同族扩展 —— Phase 30 只把 R1/R2 写在
+        #     **delta 生成器**里，判级模型没有；本轮 `target_symbol` 改进后新暴露出 3 条
+        #     「目标缺席」的模型边（`MX:sym:n ← MX:math:binomial` 等）**门禁先红、模型无规则可撤**。
+        #     现由 `verification_model` A11 与门禁**共用同一谓词**，构造上不可能分歧。
+        # ⚠ 判据必须用 `in scan` 而非 `scan.get(...)`：本断言的配置项是**空字典**（无需参数），
+        #   而空字典为假值 → 曾使本行被跳过、直接落到 `未知 scan`（SKIP＝假通过，铁律 #20）。
+        if "model_semantic_target_present" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            bad, n_dec = [], 0
+            for e in graph["edges"]:
+                if e.get("type") not in ("defines", "has_symbol", "derived_from"):
+                    continue
+                p = e.get("props") or {}
+                k = p.get("kind") or e.get("kind") or ""
+                s = p.get("source") or ""
+                if not ((k in vm.MODEL_KINDS) or ("GNN" in s) or ("LLM" in s)
+                        or ("gnn" in k) or ("llm" in k)):
+                    continue
+                sn, tn = n_by_id.get(e["source"]), n_by_id.get(e["target"])
+                if not sn or not tn:
+                    continue
+                ok = vm.symbol_in_source(sn, vm.target_symbol(tn))
+                if ok is None:
+                    continue
+                n_dec += 1
+                if ok is False:
+                    bad.append((e.get("type"), e["source"], vm.target_symbol(tn)))
+            return ("PASS" if not bad else "FAIL"), \
+                "可判定 %d 条，目标缺席 %d 条：%s" % (n_dec, len(bad), bad[:3])
+
+        # (p) 量纲一致边必须**真的一致**（Phase 31）：`dimensionally_consistent` 的任一条，
+        #     只要两端真量纲**均可查**，就必须严格相等。这是 T3（全图最短板任务族）的仪器。
+        #     为什么现在才有：该边型此前**从未**被真量纲复算过（A1 存在但被命名缺口卡成
+        #     「不可判定」）—— 关闭缺口后一次就抓出 8 条量纲互斥的假边（铁律 #33）。
+        # ⚠ 同上：`in scan` 而非 `scan.get(...)`（空字典是假值 → 会静默退化为 SKIP）。
+        if "dim_consistent_recompute" in scan:
+            if vm is None or dt is None:
+                return "SKIP", "verification_model / dimension_table 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            bad, n_dec = [], 0
+            for e in graph["edges"]:
+                if e.get("type") != "dimensionally_consistent":
+                    continue
+                na = vm.qname_of_node(n_by_id.get(e["source"]))
+                nb = vm.qname_of_node(n_by_id.get(e["target"]))
+                da, db = dt.dim_of(na), dt.dim_of(nb)
+                if da is None or db is None:
+                    continue
+                n_dec += 1
+                if not dt.dim_equal(na, nb):
+                    bad.append((na, nb, (e.get("props") or {}).get("verification_scope")))
+            return ("PASS" if not bad else "FAIL"), \
+                "可判定 %d 条，量纲互斥 %d 条：%s" % (n_dec, len(bad), bad[:3])
+
         return "SKIP", "未知 scan"
 
     return "SKIP", "未知 kind：%s" % kind

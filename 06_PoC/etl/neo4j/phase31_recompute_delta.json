@@ -1,0 +1,4006 @@
+{
+ "meta": {
+  "phase": 31,
+  "tag": "recompute-coverage",
+  "generator": "phase31_recompute_delta.py",
+  "base_graph": "06_PoC\\etl\\normalized.json",
+  "theme": "复算维度全覆盖：把确定性复算从「仅模型产物」推广到所有来源的语义边",
+  "rebut_rules": {
+   "semantic_target_absent": "R6 模型产物语义边（defines/has_symbol/derived_from）目标在源结构化表达式中缺席",
+   "dimensional_mismatch": "R7 真量纲不符（A1 复算，命名缺口关闭后才可判定）",
+   "unit_dimension_mismatch": "R8 单位量纲 ≠ 物理量真量纲（A8 复算）"
+  },
+  "edges_withdrawn": 48,
+  "withdrawn_breakdown": {
+   "R6 模型产物语义边（defines/has_symbol/derived_from）目标在源结构化表达式中缺席": 39,
+   "R8 单位量纲 ≠ 物理量真量纲（A8 复算）": 1,
+   "R7 真量纲不符（A1 复算，命名缺口关闭后才可判定）": 8
+  },
+  "edges_relabeled": 263,
+  "level_distribution_after": {
+   "unverified": 0,
+   "model_inferred": 135,
+   "source_asserted": 13795,
+   "by_construction": 11,
+   "rule_checked": 31481,
+   "cross_source": 3290,
+   "human_reviewed": 0
+  }
+ },
+ "nodes": [],
+ "delete_nodes": [],
+ "edges": [
+  {
+   "id": "has_symbol|MX:def:manifold|MX:sym:m",
+   "source": "MX:def:manifold",
+   "target": "MX:sym:m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:manifold|MX:sym:n",
+   "source": "MX:def:manifold",
+   "target": "MX:sym:n",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:tangent_space|MX:sym:m",
+   "source": "MX:def:tangent_space",
+   "target": "MX:sym:m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:tangent_space|MX:sym:t_p_m",
+   "source": "MX:def:tangent_space",
+   "target": "MX:sym:t_p_m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T_p M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:tangent_space|MX:sym:p",
+   "source": "MX:def:tangent_space",
+   "target": "MX:sym:p",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=p 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:riemannian_metric|MX:sym:m",
+   "source": "MX:def:riemannian_metric",
+   "target": "MX:sym:m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:riemannian_metric|MX:sym:t_p_m",
+   "source": "MX:def:riemannian_metric",
+   "target": "MX:sym:t_p_m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T_p M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:riemannian_metric|MX:sym:g",
+   "source": "MX:def:riemannian_metric",
+   "target": "MX:sym:g",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=g 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:levi_civita|MX:sym:m",
+   "source": "MX:def:levi_civita",
+   "target": "MX:sym:m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:levi_civita|MX:sym:g",
+   "source": "MX:def:levi_civita",
+   "target": "MX:sym:g",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=g 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:levi_civita|MX:sym:nabla",
+   "source": "MX:def:levi_civita",
+   "target": "MX:sym:nabla",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\nabla 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:lemma:partition_of_unity|MX:sym:m",
+   "source": "MX:lemma:partition_of_unity",
+   "target": "MX:sym:m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:lemma:partition_of_unity|MX:sym:rho_alpha",
+   "source": "MX:lemma:partition_of_unity",
+   "target": "MX:sym:rho_alpha",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\rho_\\alpha 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MX:sym:m",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MX:sym:m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MX:sym:nabla",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MX:sym:nabla",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\nabla 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MX:sym:x",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MX:sym:x",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=X 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MX:sym:y",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MX:sym:y",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=Y 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MX:sym:nabla",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MX:sym:nabla",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\nabla 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MX:sym:r",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MX:sym:r",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=R 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MX:sym:x",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MX:sym:x",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=X 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MX:sym:y",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MX:sym:y",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=Y 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MX:sym:z",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MX:sym:z",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=Z 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:gauss_bonnet|MX:sym:m",
+   "source": "MX:thm:gauss_bonnet",
+   "target": "MX:sym:m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=M 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:gauss_bonnet|MX:sym:k",
+   "source": "MX:thm:gauss_bonnet",
+   "target": "MX:sym:k",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=K 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:gauss_bonnet|MX:sym:chi_m",
+   "source": "MX:thm:gauss_bonnet",
+   "target": "MX:sym:chi_m",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\chi(M) 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:thm:gauss_bonnet|MX:sym:pi",
+   "source": "MX:thm:gauss_bonnet",
+   "target": "MX:sym:pi",
+   "type": "has_symbol",
+   "kind": "has_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\pi 出现于源公式的结构化表达式（latex/formula/symbols）（原 by_construction/symbol_scan_from_text）"
+   }
+  },
+  {
+   "id": "has_unit|PQ:c|UN:mps",
+   "source": "PQ:c",
+   "target": "UN:mps",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Speed of light={'L': 1.0, 'T': -1.0} vs m/s={'L': 1.0, 'T': -1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:emc2|SY:e",
+   "source": "FO:emc2",
+   "target": "SY:e",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=E 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:emc2|SY:m",
+   "source": "FO:emc2",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:emc2|SY:c",
+   "source": "FO:emc2",
+   "target": "SY:c",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=c 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:fma|SY:m",
+   "source": "FO:fma",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:fma|SY:f",
+   "source": "FO:fma",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=F 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:fma|SY:a",
+   "source": "FO:fma",
+   "target": "SY:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:ke|SY:m",
+   "source": "FO:ke",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:ke|SY:v",
+   "source": "FO:ke",
+   "target": "SY:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|FO:ke|SY:ke",
+   "source": "FO:ke",
+   "target": "SY:ke",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=KE 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|MO:ch4|EK:el:H",
+   "source": "MO:ch4",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|MO:ch4|EK:el:C",
+   "source": "MO:ch4",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|MO:o2|EK:el:O",
+   "source": "MO:o2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|MO:co2|EK:el:C",
+   "source": "MO:co2",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|MO:co2|EK:el:O",
+   "source": "MO:co2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|MO:h2o|EK:el:H",
+   "source": "MO:h2o",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|MO:h2o|EK:el:O",
+   "source": "MO:h2o",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:momentum|SY:m",
+   "source": "CM:fo:momentum",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:momentum|SY:v",
+   "source": "CM:fo:momentum",
+   "target": "SY:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:momentum|CM:sy:p",
+   "source": "CM:fo:momentum",
+   "target": "CM:sy:p",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=p 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:work|SY:f",
+   "source": "CM:fo:work",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=F 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:work|CM:sy:W",
+   "source": "CM:fo:work",
+   "target": "CM:sy:W",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=W 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:power|CM:sy:W",
+   "source": "CM:fo:power",
+   "target": "CM:sy:W",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=W 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:power|CM:sy:P",
+   "source": "CM:fo:power",
+   "target": "CM:sy:P",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=P 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:gravity|SY:m",
+   "source": "CM:fo:gravity",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:gravity|SY:f",
+   "source": "CM:fo:gravity",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=F 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:gravity|CM:sy:G",
+   "source": "CM:fo:gravity",
+   "target": "CM:sy:G",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=G 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:centripetal|SY:m",
+   "source": "CM:fo:centripetal",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:centripetal|SY:f",
+   "source": "CM:fo:centripetal",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=F 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:centripetal|SY:v",
+   "source": "CM:fo:centripetal",
+   "target": "SY:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:impulse|SY:f",
+   "source": "CM:fo:impulse",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=F 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CM:fo:impulse|CM:sy:J",
+   "source": "CM:fo:impulse",
+   "target": "CM:sy:J",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=J 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:methane|EK:el:H",
+   "source": "OM:mo:methane",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:methane|EK:el:C",
+   "source": "OM:mo:methane",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:ethane|EK:el:H",
+   "source": "OM:mo:ethane",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:ethane|EK:el:C",
+   "source": "OM:mo:ethane",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:ethylene|EK:el:H",
+   "source": "OM:mo:ethylene",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:ethylene|EK:el:C",
+   "source": "OM:mo:ethylene",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:benzene|EK:el:H",
+   "source": "OM:mo:benzene",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:benzene|EK:el:C",
+   "source": "OM:mo:benzene",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:ethanol|EK:el:H",
+   "source": "OM:mo:ethanol",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:ethanol|EK:el:C",
+   "source": "OM:mo:ethanol",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|OM:mo:ethanol|EK:el:O",
+   "source": "OM:mo:ethanol",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OM:fo:combustion|OM:sy:C",
+   "source": "OM:fo:combustion",
+   "target": "OM:sy:C",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=C 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OM:fo:combustion|OM:sy:H",
+   "source": "OM:fo:combustion",
+   "target": "OM:sy:H",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=H 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OM:fo:combustion|OM:sy:O",
+   "source": "OM:fo:combustion",
+   "target": "OM:sy:O",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=O 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:ideal_gas|TH:sy:P",
+   "source": "TH:fo:ideal_gas",
+   "target": "TH:sy:P",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=P 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:ideal_gas|TH:sy:V",
+   "source": "TH:fo:ideal_gas",
+   "target": "TH:sy:V",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=V 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:ideal_gas|TH:sy:T",
+   "source": "TH:fo:ideal_gas",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:ideal_gas|TH:sy:R",
+   "source": "TH:fo:ideal_gas",
+   "target": "TH:sy:R",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=R 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:ideal_gas|TH:sy:n",
+   "source": "TH:fo:ideal_gas",
+   "target": "TH:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:first_law|TH:sy:U",
+   "source": "TH:fo:first_law",
+   "target": "TH:sy:U",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=U 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:first_law|TH:sy:Q",
+   "source": "TH:fo:first_law",
+   "target": "TH:sy:Q",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=Q 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:boyle|TH:sy:P",
+   "source": "TH:fo:boyle",
+   "target": "TH:sy:P",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=P 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:boyle|TH:sy:V",
+   "source": "TH:fo:boyle",
+   "target": "TH:sy:V",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=V 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:charles|TH:sy:V",
+   "source": "TH:fo:charles",
+   "target": "TH:sy:V",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=V 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:charles|TH:sy:T",
+   "source": "TH:fo:charles",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:gay_lussac|TH:sy:P",
+   "source": "TH:fo:gay_lussac",
+   "target": "TH:sy:P",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=P 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:gay_lussac|TH:sy:T",
+   "source": "TH:fo:gay_lussac",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:carnot|TH:sy:T",
+   "source": "TH:fo:carnot",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|TH:fo:carnot|TH:sy:eta",
+   "source": "TH:fo:carnot",
+   "target": "TH:sy:eta",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\eta 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:n_moles|TH:un:mole",
+   "source": "TH:pq:n_moles",
+   "target": "TH:un:mole",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Amount of substance={'N': 1.0} vs mol={'N': 1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:coulomb|EM:sy:k",
+   "source": "EM:fo:coulomb",
+   "target": "EM:sy:k",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=k 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:ohm|EM:sy:I",
+   "source": "EM:fo:ohm",
+   "target": "EM:sy:I",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=I 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:ohm|EM:sy:V",
+   "source": "EM:fo:ohm",
+   "target": "EM:sy:V",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=V 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:ohm|EM:sy:R",
+   "source": "EM:fo:ohm",
+   "target": "EM:sy:R",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=R 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:lorentz|SY:f",
+   "source": "EM:fo:lorentz",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=F 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:lorentz|SY:v",
+   "source": "EM:fo:lorentz",
+   "target": "SY:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:lorentz|EM:sy:E",
+   "source": "EM:fo:lorentz",
+   "target": "EM:sy:E",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=E 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:lorentz|EM:sy:B",
+   "source": "EM:fo:lorentz",
+   "target": "EM:sy:B",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=B 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:faraday|EM:sy:Phi",
+   "source": "EM:fo:faraday",
+   "target": "EM:sy:Phi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\Phi 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:gauss|EM:sy:E",
+   "source": "EM:fo:gauss",
+   "target": "EM:sy:E",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=E 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:gauss|EM:sy:eps0",
+   "source": "EM:fo:gauss",
+   "target": "EM:sy:eps0",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\varepsilon_0 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:biot_savart|EM:sy:I",
+   "source": "EM:fo:biot_savart",
+   "target": "EM:sy:I",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=I 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:biot_savart|EM:sy:B",
+   "source": "EM:fo:biot_savart",
+   "target": "EM:sy:B",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=B 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:biot_savart|EM:sy:mu0",
+   "source": "EM:fo:biot_savart",
+   "target": "EM:sy:mu0",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\mu_0 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:charge|EM:un:coulomb",
+   "source": "EM:pq:charge",
+   "target": "EM:un:coulomb",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Electric charge={'I': 1.0, 'T': 1.0} vs C={'I': 1.0, 'T': 1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:current|EM:un:ampere",
+   "source": "EM:pq:current",
+   "target": "EM:un:ampere",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Electric current={'I': 1.0} vs A={'I': 1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:bfield|EM:un:tesla",
+   "source": "EM:pq:bfield",
+   "target": "EM:un:tesla",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Magnetic field={'I': -1.0, 'M': 1.0, 'T': -2.0} vs T={'M': 1.0, 'T': -2.0, 'I': -1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:emf|EM:un:volt",
+   "source": "EM:pq:emf",
+   "target": "EM:un:volt",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Electromotive force={'I': -1.0, 'L': 2.0, 'M': 1.0, 'T': -3.0} vs V={'M': 1.0, 'L': 2.0, 'T': -3.0, 'I': -1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:mag_flux|EM:un:weber",
+   "source": "EM:pq:mag_flux",
+   "target": "EM:un:weber",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Magnetic flux={'I': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0} vs Wb={'M': 1.0, 'L': 2.0, 'T': -2.0, 'I': -1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:nacl|EK:el:Na",
+   "source": "IC:mo:nacl",
+   "target": "EK:el:Na",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:nacl|EK:el:Cl",
+   "source": "IC:mo:nacl",
+   "target": "EK:el:Cl",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:hcl|EK:el:H",
+   "source": "IC:mo:hcl",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:hcl|EK:el:Cl",
+   "source": "IC:mo:hcl",
+   "target": "EK:el:Cl",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:cl2|EK:el:Cl",
+   "source": "IC:mo:cl2",
+   "target": "EK:el:Cl",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:na|EK:el:Na",
+   "source": "IC:mo:na",
+   "target": "EK:el:Na",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:h2o|EK:el:H",
+   "source": "IC:mo:h2o",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:h2o|EK:el:O",
+   "source": "IC:mo:h2o",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|IC:mo:o2|EK:el:O",
+   "source": "IC:mo:o2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|IC:fo:ph|IC:sy:H",
+   "source": "IC:fo:ph",
+   "target": "IC:sy:H",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=H 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:planck|QM:sy:h",
+   "source": "QM:fo:planck",
+   "target": "QM:sy:h",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=h 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:planck|QM:sy:nu",
+   "source": "QM:fo:planck",
+   "target": "QM:sy:nu",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\nu 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:de_broglie|QM:sy:h",
+   "source": "QM:fo:de_broglie",
+   "target": "QM:sy:h",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=h 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:de_broglie|QM:sy:lambda",
+   "source": "QM:fo:de_broglie",
+   "target": "QM:sy:lambda",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\lambda 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:schrodinger|SY:m",
+   "source": "QM:fo:schrodinger",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:schrodinger|QM:sy:hbar",
+   "source": "QM:fo:schrodinger",
+   "target": "QM:sy:hbar",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\hbar 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:schrodinger|QM:sy:psi",
+   "source": "QM:fo:schrodinger",
+   "target": "QM:sy:psi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\psi 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:uncertainty|QM:sy:hbar",
+   "source": "QM:fo:uncertainty",
+   "target": "QM:sy:hbar",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\hbar 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:photoelectric|QM:sy:h",
+   "source": "QM:fo:photoelectric",
+   "target": "QM:sy:h",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=h 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:photoelectric|QM:sy:nu",
+   "source": "QM:fo:photoelectric",
+   "target": "QM:sy:nu",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\nu 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|QM:fo:photoelectric|QM:sy:phi",
+   "source": "QM:fo:photoelectric",
+   "target": "QM:sy:phi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\phi 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:lorentz_factor|SY:v",
+   "source": "RT:fo:lorentz_factor",
+   "target": "SY:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:lorentz_factor|RT:sy:gamma",
+   "source": "RT:fo:lorentz_factor",
+   "target": "RT:sy:gamma",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\gamma 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:lorentz_factor|RT:sy:c",
+   "source": "RT:fo:lorentz_factor",
+   "target": "RT:sy:c",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=c 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:time_dilation|RT:sy:gamma",
+   "source": "RT:fo:time_dilation",
+   "target": "RT:sy:gamma",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\gamma 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:length_contraction|RT:sy:gamma",
+   "source": "RT:fo:length_contraction",
+   "target": "RT:sy:gamma",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\gamma 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:rel_momentum|SY:m",
+   "source": "RT:fo:rel_momentum",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:rel_momentum|SY:v",
+   "source": "RT:fo:rel_momentum",
+   "target": "SY:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:rel_momentum|RT:sy:gamma",
+   "source": "RT:fo:rel_momentum",
+   "target": "RT:sy:gamma",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\gamma 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:mass_energy|SY:m",
+   "source": "RT:fo:mass_energy",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=m 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|RT:fo:mass_energy|RT:sy:c",
+   "source": "RT:fo:mass_energy",
+   "target": "RT:sy:c",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=c 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:glucose|EK:el:H",
+   "source": "BC:mo:glucose",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:glucose|EK:el:C",
+   "source": "BC:mo:glucose",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:glucose|EK:el:O",
+   "source": "BC:mo:glucose",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:atp|EK:el:H",
+   "source": "BC:mo:atp",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:atp|EK:el:C",
+   "source": "BC:mo:atp",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:atp|EK:el:O",
+   "source": "BC:mo:atp",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:atp|EK:el:N",
+   "source": "BC:mo:atp",
+   "target": "EK:el:N",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:amino_acid|EK:el:H",
+   "source": "BC:mo:amino_acid",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:amino_acid|EK:el:C",
+   "source": "BC:mo:amino_acid",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:amino_acid|EK:el:O",
+   "source": "BC:mo:amino_acid",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:amino_acid|EK:el:N",
+   "source": "BC:mo:amino_acid",
+   "target": "EK:el:N",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:co2|EK:el:C",
+   "source": "BC:mo:co2",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:co2|EK:el:O",
+   "source": "BC:mo:co2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:h2o|EK:el:H",
+   "source": "BC:mo:h2o",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:h2o|EK:el:O",
+   "source": "BC:mo:h2o",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|BC:mo:o2|EK:el:O",
+   "source": "BC:mo:o2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:quadratic|MA:sy:a",
+   "source": "MA:fo:quadratic",
+   "target": "MA:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:quadratic|MA:sy:b",
+   "source": "MA:fo:quadratic",
+   "target": "MA:sy:b",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=b 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:quadratic|MA:sy:x",
+   "source": "MA:fo:quadratic",
+   "target": "MA:sy:x",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=x 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:binomial|MA:sy:a",
+   "source": "MA:fo:binomial",
+   "target": "MA:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:binomial|MA:sy:b",
+   "source": "MA:fo:binomial",
+   "target": "MA:sy:b",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=b 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:binomial|MA:sy:n",
+   "source": "MA:fo:binomial",
+   "target": "MA:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:euler_identity|MA:sy:i",
+   "source": "MA:fo:euler_identity",
+   "target": "MA:sy:i",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=i 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:pythagoras|MA:sy:a",
+   "source": "MA:fo:pythagoras",
+   "target": "MA:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:pythagoras|MA:sy:b",
+   "source": "MA:fo:pythagoras",
+   "target": "MA:sy:b",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=b 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:log_product|MA:sy:x",
+   "source": "MA:fo:log_product",
+   "target": "MA:sy:x",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=x 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:power_rule|MC:sy:n",
+   "source": "MC:fo:power_rule",
+   "target": "MC:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:ftc|MC:sy:f",
+   "source": "MC:fo:ftc",
+   "target": "MC:sy:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=f 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:ftc|MC:sy:dx",
+   "source": "MC:fo:ftc",
+   "target": "MC:sy:dx",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=dx 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:chain_rule|MC:sy:f",
+   "source": "MC:fo:chain_rule",
+   "target": "MC:sy:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=f 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:chain_rule|MC:sy:g",
+   "source": "MC:fo:chain_rule",
+   "target": "MC:sy:g",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=g 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:taylor|MC:sy:f",
+   "source": "MC:fo:taylor",
+   "target": "MC:sy:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=f 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:taylor|MC:sy:n",
+   "source": "MC:fo:taylor",
+   "target": "MC:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MC:fo:limit_def|MC:sy:f",
+   "source": "MC:fo:limit_def",
+   "target": "MC:sy:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=f 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MG:fo:circle_area|MG:sy:r",
+   "source": "MG:fo:circle_area",
+   "target": "MG:sy:r",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=r 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MG:fo:circle_area|MG:sy:pi",
+   "source": "MG:fo:circle_area",
+   "target": "MG:sy:pi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\pi 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MG:fo:sphere_vol|MG:sy:r",
+   "source": "MG:fo:sphere_vol",
+   "target": "MG:sy:r",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=r 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MG:fo:sphere_vol|MG:sy:pi",
+   "source": "MG:fo:sphere_vol",
+   "target": "MG:sy:pi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\pi 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|MG:fo:euler_poly|MG:sy:V",
+   "source": "MG:fo:euler_poly",
+   "target": "MG:sy:V",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=V 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:snell|OP:sy:n",
+   "source": "OP:fo:snell",
+   "target": "OP:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:snell|OP:sy:theta",
+   "source": "OP:fo:snell",
+   "target": "OP:sy:theta",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\theta 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:lens|OP:sy:f",
+   "source": "OP:fo:lens",
+   "target": "OP:sy:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=f 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:lens|OP:sy:u",
+   "source": "OP:fo:lens",
+   "target": "OP:sy:u",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=u 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:lens|OP:sy:v",
+   "source": "OP:fo:lens",
+   "target": "OP:sy:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:mirror|OP:sy:f",
+   "source": "OP:fo:mirror",
+   "target": "OP:sy:f",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=f 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:refr_speed|OP:sy:n",
+   "source": "OP:fo:refr_speed",
+   "target": "OP:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|OP:fo:refr_speed|OP:sy:c",
+   "source": "OP:fo:refr_speed",
+   "target": "OP:sy:c",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=c 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|OP:pq:focal_length|OP:un:meter",
+   "source": "OP:pq:focal_length",
+   "target": "OP:un:meter",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Focal length={'L': 1.0} vs m={'L': 1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|OP:pq:object_dist|OP:un:meter",
+   "source": "OP:pq:object_dist",
+   "target": "OP:un:meter",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Object distance={'L': 1.0} vs m={'L': 1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|OP:pq:image_dist|OP:un:meter",
+   "source": "OP:pq:image_dist",
+   "target": "OP:un:meter",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Image distance={'L': 1.0} vs m={'L': 1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:boltzmann|SM:sy:k_B",
+   "source": "SM:fo:boltzmann",
+   "target": "SM:sy:k_B",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=k_B 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:boltzmann|SM:sy:W",
+   "source": "SM:fo:boltzmann",
+   "target": "SM:sy:W",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=W 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:boltzmann|SM:sy:S",
+   "source": "SM:fo:boltzmann",
+   "target": "SM:sy:S",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=S 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:maxwell|SY:v",
+   "source": "SM:fo:maxwell",
+   "target": "SY:v",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=v 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:maxwell|SM:sy:k_B",
+   "source": "SM:fo:maxwell",
+   "target": "SM:sy:k_B",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=k_B 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:partition|SM:sy:k_B",
+   "source": "SM:fo:partition",
+   "target": "SM:sy:k_B",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=k_B 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:partition|SM:sy:Z",
+   "source": "SM:fo:partition",
+   "target": "SM:sy:Z",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=Z 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:partition|SM:sy:T",
+   "source": "SM:fo:partition",
+   "target": "SM:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|SM:pq:boltz_const|SM:un:j_per_k",
+   "source": "SM:pq:boltz_const",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Boltzmann constant={'L': 2.0, 'M': 1.0, 'Th': -1.0, 'T': -2.0} vs J/K={'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|SM:pq:stat_entropy|SM:un:j_per_k",
+   "source": "SM:pq:stat_entropy",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Statistical entropy={'L': 2.0, 'M': 1.0, 'Th': -1.0, 'T': -2.0} vs J/K={'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "dimensionally_consistent|PQ:c|PQ:vel",
+   "source": "PQ:c",
+   "target": "PQ:vel",
+   "type": "dimensionally_consistent",
+   "kind": "gnn_typed_verified",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "dimensional_strict_equal",
+    "verifier": "verification_model.dimension_table",
+    "verified": true,
+    "verification_note": "Phase31 复算：dimensional_strict_equal（原 model_inferred/model_link_prediction）"
+   }
+  },
+  {
+   "id": "dimensionally_consistent|EM:pq:voltage|EM:pq:emf",
+   "source": "EM:pq:voltage",
+   "target": "EM:pq:emf",
+   "type": "dimensionally_consistent",
+   "kind": "gnn_typed_verified",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "dimensional_strict_equal",
+    "verifier": "verification_model.dimension_table",
+    "verified": true,
+    "verification_note": "Phase31 复算：dimensional_strict_equal（原 model_inferred/model_link_prediction）"
+   }
+  },
+  {
+   "id": "dimensionally_consistent|OP:pq:focal_length|OP:pq:object_dist",
+   "source": "OP:pq:focal_length",
+   "target": "OP:pq:object_dist",
+   "type": "dimensionally_consistent",
+   "kind": "gnn_typed_verified",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "dimensional_strict_equal",
+    "verifier": "verification_model.dimension_table",
+    "verified": true,
+    "verification_note": "Phase31 复算：dimensional_strict_equal（原 model_inferred/model_link_prediction）"
+   }
+  },
+  {
+   "id": "dimensionally_consistent|OP:pq:focal_length|OP:pq:image_dist",
+   "source": "OP:pq:focal_length",
+   "target": "OP:pq:image_dist",
+   "type": "dimensionally_consistent",
+   "kind": "gnn_typed_verified",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "dimensional_strict_equal",
+    "verifier": "verification_model.dimension_table",
+    "verified": true,
+    "verification_note": "Phase31 复算：dimensional_strict_equal（原 model_inferred/model_link_prediction）"
+   }
+  },
+  {
+   "id": "dimensionally_consistent|OP:pq:object_dist|OP:pq:image_dist",
+   "source": "OP:pq:object_dist",
+   "target": "OP:pq:image_dist",
+   "type": "dimensionally_consistent",
+   "kind": "gnn_typed_verified",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "dimensional_strict_equal",
+    "verifier": "verification_model.dimension_table",
+    "verified": true,
+    "verification_note": "Phase31 复算：dimensional_strict_equal（原 model_inferred/model_link_prediction）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:def:tangent_space|TH:sy:T",
+   "source": "MX:def:tangent_space",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 model_inferred/model_link_prediction）"
+   }
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|OP:sy:n",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "OP:sy:n",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 model_inferred/model_link_prediction）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:mass_action|CE:sy:K",
+   "source": "CE:fo:mass_action",
+   "target": "CE:sy:K",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=K 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:reaction_quotient|CE:sy:Q",
+   "source": "CE:fo:reaction_quotient",
+   "target": "CE:sy:Q",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=Q 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:gibbs_standard|CE:sy:G",
+   "source": "CE:fo:gibbs_standard",
+   "target": "CE:sy:G",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=G 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:gibbs_standard|TH:sy:R",
+   "source": "CE:fo:gibbs_standard",
+   "target": "TH:sy:R",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=R 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:gibbs_standard|TH:sy:T",
+   "source": "CE:fo:gibbs_standard",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:gibbs_reaction|CE:sy:G",
+   "source": "CE:fo:gibbs_reaction",
+   "target": "CE:sy:G",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=G 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:gibbs_reaction|CE:sy:Q",
+   "source": "CE:fo:gibbs_reaction",
+   "target": "CE:sy:Q",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=Q 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:gibbs_reaction|TH:sy:R",
+   "source": "CE:fo:gibbs_reaction",
+   "target": "TH:sy:R",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=R 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:gibbs_reaction|TH:sy:T",
+   "source": "CE:fo:gibbs_reaction",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:ph|CE:sy:pH",
+   "source": "CE:fo:ph",
+   "target": "CE:sy:pH",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\mathrm{pH} 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:kw|CE:sy:K",
+   "source": "CE:fo:kw",
+   "target": "CE:sy:K",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=K 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:ka|CE:sy:Ka",
+   "source": "CE:fo:ka",
+   "target": "CE:sy:Ka",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=K_a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:henderson|CE:sy:pH",
+   "source": "CE:fo:henderson",
+   "target": "CE:sy:pH",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\mathrm{pH} 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:henderson|CE:sy:Ka",
+   "source": "CE:fo:henderson",
+   "target": "CE:sy:Ka",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=K_a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:ksp|CE:sy:Ksp",
+   "source": "CE:fo:ksp",
+   "target": "CE:sy:Ksp",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=K_{sp} 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:nernst|CE:sy:F",
+   "source": "CE:fo:nernst",
+   "target": "CE:sy:F",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=F 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:nernst|TH:sy:R",
+   "source": "CE:fo:nernst",
+   "target": "TH:sy:R",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=R 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:nernst|TH:sy:T",
+   "source": "CE:fo:nernst",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:arrhenius|CE:sy:k",
+   "source": "CE:fo:arrhenius",
+   "target": "CE:sy:k",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=k 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:arrhenius|CE:sy:Ea",
+   "source": "CE:fo:arrhenius",
+   "target": "CE:sy:Ea",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=E_a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:arrhenius|TH:sy:T",
+   "source": "CE:fo:arrhenius",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=T 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|CE:pq:gibbs_energy|TH:un:joule",
+   "source": "CE:pq:gibbs_energy",
+   "target": "TH:un:joule",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Gibbs free energy={'L': 2.0, 'M': 1.0, 'T': -2.0} vs J={'M': 1.0, 'L': 2.0, 'T': -2.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|CE:mo:nh3|EK:el:N",
+   "source": "CE:mo:nh3",
+   "target": "EK:el:N",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "composed_of|CE:mo:nh3|EK:el:H",
+   "source": "CE:mo:nh3",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "kind": "molecule_element",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "formula_count_node_recheck",
+    "verifier": "verification_model.parse_formula_independent(源节点 formula)",
+    "verified": true,
+    "verification_note": "Phase31 复算：formula_count_node_recheck（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "dimensionally_consistent|CE:pq:gibbs_energy|CE:pq:activation_energy",
+   "source": "CE:pq:gibbs_energy",
+   "target": "CE:pq:activation_energy",
+   "type": "dimensionally_consistent",
+   "kind": "derived",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "dimensional_strict_equal",
+    "verifier": "verification_model.dimension_table",
+    "verified": true,
+    "verification_note": "Phase31 复算：dimensional_strict_equal（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "dimensionally_consistent|CE:pq:gibbs_energy|PQ:energy",
+   "source": "CE:pq:gibbs_energy",
+   "target": "PQ:energy",
+   "type": "dimensionally_consistent",
+   "kind": "derived",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "dimensional_strict_equal",
+    "verifier": "verification_model.dimension_table",
+    "verified": true,
+    "verification_note": "Phase31 复算：dimensional_strict_equal（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:congruence|NT:sy:a",
+   "source": "NT:fo:congruence",
+   "target": "NT:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:congruence|NT:sy:n",
+   "source": "NT:fo:congruence",
+   "target": "NT:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:congruence|NT:sy:cong",
+   "source": "NT:fo:congruence",
+   "target": "NT:sy:cong",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\equiv 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:congruence|MA:sy:a",
+   "source": "NT:fo:congruence",
+   "target": "MA:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:congruence|MA:sy:n",
+   "source": "NT:fo:congruence",
+   "target": "MA:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euler_theorem|NT:sy:a",
+   "source": "NT:fo:euler_theorem",
+   "target": "NT:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euler_theorem|NT:sy:n",
+   "source": "NT:fo:euler_theorem",
+   "target": "NT:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euler_theorem|NT:sy:phi",
+   "source": "NT:fo:euler_theorem",
+   "target": "NT:sy:phi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\varphi(n) 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euler_theorem|NT:sy:cong",
+   "source": "NT:fo:euler_theorem",
+   "target": "NT:sy:cong",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\equiv 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euler_theorem|MA:sy:a",
+   "source": "NT:fo:euler_theorem",
+   "target": "MA:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euler_theorem|MA:sy:n",
+   "source": "NT:fo:euler_theorem",
+   "target": "MA:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:fermat_little|NT:sy:a",
+   "source": "NT:fo:fermat_little",
+   "target": "NT:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:fermat_little|NT:sy:p",
+   "source": "NT:fo:fermat_little",
+   "target": "NT:sy:p",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=p 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:fermat_little|NT:sy:cong",
+   "source": "NT:fo:fermat_little",
+   "target": "NT:sy:cong",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\equiv 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:fermat_little|MA:sy:a",
+   "source": "NT:fo:fermat_little",
+   "target": "MA:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:crt|NT:sy:n",
+   "source": "NT:fo:crt",
+   "target": "NT:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:crt|NT:sy:cong",
+   "source": "NT:fo:crt",
+   "target": "NT:sy:cong",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\equiv 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:crt|MA:sy:n",
+   "source": "NT:fo:crt",
+   "target": "MA:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:wilson|NT:sy:p",
+   "source": "NT:fo:wilson",
+   "target": "NT:sy:p",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=p 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:wilson|NT:sy:cong",
+   "source": "NT:fo:wilson",
+   "target": "NT:sy:cong",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\equiv 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:fundamental_arithmetic|NT:sy:n",
+   "source": "NT:fo:fundamental_arithmetic",
+   "target": "NT:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:fundamental_arithmetic|NT:sy:p",
+   "source": "NT:fo:fundamental_arithmetic",
+   "target": "NT:sy:p",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=p 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euclid_algorithm|NT:sy:a",
+   "source": "NT:fo:euclid_algorithm",
+   "target": "NT:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:euclid_algorithm|MA:sy:b",
+   "source": "NT:fo:euclid_algorithm",
+   "target": "MA:sy:b",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=b 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:basel|MG:sy:pi",
+   "source": "NT:fo:basel",
+   "target": "MG:sy:pi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\pi 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:basel|MX:sym:pi",
+   "source": "NT:fo:basel",
+   "target": "MX:sym:pi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\pi 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:unit_group|NT:sy:a",
+   "source": "NT:fo:unit_group",
+   "target": "NT:sy:a",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=a 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:unit_group|NT:sy:n",
+   "source": "NT:fo:unit_group",
+   "target": "NT:sy:n",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=n 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:unit_group|NT:sy:Z",
+   "source": "NT:fo:unit_group",
+   "target": "NT:sy:Z",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=\\mathbb{Z} 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_symbol|BC:fo:atp_hydrolysis_eq|BC:sy:P",
+   "source": "BC:fo:atp_hydrolysis_eq",
+   "target": "BC:sy:P",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "symbol_expr_recompute",
+    "verifier": "verification_model.symbol_in_source",
+    "verified": true,
+    "verification_note": "Phase31 复算：目标符号 sym=P 出现于源公式的结构化表达式（latex/formula/symbols）（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|RT:pq:proper_time|UN:s",
+   "source": "RT:pq:proper_time",
+   "target": "UN:s",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Proper time={'T': 1.0} vs s={'T': 1.0}（原 source_asserted/manual_curation）"
+   }
+  },
+  {
+   "id": "has_unit|RT:pq:light_speed|UN:mps",
+   "source": "RT:pq:light_speed",
+   "target": "UN:mps",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase31 复算：Speed of light={'L': 1.0, 'T': -1.0} vs m/s={'L': 1.0, 'T': -1.0}（原 source_asserted/manual_curation）"
+   }
+  }
+ ],
+ "delete_edges": [
+  {
+   "source": "EM:pq:efield",
+   "type": "dimensionally_consistent",
+   "target": "EM:pq:emf",
+   "kind": "gnn_typed_verified"
+  },
+  {
+   "source": "EM:pq:efield",
+   "type": "has_unit",
+   "target": "EM:un:volt",
+   "kind": "quantity_unit"
+  },
+  {
+   "source": "MX:chem:co2",
+   "type": "derived_from",
+   "target": "MX:math:binomial",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:chem:co2",
+   "type": "derived_from",
+   "target": "MX:math:pythagorean_identity",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:def:levi_civita",
+   "type": "derived_from",
+   "target": "MX:math:binomial",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:levi_civita",
+   "type": "derived_from",
+   "target": "MX:math:expand",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:levi_civita",
+   "type": "derived_from",
+   "target": "MX:math:pythagorean_identity",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:manifold",
+   "type": "derived_from",
+   "target": "MX:math:binomial",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:def:manifold",
+   "type": "derived_from",
+   "target": "MX:math:expand",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:def:manifold",
+   "type": "derived_from",
+   "target": "MX:math:pythagorean_identity",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:riemannian_metric",
+   "type": "derived_from",
+   "target": "MX:math:binomial",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:riemannian_metric",
+   "type": "derived_from",
+   "target": "MX:math:expand",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:tangent_space",
+   "type": "derived_from",
+   "target": "MX:math:binomial",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:tangent_space",
+   "type": "derived_from",
+   "target": "MX:math:expand",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:tangent_space",
+   "type": "derived_from",
+   "target": "MX:math:pythagorean_identity",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "derived_from",
+   "target": "MX:def:riemannian_metric",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "derived_from",
+   "target": "MX:def:tangent_space",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:partition_of_unity",
+   "type": "derived_from",
+   "target": "MX:def:levi_civita",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:partition_of_unity",
+   "type": "derived_from",
+   "target": "MX:def:riemannian_metric",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:partition_of_unity",
+   "type": "derived_from",
+   "target": "MX:def:tangent_space",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:sym:c",
+   "type": "has_symbol",
+   "target": "MX:math:pythagorean_identity",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:c",
+   "type": "has_symbol",
+   "target": "MX:math:trig_unit",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:chi_m",
+   "type": "derived_from",
+   "target": "MX:sym:pi",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:k",
+   "type": "derived_from",
+   "target": "MX:sym:chi_m",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:k",
+   "type": "derived_from",
+   "target": "MX:sym:pi",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:n",
+   "type": "derived_from",
+   "target": "MX:sym:rho_alpha",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:n",
+   "type": "has_symbol",
+   "target": "MX:math:binomial",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:nabla",
+   "type": "derived_from",
+   "target": "MX:sym:r",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:nabla",
+   "type": "derived_from",
+   "target": "MX:sym:x",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:r",
+   "type": "derived_from",
+   "target": "MX:sym:x",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:x",
+   "type": "derived_from",
+   "target": "MX:sym:y",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:thm:gauss_bonnet",
+   "type": "derived_from",
+   "target": "MX:def:levi_civita",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:gauss_bonnet",
+   "type": "derived_from",
+   "target": "MX:def:riemannian_metric",
+   "kind": "llm_inferred"
+  },
+  {
+   "source": "MX:thm:gauss_bonnet",
+   "type": "derived_from",
+   "target": "MX:def:tangent_space",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:gauss_bonnet",
+   "type": "derived_from",
+   "target": "MX:lemma:covariant_derivative",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:gauss_bonnet",
+   "type": "derived_from",
+   "target": "MX:lemma:partition_of_unity",
+   "kind": "llm_inferred"
+  },
+  {
+   "source": "MX:thm:gauss_bonnet",
+   "type": "derived_from",
+   "target": "MX:thm:riemann_curvature",
+   "kind": "llm_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "derived_from",
+   "target": "MX:def:manifold",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "derived_from",
+   "target": "MX:def:riemannian_metric",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "derived_from",
+   "target": "MX:def:tangent_space",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "derived_from",
+   "target": "MX:lemma:partition_of_unity",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PB:pq:concentration",
+   "type": "dimensionally_consistent",
+   "target": "PQ:c",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PB:pq:grav_const",
+   "type": "dimensionally_consistent",
+   "target": "PQ:c",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PB:pq:planck",
+   "type": "dimensionally_consistent",
+   "target": "PB:pq:lum_intensity",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PB:pq:planck",
+   "type": "dimensionally_consistent",
+   "target": "PQ:c",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PB:pq:thermal_diff",
+   "type": "dimensionally_consistent",
+   "target": "PQ:c",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PQ:c",
+   "type": "dimensionally_consistent",
+   "target": "PB:pq:amount",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PQ:c",
+   "type": "dimensionally_consistent",
+   "target": "PB:pq:molar_mass",
+   "kind": "gnn_typed_inferred"
+  }
+ ]
+}

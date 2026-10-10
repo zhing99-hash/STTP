@@ -18,6 +18,17 @@
   R3 `has_unit`    目标单位解析出的量纲 == 源物理量的真量纲（`dimension_table`）
   R4 `has_unit`    同一物理量的多个 `has_unit` 目标**量纲必须唯一**（互斥→至多一个对）
 
+Phase 31（第 21 轮「复算维度全覆盖」）新增/扩展
+------------------------------------------------
+  R1/R2 **扩展到 `derived_from`**：三类**模型产物语义边**（`defines`/`has_symbol`/
+       `derived_from`）的目标标识若在源表达式中**缺席**，即为可被确定性反驳 —— 与判级模型
+       `A11`、门禁 `model_semantic_target_present` **同谓词、三处独立实现**（铁律 #14）。
+      ⚠ 仍**只对模型产物边**执行：策划数据的符号命名有习惯差异（`Q` vs `q`、`u` vs `d_o`），
+      第 21 轮实测 22 条 `has_symbol` 缺席**全是记号变体** → 一律不用缺席撤策划边（铁律 #31）。
+  R7 `dimensionally_consistent`：两端的真量纲**均可查**时必须严格相等。该边型在本轮之前
+      **从未**被真量纲复算过（`A1` 存在却被命名缺口卡成「不可判定」，静默退化）→ 关掉
+      缺口后一次抓出 8 条量纲互斥的假边。此处为**独立第二实现**。
+
 三态（铁律 spirit：不可判定 ≠ 假）
 ----------------------------------
   源无表达式 / 端点无 symbol / 量纲查不到 → **不可判定**（`None`），**不撤**。
@@ -197,11 +208,14 @@ def run(path=NORM):
     findings = collections.defaultdict(list)
     undecidable = collections.Counter()
 
-    # ---- R1 / R2：目标 symbol 必须出现在源对象（声明 + 表达式）里 ----
+    # ---- R1 / R2 / R6：目标 symbol 必须出现在源对象（声明 + 表达式）里 ----
     #   ⚠ 只对**模型产物**边执行反驳：策划数据里的符号命名（`Q` vs `q`、`eps` vs
     #     `\mathcal{E}`）带人为习惯，误撤代价高；模型边的"符号缺失"则是纯噪声。
+    #   ⚠ Phase 31：类型集从 (`defines`,`has_symbol`) 扩到含 `derived_from` ——
+    #     与判级模型 A11 / 门禁同谓词（三处独立实现互为交叉验证，铁律 #14）。
+    SEMANTIC_TYPES = ("defines", "has_symbol", "derived_from")
     for e in E:
-        if e["type"] not in ("defines", "has_symbol"):
+        if e["type"] not in SEMANTIC_TYPES:
             continue
         if not is_model(e):
             continue
@@ -211,8 +225,11 @@ def run(path=NORM):
             continue
         s = sym_of(tnode)
         ok = has_symbol(snode, s)
-        tag = "R1_defines_target_symbol_absent" if e["type"] == "defines" \
-            else "R2_symbol_target_absent"
+        tag = "R2_symbol_target_absent"
+        if e["type"] == "defines":
+            tag = "R1_defines_target_symbol_absent"
+        elif e["type"] == "derived_from":
+            tag = "R6_derived_from_target_absent"
         if s is None or ok is None:
             undecidable[e["type"]] += 1
         elif ok is False:
@@ -246,6 +263,22 @@ def run(path=NORM):
             findings["R4_unit_multi_conflict"].append(
                 (src, props_of(N.get(src)).get("name"), len(lst), len(dims)))
 
+    # ---- R7：`dimensionally_consistent` 两端真量纲必须严格相等（Phase 31 新增）----
+    #     此前该边型**从未**被真量纲复算（铁律 #33：新维度先问「这里有没有从未被检验过的
+    #     断言」）。此处独立于 `verification_model` 自行解析节点→量名→量纲。
+    for e in E:
+        if e["type"] != "dimensionally_consistent":
+            continue
+        na = _qname(N.get(e["source"]), e["source"])
+        nb = _qname(N.get(e["target"]), e["target"])
+        da, db = dm.dim_of(na), dm.dim_of(nb)
+        if da is None or db is None:
+            undecidable["R7"] += 1
+            continue
+        if _norm(da) != _norm(db):
+            findings["R7_dim_consistent_mismatch"].append(
+                (e["id"], na, nb, kind_of(e), src_of(e)))
+
     # ---- 汇报 ----
     print("=" * 92)
     print("语义边确定性反驳审计 —— %s" % os.path.relpath(path, ROOT))
@@ -268,6 +301,22 @@ def run(path=NORM):
 def unit_str(un):
     p = props_of(un)
     return p.get("symbol") or p.get("name")
+
+
+def _qname(node, nid):
+    """节点 → 物理量规范名（**本脚本自带**解析，不 import verification_model）。"""
+    p = props_of(node)
+    if p.get("name"):
+        return str(p["name"]).strip()
+    n = str(nid)
+    for pre in ("PQ:", "PB:pq:", "PB:phy:"):
+        if n.startswith(pre):
+            return n[len(pre):]
+    ns, _, rest = n.partition(":")
+    for pre in ("pq:", "phy:"):
+        if rest.startswith(pre):
+            return rest[len(pre):]
+    return rest if ns in ("PQ",) else None
 
 
 def main():
