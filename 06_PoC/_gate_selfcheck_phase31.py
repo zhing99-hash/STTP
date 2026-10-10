@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """门禁「非真空」自检（Non-vacuous Gate Self-Check）—— Phase 31 ~ Phase 35
 ==========================================================================
 目的（铁律 #14 / #16 / #20 / #38）：

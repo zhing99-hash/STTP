@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """
 从 Phase 5 三个原始源文件（含正确节点 id）重建推往 Aura 的"加法性"delta。
 绕开 phase5_integration.py 的已知 bug（把边 source 错写成管线名）。

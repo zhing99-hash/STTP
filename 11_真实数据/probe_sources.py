@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """probe_sources.py —— 外部数据源「可达性」探测器（项目铁律的可执行版本）。
 
 为什么需要它

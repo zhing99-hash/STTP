@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 12 终态整合（一体化、幂等、可断点重跑）：
   1) 健壮加载 PhysicsBabel 5000-eq 增量边到 Aura（robust_aura_loader.write_edges 小批+重连）；
   2) LLM 复核同步：VERIFY 9 条升级 typed 桥(verified)，REJECT 76 条删除 related_to 伪影；

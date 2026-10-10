@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """phase34_alias_delta.py —— 第 24 轮 · T4 残差「跨源名称对齐」攻坚（Alias Cross-Source）
 
 本轮命题

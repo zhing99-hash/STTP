@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 27 · 可信性修复轮（Trust Fix）—— 修正 delta 生成器
 ==============================================================
 把「源头修复」灌入本地权威图 `06_PoC/etl/normalized.json`，产出一个 apply_delta 可用的

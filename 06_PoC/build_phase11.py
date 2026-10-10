@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 9 · 推理生成层产出构建。
 把全量真实图(graph_data_full)与 180 条 GNN/符号校验跨域边合并，
 产出前端 viz 图(graph_data_phase11.json) 与 Aura 增量(phase11_aura_delta.json)。

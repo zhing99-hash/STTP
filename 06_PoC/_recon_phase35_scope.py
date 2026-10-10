@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase35_scope.py —— Phase 35 只读侦察：**北极星口径自审 + 占位实体审计**
 ============================================================================
 第 25 轮「改轨」后的两项**新维度**体检（只读，不改图）：

@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """
 Phase 5.E — 集成脚本（主协调方）
 把 Phase 5.A (Wikidata same_as) + 5.B (GNN 推断) + 5.C (跨源对齐) 三路产出

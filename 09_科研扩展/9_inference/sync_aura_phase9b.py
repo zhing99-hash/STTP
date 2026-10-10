@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 9 任务1 · 批量把重筛结果同步到 Aura（UNWIND 批处理，减少往返）。
 - DROP 的 related_to 边：删除。
 - UPGRADE 的 related_to 边：删除旧 related_to，写入 typed(reactant_of/product_of) 已验证桥。

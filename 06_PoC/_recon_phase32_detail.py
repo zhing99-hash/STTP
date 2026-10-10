@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """第 22 轮侦察 ③：证据明细可取回率（只读）。
 
 对全图分类，统计：level 分布 × scope 分布 × 「ctx 里是否有明细串可取回」。

@@ -1,3 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 import sys, os, json
 sys.path.insert(0, r"C:\Users\Administrator\WorkBuddy\2026-10-08-10-51-20\STTP\06_PoC")
 import graph_export

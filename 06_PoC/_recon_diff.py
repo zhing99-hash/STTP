@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """对比「落库档位」vs「新模型复算档位」，输出逐类差异（只读，不写）。"""
 import sys, os, json, collections
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

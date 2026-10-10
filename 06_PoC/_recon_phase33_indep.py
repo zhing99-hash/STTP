@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase33_indep.py —— 第 23 轮只读侦察：T9-i 非独立证据的全量构成。
 
 复现 task_trust_audit.py 的 ok_edges（T1–T8 达标边），拆出「缺独立证据」的子集，

@@ -1,0 +1,49 @@
+STTP · 跨学科公式知识图谱（Science Topology Through Physics）
+Copyright 2026 zhing
+
+This product is licensed under the Apache License, Version 2.0
+(see the LICENSE file in the project root for the full text).
+
+----------------------------------------------------------------------------
+NOTICE
+----------------------------------------------------------------------------
+
+This product includes software developed at / by the STTP project
+(https://github.com/zhing99-hash/STTP).
+
+----------------------------------------------------------------------------
+Third-Party Components
+----------------------------------------------------------------------------
+
+The following third-party assets are bundled in 06_PoC/vendor/ and remain
+under their own respective licenses. They are redistributed unmodified.
+
+1. cytoscape.js 3.30.2
+   Copyright (c) 2016-2024, The Cytoscape Consortium.
+   License: MIT
+
+2. layout-base 2.0.1
+   License: MIT
+
+3. cose-base 2.2.0
+   License: MIT
+
+4. cytoscape-fcose 2.2.0
+   License: MIT
+
+5. MathJax 3.2.2 (es5/tex-svg)
+   Copyright (c) 2009-2024 The MathJax Consortium.
+   License: Apache License 2.0
+
+The full text of the MIT and Apache-2.0 licenses applicable to the above
+components is available at the upstream project repositories and at
+https://www.apache.org/licenses/LICENSE-2.0
+
+----------------------------------------------------------------------------
+Data Sources
+----------------------------------------------------------------------------
+
+The knowledge graph aggregates data from public scientific data sources
+(MathXiv / ArxiTeX, PhysicsBabel, ElementKG 2.0, PubChem, Wikidata, Rhea,
+ChEBI, Crossref / OpenAlex, CODATA and others). Such data remains subject to
+the terms of its original providers and is not relicensed by this project.

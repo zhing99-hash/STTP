@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """侦察 7：ALIAS 扩充的**影响模拟**（不写任何文件）。
 把候选别名代入 dm.canon/dim_of，重算 T3/T6 的每条边，统计 撤/升/不可判定。
 """

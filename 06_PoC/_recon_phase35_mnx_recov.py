@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase35_mnx_recov.py —— Phase 35 只读复核：MetaNetX 对 Rhea 反应的真实覆盖
 ============================================================================
 动机（铁律 #44：跨轮引用的数字必须由仪器现算）：

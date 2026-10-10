@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase35_reachability.py —— Phase 35 只读侦察：**第二源可达性穷举**
 ============================================================================
 第 25 轮起点任务 = 「接入第二反应源以消化 T4 残差」。按铁律 #34（负结果优先）与

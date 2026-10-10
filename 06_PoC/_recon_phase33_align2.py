@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase33_align2.py —— 第 23 轮只读侦察 4：T4 跨列复算的**真实天花板**（含 formula 判据）。
 
 对每条 T4 边，用「参与物的 label 或 formula」去匹配方程两侧，分类：

@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase34_synpreview.py —— 第 24 轮只读侦察 3：ChEBI 同义词对齐预演。
 对 Rhea 残差的去重参与物抽样，经代理从 ChEBI OLS4 取 synonyms，
 用「label ∪ synonyms」重跑侧别匹配（复用 A12 判据），统计可升级数 + 反例数（wrong）。

@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 9 任务1 续：把 85 条 KEEP(related_to) 假设送 LLM 复核。
 方法学（LLM 语义 + 符号校验）：
   (a) 符号核验: 源分子 formula 是否精确命中目标反应 equation 的某一侧 -> VERIFY(reactant/product)

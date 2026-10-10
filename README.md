@@ -1,5 +1,8 @@
 # STTP · 跨学科公式知识图谱（数理化拓扑图）
 
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
+
 > **S**cience **T**opology **T**hrough **P**hysics — 把数学公式、物理规律、化学物质与物理世界（元素 / 分子 / 反应 / 单位 / 物理量）连成**一张可推理的知识图谱**。
 
 本项目把"公式"与"物理世界"打通：从 E=mc²、F=ma、动能定理，一路连到甲烷燃烧反应、原子组成、国际单位制，并在图谱上用 **GNN 推断 + LLM 假设 + 符号校验（SymPy / pint / RDKit-等价逻辑）** 自动发现并验证跨域边。
@@ -110,4 +113,21 @@ python 06_PoC/robust_aura_loader.py --input <your_graph.json>
 
 ## 6. 许可
 
-见仓库根 `LICENSE`。
+本项目采用 **Apache License 2.0** 开源 —— 见仓库根 [`LICENSE`](LICENSE)；
+第三方组件（前端 vendor 库）与数据来源的署名见 [`NOTICE`](NOTICE)。
+
+```
+Copyright 2026 zhing
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```

@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 7i — 数论垂直切片（路线图 Phase 7 清单中最后一个数学子领域）。
 
 覆盖：同余 / 模运算 / 欧拉定理 / 费马小定理 / 中国剩余定理 / 威尔逊定理 /

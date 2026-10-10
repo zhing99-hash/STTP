@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """侦察 8：T5(has_symbol manual_curation) 与 T2(composed_of manual_curation) 的复算影响模拟。只读。"""
 import json, sys, os, collections
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

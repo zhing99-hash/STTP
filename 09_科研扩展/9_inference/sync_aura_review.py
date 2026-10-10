@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """把 LLM 复核结果(llm_review_85.json)同步到 Aura：
   - VERIFY: 新建已验证 typed 桥(reactant_of/product_of, verified=True)，并删除原 related_to 边
   - REJECT: 删除原 related_to 边(剔除 GNN 伪影)

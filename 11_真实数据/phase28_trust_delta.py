@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """phase28_trust_delta.py —— 第 18 轮 · Claim/Evidence/Verification 轻量落地（只读生成 delta）
 
 做三件事（全部**从源头恢复 / 由规则重算**，不改任何生成器逻辑之外的东西）：

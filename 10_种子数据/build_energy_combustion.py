@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """
 Phase 6 垂直切片：「能量·燃烧」
 把 数学公式(E=mc2/F=ma/KE) + 物理公式 + 物理量 + 单位 + 化学反应(CH4燃烧)

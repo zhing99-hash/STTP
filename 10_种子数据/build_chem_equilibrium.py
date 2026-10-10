@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 7h — 化学平衡垂直切片（路线图 Phase 7 清单中最后一个化学子领域）。
 
 覆盖：质量作用定律 / 反应商 / ΔG–K 关系 / Le Chatelier / 酸碱（pH·pOH·Kw·Ka·Henderson）/ 溶度积 /

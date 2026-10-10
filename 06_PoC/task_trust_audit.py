@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """task_trust_audit.py —— 北极星仪器：**任务级可信完成率**（第 18 轮 · A 路线）
 
 口径（2026-10-10 老板裁定，取代「跨域边计数 / 学科占比」）

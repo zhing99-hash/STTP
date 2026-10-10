@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase33_align3.py —— 第 23 轮只读侦察 5：T4 判据强度分层 + 假阳风险。
 区分 label 命中 / 仅 formula 命中；并检测「同侧 formula 命中但被其它同式物种指代」的歧义。只读。
 """

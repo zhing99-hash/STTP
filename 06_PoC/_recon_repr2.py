@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """侦察 2：更宽的「字符串化」检测 —— 含 dict/list 片段但首字符不是 [{ 的，
 以及源头已知的 str(list) 写法（如 pb_domains）。只读。"""
 import json, ast, collections, os, re

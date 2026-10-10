@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """侦察 4：T3 = dimensionally_consistent 边，两端点是否可用 dimension_table 真量纲复算。只读。"""
 import json, sys, os, collections
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

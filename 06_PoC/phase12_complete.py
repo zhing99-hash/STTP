@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 12 完成器（后台常驻，自动收尾）：
   等 Aura 边总数连续 2 次不再增长（推送完成）后，
   1) 运行 export_aura.py 从 Aura 反向导出权威 graph_data_phase12.json；

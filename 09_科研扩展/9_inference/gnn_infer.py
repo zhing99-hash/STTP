@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 13 · 推理生成层「带类型的边」重训（多关系链接预测）。
 
 对齐 PROJECT_DEVELOPMENT_GUIDE.md 第十节 · 待办 #2 / #3：

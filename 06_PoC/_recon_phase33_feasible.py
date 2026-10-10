@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase33_feasible.py —— 第 23 轮只读侦察 2：可独立复算子集与天花板。
 
 对 T4(reactant_of/product_of) / T8(cites/discusses) / T6(derived_from/has_unit)

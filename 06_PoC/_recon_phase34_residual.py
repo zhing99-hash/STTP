@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """_recon_phase34_residual.py —— 第 24 轮只读侦察 1：T4 残差全量构成。
 以「已落库的 Phase 33 判级」为准（铁律 #44），把 T4 残差（仍 equation_sidedness 的边）
 按 target 反应节点逐条分解：

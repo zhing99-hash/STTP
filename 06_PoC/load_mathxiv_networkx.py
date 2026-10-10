@@ -1,3 +1,11 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """
 PoC 主脚本：加载 MathXiv / ArxiTeX 风格的数学工件 JSON，
 构建 NetworkX 拓扑图并用 matplotlib 渲染首张公式拓扑图。

@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """侦察 5：T6 = derived_from | has_unit 的档位构成；以及 T5 的 230 缺口构成。只读。"""
 import json, os, collections
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

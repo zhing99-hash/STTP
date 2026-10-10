@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """从 Aura 反向导出当前全量图 -> **viz 快照**。
 
 默认输出 `06_PoC/graph_data_aura.json`（语义明确：来自 Aura 的反向导出）。

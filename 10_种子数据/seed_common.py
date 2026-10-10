@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """Phase 7 种子切片共用工具：类型标签、节点/边构造、校验、写出。
 
 用法：各切片 build_*.py 里 `import seed_common as sc`，调用 sc.n / sc.e / sc.build_and_write。

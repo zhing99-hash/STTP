@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """把 GNN 产出的**带类型边**合并进本地权威快照，并生成新的可视化快照 phase14。
 
 项目铁律（PROJECT_DEVELOPMENT_GUIDE §5.1）：用于 viz / Neo4j 的 JSON 必须经

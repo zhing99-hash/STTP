@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
 """从 Aura 重新导出权威原始图 -> 06_PoC/etl/normalized.json（ETL 原始格式）。
 用于恢复被 Phase 12 清理误删的 viz_server 后端源文件。
 原始格式: {nodes:[{id,labels:[...],props:{...}}], edges:[{id,source,target,type,kind,props:{...}}]}
