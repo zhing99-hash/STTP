@@ -10,6 +10,9 @@ elementkg_synthetic_corpus_40w/
 06_PoC/etl/neo4j/*_aura_delta.json
 11_真实数据/*_raw.json
 11_真实数据/*_cache.json
+# 摄入前的自动备份 raw（每个约 16 MB，仅本地回溯用）与临时探索脚本
+11_真实数据/*.before_*.json
+11_真实数据/_*
 11_真实数据/physicsbabel_circuits.parquet
 
 # ===== Python 缓存 / 临时 =====

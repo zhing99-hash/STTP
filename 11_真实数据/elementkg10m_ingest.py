@@ -7,7 +7,9 @@ Phase 8.B — ElementKG 2.0 全量 10M CSV 接入（真实化学核心子集）
   1) 全部 118 元素 (element 行) -> 桥接 Phase 8 EK:el:*
   2) 有界真实反应子图: 取 N 个 Reaction, 沿 PRODUCES/PARTICIPATES_IN/USED_IN + IS_MOLECULE
      解析出真实分子(Molecule, 带 PUBCHEM 全属性) + 官能团 + 元素组成
-  3) 骨架分子(PC:mol:*) 按分子式 same_as 挂到真实分子
+  3) 骨架分子(PC:mol:*) 按分子式 same_formula_as 挂到真实分子
+     ⚠ P0-4 修复（2026-10-10）：仅凭**分子式相同**不能断言"同一实体"（存在异构体 /
+     质子化态 / 立体异构），故边类型由 `same_as` 精确化为 `same_formula_as`，且不授 verified。
 两遍流式扫描(避免内存爆): pass1 建反应子图索引, pass2 抽取属性写 raw JSON。
 """
 import sys, io, csv, json, os
@@ -203,15 +205,18 @@ def pass2(selected, rxn_entities, entity2mol, need_mols):
             edges.append({"id": f"has_elem:EK2:fg:{fg}->EK2:el:{sym}", "source": f"EK2:fg:{fg}", "target": f"EK2:el:{sym}",
                           "type": "has_element", "kind": "real",
                           "props": {"confidence": 0.9, "explicit_or_inferred": "explicit", "source": "ElementKG2.0"}})
-    # 骨架桥接
+    # 骨架桥接（P0-4 修复：仅凭分子式判等 → same_formula_as，而非 same_as）
     for mid, p in mols.items():
         f = (p.get("formula") or "").replace(" ", "").upper()
         if f in SKELETON_FORMULA:
             pc = SKELETON_FORMULA[f]
-            edges.append({"id": f"same_as:{pc}->EK2:mol:{mid}", "source": pc, "target": f"EK2:mol:{mid}",
-                          "type": "same_as", "kind": "skeleton_bridge",
+            edges.append({"id": f"same_formula_as:{pc}->EK2:mol:{mid}", "source": pc, "target": f"EK2:mol:{mid}",
+                          "type": "same_formula_as", "kind": "skeleton_bridge",
                           "props": {"confidence": 0.9, "explicit_or_inferred": "inferred",
-                                    "source": "ElementKG2.0", "alignment": "formula"}})
+                                    "verified": False,
+                                    "verification_scope": "formula_only",
+                                    "source": "ElementKG2.0", "alignment": "formula",
+                                    "type_note": "同分子式≠同一实体（异构体/质子化态可能不同），故不作 same_as"}})
 
     raw = {"nodes": nodes, "edges": edges}
     with open(OUT, "w", encoding="utf-8") as f:

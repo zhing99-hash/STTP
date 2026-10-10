@@ -22,6 +22,7 @@ Verdict 字典格式
     "error_codes": List[str],   # 触发错误码
     "verified": bool,           # True only when VERIFIED
     "rejected": bool,           # True only when REJECTED
+    "verification_scope": str,  # P0-3：本门禁**实际**验证的范围（含未覆盖项），见 SCOPE_BY_GATE
 }
 
 门禁路由规则
@@ -72,6 +73,11 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
     try:
         from rdkit import Chem
         from rdkit.Chem import rdChemReactions
+        try:
+            from rdkit import RDLogger
+            RDLogger.DisableLog("rdApp.*")     # 抑制 SMARTS 解析告警刷屏
+        except Exception:
+            pass
     except ImportError:
         return (
             "NEEDS_REVIEW",
@@ -84,13 +90,39 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
         return "NEEDS_REVIEW", "候选边缺少 smiles 字段，无法验证", ["R-CHEM-02"]
 
     def count_atoms(mols) -> Dict[str, int]:
+        """显式原子 + **隐式氢**。
+        ⚠ P0-3 修复（2026-10-10）：旧版只数显式原子，`CO>>C=O`（CH₃OH → CH₂O）
+        两边的 C/O 计数相同 → 被误判"守恒"。现计入各原子隐式氢（GetTotalNumHs）。
+        注意：SMARTS 解析出的分子需先 `UpdatePropertyCache` 才会计算隐式价，否则
+        `GetTotalNumHs()` 抛 precondition 违规（实测）。"""
         counts: Dict[str, int] = {}
         for mol in mols:
             if mol is None:
                 continue
+            try:
+                mol.UpdatePropertyCache(strict=False)
+            except Exception:
+                pass
             for atom in mol.GetAtoms():
                 counts[atom.GetSymbol()] = counts.get(atom.GetSymbol(), 0) + 1
+                try:
+                    nh = atom.GetTotalNumHs()
+                except Exception:
+                    nh = 0
+                if nh:
+                    counts["H"] = counts.get("H", 0) + nh
         return counts
+
+    def total_charge(mols) -> int:
+        # ⚠ P0-3 修复（2026-10-10）：旧版只数**显式原子**、**完全不查电荷**，于是
+        #   `[Na+]>>[Na]`（原子数相同、净电荷 +1）会被判 VERIFIED。现补形式电荷守恒。
+        q = 0
+        for mol in mols:
+            if mol is None:
+                continue
+            for atom in mol.GetAtoms():
+                q += atom.GetFormalCharge()
+        return q
 
     try:
         rxn = rdChemReactions.ReactionFromSmarts(smarts)
@@ -109,19 +141,24 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
 
     r_counts = count_atoms(rxn.GetReactants())
     p_counts = count_atoms(rxn.GetProducts())
+    r_q = total_charge(rxn.GetReactants())
+    p_q = total_charge(rxn.GetProducts())
 
-    if r_counts == p_counts:
+    scope = ("验证范围：显式原子计数 + 形式电荷守恒；"
+             "**未覆盖**隐式氢补齐 / 立体化学 / 反应可行性 / 能量")
+
+    if r_counts == p_counts and r_q == p_q:
         diff_str = ", ".join(
             f"{el}: 反应物 {r_counts.get(el,0)} → 产物 {p_counts.get(el,0)}"
             for el in sorted(set(list(r_counts) + list(p_counts)))
         )
         return (
             "VERIFIED",
-            f"R-CHEM 原子守恒检验通过。原子计数：{r_counts}（反应物）= {p_counts}（产物）。"
-            f"详情：{diff_str}",
+            f"R-CHEM 原子-电荷双重守恒通过。原子计数：{r_counts} = {p_counts}；"
+            f"净电荷：{r_q} = {p_q}。详情：{diff_str}。{scope}",
             []
         )
-    else:
+    if r_counts != p_counts:
         diff = {
             el: r_counts.get(el, 0) - p_counts.get(el, 0)
             for el in set(list(r_counts) + list(p_counts))
@@ -130,10 +167,15 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
         return (
             "REJECTED",
             f"R-CHEM-01：原子守恒违反。反应物原子 {r_counts}，产物原子 {p_counts}，"
-            f"差值（非零原子）: {non_zero}。"
-            f"示例差值：{dict(list(non_zero.items())[:3])}",
+            f"差值（非零原子）: {non_zero}。{scope}",
             ["R-CHEM-01"]
         )
+    # 原子数相同但电荷不等
+    return (
+        "REJECTED",
+        f"R-CHEM-03：电荷守恒违反（原子数相同）。净电荷 反应物 {r_q} ≠ 产物 {p_q}。{scope}",
+        ["R-CHEM-03"]
+    )
 
 
 # -----------------------------------------------------------------------------
@@ -249,7 +291,8 @@ def gate_phy(candidate: dict) -> Tuple[str, str, List[str]]:
         return (
             "VERIFIED",
             f"R-PHY 量纲齐次性检验通过。"
-            f"左侧量纲={fmt_dim(lhs_dim)}，右侧量纲={fmt_dim(rhs_dim)}，完全一致。",
+            f"左侧量纲={fmt_dim(lhs_dim)}，右侧量纲={fmt_dim(rhs_dim)}，完全一致。"
+            f"验证范围：**仅**量纲齐次性；**未覆盖** 无量纲系数 / 物理意义 / 极端极限 / 符号约定。",
             []
         )
     else:
@@ -280,7 +323,10 @@ def _parse_math(expr_str: str, symbols: List[str]) -> Optional[Any]:
             implicit_multiplication_application,
             convert_xor,
         )
-        local_dict = {s: sp.Symbol(s, real=True, positive=True) for s in symbols}
+        # ⚠ P0-3 修复（2026-10-10）：旧版把**所有变量设为 positive=True**，于是
+        #   `sqrt(x**2) = x`、`|x| = x` 这类「仅对非负实数成立」的等式被判"恒成立"。
+        #   现仅声明 `real=True`（不假设正），变量域写进 evidence。
+        local_dict = {s: sp.Symbol(s, real=True) for s in symbols}
         local_dict.update(sp.__dict__)
         return parse_expr(
             expr_str,
@@ -352,9 +398,10 @@ def gate_math(candidate: dict) -> Tuple[str, str, List[str]]:
         return (
             "VERIFIED",
             f"R-MATH 符号等式验证通过。"
-            f"变量列表: {vars_list or '无'}; "
+            f"变量列表: {vars_list or '无'}; 变量域: 实数（**未假设正/非零**，故正实数专属恒等式不会误判）; "
             f"LHS={lhs}, RHS={rhs}; "
-            f"LHS - RHS 化简 = {diff_display}（= 0），等式恒成立。",
+            f"LHS - RHS 化简 = {diff_display}（= 0），等式在实数域恒成立。"
+            f"验证范围：符号化简等价；**未覆盖** 分支条件 / 定义域奇点 / 数值边界。",
             []
         )
     else:
@@ -416,6 +463,19 @@ def route_to_gate(candidate: dict) -> Tuple[str, str, str, List[str]]:
         "N/A",
         []
     )
+
+
+# =============================================================================
+# 验证范围声明（P0-3 · 铁律 #19：`verified` 不可作单一布尔，须分层）
+# =============================================================================
+
+# gate 名 -> 该门禁**实际**验证了什么（会写入 Verdict，供下游按需过滤）
+SCOPE_BY_GATE: Dict[str, str] = {
+    "R-CHEM": "explicit_atoms_plus_formal_charge; excludes:implicit_H/stereo/feasibility",
+    "R-PHY": "dimensional_homogeneity_only; excludes:coefficients/physical_meaning",
+    "R-MATH": "symbolic_equality_over_reals; excludes:branch_conditions/singularities",
+    "N/A": "no_automatic_gate",
+}
 
 
 # =============================================================================
@@ -528,6 +588,8 @@ class VerificationLoop:
             "verified_at": ts,
             "verified": verified,
             "rejected": rejected,
+            # P0-3：显式声明本门禁**实际**验证的范围（含未覆盖项），供下游按强度过滤
+            "verification_scope": SCOPE_BY_GATE.get(gate, "unspecified"),
         }
 
     def verify_all(self, candidates: List[dict]) -> List[dict]:

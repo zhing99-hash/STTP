@@ -1,0 +1,289 @@
+{
+  "meta": {
+    "source": "PhysicsBabel exponents 消元反解",
+    "method": "linear elimination over equation-level homogeneity exponents",
+    "base_dims": [
+      "M",
+      "L",
+      "T",
+      "I",
+      "Th",
+      "N",
+      "J",
+      "A"
+    ],
+    "n_equations_used": 46720,
+    "n_quantities": 59,
+    "note": "仅收录可被唯一解出的量；查不到者下游一律不建 dimensionally_consistent 边"
+  },
+  "dimensions": {
+    "mass": {
+      "M": 1
+    },
+    "length": {
+      "L": 1
+    },
+    "time": {
+      "T": 1
+    },
+    "current": {
+      "I": 1
+    },
+    "temperature": {
+      "Th": 1
+    },
+    "amount": {
+      "N": 1
+    },
+    "luminous_intensity": {
+      "J": 1
+    },
+    "angle": {
+      "A": 1
+    },
+    "force": {
+      "L": 1.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "energy": {
+      "L": 2.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "torque": {
+      "L": 2.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "power": {
+      "L": 2.0,
+      "M": 1.0,
+      "T": -3.0
+    },
+    "momentum": {
+      "L": 1.0,
+      "M": 1.0,
+      "T": -1.0
+    },
+    "ang_momentum": {
+      "L": 2.0,
+      "M": 1.0,
+      "T": -1.0
+    },
+    "action": {
+      "L": 2.0,
+      "M": 1.0,
+      "T": -1.0
+    },
+    "pressure": {
+      "L": -1.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "viscosity": {
+      "L": -1.0,
+      "M": 1.0,
+      "T": -1.0
+    },
+    "entropy": {
+      "L": 2.0,
+      "M": 1.0,
+      "Th": -1.0,
+      "T": -2.0
+    },
+    "heat_capacity": {
+      "L": 2.0,
+      "M": 1.0,
+      "Th": -1.0,
+      "T": -2.0
+    },
+    "thermal_cond": {
+      "L": 1.0,
+      "M": 1.0,
+      "Th": -1.0,
+      "T": -3.0
+    },
+    "expansion": {
+      "Th": -1.0
+    },
+    "specific_heat": {
+      "L": 2.0,
+      "Th": -1.0,
+      "T": -2.0
+    },
+    "voltage": {
+      "I": -1.0,
+      "L": 2.0,
+      "M": 1.0,
+      "T": -3.0
+    },
+    "inductance": {
+      "I": -2.0,
+      "L": 2.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "efield": {
+      "I": -1.0,
+      "L": 1.0,
+      "M": 1.0,
+      "T": -3.0
+    },
+    "mag_flux": {
+      "I": -1.0,
+      "L": 2.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "permeability": {
+      "I": -2.0,
+      "L": 1.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "capacitance": {
+      "L": -2.0,
+      "M": -1.0,
+      "T": 4.0,
+      "I": 2.0
+    },
+    "permittivity": {
+      "L": -3.0,
+      "M": -1.0,
+      "T": 4.0,
+      "I": 2.0
+    },
+    "conductivity": {
+      "L": -3.0,
+      "M": -1.0,
+      "T": 3.0,
+      "I": 2.0
+    },
+    "resistivity": {
+      "L": 3.0,
+      "M": 1.0,
+      "T": -3.0,
+      "I": -2.0
+    },
+    "resistance": {
+      "L": 2.0,
+      "I": -2.0,
+      "M": 1.0,
+      "T": -3.0
+    },
+    "bfield": {
+      "I": -1.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "molar_energy": {
+      "N": -1.0,
+      "L": 2.0,
+      "M": 1.0,
+      "T": -2.0
+    },
+    "concentration": {
+      "L": -3.0,
+      "N": 1.0
+    },
+    "cat_activity": {
+      "N": 1.0,
+      "T": -1.0
+    },
+    "grav_const": {
+      "L": 3.0,
+      "M": -1.0,
+      "T": -2.0
+    },
+    "planck": {
+      "L": 2.0,
+      "M": 1.0,
+      "T": -1.0
+    },
+    "velocity": {
+      "L": 1.0,
+      "T": -1.0
+    },
+    "stiffness": {
+      "M": 1.0,
+      "T": -2.0
+    },
+    "surf_tension": {
+      "M": 1.0,
+      "T": -2.0
+    },
+    "charge": {
+      "I": 1.0,
+      "T": 1.0
+    },
+    "molar_mass": {
+      "N": -1.0,
+      "M": 1.0
+    },
+    "acceleration": {
+      "L": 1.0,
+      "T": -2.0
+    },
+    "gravity": {
+      "L": 1.0,
+      "T": -2.0
+    },
+    "kin_viscosity": {
+      "L": 2.0,
+      "T": -1.0
+    },
+    "omega": {
+      "T": -1.0
+    },
+    "frequency": {
+      "T": -1.0
+    },
+    "thermal_diff": {
+      "L": 2.0,
+      "T": -1.0
+    },
+    "light_speed": {
+      "L": 1.0,
+      "T": -1.0
+    },
+    "flowrate": {
+      "L": 3.0,
+      "T": -1.0
+    },
+    "inertia": {
+      "L": 2.0,
+      "M": 1.0
+    },
+    "density": {
+      "L": -3.0,
+      "M": 1.0
+    },
+    "area": {
+      "L": 2.0
+    },
+    "volume": {
+      "L": 3.0
+    },
+    "gas_constant": {
+      "N": -1.0,
+      "L": 2.0,
+      "M": 1.0,
+      "T": -2.0,
+      "Th": -1.0
+    },
+    "boltzmann": {
+      "L": 2.0,
+      "M": 1.0,
+      "Th": -1.0,
+      "T": -2.0
+    },
+    "elem_charge": {
+      "I": 1.0,
+      "T": 1.0
+    },
+    "avogadro": {
+      "N": -1.0
+    }
+  }
+}

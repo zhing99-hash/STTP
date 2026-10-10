@@ -57,6 +57,13 @@ OUT_TYPED = os.path.join(HERE, "phase13_typed_edges.json")
 OUT_DETAIL = os.path.join(HERE, "phase13_typed_candidates.json")
 OUT_METRICS = os.path.join(HERE, "phase13_gnn_metrics.json")
 
+# P0-1：载入量纲真值表（11_真实数据/dimension_table.py 由 PhysicsBabel exponents 反解）
+sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
+try:
+    import dimension_table as dt
+except Exception:
+    dt = None
+
 SEED = 0
 random.seed(SEED)
 np.random.seed(SEED)
@@ -105,43 +112,78 @@ TYPES = sorted({norm_type(id2type[n]) for n in all_ids})
 SUBS = sorted({id2subj[n] for n in all_ids})
 print("    节点类型 %d 类 / 学科 %d 类" % (len(TYPES), len(SUBS)))
 
-# ------------------------------------------------------------------ 2. 邻接 / 关系集
-adj = collections.defaultdict(set)
+# ------------------------------------------------------------------ 2. 关系集 + 训练/测试划分
 edge_type_count = collections.Counter()
 edge_by_type = collections.defaultdict(list)
-all_pairs = set()
 for e in edges:
     a, b, t = e.get("source"), e.get("target"), e.get("type")
     if a not in idx or b not in idx:
         continue
-    adj[a].add(b)
-    adj[b].add(a)
     edge_type_count[t] += 1
     edge_by_type[t].append((a, b))
-    all_pairs.add((a, b))
+
+all_pairs = {(e.get("source"), e.get("target")) for e in edges
+             if e.get("source") in idx and e.get("target") in idx}
 
 RELS = sorted([t for t, c in edge_type_count.items() if c >= MIN_REL_COUNT])
 print("[2] 关系集（样本数 >= %d）：%d 类" % (MIN_REL_COUNT, len(RELS)))
 
+# ⚠ P0-5 修复（2026-10-10 · 可信性修复轮）：**先划分 holdout，再构训练子图**。
+# 旧版把**全部边**投入训练（仅 has_symbol 下采样），评估时又取**同一批** edge_by_type[rel]
+# 的前 10% 作测试 —— 测试正样本已在训练集中，模型只是"背答案"，MRR 0.70 无意义。
+# 现改为：
+#   * 按「无向对」整组划分（防止 (a,b) 在训练、(b,a) 在测试的反向泄漏）
+#   * 每关系留出 10%（上限 200 组）作测试
+#   * 邻接矩阵 / 关系掩码 / 节点结构特征 **一律只用训练边**构建
+random.seed(SEED)
+train_by_rel = collections.defaultdict(list)
+test_by_rel = collections.defaultdict(list)
+for r in sorted(edge_type_count):
+    groups = collections.defaultdict(list)
+    for a, b in edge_by_type[r]:
+        groups[(a, b) if a <= b else (b, a)].append((a, b))
+    keys = sorted(groups)
+    random.shuffle(keys)
+    n_test = max(1, min(200, len(keys) // 10))
+    test_keys = set(keys[:n_test])
+    for k in keys:
+        (test_by_rel if k in test_keys else train_by_rel)[r].extend(groups[k])
+
+# 训练子图的无向邻接（**仅训练边**；用于图卷积与结构特征）
+adj = collections.defaultdict(set)
+for r in sorted(edge_type_count):
+    for a, b in train_by_rel[r]:
+        adj[a].add(b)
+        adj[b].add(a)
+
 train_pairs = []
-pos_by_ru = collections.defaultdict(set)
+pos_by_ru = collections.defaultdict(set)   # 全图正例：仅用于负采样/filtered-eval 过滤，**不参与训练**
 pos_by_rv = collections.defaultdict(set)
 for r in RELS:
-    pairs = edge_by_type[r]
-    if r == "has_symbol" and len(pairs) > HAS_SYMBOL_CAP:
-        pairs = random.sample(pairs, HAS_SYMBOL_CAP)
     ri = RELS.index(r)
-    for a, b in pairs:
-        train_pairs.append((idx[a], ri, idx[b]))
+    for a, b in edge_by_type[r]:
         pos_by_ru[(ri, idx[a])].add(idx[b])
         pos_by_rv[(ri, idx[b])].add(idx[a])
-print("    训练正样本 %d 条" % len(train_pairs))
+    pairs = train_by_rel[r]
+    if r == "has_symbol" and len(pairs) > HAS_SYMBOL_CAP:
+        pairs = random.sample(pairs, HAS_SYMBOL_CAP)
+    for a, b in pairs:
+        train_pairs.append((idx[a], ri, idx[b]))
+print("    训练正样本 %d 条 / 测试正样本 %d 条"
+      % (len(train_pairs), sum(len(v) for v in test_by_rel.values())))
+
+# 断言守卫（P0-5 回归门禁）：训练/测试三元组不得重叠
+_train_trip = {(idx[a], RELS.index(r), idx[b]) for r in RELS for a, b in train_by_rel[r]}
+_test_trip = {(idx[a], RELS.index(r), idx[b]) for r in RELS for a, b in test_by_rel[r]}
+_overlap = _train_trip & _test_trip
+assert not _overlap, "P0-5 失败：训练/测试三元组重叠 %d 条" % len(_overlap)
 
 # 关系-端点类型模式（用于 schema-constrained decoding：禁止 product_of Element→Element 这类荒唐预测）
+# ⚠ 仅用**训练边**推导，避免测试边的类型组合泄漏（P0-5）
 TYPE_IDX = {t: i for i, t in enumerate(TYPES)}
 REL_MASK = np.zeros((len(RELS), len(TYPES), len(TYPES)), dtype=bool)
 for ri_, rel in enumerate(RELS):
-    for a, b in edge_by_type[rel]:
+    for a, b in train_by_rel[rel]:
         if a in idx and b in idx:
             REL_MASK[ri_, TYPE_IDX[norm_type(id2type[a])], TYPE_IDX[norm_type(id2type[b])]] = True
 print("    关系-端点类型模式：%d 个 (关系,头类型,尾类型) 合法组合"
@@ -156,11 +198,11 @@ BASE_DIMS = ["M", "L", "T", "I", "K", "N", "J"]
 
 out_et = collections.defaultdict(collections.Counter)
 in_et = collections.defaultdict(collections.Counter)
-for e in edges:
-    a, b, t = e.get("source"), e.get("target"), e.get("type")
-    if a in idx and b in idx:
-        out_et[a][t] += 1
-        in_et[b][t] += 1
+# ⚠ P0-5：结构特征**仅由训练边**统计（旧版取全图，测试边的度/类型分布直接泄漏进节点特征）
+for r_ in sorted(edge_type_count):
+    for a, b in train_by_rel[r_]:
+        out_et[a][r_] += 1
+        in_et[b][r_] += 1
 
 n_et = len(EDGE_TYPES)
 FEAT_DIM = (len(TYPES) + len(SUBS) + 2 + n_et + n_et
@@ -315,7 +357,7 @@ with torch.no_grad():
     H = enc(XT)
 
 # ------------------------------------------------------------------ 6. 评估
-print("[5] 评估（每关系留出 10% 正样本，过滤式 MRR / Hits@10）...")
+print("[5] 评估（每关系留出 10% 正样本【**已从训练集中剔除**】，过滤式 MRR / Hits@10）...")
 
 
 def filtered_eval(ri, test_triples, pool=250):
@@ -341,10 +383,8 @@ def filtered_eval(ri, test_triples, pool=250):
 
 metrics = {}
 for rel in RELS:
-    pairs = [(idx[a], idx[b]) for a, b in edge_by_type[rel] if a in idx and b in idx]
-    random.shuffle(pairs)
-    n_test = max(1, min(200, len(pairs) // 10))
-    mrr, h10, n = filtered_eval(RELS.index(rel), pairs[:n_test])
+    pairs = [(idx[a], idx[b]) for a, b in test_by_rel[rel] if a in idx and b in idx]
+    mrr, h10, n = filtered_eval(RELS.index(rel), pairs)
     metrics[rel] = {"n_edges": edge_type_count[rel], "n_test": n,
                     "MRR": round(mrr, 4), "Hits@10": round(h10, 4)}
     print("    %-26s edges=%-6d MRR=%.4f Hits@10=%.4f" % (rel, edge_type_count[rel], mrr, h10))
@@ -384,7 +424,30 @@ for nid in all_ids:
 print("    元素原子量表：%d 个符号" % len(SYM_WEIGHT))
 
 
+def _qname(nid):
+    """节点 id -> 物理量名（支持 PB:pq:<n> / <NS>:pq:<n> / <NS>:phy:<n> / PQ:<n>）。"""
+    if nid.startswith("PB:pq:"):
+        return nid[len("PB:pq:"):]
+    ns, _, rest = nid.partition(":")
+    for pre in ("pq:", "phy:"):
+        if rest.startswith(pre):
+            return rest[len(pre):]
+    if ns == "PQ":
+        return rest
+    return None
+
+
 def dim_check(u, v):
+    """量纲一致性判定（**优先真值表**；P0-1 修复）。
+
+    旧版仅用 `has_unit` 边的**首个单位**做 pint 比对，粒度粗且易误判
+    （实测把 angular_momentum 与 energy、voltage 与 efield 判为"一致"）。
+    现优先用 dimension_table 的消元反解真值表（严格相等），仅覆盖不到时回退 pint。
+    """
+    if dt is not None:
+        nu, nv = _qname(u), _qname(v)
+        if nu and nv and dt.dim_of(nu) is not None and dt.dim_of(nv) is not None:
+            return dt.dim_equal(nu, nv)
     uu, vu = units_cache.get(u), units_cache.get(v)
     if not uu or not vu:
         return None
@@ -572,10 +635,14 @@ def gate_check(u, v):
                 "摩尔质量 %s g/mol（%s + 原子量校验）" % (mm, "组成边" if src == "composed_of" else "化学式解析")
         return "has_quantity", "R-PHY", "NEEDS_REVIEW", "分子-物理量待验证"
 
-    # R-MATH：公式 LaTeX 规范化等价
+    # R-MATH：公式 LaTeX 字符串规范化等价（**仅字符串层面，不构成数学等价**）
+    # ⚠ P0-2 修复：旧版返回 same_as / VERIFIED，使 `\sin(x)`/`\cos(x)` 这类误判升格为"已证实"。
     if tu == "Formula" and tv == "Formula":
-        if norm_latex(id2attrs[u].get("latex")) and norm_latex(id2attrs[u].get("latex")) == norm_latex(id2attrs[v].get("latex")):
-            return "same_as", "R-MATH", "VERIFIED", "LaTeX 规范化后等价"
+        lu = norm_latex(id2attrs[u].get("latex"))
+        lv = norm_latex(id2attrs[v].get("latex"))
+        if lu and lu == lv:
+            return "same_latex_normalized", "R-MATH", "NEEDS_REVIEW", \
+                "LaTeX 字符串规范化后相同（非数学等价）"
         return None
     return None
 
@@ -683,7 +750,20 @@ partB = []
 bcount = collections.Counter()
 
 
-def emitB(store, key, s, t, rtype, gate, rat, sname, extra=None):
+# 各门禁「实际验证了什么」的显式声明（P0-3：verified 不可作单一布尔，须分层——
+# 由 type/kind/gate 共同决定；此处把每个门禁的验证范围显式写入边属性）
+SCOPE = {
+    "B1": "explicit_atoms_only",       # 仅显式原子；**未计**隐式氢 / 形式电荷 / 立体化学
+    "B2": "periodic_position",         # 仅周期表位置（周期/族）
+    "B3": "dimensional_only",          # 仅量纲（应为真值表严格相等）
+    "B4": "equation_side_only",        # 仅方程左右侧角色
+    "B5": "molar_mass_from_formula",   # 摩尔质量＝化学式 × 标准原子量
+    "B6": "string_normalization",      # 仅 LaTeX 字符串规范化（**非数学等价**）
+}
+
+
+def emitB(store, key, s, t, rtype, gate, rat, sname, extra=None,
+          status="VERIFIED", conf=0.95):
     if bcount[sname] >= CAPS[sname]:
         return
     if (s, t) in all_pairs or (t, s) in all_pairs or (s, t) in store:
@@ -692,8 +772,10 @@ def emitB(store, key, s, t, rtype, gate, rat, sname, extra=None):
         return
     store.add((s, t))
     bcount[sname] += 1
-    props = {"confidence": 0.95, "explicit_or_inferred": "inferred", "verified": True,
-             "verification_gate": gate, "status": "VERIFIED",
+    props = {"confidence": conf, "explicit_or_inferred": "inferred",
+             "verified": status == "VERIFIED",
+             "verification_gate": gate, "status": status,
+             "verification_scope": SCOPE.get(sname, "unspecified"),
              "source": "Phase13.Gate." + sname, "rationale": rat, "domain": "cross_domain"}
     if extra:
         props.update(extra)
@@ -786,7 +868,10 @@ for mi in mols:
         emitB(_store, None, all_ids[mi], all_ids[pi], "has_quantity", "R-PHY",
               "摩尔质量 %s g/mol（%s）" % (mm, "组成边+原子量" if msrc == "composed_of" else "化学式解析+原子量"), "B5",
               extra={"value": mm, "unit": "g/mol", "mass_source": msrc})
-# B6 公式 × 公式 → same_as（LaTeX 规范化等价）
+# B6 公式 × 公式 → same_latex_normalized（**仅字符串规范化相同，非数学等价**）
+# ⚠ P0-2 修复（2026-10-10）：旧版把「LaTeX 归一后字符串相等」当作 `same_as` 并标
+# VERIFIED —— `\sin(x)` 与 `\cos(x)` 删掉命令后都归一为 `(x)` 即判等（已复现）。
+# 现改为精确化的边类型 + **不授 VERIFIED**（NEEDS_REVIEW，需人工或符号系统复核）。
 buckets = collections.defaultdict(list)
 for fi in nodes_by_type.get("Formula", []):
     key = norm_latex(id2attrs[all_ids[fi]].get("latex"))
@@ -795,7 +880,9 @@ for fi in nodes_by_type.get("Formula", []):
 for key, ids in buckets.items():
     for x in range(len(ids)):
         for y in range(x + 1, len(ids)):
-            emitB(_store, None, ids[x], ids[y], "same_as", "R-MATH", "LaTeX 规范化后等价", "B6")
+            emitB(_store, None, ids[x], ids[y], "same_latex_normalized", "R-MATH",
+                  "LaTeX 字符串规范化后相同（**非数学等价证明**，仅字符串层面线索）", "B6",
+                  status="NEEDS_REVIEW", conf=0.6)
 
 print("    Part B 产出 %d 条，分布 %s" % (len(partB), dict(bcount.most_common())))
 

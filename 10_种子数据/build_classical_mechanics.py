@@ -104,9 +104,10 @@ for pq, un in [
 ]:
     edges.append(sc.e(pq, un, "has_unit", "quantity_unit"))
 
-# 量纲一致
+# 量纲一致（⚠ P0-1 修复 2026-10-10：原第 1 项 ("CM:pq:momentum","CM:pq:mass","p=mv")
+# 是**笔误**——动量 M·L·T⁻¹ 与质量 M 量纲不同，不能建 dimensionally_consistent；
+# "p=mv" 的语义已由下方 `CM:fo:momentum --derived_from--> PQ:mass/vel` 正确表达，故删除）
 for a, b, note in [
-    ("CM:pq:momentum", "CM:pq:mass", "p=mv"),
     ("CM:pq:work", "CM:pq:torque", "work and torque share M*L^2*T^-2"),
     ("CM:pq:impulse", "CM:pq:momentum", "J=Δp"),
 ]:

@@ -22,7 +22,7 @@ CH₄ + 2O₂ → CO₂ + 2H₂O  (Reaction)
 ```
 最终实现：从纯数学定理出发，一路推理到真实化学分子的物理化学性质，全链路可符号验证。
 
-**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **9656 节点 / 49881 边**（Aura 云端集合级对账零差异），已开源至 GitHub。**北极星指标「跨学科连通性」已于 2026-10-09 首次仪器化**：连通分量 **1**、孤立节点 **0**；**学科均衡经 Phase 26 治理** —— 物理占比 **71.5% → 54.3%**；**但跨域边绝对数仍 869（占比 2.16% → 1.74%，被化学侧分母摊薄）**，`has_quantity` 仍占 **90%**、跨学科实质只在「化学 ↔ 物理」**93%** —— **下一步应专做「跨域桥」而非继续补量**。
+**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **9656 节点 / 48735 边**（Aura 云端集合级对账零差异），已开源至 GitHub。**北极星指标「跨学科连通性」已于 2026-10-09 首次仪器化**：连通分量 **1**、孤立节点 **0**；**学科均衡经 Phase 26 治理** —— 物理占比 **71.5% → 54.3%**；**但跨域边绝对数仍 869（占比 2.16% → 1.74%，被化学侧分母摊薄）**，`has_quantity` 仍占 **90%**、跨学科实质只在「化学 ↔ 物理」**93%** —— **下一步应专做「跨域桥」而非继续补量**。
 
 ---
 
@@ -34,15 +34,15 @@ URI:        neo4j+ssc://853a33bc.databases.neo4j.io
 Database:   853a33bc
 Username:   853a33bc
 Password:   （见 环境变量 / .env，禁止明文）
-总计:       9656 节点 / 49881 边（与本地集合级对账零差异）
+总计:       9656 节点 / 48735 边（与本地集合级对账零差异）
 ```
 
-> ⚠️ Aura 免费实例约 5 万节点上限，当前 **9656 节点 / 49881 边**（云端与本地集合级对账零差异）；扩容（如 Rhea 全库 1.9 万条反应）前先估算增量并分批推。
+> ⚠️ Aura 免费实例约 5 万节点上限，当前 **9656 节点 / 48735 边**（云端与本地集合级对账零差异）；扩容（如 Rhea 全库 1.9 万条反应）前先估算增量并分批推。
 
 ### 2.2 本地可视化服务
 ```
 地址:   http://127.0.0.1:8765/
-数据:   06_PoC/graph_data_phase26.json（9656 节点 / 49881 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
+数据:   06_PoC/graph_data_phase27.json（9656 节点 / 48735 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
 前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax，**依赖已本地 vendored**，可完全离线）
 ```
 
@@ -51,7 +51,7 @@ Password:   （见 环境变量 / .env，禁止明文）
 bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_PYTHON
 ```
 > 长驻请后台启动并重定向日志，例如：`bash sttp.sh viz > .runlog/viz.log 2>&1 &`
-> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase26.json python 06_PoC/viz_server.py`
+> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase27.json python 06_PoC/viz_server.py`
 > ⚠️ 必须用系统 Python（`.env` 的 `STTP_PYTHON`）；托管 3.13 是空环境，缺依赖。
 
 ### 2.3 GitHub 仓库
@@ -190,7 +190,9 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 | has_functionalgroup | 2350 | 分子 → 官能团 | — |
 | reagent_of | 1807 | 试剂 → 反应 | R-CHEM |
 | same_period | 1360 | 同周期元素 | — |
-| dimensionally_consistent | 1200 | 量纲自洽（物理方程内） | R-PHY |
+| dimensionally_consistent | 56 | 量纲严格相等（真值表判定，P0-1 修复） | R-PHY |
+| same_formula_as | 6 | 同分子式（**非同一实体**，P0-4 修复，`verification_scope=formula_only`） | R-CHEM |
+| same_latex_normalized | 0 | LaTeX **字符串**规范化相同（**非数学等价**，P0-2 修复，NEEDS_REVIEW） | R-MATH |
 | same_family | 374 | 同族元素（f 区实为「同系列」） | — |
 | discusses | 178 | 文献 → 概念 | — |
 | cites | 176 | 文献引用 | — |
@@ -412,6 +414,30 @@ python 03_知识层/normalize_labels.py --delta-only <备份.json>   # 据备份
 > 收敛到 `graph_export.TYPE_PRIORITY` 的**受控词表 ∪ {Entity}**。
 > **词表封闭性断言**必须用**归一化后**的 labels 判定（用原始 labels 会把「待改的」误报成「遗留的」）。
 > delta 节点须带 `"props": {}`（防 `SET n += null` 报错）。
+
+---
+
+### 5.13 `11_真实数据/dimension_table.py` — ★物理量量纲真值表（**2026-10-10 新增**）
+
+**背景**：`physicsbabel_ingest.py` 曾把「方程维度自洽（整式齐次）」误写为「两量量纲一致」（P0-1），
+沉淀 1130 条脏边。PhysicsBabel 的 `exponents` 是**方程级齐次系数**（`∏Qᵢ^expᵢ = 无量纲`），
+把它当作关于「各量量纲向量」的**线性方程组**、以 SI 基本量为边界条件，用**消元法**即可反解真量纲。
+
+**接口**：`dim_of(name)` / `dim_equal(a,b)` / `is_homogeneous(keys,exponents)`（**三态**：True / False / **None=不可判定**）
+/ `same_dimension_pairs(names)`；`ALIAS` 把其它命名空间的量名（`CM:pq:work`、`MX:phy:kinetic_energy`）对齐到规范名。
+产物 `dimension_table.json`（59 个量，实测 `force=MLT⁻²` / `voltage=ML²T⁻³I⁻¹` / `permittivity=M⁻¹L⁻³T⁴I²` 全对）。
+
+**用法**：`$PY 11_真实数据/dimension_table.py`（重建）。
+
+### 5.14 `06_PoC/frozen_gate.py` — ★冻结反例集门禁（**2026-10-10 新增**，与 `connectivity_audit.py` **并列**）
+
+**动机**：铁律 #14 —— 自检输入若与被检对象同源会一起静默通过。故反例集**独立于校验器实现**，
+且**每条含正对照**（应当成立者必须成立），防门禁过严。
+
+**组成**：`frozen_counterexamples.json`（12 条，覆盖 5 条 P0）+ `frozen_gate.py`
+（区分「主图结果层扫描」与「校验器层动态调用」；**门禁因缺依赖降级时记 SKIP 而非 PASS** —— 铁律 #13）。
+
+**用法**：`$PY 06_PoC/frozen_gate.py [--json]`；退出码 0 = 全通过，1 = 有回归。
 
 ---
 
@@ -701,7 +727,7 @@ python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_U
 
 # 4. 启动本地可视化
 bash sttp.sh viz
-# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase26.json）
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase27.json）
 
 # 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
 bash sttp.sh export

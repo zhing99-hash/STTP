@@ -1,0 +1,112 @@
+{
+  "meta": {
+    "name": "冻结反例集（Frozen Counterexamples）",
+    "purpose": "已知错误模式的回归门禁：任何一条被判『已证实 / 应存在』即视为回归失败。与 connectivity_audit.py 并列。",
+    "created": "2026-10-10",
+    "phase": 27,
+    "ref": "07_交付物/GPT6评估报告独立核验与路线调整建议_20261009.md",
+    "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严",
+    "run": "python 06_PoC/frozen_gate.py [--json]"
+  },
+  "cases": [
+    {
+      "id": "P0-1-dim-energy-mass",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "desc": "energy(ML²T⁻²) 与 mass(M) 量纲不同 → 不得建 dimensionally_consistent",
+      "input": {"a": "energy", "b": "mass"},
+      "expect": "DIM_NOT_EQUAL"
+    },
+    {
+      "id": "P0-1-dim-angular-energy",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "desc": "angular_momentum(ML²T⁻¹) 与 energy(ML²T⁻²) 量纲不同（Phase13.Gate.B3 曾误判一致）",
+      "input": {"a": "angular_momentum", "b": "energy"},
+      "expect": "DIM_NOT_EQUAL"
+    },
+    {
+      "id": "P0-1-dim-voltage-efield",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "desc": "voltage(ML²T⁻³I⁻¹) 与 efield(MLT⁻³I⁻¹) 量纲不同（差一个 L）",
+      "input": {"a": "voltage", "b": "efield"},
+      "expect": "DIM_NOT_EQUAL"
+    },
+    {
+      "id": "P0-1-dim-positive-control",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "desc": "（正对照）energy 与 torque 确为同量纲（均 ML²T⁻²）→ 必须判相等，否则门禁过严",
+      "input": {"a": "energy", "b": "torque"},
+      "expect": "DIM_EQUAL"
+    },
+    {
+      "id": "P0-1-main-dc-no-mismatch",
+      "p0": "P0-1",
+      "kind": "graph_scan",
+      "desc": "主图中「两端量纲严格不等」的 dimensionally_consistent 边数必须为 0（真值表判定）",
+      "scan": {"edge_type": "dimensionally_consistent", "dim_mismatch": true},
+      "expect": "ZERO"
+    },
+    {
+      "id": "P0-2-latex-not-same-as",
+      "p0": "P0-2",
+      "kind": "graph_scan",
+      "desc": "不得存在以「LaTeX 字符串规范化」为据的 same_as / VERIFIED 边",
+      "scan": {"forbidden": [
+        {"edge_type": "same_as", "rationale_contains": "LaTeX"},
+        {"edge_type": "same_latex_normalized", "status": "VERIFIED"}
+      ]},
+      "expect": "ABSENT"
+    },
+    {
+      "id": "P0-3-chem-implicit-H",
+      "p0": "P0-3",
+      "kind": "gate_chem",
+      "desc": "CO>>C=O：显式 C/O 计数相同，但隐式氢 CH₃OH(4) vs CH₂O(2) 不同 → 不得判守恒",
+      "input": {"smiles": "CO>>C=O"},
+      "expect": "NOT_VERIFIED"
+    },
+    {
+      "id": "P0-3-chem-charge",
+      "p0": "P0-3",
+      "kind": "gate_chem",
+      "desc": "[Na+]>>[Na]：原子数相同但净电荷 +1→0 不守恒",
+      "input": {"smiles": "[Na+]>>[Na]"},
+      "expect": "NOT_VERIFIED"
+    },
+    {
+      "id": "P0-3-chem-positive-control",
+      "p0": "P0-3",
+      "kind": "gate_chem",
+      "desc": "（正对照）2 H2 + O2 >> 2 H2O 原子与电荷均守恒 → 必须 VERIFIED",
+      "input": {"smiles": "[H][H].[H][H].[O]=[O]>>[H]O[H].[H]O[H]"},
+      "expect": "VERIFIED"
+    },
+    {
+      "id": "P0-3-math-domain-sqrt",
+      "p0": "P0-3",
+      "kind": "gate_math",
+      "desc": "sqrt(x²)=x 仅在 x≥0 成立；变量域不得默认 positive",
+      "input": {"lhs": "sqrt(x**2)", "rhs": "x", "vars": ["x"]},
+      "expect": "NOT_VERIFIED"
+    },
+    {
+      "id": "P0-3-math-positive-control",
+      "p0": "P0-3",
+      "kind": "gate_math",
+      "desc": "（正对照）(x+1)² = x²+2x+1 恒成立 → 必须 VERIFIED",
+      "input": {"lhs": "(x+1)**2", "rhs": "x**2+2*x+1", "vars": ["x"]},
+      "expect": "VERIFIED"
+    },
+    {
+      "id": "P0-4-skeleton-bridge-absent",
+      "p0": "P0-4",
+      "kind": "graph_scan",
+      "desc": "主图中不得再出现 kind==skeleton_bridge 的 same_as 边（应改判 same_formula_as）",
+      "scan": {"edge_type": "same_as", "edge_kind": "skeleton_bridge"},
+      "expect": "ABSENT"
+    }
+  ]
+}

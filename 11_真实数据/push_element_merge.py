@@ -87,8 +87,21 @@ RETURN count(rel) AS c
 DEL_EDGE_CYPHER = """
 UNWIND $rows AS row
 MATCH (a:Entity {id: row.source})-[r]->(b:Entity {id: row.target})
-WHERE type(r) = row.type AND coalesce(r.kind,'') = coalesce(row.kind,'')
+WHERE type(r) = row.type
+  AND (row.kind IS NULL OR coalesce(r.kind,'') = coalesce(row.kind,''))
 DELETE r
+RETURN count(*) AS c
+"""
+
+# 边删除后的**残留回查**（按 source/target/type，不带 kind，因为带 kind 的已被删）。
+# ⚠ 2026-10-10 踩坑：旧版 DEL_EDGE_CYPHER 强制 `kind` 相等，而多数 delta 的 delete_edges
+# 不带 kind（→ NULL）→ `coalesce(r.kind,'')='real' ≠ ''` → **一条都没删**；但 run_batched 的
+# `done += len(seg)` 是**无条件累加**，于是日志报「边 DELETE 完成 1160/1160」——铁律 #13
+# 「语句跑完 ≠ 事情做成」。故补此回查并按残留数判失败。
+LEFT_EDGE_CYPHER = """
+UNWIND $rows AS row
+MATCH (a:Entity {id: row.source})-[r]->(b:Entity {id: row.target})
+WHERE type(r) = row.type
 RETURN count(r) AS c
 """
 
@@ -238,8 +251,18 @@ def main():
             left = s.run("MATCH (n) WHERE n.id IN $ids RETURN count(n) AS c",
                          ids=del_nodes).single()["c"]
             elem = s.run("MATCH (n:Element) RETURN count(n) AS c").single()["c"]
+            left_edges = (s.run(LEFT_EDGE_CYPHER, rows=dels).single()["c"]
+                          if dels else 0)
         print(f"[after ] Aura: {n1} 节点 / {e1} 边  (Δ{n1-n0:+d} / Δ{e1-e0:+d})")
-        print(f"[check ] 待删节点残留 {left}/{len(del_nodes)}（应为 0） · Element 节点 {elem}（应为 118）")
+        print(f"[check ] 待删节点残留 {left}/{len(del_nodes)}（应为 0） · "
+              f"**待删边残留 {left_edges}/{len(dels)}（应为 0）** · Element 节点 {elem}（应为 118）")
+        if left_edges:
+            print("\n" + "!" * 72)
+            print(f"!! 待删边仍有 {left_edges} 条残留 → **云端与本地已分叉**！")
+            print("!! 多为 delta 的 delete_edges 缺 kind 且语句未做通配所致（已修语句）；")
+            print("!! 请重跑本步（MERGE 幂等，可安全重复）。")
+            print("!" * 72)
+            return 3
 
         lost = bn + bdn + be + bd
         if lost:
