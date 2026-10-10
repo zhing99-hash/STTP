@@ -1,0 +1,73 @@
+{
+ "meta": {
+  "phase": 30,
+  "created": "2026-10-10",
+  "theme": "跨域桥去伪存真 —— 真孤岛冻结清单",
+  "finding": "Phase 30 撤回 81 条「可被确定性反驳」的假语义边后暴露：下列 4 个连通分量（共 26 节点）在撤回前**唯一**与主图的连接就是那些假边 —— 微积分簇仅靠 3 条 `defines→TH:pq:gas_const`（链式法则/FTC/极限定义「定义」气体常数）、几何三角簇仅靠 2 条 `defines→MG:pq:angle`（Euler 恒等式/理想气体状态方程「定义」角度）、电感与电容簇仅靠 4 条假 `has_unit`（`gas_const→henry/farad`、`inductance/capacitance→j_per_k/pascal`）。撤回后它们成为**真孤岛**。",
+  "policy": "真孤岛**一律不做假连接**（本轮的教训正是「不要为了指标好看而编造边」）。任何**新增**孤岛（不在本清单内）或清单外节点进入孤岛 → 视为回归，门禁 FAIL。若要消除某个孤岛，必须补一条**有证据**的边（如算子桥）并同步更新本文件。",
+  "max_components": 5,
+  "min_component_size": 100,
+  "island_count": 4,
+  "island_nodes_total": 26
+ },
+ "islands": [
+  {
+   "id": "island-calculus",
+   "size": 16,
+   "subject": "数学",
+   "why": "MC（微积分）切片 + `MX:math:derivative_power`/`power_rule` 两个数学概念 + 1 个 Wikidata 实体。撤回前唯一的图外连接是 3 条假 `defines` 边（`MC:fo:chain_rule` / `MC:fo:ftc` / `MC:fo:limit_def` → `TH:pq:gas_const`）。簇内部由 `same_as` / `has_symbol` / `has_quantity` 自身连通。",
+   "nodes": [
+    "MC:fo:chain_rule",
+    "MC:fo:ftc",
+    "MC:fo:limit_def",
+    "MC:fo:power_rule",
+    "MC:fo:taylor",
+    "MC:pq:derivative",
+    "MC:pq:integral",
+    "MC:pq:limit",
+    "MC:pq:order",
+    "MC:sy:dx",
+    "MC:sy:f",
+    "MC:sy:g",
+    "MC:sy:n",
+    "MX:math:derivative_power",
+    "MX:math:power_rule",
+    "WD:Q1190543"
+   ]
+  },
+  {
+   "id": "island-geometry-trig",
+   "size": 5,
+   "subject": "数学",
+   "why": "MG（几何）切片：正弦/余弦定理 + 角度量 + θ + radian。撤回前唯一的图外连接是 2 条假 `defines` 边（`MA:fo:euler_identity` / `TH:fo:ideal_gas` → `MG:pq:angle`）。",
+   "nodes": [
+    "MG:fo:law_cosines",
+    "MG:fo:law_sines",
+    "MG:pq:angle",
+    "MG:sy:theta",
+    "MG:un:radian"
+   ]
+  },
+  {
+   "id": "island-inductance",
+   "size": 3,
+   "subject": "物理",
+   "why": "电感量 + 符号 L + 单位 henry。撤回前唯一的图外连接是假 `has_unit`（`TH:pq:gas_const→EM:un:henry` 及 `EM:pq:inductance→{j_per_k, pascal}`）。簇内的 `EM:pq:inductance --has_unit--> EM:un:henry` 本身**是正确**的（henry 即电感单位）→ 保留。",
+   "nodes": [
+    "EM:pq:inductance",
+    "EM:sy:L",
+    "EM:un:henry"
+   ]
+  },
+  {
+   "id": "island-capacitance",
+   "size": 2,
+   "subject": "物理",
+   "why": "电容量 + 单位 farad。撤回前唯一的图外连接是假 `has_unit`（`gas_const→farad`、`capacitance→{j_per_k, pascal}`）。簇内的 `EM:pq:capacitance --has_unit--> EM:un:farad` **正确**（farad 即电容单位）→ 保留。",
+   "nodes": [
+    "EM:pq:capacitance",
+    "EM:un:farad"
+   ]
+  }
+ ]
+}

@@ -5,7 +5,7 @@
   "created": "2026-10-10",
   "phase": 30,
   "ref": "07_交付物/Phase30_去伪存真报告_20261010.md",
-  "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严。Phase 29 追加跨域桥断言：『桥必须有证据』与『桥不得自相矛盾』，两者都带正对照（含 min_count 防空真通过） | Phase 30 追加『语义边去伪』断言：单位量纲一致/唯一、model 边目标符号必须出现于源表达式、数学桥必须有算子证据；并补『每摩尔/表达式-only』两处判据校准的正反例。",
+  "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严。Phase 29 追加跨域桥断言：『桥必须有证据』与『桥不得自相矛盾』，两者都带正对照（含 min_count 防空真通过） | Phase 30 追加『语义边去伪』断言：单位量纲一致/唯一、model 边目标符号必须出现于源表达式、数学桥必须有算子证据；并补『每摩尔/表达式-only』两处判据校准的正反例。 | Phase 30 再追加『真孤岛冻结』断言：连通分量必须逐节点等于 known_islands.json 的并集（撤回假边后暴露的 4 个真孤岛），新增孤岛即回归。",
   "kinds": [
    "dim_table",
    "gate_chem",
@@ -1452,6 +1452,18 @@
     "level": "rule_checked",
     "scope": "unit_dimension_recompute"
    }
+  },
+  {
+   "id": "P1-den-main-island-freeze",
+   "p0": "P1-struct",
+   "kind": "graph_scan",
+   "desc": "连通分量必须逐节点等于 known_islands.json（4 个真孤岛 / 26 节点）且分量总数 ≤ 5；新增孤岛即 FAIL（Phase 30 撤回 81 条假边后暴露：这 26 个节点此前唯一的图外连接就是假边）",
+   "scan": {
+    "island_freeze": {
+     "max_components": 5
+    }
+   },
+   "expect": "FROZEN_OK"
   }
  ]
 }

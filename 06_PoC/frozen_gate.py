@@ -453,6 +453,65 @@ def run_case(case, graph):
                 "数学桥 %d 条（需≥%d），无证据/低于 %s 的 %d 条：%s" % \
                 (len(sel), cfg.get("min_count", 1), minlv, len(bad), bad[:3])
 
+        # (m) 真孤岛冻结（Phase 30）：连通分量必须**逐节点**等于 `known_islands.json`
+        #     的并集，且分量总数 ≤ `meta.max_components`。
+        #     为什么必须断言：`connectivity_audit --strict` 在 Phase 30 之前**只看
+        #     孤立/悬空/自环**，**不看连通分量数** → 「分量 1」这个北极星口径长期只能
+        #     靠人肉阅读。第 20 轮撤回 81 条假边后，26 个节点（此前**唯一**靠假边挂在
+        #     主图上）暴露为 4 个真孤岛，而当时**没有任何仪器会报警**。
+        #     本断言把「孤岛集合」冻结下来：新增孤岛 → FAIL；真要消除孤岛须补**有证据**
+        #     的边并同步更新清单（铁律 #16：改口径必须留对照；#20：查不到依赖不得记 PASS）。
+        if scan.get("island_freeze"):
+            ki_path = os.path.join(HERE, "known_islands.json")
+            if not os.path.exists(ki_path):
+                return "SKIP", "known_islands.json 不存在（不得记 PASS）"
+            try:
+                ki = json.load(open(ki_path, encoding="utf-8"))
+            except Exception as e:                        # noqa: BLE001
+                return "SKIP", "known_islands.json 解析失败：%s" % e
+            ids = [n["id"] for n in (graph.get("nodes") or [])]
+            par = {i: i for i in ids}
+
+            def _find(x):
+                while par[x] != x:
+                    par[x] = par[par[x]]
+                    x = par[x]
+                return x
+
+            for e in graph["edges"]:
+                s, t = e.get("source"), e.get("target")
+                if s in par and t in par:
+                    rs, rt = _find(s), _find(t)
+                    if rs != rt:
+                        par[rs] = rt
+            buckets = collections.defaultdict(set)
+            for i in ids:
+                buckets[_find(i)].add(i)
+            comps = sorted(buckets.values(), key=len, reverse=True)
+            max_comp = int(scan["island_freeze"].get("max_components",
+                                                     (ki.get("meta") or {}).get("max_components", 1 << 30)))
+            known = set()
+            for isl in (ki.get("islands") or []):
+                known |= set(isl["nodes"])
+            actual = set()
+            for c in comps:
+                if len(c) < 100:
+                    actual |= c
+            fails = []
+            if len(comps) > max_comp:
+                fails.append("分量 %d > 上限 %d" % (len(comps), max_comp))
+            extra = sorted(actual - known)
+            if extra:
+                fails.append("新增孤岛节点 %d 个：%s" % (len(extra), extra[:5]))
+            missing = sorted(known - actual)
+            if missing:
+                fails.append("冻结孤岛已消失 %d 个（若补了真边须更新清单）：%s" % (len(missing), missing[:5]))
+            return ("PASS" if not fails else "FAIL"), \
+                "分量 %d 个（上限 %d）；冻结岛 %d 个 / %d 节点；实际孤岛 %d 个 / %d 节点%s" % (
+                    len(comps), max_comp, len(ki.get("islands") or []), len(known),
+                    sum(1 for c in comps if len(c) < 100), len(actual),
+                    "" if not fails else "  ← " + "; ".join(fails))
+
         return "SKIP", "未知 scan"
 
     return "SKIP", "未知 kind：%s" % kind

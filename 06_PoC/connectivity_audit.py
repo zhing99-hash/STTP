@@ -39,6 +39,11 @@ sys.path.insert(0, HERE)
 import graph_export  # noqa: E402
 
 DEFAULT_IN = os.path.join(HERE, "etl", "normalized.json")
+# 真孤岛冻结清单（Phase 30 新增）：把「撤回假边后暴露的真孤岛」显式冻结，
+# 使 `--strict` 能对**孤岛集合的变动**报警 —— 而不是像以前那样只看孤立/悬空/自环。
+# 背景：`--strict` 此前**不检查连通分量数**，导致「分量 1」这个北极星口径曾一度
+# 只能靠人肉阅读，孤岛回归不会被任何门禁拦住（典型的「仪器缺一环」）。
+KNOWN_ISLANDS = os.path.join(HERE, "known_islands.json")
 
 # 枢纽命名空间：**有意跨学科**，其「混标」不是缺陷，不该报警（否则 --strict 变成狼来了）。
 #   MX: Phase5 枢纽层，显式汇聚 chem(chemistry) / phy(physics) / math.DG / cross 四类 domain；
@@ -138,7 +143,7 @@ def audit(g, subjects=None):
             "small": [
                 {"size": len(c), "subjects": dict(collections.Counter(subjects[x] for x in c)),
                  "types": dict(collections.Counter(ptype(by_id[x]) for x in c)),
-                 "sample": c[:4]}
+                 "sample": c[:4], "nodes": sorted(c)}
                 for c in comps if len(c) < 100
             ],
         },
@@ -173,6 +178,62 @@ def subjects_from(g, overrides=None):
     return out
 
 
+def check_islands(r, allow_path=None):
+    """把「小分量集合」与冻结清单（`known_islands.json`）逐节点比对。
+
+    返回 dict；同时把结果挂到 `r["island_freeze"]` 供渲染 / `--strict`。
+
+    判定（三条中任一不满足 → verdict=REGRESSION）：
+      ① 分量总数 ≤ `meta.max_components`
+      ② 小分量节点集合**逐节点**等于冻结清单的并集（既不许新增、也不许缺项）
+      ③ 清单声明的 island_count / island_nodes_total 与实际一致
+    清单文件缺失 → verdict=UNKNOWN（`--strict` 下**不放过**，按回归处理，铁律 #20）。
+    """
+    cp = r["components"]
+    actual_islands = [sorted(s["nodes"]) for s in cp["small"]]
+    actual_nodes = set().union(*actual_islands) if actual_islands else set()
+    out = {
+        "known_islands": 0, "known_nodes": 0, "max_components": None,
+        "actual_components": cp["count"], "actual_islands": len(actual_islands),
+        "actual_nodes": len(actual_nodes),
+        "verdict": "UNKNOWN", "notes": [],
+    }
+    path = allow_path or KNOWN_ISLANDS
+    if not os.path.exists(path):
+        out["notes"].append("冻结清单缺失：%s（无法判定孤岛是否为已知）" % os.path.relpath(path, ROOT))
+        r["island_freeze"] = out
+        return out
+    try:
+        with open(path, encoding="utf-8") as f:
+            kf = json.load(f)
+    except Exception as e:                                   # noqa: BLE001
+        out["notes"].append("冻结清单解析失败：%s" % e)
+        r["island_freeze"] = out
+        return out
+
+    meta = kf.get("meta") or {}
+    known = [sorted(i["nodes"]) for i in (kf.get("islands") or [])]
+    known_nodes = set().union(*known) if known else set()
+    out.update(known_islands=len(known), known_nodes=len(known_nodes),
+               max_components=meta.get("max_components"))
+
+    if out["max_components"] is not None and cp["count"] > out["max_components"]:
+        out["notes"].append("连通分量 %d 个 > 上限 %d 个" % (cp["count"], out["max_components"]))
+    extra = sorted(actual_nodes - known_nodes)
+    if extra:
+        out["notes"].append("**新增孤岛节点** %d 个（不在冻结清单内）：%s"
+                            % (len(extra), extra[:5]))
+    missing = sorted(known_nodes - actual_nodes)
+    if missing:
+        out["notes"].append("冻结孤岛已消失 %d 个（若是补了真边则应更新清单）：%s"
+                            % (len(missing), missing[:5]))
+    if len(actual_islands) != len(known):
+        out["notes"].append("孤岛个数 %d ≠ 清单 %d" % (len(actual_islands), len(known)))
+    out["verdict"] = "FROZEN-OK" if not out["notes"] else "REGRESSION"
+    r["island_freeze"] = out
+    return out
+
+
 def render(r, title="跨学科连通性审计"):
     L = []
     bar = "=" * 84
@@ -204,6 +265,15 @@ def render(r, title="跨学科连通性审计"):
         for s in cp["small"][:6]:
             L.append("      size=%-4d %s  样例=%s" % (
                 s["size"], dict(list(s["types"].items())[:3]), s["sample"][:2]))
+        # Phase 30：把「是否在冻结清单内」直接打在报告里 —— 孤岛要么被冻结，
+        # 要么就是回归；不存在「没被注意到」的第三种状态。
+        _kf = r.get("island_freeze") or {}
+        if _kf:
+            L.append("      冻结核对    : %s（清单 %d 个岛 / %d 节点，最大分量上限 %s）"
+                     % (_kf["verdict"], _kf["known_islands"], _kf["known_nodes"],
+                        _kf["max_components"]))
+            for msg in _kf["notes"]:
+                L.append("      ⚠ %s" % msg)
     d = r["defects"]
     L.append("-" * 84)
     L.append("  悬空边 / 自环边 : %d / %d" % (d["dangling_edges"], d["self_loop_edges"]))
@@ -225,13 +295,16 @@ def main():
     ap = argparse.ArgumentParser(description="跨学科连通性审计（STTP 北极星仪器）")
     ap.add_argument("--input", default=DEFAULT_IN, help="原始图 JSON（默认 etl/normalized.json）")
     ap.add_argument("--json", dest="json_out", default=None, help="把结构化结果写到该路径")
-    ap.add_argument("--strict", action="store_true", help="检出孤立/悬空/自环时退非零")
+    ap.add_argument("--strict", action="store_true", help="检出孤立/悬空/自环/**未冻结孤岛**时退非零")
+    ap.add_argument("--islands", dest="islands", default=KNOWN_ISLANDS,
+                    help="真孤岛冻结清单（默认 06_PoC/known_islands.json）")
     a = ap.parse_args()
 
     with open(a.input, encoding="utf-8") as f:
         g = json.load(f)
 
     r = audit(g)
+    kf = check_islands(r, a.islands)
     print(render(r, "跨学科连通性审计 · %s" % os.path.relpath(a.input, ROOT)))
 
     if a.json_out:
@@ -240,6 +313,9 @@ def main():
         print("  [json] -> %s" % os.path.relpath(a.json_out, ROOT))
 
     bad = r["defects"]["dangling_edges"] + r["defects"]["self_loop_edges"] + r["defects"]["isolated_nodes"]
+    if a.strict and kf["verdict"] != "FROZEN-OK":
+        bad += max(1, len(kf["notes"]))
+        print("[STRICT] 孤岛冻结核对未通过（%s → 视为回归）" % kf["verdict"])
     if a.strict and bad:
         print("[STRICT] 检出 %d 项结构缺陷 → 退出码 2" % bad)
         return 2
