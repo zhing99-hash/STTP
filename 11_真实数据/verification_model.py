@@ -355,6 +355,140 @@ def dim_matches_class(got, want):
     return g == _drop(mol)
 
 
+# ============================================================================ #
+# Phase 30（第 20 轮）：语义边的**确定性反驳 / 复算**
+# ============================================================================ #
+# 单位符号 → SI 量纲向量。**本模块自带**的 SI 定义表（另在 `semantic_noise_audit.py`
+# 有一份独立实现，互为对照，铁律 #14）。判据只依赖单位符号本身这一**外部事实**。
+_UNIT_SI = {
+    "kg": {"M": 1.0},
+    "m": {"L": 1.0},
+    "s": {"T": 1.0},
+    "j": {"M": 1.0, "L": 2.0, "T": -2.0},
+    "m/s": {"L": 1.0, "T": -1.0},
+    "m/s^2": {"L": 1.0, "T": -2.0},
+    "n": {"M": 1.0, "L": 1.0, "T": -2.0},
+    "w": {"M": 1.0, "L": 2.0, "T": -3.0},
+    "pa": {"M": 1.0, "L": -1.0, "T": -2.0},
+    "k": {"Th": 1.0},
+    "m^3": {"L": 3.0},
+    "mol": {"N": 1.0},
+    "j/k": {"M": 1.0, "L": 2.0, "T": -2.0, "Th": -1.0},
+    "j/(mol*k)": {"M": 1.0, "L": 2.0, "T": -2.0, "N": -1.0, "Th": -1.0},
+    "c": {"I": 1.0, "T": 1.0},
+    "v": {"M": 1.0, "L": 2.0, "T": -3.0, "I": -1.0},
+    "a": {"I": 1.0},
+    "ω": {"M": 1.0, "L": 2.0, "T": -3.0, "I": -2.0},
+    "ohm": {"M": 1.0, "L": 2.0, "T": -3.0, "I": -2.0},
+    "f": {"M": -1.0, "L": -2.0, "T": 4.0, "I": 2.0},
+    "t": {"M": 1.0, "T": -2.0, "I": -1.0},
+    "h": {"M": 1.0, "L": 2.0, "T": -2.0, "I": -2.0},
+    "wb": {"M": 1.0, "L": 2.0, "T": -2.0, "I": -1.0},
+    "hz": {"T": -1.0},
+    "ev": {"M": 1.0, "L": 2.0, "T": -2.0},
+    "m^2": {"L": 2.0},
+    # ⚠ 本项目把「角度 A」当基本量（见 dimension_table.DIM），故 radian = {A:1}；
+    #   若照 SI 把 rad 当无量纲，会把合法的 `角度 --has_unit--> radian` 误撤。
+    "rad": {"A": 1.0},
+    "mol/l": {"N": 1.0, "L": -3.0},
+}
+
+
+def unit_dim_of_symbol(sym):
+    """单位符号串 → 量纲向量；不可识别返回 None（**不猜**）。"""
+    if not sym:
+        return None
+    s = str(sym).strip().lower().replace(" ", "").replace("·", "*")
+    if s in _UNIT_SI:
+        return dict(_UNIT_SI[s])
+    s2 = s.replace("(", "").replace(")", "")
+    return dict(_UNIT_SI[s2]) if s2 in _UNIT_SI else None
+
+
+# ---- 数学算子存在性（数学桥的确定性证据）----
+# 每条：scope 名 -> (判据正则, 允许的目标数学对象集合)。
+# 「公式 F 使用了数学工具 M」当且仅当 **F 的表达式中出现了 M 所辖的算子/常量** ——
+# 与「谁提的」无关，可复算。
+MATH_OP_RULES = {
+    # ⚠ 只收「算子与目标**一一对应**」的规则。第 20 轮主动**删除**了两条不够严的规则：
+    #   · `\sum` → Taylor/二项式：**泛指求和 ≠ 级数展开**（`Z=\sum_i e^{-E_i/kT}` 是配分函数，
+    #     与 Taylor 无关）—— 会把合法公式错链到错误数学对象。
+    #   · `\nabla` → `MX:math:expand`：语义错位（微分算子 ≠ 展开）。
+    #   宁缺勿滥：宁可少建桥，也不建**语义错**的桥。
+    "log_rule_usage": (r"\\log|\\ln|\\lg", {"MA:fo:log_product"}),
+    "exp_base_e_usage": (r"e\^\{|\\exp", {"MA:sy:e", "MA:pq:euler_e"}),
+    "pi_constant_usage": (r"\\pi|π", {"MA:sy:pi"}),
+    "trig_identity_usage": (r"\\sin|\\cos|\\tan", {"MX:math:trig_unit"}),
+    "differential_rule_usage": (r"\\frac\{d\}|d/dx",
+                                {"MX:math:derivative_power", "MX:math:power_rule"}),
+}
+_MATH_OP_RE = {k: re.compile(v[0]) for k, v in MATH_OP_RULES.items()}
+
+
+def math_op_of(text):
+    """返回表达式文本命中的数学算子 scope 列表（可能多个）。"""
+    if not text:
+        return []
+    return [k for k, rx in _MATH_OP_RE.items() if rx.search(str(text))]
+
+
+def expr_of_node(node) -> str:
+    """节点的「表达式」文本（latex / formula）—— 数学桥与符号复算的判据来源。"""
+    p = (node or {}).get("props") or {}
+    return " ".join(str(p.get(k)) for k in ("latex", "formula") if p.get(k))
+
+
+def declared_symbols(node):
+    """节点自带的 `symbols` 声明（部分 MathML 节点会显式列出成员符号）。"""
+    d = ((node or {}).get("props") or {}).get("symbols")
+    if isinstance(d, str):
+        try:
+            d = json.loads(d)
+        except Exception:                                # noqa: BLE001
+            d = [d]
+    return [str(x) for x in (d or [])]
+
+
+def target_symbol(node):
+    """目标实体的符号：`symbol` → `latex` → 名称首段（`T (temperature)` → `T`）。"""
+    p = (node or {}).get("props") or {}
+    for k in ("symbol", "latex"):
+        if p.get(k):
+            return str(p[k]).strip()
+    m = re.match(r"^([^\s(]+)", str(p.get("name") or "").strip())
+    return m.group(1) if m else None
+
+
+_LATEX_CMD = re.compile(r"\\([A-Za-z]+)")
+_STRIP = re.compile(r"[\\{}$\s]+")
+
+
+def _norm_latex(s):
+    return _STRIP.sub("", _LATEX_CMD.sub(r"\1", str(s)))
+
+
+def symbol_in_source(src_node, sym):
+    """目标符号是否出现于源对象的**表达式/声明**中（宽松；不可判定返回 None）。
+
+    ⚠ 宽松判据只会「多判为出现」（不撤），绝不「少判为出现」（错撤）——
+      因此由 False 得出的**反驳是可靠的**（sound），代价是漏掉同名碰撞（如 `V=IR` 的 R）。
+    """
+    if not sym:
+        return None
+    text = expr_of_node(src_node)
+    if not text:
+        return None
+    s = str(sym).strip()
+    cands = [s]
+    m = re.match(r"^(.+?)_\{?(.+?)\}?$", s)
+    if m:
+        cands.append(m.group(1))
+    if any(c in declared_symbols(src_node) for c in cands):
+        return True
+    t = _norm_latex(text)
+    return any(c and _norm_latex(c) in t for c in cands)
+
+
 # 分子摩尔质量（Phase9.B5 / Phase13.Gate.B5 写入）：`摩尔质量 44.009 g/mol（化学式解析+原子量）`
 _MASS_IN_RATIONALE = re.compile(r"摩尔质量\s*([0-9.]+)\s*g/mol")
 
@@ -555,8 +689,25 @@ def classify(e: dict, ctx: dict):
                      "NIST WebBook × dimension_table(单位量纲)",
                      "单位 `%s` 经量纲表独立复算一致" % p.get("unit"))
 
-    # ================= B. 无独立复算可用：按提出者 / 来源定级 =================
-    # B1 模型产物（GNN 链接预测 / LLM 推断）—— **不构成验证**
+    # A8 单位—量纲（Phase 30）：`has_unit` 的确定性复算
+    #     「量 Q 有单位 U」⟺ dim(Q) == dim(U)。两者都是外部事实，可复算。
+    if t == "has_unit":
+        ok, why = ctx["unit_ok"].get(eid, (None, ""))
+        if ok is True:
+            return R("rule_checked", "unit_dimension_recompute",
+                     "dimension_table(量纲) × 单位符号解析", why)
+        if ok is False:
+            return R("unverified", "unit_dimension_mismatch",
+                     "dimension_table(量纲) × 单位符号解析",
+                     "单位量纲与物理量真量纲不符：%s" % why)
+
+    # A9 数学桥（Phase 30）：源公式**含**目标数学对象所辖的算子 → 确定性证据
+    #     例：`pH=-\\log_{10}[H^+]` 含对数算子 → 与对数律 `MA:fo:log_product` 的桥成立。
+    if t in ("derived_from", "has_symbol") and ctx["math_ok"].get(eid, (None,))[0] is True:
+        _ok, _scope, _why = ctx["math_ok"][eid]
+        return R("rule_checked", _scope, "verification_model.math_operator_presence", _why)
+
+    # ================= B. 无独立复算可用：按提出者 / 来源定级 =================    # B1 模型产物（GNN 链接预测 / LLM 推断）—— **不构成验证**
     if kind in MODEL_KINDS or ("GNN" in src) or ("LLM" in src) \
             or ("gnn" in kind) or ("llm" in kind):
         return R("model_inferred", "model_link_prediction", src or kind,
@@ -640,6 +791,8 @@ def build_ctx(nodes, edges):
         "dim_ok": {},
         "mass_ok": {},          # eid -> (ok, cross, why)：分子摩尔质量独立复算
         "hq_class_ok": {},      # eid -> (ok, class_label, why)：rationale 声称类 vs 目标量纲
+        "unit_ok": {},          # eid -> (ok, why)：has_unit 单位量纲 vs 物理量真量纲
+        "math_ok": {},          # eid -> (ok, scope, why)：数学桥「算子存在性」复算
         "bugs": collections.defaultdict(list),
     }
 
@@ -799,6 +952,42 @@ def build_ctx(nodes, edges):
                     if not ok:
                         ctx["bugs"]["has_quantity_class_mismatch"].append(
                             (src, tgt, label, canon_q))
+
+        # (f) has_unit：**单位量纲 vs 物理量真量纲**（Phase 30 新增）
+        #     判据只依赖「单位符号」与「量名」两个外部事实，与提出者无关。
+        if t == "has_unit":
+            un = node_by_id.get(tgt) or {}
+            qn = node_by_id.get(src) or {}
+            up = un.get("props") or {}
+            usym = up.get("symbol") or up.get("name")
+            ud = unit_dim_of_symbol(usym)
+            qname = (qn.get("props") or {}).get("name") or str(src).split(":")[-1]
+            qd = dm.dim_of(qname)
+            if ud is None or qd is None:
+                ctx["unit_ok"][eid] = (None, "单位/量纲不可判定(%s / %s)" % (usym, qname))
+            else:
+                ok = _drop(ud) == _drop(qd)
+                ctx["unit_ok"][eid] = (
+                    ok, "%s=%s vs %s=%s" % (qname, _drop(qd), usym, _drop(ud)))
+                if not ok:
+                    ctx["bugs"]["unit_dimension_mismatch"].append(
+                        (eid, qname, usym, _drop(qd), _drop(ud)))
+
+        # (g) 数学桥：源公式是否**真的**含目标数学对象所辖的算子（Phase 30 新增）
+        #     三态：命中且目标被该规则覆盖 → True；命中但目标不在覆盖集 → None（不判否）；
+        #           源无算子 → None（不判否）。
+        if t in ("derived_from", "has_symbol"):
+            tnode = node_by_id.get(tgt) or {}
+            tid = str(tgt)
+            snode = node_by_id.get(src) or {}
+            hits = math_op_of(expr_of_node(snode))
+            matched = [k for k in hits if tid in MATH_OP_RULES[k][1]]
+            if matched:
+                ctx["math_ok"][eid] = (True, matched[0],
+                                       "源表达式含 %s 所辖算子 → 目标 %s" % (matched[0], tid))
+            else:
+                ctx["math_ok"][eid] = (None, hits[0] if hits else "",
+                                       "算子命中但目标未被覆盖" if hits else "源表达式无数学算子")
     return ctx
 
 
@@ -920,6 +1109,12 @@ def audit(path=NORM):
     no = sum(1 for v in d.values() if v[0] is False)
     na = sum(1 for v in d.values() if v[0] is None)
     print("  %-14s 自洽 %5d / 自相矛盾 %4d / 不可判定 %5d" % ("hq_class_ok", yes, no, na))
+    for key, lab in (("unit_ok", "unit_ok"), ("math_ok", "math_ok")):
+        d = ctx[key]
+        yes = sum(1 for v in d.values() if v[0] is True)
+        no = sum(1 for v in d.values() if v[0] is False)
+        na = sum(1 for v in d.values() if v[0] is None)
+        print("  %-14s 通过 %5d / 不一致 %4d / 不可判定 %5d" % (lab, yes, no, na))
     print("=" * 92)
     return res, ctx
 

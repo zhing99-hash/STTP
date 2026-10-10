@@ -130,6 +130,16 @@ EOF
     shift
     "$PY" 06_PoC/task_trust_audit.py "$@"
     ;;
+  dedup)
+    # Phase 30 去伪存真：确定性反驳语义噪声边 + 重建单位/数学桥（默认 dry-run，--apply 交 apply_delta）
+    shift
+    "$PY" 11_真实数据/phase30_dedup_delta.py "$@"
+    ;;
+  noise)
+    # 独立实现的语义噪声审计器（只读，用于与 verification_model 交叉核对）
+    shift
+    "$PY" 06_PoC/semantic_noise_audit.py "$@"
+    ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py
     ;;

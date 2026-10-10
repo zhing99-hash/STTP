@@ -1,0 +1,1132 @@
+{
+ "meta": {
+  "phase": 30,
+  "tag": "dedup",
+  "generator": "phase30_dedup_delta.py",
+  "base_graph": "06_PoC\\etl\\normalized.json",
+  "theme": "跨域桥去伪存真：确定性反驳语义噪声边 + 重建单位/数学桥",
+  "edges_withdrawn": 81,
+  "withdrawn_breakdown": {
+   "R1_defines_target_symbol_absent": 23,
+   "R2_symbol_target_absent": 28,
+   "R3_unit_dim_mismatch": 29,
+   "R5_unit_conflict_model_withdrawn": 1
+  },
+  "unit_edges_rebuilt": 1,
+  "math_bridges_built": 13,
+  "edges_relabeled": 32,
+  "level_distribution": {
+   "unverified": 0,
+   "model_inferred": 189,
+   "source_asserted": 14026,
+   "by_construction": 37,
+   "rule_checked": 31218,
+   "cross_source": 3290,
+   "human_reviewed": 0
+  }
+ },
+ "nodes": [],
+ "delete_nodes": [],
+ "edges": [
+  {
+   "id": "has_unit|PQ:force|CM:un:newton",
+   "source": "PQ:force",
+   "target": "CM:un:newton",
+   "type": "has_unit",
+   "kind": "unit_dimension_recompute",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true,
+    "verification_note": "Phase30 存真：Force={'L': 1.0, 'M': 1.0, 'T': -2.0} vs N={'M': 1.0, 'L': 1.0, 'T': -2.0}"
+   }
+  },
+  {
+   "id": "has_symbol|EM:fo:biot_savart|MA:sy:pi",
+   "source": "EM:fo:biot_savart",
+   "target": "MA:sy:pi",
+   "type": "has_symbol",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "pi_constant_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 pi_constant_usage 所辖算子 → 目标 MA:sy:pi"
+   }
+  },
+  {
+   "id": "derived_from|IC:fo:ph|MA:fo:log_product",
+   "source": "IC:fo:ph",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product"
+   }
+  },
+  {
+   "id": "derived_from|OP:fo:snell|MX:math:trig_unit",
+   "source": "OP:fo:snell",
+   "target": "MX:math:trig_unit",
+   "type": "derived_from",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "trig_identity_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 trig_identity_usage 所辖算子 → 目标 MX:math:trig_unit"
+   }
+  },
+  {
+   "id": "derived_from|SM:fo:boltzmann|MA:fo:log_product",
+   "source": "SM:fo:boltzmann",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:maxwell|MA:pq:euler_e",
+   "source": "SM:fo:maxwell",
+   "target": "MA:pq:euler_e",
+   "type": "has_symbol",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 exp_base_e_usage 所辖算子 → 目标 MA:pq:euler_e"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:maxwell|MA:sy:e",
+   "source": "SM:fo:maxwell",
+   "target": "MA:sy:e",
+   "type": "has_symbol",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 exp_base_e_usage 所辖算子 → 目标 MA:sy:e"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:partition|MA:pq:euler_e",
+   "source": "SM:fo:partition",
+   "target": "MA:pq:euler_e",
+   "type": "has_symbol",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 exp_base_e_usage 所辖算子 → 目标 MA:pq:euler_e"
+   }
+  },
+  {
+   "id": "has_symbol|SM:fo:partition|MA:sy:e",
+   "source": "SM:fo:partition",
+   "target": "MA:sy:e",
+   "type": "has_symbol",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 exp_base_e_usage 所辖算子 → 目标 MA:sy:e"
+   }
+  },
+  {
+   "id": "derived_from|CE:fo:gibbs_standard|MA:fo:log_product",
+   "source": "CE:fo:gibbs_standard",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product"
+   }
+  },
+  {
+   "id": "derived_from|CE:fo:gibbs_reaction|MA:fo:log_product",
+   "source": "CE:fo:gibbs_reaction",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product"
+   }
+  },
+  {
+   "id": "derived_from|CE:fo:poh|MA:fo:log_product",
+   "source": "CE:fo:poh",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product"
+   }
+  },
+  {
+   "id": "derived_from|CE:fo:nernst|MA:fo:log_product",
+   "source": "CE:fo:nernst",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product"
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:arrhenius|MA:pq:euler_e",
+   "source": "CE:fo:arrhenius",
+   "target": "MA:pq:euler_e",
+   "type": "has_symbol",
+   "kind": "math_operator_bridge",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true,
+    "verification_note": "Phase30 存真：源表达式含 exp_base_e_usage 所辖算子 → 目标 MA:pq:euler_e"
+   }
+  },
+  {
+   "id": "has_unit|PQ:energy|UN:j",
+   "source": "PQ:energy",
+   "target": "UN:j",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|PQ:mass|UN:kg",
+   "source": "PQ:mass",
+   "target": "UN:kg",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|PQ:accel|UN:mps2",
+   "source": "PQ:accel",
+   "target": "UN:mps2",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|PQ:vel|UN:mps",
+   "source": "PQ:vel",
+   "target": "UN:mps",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|CM:pq:work|CM:un:joule",
+   "source": "CM:pq:work",
+   "target": "CM:un:joule",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|CM:pq:power|CM:un:watt",
+   "source": "CM:pq:power",
+   "target": "CM:un:watt",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|CM:pq:torque|CM:un:joule",
+   "source": "CM:pq:torque",
+   "target": "CM:un:joule",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:pressure|TH:un:pascal",
+   "source": "TH:pq:pressure",
+   "target": "TH:un:pascal",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:volume|TH:un:cubic_meter",
+   "source": "TH:pq:volume",
+   "target": "TH:un:cubic_meter",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:temperature|TH:un:kelvin",
+   "source": "TH:pq:temperature",
+   "target": "TH:un:kelvin",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|TH:un:j_per_mol_k",
+   "source": "TH:pq:gas_const",
+   "target": "TH:un:j_per_mol_k",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:internal_energy|TH:un:joule",
+   "source": "TH:pq:internal_energy",
+   "target": "TH:un:joule",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:heat|TH:un:joule",
+   "source": "TH:pq:heat",
+   "target": "TH:un:joule",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|TH:pq:entropy|TH:un:j_per_k",
+   "source": "TH:pq:entropy",
+   "target": "TH:un:j_per_k",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:voltage|EM:un:volt",
+   "source": "EM:pq:voltage",
+   "target": "EM:un:volt",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:capacitance|EM:un:farad",
+   "source": "EM:pq:capacitance",
+   "target": "EM:un:farad",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:resistance|EM:un:ohm",
+   "source": "EM:pq:resistance",
+   "target": "EM:un:ohm",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|EM:pq:inductance|EM:un:henry",
+   "source": "EM:pq:inductance",
+   "target": "EM:un:henry",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|QM:pq:frequency|QM:un:hertz",
+   "source": "QM:pq:frequency",
+   "target": "QM:un:hertz",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|QM:pq:work_function|QM:un:ev",
+   "source": "QM:pq:work_function",
+   "target": "QM:un:ev",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "derived_from|MA:fo:euler_identity|MA:pq:euler_e",
+   "source": "MA:fo:euler_identity",
+   "target": "MA:pq:euler_e",
+   "type": "derived_from",
+   "kind": "e_base",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:euler_identity|MA:sy:e",
+   "source": "MA:fo:euler_identity",
+   "target": "MA:sy:e",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_symbol|MA:fo:euler_identity|MA:sy:pi",
+   "source": "MA:fo:euler_identity",
+   "target": "MA:sy:pi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "pi_constant_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|MG:pq:area|MG:un:sq_meter",
+   "source": "MG:pq:area",
+   "target": "MG:un:sq_meter",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|MG:pq:volume|MG:un:cubic_meter",
+   "source": "MG:pq:volume",
+   "target": "MG:un:cubic_meter",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|MG:pq:angle|MG:un:radian",
+   "source": "MG:pq:angle",
+   "target": "MG:un:radian",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_symbol|CE:fo:arrhenius|MA:sy:e",
+   "source": "CE:fo:arrhenius",
+   "target": "MA:sy:e",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_unit|CE:pq:activation_energy|TH:un:joule",
+   "source": "CE:pq:activation_energy",
+   "target": "TH:un:joule",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "unit_dimension_recompute",
+    "verifier": "dimension_table(量纲) × 单位符号解析",
+    "verified": true
+   }
+  },
+  {
+   "id": "derived_from|CE:fo:ph|MA:fo:log_product",
+   "source": "CE:fo:ph",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "log_definition",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  },
+  {
+   "id": "derived_from|CE:fo:henderson|MA:fo:log_product",
+   "source": "CE:fo:henderson",
+   "target": "MA:fo:log_product",
+   "type": "derived_from",
+   "kind": "log_definition_buffer",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "log_rule_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  },
+  {
+   "id": "derived_from|CE:fo:arrhenius|MA:pq:euler_e",
+   "source": "CE:fo:arrhenius",
+   "target": "MA:pq:euler_e",
+   "type": "derived_from",
+   "kind": "exp_base_e",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "exp_base_e_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  },
+  {
+   "id": "has_symbol|NT:fo:basel|MA:sy:pi",
+   "source": "NT:fo:basel",
+   "target": "MA:sy:pi",
+   "type": "has_symbol",
+   "kind": "formula_symbol",
+   "props": {
+    "verification_level": "rule_checked",
+    "verification_scope": "pi_constant_usage",
+    "verifier": "verification_model.math_operator_presence",
+    "verified": true
+   }
+  }
+ ],
+ "delete_edges": [
+  {
+   "source": "CM:fo:power",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "CM:pq:angular_momentum",
+   "type": "has_unit",
+   "target": "CM:un:joule",
+   "kind": "quantity_unit"
+  },
+  {
+   "source": "CM:pq:impulse",
+   "type": "has_unit",
+   "target": "CM:un:newton",
+   "kind": "quantity_unit"
+  },
+  {
+   "source": "CM:pq:momentum",
+   "type": "has_unit",
+   "target": "CM:un:newton",
+   "kind": "quantity_unit"
+  },
+  {
+   "source": "CM:pq:power",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "CM:pq:power",
+   "type": "has_unit",
+   "target": "TH:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "CM:pq:power",
+   "type": "has_unit",
+   "target": "TH:un:pascal",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:fo:faraday",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:fo:ohm",
+   "type": "defines",
+   "target": "SM:pq:boltz_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:capacitance",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:capacitance",
+   "type": "has_unit",
+   "target": "TH:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:capacitance",
+   "type": "has_unit",
+   "target": "TH:un:pascal",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:inductance",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:inductance",
+   "type": "has_unit",
+   "target": "TH:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:inductance",
+   "type": "has_unit",
+   "target": "TH:un:pascal",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:mag_flux",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:resistance",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "EM:pq:resistance",
+   "type": "has_unit",
+   "target": "TH:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:binomial",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:euler_identity",
+   "type": "defines",
+   "target": "MC:pq:derivative",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:euler_identity",
+   "type": "defines",
+   "target": "MG:pq:angle",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:euler_identity",
+   "type": "defines",
+   "target": "MG:pq:volume",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:euler_identity",
+   "type": "defines",
+   "target": "SM:pq:boltz_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:euler_identity",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:euler_identity",
+   "type": "has_symbol",
+   "target": "MX:sym:nabla",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MA:fo:euler_identity",
+   "type": "has_symbol",
+   "target": "MX:sym:y",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MC:fo:chain_rule",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MC:fo:ftc",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MC:fo:limit_def",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MG:fo:circle_area",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MG:fo:euler_poly",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MG:fo:sphere_vol",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MG:pq:area",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:def:manifold",
+   "type": "has_symbol",
+   "target": "MX:sym:rho_alpha",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "MA:sy:pi",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "MC:sy:f",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "MG:sy:pi",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "MG:sy:theta",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "MX:sym:g",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "MX:sym:r",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "MX:sym:t_p_m",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "QM:sy:hbar",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "SM:sy:k_B",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "SY:f",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "SY:m",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "TH:sy:P",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "TH:sy:T",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:covariant_derivative",
+   "type": "has_symbol",
+   "target": "TH:sy:V",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:lemma:partition_of_unity",
+   "type": "has_symbol",
+   "target": "MX:sym:n",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:sym:n",
+   "type": "has_symbol",
+   "target": "MX:math:expand",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:thm:gauss_bonnet",
+   "type": "has_symbol",
+   "target": "MX:sym:rho_alpha",
+   "kind": "llm_inferred_gnn"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "MC:sy:f",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "MG:sy:theta",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "MX:sym:g",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "QM:sy:hbar",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "SM:sy:k_B",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "SY:f",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "SY:m",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "MX:thm:riemann_curvature",
+   "type": "has_symbol",
+   "target": "TH:sy:T",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "OM:fo:combustion",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "OP:fo:refr_speed",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "PQ:force",
+   "type": "has_unit",
+   "target": "UN:kg",
+   "kind": "quantity_unit"
+  },
+  {
+   "source": "QM:pq:action",
+   "type": "has_unit",
+   "target": "QM:un:ev",
+   "kind": "quantity_unit"
+  },
+  {
+   "source": "QM:pq:action",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "SM:fo:boltzmann",
+   "type": "defines",
+   "target": "MG:pq:volume",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "SM:fo:boltzmann",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:fo:first_law",
+   "type": "defines",
+   "target": "TH:pq:gas_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:fo:ideal_gas",
+   "type": "defines",
+   "target": "MC:pq:derivative",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:fo:ideal_gas",
+   "type": "defines",
+   "target": "MG:pq:angle",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:fo:ideal_gas",
+   "type": "defines",
+   "target": "SM:pq:boltz_const",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "CM:un:joule",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "CM:un:watt",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "EM:un:farad",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "EM:un:henry",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "EM:un:ohm",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "EM:un:weber",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "OP:un:meter",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "QM:un:ev",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "SM:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "TH:un:j_per_k",
+   "kind": "gnn_typed_inferred"
+  },
+  {
+   "source": "TH:pq:gas_const",
+   "type": "has_unit",
+   "target": "TH:un:pascal",
+   "kind": "gnn_typed_inferred"
+  }
+ ]
+}

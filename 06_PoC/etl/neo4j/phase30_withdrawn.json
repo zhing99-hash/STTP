@@ -1,0 +1,767 @@
+{
+ "R1_defines_target_symbol_absent": [
+  {
+   "id": "defines|MA:fo:euler_identity|TH:pq:gas_const",
+   "source": "MA:fo:euler_identity",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（e^{i\\pi}+1=0）"
+  },
+  {
+   "id": "defines|SM:fo:boltzmann|TH:pq:gas_const",
+   "source": "SM:fo:boltzmann",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（S=k_B\\ln W）"
+  },
+  {
+   "id": "defines|EM:fo:faraday|TH:pq:gas_const",
+   "source": "EM:fo:faraday",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（\\mathcal{E}=-\\frac{d\\Phi}{dt}）"
+  },
+  {
+   "id": "defines|MC:fo:ftc|TH:pq:gas_const",
+   "source": "MC:fo:ftc",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（\\int_a^b f'(x)\\,dx=f(b)-f(a)）"
+  },
+  {
+   "id": "defines|MA:fo:euler_identity|MG:pq:angle",
+   "source": "MA:fo:euler_identity",
+   "target": "MG:pq:angle",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "theta",
+   "reason": "目标符号 'theta' 不在源表达式/声明中（e^{i\\pi}+1=0）"
+  },
+  {
+   "id": "defines|MA:fo:binomial|TH:pq:gas_const",
+   "source": "MA:fo:binomial",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（(a+b)^n=\\sum_{k=0}^{n}\\binom{n}{k}a^{n-k}b^k）"
+  },
+  {
+   "id": "defines|MA:fo:euler_identity|SM:pq:boltz_const",
+   "source": "MA:fo:euler_identity",
+   "target": "SM:pq:boltz_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "k_B",
+   "reason": "目标符号 'k_B' 不在源表达式/声明中（e^{i\\pi}+1=0）"
+  },
+  {
+   "id": "defines|MG:fo:circle_area|TH:pq:gas_const",
+   "source": "MG:fo:circle_area",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（A=\\pi r^2）"
+  },
+  {
+   "id": "defines|MA:fo:euler_identity|MG:pq:volume",
+   "source": "MA:fo:euler_identity",
+   "target": "MG:pq:volume",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "V",
+   "reason": "目标符号 'V' 不在源表达式/声明中（e^{i\\pi}+1=0）"
+  },
+  {
+   "id": "defines|TH:fo:ideal_gas|MG:pq:angle",
+   "source": "TH:fo:ideal_gas",
+   "target": "MG:pq:angle",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "theta",
+   "reason": "目标符号 'theta' 不在源表达式/声明中（PV=nRT）"
+  },
+  {
+   "id": "defines|TH:fo:ideal_gas|SM:pq:boltz_const",
+   "source": "TH:fo:ideal_gas",
+   "target": "SM:pq:boltz_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "k_B",
+   "reason": "目标符号 'k_B' 不在源表达式/声明中（PV=nRT）"
+  },
+  {
+   "id": "defines|TH:fo:first_law|TH:pq:gas_const",
+   "source": "TH:fo:first_law",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（\\Delta U = Q - W）"
+  },
+  {
+   "id": "defines|MG:fo:sphere_vol|TH:pq:gas_const",
+   "source": "MG:fo:sphere_vol",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（V=\\tfrac{4}{3}\\pi r^3）"
+  },
+  {
+   "id": "defines|OM:fo:combustion|TH:pq:gas_const",
+   "source": "OM:fo:combustion",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（C_xH_y + (x+\\tfrac{y}{4})O_2 \\rightarrow xCO_2 + \\tfrac{y}{2）"
+  },
+  {
+   "id": "defines|CM:fo:power|TH:pq:gas_const",
+   "source": "CM:fo:power",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（P=\\frac{W}{t}）"
+  },
+  {
+   "id": "defines|MA:fo:euler_identity|MC:pq:derivative",
+   "source": "MA:fo:euler_identity",
+   "target": "MC:pq:derivative",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "f'",
+   "reason": "目标符号 \"f'\" 不在源表达式/声明中（e^{i\\pi}+1=0）"
+  },
+  {
+   "id": "defines|OP:fo:refr_speed|TH:pq:gas_const",
+   "source": "OP:fo:refr_speed",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（v=\\frac{c}{n}）"
+  },
+  {
+   "id": "defines|MC:fo:limit_def|TH:pq:gas_const",
+   "source": "MC:fo:limit_def",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（f'(x)=\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}）"
+  },
+  {
+   "id": "defines|MG:fo:euler_poly|TH:pq:gas_const",
+   "source": "MG:fo:euler_poly",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（V-E+F=2）"
+  },
+  {
+   "id": "defines|EM:fo:ohm|SM:pq:boltz_const",
+   "source": "EM:fo:ohm",
+   "target": "SM:pq:boltz_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "k_B",
+   "reason": "目标符号 'k_B' 不在源表达式/声明中（V=IR）"
+  },
+  {
+   "id": "defines|SM:fo:boltzmann|MG:pq:volume",
+   "source": "SM:fo:boltzmann",
+   "target": "MG:pq:volume",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "V",
+   "reason": "目标符号 'V' 不在源表达式/声明中（S=k_B\\ln W）"
+  },
+  {
+   "id": "defines|TH:fo:ideal_gas|MC:pq:derivative",
+   "source": "TH:fo:ideal_gas",
+   "target": "MC:pq:derivative",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "f'",
+   "reason": "目标符号 \"f'\" 不在源表达式/声明中（PV=nRT）"
+  },
+  {
+   "id": "defines|MC:fo:chain_rule|TH:pq:gas_const",
+   "source": "MC:fo:chain_rule",
+   "target": "TH:pq:gas_const",
+   "type": "defines",
+   "kind": "gnn_typed_inferred",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（\\frac{d}{dx}f(g(x))=f'(g(x))\\,g'(x)）"
+  }
+ ],
+ "R2_symbol_target_absent": [
+  {
+   "id": "has_symbol|MX:def:manifold|MX:sym:rho_alpha",
+   "source": "MX:def:manifold",
+   "target": "MX:sym:rho_alpha",
+   "type": "has_symbol",
+   "kind": "llm_inferred_gnn",
+   "symbol": "\\rho_\\alpha",
+   "reason": "目标符号 '\\\\rho_\\\\alpha' 不在源表达式/声明中（M）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:partition_of_unity|MX:sym:n",
+   "source": "MX:lemma:partition_of_unity",
+   "target": "MX:sym:n",
+   "type": "has_symbol",
+   "kind": "llm_inferred_gnn",
+   "symbol": "n",
+   "reason": "目标符号 'n' 不在源表达式/声明中（\\{\\rho_\\alpha\\}）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MX:sym:r",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MX:sym:r",
+   "type": "has_symbol",
+   "kind": "llm_inferred_gnn",
+   "symbol": "R",
+   "reason": "目标符号 'R' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:thm:gauss_bonnet|MX:sym:rho_alpha",
+   "source": "MX:thm:gauss_bonnet",
+   "target": "MX:sym:rho_alpha",
+   "type": "has_symbol",
+   "kind": "llm_inferred_gnn",
+   "symbol": "\\rho_\\alpha",
+   "reason": "目标符号 '\\\\rho_\\\\alpha' 不在源表达式/声明中（\\int_M K\\, dA = 2\\pi \\chi(M)）"
+  },
+  {
+   "id": "has_symbol|MX:sym:n|MX:math:expand",
+   "source": "MX:sym:n",
+   "target": "MX:math:expand",
+   "type": "has_symbol",
+   "kind": "llm_inferred_gnn",
+   "symbol": "expand",
+   "reason": "目标符号 'expand' 不在源表达式/声明中（n）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MG:sy:pi",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MG:sy:pi",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "\\pi",
+   "reason": "目标符号 '\\\\pi' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MX:sym:g",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MX:sym:g",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "g",
+   "reason": "目标符号 'g' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MA:sy:pi",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MA:sy:pi",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "\\pi",
+   "reason": "目标符号 '\\\\pi' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MC:sy:f",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MC:sy:f",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "f",
+   "reason": "目标符号 'f' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|TH:sy:T",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "T",
+   "reason": "目标符号 'T' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MX:sym:g",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MX:sym:g",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "g",
+   "reason": "目标符号 'g' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|TH:sy:T",
+   "source": "MX:thm:riemann_curvature",
+   "target": "TH:sy:T",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "T",
+   "reason": "目标符号 'T' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|SY:m",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "m",
+   "reason": "目标符号 'm' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MG:sy:theta",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MG:sy:theta",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "\\theta",
+   "reason": "目标符号 '\\\\theta' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|SY:m",
+   "source": "MX:thm:riemann_curvature",
+   "target": "SY:m",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "m",
+   "reason": "目标符号 'm' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|QM:sy:hbar",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "QM:sy:hbar",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "\\hbar",
+   "reason": "目标符号 '\\\\hbar' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MC:sy:f",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MC:sy:f",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "f",
+   "reason": "目标符号 'f' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  },
+  {
+   "id": "has_symbol|MA:fo:euler_identity|MX:sym:nabla",
+   "source": "MA:fo:euler_identity",
+   "target": "MX:sym:nabla",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "\\nabla",
+   "reason": "目标符号 '\\\\nabla' 不在源表达式/声明中（e^{i\\pi}+1=0）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|QM:sy:hbar",
+   "source": "MX:thm:riemann_curvature",
+   "target": "QM:sy:hbar",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "\\hbar",
+   "reason": "目标符号 '\\\\hbar' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|SM:sy:k_B",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "SM:sy:k_B",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "k_B",
+   "reason": "目标符号 'k_B' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MA:fo:euler_identity|MX:sym:y",
+   "source": "MA:fo:euler_identity",
+   "target": "MX:sym:y",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "Y",
+   "reason": "目标符号 'Y' 不在源表达式/声明中（e^{i\\pi}+1=0）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|SM:sy:k_B",
+   "source": "MX:thm:riemann_curvature",
+   "target": "SM:sy:k_B",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "k_B",
+   "reason": "目标符号 'k_B' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|MX:sym:t_p_m",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "MX:sym:t_p_m",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "T_p M",
+   "reason": "目标符号 'T_p M' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|SY:f",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "F",
+   "reason": "目标符号 'F' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|MG:sy:theta",
+   "source": "MX:thm:riemann_curvature",
+   "target": "MG:sy:theta",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "\\theta",
+   "reason": "目标符号 '\\\\theta' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|TH:sy:P",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "TH:sy:P",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "P",
+   "reason": "目标符号 'P' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:lemma:covariant_derivative|TH:sy:V",
+   "source": "MX:lemma:covariant_derivative",
+   "target": "TH:sy:V",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "V",
+   "reason": "目标符号 'V' 不在源表达式/声明中（\\nabla_X Y）"
+  },
+  {
+   "id": "has_symbol|MX:thm:riemann_curvature|SY:f",
+   "source": "MX:thm:riemann_curvature",
+   "target": "SY:f",
+   "type": "has_symbol",
+   "kind": "gnn_typed_inferred",
+   "symbol": "F",
+   "reason": "目标符号 'F' 不在源表达式/声明中（R(X,Y)Z = \\nabla_X\\nabla_Y Z - \\nabla_Y\\nabla_X Z - \\nabla_{）"
+  }
+ ],
+ "R3_unit_dim_mismatch": [
+  {
+   "id": "has_unit|PQ:force|UN:kg",
+   "source": "PQ:force",
+   "target": "UN:kg",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "quantity": "Force",
+   "unit": "kg",
+   "reason": "单位量纲 {'M': 1.0} ≠ Force 真量纲 {'L': 1.0, 'M': 1.0, 'T': -2.0}"
+  },
+  {
+   "id": "has_unit|CM:pq:momentum|CM:un:newton",
+   "source": "CM:pq:momentum",
+   "target": "CM:un:newton",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "quantity": "Momentum",
+   "unit": "N",
+   "reason": "单位量纲 {'M': 1.0, 'L': 1.0, 'T': -2.0} ≠ Momentum 真量纲 {'L': 1.0, 'M': 1.0, 'T': -1.0}"
+  },
+  {
+   "id": "has_unit|CM:pq:angular_momentum|CM:un:joule",
+   "source": "CM:pq:angular_momentum",
+   "target": "CM:un:joule",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "quantity": "Angular momentum",
+   "unit": "J",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0} ≠ Angular momentum 真量纲 {'L': 2.0, 'M': 1.0, 'T': -1.0}"
+  },
+  {
+   "id": "has_unit|CM:pq:impulse|CM:un:newton",
+   "source": "CM:pq:impulse",
+   "target": "CM:un:newton",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "quantity": "Impulse",
+   "unit": "N",
+   "reason": "单位量纲 {'M': 1.0, 'L': 1.0, 'T': -2.0} ≠ Impulse 真量纲 {'L': 1.0, 'M': 1.0, 'T': -1.0}"
+  },
+  {
+   "id": "has_unit|QM:pq:action|QM:un:ev",
+   "source": "QM:pq:action",
+   "target": "QM:un:ev",
+   "type": "has_unit",
+   "kind": "quantity_unit",
+   "quantity": "Action",
+   "unit": "eV",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0} ≠ Action 真量纲 {'L': 2.0, 'M': 1.0, 'T': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|TH:un:pascal",
+   "source": "TH:pq:gas_const",
+   "target": "TH:un:pascal",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "Pa",
+   "reason": "单位量纲 {'M': 1.0, 'L': -1.0, 'T': -2.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|TH:un:j_per_k",
+   "source": "TH:pq:gas_const",
+   "target": "TH:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|CM:pq:power|TH:un:j_per_k",
+   "source": "CM:pq:power",
+   "target": "TH:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Power",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Power 真量纲 {'L': 2.0, 'M': 1.0, 'T': -3.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:inductance|TH:un:j_per_k",
+   "source": "EM:pq:inductance",
+   "target": "TH:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Inductance",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Inductance 真量纲 {'I': -2.0, 'L': 2.0, 'M': 1.0, 'T': -2.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:capacitance|TH:un:j_per_k",
+   "source": "EM:pq:capacitance",
+   "target": "TH:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Capacitance",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Capacitance 真量纲 {'L': -2.0, 'M': -1.0, 'T': 4.0, 'I': 2.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:inductance|TH:un:pascal",
+   "source": "EM:pq:inductance",
+   "target": "TH:un:pascal",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Inductance",
+   "unit": "Pa",
+   "reason": "单位量纲 {'M': 1.0, 'L': -1.0, 'T': -2.0} ≠ Inductance 真量纲 {'I': -2.0, 'L': 2.0, 'M': 1.0, 'T': -2.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:capacitance|TH:un:pascal",
+   "source": "EM:pq:capacitance",
+   "target": "TH:un:pascal",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Capacitance",
+   "unit": "Pa",
+   "reason": "单位量纲 {'M': 1.0, 'L': -1.0, 'T': -2.0} ≠ Capacitance 真量纲 {'L': -2.0, 'M': -1.0, 'T': 4.0, 'I': 2.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|CM:un:joule",
+   "source": "TH:pq:gas_const",
+   "target": "CM:un:joule",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "J",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|MG:pq:area|SM:un:j_per_k",
+   "source": "MG:pq:area",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Area",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Area 真量纲 {'L': 2.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|SM:un:j_per_k",
+   "source": "TH:pq:gas_const",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|CM:pq:power|SM:un:j_per_k",
+   "source": "CM:pq:power",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Power",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Power 真量纲 {'L': 2.0, 'M': 1.0, 'T': -3.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:capacitance|SM:un:j_per_k",
+   "source": "EM:pq:capacitance",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Capacitance",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Capacitance 真量纲 {'L': -2.0, 'M': -1.0, 'T': 4.0, 'I': 2.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:inductance|SM:un:j_per_k",
+   "source": "EM:pq:inductance",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Inductance",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Inductance 真量纲 {'I': -2.0, 'L': 2.0, 'M': 1.0, 'T': -2.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:resistance|SM:un:j_per_k",
+   "source": "EM:pq:resistance",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Resistance",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Resistance 真量纲 {'L': 2.0, 'I': -2.0, 'M': 1.0, 'T': -3.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|OP:un:meter",
+   "source": "TH:pq:gas_const",
+   "target": "OP:un:meter",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "m",
+   "reason": "单位量纲 {'L': 1.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|QM:un:ev",
+   "source": "TH:pq:gas_const",
+   "target": "QM:un:ev",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "eV",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|CM:un:watt",
+   "source": "TH:pq:gas_const",
+   "target": "CM:un:watt",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "W",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -3.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|CM:pq:power|TH:un:pascal",
+   "source": "CM:pq:power",
+   "target": "TH:un:pascal",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Power",
+   "unit": "Pa",
+   "reason": "单位量纲 {'M': 1.0, 'L': -1.0, 'T': -2.0} ≠ Power 真量纲 {'L': 2.0, 'M': 1.0, 'T': -3.0}"
+  },
+  {
+   "id": "has_unit|QM:pq:action|SM:un:j_per_k",
+   "source": "QM:pq:action",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Action",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Action 真量纲 {'L': 2.0, 'M': 1.0, 'T': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|EM:un:farad",
+   "source": "TH:pq:gas_const",
+   "target": "EM:un:farad",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "F",
+   "reason": "单位量纲 {'M': -1.0, 'L': -2.0, 'T': 4.0, 'I': 2.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|EM:un:henry",
+   "source": "TH:pq:gas_const",
+   "target": "EM:un:henry",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "H",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'I': -2.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|EM:un:weber",
+   "source": "TH:pq:gas_const",
+   "target": "EM:un:weber",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "Wb",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'I': -1.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|TH:pq:gas_const|EM:un:ohm",
+   "source": "TH:pq:gas_const",
+   "target": "EM:un:ohm",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Gas constant",
+   "unit": "Ω",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -3.0, 'I': -2.0} ≠ Gas constant 真量纲 {'N': -1.0, 'L': 2.0, 'M': 1.0, 'T': -2.0, 'Th': -1.0}"
+  },
+  {
+   "id": "has_unit|EM:pq:resistance|TH:un:j_per_k",
+   "source": "EM:pq:resistance",
+   "target": "TH:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "quantity": "Resistance",
+   "unit": "J/K",
+   "reason": "单位量纲 {'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0} ≠ Resistance 真量纲 {'L': 2.0, 'I': -2.0, 'M': 1.0, 'T': -3.0}"
+  }
+ ],
+ "R5_unit_conflict_model_withdrawn": [
+  {
+   "id": "has_unit|EM:pq:mag_flux|SM:un:j_per_k",
+   "source": "EM:pq:mag_flux",
+   "target": "SM:un:j_per_k",
+   "type": "has_unit",
+   "kind": "gnn_typed_inferred",
+   "reason": "与同量其它单位边**量纲互斥**，且存在策划断言 → 撤模型侧"
+  }
+ ]
+}

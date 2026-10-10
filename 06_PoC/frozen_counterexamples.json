@@ -3,9 +3,9 @@
   "name": "冻结反例集（Frozen Counterexamples）",
   "purpose": "已知错误模式的回归门禁：任何一条被判『已证实 / 应存在』即视为回归失败。与 connectivity_audit.py 并列。",
   "created": "2026-10-10",
-  "phase": 29,
-  "ref": "07_交付物/Phase29_跨域桥专项报告_20261010.md",
-  "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严。Phase 29 追加跨域桥断言：『桥必须有证据』与『桥不得自相矛盾』，两者都带正对照（含 min_count 防空真通过）",
+  "phase": 30,
+  "ref": "07_交付物/Phase30_去伪存真报告_20261010.md",
+  "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严。Phase 29 追加跨域桥断言：『桥必须有证据』与『桥不得自相矛盾』，两者都带正对照（含 min_count 防空真通过） | Phase 30 追加『语义边去伪』断言：单位量纲一致/唯一、model 边目标符号必须出现于源表达式、数学桥必须有算子证据；并补『每摩尔/表达式-only』两处判据校准的正反例。",
   "kinds": [
    "dim_table",
    "gate_chem",
@@ -1054,6 +1054,403 @@
     "edge": 0,
     "level": "rule_checked",
     "scope": "webbook_unit_dimension_recompute"
+   }
+  },
+  {
+   "id": "P1-level-unit-dim-ok",
+   "p0": "P1-dedup",
+   "kind": "level_check",
+   "desc": "**正对照**：能量 --has_unit--> J 量纲一致 → 必须 rule_checked / unit_dimension_recompute（A8 首次生效）",
+   "input": {
+    "nodes": [
+     {
+      "id": "PQ:energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "energy"
+      }
+     },
+     {
+      "id": "UN:j",
+      "labels": [
+       "Unit",
+       "Entity"
+      ],
+      "props": {
+       "symbol": "J",
+       "name": "joule"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_unit|PQ:energy|UN:j",
+      "source": "PQ:energy",
+      "target": "UN:j",
+      "type": "has_unit",
+      "kind": "quantity_unit"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "unit_dimension_recompute"
+   }
+  },
+  {
+   "id": "P1-level-unit-dim-mismatch",
+   "p0": "P1-dedup",
+   "kind": "level_check",
+   "desc": "**反例**：能量 --has_unit--> Pa（M L²T⁻² vs M L⁻¹T⁻²）→ 必须 unverified / unit_dimension_mismatch（不得因来源是策划就放行）",
+   "input": {
+    "nodes": [
+     {
+      "id": "PQ:energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "energy"
+      }
+     },
+     {
+      "id": "UN:pa",
+      "labels": [
+       "Unit",
+       "Entity"
+      ],
+      "props": {
+       "symbol": "Pa",
+       "name": "pascal"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_unit|PQ:energy|UN:pa",
+      "source": "PQ:energy",
+      "target": "UN:pa",
+      "type": "has_unit",
+      "kind": "quantity_unit"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "unverified",
+    "scope": "unit_dimension_mismatch"
+   }
+  },
+  {
+   "id": "P1-level-unit-force-kg-rejected",
+   "p0": "P1-dedup",
+   "kind": "level_check",
+   "desc": "**反例（冻结策划错误）**：力 --has_unit--> kg（力=MLT⁻² ≠ 质量=M）→ 必须 unverified。这是第 20 轮查出的仓库内策划真实错误（PQ:force→UN:kg）",
+   "input": {
+    "nodes": [
+     {
+      "id": "PQ:force",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "force"
+      }
+     },
+     {
+      "id": "UN:kg",
+      "labels": [
+       "Unit",
+       "Entity"
+      ],
+      "props": {
+       "symbol": "kg",
+       "name": "kilogram"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_unit|PQ:force|UN:kg",
+      "source": "PQ:force",
+      "target": "UN:kg",
+      "type": "has_unit",
+      "kind": "quantity_unit"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "unverified",
+    "scope": "unit_dimension_mismatch"
+   }
+  },
+  {
+   "id": "P1-level-math-bridge-log-ok",
+   "p0": "P1-math",
+   "kind": "level_check",
+   "desc": "**正对照**：pH=-\\log_{10}[H^+] 含对数算子 → 与对数律 MA:fo:log_product 的桥必须 rule_checked / log_rule_usage",
+   "input": {
+    "nodes": [
+     {
+      "id": "CE:fo:ph",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "pH=-\\log_{10}[H^+]"
+      }
+     },
+     {
+      "id": "MA:fo:log_product",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "\\log(xy)=\\log x+\\log y"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "derived_from|CE:fo:ph|MA:fo:log_product",
+      "source": "CE:fo:ph",
+      "target": "MA:fo:log_product",
+      "type": "derived_from",
+      "kind": "math_operator_bridge"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "log_rule_usage"
+   }
+  },
+  {
+   "id": "P1-level-math-bridge-no-op-rejected",
+   "p0": "P1-math",
+   "kind": "level_check",
+   "desc": "**反例**：源公式不含对数算子（a=b+c）却声称 derived_from 对数律 → 不得 rule_checked（无算子证据）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:fo:x",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "a=b+c"
+      }
+     },
+     {
+      "id": "MA:fo:log_product",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "\\log(xy)=\\log x+\\log y"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "derived_from|T:fo:x|MA:fo:log_product",
+      "source": "T:fo:x",
+      "target": "MA:fo:log_product",
+      "type": "derived_from",
+      "kind": "math_operator_bridge"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "not_level": "rule_checked"
+   }
+  },
+  {
+   "id": "P1-level-math-bridge-wrong-target-rejected",
+   "p0": "P1-math",
+   "kind": "level_check",
+   "desc": "**反例**：源公式含对数却指向 MA:sy:pi（π，非对数律覆盖范围）→ 不得 rule_checked（算子与目标不匹配）",
+   "input": {
+    "nodes": [
+     {
+      "id": "CE:fo:ph",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "pH=-\\log_{10}[H^+]"
+      }
+     },
+     {
+      "id": "MA:sy:pi",
+      "labels": [
+       "Symbol",
+       "Entity"
+      ],
+      "props": {
+       "latex": "\\pi"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_symbol|CE:fo:ph|MA:sy:pi",
+      "source": "CE:fo:ph",
+      "target": "MA:sy:pi",
+      "type": "has_symbol",
+      "kind": "math_operator_bridge"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "not_level": "rule_checked"
+   }
+  },
+  {
+   "id": "P1-level-model-defines-absent-symbol-rejected",
+   "p0": "P1-dedup",
+   "kind": "level_check",
+   "desc": "**反例（冻结 GNN 塌缩）**：Euler 恒等式 --defines--> 气体常数 且源表达式不含 R → 不得 rule_checked（交由 delta 撤回）",
+   "input": {
+    "nodes": [
+     {
+      "id": "MA:fo:euler_identity",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "e^{i\\pi}+1=0"
+      }
+     },
+     {
+      "id": "TH:pq:gas_const",
+      "labels": [
+       "Constant",
+       "Entity"
+      ],
+      "props": {
+       "name": "Gas constant",
+       "symbol": "R"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "defines|MA:fo:euler_identity|TH:pq:gas_const",
+      "source": "MA:fo:euler_identity",
+      "target": "TH:pq:gas_const",
+      "type": "defines",
+      "kind": "gnn_typed_inferred"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "not_level": "rule_checked"
+   }
+  },
+  {
+   "id": "P1-den-main-unit-dim-consistent",
+   "p0": "P1-dedup",
+   "kind": "graph_scan",
+   "desc": "全图 has_unit 边的量纲=单位量纲 必须零违规（不可判定者不参与）。第 20 轮撤回 29 条后应为 0",
+   "scan": {
+    "unit_dim_consistent": true
+   },
+   "expect": "ZERO"
+  },
+  {
+   "id": "P1-den-main-unit-unique",
+   "p0": "P1-dedup",
+   "kind": "graph_scan",
+   "desc": "同一物理量的多个 has_unit 目标量纲必须唯一（一个量不能既是 Pa 又是 J/(mol·K)）",
+   "scan": {
+    "unit_unique_per_quantity": true
+   },
+   "expect": "ZERO"
+  },
+  {
+   "id": "P1-den-main-semantic-target-present",
+   "p0": "P1-dedup",
+   "kind": "graph_scan",
+   "desc": "全图 model 产物 defines/has_symbol 的目标符号必须出现于源表达式（证明撤回彻底生效）",
+   "scan": {
+    "semantic_target_present": true
+   },
+   "expect": "ZERO"
+  },
+  {
+   "id": "P1-den-main-math-bridge-evidenced",
+   "p0": "P1-math",
+   "kind": "graph_scan",
+   "desc": "数学桥（kind=math_operator_bridge）必须 ① rule_checked；② 源表达式含所辖算子；且条数 ≥ 13（防真空通过）",
+   "scan": {
+    "math_bridge_evidenced": {
+     "min_level": "rule_checked",
+     "min_count": 13
+    }
+   },
+   "expect": "ALL_EVIDENCED"
+  },
+  {
+   "id": "P1-level-unit-molar-mass-not-flagged",
+   "p0": "P1-dedup",
+   "kind": "level_check",
+   "desc": "**正对照（防误伤）**：摩尔熵 挂 J/(mol*K) 是正确的每摩尔形式 → 必须 rule_checked，不得误撤",
+   "input": {
+    "nodes": [
+     {
+      "id": "PQ:molar_entropy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_entropy"
+      }
+     },
+     {
+      "id": "SM:un:j_per_k",
+      "labels": [
+       "Unit",
+       "Entity"
+      ],
+      "props": {
+       "symbol": "J/(mol*K)",
+       "name": "joule per mole kelvin"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_unit|PQ:molar_entropy|SM:un:j_per_k",
+      "source": "PQ:molar_entropy",
+      "target": "SM:un:j_per_k",
+      "type": "has_unit",
+      "kind": "quantity_unit"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "unit_dimension_recompute"
    }
   }
  ]

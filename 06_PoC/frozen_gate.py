@@ -346,6 +346,113 @@ def run_case(case, graph):
                 "%s：共 %d 条（需≥%d），低于 %s 的 %d 条 %s" % \
                 (tgt, len(sel), cfg.get("min_count", 1), minlv, len(bad), bad[:3])
 
+        # (i) 单位—量纲一致（Phase 30）：全图 `has_unit` 边必须满足 dim(量) == dim(单位)。
+        #     第 20 轮实测 29 条违规（面积→J/K、气体常数→Pa、力→kg…），其中 **5 条是
+        #     仓库内策划数据的真实错误**（`PQ:force → UN:kg`）。不可判定者不计入。
+        if scan.get("unit_dim_consistent"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            bad, n_checked, n_na = [], 0, 0
+            for e in graph["edges"]:
+                if e.get("type") != "has_unit":
+                    continue
+                un, qn = n_by_id.get(e["target"]), n_by_id.get(e["source"])
+                if not un or not qn:
+                    continue
+                up = un.get("props") or {}
+                ud = vm.unit_dim_of_symbol(up.get("symbol") or up.get("name"))
+                qn_name = (qn.get("props") or {}).get("name") or e["source"].split(":")[-1]
+                qd = vm.dm.dim_of(qn_name)
+                if ud is None or qd is None:
+                    n_na += 1
+                    continue
+                n_checked += 1
+                if vm._drop(ud) != vm._drop(qd):
+                    bad.append((e["source"], e["target"], qn_name, vm._drop(qd), vm._drop(ud)))
+            return ("PASS" if not bad else "FAIL"), \
+                "可判定 %d 条 / 不可判定 %d 条，量纲不符 %d 条：%s" % \
+                (n_checked, n_na, len(bad), bad[:3])
+
+        # (j) 单位唯一（Phase 30）：同一物理量的多个 `has_unit` 目标**量纲必须唯一**
+        #     —— 一个量不能既以 Pa 又以 J/(mol·K) 为单位。第 20 轮实测 `气体常数`
+        #     挂了 **12 条**互斥单位边（10 种量纲），是 GNN 塌缩的典型指纹。
+        if scan.get("unit_unique_per_quantity"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            agg = collections.defaultdict(list)
+            for e in graph["edges"]:
+                if e.get("type") != "has_unit":
+                    continue
+                un = n_by_id.get(e["target"])
+                if not un:
+                    continue
+                ud = vm.unit_dim_of_symbol((un.get("props") or {}).get("symbol"))
+                if ud is not None:
+                    agg[e["source"]].append(tuple(sorted(vm._drop(ud).items())))
+            bad = [(s, len(v), len(set(v))) for s, v in agg.items() if len(set(v)) > 1]
+            return ("PASS" if not bad else "FAIL"), \
+                "多单位量的 %d 个，量纲互斥 %d 个：%s" % (len(agg), len(bad), bad[:3])
+
+        # (k) 语义边目标必须**出现于源表达式**（Phase 30）：模型产物的 `defines` /
+        #     `has_symbol` 边，其目标符号必须真的出现在源公式里。判据**只读表达式**
+        #     （不读散文）—— 实测若把散文计入，`Rate of doing work.` 里的 "R" 会让
+        #     9 条真·错误边逃过反驳。策划数据不在此断言范围（符号命名带人为习惯）。
+        if scan.get("semantic_target_present"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            bad, n_checked = [], 0
+            for e in graph["edges"]:
+                if e.get("type") not in ("defines", "has_symbol"):
+                    continue
+                p = e.get("props") or {}
+                k = p.get("kind") or e.get("kind") or ""
+                s = p.get("source") or ""
+                if not ((k in vm.MODEL_KINDS) or ("GNN" in s) or ("LLM" in s)
+                        or ("gnn" in k) or ("llm" in k)):
+                    continue
+                sn, tn = n_by_id.get(e["source"]), n_by_id.get(e["target"])
+                if not sn or not tn:
+                    continue
+                ok = vm.symbol_in_source(sn, vm.target_symbol(tn))
+                if ok is None:
+                    continue
+                n_checked += 1
+                if ok is False:
+                    bad.append((e["source"], e["target"], vm.target_symbol(tn)))
+            return ("PASS" if not bad else "FAIL"), \
+                "可判定 %d 条，符号缺失 %d 条：%s" % (n_checked, len(bad), bad[:3])
+
+        # (l) 数学桥必须有**算子证据**（Phase 30）：`kind == math_operator_bridge` 的边
+        #     必须 ① 达到 `rule_checked`；② 源表达式确实含目标数学对象所辖算子。
+        #     这是「数学桥」第一次**有仪器**—— 防止将来有人凭名字相似建数学桥。
+        if scan.get("math_bridge_evidenced"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            cfg = scan["math_bridge_evidenced"]
+            minlv = cfg.get("min_level", "rule_checked")
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            sel, bad = [], []
+            for e in graph["edges"]:
+                p = e.get("props") or {}
+                if (p.get("kind") or e.get("kind")) != "math_operator_bridge":
+                    continue
+                sel.append(e)
+                lvl = p.get("verification_level")
+                if vm.RANK.get(lvl, -1) < vm.RANK.get(minlv, 99):
+                    bad.append((e["source"], e["target"], "level=%s" % lvl))
+                    continue
+                sn = n_by_id.get(e["source"])
+                hits = vm.math_op_of(vm.expr_of_node(sn))
+                if not any(str(e["target"]) in vm.MATH_OP_RULES[h][1] for h in hits):
+                    bad.append((e["source"], e["target"], "无算子证据"))
+            ok = (not bad) and len(sel) >= cfg.get("min_count", 1)
+            return ("PASS" if ok else "FAIL"), \
+                "数学桥 %d 条（需≥%d），无证据/低于 %s 的 %d 条：%s" % \
+                (len(sel), cfg.get("min_count", 1), minlv, len(bad), bad[:3])
+
         return "SKIP", "未知 scan"
 
     return "SKIP", "未知 kind：%s" % kind

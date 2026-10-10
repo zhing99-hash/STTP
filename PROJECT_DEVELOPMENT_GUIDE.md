@@ -22,12 +22,14 @@ CH₄ + 2O₂ → CO₂ + 2H₂O  (Reaction)
 ```
 最终实现：从纯数学定理出发，一路推理到真实化学分子的物理化学性质，全链路可符号验证。
 
-**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **9657 节点 / 48827 边**（Aura 云端集合级对账零差异），已开源至 GitHub。
-**北极星指标「跨学科连通性」已仪器化（`06_PoC/task_trust_audit.py`，8 任务族 T1–T8 成对读）**：连通分量 **1**、孤立节点 **0**；
+**当前进度**：四层架构（数据层 / 知识层 / 推理生成层 / 交互层）均已 MVP 落地，图谱规模 **9657 节点 / 48760 边**（Aura 云端集合级对账零差异），已开源至 GitHub。
+**北极星指标「跨学科连通性」已仪器化（`06_PoC/task_trust_audit.py`，8 任务族 T1–T8 成对读）**：连通分量 **1**、孤立节点 **0**；任务级可信完成率 **40224 / 40680 = 98.9%**。
 **Phase 26 治理学科均衡**（物理占比 **71.5% → 54.3%**）；**Phase 29 跨域桥专项**把最短板 **T7 从 0/53 = 0.0% 拉到 861/962 = 89.5%**
-（根因＝**双口径缺陷**：门槛 `human_reviewed` 自动化不可达 + 类型窗口漏掉主桥 `has_quantity`；另有 **700 条真桥被误判为模型预测**）。
-⚠ **新的最短板是「数学桥」**：跨域边 962 条中化学↔物理占 899（93.5%），**数学↔物理仅 1/29 达标、化学↔数学 0/6** ——
-且 **DLMF 特殊函数路线已证伪**（PhysicsBabel 5000 条公式全为纯单项式）→ 下轮攻数学桥须**另找载体**。
+（根因＝**双口径缺陷**：门槛 `human_reviewed` 自动化不可达 + 类型窗口漏掉主桥 `has_quantity`；另有 **700 条真桥被误判为模型预测**）；
+**Phase 30「去伪存真」**再进一步：**撤回 81 条可被确定性反驳的语义边**（含 **5 条策划数据错误** `力→kg` 等）+ **建起 14 条真桥**（数学 13 + 单位 1）
+→ **T7 879/949 = 92.6%**、**数学↔物理 3.4% → 72.7%**、**化学↔数学 0.0% → 83.3%**。
+⚠ **跨域桥已非第一短板**；但**每个新维度都可能是一片从未被检验的空白**（「单位」维一加复算即冒出 29 条违规）
+—— 下一步转向 **Claim/Evidence 完整对象化 + repr 串生成链根治**（详见 `00_项目管理/下一步开发计划_20261008.md`）。
 
 ---
 
@@ -39,15 +41,15 @@ URI:        neo4j+ssc://853a33bc.databases.neo4j.io
 Database:   853a33bc
 Username:   853a33bc
 Password:   （见 环境变量 / .env，禁止明文）
-总计:       9657 节点 / 48827 边（与本地集合级对账零差异）
+总计:       9657 节点 / 48760 边（与本地集合级对账零差异）
 ```
 
-> ⚠️ Aura 免费实例约 5 万节点上限，当前 **9657 节点 / 48827 边**（云端与本地集合级对账零差异）；扩容（如 Rhea 全库 1.9 万条反应、或 WebBook 全量 1093 分子）前先估算增量并分批推。
+> ⚠️ Aura 免费实例约 5 万节点上限，当前 **9657 节点 / 48760 边**（云端与本地集合级对账零差异）；扩容（如 Rhea 全库 1.9 万条反应、或 WebBook 全量 1093 分子）前先估算增量并分批推。
 
 ### 2.2 本地可视化服务
 ```
 地址:   http://127.0.0.1:8765/
-数据:   06_PoC/graph_data_phase29.json（9657 节点 / 48827 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
+数据:   06_PoC/graph_data_phase30.json（9657 节点 / 48760 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
 前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax，**依赖已本地 vendored**，可完全离线）
 ```
 
@@ -56,7 +58,7 @@ Password:   （见 环境变量 / .env，禁止明文）
 bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_PYTHON
 ```
 > 长驻请后台启动并重定向日志，例如：`bash sttp.sh viz > .runlog/viz.log 2>&1 &`
-> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase27.json python 06_PoC/viz_server.py`
+> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase30.json python 06_PoC/viz_server.py`
 > ⚠️ 必须用系统 Python（`.env` 的 `STTP_PYTHON`）；托管 3.13 是空环境，缺依赖。
 
 ### 2.3 GitHub 仓库
@@ -682,9 +684,17 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 **1. Phase 8 收尾：ElementKG 2.0 真实 dump + Vashy / ReactionAtlas**
 - 状态：Phase 8 三期满负荷落地（文献/常量/分子/药物四层），剩余候选为 **ElementKG 2.0 官方 dump**、
   **Vashy**（物理方程侧）、**ReactionAtlas**（反应侧）
-- ⚠️ **首要约束：从「控物理失衡」转为「产跨域桥」**。物理占比已由 Phase 26（Rhea+ChEBI 化学侧）从 **71.5% 压到 54.3%**；但跨域边绝对数仍 **869**、90% 依赖 `has_quantity`、**数学↔物理仅 29 条** ——
-  跨学科实质只发生在「化学 ↔ 物理」（93%）。**接物理源前必须评估它对失衡的边际影响**，
-  优先接**化学 / 数学 / 交叉学科**侧的源。
+- ⚠️ **首要约束已从「产跨域桥」转为「去伪存真 + 新维度复算」**。物理占比已由 Phase 26（Rhea+ChEBI 化学侧）从 **71.5% 压到 54.3%**；
+  但第 19~20 轮连续侦察证明：**跨域桥的瓶颈不是「缺桥」而是「图上有可被确定性反驳的假桥」** ——
+  Phase 30 一次撤回 **81 条**假语义边（含 **5 条策划数据本身的错误**），并把数学桥从 **3.4%** 拉到 **72.7%**。
+  **「跨域桥」已不再是第一短板**；接新源前须先回答「这个源的每个维度是否已被复算检验过」。
+
+**1b. ★ Claim / Evidence 完整对象化 + repr 串生成链根治（第 21 轮建议）**
+- 把 `{claim, evidence[], verification_scope, verifier}` 做成**一等对象**（含独立 `evidence[]` 列表）；
+  `evidence[]` 目前**仅落到跨域桥边**，尚未推广全图。
+- 同步做 **repr 串生成链根治**（`build_phase11/11b/12.py` 回写往返）—— 已是**连续第三轮**顺延的技术债，
+  它是「属性形态 → 静默降级」的根源（嵌套容器致 Neo4j 整批失败、`apoc.merge.relationship` 只写 `onCreateProps` 等均属此类）。
+- 一并补 **`reconcile_aura_edges.py` 的「属性维」对账**（现只比三元组，是结构性盲区）。
 
 **2. 缓解分子层多节点对 GNN 嵌入的稀释**
 - 现象：8 套分子命名空间（有意的跨源对齐）会让同一实体拆成多个节点，稀释嵌入质量
@@ -741,7 +751,7 @@ python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_U
 
 # 4. 启动本地可视化
 bash sttp.sh viz
-# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase27.json）
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase30.json）
 
 # 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
 bash sttp.sh export
