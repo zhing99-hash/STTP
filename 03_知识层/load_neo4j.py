@@ -152,7 +152,7 @@ def write_graph(driver, nodes: List[dict], edges: List[dict],
             "UNWIND $rows AS row "
             "MATCH (a:Entity {id: row.start}), (b:Entity {id: row.end}) "
             "CALL apoc.merge.relationship(a, row.type, {kind: row.kind}, "
-            "row.props, b) YIELD rel RETURN count(rel) AS c"
+            "row.props, b) YIELD rel SET rel += row.props RETURN count(rel) AS c"
         )
         brows = [{"start": e["source"], "end": e["target"], "type": e["type"],
                   "kind": e.get("kind", e.get("props", {}).get("kind", "")),

@@ -219,7 +219,7 @@ if (window.__v_mj || !window.MathJax) {
   </div>
   <div class="section">
     <h3>显示选项</h3>
-    <label class="row"><input type="checkbox" class="chk" id="f-verified" /> 仅显示 verified 推断边</label>
+    <label class="row"><input type="checkbox" class="chk" id="f-verified" /> 仅显示「独立复核」推断边（≥rule_checked）</label>
     <label class="row"><input type="checkbox" class="chk" id="f-eoi" checked /> explicit/inferred 区别着色</label>
     <div class="hint">关闭后按边类型 kind 着色；线型始终：实线=explicit、虚线=inferred</div>
     <label class="row"><input type="checkbox" class="chk" id="f-ghost" checked /> 显示 ghost 外部节点</label>
@@ -463,6 +463,10 @@ function buildElements(){
         confidence: (e.confidence == null ? 0.5 : e.confidence),
         explicit_or_inferred: eoi,
         verified: !!e.verified,
+        verified_strict: !!e.verified_strict,
+        vlevel: e.verification_level || "",
+        vscope: e.verification_scope || "",
+        verifier: e.verifier || "",
         gate: e.gate || "",
         evidence: e.evidence || "",
         rationale: e.rationale || "",
@@ -701,15 +705,20 @@ function bindEvents(){
     }
   });
 
-  // 边 tooltip：confidence + gate + evidence
+  // 边 tooltip：confidence + 可信性分层 + evidence
   const tip = document.getElementById("tooltip");
   cy.on("mouseover", "edge", evt => {
     const d = evt.target.data();
+    const vl = (d.vlevel || "");
+    const vlTag = vl === "model_inferred" ? "⚠ " : (d.verified_strict ? "★ " : "");
     const parts = [
       `type: <b>${escapeHtml(d.type)}</b>  ·  kind: <b>${escapeHtml(d.kind)}</b>`,
       `来源: <b>${escapeHtml(d.explicit_or_inferred)}</b>`,
       `confidence: <b>${Number(d.confidence).toFixed(2)}</b>`,
-      d.verified ? `verified: <b>✅ ${escapeHtml(d.gate || "")}</b>` : (d.gate ? `gate: ${escapeHtml(d.gate)}` : ""),
+      vl ? `可信性: <b>${vlTag}${escapeHtml(vl)}</b>`
+         + (d.vscope ? `  ·  scope: <b>${escapeHtml(d.vscope)}</b>` : "")
+         + (d.verifier ? `<br/>verifier: ${escapeHtml(d.verifier)}` : "")
+         : (d.gate ? `gate: ${escapeHtml(d.gate)}` : ""),
       d.evidence ? `evidence: ${escapeHtml(String(d.evidence).slice(0, 180))}` : "",
       d.rationale ? `rationale: ${escapeHtml(String(d.rationale).slice(0, 180))}` : "",
       `<span class="note">${escapeHtml(d.source)} → ${escapeHtml(d.target)}</span>`
@@ -762,7 +771,7 @@ function applyFilters(){
         && state.etypes.has(e.data("type"))
         && e.data("confidence") >= state.minConf;
       if (state.verifiedOnly){
-        ok = ok && e.data("explicit_or_inferred") === "inferred" && e.data("verified") === true;
+        ok = ok && e.data("explicit_or_inferred") === "inferred" && e.data("verified_strict") === true;
       }
       e.toggleClass("hidden", !ok);
     });

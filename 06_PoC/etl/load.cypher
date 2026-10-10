@@ -47,6 +47,7 @@ MATCH (a {id: $start}), (b {id: $end})
 CALL apoc.merge.relationship(
   a, $type, {}, $props, b
 ) YIELD rel
+SET rel += $props
 RETURN rel;
 
 // ------------------------------------------------------------

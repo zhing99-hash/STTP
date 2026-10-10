@@ -81,8 +81,17 @@ EDGE_CYPHER = """
 UNWIND $rows AS row
 MATCH (a:Entity {id: row.source}), (b:Entity {id: row.target})
 CALL apoc.merge.relationship(a, row.type, {kind: row.kind}, row.props, b) YIELD rel
+SET rel += row.props
 RETURN count(rel) AS c
 """
+# ⚠ 2026-10-10 踩坑（铁律 #13「语句跑完 ≠ 事情做成」的第二次现形）：
+# `apoc.merge.relationship(a, type, identProps, props, b)` 的 `props` 是 **onCreateProps**
+# —— **只在「新建」时生效**；对**已存在**的边（MERGE 命中）**什么都不写**。
+# 于是「只更新边属性」的 delta 会**静默零效果**：日志照样报「边 MERGE 完成 48734/48734」、
+# 计数不变、`reconcile_aura_edges` 也 0 差异（它只比 (source,type,kind) 三元组，不看属性）。
+# 第 18 轮实测：Phase 28 的 48734 条边属性**一条都没落库**，Aura 上 `verification_level`
+# 属性根本不存在，而脚本 exit=0。故补 `SET rel += row.props`（与 APOC 版本无关、create/match
+# 都生效），再加下方 [5/5] **属性落地抽检**做仪器守卫。
 
 DEL_EDGE_CYPHER = """
 UNWIND $rows AS row
@@ -104,6 +113,47 @@ MATCH (a:Entity {id: row.source})-[r]->(b:Entity {id: row.target})
 WHERE type(r) = row.type
 RETURN count(r) AS c
 """
+
+# 边**属性**落地抽检（铁律 #13 守卫）：把 delta 边的属性与 DB 上实际属性**逐键比对**。
+# 只抽样（默认 300 条等距），足够捕获「onCreateProps 只在新建时生效」这类**系统性**缺陷。
+FETCH_EDGE_PROPS_CYPHER = """
+UNWIND $rows AS row
+MATCH (a:Entity {id: row.source})-[r]->(b:Entity {id: row.target})
+WHERE type(r) = row.type
+  AND coalesce(r.kind,'') = coalesce(row.kind,'')
+RETURN row.source AS s, row.target AS t, row.type AS ty, properties(r) AS p
+"""
+
+
+def verify_edge_props(driver, edges, sample=300):
+    """抽样比对边属性是否真的落库。返回 (已检条数, 不符条数, 前 3 样例)。"""
+    n = len(edges)
+    if not n:
+        return 0, 0, []
+    if n <= sample:
+        rows = edges
+    else:
+        step = n / float(sample)
+        rows = [edges[int(i * step)] for i in range(sample)]
+    checked, bad, samples = 0, 0, []
+    for i in range(0, len(rows), 50):
+        seg = rows[i:i + 50]
+        with driver.session(database=DB) as s:
+            got = s.run(FETCH_EDGE_PROPS_CYPHER, rows=seg).data()
+        idx = {(g["s"], g["ty"], g["t"]): (g["p"] or {}) for g in got}
+        for e in seg:
+            key = (e["source"], e["type"], e["target"])
+            if key not in idx:                       # 端点/类型匹配不上 → 由 DELETE 回查兜底
+                continue
+            checked += 1
+            dbp = idx[key]
+            for k, v in (e.get("props") or {}).items():
+                if dbp.get(k) != v:
+                    bad += 1
+                    if len(samples) < 3:
+                        samples.append((key[0], key[1], k, v, dbp.get(k)))
+                    break
+    return checked, bad, samples
 
 
 def run_batched(driver, cypher, rows, label, batch=200, max_retry=6):
@@ -245,6 +295,14 @@ def main():
         else:
             bd = 0
 
+        # [5/5] 边属性落地抽检 —— 铁律 #13：`MERGE 跑完 48734/48734` 不等于属性真的写进去了
+        ck, badp = 0, 0
+        if edges:
+            ck, badp, bad_samples = verify_edge_props(driver, edges, 300)
+            print(f"[5/5] 边属性抽检：已检 {ck} 条，不符 {badp} 条")
+            for s_ in bad_samples:
+                print(f"      ✗ {s_[0]}--{s_[1]}-->... 键 {s_[2]}：delta={s_[3]!r} db={s_[4]!r}")
+
         with driver.session(database=DB) as s:
             n1 = s.run("MATCH (n) RETURN count(n) AS c").single()["c"]
             e1 = s.run("MATCH ()-[r]->() RETURN count(r) AS c").single()["c"]
@@ -261,6 +319,14 @@ def main():
             print(f"!! 待删边仍有 {left_edges} 条残留 → **云端与本地已分叉**！")
             print("!! 多为 delta 的 delete_edges 缺 kind 且语句未做通配所致（已修语句）；")
             print("!! 请重跑本步（MERGE 幂等，可安全重复）。")
+            print("!" * 72)
+            return 3
+
+        if badp:
+            print("\n" + "!" * 72)
+            print(f"!! 边属性抽检不符 {badp}/{ck} → **属性未真正落库**（云端与本地已分叉）！")
+            print("!! 常见原因：apoc.merge.relationship 的 props 只是 onCreateProps，")
+            print("!! 对**已存在**边不写任何属性 —— 必须补 `SET rel += row.props`。")
             print("!" * 72)
             return 3
 

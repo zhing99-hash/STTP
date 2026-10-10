@@ -45,6 +45,7 @@ EDGE_CYPHER = """
 UNWIND $rows AS row
 MATCH (a:Entity {id: row.source}), (b:Entity {id: row.target})
 CALL apoc.merge.relationship(a, row.type, {kind: row.kind}, row.props, b) YIELD rel
+SET rel += row.props
 RETURN count(rel) AS c
 """
 

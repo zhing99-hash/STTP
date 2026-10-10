@@ -146,9 +146,34 @@ def load(path: str = OUT) -> dict:
     return _TABLE
 
 
+def _display_key(name: str) -> str:
+    """把「展示名」（如 `Kinetic energy` / `Gibbs free energy`）规整为 snake_case 键。
+
+    图上的量名多为展示名（首字母大写、含空格），而真值表 / ALIAS 用 snake_case。
+    不规整会**静默查不到**（`dim_of` 返回 None），使本可复算的边退化为不可判定。
+    """
+    s = str(name).strip().lower()
+    out = []
+    for ch in s:
+        out.append(ch if (ch.isalnum() or ch == "_") else "_")
+    s = "".join(out)
+    while "__" in s:
+        s = s.replace("__", "_")
+    return s.strip("_")
+
+
 def canon(name: str) -> str:
-    """把量名归一为真值表规范名（经 ALIAS）。"""
-    return ALIAS.get(str(name), str(name))
+    """把量名归一为真值表规范名（先查 ALIAS，再试 snake_case 展示名）。"""
+    s = str(name)
+    if s in ALIAS:
+        return ALIAS[s]
+    k = _display_key(s)
+    if k in ALIAS:
+        return ALIAS[k]
+    tbl = load()
+    if k in tbl:
+        return k
+    return s
 
 
 def dim_of(name: str):

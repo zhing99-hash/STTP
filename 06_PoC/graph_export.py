@@ -186,6 +186,19 @@ def _resolve_input(path: str | None) -> str:
     return DEFAULT_NORMALIZED
 
 
+# 可信性分层受控词表（与 `11_真实数据/verification_model.py` 保持一致；此处内联以避免
+# 06_PoC 反向依赖 11_真实数据。改词表时**两处都要改**，并跑 frozen_gate）
+RANK_ORDER = {
+    "unverified": 0,
+    "model_inferred": 1,
+    "source_asserted": 2,
+    "by_construction": 3,
+    "rule_checked": 4,
+    "cross_source": 5,
+    "human_reviewed": 6,
+}
+
+
 def build_graph_data(src_path: str) -> dict:
     """把规范化图谱 JSON 转成前端友好结构（纯函数，供 server 复用）。"""
     with open(src_path, "r", encoding="utf-8") as f:
@@ -217,6 +230,19 @@ def build_graph_data(src_path: str) -> dict:
         })
 
     # ------------------------ 边 ------------------------
+    # 可信性分层（Phase 28 / 第 18 轮）：`verified` 不再是唯一口径。
+    # 权威侧由 `11_真实数据/verification_model.py` 落 `verification_level`；
+    # 此处仅做**派生**（避免 06_PoC 反向依赖 11_真实数据），并保留旧 `verified` 字段兼容。
+    def _derive_verified(props):
+        lv = props.get("verification_level")
+        if lv is None:
+            return bool(props.get("verified", False))
+        return RANK_ORDER.get(lv, -1) >= RANK_ORDER["by_construction"]
+
+    def _derive_strict(props):
+        lv = props.get("verification_level")
+        return RANK_ORDER.get(lv, -1) >= RANK_ORDER["rule_checked"]
+
     edges_out = []
     for e in data.get("edges", []):
         props = dict(e.get("props") or {})
@@ -233,7 +259,11 @@ def build_graph_data(src_path: str) -> dict:
             "kind": kind,
             "confidence": props.get("confidence"),
             "explicit_or_inferred": eoi,                     # explicit / inferred
-            "verified": bool(props.get("verified", False)),  # Phase 3 校验通过
+            "verified": _derive_verified(props),             # 派生：level ≥ by_construction
+            "verified_strict": _derive_strict(props),        # 派生：level ≥ rule_checked
+            "verification_level": props.get("verification_level"),
+            "verification_scope": props.get("verification_scope"),
+            "verifier": props.get("verifier"),
             "gate": props.get("verification_gate"),          # R-MATH / R-PHY / R-CHEM
             "evidence": props.get("verification_evidence") or props.get("evidence"),
             "rationale": props.get("rationale"),
@@ -255,6 +285,8 @@ def build_graph_data(src_path: str) -> dict:
     subj_counter = Counter(nd["subject"] for nd in nodes_out)
     eoi_counter = Counter(ed["explicit_or_inferred"] for ed in edges_out)
     verified_count = sum(1 for ed in edges_out if ed["verified"])
+    strict_count = sum(1 for ed in edges_out if ed["verified_strict"])
+    lv_counter = Counter(ed["verification_level"] or "unlabeled" for ed in edges_out)
 
     node_ids = {nd["id"] for nd in nodes_out}
     dangling = set()
@@ -274,6 +306,8 @@ def build_graph_data(src_path: str) -> dict:
         "subjects": dict(sorted(subj_counter.items())),
         "explicit_or_inferred": dict(sorted(eoi_counter.items())),
         "verified_edges": verified_count,
+        "verified_strict_edges": strict_count,
+        "verification_levels": dict(lv_counter),
         "dangling_endpoints": sorted(dangling),
         "warnings": warnings,
     }

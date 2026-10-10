@@ -3,9 +3,10 @@
     "name": "冻结反例集（Frozen Counterexamples）",
     "purpose": "已知错误模式的回归门禁：任何一条被判『已证实 / 应存在』即视为回归失败。与 connectivity_audit.py 并列。",
     "created": "2026-10-10",
-    "phase": 27,
+    "phase": 28,
     "ref": "07_交付物/GPT6评估报告独立核验与路线调整建议_20261009.md",
     "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严",
+    "kinds": ["dim_table", "gate_chem", "gate_math", "graph_scan", "level_check", "attrib_check"],
     "run": "python 06_PoC/frozen_gate.py [--json]"
   },
   "cases": [
@@ -107,6 +108,159 @@
       "desc": "主图中不得再出现 kind==skeleton_bridge 的 same_as 边（应改判 same_formula_as）",
       "scan": {"edge_type": "same_as", "edge_kind": "skeleton_bridge"},
       "expect": "ABSENT"
+    },
+    {
+      "id": "P0-5-level-model-not-rule",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "模型产物（gnn_typed_verified）不得被判 rule_checked —— 预测≠验证（存量 verified 通胀元凶）",
+      "input": {"edges": [
+        {"type": "has_quantity", "source": "EL:x", "target": "PQ:force",
+         "props": {"kind": "gnn_typed_verified", "source": "Phase13.Gate.B5"}}
+      ]},
+      "expect": {"edge": 0, "level": "model_inferred", "max_level": "model_inferred"}
+    },
+    {
+      "id": "P0-5-level-dim-table-positive",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "（正对照）kind==dimension_table 的 dimensionally_consistent 边必须判 rule_checked / dimensional_strict_equal",
+      "input": {
+        "nodes": [{"id": "PQ:energy", "props": {"name": "energy"}},
+                  {"id": "PQ:torque", "props": {"name": "torque"}}],
+        "edges": [{"type": "dimensionally_consistent", "source": "PQ:energy", "target": "PQ:torque",
+                   "props": {"kind": "dimension_table", "source": "dimension_table"}}]
+      },
+      "expect": {"edge": 0, "level": "rule_checked", "scope": "dimensional_strict_equal"}
+    },
+    {
+      "id": "P0-5-level-dim-mismatch",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "非 dimension_table 的 dc 边：独立复算 energy(ML²T⁻²) vs mass(M) 不等 → 必须降为 unverified",
+      "input": {
+        "nodes": [{"id": "PQ:energy", "props": {"name": "energy"}},
+                  {"id": "PQ:mass", "props": {"name": "mass"}}],
+        "edges": [{"type": "dimensionally_consistent", "source": "PQ:energy", "target": "PQ:mass",
+                   "props": {"kind": "gnn_typed_verified", "source": "Phase13.Gate.B3"}}]
+      },
+      "expect": {"edge": 0, "level": "unverified", "scope": "dimensional_mismatch"}
+    },
+    {
+      "id": "P0-5-level-has-symbol-ok",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "（正对照）PhysicsBabel has_symbol：量确在公式 exponents 中 → rule_checked / formula_participation_membership",
+      "input": {
+        "nodes": [{"id": "PB:fo:1", "labels": ["Formula"],
+                   "props": {"dim_exponents": {"mass": 1, "length": 1}}},
+                  {"id": "PQ:mass", "props": {"name": "Mass"}}],
+        "edges": [{"type": "has_symbol", "source": "PB:fo:1", "target": "PQ:mass",
+                   "props": {"kind": "real", "source": "PhysicsBabel",
+                             "rationale": "方程中 Mass 为参与量"}}]
+      },
+      "expect": {"edge": 0, "level": "rule_checked", "scope": "formula_participation_membership"}
+    },
+    {
+      "id": "P0-5-level-has-symbol-stale",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "PhysicsBabel has_symbol 挂了一个不在公式 exponents 中的量（陈旧错挂）→ 不得 rule_checked，须判 unverified",
+      "input": {
+        "nodes": [{"id": "PB:fo:600", "labels": ["Formula"],
+                   "props": {"dim_exponents": {"mass": 1}}},
+                  {"id": "PQ:force", "props": {"name": "force"}}],
+        "edges": [{"type": "has_symbol", "source": "PB:fo:600", "target": "PQ:force",
+                   "props": {"kind": "real", "source": "PhysicsBabel"}}]
+      },
+      "expect": {"edge": 0, "level": "unverified", "scope": "formula_participation_not_found"}
+    },
+    {
+      "id": "P0-5-level-composed-self-only",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "composed_of 仅凭『模型自述分子式』内部一致、节点无外部权威式 → 不得 cross_source（自我验证），上限 rule_checked",
+      "input": {
+        "nodes": [{"id": "GN:mol:x", "props": {"formula": "H2O"}}],
+        "edges": [{"type": "composed_of", "source": "GN:mol:x", "target": "EK:el:O",
+                   "props": {"from_formula": "H2O", "count": 1,
+                             "kind": "gnn_typed_verified", "source": "GNN"}}]
+      },
+      "expect": {"edge": 0, "not_level": "cross_source", "max_level": "rule_checked"}
+    },
+    {
+      "id": "P0-5-level-composed-cross-positive",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "（正对照）节点带 PubChem 权威式且独立解析一致、边自身非 PubChem 来源 → cross_source（真·双源）",
+      "input": {
+        "nodes": [{"id": "PB:mol:ts", "props": {"pubchem_formula": "O3S2"}}],
+        "edges": [{"type": "composed_of", "source": "PB:mol:ts", "target": "EK:el:O",
+                   "props": {"from_formula": "O3S2", "count": 3, "source": "curated_seed"}}]
+      },
+      "expect": {"edge": 0, "level": "cross_source", "scope": "formula_count_cross_source"}
+    },
+    {
+      "id": "P0-5-level-latex-not-verified",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "desc": "same_latex_normalized（LaTeX 串规范化）不构成等价证明 → 必须 model_inferred，不得任何 verified 级",
+      "input": {"edges": [
+        {"type": "same_latex_normalized", "source": "MX:fo:a", "target": "MX:fo:b",
+         "props": {"kind": "llm_inferred", "source": "gnn_infer.py"}}
+      ]},
+      "expect": {"edge": 0, "level": "model_inferred"}
+    },
+    {
+      "id": "P0-6-attrib-has-symbol-phy-bogus",
+      "p0": "P0-6",
+      "kind": "attrib_check",
+      "desc": "虚假归因：has_symbol 的 scope(formula_participation_membership) 与门禁名 R-PHY 不符 → 必须判为不匹配",
+      "input": {"gate": "R-PHY", "scope": "formula_participation_membership"},
+      "expect": "NOT_MATCH"
+    },
+    {
+      "id": "P0-6-attrib-r-phy-positive",
+      "p0": "P0-6",
+      "kind": "attrib_check",
+      "desc": "（正对照）R-PHY 配 dimensional_strict_equal 是合法配对 → 必须判匹配，防止门禁过严",
+      "input": {"gate": "R-PHY", "scope": "dimensional_strict_equal"},
+      "expect": "MATCH"
+    },
+    {
+      "id": "P0-6-attrib-r-chem-positive",
+      "p0": "P0-6",
+      "kind": "attrib_check",
+      "desc": "（正对照）R-CHEM 配 formula_count_independent_recheck 是合法配对 → 必须判匹配",
+      "input": {"gate": "R-CHEM", "scope": "formula_count_independent_recheck"},
+      "expect": "MATCH"
+    },
+    {
+      "id": "P0-5-main-has-symbol-no-phy-gate",
+      "p0": "P0-5",
+      "kind": "graph_scan",
+      "desc": "主图中不得存在挂「物理/化学门禁」的 has_symbol 边（has_symbol 由组成成员核对产生，与量纲/守恒门禁无关=虚假归因）",
+      "scan": {"forbidden": [
+        {"edge_type": "has_symbol", "prop": "verification_gate",
+         "in_values": ["R-PHY", "R-CHEM", "R-MATH", "R-BIO"]}
+      ]},
+      "expect": "ABSENT"
+    },
+    {
+      "id": "P0-5-main-gate-attrib-consistent",
+      "p0": "P0-5",
+      "kind": "graph_scan",
+      "desc": "落库自洽：凡已存 verification_gate 的边，其归因必须与派生的 verification_scope 配对合法（回归门禁：审计改正派生字段后，必须同时**撤回**库里的假归因）",
+      "scan": {"gate_attrib": true},
+      "expect": "CONSISTENT"
+    },
+    {
+      "id": "P0-5-main-level-consistent",
+      "p0": "P0-5",
+      "kind": "graph_scan",
+      "desc": "落库一致性：凡带 verification_level 的边，其 verified 布尔必须 == is_verified(level)（防下游绕过分层直接写布尔）",
+      "scan": {"level_consistent": true},
+      "expect": "CONSISTENT"
     }
   ]
 }

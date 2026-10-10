@@ -585,6 +585,15 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 - **Aura 唯一约束为 Entity.id**：同一 id 的节点重复写入会触发 `IndexEntryConflictException`。增量 JSON 中的节点若已存在于 Aura，须从 nodes 列表中排除（边仍按 id 引用，MATCH 到已有节点）。
 - **apoc.merge.relationship 按 (起点, 终点, 类型, kind) 去重**：同一对节点在同一类型下重复推只会保留一条，属正确行为。
   ⚠️ 反之亦然：**同三元组但 `kind` 不同会各存一条边**（identProps 带 `kind`）。判断「边是否重复」时不能只看 `(source,type,target)`。
+- **🔴 `apoc.merge.relationship` 的第 4 个参数是 `onCreateProps`，对「已存在的边」不写任何属性**（2026-10-10 事故）：
+  `apoc.merge.relationship(a, type, identProps, props, b)` 5 参形式中，`props` **只在新建边时生效**；
+  MERGE 命中**已有**边时它**什么也不做**。于是「**只更新边属性**」的 delta 会**静默零效果** ——
+  日志照样报「边 MERGE 完成 48734/48734」、边计数不变、`reconcile_aura_edges` 也 **0 差异**
+  （它只比 `(source,type,kind)` 三元组，**从不看属性**）→ 三重"假通过"。
+  第 18 轮实测：Phase 28 的 48734 条边属性**一条都没落库**，Aura 上 `verification_level` 属性**根本不存在**，而脚本 `exit=0`。
+  **修复（全仓 9 处已改）**：紧接 MERGE 后补 **`SET rel += row.props`**（与 APOC 版本无关，create/match 都生效）；
+  并在 `push_element_merge.py` 增加 **[5/5] 边属性落地抽检**（抽样 300 条逐键比对，不符则 **exit 3**）。
+  **教训**：`reconcile` 必须补一维「**属性**对账」的口径（或至少在推送器内置抽检），否则「计数相等 ≠ 内容相等」（铁律 #12）。
 - **🔴 嵌套属性会让整批事务失败，且旧推送器会静默吞掉**（2026-10-09 事故）：Neo4j 属性值只接受 primitive / 同质 primitive 数组。
   delta 里若夹带 `dict` / `list[dict]`（本地 NetworkX 不校验），推送时**整批失败**，重试 6 次后放弃该批却仍 `exit 0`。
   实际损失：`phase13` 的 `gnn_type_probs`(list[dict]) 丢 **600 条边**、`phase15/16` 的 `alias_sources`(dict) 让 **118 个元素的 period/group 全未写入**。

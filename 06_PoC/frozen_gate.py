@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""冻结反例集门禁（Frozen Counterexample Gate）· Phase 27 可信性修复轮
+"""冻结反例集门禁（Frozen Counterexample Gate）· Phase 27 可信性修复轮 / Phase 28 分层可信性
 ==========================================================================
 与 `06_PoC/connectivity_audit.py` **并列**的回归门禁：把已坐实的错误模式冻结为
 反例集（`frozen_counterexamples.json`），断言它们**不得**再次被判「已证实 / 应存在」。
@@ -10,6 +10,16 @@
   且区分「结果层扫描」（主图）与「校验器层动态调用」（gate_*），互为交叉验证。
 * 铁律 #19 —— `verified` 不可作单一布尔：反例集对 gate 一律比对 **verdict + scope**。
 * 每个 P0 均含**正对照**（应当成立者必须成立），防止门禁「过严」把正确数据一并淹没。
+
+用例 kind（`run_case` 分支）
+----------------------------
+* `dim_table`     —— 量纲真值表判等 / 不等
+* `gate_chem`     —— 化学方程式守恒门禁（原子 + 电荷）
+* `gate_math`     —— 数学等价门禁（变量域）
+* `graph_scan`    —— 主图结果层扫描：forbidden / ABSENT / ZERO(量纲) / level_consistent
+* `level_check`   —— **Phase 28**：合成小图走 `verification_model.classify_all`，
+                    断言结果层 `verification_level` / `verification_scope`
+* `attrib_check`  —— **Phase 28**：门禁归因配对表（虚假归因：gate 与 scope 不符）
 
 用法
 ----
@@ -45,6 +55,11 @@ try:
 except Exception as e:                                   # noqa: BLE001
     vl = None
     print("[WARN] verification_loop 不可用：%s" % e)
+try:
+    import verification_model as vm                      # Phase 28 分层模型
+except Exception as e:                                   # noqa: BLE001
+    vm = None
+    print("[WARN] verification_model 不可用：%s" % e)
 
 
 # --------------------------------------------------------------- helpers
@@ -100,6 +115,55 @@ def run_case(case, graph):
         ok = (verdict == "VERIFIED") if exp == "VERIFIED" else (verdict != "VERIFIED")
         return ("PASS" if ok else "FAIL"), "verdict=%s codes=%s" % (verdict, codes)
 
+    if kind == "level_check":
+        # Phase 28：把「可信性分层」本身冻结为回归门禁。
+        # 用例自带 nodes / edges（合成小图），走与主图**完全相同**的 classify_all 路径，
+        # 断言结果层的 level / scope —— 防止分层模型的语义随重构悄悄漂移（铁律 #19）。
+        if vm is None:
+            return "SKIP", "verification_model 不可用"
+        inp = case["input"]
+        nodes = inp.get("nodes") or []
+        edges = inp.get("edges") or []
+        if not edges:
+            return "SKIP", "无待判边"
+        res, _ctx = vm.classify_all(nodes, edges)
+        exp = case["expect"]
+        idx = exp.get("edge", 0)
+        if idx >= len(res):
+            return "FAIL", "边索引越界 %d/%d" % (idx, len(res))
+        _e, r = res[idx]
+        lvl, scope = r["verification_level"], r["verification_scope"]
+        fails = []
+        if "level" in exp and lvl != exp["level"]:
+            fails.append("level=%s≠%s" % (lvl, exp["level"]))
+        if "not_level" in exp and lvl == exp["not_level"]:
+            fails.append("level=%s 命中禁项" % lvl)
+        if "min_level" in exp and vm.RANK.get(lvl, -1) < vm.RANK.get(exp["min_level"], 99):
+            fails.append("level=%s 低于下限 %s" % (lvl, exp["min_level"]))
+        if "max_level" in exp and vm.RANK.get(lvl, 99) > vm.RANK.get(exp["max_level"], -1):
+            fails.append("level=%s 高于上限 %s" % (lvl, exp["max_level"]))
+        if "scope" in exp and scope != exp["scope"]:
+            fails.append("scope=%s≠%s" % (scope, exp["scope"]))
+        for ns in (exp.get("not_scope") or []):
+            if scope == ns:
+                fails.append("scope=%s 命中禁项" % scope)
+        detail = "level=%s scope=%s" % (lvl, scope)
+        if fails:
+            return "FAIL", detail + "  ← " + "; ".join(fails)
+        return "PASS", detail
+
+    if kind == "attrib_check":
+        # 门禁归因配对表：把「虚假归因」冻结为回归门禁（Phase 27 P0-4 的延伸）。
+        # 例：`has_symbol` 挂着 `R-PHY`，却从未跑过量纲门禁 → 归因与范围不符。
+        if vm is None:
+            return "SKIP", "verification_model 不可用"
+        gate = case["input"]["gate"]
+        scope = case["input"]["scope"]
+        matched = vm._gate_matches_scope(gate, scope)
+        want = (case["expect"] == "MATCH")
+        return ("PASS" if matched == want else "FAIL"), \
+            "gate=%s scope=%s matched=%s（期望 %s）" % (gate, scope, matched, case["expect"])
+
     if kind == "graph_scan":
         if graph is None:
             return "SKIP", "主图不可用"
@@ -119,7 +183,53 @@ def run_case(case, graph):
                     if "status" in f:
                         if (e.get("props") or {}).get("status") == f["status"]:
                             hits.append((e["source"], e["target"]))
+                    if "prop" in f:
+                        val = (e.get("props") or {}).get(f["prop"])
+                        if "equals" in f and val == f["equals"]:
+                            hits.append((e["source"], e["target"]))
+                        if "in_values" in f and val in f["in_values"]:
+                            hits.append((e["source"], e["target"]))
             return ("PASS" if not hits else "FAIL"), "命中 %d：%s" % (len(hits), hits[:3])
+
+        # (b2) 门禁归因自洽：任何**已存**的 `verification_gate` 必须与其**派生**
+        #      `verification_scope` 配对合法（`_gate_matches_scope`）。这是 Phase 27
+        #      「虚假归因」的落库级版本 —— 审计只改了派生字段，若不撤回归因则库里
+        #      仍留着一句「某个从未跑过的门禁验过它」的假话（铁律 #15 / #13）。
+        if scan.get("gate_attrib"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            bad = []
+            n_gated = 0
+            for e in graph["edges"]:
+                p = e.get("props") or {}
+                g = p.get("verification_gate")
+                if not g or g == "NONE":
+                    continue
+                n_gated += 1
+                if not vm._gate_matches_scope(g, p.get("verification_scope")):
+                    bad.append((e["type"], g, p.get("verification_scope")))
+            return ("PASS" if not bad else "FAIL"), \
+                "已归因 %d 条，归因-范围不符 %d 条：%s" % (n_gated, len(bad), bad[:3])
+
+        # (d) 落库一致性：`verified` 布尔必须与 `verification_level` 自洽（铁律 #19/#13）
+        #     凡存了分层字段的边，其 verified 必须 == is_verified(level)。
+        #     任何「布尔与分层打架」都说明有下游绕过分层直接写布尔 → 静默降级风险。
+        if scan.get("level_consistent"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            bad = []
+            n_tagged = 0
+            for e in graph["edges"]:
+                p = e.get("props") or {}
+                lvl = p.get("verification_level")
+                if lvl is None:
+                    continue                       # 未分层边不在本断言范围
+                n_tagged += 1
+                want = vm.is_verified(lvl)
+                if p.get("verified") != want:
+                    bad.append((e["type"], e["source"], e["target"], lvl, p.get("verified")))
+            return ("PASS" if not bad else "FAIL"), \
+                "已分层 %d 条，布尔-分层不符 %d 条：%s" % (n_tagged, len(bad), bad[:3])
 
         # (b) ABSENT：指定 type(+kind) 的边必须不存在
         if exp == "ABSENT":
