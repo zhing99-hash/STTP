@@ -57,7 +57,7 @@ Password:   （见 环境变量 / .env，禁止明文）
 ### 2.2 本地可视化服务
 ```
 地址:   http://127.0.0.1:8765/
-数据:   06_PoC/graph_data_phase33.json（9657 节点 / 48712 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
+数据:   06_PoC/graph_data_phase34.json（9657 节点 / 48712 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
 前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax，**依赖已本地 vendored**，可完全离线）
 ```
 
@@ -66,7 +66,7 @@ Password:   （见 环境变量 / .env，禁止明文）
 bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_PYTHON
 ```
 > 长驻请后台启动并重定向日志，例如：`bash sttp.sh viz > .runlog/viz.log 2>&1 &`
-> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase33.json python 06_PoC/viz_server.py`
+> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase34.json python 06_PoC/viz_server.py`
 > ⚠️ 必须用系统 Python（`.env` 的 `STTP_PYTHON`）；托管 3.13 是空环境，缺依赖。
 
 ### 2.3 GitHub 仓库
@@ -449,24 +449,26 @@ python 03_知识层/normalize_labels.py --delta-only <备份.json>   # 据备份
 **动机**：铁律 #14 —— 自检输入若与被检对象同源会一起静默通过。故反例集**独立于校验器实现**，
 且**每条含正对照**（应当成立者必须成立），防门禁过严。
 
-**组成**：`frozen_counterexamples.json`（**71 条**，覆盖 5 条 P0 + Phase 28~33 新增不变量）
+**组成**：`frozen_counterexamples.json`（**72 条**，覆盖 5 条 P0 + Phase 28~34 新增不变量）
 + `frozen_gate.py`（区分「主图结果层扫描」与「校验器层动态调用」；**门禁因缺依赖降级时记 SKIP 而非 PASS** —— 铁律 #13）。
 
-**不变量分组（截至 Phase 33）**：a–h（Phase 27 P0 修复）/ i–p（Phase 28~31 分层可信性、桥证据、跨字段自洽）
+**不变量分组（截至 Phase 34）**：a–h（Phase 27 P0 修复）/ i–p（Phase 28~31 分层可信性、桥证据、跨字段自洽）
 / **(q) `evidence_traceable`**（`is_strict` 边须有独立证据链，Phase 32）/ **(r) `evidence_wellformed`**
 （全图证据对象良构、`kind ∈ EVIDENCE_KINDS`、`indep` 与 `kind` 配对）/ **(s) `no_repr_residue`**
 （全图 props 无「Python repr 化容器」残留，Phase 32）/ **(t) `level_scope_reproducible`**
 （全图落库 `level`/`scope`/`verifier` 必须与 `classify_all` 重算逐条一致，Phase 33 · 铁律 #25）
-/ `island_freeze`（已知孤岛冻结核对，Phase 30）。
+/ **(u) `residual_accounted`**（T4 残差「不可独立复算的理由」必须落在受控枚举内，**零未归类**，
+Phase 34 · 铁律 #30/#34）/ `island_freeze`（已知孤岛冻结核对，Phase 30）。
 
-**非真空自检**：`bash sttp.sh gatecheck` → `06_PoC/_gate_selfcheck_phase31.py`（Phase 31+32+33），
-**不改门禁代码**、注入已知缺陷，断言 7 条不变量（n/o/p/q/r/s/t）**真的会红**（正对照 PASS + 注入 FAIL）。
+**非真空自检**：`bash sttp.sh gatecheck` → `06_PoC/_gate_selfcheck_phase31.py`（Phase 31~34），
+**不改门禁代码**、注入已知缺陷，断言 8 条不变量（n/o/p/q/r/s/t/u）**真的会红**（正对照 PASS + 注入 FAIL）。
 
 **用法**：`$PY 06_PoC/frozen_gate.py [--json]`；退出码 0 = 全通过，1 = 有回归。
 
-> ★ **Phase 33 独立审计器交叉确认**：`06_PoC/semantic_noise_audit.py` 新增 **R10/R11** ——
-> 用**自带实现**（不 import 判级模型）独立重算 T4 跨源侧别（2773 条）与 T6 CODATA 定义式（18 条），
-> 并配**双向正对照**（正确→True / 错误→False）。**独立审计器必须允许它「报错」**（铁律 #43）。
+> ★ **Phase 33/34 独立审计器交叉确认**：`06_PoC/semantic_noise_audit.py` 新增 **R10/R11/R12** ——
+> 用**自带实现**（不 import 判级模型）独立重算 T4 跨源侧别（**3991 条**，含 Phase 34 同义词通道）与
+> T6 CODATA 定义式（18 条），并对 **T4 残差做清算**（**未归类 0**）；配**双向正对照**。
+> **独立审计器必须允许它「报错」**（铁律 #43）。
 
 ---
 
@@ -726,14 +728,14 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 - 门禁 **67 → 70**（+q/r/s）；`repr` 串生成链**已源头根治**（`_csv_encode`）。
 - 相关工具：`11_真实数据/phase32_evidence_delta.py`；`sttp.sh evidence`。
 - **下一轮建议**：**T9-i 证据独立攻坚**（对可复算子集补独立复算）或 `source_asserted` 攻坚（13795 条 / 28.3%）。
-  → **已由 Phase 33 消化，见 1e**。
+  → **已由 Phase 33 消化，见 1d**。
 
 **1c. ★ 门禁「非真空」自检（Phase 31 新增，已固化）**
 - `bash sttp.sh gatecheck` → `06_PoC/_gate_selfcheck_phase31.py`：**不改门禁代码**，
   直接 `run_case(case, mutated_graph)` 注入已知假边，断言不变量**真的会 FAIL**（正对照 PASS + 注入缺陷 FAIL）。
 - **一条永远不会红的断言不是断言**；`PASS` 只说明「当前没红」，不说明「有能力红」。
   同理：`scan.get()` 遇**空字典**（假值）会让断言**静默退化为 SKIP** —— **SKIP 比 FAIL 更危险**（FAIL 有人查，SKIP 无人看）。
-- **Phase 33 扩到 7 条不变量（n/o/p/q/r/s/t）**，全部经注入式自检证明**可红**。
+- **Phase 34 扩到 8 条不变量（n/o/p/q/r/s/t/u）**，全部经注入式自检证明**可红**。
 
 **1d. ✅ T9-i 证据独立攻坚（Phase 33 · 第 23 轮，已完成）**
 - **T9-i 由 85.9% → 92.8%**（37564/40484）；升档 **+2791**（T4 跨源 2773 + T6 复算 18）、**降级 0**；规模 **9657/48712 零变化**。
@@ -745,9 +747,24 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
   **A13** `codata_derivation_recheck`（`scope=codata_definition_recompute`，`rule_checked`）；**同源**（`SCOPE_KIND` +4）。
 - 门禁 **70 → 71**（+**(t) `level_scope_reproducible`**，铁律 #25：落库档位必须能被重算重现）；
   独立审计器 +**R10/R11**（自带实现独立重算 + 双向正对照，铁律 #43）。
-- 相关工具：`11_真实数据/phase33_indep_delta.py`；`sttp.sh evidence`（同一命令）。
-- **下一轮建议**：**接入第二个反应源**（MetaCyc/KEGG 类，消除 T4 余 2502 条 `nomatch`，
-  ⚠ 先做**可达性侦察**）或 **T8 第二文献索引**（Crossref/DataCite 已可达）。
+- 相关工具：`11_真实数据/phase33_indep_delta.py`；`sttp.sh indep`。
+
+**1e. ✅ T4 残差「跨源名称对齐」（Phase 34 · 第 24 轮，已完成）**
+- **T9-i 由 92.8% → 95.8%**（38782/40484）；升档 **+1218**、**降级 0**；规模 **9657/48712 零变化**。
+- **核心洞察**：T4 残差根因是**命名**而非**缺源** —— Rhea 方程写 `pentanoate`，ChEBI 主名是 `valerate`。
+  **真·第二「反应」源不可批量获取**（KEGG `link/rhea/*` 全空、FTP 不可达；Reactome 映射 404）；
+  可达且真实的第二源 = **ChEBI 本体同义词（OLS4）**（Rhea 方程串 × ChEBI 本体，两个不同数据库）。
+- **判据护栏**：同义词**归一后长度 ≥3**（挡掉单字母 `H` 误命中 `H(+)` 的假阳，铁律 #31 正对照）；
+  **同义词只用于升档、不用于反驳**（宁缺勿滥）；label → formula → synonym **优先级**保证 Phase 33 的 2773 条**零降级**。
+- 新增 **A14**（`reaction_side_cross_check` 增 synonym 通道）+ `chebi_alias_names()` + `_SYN_MIN_LEN`；
+  数据获取 `11_真实数据/chebi_synonym_fetch.py`（**772/772 成功 / 3557 条同义词**）。
+- 门禁 **71 → 72**（+**(u) `residual_accounted`**：T4 残差**零未归类**，铁律 #30/#34）；
+  独立审计器 **R10 升级**（同义词通道，长度护栏**独立取 2**）+ **R12 残差清算** + **同义词正对照**。
+- **新纪律**：#47 抽样不可替代全量预演（50 抽样估 19% vs 全量 69%，差 4 倍）；#48 先证「第二源可达且独立」；
+  #49 命名对齐是一种合法的「跨源」。
+- 相关工具：`11_真实数据/{phase34_alias_delta,chebi_synonym_fetch}.py`；`sttp.sh {alias,synfetch}`。
+- **下一轮建议**：**SABIO-RK / MetaCyc 批量端点可达性侦察**（若可行则攻 T4 余 1321，⚠ 先侦察再投入）
+  或 **T8 第二文献索引**（354 条）。
 
 **2. 缓解分子层多节点对 GNN 嵌入的稀释**
 - 现象：8 套分子命名空间（有意的跨源对齐）会让同一实体拆成多个节点，稀释嵌入质量
@@ -804,7 +821,7 @@ python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_U
 
 # 4. 启动本地可视化
 bash sttp.sh viz
-# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase33.json）
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase34.json）
 
 # 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
 bash sttp.sh export
@@ -812,7 +829,7 @@ bash sttp.sh export
 # 6. 查看图谱统计 / 北极星自检
 bash sttp.sh stats
 python 06_PoC/connectivity_audit.py --strict   # 分量=6 / 5 岛 / 29 节点 → FROZEN-OK 退码 0（已知岛已冻结）
-python 06_PoC/frozen_gate.py                   # 冻结反例集门禁 → PASS 71 / FAIL 0 / SKIP 0
+python 06_PoC/frozen_gate.py                   # 冻结反例集门禁 → PASS 72 / FAIL 0 / SKIP 0
 python 06_PoC/task_trust_audit.py              # 北极星：正确且可追溯 99.6%；T9 可追溯 100% / T9-i 独立 85.9%
 bash sttp.sh gatecheck                         # 门禁非真空自检（6 条不变量全部可红）
 

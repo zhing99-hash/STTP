@@ -15,6 +15,8 @@
 #   bash sttp.sh recompute [--apply]                生成 Phase 31 复算全覆盖 delta（默认 dry-run）
 #   bash sttp.sh evidence [--dry]                   生成 Phase 32 Claim/Evidence 对象化 delta
 #   bash sttp.sh indep [--dry]                      生成 Phase 33 T9-i 证据独立攻坚 delta
+#   bash sttp.sh alias [--dry]                      生成 Phase 34 T4 跨源名称对齐 delta（ChEBI 同义词）
+#   bash sttp.sh synfetch                          拉取 ChEBI OLS4 同义词缓存（Phase 34）
 #   bash sttp.sh noise                              独立实现的语义噪声审计器（跨实现交叉核对）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
@@ -157,6 +159,17 @@ EOF
     # 把 T4/T6 的 source_asserted 升为**独立证据**（非破坏性，只更新判级与证据对象；默认 dry-run）
     shift
     "$PY" 11_真实数据/phase33_indep_delta.py "$@"
+    ;;
+  alias)
+    # Phase 34 T4 残差跨源名称对齐：ChEBI 本体同义词（OLS4）× Rhea 方程侧别
+    # （非破坏性，只更新判级与证据对象；默认 dry-run）
+    shift
+    "$PY" 11_真实数据/phase34_alias_delta.py "$@"
+    ;;
+  synfetch)
+    # Phase 34 数据获取：经代理从 ChEBI OLS4 拉取残差参与物同义词缓存（幂等 / 可重试）
+    shift
+    "$PY" 11_真实数据/chebi_synonym_fetch.py "$@"
     ;;
   noise)
     # 独立实现的语义噪声审计器（只读，用于与 verification_model 交叉核对）

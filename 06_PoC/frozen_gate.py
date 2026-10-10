@@ -752,6 +752,33 @@ def run_case(case, graph):
             return ("PASS" if not bad else "FAIL"), \
                 "重算覆盖 %d 条，落库≠重算 %d 条：%s" % (n_seen, len(bad), bad[:3])
 
+        # (u) **T4 残差必须清算到位**（Phase 34 · 铁律 #30/#34）：凡 `reactant_of`/`product_of`
+        #     且**非** cross_source/mismatch 的边，其「不可独立复算的理由」必须落在受控枚举内
+        #     —— **零未归类**。这是「负结果也是交付物」的机器化落地：不可判定 ≠ 可以放过。
+        #     判据由 `verification_model.residual_reason` **单一提供**（铁律 #36，同源）；
+        #     独立审计器 R12 用**自带实现**重算同一口径（铁律 #43）。
+        #     ⚠ `in scan` 而非 `scan.get(...)`（空字典是假值 → 静默退化为 SKIP，铁律 #20/#37）。
+        if "residual_accounted" in scan:
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            n_by_id = {n["id"]: n for n in (graph.get("nodes") or [])}
+            bad, n_seen = [], 0
+            reasons = collections.Counter()
+            for e in (graph.get("edges") or []):
+                if e.get("type") not in ("reactant_of", "product_of"):
+                    continue
+                sc = (e.get("props") or {}).get("verification_scope")
+                if sc in ("equation_species_cross_source", "equation_species_mismatch"):
+                    continue
+                n_seen += 1
+                rs = vm.residual_reason(e, n_by_id)
+                reasons[rs] += 1
+                if rs not in vm.RESIDUAL_REASONS:
+                    bad.append((e.get("id"), rs))
+            return ("PASS" if not bad else "FAIL"), \
+                "T4 残差 %d 条，未归类 %d 条：%s  %s" % (
+                    n_seen, len(bad), bad[:3], dict(reasons))
+
         return "SKIP", "未知 scan"
 
     return "SKIP", "未知 kind：%s" % kind

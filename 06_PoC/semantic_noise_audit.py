@@ -220,6 +220,33 @@ _RXN_EQ_SPLIT = re.compile(r" = ")
 _RXN_TERM_SPLIT = re.compile(r" \+ ")
 _RXN_PAREN_AUDIT = re.compile(r"\([^)]*\)")
 
+# ---- ChEBI 同义词缓存（Phase 34 · R10 扩展）----------------------------------
+# 审计器**自带**读取同一份外部数据（`11_真实数据/chebi_synonym_cache.json`，来自 ChEBI OLS4），
+# 但用**自己的**归一 + 匹配实现 ⇒ 与判级模型「同判据、独立实现」（铁律 #43）。
+# ⚠ 长度护栏**独立取值 2**（判级模型用 3）：两者若都判「只在归属侧」⇒ 交叉确认更强。
+_AUDIT_SYN_PATH = os.path.join(ROOT, "11_真实数据", "chebi_synonym_cache.json")
+try:
+    _AUDIT_SYN = json.load(open(_AUDIT_SYN_PATH, encoding="utf-8")) \
+        if os.path.exists(_AUDIT_SYN_PATH) else {}
+except Exception:                                             # noqa: BLE001
+    _AUDIT_SYN = {}
+_AUDIT_SYN_MIN = 2
+
+
+def _audit_alias_names(pp) -> list:
+    """自带实现：参与物的 ChEBI 同义词集（归一后）。"""
+    cid = (pp or {}).get("chebi_id")
+    rec = _AUDIT_SYN.get(cid) if cid else None
+    if not (rec and rec.get("ok")):
+        return []
+    lab = _audit_canon((pp or {}).get("name") or "")
+    out = []
+    for s in rec.get("synonyms") or []:
+        c = _audit_canon(s)
+        if c and len(c) >= _AUDIT_SYN_MIN and c != lab and c not in out:
+            out.append(c)
+    return out
+
 
 def _audit_canon(x) -> str:
     s = str(x).lower()
@@ -228,7 +255,10 @@ def _audit_canon(x) -> str:
 
 
 def rxn_side_check(part_node, rxn_node, is_reactant):
-    """自带实现：True=只在归属侧 / False=只在相反侧 / None=不可判定。"""
+    """自带实现：True=只在归属侧 / False=只在相反侧 / None=不可判定。
+
+    Phase 34 扩展：label/formula 均未命中时，启用 **ChEBI 同义词**通道（只升不驳）。
+    """
     eq = props_of(rxn_node).get("equation")
     if not eq or " = " not in str(eq):
         return None
@@ -255,6 +285,19 @@ def rxn_side_check(part_node, rxn_node, is_reactant):
         if cs.count(fml) > 1:
             return None
         return True
+    # Phase 34：同义词通道（只升不驳）
+    syms = _audit_alias_names(pp)
+    if syms:
+        sh = [s for s in syms if s in cs]
+        sw = [s for s in syms if s in os_]
+        if sh and not sw:
+            if cs.count(sh[0]) > 1:
+                return None
+            return True
+        if sh and sw:
+            return None
+        if sw:
+            return None
     return None
 
 
@@ -456,6 +499,41 @@ def run(path=NORM):
                 findings["R11_codata_recheck_failed"].append(
                     (e["id"], "codata_definition", "独立重算=%s" % got, src_of(e)))
 
+    # ---- R12：T4 残差清算（Phase 34 · 独立实现）----
+    #     凡 `reactant_of`/`product_of` 且**非** cross_source/mismatch 的边，必须能归入
+    #     一个「**不可独立复算的显式理由**」类别，**零未归类**（铁律 #30：不可判定 ≠ 可以放过）。
+    #     类别枚举（本脚本自带，与判级侧 `verification_model.residual_reason` 同**口径**、独立实现）。
+    n_r12 = 0
+    r12_reason = collections.Counter()
+    for e in E:
+        if e.get("type") not in ("reactant_of", "product_of"):
+            continue
+        sc = props_of(e).get("verification_scope")
+        if sc in ("equation_species_cross_source", "equation_species_mismatch"):
+            continue
+        n_r12 += 1
+        rp = props_of(N.get(e["target"]))
+        pp = props_of(N.get(e["source"]))
+        rsrc = rp.get("source") or "-"
+        if rsrc == "ElementKG2.0":
+            reason = "same_source_elementkg"
+        elif str(rsrc).startswith("curated_seed"):
+            reason = "same_source_curated"
+        elif rsrc == "Rhea":
+            if pp.get("is_generic"):
+                reason = "generic_class"
+            elif pp.get("is_polymer"):
+                reason = "polymer_residue"
+            elif rp.get("equation") and "[" in str(rp.get("equation")):
+                reason = "placeholder_complex"
+            else:
+                reason = "naming_variant_no_second_source"
+        else:
+            reason = "UNCLASSIFIED"
+        r12_reason[reason] += 1
+        if reason == "UNCLASSIFIED":
+            findings["R12_unclassified_residual"].append((e["id"], rsrc, sc))
+
     # ---- 汇报 ----
     print("=" * 92)
     print("语义边确定性反驳审计 —— %s" % os.path.relpath(path, ROOT))
@@ -480,11 +558,13 @@ def run(path=NORM):
     print("   正对照 · 包装命令剥壳：%s"
           % ("✅ 全部符合预期" if not _pc_bad else "❌ 不符 %s" % _pc_bad))
 
-    print("\n【R10/R11 独立证据重算（Phase 33 · 独立实现）】")
+    print("\n【R10/R11/R12 独立证据重算与残差清算（Phase 33/34 · 独立实现）】")
     print("   R10 自称跨源侧别校验 %d 条，独立重算不为「只在归属侧」%d 条"
           % (n_r10, len(findings.get("R10_reaction_side_recheck_failed", []))))
     print("   R11 自称 CODATA 定义式复算 %d 条，独立重算不一致 %d 条"
           % (n_r11, len(findings.get("R11_codata_recheck_failed", []))))
+    print("   R12 T4 残差清算 %d 条，未归类 %d 条   按理由：%s"
+          % (n_r12, len(findings.get("R12_unclassified_residual", [])), dict(r12_reason)))
     # 正对照（铁律 #31：新判据必须配正对照，且要能**双向**报错）
     _pc_rxn = {
         "reactant-ok": rxn_side_check({"props": {"name": "H2O"}},
@@ -492,14 +572,25 @@ def run(path=NORM):
         "product-wrong": rxn_side_check({"props": {"name": "H2O"}},
                                         {"props": {"equation": "H2O + CO2 = H2CO3"}}, False),
     }
+    # Phase 34 同义词通道正对照：'valerate'（ChEBI:31011）的同义词含 'pentanoate'
+    _pc_syn = rxn_side_check(
+        {"props": {"name": "valerate", "formula": "C5H9O2", "chebi_id": "CHEBI:31011"}},
+        {"props": {"equation": "pentanamide + H2O = pentanoate + NH4(+)"}}, False)
+    _pc_syn_rebut = rxn_side_check(
+        {"props": {"name": "valerate", "formula": "C5H9O2", "chebi_id": "CHEBI:31011"}},
+        {"props": {"equation": "pentanamide + H2O = pentanoate + NH4(+)"}}, True)
     _pc_cod = {
         "def-ok": codata_check(N, "TH:pq:gas_const", "R = N_A·k_B"),
         "def-wrong": codata_check(N, "CO:pq:elementary_charge", "R = N_A·k_B"),
     }
     pc_ok = (_pc_rxn == {"reactant-ok": True, "product-wrong": False}
-             and _pc_cod == {"def-ok": True, "def-wrong": False})
+             and _pc_cod == {"def-ok": True, "def-wrong": False}
+             and _pc_syn is True and _pc_syn_rebut is None)
     print("   正对照 · R10 侧别（%s）/ R11 定义式（%s）：%s"
           % (_pc_rxn, _pc_cod, "✅ 双向符合预期" if pc_ok else "❌ 不符"))
+    print("   正对照 · 同义词通道（命中归侧=%s / 仅相反侧不驳=%s）：%s"
+          % (_pc_syn, _pc_syn_rebut,
+             "✅ 符合预期" if (_pc_syn is True and _pc_syn_rebut is None) else "❌ 不符"))
 
     tot = sum(len(v) for v in findings.values())
     print("\n合计候选反驳 %d 条" % tot)

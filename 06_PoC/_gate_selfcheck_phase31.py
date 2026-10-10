@@ -17,6 +17,7 @@
                 (r) evidence_wellformed（非法 kind / 覆盖率跌破下限 → FAIL）
                 (s) no_repr_residue（Python repr 容器残留 → FAIL）
     Phase 33 —— (t) level_scope_reproducible（落库档位 ≠ 重算 → FAIL）
+    Phase 34 —— (u) residual_accounted（T4 残差**未归类** → FAIL）
 
 用法：python 06_PoC/_gate_selfcheck_phase31.py
 退出码：0 = 全部符合预期（真空即 1）。
@@ -73,7 +74,8 @@ for cid, scan in (("P1-den-main-symbol-expr-evidenced", "n"),
                   ("P1-den-main-evidence-traceable", "q"),
                   ("P1-den-main-evidence-wellformed", "r"),
                   ("P1-den-main-no-repr-residue", "s"),
-                  ("P1-den-main-level-scope-reproducible", "t")):
+                  ("P1-den-main-level-scope-reproducible", "t"),
+                  ("P1-den-main-residual-accounted", "u")):
     st, det = fg.run_case(_case(cid), graph0)
     _check("baseline(%s) %s" % (scan, cid), st, "PASS")
 
@@ -306,11 +308,30 @@ if graph0.get("edges"):
     _check("inject(t) scope 不一致 -> FAIL", st, "FAIL")
     print("      detail: %s" % det)
 
+# ------------------------- 9) (u) T4 残差「未归类」
+print("\n== 9) (u) 注入「说不清为何未验证」的 T4 残差边（未知来源）→ 必须 FAIL ==")
+g = copy.deepcopy(graph0)
+g["nodes"].append({"id": "TEST:rx:unknown", "type": "reaction",
+                   "props": {"source": "TEST_UNKNOWN_SRC", "equation": "A + B = C"}})
+g["nodes"].append({"id": "TEST:cpd:x", "type": "molecule",
+                   "props": {"source": "TEST_UNKNOWN_SRC", "name": "x"}})
+g["edges"].append({
+    "id": "TEST|reactant_of|TEST:cpd:x|TEST:rx:unknown",
+    "type": "reactant_of", "source": "TEST:cpd:x", "target": "TEST:rx:unknown",
+    "kind": "manual",
+    "props": {"kind": "manual", "source": "TEST_SRC",
+              "verification_level": "source_asserted",
+              "verification_scope": "source_assertion"},
+})
+st, det = fg.run_case(_case("P1-den-main-residual-accounted"), g)
+_check("inject(u) T4 残差未归类 -> FAIL", st, "FAIL")
+print("      detail: %s" % det)
+
 # --------------------------------------------------------------------- 汇总
 print("\n" + "-" * 74)
 if fails:
     print("汇总：❌ 非真空自检未通过 %d 项：%s" % (len(fails), fails))
     sys.exit(1)
-print("汇总：✅ 7 条不变量（n/o/p/q/r/s/t）全部**可红**（正对照 PASS + 注入缺陷 FAIL）"
+print("汇总：✅ 8 条不变量（n/o/p/q/r/s/t/u）全部**可红**（正对照 PASS + 注入缺陷 FAIL）"
       "—— 非真空，门禁有效")
 sys.exit(0)

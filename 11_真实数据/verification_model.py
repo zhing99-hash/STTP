@@ -518,6 +518,37 @@ def unit_dim_of_symbol(sym):
 _RXN_PLUS = re.compile(r" \+ ")           # ⚠ 必须要求两侧空白：否则 `NAD(+)` 的电荷号会被误切
 _RXN_PAREN = re.compile(r"\([^)]*\)")
 
+# ---- ChEBI 本体「同义词」缓存（Phase 34 · A14）----------------------------------
+# 经 ChEBI **OLS4** 拉取（`11_真实数据/chebi_synonym_fetch.py`），与 Rhea 是**不同数据库**。
+# 赋予 A12 一个更宽的 ChEBI 名称集：Rhea 方程写 `pentanoate`，而 ChEBI 主名是 `valerate`
+# —— 二者**同物异名**。仍属**跨源**（Rhea 方程串 × ChEBI 本体），与提出者无关（铁律 #26/#45）。
+# ⚠ 缓存缺失 → 同义词通道自动关闭（退化为 Phase 33 的 label/formula 口径，**不降级任何已判边**）。
+_SYN_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               "chebi_synonym_cache.json")
+try:
+    _CHEBI_SYN = json.load(open(_SYN_CACHE_PATH, encoding="utf-8")) \
+        if os.path.exists(_SYN_CACHE_PATH) else {}
+except Exception:                                             # noqa: BLE001
+    _CHEBI_SYN = {}
+# 归一后长度下限：挡掉**单字母同义词**（如 `L-histidine residue` 的同义词 `H` → canon `h`
+# 会误命中方程里的 `H(+)` —— 实测这是唯一的假阳来源；铁律 #31：收紧判据须配正对照）。
+_SYN_MIN_LEN = 3
+
+
+def chebi_alias_names(part_props) -> list:
+    """参与物的 ChEBI **同义词集**（归一后）；缺失/未成功则返回空表。"""
+    cid = (part_props or {}).get("chebi_id")
+    rec = _CHEBI_SYN.get(cid) if cid else None
+    if not (rec and rec.get("ok")):
+        return []
+    lab = _canon_species((part_props or {}).get("name") or "")
+    out = []
+    for s in rec.get("synonyms") or []:
+        c = _canon_species(s)
+        if c and len(c) >= _SYN_MIN_LEN and c != lab and c not in out:
+            out.append(c)
+    return out
+
 
 def _canon_species(x) -> str:
     """物种串归一：小写、去括注 `(in)/(out)/(+)/(n)`、去空格与正负号。"""
@@ -538,10 +569,13 @@ def split_equation(eq):
 def reaction_side_cross_check(part_node, rxn_node, is_reactant: bool):
     """参与物（ChEBI）在反应方程（Rhea）中的侧别是否与边一致。
 
-    返回 `(ok, strength, why)`：
-      ok=True  —— label（强）或 formula（弱）**只出现在归属侧**；
-      ok=False —— 只出现在**相反侧**（确定性矛盾）；
+    判据强度分层（**优先保证 Phase 33 口径零降级**：label → formula → synonym）：
+      ok=True  —— 主名 `label`（强，Phase 33）/ 式 `formula`（中，Phase 33）/
+                  **同义词 `synonym`（弱，Phase 34 · ChEBI 本体）** 只出现在**归属侧**；
+      ok=False —— **主名 / 式**只出现在**相反侧**（确定性矛盾）；
       ok=None  —— 不可判定（无方程 / 两侧都出现 / 同侧重复 / 泛称无法匹配）→ **不升档**。
+    ⚠ 同义词**只用于升档、不用于反驳**（宁缺勿滥；铁律 #31）。
+    ⚠ 同义词通道在 `label`/`formula` 均未命中时才启用 ⇒ **绝不改变 Phase 33 已升的 2773 条**。
     """
     rp = (rxn_node or {}).get("props") or {}
     lhs, rhs = split_equation(rp.get("equation"))
@@ -570,7 +604,21 @@ def reaction_side_cross_check(part_node, rxn_node, is_reactant: bool):
         if cs.count(fml) > 1:      # 同侧同式多物种 → 可能指代他物（宁缺勿滥）
             return None, "", "formula「%s」在归属侧重复出现（可能指代他物，歧义）" % pp.get("formula")
         return True, "formula", "formula「%s」仅在%s出现（label 未命中）" % (pp.get("formula"), side)
-    return None, "", "label/formula 均未在方程中出现（泛称，无法匹配）"
+    # ---- Phase 34 · A14：ChEBI 同义词通道（label/formula 均未命中时启用）----
+    syns = chebi_alias_names(pp)
+    if syns:
+        sh = [s for s in syns if s in cs]
+        sw = [s for s in syns if s in os_]
+        if sh and not sw:
+            if cs.count(sh[0]) > 1:    # 同侧重复 → 可能指代他物（歧义）
+                return None, "", "同义词「%s」在归属侧重复出现（可能指代他物，歧义）" % sh[0]
+            return True, "synonym", "ChEBI 同义词「%s」仅在%s出现；相反侧无" % (sh[0], side)
+        if sh and sw:
+            return None, "", "同义词「%s」两侧都出现（歧义）" % sh[0]
+        if sw:
+            # 保守：同义词只在相反侧**不据此反驳**（同义词集较宽，易假阳；铁律 #31）
+            return None, "", "同义词「%s」只出现在相反侧（保守：不据此反驳）" % sw[0]
+    return None, "", "label/formula/ChEBI 同义词 均未在方程中出现（泛称，无法匹配）"
 
 
 # ---------------------------------- CODATA 常量定义式「数值复算」（Phase 33 · A13）
@@ -622,6 +670,43 @@ def codata_derivation_recheck(node_by_id, src_id, defn):
     rel = abs(calc - float(rec)) / max(abs(float(rec)), 1e-30)
     ok = rel <= _CODATA_REL_TOL
     return ok, "%s ⇒ 复算 %.10g vs 记录 %.10g（rel %.1e）" % (defn, calc, float(rec), rel)
+
+
+# ---- T4 残差「不可独立复算理由」分类（Phase 34 · A14 的配套清算）---------------
+# 凡 `reactant_of`/`product_of` 且**非** cross_source/mismatch 的边，必须能归入一个
+# **显式理由** —— 既是「负结果也是交付物」（铁律 #34），也落地「不可判定 ≠ 可以放过」（铁律 #30）。
+# ★ 门禁不变量 `residual_accounted` 调用**本函数**（单一口径，铁律 #36）；
+#   独立审计器 R12 用**自带实现**重算同一口径（铁律 #43：审计器必须允许它报错）。
+RESIDUAL_REASONS = (
+    "same_source_elementkg",            # ElementKG2.0：无方程串，SMILES 亦同源 ⇒ 无独立源
+    "same_source_curated",              # curated_seed：方程与图节点皆项目策划 ⇒ 同源
+    "generic_class",                    # Rhea 泛称类参与物（无具体对应物）
+    "polymer_residue",                  # Rhea 聚合物 / 残基占位
+    "placeholder_complex",              # Rhea 方程含 `[占位复合物]` ⇒ 不可判定
+    "naming_variant_no_second_source",  # 命名/质子化变体，且 ChEBI 同义词集亦未覆盖
+)
+
+
+def residual_reason(edge, node_by_id) -> str:
+    """T4 残差边「不可独立复算」理由码；非 T4 边返回 `""`；未归类返回 `"UNCLASSIFIED"`。"""
+    if edge.get("type") not in ("reactant_of", "product_of"):
+        return ""
+    pp = (node_by_id.get(edge.get("source")) or {}).get("props") or {}
+    rp = (node_by_id.get(edge.get("target")) or {}).get("props") or {}
+    rsrc = rp.get("source") or "-"
+    if rsrc == "ElementKG2.0":
+        return "same_source_elementkg"
+    if str(rsrc).startswith("curated_seed"):
+        return "same_source_curated"
+    if rsrc == "Rhea":
+        if pp.get("is_generic"):
+            return "generic_class"
+        if pp.get("is_polymer"):
+            return "polymer_residue"
+        if rp.get("equation") and "[" in str(rp.get("equation")):
+            return "placeholder_complex"
+        return "naming_variant_no_second_source"
+    return "UNCLASSIFIED"
 
 
 # ---- 数学算子存在性（数学桥的确定性证据）----
