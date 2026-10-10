@@ -9,6 +9,9 @@
 #   bash sttp.sh pushall [--execute]                离线增量顺序编排（16 步：推送→对账→导出）
 #   bash sttp.sh reconcile [--dry-run|--report-only] 云端/本地边对账（默认清理，使云端==本地）
 #   bash sttp.sh probe [--only k1,k2] [--rounds N]  真实数据源可达性探测
+#   bash sttp.sh bridge [--dry] [--out <p>]         生成跨域桥 delta（Phase 29）
+#   bash sttp.sh webbook [--limit N|--only A,B]     抓取 NIST WebBook 热化学数据
+#   bash sttp.sh t7 [--legacy-t7]                   北极星 T7 跨域桥达标率（含反向对照）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -111,6 +114,21 @@ EOF
   probe)
     shift
     "$PY" 11_真实数据/probe_sources.py "$@"
+    ;;
+  bridge)
+    # 生成跨域桥 delta（Phase 29）：默认 dry-run，加 --apply 交给 apply_delta 落盘
+    shift
+    "$PY" 11_真实数据/phase29_bridge_delta.py "$@"
+    ;;
+  webbook)
+    # 抓取 NIST Chemistry WebBook 气相热化学表（增量缓存）
+    shift
+    "$PY" 11_真实数据/webbook_ingest.py "$@"
+    ;;
+  t7)
+    # 北极星 T7（跨域桥）达标率；--legacy-t7 打印旧口径反向对照
+    shift
+    "$PY" 06_PoC/task_trust_audit.py "$@"
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

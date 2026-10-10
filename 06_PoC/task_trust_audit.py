@@ -15,6 +15,24 @@
     · **达标率** = 达标边 / 该任务族边
     单读达标率会被「只标了少数边」骗过。
 
+T7 口径裁定（Phase 29 / 第 19 轮，含**反向对照**）
+-----------------------------------------------
+第 18 轮把 T7 定为：「类型窗口 = same_as/proves/derived_from/defines/related_to，
+门槛 = **human_reviewed**」。实测 **0/53 = 0.0%** —— 复查后确认这不是「没有桥」，
+而是**量错了**，两处口径缺陷：
+
+1. **门槛不可达**：`human_reviewed` 要求人工复核，自动化管线**永不可达** →
+   任何真实存在的桥都会被判 0，仪器失去区分度。
+   → 改为 **`rule_checked`**（有**确定性复算**证据即算「证据可追溯」），
+     并**单独报告** `human_reviewed` 金标准计数，严格性不丢失。
+2. **类型窗口漏掉主桥**：图里 784 条「化学物质 → 物理量」的桥是 `has_quantity`
+   （分子 → 摩尔质量/质量…），**全在窗口之外**；而窗口内的 14 条数学→物理
+   `defines` 是 GNN 填充边。窗口选错了对象。
+   → 改为**任意类型的跨域语义边**（端点学科不同即算），由「证据档」而非
+     「边类型」把关。
+
+`--legacy-t7` 可复现旧口径，用于反向对照（口径只改一次、对照必须留档，铁律 #16）。
+
 用法
 ----
     python task_trust_audit.py                     # 读 06_PoC/etl/normalized.json
@@ -64,8 +82,8 @@ TASKS = [
      "常量派生 / 单位挂靠", "source_asserted",
      lambda e, N: e["type"] in ("derived_from", "has_unit")),
     ("T7", "跨域桥（跨学科端点）",
-     "两端点学科不同的 same_as/proves/derived_from/defines —— **本项目的核心命题**",
-     "human_reviewed", None),      # 判定函数在 main 里特化（需学科信息）
+     "两端点学科不同的**任意类型**语义边 —— **本项目的核心命题**",
+     "rule_checked", None),      # 判定函数在 main 里特化（需学科信息）
     ("T8", "文献元数据",
      "论文↔主题/引用", "source_asserted",
      lambda e, N: e["type"] in ("cites", "discusses")),
@@ -81,6 +99,8 @@ def main():
     ap = argparse.ArgumentParser(description="北极星仪器：任务级可信完成率")
     ap.add_argument("--graph", default=NORM)
     ap.add_argument("--json", default=None)
+    ap.add_argument("--legacy-t7", action="store_true",
+                    help="复现第 18 轮旧口径 T7（5 类语义边 + human_reviewed 门槛）供反向对照")
     a = ap.parse_args()
 
     nodes, edges = load(a.graph)
@@ -89,9 +109,14 @@ def main():
                                              n["id"]) for n in nodes}
 
     def is_cross(e):
+        """跨域语义边：两端点学科不同（**任意边类型**）。"""
         s, t = subj.get(e["source"]), subj.get(e["target"])
-        return bool(s and t and s != t and e["type"] in
-                    ("same_as", "proves", "derived_from", "defines", "related_to"))
+        return bool(s and t and s != t)
+
+    def is_cross_legacy(e):
+        """旧口径（第 18 轮）：仅限 5 个「语义关系」类型 —— 保留用于**反向对照**。"""
+        return is_cross(e) and e["type"] in \
+            ("same_as", "proves", "derived_from", "defines", "related_to")
 
     print("=" * 100)
     print("北极星 · 任务级可信完成率 —— %s" % os.path.relpath(a.graph, ROOT))
@@ -105,7 +130,7 @@ def main():
     tot_e = tot_ok = 0
     for tid, name, desc, minlv, pred in TASKS:
         if tid == "T7":
-            sel = [e for e in edges if is_cross(e)]
+            sel = [e for e in edges if (is_cross_legacy(e) if a.legacy_t7 else is_cross(e))]
         else:
             sel = [e for e in edges if pred(e, node_by_id)]
         n = len(sel)
@@ -133,23 +158,48 @@ def main():
     star = 100.0 * tot_ok / tot_e if tot_e else 0.0
     print("  %-27s %8d %8s %8d %7.1f%%   ← **北极星**" % ("合计", tot_e, "-", tot_ok, star))
 
-    # 参考：**宽口径**跨域边（任意边类型，端点学科不同）—— 与旧北极星口径接续对照
-    cross_all = [e for e in edges
-                 if subj.get(e["source"]) and subj.get(e["target"])
-                 and subj[e["source"]] != subj[e["target"]]]
-    cok = [e for e in cross_all
-           if vm.RANK.get((e.get("props") or {}).get("verification_level"), -1)
-           >= vm.RANK["rule_checked"]]
-    print("  [参考] 宽口径跨域边（任意类型）%d 条；其中 ≥rule_checked 仅 %d 条（%.1f%%）"
-          % (len(cross_all), len(cok), 100.0 * len(cok) / len(cross_all) if cross_all else 0))
+    # ---------------- 反向对照：旧口径 T7 vs 新口径 T7（铁律 #16） ----------------
+    cross_all = [e for e in edges if is_cross(e)]
+    legacy = [e for e in edges if is_cross_legacy(e)]
 
-    # ---------------- 敏感性：T7 门槛下调 ----------------
+    def ge(sel, lv):
+        return [e for e in sel
+                if vm.RANK.get((e.get("props") or {}).get("verification_level"), -1)
+                >= vm.RANK[lv]]
+
+    print("\n  【反向对照 · T7 口径变更留档】")
+    print("    %-52s %6s %10s %8s" % ("口径", "分母", "≥rule_checked", "达标率"))
+    print("    " + "-" * 82)
+    for tag, sel in (("旧口径（5 类语义边，门槛 human_reviewed）", legacy),
+                     ("新口径（任意类型跨域边，门槛 rule_checked）", cross_all)):
+        best = ge(sel, "human_reviewed" if "旧口径" in tag else "rule_checked")
+        print("    %-52s %6d %10d %7.1f%%"
+              % (tag, len(sel), len(best),
+                 100.0 * len(best) / len(sel) if sel else 0.0))
+    print("    → 旧口径的 `human_reviewed` 金标准子集（新口径下）：%d 条"
+          % len(ge(cross_all, "human_reviewed")))
+
+    # ---------------- 跨域边的学科对 × 档次（证据分布） ----------------
+    print("\n  【跨域边的学科对 × 证据档】")
+    cp = collections.Counter((tuple(sorted((subj[e["source"]], subj[e["target"]]))),
+                              (e.get("props") or {}).get("verification_level", "未标"))
+                             for e in cross_all)
+    by_pair = collections.defaultdict(collections.Counter)
+    for (pair, lv), n in cp.items():
+        by_pair[pair][lv] += n
+    for pair in sorted(by_pair, key=lambda p: -sum(by_pair[p].values())):
+        tot_p = sum(by_pair[pair].values())
+        ok_p = sum(n for lv, n in by_pair[pair].items()
+                   if vm.RANK.get(lv, -1) >= vm.RANK["rule_checked"])
+        det = " ".join("%s×%d" % (k, v) for k, v in by_pair[pair].most_common())
+        print("    %-18s 共 %4d  ≥rule_checked %4d  (%5.1f%%)   %s"
+              % ("↔".join(pair), tot_p, ok_p, 100.0 * ok_p / tot_p if tot_p else 0.0, det))
+
+    # ---------------- 敏感性：T7 门槛升降 ----------------
     t7 = [r for r in rows if r["task"] == "T7"][0]
-    for lv in ("cross_source", "rule_checked", "source_asserted"):
-        sel = [e for e in edges if is_cross(e)
-               and vm.RANK.get((e["props"] or {}).get("verification_level"), -1)
-               >= vm.RANK[lv]]
-        print("  [敏感性] T7 门槛降为 %-16s → 达标 %d / %d (%.1f%%)"
+    for lv in ("human_reviewed", "cross_source", "rule_checked", "source_asserted"):
+        sel = ge(cross_all, lv)
+        print("  [敏感性] T7 门槛=%-16s → 达标 %d / %d (%.1f%%)"
               % (lv, len(sel), t7["edges"], 100.0 * len(sel) / t7["edges"] if t7["edges"] else 0))
 
     # ---------------- 档位总览 ----------------

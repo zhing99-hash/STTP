@@ -131,6 +131,9 @@ def is_strict(level: str) -> bool:
 # 「门禁名」与「实测范围」的合法配对表 —— 用于识别**虚假归因**
 # （例：`has_symbol` 挂着 `R-PHY`，却从未跑过量纲门禁 → 归因与范围不符）
 GATE_SCOPE_OK = {
+    # ⚠ 白名单**只放**量纲门禁自己的范围。**切勿**把 `formula_participation_*` 加进来：
+    #   Phase 27 已坐实 `has_symbol` 的验证与量纲门禁无关，把它列进来等于给虚假归因开后门
+    #   （冻结反例 `P0-6-attrib-has-symbol-phy-bogus` 会在下一次运行立刻 FAIL）。
     "R-PHY": {"dimensional_strict_equal", "dimensional_mismatch"},
     "R-CHEM": {"formula_count_independent_recheck", "formula_count_cross_source",
                "formula_count_mismatch", "period_authority_equal", "family_authority_equal",
@@ -235,6 +238,157 @@ def rationale_key(rationale):
 
 # Phase13 Gate.B1 把「所依据的分子式」写进了 rationale：`化学式 CO2 含 C×1（组成解析）`
 _FORMULA_IN_RATIONALE = re.compile(r"化学式\s*([^\s含]+)\s*含")
+
+# Phase9 LLM 精炼把「该量属于哪一类物理量」写进了 rationale：
+# `分子摩尔质量/分子量属质量类物理量（组成校验）`
+# → 可**确定性地**核对：声称的类 与 目标物理量的实际量纲 是否自洽。
+# 实测该理由被原样粘贴到 8 个不同目标上（质量 + 能量 + 动能 + 内能 …），
+# 即「一条理由 / 多个互斥目标」——**自相矛盾**，属真实缺陷而非「未验证」。
+_CLASS_IN_RATIONALE = re.compile(r"属(.+?)类物理量")
+
+# 类名 → 该类的量纲（用 SI 基本量表示）；用于与 dimension_table 的真量纲比对
+CLASS_DIM = {
+    "质量": {"M": 1.0},
+    "能量": {"L": 2.0, "M": 1.0, "T": -2.0},
+    "力": {"L": 1.0, "M": 1.0, "T": -2.0},
+    "压强": {"L": -1.0, "M": 1.0, "T": -2.0},
+    "电荷": {"I": 1.0, "T": 1.0},
+    "温度": {"Th": 1.0},
+    "时间": {"T": 1.0},
+    "长度": {"L": 1.0},
+}
+
+
+def class_dim_in_rationale(rationale):
+    """取出 rationale 声称的「物理量类」及其应有量纲；无声明返回 (None, None)。"""
+    if not rationale:
+        return None, None
+    m = _CLASS_IN_RATIONALE.search(str(rationale))
+    if not m:
+        return None, None
+    label = m.group(1).strip()
+    for name, dim in CLASS_DIM.items():
+        if name in label:
+            return label, dim
+    return label, None
+
+
+def _drop(d):
+    return {k: float(v) for k, v in (d or {}).items() if abs(float(v)) > 1e-9}
+
+
+# 单位串 → SI 基本量向量（Phase 29）。
+#
+# ⚠ 这是**本模块自己的**独立解析实现，**不 import** 产出方（`webbook_ingest.UNIT_DIM`）——
+#   铁律 #14：自检输入若与被检对象同源就会**一起静默通过**。
+#   判据仅基于单位串本身（`kJ/mol` 是能量/物质的量，与"谁写的"无关）。
+#   复合单位用 `/` 与 `*` 显式拆解，可逐项复算。
+_UNIT_BASE = {
+    "j": {"M": 1.0, "L": 2.0, "T": -2.0},      # J = kg·m²/s²
+    "kj": {"M": 1.0, "L": 2.0, "T": -2.0, "W": 3.0},   # kJ = 10³ J（量纲同 J，W 为量级占位）
+    "mol": {"N": 1.0},
+    "k": {"Th": 1.0},
+    "kg": {"M": 1.0},
+}
+
+
+def unit_dimension(unit):
+    """把单位串（`kJ/mol`、`J/mol*K`…）解析为量纲向量；不可解析返回 None。
+
+    只做**乘除**与**整数幂**（`mol^2`、`s^-1`）；分子/分母各段按 `*` 拆开，
+    指数取 `^n`。无法识别的单位符号一律返回 None（**不猜**）。
+    """
+    if not unit:
+        return None
+    s = str(unit).strip().lower().replace(" ", "").replace("·", "*")
+    s = s.replace("(mol*k)", "mol*k").replace("(mol·k)", "mol*k")
+    if "/" in s:
+        num, _, den = s.partition("/")
+    else:
+        num, den = s, ""
+    out = {}
+
+    def _acc(seg, sign):
+        if not seg:
+            return True
+        for tok in seg.split("*"):
+            if not tok:
+                continue
+            exp = 1.0
+            if "^" in tok:
+                base, _, e = tok.partition("^")
+                try:
+                    exp = float(e)
+                except ValueError:
+                    return False
+                tok = base
+            d = _UNIT_BASE.get(tok)
+            if d is None:
+                return False
+            for k, v in d.items():
+                if k == "W":                       # 量级占位，不参与量纲
+                    continue
+                out[k] = out.get(k, 0.0) + sign * exp * v
+        return True
+
+    if not _acc(num, 1.0) or not _acc(den, -1.0):
+        return None
+    return {k: v for k, v in out.items() if abs(v) > 1e-9}
+
+
+def dim_matches_class(got, want):
+    """目标量的真量纲 `got` 是否属于 rationale 声称的类 `want`。
+
+    **含「每摩尔」形式**：摩尔量（per amount）是同类量的表示法 ——
+    `molar_mass = mass / amount`、`molar_energy = energy / amount`。
+    只做 `got == want` 会把 700 条合法的「分子 → 摩尔质量」桥误判为自相矛盾
+    （第 19 轮实测：漏掉这一层的首次实现一次删掉 762 条，其中 700 条是**好边**）。
+    返回 True / False / None（不可判定）。
+    """
+    g, w = _drop(got), _drop(want)
+    if not g or not w:
+        return None
+    if g == w:
+        return True
+    mol = dict(w)
+    mol["N"] = mol.get("N", 0.0) - 1.0
+    return g == _drop(mol)
+
+
+# 分子摩尔质量（Phase9.B5 / Phase13.Gate.B5 写入）：`摩尔质量 44.009 g/mol（化学式解析+原子量）`
+_MASS_IN_RATIONALE = re.compile(r"摩尔质量\s*([0-9.]+)\s*g/mol")
+
+# 下标 / 上标字符（`CO₂`、`SO₄²⁻`）→ ASCII，供「名称即化学式」的节点使用
+_SUBSUP = str.maketrans("₀₁₂₃₄₅₆₇₈₉⁰¹²³⁴⁵⁶⁷⁸⁹", "01234567890123456789")
+_FORMULA_TOKEN = re.compile(r"[A-Za-z0-9\(\)\[\]\.\+\-]{1,40}")
+
+
+def formula_from_name(name):
+    """无 `formula` / `pubchem_formula` 时，**节点名本身可能就是化学式**（`CO₂` / `CH₄`）。
+
+    第 19 轮实测：`MX` 域的 `MX:chem:co2`(name=`CO₂`) / `MX:chem:methane`(name=`CH₄`)
+    有 `has_quantity → molar_mass` 边且值**完全正确**（44.009 / 16.043），却因为节点没有
+    `formula` 字段而无法独立复算，被降级为 `model_inferred`（铁律 #17 的同类问题：
+    「字段缺失」≠「不可用」）。此处做**保守**回退：只有把下标归一后能被独立解析器
+    接受的串才认（`Water`、`n-Butanol` 等自然语言名一律不认）。
+    """
+    if not name:
+        return None
+    s = str(name).translate(_SUBSUP).strip()
+    if not _FORMULA_TOKEN.fullmatch(s) or not re.search(r"[A-Z]", s):
+        return None
+    try:
+        comp = parse_formula_independent(s)
+    except Exception:                                    # noqa: BLE001
+        return None
+    return s if comp else None
+
+
+def src_mass_formula(props):
+    """摩尔质量复算所用的分子式来源（**有序**回退，不猜）：PubChem → formula → 名称。"""
+    p = props or {}
+    return (p.get("pubchem_formula") or p.get("formula")
+            or formula_from_name(p.get("name")))
 
 
 def formula_in_rationale(rationale):
@@ -348,6 +502,59 @@ def classify(e: dict, ctx: dict):
                  "verification_model.formula_members",
                  "该量不在公式 exponents 中且与记录键不符（陈旧错挂，待清理）")
 
+    # A5 跨域桥 · 分子 → 摩尔质量物理量（Phase9.B5 / Phase13.Gate.B5）
+    #    证据 = 「元素原子量 × 独立解析的化学式计数」复算 == 记录值（与提出者无关）
+    if t == "has_quantity" and ctx["mass_ok"].get(eid) is not None:
+        ok, cross, why = ctx["mass_ok"][eid]
+        if ok is True and cross:
+            return R("cross_source", "molar_mass_cross_source",
+                     "element_reference.py × PubChem(pubchem_molecular_weight)", why)
+        if ok is True:
+            return R("rule_checked", "molar_mass_independent_recompute",
+                     "verification_model.parse_formula_independent × element_reference.py", why)
+        if ok is False:
+            return R("unverified", "molar_mass_mismatch",
+                     "verification_model.parse_formula_independent × element_reference.py", why)
+
+    # A6 跨域桥 · rationale 声称的「类」与目标物理量真量纲自洽性
+    #    **一条理由被粘贴到多个互斥目标**（质量 + 动能 + 内能…）→ 自相矛盾 → 不成立
+    if t == "has_quantity" and ctx["hq_class_ok"].get(eid) is not None:
+        ok, label, why = ctx["hq_class_ok"][eid]
+        if ok is False:
+            return R("unverified", "rationale_target_mismatch",
+                     "verification_model.dimension_table",
+                     "理由声称「%s类」，与目标物理量真量纲不符：%s" % (label, why))
+
+    # A7 跨域桥 · NIST WebBook 热化学（Phase 29 接入）
+    #    证据是**外源的确定性判据**，不是「谁提的」：
+    #      ① 单位（`kJ/mol` / `J/mol*K`）经量纲表**独立复算**，必须与目标物理量真量纲一致；
+    #      ② 页面内 **≥2 条独立文献**在容差内吻合 → 第二级证据。
+    #    ⚠ 判据**只读边自身的 `unit` / `n_references`**，绝不读已存的 `verification_level`
+    #      —— 否则「复算」变成复述，铁律 #14 退化。
+    #    ⚠ 本段是**必需**的：缺它则这些边落库为 `rule_checked` 而重算为 `source_asserted`，
+    #      产生「落库档位 ≠ 复算档位」的静默不一致（第 19 轮实测 157 条，铁律 #23）。
+    if t == "has_quantity" and kind == "webbook_thermochemistry":
+        tnode = (ctx.get("node_by_id") or {}).get(e.get("target")) or {}
+        qn = (tnode.get("props") or {}).get("name") or str(e.get("target") or "").split(":")[-1]
+        got = dm.dim_of(qn)                     # 目标物理量的**真量纲**（真值表）
+        want = unit_dimension(p.get("unit"))    # 边自带单位的量纲（本模块独立解析）
+        if got is None or want is None:
+            pass            # 不可判定 → 落到 B 段按来源定级，不猜
+        elif _drop(want) != _drop(got):
+            return R("unverified", "webbook_unit_dimension_mismatch",
+                     "NIST WebBook × dimension_table(单位量纲)",
+                     "单位 `%s` 解析为 %s，但目标量 %s 真量纲为 %s"
+                     % (p.get("unit"), _drop(want), qn, _drop(got)))
+        else:
+            nref = int(p.get("n_references") or 0)
+            if nref >= 2:
+                return R("cross_source", "webbook_multi_reference_agreement",
+                         "NIST WebBook(≥2 独立文献) × dimension_table",
+                         "单位量纲独立复算通过；%d 条独立文献吻合" % nref)
+            return R("rule_checked", "webbook_unit_dimension_recompute",
+                     "NIST WebBook × dimension_table(单位量纲)",
+                     "单位 `%s` 经量纲表独立复算一致" % p.get("unit"))
+
     # ================= B. 无独立复算可用：按提出者 / 来源定级 =================
     # B1 模型产物（GNN 链接预测 / LLM 推断）—— **不构成验证**
     if kind in MODEL_KINDS or ("GNN" in src) or ("LLM" in src) \
@@ -431,6 +638,8 @@ def build_ctx(nodes, edges):
         "period_ok": {},
         "family_ok": {},
         "dim_ok": {},
+        "mass_ok": {},          # eid -> (ok, cross, why)：分子摩尔质量独立复算
+        "hq_class_ok": {},      # eid -> (ok, class_label, why)：rationale 声称类 vs 目标量纲
         "bugs": collections.defaultdict(list),
     }
 
@@ -525,6 +734,71 @@ def build_ctx(nodes, edges):
                 ctx["dim_ok"][eid] = (ok, "%s vs %s" % (na, nb))
                 if not ok:
                     ctx["bugs"]["dim_mismatch"].append((eid, na, nb))
+        # (e) has_quantity：分子 → 物理量（**跨域桥**）的两道确定性复核
+        #     e1) 目标为摩尔质量 → 用元素原子量 × 独立解析的化学式计数**复算**摩尔质量
+        #     e2) rationale 声称的「类」与目标物理量的真量纲是否自洽（识破「一条理由多目标」）
+        if t == "has_quantity":
+            tn = node_by_id.get(tgt) or {}
+            tprops = tn.get("props") or {}
+            qname = tprops.get("name") or t.split(":")[-1]
+            canon_q = dm.canon(qname)
+
+            # e1 摩尔质量复算
+            if canon_q == "molar_mass":
+                sp = (node_by_id.get(src, {}).get("props") or {})
+                f = src_mass_formula(sp)
+                rec = p.get("value")
+                if rec is None:
+                    m = _MASS_IN_RATIONALE.search(str(p.get("rationale") or ""))
+                    rec = float(m.group(1)) if m else None
+                if not f or rec is None:
+                    ctx["mass_ok"][eid] = (None, False, "无分子式/记录值可复算")
+                else:
+                    try:
+                        comp = parse_formula_independent(f)
+                        tot, miss = 0.0, []
+                        for sym, cnt in comp.items():
+                            w = er.weight_of(sym)
+                            if w is None:
+                                miss.append(sym)
+                                break
+                            tot += float(w) * float(cnt)
+                        if miss:
+                            ctx["mass_ok"][eid] = (None, False, "缺原子量 %s" % miss)
+                        else:
+                            rel = abs(tot - float(rec)) / max(abs(float(rec)), 1e-9)
+                            ok = rel <= 0.005
+                            pmm = sp.get("pubchem_molecular_weight")
+                            cross = bool(ok and pmm is not None
+                                         and abs(float(pmm) - float(tot)) / max(abs(tot), 1e-9) <= 0.01)
+                            why = "%s: 复算 %.4f vs 记录 %s（%+.2f%%）；PubChem %s" % (
+                                f, tot, rec, 100.0 * (tot - float(rec)) / max(abs(float(rec)), 1e-9), pmm)
+                            ctx["mass_ok"][eid] = (ok, cross, why)
+                            if not ok:
+                                ctx["bugs"]["molar_mass_mismatch"].append(
+                                    (src, f, rec, round(tot, 4)))
+                    except Exception as ex:
+                        ctx["mass_ok"][eid] = (None, False, "分子式不可独立解析(%s)" % ex)
+
+            # e2 rationale 承载的**确定性语义载荷** vs 目标真量纲
+            #    载荷有两个来源（同一族缺陷：一条理由被原样粘到互斥目标上）：
+            #      a) 显式类声明「属X类物理量」（Phase9 LLM 精炼模板）
+            #      b) **数值断言**「摩尔质量 N g/mol」（Phase9.B5 模板）—— 只能锚定质量类
+            #    ⚠ 第 19 轮补 b)：只认 a) 会漏掉 20 条同类缺陷（rationale 写摩尔质量数值、
+            #       目标却是 energy/ke/internal_energy），因为它们没写「属…类」四个字。
+            label, want = class_dim_in_rationale(p.get("rationale"))
+            if label is None and _MASS_IN_RATIONALE.search(str(p.get("rationale") or "")):
+                label, want = "摩尔质量(数值断言)", CLASS_DIM["质量"]
+            if label is not None:
+                got = dm.dim_of(qname)
+                ok = dim_matches_class(got, want)
+                if ok is None:
+                    ctx["hq_class_ok"][eid] = (None, label, "类/量纲不可判定")
+                else:
+                    ctx["hq_class_ok"][eid] = (ok, label, "声称 %s 类 vs 目标 %s=%s" % (label, canon_q, got))
+                    if not ok:
+                        ctx["bugs"]["has_quantity_class_mismatch"].append(
+                            (src, tgt, label, canon_q))
     return ctx
 
 
@@ -634,6 +908,18 @@ def audit(path=NORM):
         no = sum(1 for v in d.values() if v[0] is False)
         na = sum(1 for v in d.values() if v[0] is None)
         print("  %-14s 通过 %5d / 不一致 %4d / 不可判定 %5d" % (key, yes, no, na))
+    d = ctx["mass_ok"]
+    yes = sum(1 for v in d.values() if v[0] is True)
+    no = sum(1 for v in d.values() if v[0] is False)
+    na = sum(1 for v in d.values() if v[0] is None)
+    cr = sum(1 for v in d.values() if v[0] is True and v[1])
+    print("  %-14s 通过 %5d / 不一致 %4d / 不可判定 %5d   （其中与 PubChem 亦一致 → cross_source %d）"
+          % ("mass_ok", yes, no, na, cr))
+    d = ctx["hq_class_ok"]
+    yes = sum(1 for v in d.values() if v[0] is True)
+    no = sum(1 for v in d.values() if v[0] is False)
+    na = sum(1 for v in d.values() if v[0] is None)
+    print("  %-14s 自洽 %5d / 自相矛盾 %4d / 不可判定 %5d" % ("hq_class_ok", yes, no, na))
     print("=" * 92)
     return res, ctx
 

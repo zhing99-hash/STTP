@@ -1,266 +1,1060 @@
 {
-  "meta": {
-    "name": "冻结反例集（Frozen Counterexamples）",
-    "purpose": "已知错误模式的回归门禁：任何一条被判『已证实 / 应存在』即视为回归失败。与 connectivity_audit.py 并列。",
-    "created": "2026-10-10",
-    "phase": 28,
-    "ref": "07_交付物/GPT6评估报告独立核验与路线调整建议_20261009.md",
-    "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严",
-    "kinds": ["dim_table", "gate_chem", "gate_math", "graph_scan", "level_check", "attrib_check"],
-    "run": "python 06_PoC/frozen_gate.py [--json]"
+ "meta": {
+  "name": "冻结反例集（Frozen Counterexamples）",
+  "purpose": "已知错误模式的回归门禁：任何一条被判『已证实 / 应存在』即视为回归失败。与 connectivity_audit.py 并列。",
+  "created": "2026-10-10",
+  "phase": 29,
+  "ref": "07_交付物/Phase29_跨域桥专项报告_20261010.md",
+  "principle": "铁律 #14：自检输入若与被检对象同源会一起静默通过 → 本反例集独立于校验器实现，且含**正对照**防止门禁过严。Phase 29 追加跨域桥断言：『桥必须有证据』与『桥不得自相矛盾』，两者都带正对照（含 min_count 防空真通过）",
+  "kinds": [
+   "dim_table",
+   "gate_chem",
+   "gate_math",
+   "graph_scan",
+   "level_check",
+   "attrib_check"
+  ],
+  "run": "python 06_PoC/frozen_gate.py [--json]"
+ },
+ "cases": [
+  {
+   "id": "P0-1-dim-energy-mass",
+   "p0": "P0-1",
+   "kind": "dim_table",
+   "desc": "energy(ML²T⁻²) 与 mass(M) 量纲不同 → 不得建 dimensionally_consistent",
+   "input": {
+    "a": "energy",
+    "b": "mass"
+   },
+   "expect": "DIM_NOT_EQUAL"
   },
-  "cases": [
-    {
-      "id": "P0-1-dim-energy-mass",
-      "p0": "P0-1",
-      "kind": "dim_table",
-      "desc": "energy(ML²T⁻²) 与 mass(M) 量纲不同 → 不得建 dimensionally_consistent",
-      "input": {"a": "energy", "b": "mass"},
-      "expect": "DIM_NOT_EQUAL"
-    },
-    {
-      "id": "P0-1-dim-angular-energy",
-      "p0": "P0-1",
-      "kind": "dim_table",
-      "desc": "angular_momentum(ML²T⁻¹) 与 energy(ML²T⁻²) 量纲不同（Phase13.Gate.B3 曾误判一致）",
-      "input": {"a": "angular_momentum", "b": "energy"},
-      "expect": "DIM_NOT_EQUAL"
-    },
-    {
-      "id": "P0-1-dim-voltage-efield",
-      "p0": "P0-1",
-      "kind": "dim_table",
-      "desc": "voltage(ML²T⁻³I⁻¹) 与 efield(MLT⁻³I⁻¹) 量纲不同（差一个 L）",
-      "input": {"a": "voltage", "b": "efield"},
-      "expect": "DIM_NOT_EQUAL"
-    },
-    {
-      "id": "P0-1-dim-positive-control",
-      "p0": "P0-1",
-      "kind": "dim_table",
-      "desc": "（正对照）energy 与 torque 确为同量纲（均 ML²T⁻²）→ 必须判相等，否则门禁过严",
-      "input": {"a": "energy", "b": "torque"},
-      "expect": "DIM_EQUAL"
-    },
-    {
-      "id": "P0-1-main-dc-no-mismatch",
-      "p0": "P0-1",
-      "kind": "graph_scan",
-      "desc": "主图中「两端量纲严格不等」的 dimensionally_consistent 边数必须为 0（真值表判定）",
-      "scan": {"edge_type": "dimensionally_consistent", "dim_mismatch": true},
-      "expect": "ZERO"
-    },
-    {
-      "id": "P0-2-latex-not-same-as",
-      "p0": "P0-2",
-      "kind": "graph_scan",
-      "desc": "不得存在以「LaTeX 字符串规范化」为据的 same_as / VERIFIED 边",
-      "scan": {"forbidden": [
-        {"edge_type": "same_as", "rationale_contains": "LaTeX"},
-        {"edge_type": "same_latex_normalized", "status": "VERIFIED"}
-      ]},
-      "expect": "ABSENT"
-    },
-    {
-      "id": "P0-3-chem-implicit-H",
-      "p0": "P0-3",
-      "kind": "gate_chem",
-      "desc": "CO>>C=O：显式 C/O 计数相同，但隐式氢 CH₃OH(4) vs CH₂O(2) 不同 → 不得判守恒",
-      "input": {"smiles": "CO>>C=O"},
-      "expect": "NOT_VERIFIED"
-    },
-    {
-      "id": "P0-3-chem-charge",
-      "p0": "P0-3",
-      "kind": "gate_chem",
-      "desc": "[Na+]>>[Na]：原子数相同但净电荷 +1→0 不守恒",
-      "input": {"smiles": "[Na+]>>[Na]"},
-      "expect": "NOT_VERIFIED"
-    },
-    {
-      "id": "P0-3-chem-positive-control",
-      "p0": "P0-3",
-      "kind": "gate_chem",
-      "desc": "（正对照）2 H2 + O2 >> 2 H2O 原子与电荷均守恒 → 必须 VERIFIED",
-      "input": {"smiles": "[H][H].[H][H].[O]=[O]>>[H]O[H].[H]O[H]"},
-      "expect": "VERIFIED"
-    },
-    {
-      "id": "P0-3-math-domain-sqrt",
-      "p0": "P0-3",
-      "kind": "gate_math",
-      "desc": "sqrt(x²)=x 仅在 x≥0 成立；变量域不得默认 positive",
-      "input": {"lhs": "sqrt(x**2)", "rhs": "x", "vars": ["x"]},
-      "expect": "NOT_VERIFIED"
-    },
-    {
-      "id": "P0-3-math-positive-control",
-      "p0": "P0-3",
-      "kind": "gate_math",
-      "desc": "（正对照）(x+1)² = x²+2x+1 恒成立 → 必须 VERIFIED",
-      "input": {"lhs": "(x+1)**2", "rhs": "x**2+2*x+1", "vars": ["x"]},
-      "expect": "VERIFIED"
-    },
-    {
-      "id": "P0-4-skeleton-bridge-absent",
-      "p0": "P0-4",
-      "kind": "graph_scan",
-      "desc": "主图中不得再出现 kind==skeleton_bridge 的 same_as 边（应改判 same_formula_as）",
-      "scan": {"edge_type": "same_as", "edge_kind": "skeleton_bridge"},
-      "expect": "ABSENT"
-    },
-    {
-      "id": "P0-5-level-model-not-rule",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "模型产物（gnn_typed_verified）不得被判 rule_checked —— 预测≠验证（存量 verified 通胀元凶）",
-      "input": {"edges": [
-        {"type": "has_quantity", "source": "EL:x", "target": "PQ:force",
-         "props": {"kind": "gnn_typed_verified", "source": "Phase13.Gate.B5"}}
-      ]},
-      "expect": {"edge": 0, "level": "model_inferred", "max_level": "model_inferred"}
-    },
-    {
-      "id": "P0-5-level-dim-table-positive",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "（正对照）kind==dimension_table 的 dimensionally_consistent 边必须判 rule_checked / dimensional_strict_equal",
-      "input": {
-        "nodes": [{"id": "PQ:energy", "props": {"name": "energy"}},
-                  {"id": "PQ:torque", "props": {"name": "torque"}}],
-        "edges": [{"type": "dimensionally_consistent", "source": "PQ:energy", "target": "PQ:torque",
-                   "props": {"kind": "dimension_table", "source": "dimension_table"}}]
-      },
-      "expect": {"edge": 0, "level": "rule_checked", "scope": "dimensional_strict_equal"}
-    },
-    {
-      "id": "P0-5-level-dim-mismatch",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "非 dimension_table 的 dc 边：独立复算 energy(ML²T⁻²) vs mass(M) 不等 → 必须降为 unverified",
-      "input": {
-        "nodes": [{"id": "PQ:energy", "props": {"name": "energy"}},
-                  {"id": "PQ:mass", "props": {"name": "mass"}}],
-        "edges": [{"type": "dimensionally_consistent", "source": "PQ:energy", "target": "PQ:mass",
-                   "props": {"kind": "gnn_typed_verified", "source": "Phase13.Gate.B3"}}]
-      },
-      "expect": {"edge": 0, "level": "unverified", "scope": "dimensional_mismatch"}
-    },
-    {
-      "id": "P0-5-level-has-symbol-ok",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "（正对照）PhysicsBabel has_symbol：量确在公式 exponents 中 → rule_checked / formula_participation_membership",
-      "input": {
-        "nodes": [{"id": "PB:fo:1", "labels": ["Formula"],
-                   "props": {"dim_exponents": {"mass": 1, "length": 1}}},
-                  {"id": "PQ:mass", "props": {"name": "Mass"}}],
-        "edges": [{"type": "has_symbol", "source": "PB:fo:1", "target": "PQ:mass",
-                   "props": {"kind": "real", "source": "PhysicsBabel",
-                             "rationale": "方程中 Mass 为参与量"}}]
-      },
-      "expect": {"edge": 0, "level": "rule_checked", "scope": "formula_participation_membership"}
-    },
-    {
-      "id": "P0-5-level-has-symbol-stale",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "PhysicsBabel has_symbol 挂了一个不在公式 exponents 中的量（陈旧错挂）→ 不得 rule_checked，须判 unverified",
-      "input": {
-        "nodes": [{"id": "PB:fo:600", "labels": ["Formula"],
-                   "props": {"dim_exponents": {"mass": 1}}},
-                  {"id": "PQ:force", "props": {"name": "force"}}],
-        "edges": [{"type": "has_symbol", "source": "PB:fo:600", "target": "PQ:force",
-                   "props": {"kind": "real", "source": "PhysicsBabel"}}]
-      },
-      "expect": {"edge": 0, "level": "unverified", "scope": "formula_participation_not_found"}
-    },
-    {
-      "id": "P0-5-level-composed-self-only",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "composed_of 仅凭『模型自述分子式』内部一致、节点无外部权威式 → 不得 cross_source（自我验证），上限 rule_checked",
-      "input": {
-        "nodes": [{"id": "GN:mol:x", "props": {"formula": "H2O"}}],
-        "edges": [{"type": "composed_of", "source": "GN:mol:x", "target": "EK:el:O",
-                   "props": {"from_formula": "H2O", "count": 1,
-                             "kind": "gnn_typed_verified", "source": "GNN"}}]
-      },
-      "expect": {"edge": 0, "not_level": "cross_source", "max_level": "rule_checked"}
-    },
-    {
-      "id": "P0-5-level-composed-cross-positive",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "（正对照）节点带 PubChem 权威式且独立解析一致、边自身非 PubChem 来源 → cross_source（真·双源）",
-      "input": {
-        "nodes": [{"id": "PB:mol:ts", "props": {"pubchem_formula": "O3S2"}}],
-        "edges": [{"type": "composed_of", "source": "PB:mol:ts", "target": "EK:el:O",
-                   "props": {"from_formula": "O3S2", "count": 3, "source": "curated_seed"}}]
-      },
-      "expect": {"edge": 0, "level": "cross_source", "scope": "formula_count_cross_source"}
-    },
-    {
-      "id": "P0-5-level-latex-not-verified",
-      "p0": "P0-5",
-      "kind": "level_check",
-      "desc": "same_latex_normalized（LaTeX 串规范化）不构成等价证明 → 必须 model_inferred，不得任何 verified 级",
-      "input": {"edges": [
-        {"type": "same_latex_normalized", "source": "MX:fo:a", "target": "MX:fo:b",
-         "props": {"kind": "llm_inferred", "source": "gnn_infer.py"}}
-      ]},
-      "expect": {"edge": 0, "level": "model_inferred"}
-    },
-    {
-      "id": "P0-6-attrib-has-symbol-phy-bogus",
-      "p0": "P0-6",
-      "kind": "attrib_check",
-      "desc": "虚假归因：has_symbol 的 scope(formula_participation_membership) 与门禁名 R-PHY 不符 → 必须判为不匹配",
-      "input": {"gate": "R-PHY", "scope": "formula_participation_membership"},
-      "expect": "NOT_MATCH"
-    },
-    {
-      "id": "P0-6-attrib-r-phy-positive",
-      "p0": "P0-6",
-      "kind": "attrib_check",
-      "desc": "（正对照）R-PHY 配 dimensional_strict_equal 是合法配对 → 必须判匹配，防止门禁过严",
-      "input": {"gate": "R-PHY", "scope": "dimensional_strict_equal"},
-      "expect": "MATCH"
-    },
-    {
-      "id": "P0-6-attrib-r-chem-positive",
-      "p0": "P0-6",
-      "kind": "attrib_check",
-      "desc": "（正对照）R-CHEM 配 formula_count_independent_recheck 是合法配对 → 必须判匹配",
-      "input": {"gate": "R-CHEM", "scope": "formula_count_independent_recheck"},
-      "expect": "MATCH"
-    },
-    {
-      "id": "P0-5-main-has-symbol-no-phy-gate",
-      "p0": "P0-5",
-      "kind": "graph_scan",
-      "desc": "主图中不得存在挂「物理/化学门禁」的 has_symbol 边（has_symbol 由组成成员核对产生，与量纲/守恒门禁无关=虚假归因）",
-      "scan": {"forbidden": [
-        {"edge_type": "has_symbol", "prop": "verification_gate",
-         "in_values": ["R-PHY", "R-CHEM", "R-MATH", "R-BIO"]}
-      ]},
-      "expect": "ABSENT"
-    },
-    {
-      "id": "P0-5-main-gate-attrib-consistent",
-      "p0": "P0-5",
-      "kind": "graph_scan",
-      "desc": "落库自洽：凡已存 verification_gate 的边，其归因必须与派生的 verification_scope 配对合法（回归门禁：审计改正派生字段后，必须同时**撤回**库里的假归因）",
-      "scan": {"gate_attrib": true},
-      "expect": "CONSISTENT"
-    },
-    {
-      "id": "P0-5-main-level-consistent",
-      "p0": "P0-5",
-      "kind": "graph_scan",
-      "desc": "落库一致性：凡带 verification_level 的边，其 verified 布尔必须 == is_verified(level)（防下游绕过分层直接写布尔）",
-      "scan": {"level_consistent": true},
-      "expect": "CONSISTENT"
+  {
+   "id": "P0-1-dim-angular-energy",
+   "p0": "P0-1",
+   "kind": "dim_table",
+   "desc": "angular_momentum(ML²T⁻¹) 与 energy(ML²T⁻²) 量纲不同（Phase13.Gate.B3 曾误判一致）",
+   "input": {
+    "a": "angular_momentum",
+    "b": "energy"
+   },
+   "expect": "DIM_NOT_EQUAL"
+  },
+  {
+   "id": "P0-1-dim-voltage-efield",
+   "p0": "P0-1",
+   "kind": "dim_table",
+   "desc": "voltage(ML²T⁻³I⁻¹) 与 efield(MLT⁻³I⁻¹) 量纲不同（差一个 L）",
+   "input": {
+    "a": "voltage",
+    "b": "efield"
+   },
+   "expect": "DIM_NOT_EQUAL"
+  },
+  {
+   "id": "P0-1-dim-positive-control",
+   "p0": "P0-1",
+   "kind": "dim_table",
+   "desc": "（正对照）energy 与 torque 确为同量纲（均 ML²T⁻²）→ 必须判相等，否则门禁过严",
+   "input": {
+    "a": "energy",
+    "b": "torque"
+   },
+   "expect": "DIM_EQUAL"
+  },
+  {
+   "id": "P0-1-main-dc-no-mismatch",
+   "p0": "P0-1",
+   "kind": "graph_scan",
+   "desc": "主图中「两端量纲严格不等」的 dimensionally_consistent 边数必须为 0（真值表判定）",
+   "scan": {
+    "edge_type": "dimensionally_consistent",
+    "dim_mismatch": true
+   },
+   "expect": "ZERO"
+  },
+  {
+   "id": "P0-2-latex-not-same-as",
+   "p0": "P0-2",
+   "kind": "graph_scan",
+   "desc": "不得存在以「LaTeX 字符串规范化」为据的 same_as / VERIFIED 边",
+   "scan": {
+    "forbidden": [
+     {
+      "edge_type": "same_as",
+      "rationale_contains": "LaTeX"
+     },
+     {
+      "edge_type": "same_latex_normalized",
+      "status": "VERIFIED"
+     }
+    ]
+   },
+   "expect": "ABSENT"
+  },
+  {
+   "id": "P0-3-chem-implicit-H",
+   "p0": "P0-3",
+   "kind": "gate_chem",
+   "desc": "CO>>C=O：显式 C/O 计数相同，但隐式氢 CH₃OH(4) vs CH₂O(2) 不同 → 不得判守恒",
+   "input": {
+    "smiles": "CO>>C=O"
+   },
+   "expect": "NOT_VERIFIED"
+  },
+  {
+   "id": "P0-3-chem-charge",
+   "p0": "P0-3",
+   "kind": "gate_chem",
+   "desc": "[Na+]>>[Na]：原子数相同但净电荷 +1→0 不守恒",
+   "input": {
+    "smiles": "[Na+]>>[Na]"
+   },
+   "expect": "NOT_VERIFIED"
+  },
+  {
+   "id": "P0-3-chem-positive-control",
+   "p0": "P0-3",
+   "kind": "gate_chem",
+   "desc": "（正对照）2 H2 + O2 >> 2 H2O 原子与电荷均守恒 → 必须 VERIFIED",
+   "input": {
+    "smiles": "[H][H].[H][H].[O]=[O]>>[H]O[H].[H]O[H]"
+   },
+   "expect": "VERIFIED"
+  },
+  {
+   "id": "P0-3-math-domain-sqrt",
+   "p0": "P0-3",
+   "kind": "gate_math",
+   "desc": "sqrt(x²)=x 仅在 x≥0 成立；变量域不得默认 positive",
+   "input": {
+    "lhs": "sqrt(x**2)",
+    "rhs": "x",
+    "vars": [
+     "x"
+    ]
+   },
+   "expect": "NOT_VERIFIED"
+  },
+  {
+   "id": "P0-3-math-positive-control",
+   "p0": "P0-3",
+   "kind": "gate_math",
+   "desc": "（正对照）(x+1)² = x²+2x+1 恒成立 → 必须 VERIFIED",
+   "input": {
+    "lhs": "(x+1)**2",
+    "rhs": "x**2+2*x+1",
+    "vars": [
+     "x"
+    ]
+   },
+   "expect": "VERIFIED"
+  },
+  {
+   "id": "P0-4-skeleton-bridge-absent",
+   "p0": "P0-4",
+   "kind": "graph_scan",
+   "desc": "主图中不得再出现 kind==skeleton_bridge 的 same_as 边（应改判 same_formula_as）",
+   "scan": {
+    "edge_type": "same_as",
+    "edge_kind": "skeleton_bridge"
+   },
+   "expect": "ABSENT"
+  },
+  {
+   "id": "P0-5-level-model-not-rule",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "模型产物（gnn_typed_verified）不得被判 rule_checked —— 预测≠验证（存量 verified 通胀元凶）",
+   "input": {
+    "edges": [
+     {
+      "type": "has_quantity",
+      "source": "EL:x",
+      "target": "PQ:force",
+      "props": {
+       "kind": "gnn_typed_verified",
+       "source": "Phase13.Gate.B5"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "model_inferred",
+    "max_level": "model_inferred"
+   }
+  },
+  {
+   "id": "P0-5-level-dim-table-positive",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "（正对照）kind==dimension_table 的 dimensionally_consistent 边必须判 rule_checked / dimensional_strict_equal",
+   "input": {
+    "nodes": [
+     {
+      "id": "PQ:energy",
+      "props": {
+       "name": "energy"
+      }
+     },
+     {
+      "id": "PQ:torque",
+      "props": {
+       "name": "torque"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "type": "dimensionally_consistent",
+      "source": "PQ:energy",
+      "target": "PQ:torque",
+      "props": {
+       "kind": "dimension_table",
+       "source": "dimension_table"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "dimensional_strict_equal"
+   }
+  },
+  {
+   "id": "P0-5-level-dim-mismatch",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "非 dimension_table 的 dc 边：独立复算 energy(ML²T⁻²) vs mass(M) 不等 → 必须降为 unverified",
+   "input": {
+    "nodes": [
+     {
+      "id": "PQ:energy",
+      "props": {
+       "name": "energy"
+      }
+     },
+     {
+      "id": "PQ:mass",
+      "props": {
+       "name": "mass"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "type": "dimensionally_consistent",
+      "source": "PQ:energy",
+      "target": "PQ:mass",
+      "props": {
+       "kind": "gnn_typed_verified",
+       "source": "Phase13.Gate.B3"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "unverified",
+    "scope": "dimensional_mismatch"
+   }
+  },
+  {
+   "id": "P0-5-level-has-symbol-ok",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "（正对照）PhysicsBabel has_symbol：量确在公式 exponents 中 → rule_checked / formula_participation_membership",
+   "input": {
+    "nodes": [
+     {
+      "id": "PB:fo:1",
+      "labels": [
+       "Formula"
+      ],
+      "props": {
+       "dim_exponents": {
+        "mass": 1,
+        "length": 1
+       }
+      }
+     },
+     {
+      "id": "PQ:mass",
+      "props": {
+       "name": "Mass"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "type": "has_symbol",
+      "source": "PB:fo:1",
+      "target": "PQ:mass",
+      "props": {
+       "kind": "real",
+       "source": "PhysicsBabel",
+       "rationale": "方程中 Mass 为参与量"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "formula_participation_membership"
+   }
+  },
+  {
+   "id": "P0-5-level-has-symbol-stale",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "PhysicsBabel has_symbol 挂了一个不在公式 exponents 中的量（陈旧错挂）→ 不得 rule_checked，须判 unverified",
+   "input": {
+    "nodes": [
+     {
+      "id": "PB:fo:600",
+      "labels": [
+       "Formula"
+      ],
+      "props": {
+       "dim_exponents": {
+        "mass": 1
+       }
+      }
+     },
+     {
+      "id": "PQ:force",
+      "props": {
+       "name": "force"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "type": "has_symbol",
+      "source": "PB:fo:600",
+      "target": "PQ:force",
+      "props": {
+       "kind": "real",
+       "source": "PhysicsBabel"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "unverified",
+    "scope": "formula_participation_not_found"
+   }
+  },
+  {
+   "id": "P0-5-level-composed-self-only",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "composed_of 仅凭『模型自述分子式』内部一致、节点无外部权威式 → 不得 cross_source（自我验证），上限 rule_checked",
+   "input": {
+    "nodes": [
+     {
+      "id": "GN:mol:x",
+      "props": {
+       "formula": "H2O"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "type": "composed_of",
+      "source": "GN:mol:x",
+      "target": "EK:el:O",
+      "props": {
+       "from_formula": "H2O",
+       "count": 1,
+       "kind": "gnn_typed_verified",
+       "source": "GNN"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "not_level": "cross_source",
+    "max_level": "rule_checked"
+   }
+  },
+  {
+   "id": "P0-5-level-composed-cross-positive",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "（正对照）节点带 PubChem 权威式且独立解析一致、边自身非 PubChem 来源 → cross_source（真·双源）",
+   "input": {
+    "nodes": [
+     {
+      "id": "PB:mol:ts",
+      "props": {
+       "pubchem_formula": "O3S2"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "type": "composed_of",
+      "source": "PB:mol:ts",
+      "target": "EK:el:O",
+      "props": {
+       "from_formula": "O3S2",
+       "count": 3,
+       "source": "curated_seed"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "cross_source",
+    "scope": "formula_count_cross_source"
+   }
+  },
+  {
+   "id": "P0-5-level-latex-not-verified",
+   "p0": "P0-5",
+   "kind": "level_check",
+   "desc": "same_latex_normalized（LaTeX 串规范化）不构成等价证明 → 必须 model_inferred，不得任何 verified 级",
+   "input": {
+    "edges": [
+     {
+      "type": "same_latex_normalized",
+      "source": "MX:fo:a",
+      "target": "MX:fo:b",
+      "props": {
+       "kind": "llm_inferred",
+       "source": "gnn_infer.py"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "model_inferred"
+   }
+  },
+  {
+   "id": "P0-6-attrib-has-symbol-phy-bogus",
+   "p0": "P0-6",
+   "kind": "attrib_check",
+   "desc": "虚假归因：has_symbol 的 scope(formula_participation_membership) 与门禁名 R-PHY 不符 → 必须判为不匹配",
+   "input": {
+    "gate": "R-PHY",
+    "scope": "formula_participation_membership"
+   },
+   "expect": "NOT_MATCH"
+  },
+  {
+   "id": "P0-6-attrib-r-phy-positive",
+   "p0": "P0-6",
+   "kind": "attrib_check",
+   "desc": "（正对照）R-PHY 配 dimensional_strict_equal 是合法配对 → 必须判匹配，防止门禁过严",
+   "input": {
+    "gate": "R-PHY",
+    "scope": "dimensional_strict_equal"
+   },
+   "expect": "MATCH"
+  },
+  {
+   "id": "P0-6-attrib-r-chem-positive",
+   "p0": "P0-6",
+   "kind": "attrib_check",
+   "desc": "（正对照）R-CHEM 配 formula_count_independent_recheck 是合法配对 → 必须判匹配",
+   "input": {
+    "gate": "R-CHEM",
+    "scope": "formula_count_independent_recheck"
+   },
+   "expect": "MATCH"
+  },
+  {
+   "id": "P0-5-main-has-symbol-no-phy-gate",
+   "p0": "P0-5",
+   "kind": "graph_scan",
+   "desc": "主图中不得存在挂「物理/化学门禁」的 has_symbol 边（has_symbol 由组成成员核对产生，与量纲/守恒门禁无关=虚假归因）",
+   "scan": {
+    "forbidden": [
+     {
+      "edge_type": "has_symbol",
+      "prop": "verification_gate",
+      "in_values": [
+       "R-PHY",
+       "R-CHEM",
+       "R-MATH",
+       "R-BIO"
+      ]
+     }
+    ]
+   },
+   "expect": "ABSENT"
+  },
+  {
+   "id": "P0-5-main-gate-attrib-consistent",
+   "p0": "P0-5",
+   "kind": "graph_scan",
+   "desc": "落库自洽：凡已存 verification_gate 的边，其归因必须与派生的 verification_scope 配对合法（回归门禁：审计改正派生字段后，必须同时**撤回**库里的假归因）",
+   "scan": {
+    "gate_attrib": true
+   },
+   "expect": "CONSISTENT"
+  },
+  {
+   "id": "P0-5-main-level-consistent",
+   "p0": "P0-5",
+   "kind": "graph_scan",
+   "desc": "落库一致性：凡带 verification_level 的边，其 verified 布尔必须 == is_verified(level)（防下游绕过分层直接写布尔）",
+   "scan": {
+    "level_consistent": true
+   },
+   "expect": "CONSISTENT"
+  },
+  {
+   "id": "P1-bridge-no-contradictory",
+   "p0": "P1-bridge",
+   "kind": "graph_scan",
+   "desc": "跨域桥自洽：has_quantity（分子→物理量）的 rationale 若声明了「属X类物理量」，X 必须与目标物理量的真量纲一致。Phase 29 实测上游把同一条「属质量类」理由粘贴到 能量/动能/内能 等互斥目标上（42 条）",
+   "scan": {
+    "hq_class_consistent": true
+   },
+   "expect": "CONSISTENT"
+  },
+  {
+   "id": "P1-bridge-molar-mass-evidenced",
+   "p0": "P1-bridge",
+   "kind": "graph_scan",
+   "desc": "跨域桥证据下限（含正对照）：凡目标为 PB:pq:molar_mass 的 has_quantity 边必须**全部** ≥ rule_checked（证据 = 原子量 × 独立解析的化学式计数），且条数 ≥ 600 —— 防止「一条都没有」把断言真空通过",
+   "scan": {
+    "bridge_evidence": {
+     "target": "PB:pq:molar_mass",
+     "edge_type": "has_quantity",
+     "min_level": "rule_checked",
+     "min_count": 600
     }
-  ]
+   },
+   "expect": "EVIDENCED"
+  },
+  {
+   "id": "P1-level-molar-mass-positive-control",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**正对照**：分子→摩尔质量桥，value 与「原子量 × 分子式计数」独立复算一致 → 必须授 rule_checked，且**不得**退化为 model_inferred（第 18 轮的分类器曾把可复算的桥误判为模型预测）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:x",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "C8H11NO",
+       "molecular_weight": 137.18
+      }
+     },
+     {
+      "id": "PB:pq:molar_mass",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_mass"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:x|PB:pq:molar_mass",
+      "source": "T:mol:x",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "gnn_typed_verified",
+      "props": {
+       "value": 137.18,
+       "unit": "g/mol",
+       "rationale": "摩尔质量 137.18 g/mol（化学式解析+原子量）"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "min_level": "rule_checked",
+    "not_level": "model_inferred"
+   }
+  },
+  {
+   "id": "P1-level-molar-mass-cross-source-control",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**正对照**：分子→摩尔质量桥，若再与 PubChem 的 pubchem_molecular_weight 一致 → 必须升到 cross_source（≥2 独立来源一致）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:y",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "C8H11NO",
+       "pubchem_formula": "C8H11NO",
+       "pubchem_molecular_weight": 137.18
+      }
+     },
+     {
+      "id": "PB:pq:molar_mass",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_mass"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:y|PB:pq:molar_mass",
+      "source": "T:mol:y",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "gnn_typed_verified",
+      "props": {
+       "value": 137.18,
+       "unit": "g/mol",
+       "rationale": "摩尔质量 137.18 g/mol（化学式解析+原子量）"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "cross_source",
+    "scope": "molar_mass_cross_source"
+   }
+  },
+  {
+   "id": "P1-level-contradictory-bridge-rejected",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**反例**：分子→**能量**物理量，rationale 却声称「属质量类物理量」→ 必须判 unverified/rationale_target_mismatch（不得因「是模型产物」就只记 model_inferred 而放过自相矛盾）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:z",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "H2O"
+      }
+     },
+     {
+      "id": "PQ:energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "energy"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:z|PQ:energy",
+      "source": "T:mol:z",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+       "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "unverified",
+    "scope": "rationale_target_mismatch"
+   }
+  },
+  {
+   "id": "P1-level-consistent-class-not-flagged",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**正对照（防过严）**：同一条「属质量类」理由指向**质量**物理量时是**自洽**的，不得被判 rationale_target_mismatch",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:w",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "H2O"
+      }
+     },
+     {
+      "id": "PQ:mass",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "mass"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:w|PQ:mass",
+      "source": "T:mol:w",
+      "target": "PQ:mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+       "rationale": "分子摩尔质量/分子量属质量类物理量（组成校验）"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "not_scope": [
+     "rationale_target_mismatch"
+    ],
+    "min_level": "model_inferred"
+   }
+  },
+  {
+   "id": "P1-level-numeric-mass-on-molar-mass-ok",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**正对照（防过严）**：rationale 为**数值断言**「摩尔质量 18.015 g/mol」且目标就是 `molar_mass` 时，属同类（per-amount 形式亦算同类）→ 必须授 rule_checked，**不得**被判 rationale_target_mismatch。此用例冻结第 19 轮一次真实回归：只用 `want != got` 比对时 `molar_mass = M·N⁻¹ ≠ M`，会把 **700 条合法桥**误删",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:h2o",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "H2O"
+      }
+     },
+     {
+      "id": "PB:pq:molar_mass",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_mass"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:h2o|PB:pq:molar_mass",
+      "source": "T:mol:h2o",
+      "target": "PB:pq:molar_mass",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+       "value": 18.015,
+       "unit": "g/mol",
+       "rationale": "摩尔质量 18.015 g/mol（化学式解析 + 原子量校验）"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "scope": "molar_mass_independent_recompute",
+    "min_level": "rule_checked"
+   }
+  },
+  {
+   "id": "P1-level-numeric-mass-on-energy-rejected",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**反例**：rationale 为**数值断言**「摩尔质量 18.015 g/mol」（只能是质量类），目标却是 `PQ:energy` → 必须判 unverified/rationale_target_mismatch。此用例冻结第 19 轮补上的第二类同族缺陷（实测 **20 条**，只认「属X类物理量」字样的旧实现会全部漏掉）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:h2o2",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "H2O"
+      }
+     },
+     {
+      "id": "PQ:energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "energy"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:h2o2|PQ:energy",
+      "source": "T:mol:h2o2",
+      "target": "PQ:energy",
+      "type": "has_quantity",
+      "kind": "llm_inferred_gnn",
+      "props": {
+       "value": 18.015,
+       "unit": "g/mol",
+       "rationale": "摩尔质量 18.015 g/mol（化学式解析 + 原子量校验）"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "scope": "rationale_target_mismatch",
+    "level": "unverified"
+   }
+  },
+  {
+   "id": "P1-level-webbook-unit-ok",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**正对照**：NIST WebBook 热化学桥（`kind=webbook_thermochemistry`），单位 `kJ/mol` 经量纲表**独立复算**与目标 `molar_energy`(L²MT⁻²N⁻¹) 一致、单条文献 → 必须 `rule_checked`。冻结 A7 段存在，否则这些边会落库 `rule_checked` 而重算 `source_asserted`（静默不一致）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:wb",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "CH4"
+      }
+     },
+     {
+      "id": "PB:pq:molar_energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_energy"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:wb|PB:pq:molar_energy",
+      "source": "T:mol:wb",
+      "target": "PB:pq:molar_energy",
+      "type": "has_quantity",
+      "kind": "webbook_thermochemistry",
+      "props": {
+       "value": -74.6,
+       "unit": "kJ/mol",
+       "n_references": 1,
+       "source": "NIST Chemistry WebBook"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "webbook_unit_dimension_recompute"
+   }
+  },
+  {
+   "id": "P1-level-webbook-multi-ref",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**正对照**：同上，但页面内 **≥2 条独立文献**吻合 → 必须升档 `cross_source`（第二级证据：两个独立测量一致）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:wb",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "CH4"
+      }
+     },
+     {
+      "id": "PB:pq:molar_energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_energy"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:wb2|PB:pq:molar_energy",
+      "source": "T:mol:wb",
+      "target": "PB:pq:molar_energy",
+      "type": "has_quantity",
+      "kind": "webbook_thermochemistry",
+      "props": {
+       "value": -74.6,
+       "unit": "kJ/mol",
+       "n_references": 3,
+       "source": "NIST Chemistry WebBook"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "cross_source",
+    "scope": "webbook_multi_reference_agreement"
+   }
+  },
+  {
+   "id": "P1-level-webbook-unit-mismatch",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**反例**：WebBook 桥单位 `J/mol*K`（熵的量纲，含 Th⁻¹）却指向 `molar_energy` → 量纲独立复算不符，**必须** `unverified/webbook_unit_dimension_mismatch`。不准因为「来源是 NIST」就放行",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:wb",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "CH4"
+      }
+     },
+     {
+      "id": "PB:pq:molar_energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_energy"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:wb3|PB:pq:molar_energy",
+      "source": "T:mol:wb",
+      "target": "PB:pq:molar_energy",
+      "type": "has_quantity",
+      "kind": "webbook_thermochemistry",
+      "props": {
+       "value": 186.2,
+       "unit": "J/mol*K",
+       "n_references": 2,
+       "source": "NIST Chemistry WebBook"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "unverified",
+    "scope": "webbook_unit_dimension_mismatch"
+   }
+  },
+  {
+   "id": "P1-main-level-matches-recompute",
+   "p0": "P1-bridge",
+   "kind": "graph_scan",
+   "desc": "**落库-复算一致（铁律 #23）**：全图每条边的已存 `verification_level` 必须等于 `classify_all` 的**重算**结果 —— 0 条不符。这是比「布尔 == is_verified(level)」更强的断言：第 19 轮正是它抓出 157 条 WebBook 桥「落库 rule_checked / 重算 source_asserted」的静默不一致",
+   "scan": {
+    "level_matches_recompute": true
+   },
+   "expect": "CONSISTENT"
+  },
+  {
+   "id": "P1-bridge-source-traceable",
+   "p0": "P1-bridge",
+   "kind": "graph_scan",
+   "desc": "桥的取值必须**可追溯到具名来源**：凡 `kind=webbook_thermochemistry` 的边必须 `n_references ≥ 1`。第 19 轮实测 16 条边在多条文献分歧超出容差时旧生成器仍取「全体中位数」→ 值既不来自任何单一文献也不满足多源一致，而 `n_references=0`（静默编造）",
+   "scan": {
+    "bridge_source_traceable": {
+     "kind": "webbook_thermochemistry",
+     "min_references": 1
+    }
+   },
+   "expect": "TRACEABLE"
+  },
+  {
+   "id": "P1-level-webbook-disagreement-not-cross",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "**反例（防虚高）**：WebBook 桥若标注 `n_references=1`（多条文献分歧、只采用单条权威）→ **必须** 停在 `rule_checked`，**不得**因「来源是 NIST 且页面有多行」就升 `cross_source`",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:wb4",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "CH4"
+      }
+     },
+     {
+      "id": "PQ:molar_entropy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_entropy"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:wb4|PQ:molar_entropy",
+      "source": "T:mol:wb4",
+      "target": "PQ:molar_entropy",
+      "type": "has_quantity",
+      "kind": "webbook_thermochemistry",
+      "props": {
+       "value": 186.25,
+       "unit": "J/mol*K",
+       "n_references": 1,
+       "multi_source_agreement": false,
+       "source": "NIST Chemistry WebBook"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "webbook_unit_dimension_recompute"
+   }
+  }
+ ]
 }

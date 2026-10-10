@@ -256,6 +256,96 @@ def run_case(case, graph):
                                 (e.get("props") or {}).get("source")))
             return ("PASS" if not bad else "FAIL"), "违规 %d：%s" % (len(bad), bad[:3])
 
+        # (e) 跨域桥自洽：`has_quantity`（分子→物理量）边承载的**确定性语义载荷**
+        #     必须与目标物理量的**真量纲**一致。载荷两来源（同一族缺陷）：
+        #       a) 显式类声明「属质量类物理量」── 上游把同一条理由粘贴到 能量/动能/内能
+        #          等互斥目标上（Phase 29 实测 42 条）；
+        #       b) **数值断言**「摩尔质量 N g/mol」── 只能锚定质量类（Phase 29 实测另 20 条）。
+        #     ⚠ 比对必须用 `vm.dim_matches_class`（含「每摩尔」形式）：
+        #       否则 `molar_mass = M·N⁻¹ ≠ M` 会把 **700 条合法桥**全部误判为违规
+        #       （第 19 轮首次实现即踩中，一次假 FAIL 762 条）。
+        if scan.get("hq_class_consistent"):
+            if vm is None or dt is None:
+                return "SKIP", "verification_model / dimension_table 不可用"
+            nm = {n["id"]: ((n.get("props") or {}).get("name") or "").lower()
+                  for n in (graph.get("nodes") or [])}
+            bad, n_checked = [], 0
+            for e in graph["edges"]:
+                if e.get("type") != "has_quantity":
+                    continue
+                rat = (e.get("props") or {}).get("rationale")
+                label, want = vm.class_dim_in_rationale(rat)
+                if label is None and vm._MASS_IN_RATIONALE.search(str(rat or "")):
+                    label, want = "摩尔质量(数值断言)", vm.CLASS_DIM["质量"]
+                if label is None:
+                    continue
+                got = dt.dim_of(nm.get(e["target"], ""))
+                m = vm.dim_matches_class(got, want)
+                if m is None:
+                    continue
+                n_checked += 1
+                if m is False:
+                    bad.append((e["source"], e["target"], label))
+            return ("PASS" if not bad else "FAIL"), \
+                "已标注类 %d 条，自相矛盾 %d 条：%s" % (n_checked, len(bad), bad[:3])
+
+        # (g) 落库档位必须等于**重算**档位（铁律 #23）。
+        #     比「布尔 == is_verified(level)」更强：后者只保证自洽，
+        #     前者要求落库的 level 本身能被分类器**逐边重现** ——
+        #     否则「复算」退化为「复述」，任何口径漂移都会被静默固化。
+        #     第 19 轮实测：正是这条抓出 157 条 WebBook 桥「落库 rule_checked / 重算 source_asserted」。
+        if scan.get("level_matches_recompute"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            _res, _ctx = vm.classify_all(graph.get("nodes") or [], graph["edges"])
+            mism = []
+            for e, r in _res:
+                cur = (e.get("props") or {}).get("verification_level")
+                if cur != r["verification_level"]:
+                    mism.append((e.get("id") or "%s|%s|%s"
+                                 % (e.get("type"), e.get("source"), e.get("target")),
+                                 cur, r["verification_level"]))
+            return ("PASS" if not mism else "FAIL"), \
+                "已重算 %d 条，落库≠复算 %d 条：%s" % (len(_res), len(mism), mism[:3])
+
+        # (h) 桥的取值必须**可追溯到具名来源**：`kind == webbook_thermochemistry` 的边
+        #     必须声明 `n_references >= min_references`。第 19 轮实测：16 条边在多条文献
+        #     **分歧超出容差**时，旧生成器仍取了「全体中位数」→ 值**既不来自任何单一文献、
+        #     也不满足"多源一致"**，而 `n_references=0`（静默编造）。本断言冻结该模式。
+        if scan.get("bridge_source_traceable"):
+            cfg = scan["bridge_source_traceable"]
+            k, mn = cfg.get("kind", "webbook_thermochemistry"), cfg.get("min_references", 1)
+            bad, n_sel = [], 0
+            for e in graph["edges"]:
+                p = e.get("props") or {}
+                if (p.get("kind") or e.get("kind")) != k:
+                    continue
+                n_sel += 1
+                refs = p.get("n_references")
+                if refs is None or int(refs) < mn:
+                    bad.append((e.get("source"), e.get("target"), refs, p.get("value")))
+            return ("PASS" if not bad else "FAIL"), \
+                "%s：共 %d 条（需 n_references≥%d），不可追溯 %d 条 %s" % \
+                (k, n_sel, mn, len(bad), bad[:3])
+
+        # (f) 跨域桥证据下限（**含正对照**）：目标为 `target` 的边必须**全部** ≥ `min_level`，
+        #     且总数 ≥ `min_count` —— 防止「一条都没有」把断言真空通过。
+        if scan.get("bridge_evidence"):
+            if vm is None:
+                return "SKIP", "verification_model 不可用"
+            cfg = scan["bridge_evidence"]
+            tgt, minlv = cfg["target"], cfg["min_level"]
+            sel = [e for e in graph["edges"]
+                   if e.get("type") == cfg.get("edge_type", "has_quantity")
+                   and e.get("target") == tgt]
+            bad = [e["source"] for e in sel
+                   if vm.RANK.get((e.get("props") or {}).get("verification_level"), -1)
+                   < vm.RANK.get(minlv, 99)]
+            ok = (not bad) and len(sel) >= cfg.get("min_count", 1)
+            return ("PASS" if ok else "FAIL"), \
+                "%s：共 %d 条（需≥%d），低于 %s 的 %d 条 %s" % \
+                (tgt, len(sel), cfg.get("min_count", 1), minlv, len(bad), bad[:3])
+
         return "SKIP", "未知 scan"
 
     return "SKIP", "未知 kind：%s" % kind

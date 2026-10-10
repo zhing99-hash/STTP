@@ -105,7 +105,21 @@ upgrade_new = []  # (s,t,new_type,props)
 
 for e in raw_edges:
     if e["type"] != "related_to":
-        refined_edges.append(e)  # 60 条已验证(dim/has_quantity) 原样保留
+        # ⚠ P0 守卫（2026-10-10，第 19 轮）：不再**原样透传**上游的 has_quantity 边。
+        #   分子 → 物理量的 has_quantity 只允许锚定**质量类**物理量（见 `gnn_infer.py` B5：
+        #   唯一目标是 molar_mass）。上游曾把同一条「分子摩尔质量/分子量属质量类物理量」
+        #   理由**原样粘贴**到 能量 / 动能 / 内能 等 8 个互斥目标上，产出 42 条
+        #   **自相矛盾**的跨域边（实测 `水 --has_quantity--> 动能`）。此处源头拦截。
+        if e["type"] == "has_quantity":
+            tl = str(e.get("target_label") or "").lower()
+            if not ("molar" in tl or "mass" in tl or "weight" in tl):
+                detail.append({"source": e["source"], "target": e["target"],
+                               "decision": "DROP",
+                               "hypothesis": "剔除：分子→物理量的 has_quantity 只允许锚定质量类"
+                                             "（目标 %s 非质量类，属上游误标）" % e.get("target_label")})
+                counts["DROP"] += 1
+                continue
+        refined_edges.append(e)  # 其余已验证(dim/has_quantity-质量类) 原样保留
         continue
     u, v = e["source"], e["target"]
     decision, new_type, verified, nl, plaus = decide(u, v)

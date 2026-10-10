@@ -138,11 +138,50 @@ ALIAS = {
 }
 
 
+# ------------------------------------------------------------------ 量纲代数派生
+# Phase 29 追加：**由已解出的量做线性组合**得到的新量（只允许乘/除/幂，不做任何猜测）。
+#
+# 为什么需要：`dimension_table.json` 是 PhysicsBabel 方程**消元反解**的产物，
+# 只能覆盖「在方程里独立出现」的量。像 `molar_entropy = entropy / amount`
+# 这种**以「每摩尔」形式出现**的复合量不在其中 —— 而 NIST WebBook 的热化学桥
+# 恰恰锚定在 `std_entropy`（单位 `J/mol*K`）上。若不补，
+# 桥的量纲复算会**静默退化为「不可判定」**（`dim_of` 返回 None），
+# 从而把有证据的桥降级为 `source_asserted`（铁律 #23 的静默降级）。
+#
+# 每条派生都写明**来源式**，可逐条复核；解析失败/依赖缺失一律**跳过**（宁缺勿滥）。
+DERIVED = {
+    # 摩尔熵 = 熵 / 物质的量                → L²MTh⁻¹T⁻²N⁻¹
+    "molar_entropy": (("entropy", 1.0), ("amount", -1.0)),
+    # 摩尔热容 = 热容 / 物质的量            → L²MT⁻²Th⁻¹N⁻¹
+    "molar_heat_capacity": (("heat_capacity", 1.0), ("amount", -1.0)),
+}
+
+
+def _apply_derived(tbl: dict) -> None:
+    """把 DERIVED 里的派生量并入（in-place）；能算则算，算不出就**不写**。"""
+    for name, terms in DERIVED.items():
+        if name in tbl:
+            continue
+        vec = collections.defaultdict(float)
+        ok = True
+        for q, k in terms:
+            base = tbl.get(q)
+            if base is None:
+                ok = False
+                break
+            for d, p in base.items():
+                vec[d] += float(k) * float(p)
+        if not ok:
+            continue
+        tbl[name] = {d: round(p, 6) for d, p in vec.items() if abs(p) > 1e-9}
+
+
 def load(path: str = OUT) -> dict:
     global _TABLE
     if _TABLE is None:
         with open(path, encoding="utf-8") as f:
             _TABLE = json.load(f)["dimensions"]
+        _apply_derived(_TABLE)
     return _TABLE
 
 

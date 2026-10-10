@@ -855,8 +855,12 @@ for ri_ in rxns:
                   "方程式解析判定为%s" % ("反应物" if role == "reactant_of" else "产物"), "B4")
 # B5 分子 × 质量类物理量 → has_quantity（摩尔质量）
 # 优先锚定规范摩尔质量物理量（PB:pq:molar_mass，Phase 9 已确立的 131 条入边锚点）
+# ⚠ P0 修复（2026-10-10，第 19 轮）：旧版关键词表是 ("mass", "weight", "**energy**")，
+#   于是「分子 → 能量类物理量」也被当成质量桥发出去 —— 产出了 `水 --has_quantity--> 动能`
+#   这类**自相矛盾**的边（rationale 写「属质量类」，目标却是能量/动能/内能，实测 42 条）。
+#   质量类只允许 mass / weight；能量绝不在此列。
 mass_all = [i for i in pqs if any(k in str(id2attrs[all_ids[i]].get("name") or "").lower()
-                                  for k in ("mass", "weight", "energy"))]
+                                  for k in ("mass", "weight"))]
 mass_pqs = [i for i in mass_all if "molar_mass" in str(id2attrs[all_ids[i]].get("name") or "").lower()] \
            or mass_all
 print("    B5 质量类物理量目标 %d 个：%s" % (len(mass_pqs), [all_ids[i] for i in mass_pqs]))
