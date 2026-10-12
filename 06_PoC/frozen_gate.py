@@ -866,6 +866,9 @@ def run_case(case, graph):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--release", action="store_true",
+                    help="发布门禁（fail-closed）：缺主图 / 任何 SKIP / FAIL 均非零退出。"
+                         "默认（smoke）模式只在 FAIL 时非零退出。")
     a = ap.parse_args()
 
     cases = json.load(open(CASES, encoding="utf-8"))["cases"]
@@ -893,8 +896,20 @@ def main():
         print("汇总：PASS %d / FAIL %d / SKIP %d" % (tally["PASS"], tally["FAIL"], tally["SKIP"]))
         if tally["FAIL"]:
             print("★ 冻结反例集回归：%d 条已坐实的错误模式重新出现" % tally["FAIL"])
+        if tally["SKIP"]:
+            print("⚠ %d 条 SKIP：这些检查**不曾执行**（缺主图/缺依赖），不能当作通过。" % tally["SKIP"])
 
-    return 1 if tally["FAIL"] else 0
+    # 退出码（fail-closed 语义，铁律 #20/#37：SKIP ≠ 通过）
+    if tally["FAIL"]:
+        return 1
+    if a.release:
+        if graph is None:
+            print("★ --release：主图缺失，发布门禁不通过")
+            return 2
+        if tally["SKIP"]:
+            print("★ --release：存在 %d 条 SKIP，发布门禁不通过" % tally["SKIP"])
+            return 2
+    return 0
 
 
 if __name__ == "__main__":

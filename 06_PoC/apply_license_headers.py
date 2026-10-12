@@ -58,9 +58,9 @@ SKIP_DIR_MARKERS = ("06_PoC/vendor/", "06_PoC/vendor\\")
 def prefix_for(path: str):
     """返回 (行前缀, 行后缀) 二元组，例如 (\"# \", \"\") 或 (\"<!-- \", \" -->\")。"""
     ext = os.path.splitext(path)[1].lower()
-    if ext in (".py", ".sh", ".ps1", ".cypher"):
+    if ext in (".py", ".sh", ".ps1"):
         return "# ", ""
-    if ext == ".js":
+    if ext in (".js", ".cypher"):   # Cypher 合法注释为 // 与 /* */，不可用 #
         return "// ", ""
     if ext == ".html":
         return "<!-- ", " -->"

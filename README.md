@@ -116,6 +116,16 @@ python 06_PoC/robust_aura_loader.py --input <your_graph.json>
 本项目采用 **Apache License 2.0** 开源 —— 见仓库根 [`LICENSE`](LICENSE)；
 第三方组件（前端 vendor 库）与数据来源的署名见 [`NOTICE`](NOTICE)。
 
+**范围声明**：STTP **原创软件代码**采用 Apache-2.0；**第三方软件**（`06_PoC/vendor/`，
+许可文本在 `06_PoC/vendor/licenses/`）与**科学数据**分别遵循各自许可，
+详见 [`NOTICE`](NOTICE)、[`DATA_LICENSES.md`](DATA_LICENSES.md)。
+上游科学数据（Rhea / ChEBI / ChEMBL / PubChem 等）的条款不因本项目的
+Apache-2.0 而改变，本项目也不对其重新许可。
+
+**许可证迁移**：2026-10-11 之前的历史版本按 **MIT** 分发（见 git 历史）；
+自提交 `8e12d3e` 起，原创代码改用 Apache-2.0。此前已按 MIT 取得代码者，
+其已获权利不受影响（详见 `NOTICE` 的迁移说明）。
+
 ```
 Copyright 2026 zhing
 
