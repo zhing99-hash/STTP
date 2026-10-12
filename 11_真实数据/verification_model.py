@@ -159,6 +159,8 @@ EVIDENCE_KINDS = [
     "model_prediction",  # GNN / LLM 推断
     "construction",      # 权威表 / 定义构造性产生
     "rebuttal",          # 判否：记录推翻该断言的判据
+    "equation_species_consistency",  # R03：Rhea×ChEBI 共享词典的数据一致性检查（非独立）
+    "carryover",         # R05：沿用摄入时的验证结果（输入记录未落库，本次未重算）
 ]
 
 # scope -> (kind, indep)。**未列出的 scope** 按 level 兜底（见 _fallback_kind）。
@@ -200,6 +202,11 @@ SCOPE_KIND = {
     "multi_source_alignment": ("cross_source", True),
     "equation_species_cross_source": ("cross_source", True),
     "equation_species_mismatch": ("rebuttal", False),
+    # ---- R03/R05（第 26 轮）：共享词典一致性检查 / 沿用记录 —— 均**非独立** ----
+    "equation_species_consistency": ("equation_species_consistency", False),
+    "inchikey_match_carryover": ("carryover", False),
+    "inchikey_mismatch": ("rebuttal", False),
+    "operator_usage_unconfirmed": ("source_assertion", False),
     # ---- by_construction：构造性产生（无判断空间）→ construction / indep=False ----
     "symbol_scan_from_text": ("construction", False),
     "formula_only": ("construction", False),
@@ -565,6 +572,15 @@ def _canon_species(x) -> str:
     return s.replace(" ", "").replace("-", "").replace("+", "")
 
 
+def _inchikey_of(node):
+    """节点属性里的 InChIKey（大小写不敏感地找键名；R05 重算用）。"""
+    p = (node or {}).get("props") or {}
+    for k, v in p.items():
+        if "inchikey" in str(k).lower() and v:
+            return str(v).strip()
+    return None
+
+
 def split_equation(eq):
     """把 `A + B = C + D` 切成 (左物种[], 右物种[])；无 ` = ` 返回 (None, None)。"""
     if not eq or " = " not in eq:
@@ -577,13 +593,16 @@ def split_equation(eq):
 def reaction_side_cross_check(part_node, rxn_node, is_reactant: bool):
     """参与物（ChEBI）在反应方程（Rhea）中的侧别是否与边一致。
 
-    判据强度分层（**优先保证 Phase 33 口径零降级**：label → formula → synonym）：
-      ok=True  —— 主名 `label`（强，Phase 33）/ 式 `formula`（中，Phase 33）/
-                  **同义词 `synonym`（弱，Phase 34 · ChEBI 本体）** 只出现在**归属侧**；
-      ok=False —— **主名 / 式**只出现在**相反侧**（确定性矛盾）；
-      ok=None  —— 不可判定（无方程 / 两侧都出现 / 同侧重复 / 泛称无法匹配）→ **不升档**。
+    判据强度分层（**优先保证 Phase 33 口径零降级**：label → synonym）：
+      ok=True  —— 主名 `label`（Phase 33）/ **同义词 `synonym`（弱，Phase 34 · ChEBI 本体）**
+                  只出现在**归属侧**；
+      ok=False —— **主名**只出现在**相反侧**（确定性矛盾）；
+      ok=None  —— 不可判定（无方程 / 两侧都出现 / 同侧重复 / 泛称无法匹配 /
+                  **formula 命中——同分异构不排除（R04）**）→ **不升档**。
     ⚠ 同义词**只用于升档、不用于反驳**（宁缺勿滥；铁律 #31）。
     ⚠ 同义词通道在 `label`/`formula` 均未命中时才启用 ⇒ **绝不改变 Phase 33 已升的 2773 条**。
+    ⚠ R03（2026-10-12，GPT6 复评）：Rhea 参与物由 ChEBI 描述（共享词典），
+      本校验是**数据一致性检查**，label/synonym 命中**不构成独立证据**（见 classify 的 A12）。
     """
     rp = (rxn_node or {}).get("props") or {}
     lhs, rhs = split_equation(rp.get("equation"))
@@ -604,14 +623,17 @@ def reaction_side_cross_check(part_node, rxn_node, is_reactant: bool):
     if lh:
         return True, "label", "label「%s」仅在%s出现；相反侧无" % (pp.get("name"), side)
     fh, fw = bool(fml) and fml in cs, bool(fml) and fml in os_
+    # ⚠ R04 修复（2026-10-12，GPT6 复评）：**同分子式不足以确定具体反应参与物** ——
+    #   C₂H₆O 既可是乙醇也可是二甲醚；方程里的 `C2H6O` 可能是另一个同分异构体。
+    #   因此 formula 通道**两个方向都不得下定论**：命中只作「候选」（None），
+    #   只在相反侧也不构成对该实体的反驳。实体级判定须靠 ChEBI ID / 结构键对齐。
     if fh and fw:
         return None, "", "formula「%s」两侧都出现（歧义）" % pp.get("formula")
     if fw:
-        return False, "", "formula「%s」只出现在相反侧（与「%s」矛盾）" % (pp.get("formula"), side)
+        return None, "", "formula「%s」只出现在相反侧（同分异构不排除，保守不反驳）" % pp.get("formula")
     if fh:
-        if cs.count(fml) > 1:      # 同侧同式多物种 → 可能指代他物（宁缺勿滥）
-            return None, "", "formula「%s」在归属侧重复出现（可能指代他物，歧义）" % pp.get("formula")
-        return True, "formula", "formula「%s」仅在%s出现（label 未命中）" % (pp.get("formula"), side)
+        return None, "", "formula「%s」仅在%s出现，但同分异构不排除 → **仅候选，不升级**" \
+            % (pp.get("formula"), side)
     # ---- Phase 34 · A14：ChEBI 同义词通道（label/formula 均未命中时启用）----
     syns = chebi_alias_names(pp)
     if syns:
@@ -692,6 +714,7 @@ RESIDUAL_REASONS = (
     "polymer_residue",                  # Rhea 聚合物 / 残基占位
     "placeholder_complex",              # Rhea 方程含 `[占位复合物]` ⇒ 不可判定
     "naming_variant_no_second_source",  # 命名/质子化变体，且 ChEBI 同义词集亦未覆盖
+    "shared_dictionary_rhea_chebi",     # R03：侧别一致性命中但两源共享词典 ⇒ 非独立证据
 )
 
 
@@ -702,6 +725,13 @@ def residual_reason(edge, node_by_id) -> str:
     pp = (node_by_id.get(edge.get("source")) or {}).get("props") or {}
     rp = (node_by_id.get(edge.get("target")) or {}).get("props") or {}
     rsrc = rp.get("source") or "-"
+    # R03（2026-10-12，GPT6 复评）：侧别**一致性**命中的边（Rhea 方程 × ChEBI 主名/同义词）
+    # 不再算独立证据 —— Rhea 参与物由 ChEBI 描述，两源共享词典。单独成码以便专项复审。
+    ok, _strength, _why = reaction_side_cross_check(
+        node_by_id.get(edge.get("source")), node_by_id.get(edge.get("target")),
+        edge.get("type") == "reactant_of")
+    if ok is True:
+        return "shared_dictionary_rhea_chebi"
     if rsrc == "ElementKG2.0":
         return "same_source_elementkg"
     if str(rsrc).startswith("curated_seed"):
@@ -744,6 +774,8 @@ INDEP_REASONS = (
     "no_second_subject_index",            # T8 discusses：Wikidata P921 覆盖 0 命中
     "source_text_only",                   # T6 derived_from：仅文献文本（mathxiv），无第二源
     "unit_name_not_in_reference",         # T6 has_unit：单位名不在 CODATA 真值表
+    # —— 第二源**共享词典**（R03，第 26 轮 GPT6 复评）——
+    "shared_dictionary_rhea_chebi",       # Rhea 参与物由 ChEBI 描述：一致性命中 ≠ 独立证据
 )
 
 # ② 「不在北极星分母」的理由码（**按边类型**记账；类型级，便于新类型出现时门禁变红）
@@ -755,6 +787,7 @@ SCOPE_REASONS = (
     "descriptor_assertion_not_in_task_set",  # 物性描述值断言（如 分子→Mass），未纳入
     "identity_not_in_task_set",           # same_as 同一性合并边
     "structure_not_in_task_set",          # part_of / same_formula_as 等结构边
+    "operator_usage_not_in_task_set",     # uses_operator 算子使用关系（R04 正名，非推导）
 )
 
 # 边类型 → 不在分母的理由（**唯一权威表**）。**新增边类型若未登记 → 门禁 (w) FAIL**。
@@ -770,6 +803,7 @@ SCOPE_TYPE_REASONS = {
     "part_of": "structure_not_in_task_set",
     "same_formula_as": "structure_not_in_task_set",
     "chemical_reaction": "structure_not_in_task_set",
+    "uses_operator": "operator_usage_not_in_task_set",
 }
 
 
@@ -825,6 +859,35 @@ def is_placeholder_entity(name) -> bool:
     if not s:
         return True
     return bool(_PLACEHOLDER_RE.match(s))
+
+
+# =============================================================================
+# R02 · 「摩尔质量」量类判定的**唯一权威**（铁律 #36 同源）
+# -----------------------------------------------------------------------------
+# 背景（GPT6 复评 R02，2026-10-11）：gnn_infer.py Part A 的 gate_check 曾用
+# `any(k in name for k in ("mass","weight","energy"))` 判定「可把摩尔质量挂到该物理量上」，
+# 导致 ① energy 被当成质量类（摩尔质量 18.015 g/mol → energy 得 VERIFIED）；
+# ② 任意 mass/weight 子串（如 mass_energy）也被接受。Part B 修过、Part A 漏修。
+# 判据下沉到本函数后，**Part A（gate_check）与 Part B（B5）只从这里取**。
+_MOLAR_MASS_POS = re.compile(
+    r"(molar[_ ]?mass|molecular[_ ]?weight|摩尔质量|相对分子质量)", re.I)
+_MOLAR_MASS_NEG = re.compile(
+    r"(energy|enthalpy|entropy|gibbs|helmholtz|动能|势能|内能|焓|熵|自由能)", re.I)
+
+
+def is_molar_mass_quantity(name) -> bool:
+    """物理量名是否**语义明确**的「摩尔质量」量类。
+
+    规则：必须命中正向模式（molar mass / molecular weight / 摩尔质量 / 相对分子质量），
+    且**不含**能量类词。裸的 "mass" / "weight" **不算**（质量 ≠ 摩尔质量，量纲不同）；
+    任何含 energy 的词**一律不算**（R02 反例：18.015 g/mol 不得挂到 energy 上）。
+    """
+    s = str(name or "").strip()
+    if not s:
+        return False
+    if _MOLAR_MASS_NEG.search(s):
+        return False
+    return bool(_MOLAR_MASS_POS.search(s))
 
 
 # =============================================================================
@@ -1194,12 +1257,32 @@ def classify(e: dict, ctx: dict):
                             % (p.get("unit"), _drop(want), qn, _drop(got)))
         else:
             nref = int(p.get("n_references") or 0)
-            if nref >= 2:
+            # ⚠ R05 修复（2026-10-12，GPT6 复评）：`n_references` 是**汇总标记**，
+            #   只有计数、没有两篇文献的各自记录，不能据此宣称「多文献一致」。
+            #   必须附不可变的文献明细（`references`：≥2 个互异来源标识）才给 cross_source；
+            #   否则只是「单位量纲复算 + 沿用摄入时的计数声明」。
+            refs = p.get("references")
+            if isinstance(refs, str):
+                try:
+                    refs = json.loads(refs)
+                except Exception:                            # noqa: BLE001
+                    refs = [refs]
+            refs = [str(x) for x in (refs or []) if str(x).strip()]
+            if nref >= 2 and len(set(refs)) >= 2:
                 return R("cross_source", "webbook_multi_reference_agreement",
-                         "NIST WebBook(≥2 独立文献) × dimension_table",
-                         "单位量纲独立复算通过；%d 条独立文献吻合" % nref,
-                         detail="单位 `%s`→%s == 目标 %s→%s；%d 条独立文献吻合"
+                         "NIST WebBook(≥2 独立文献，**明细在库**) × dimension_table",
+                         "单位量纲独立复算通过；%d 条独立文献吻合（明细：%s）"
+                         % (nref, sorted(set(refs))[:4]),
+                         detail="单位 `%s`→%s == 目标 %s→%s；%d 条独立文献吻合（明细在库）"
                                 % (p.get("unit"), _drop(want), qn, _drop(got), nref))
+            if nref >= 2:
+                return R("rule_checked", "webbook_unit_dimension_recompute",
+                         "NIST WebBook × dimension_table(单位量纲)",
+                         "单位 `%s` 经量纲表独立复算一致；n_references=%d 为汇总计数、"
+                         "文献明细未落库，**不据此升级**（沿用摄入时声明）"
+                         % (p.get("unit"), nref),
+                         detail="单位 `%s`→%s == 目标 %s→%s；汇总计数未附明细"
+                                % (p.get("unit"), _drop(want), qn, _drop(got)))
             return R("rule_checked", "webbook_unit_dimension_recompute",
                      "NIST WebBook × dimension_table(单位量纲)",
                      "单位 `%s` 经量纲表独立复算一致" % p.get("unit"),
@@ -1220,9 +1303,12 @@ def classify(e: dict, ctx: dict):
                      "单位量纲与物理量真量纲不符：%s" % why,
                      detail="量纲不符：%s" % why)
 
-    # A9 数学桥（Phase 30）：源公式**含**目标数学对象所辖的算子 → 确定性证据
-    #     例：`pH=-\\log_{10}[H^+]` 含对数算子 → 与对数律 `MA:fo:log_product` 的桥成立。
-    if t in ("derived_from", "has_symbol") and ctx["math_ok"].get(eid, (None,))[0] is True:
+    # A9 数学算子使用（Phase 30 接入；R04 重定语义 2026-10-12，GPT6 复评）：
+    #     「源公式含目标数学对象所辖算子」**只**能证明 `uses_operator`（使用了该算子）——
+    #     看见 `\log` ≠ 该式由对数乘积公式**推导**而来，算子出现不得升格为 `derived_from`。
+    #     故本规则**只服务于 `uses_operator` 边**（第 26 轮已把 11 条模型数学桥从
+    #     `derived_from` 正名为 `uses_operator`）；`has_symbol` 由 A10 的字面出现复算服务。
+    if t == "uses_operator" and ctx["math_ok"].get(eid, (None,))[0] is True:
         _ok, _scope, _why = ctx["math_ok"][eid]
         return R("rule_checked", _scope, "verification_model.math_operator_presence", _why,
                  detail=_why)
@@ -1259,16 +1345,21 @@ def classify(e: dict, ctx: dict):
                  detail="目标标识 %s 不在源结构化表达式中（模型产物，可确定性反驳）"
                         % ctx["derived_support_ok"][eid][1])
 
-    # A12 化学反应侧别**跨源**校验（Phase 33）：Rhea 方程 × ChEBI label/formula。
-    #     判据只读方程串与参与物属性（铁律 #14），两源独立（Rhea vs ChEBI 本体）。
-    #     ⚠ 三态：**只出现在归属侧**才升档；歧义（两侧都出现）/同侧重复/泛称无法匹配 → 落 B 段
-    #       按来源定级；只在相反侧 → 确定性矛盾（实测 0 条）。
+    # A12 化学反应侧别**一致性**校验（Phase 33 接入；R03 重定范围 2026-10-12，GPT6 复评）。
+    #     ⚠ R03：Rhea 官方明确其参与物由 ChEBI 描述，且 Rhea 用名可能回流为 ChEBI 同义词
+    #       —— 两源**共享词典**，label/synonym 命中是**数据一致性检查**（实体映射/别名解析/
+    #       侧别是否自洽），**不构成独立证据**，不得升 cross_source、不得 indep=True。
+    #       反应角色这一事实保留其原始来源依据（B3：Rhea 方程 / ElementKG 断言）。
+    #     ⚠ R04：formula 通道已在本轮收窄为「仅候选」（同分异构不排除），不会再到这里。
+    #     保留 ok=False → unverified（label 只在相反侧 = 确定性矛盾，仍是有效反驳）。
     if t in ("reactant_of", "product_of") and ctx["rxn_side_ok"].get(eid) is not None:
         ok, strength, why = ctx["rxn_side_ok"][eid]
         if ok is True:
-            return R("cross_source", "equation_species_cross_source",
-                     "verification_model.reaction_side_cross_check(Rhea 方程 × ChEBI %s)" % strength,
-                     detail="%s（跨源：Rhea 方程串 × ChEBI 本体 %s）" % (why, strength))
+            return R("source_asserted", "equation_species_consistency",
+                     "verification_model.reaction_side_cross_check(Rhea 方程 × ChEBI %s，共享词典)"
+                     % strength,
+                     detail="%s（**数据一致性检查**：Rhea 参与物由 ChEBI 描述，"
+                            "不构成独立证据，不升档）" % why)
         if ok is False:
             return R("unverified", "equation_species_mismatch",
                      "verification_model.reaction_side_cross_check(Rhea 方程 × ChEBI)",
@@ -1332,8 +1423,28 @@ def classify(e: dict, ctx: dict):
                  detail="由文本符号扫描确定性产生（源=%s）" % (src or "etl_pipeline.py"))
     if t == "same_as":
         if kind == "pubchem_bridge":
-            return R("cross_source", "inchikey_exact_match", "PubChem",
-                     detail="PubChem InChIKey 精确匹配（kind=pubchem_bridge）")
+            # ⚠ R05 修复（2026-10-12，GPT6 复评）：旧版仅凭 kind 标签直接给
+            #   cross_source/inchikey_exact_match —— 两端节点**并未落库 InChIKey**，
+            #   分类器没有重做键比较，落库后键被破坏也抓不到。
+            #   现：两端键都在库 → 重算比对；缺失 → 明示「沿用摄入时验证」，不得称独立重算。
+            _nb = ctx.get("node_by_id") or {}
+            ka = _inchikey_of(_nb.get(e.get("source")))
+            kb = _inchikey_of(_nb.get(e.get("target")))
+            if ka and kb:
+                if ka == kb:
+                    return R("cross_source", "inchikey_exact_match",
+                             "PubChem InChIKey **重算比对**（两端键均在库）",
+                             detail="InChIKey 重算一致：%s" % ka)
+                return R("unverified", "inchikey_mismatch",
+                         "PubChem InChIKey **重算比对**（两端键均在库）",
+                         "两端 InChIKey 不一致：%s ≠ %s" % (ka, kb),
+                         detail="InChIKey 矛盾：%s ≠ %s" % (ka, kb))
+            return R("source_asserted", "inchikey_match_carryover",
+                     "PubChem（**沿用**摄入时键匹配；键未落库，未能重算）",
+                     detail="kind=pubchem_bridge：摄入时已做 InChIKey 匹配，"
+                            "但键未落库（source 缺 %s / target 缺 %s），"
+                            "本记录为沿用先前验证结果，**不构成规则复算**"
+                            % ("是" if ka else "否", "是" if kb else "否"))
         if kind == "cross_source_alignment":
             return R("cross_source", "multi_source_alignment", "cross_source_alignment",
                      detail="跨源对齐（kind=cross_source_alignment）")
@@ -1350,6 +1461,12 @@ def classify(e: dict, ctx: dict):
     if t == "same_latex_normalized":
         return R("model_inferred", "latex_normalized_only", "gnn_infer.py(norm_latex)",
                  detail="仅 LaTeX 归一化后同形（GNM 归一），**不构成验证**")
+    if t == "uses_operator":
+        # R04（第 26 轮）：算子使用边在 A9（算子存在性复算）未命中时的回退 ——
+        # 「使用了算子」没有算子证据支撑 → 只算来源断言，不猜。
+        return R("source_asserted", "operator_usage_unconfirmed", src or "unknown",
+                 detail="来源 %s 断言算子使用，但源表达式未检出所辖算子（未证实）"
+                        % (src or "unknown"))
 
     # B6 常量派生 / 文献 / schema
     if t == "derived_from" and kind == "constant_derivation":
@@ -1387,6 +1504,7 @@ _CLAIM_TEMPLATES = {
     "has_unit": "物理量「{s}」的单位是「{t}」",
     "has_quantity": "「{s}」与物理量「{t}」相关",
     "derived_from": "「{s}」派生自「{t}」",
+    "uses_operator": "「{s}」使用了数学对象「{t}」所辖的算子",
     "defines": "「{s}」定义「{t}」",
     "same_as": "「{s}」与「{t}」同义/等价",
     "same_formula_as": "「{s}」与「{t}」分子式相同",
@@ -1644,10 +1762,11 @@ def build_ctx(nodes, edges):
                     ctx["bugs"]["unit_dimension_mismatch"].append(
                         (eid, qname, usym, _drop(qd), _drop(ud)))
 
-        # (g) 数学桥：源公式是否**真的**含目标数学对象所辖的算子（Phase 30 新增）
+        # (g) 数学算子使用：源公式是否**真的**含目标数学对象所辖的算子（Phase 30 新增；
+        #     R04 收窄 2026-10-12：只服务 `uses_operator` —— 算子出现 ≠ 推导关系）
         #     三态：命中且目标被该规则覆盖 → True；命中但目标不在覆盖集 → None（不判否）；
         #           源无算子 → None（不判否）。
-        if t in ("derived_from", "has_symbol"):
+        if t == "uses_operator":
             tnode = node_by_id.get(tgt) or {}
             tid = str(tgt)
             snode = node_by_id.get(src) or {}

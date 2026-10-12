@@ -14,7 +14,8 @@
    "level_check",
    "attrib_check"
   ],
-  "run": "python 06_PoC/frozen_gate.py [--json]"
+  "run": "python 06_PoC/frozen_gate.py [--json]",
+  "cases_note": "R02 量类判定冻结（第 26 轮）"
  },
  "cases": [
   {
@@ -886,7 +887,7 @@
    "id": "P1-level-webbook-multi-ref",
    "p0": "P1-bridge",
    "kind": "level_check",
-   "desc": "**正对照**：同上，但页面内 **≥2 条独立文献**吻合 → 必须升档 `cross_source`（第二级证据：两个独立测量一致）",
+   "desc": "**正对照（R05 修订）**：≥2 条独立文献吻合且**明细在库**（references ≥2 互异）→ 必须升档 cross_source（第二级证据：两个独立测量一致，且输入记录不可变地在库）",
    "input": {
     "nodes": [
      {
@@ -921,7 +922,11 @@
        "value": -74.6,
        "unit": "kJ/mol",
        "n_references": 3,
-       "source": "NIST Chemistry WebBook"
+       "source": "NIST Chemistry WebBook",
+       "references": [
+        "doi:10.1002/example.1",
+        "pmid:12345678"
+       ]
       }
      }
     ]
@@ -1195,7 +1200,7 @@
    "id": "P1-level-math-bridge-log-ok",
    "p0": "P1-math",
    "kind": "level_check",
-   "desc": "**正对照**：pH=-\\log_{10}[H^+] 含对数算子 → 与对数律 MA:fo:log_product 的桥必须 rule_checked / log_rule_usage",
+   "desc": "**R04 语义收窄**：pH 含 \\log 算子，但算子出现 ≠ 推导关系 —— derived_from 桥**不得**升为 rule_checked（应落来源断言/不可判）",
    "input": {
     "nodes": [
      {
@@ -1225,14 +1230,17 @@
       "source": "CE:fo:ph",
       "target": "MA:fo:log_product",
       "type": "derived_from",
-      "kind": "math_operator_bridge"
+      "kind": "math_operator_bridge",
+      "props": {
+       "source": "curated_seed"
+      }
      }
     ]
    },
    "expect": {
     "edge": 0,
-    "level": "rule_checked",
-    "scope": "log_rule_usage"
+    "level": "source_asserted",
+    "scope": "manual_curation"
    }
   },
   {
@@ -1838,6 +1846,241 @@
     "scope_accounted": {}
    },
    "expect": "ZERO"
+  },
+  {
+   "id": "P1-r02-molar-mass-energy",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "energy"
+   },
+   "expect": "NOT_MOLAR_MASS",
+   "note": "R02 复评反例：energy 不得判为摩尔质量量类（旧 gate_check 曾给 18.015 g/mol VERIFIED）"
+  },
+  {
+   "id": "P1-r02-molar-mass-kinetic",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "kinetic_energy"
+   },
+   "expect": "NOT_MOLAR_MASS",
+   "note": "R02：动能是能量类，不得判为摩尔质量量类"
+  },
+  {
+   "id": "P1-r02-molar-mass-massenergy",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "mass_energy"
+   },
+   "expect": "NOT_MOLAR_MASS",
+   "note": "R02：含 mass 子串但语义是质能，不得判为摩尔质量量类"
+  },
+  {
+   "id": "P1-r02-molar-mass-bare-mass",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "mass"
+   },
+   "expect": "NOT_MOLAR_MASS",
+   "note": "R02：裸 mass（质量）≠ 摩尔质量，量纲不同，不得挂 g/mol"
+  },
+  {
+   "id": "P1-r02-molar-mass-bare-weight",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "weight"
+   },
+   "expect": "NOT_MOLAR_MASS",
+   "note": "R02：裸 weight 不是摩尔质量量类"
+  },
+  {
+   "id": "P1-r02-molar-mass-positive",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "molar_mass"
+   },
+   "expect": "MOLAR_MASS",
+   "note": "R02 正对照：规范摩尔质量量类必须判中"
+  },
+  {
+   "id": "P1-r02-molar-mass-molweight",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "molecular weight"
+   },
+   "expect": "MOLAR_MASS",
+   "note": "R02 正对照：molecular weight 同义必须判中"
+  },
+  {
+   "id": "P1-r02-molar-mass-zh",
+   "p0": true,
+   "kind": "pq_quantity_gate",
+   "input": {
+    "name": "摩尔质量"
+   },
+   "expect": "MOLAR_MASS",
+   "note": "R02 正对照：中文名必须判中"
+  },
+  {
+   "id": "P1-r01-chem-balanced-methanol",
+   "p0": true,
+   "kind": "gate_chem",
+   "input": {
+    "smiles": "CO>>C=O.[H][H]"
+   },
+   "expect": "VERIFIED",
+   "note": "R01 复评正例：已配平 reaction SMILES（CH4O→CH2O+H2）必须 VERIFIED（旧版误拒）"
+  },
+  {
+   "id": "P1-r01-chem-balanced-ethene",
+   "p0": true,
+   "kind": "gate_chem",
+   "input": {
+    "smiles": "C=C.[H][H]>>CC"
+   },
+   "expect": "VERIFIED",
+   "note": "R01 复评正例：C2H4+H2→C2H6 必须 VERIFIED"
+  },
+  {
+   "id": "P1-r01-chem-explicit-H-same",
+   "p0": true,
+   "kind": "gate_chem",
+   "input": {
+    "smiles": "[CH3][OH]>>[CH2]=O.[H][H]"
+   },
+   "expect": "VERIFIED",
+   "note": "R01：同一反应的显式氢写法必须与简写同判"
+  },
+  {
+   "id": "P1-r01-chem-smarts-never-verified",
+   "p0": true,
+   "kind": "gate_chem",
+   "input": {
+    "smarts": "CO>>C=O.[H][H]"
+   },
+   "expect": "NOT_VERIFIED",
+   "note": "R01：SMARTS 查询模式氢计数不可判定，绝不 VERIFIED"
+  },
+  {
+   "id": "P1-r01-chem-smarts-undetermined",
+   "p0": true,
+   "kind": "gate_chem",
+   "input": {
+    "smarts": "CO>>C=O"
+   },
+   "expect": "NOT_VERIFIED",
+   "note": "R01：SMARTS 查询模式即使显式原子守恒也只能 NEEDS_REVIEW"
+  },
+  {
+   "id": "P1-r01-chem-field-conflict",
+   "p0": true,
+   "kind": "gate_chem",
+   "input": {
+    "smiles": "CO>>C=O",
+    "smarts": "C=C>>CC"
+   },
+   "expect": "NOT_VERIFIED",
+   "note": "R01：smiles 与 smarts 字段冲突 → 不可判定"
+  },
+  {
+   "id": "P1-r05-webbook-multi-ref-no-detail",
+   "p0": "P1-bridge",
+   "kind": "level_check",
+   "desc": "R05 复评反例：n_references=3 但**无文献明细** → 汇总计数不得升 cross_source，只能 rule_checked（单位量纲复算 + 沿用摄入时声明）",
+   "input": {
+    "nodes": [
+     {
+      "id": "T:mol:wb",
+      "labels": [
+       "Molecule",
+       "Entity"
+      ],
+      "props": {
+       "formula": "CH4"
+      }
+     },
+     {
+      "id": "PB:pq:molar_energy",
+      "labels": [
+       "PhysicalQuantity",
+       "Entity"
+      ],
+      "props": {
+       "name": "molar_energy"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "has_quantity|T:mol:wb2|PB:pq:molar_energy",
+      "source": "T:mol:wb",
+      "target": "PB:pq:molar_energy",
+      "type": "has_quantity",
+      "kind": "webbook_thermochemistry",
+      "props": {
+       "value": -74.6,
+       "unit": "kJ/mol",
+       "n_references": 3,
+       "source": "NIST Chemistry WebBook"
+      }
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "webbook_unit_dimension_recompute"
+   }
+  },
+  {
+   "id": "P1-r04-uses-operator-log-ok",
+   "p0": "P1-math",
+   "kind": "level_check",
+   "desc": "**R04 正对照**：同输入但边类型为 uses_operator（算子使用关系）→ 算子存在性复算通过，必须 rule_checked / log_rule_usage",
+   "input": {
+    "nodes": [
+     {
+      "id": "CE:fo:ph",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "pH=-\\log_{10}[H^+]"
+      }
+     },
+     {
+      "id": "MA:fo:log_product",
+      "labels": [
+       "Formula",
+       "Entity"
+      ],
+      "props": {
+       "latex": "\\log(xy)=\\log x+\\log y"
+      }
+     }
+    ],
+    "edges": [
+     {
+      "id": "uses_operator|CE:fo:ph|MA:fo:log_product",
+      "source": "CE:fo:ph",
+      "target": "MA:fo:log_product",
+      "type": "uses_operator",
+      "kind": "math_operator_bridge"
+     }
+    ]
+   },
+   "expect": {
+    "edge": 0,
+    "level": "rule_checked",
+    "scope": "log_rule_usage"
+   }
   }
  ]
 }

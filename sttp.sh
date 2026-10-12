@@ -29,6 +29,7 @@
 #   bash sttp.sh scopeaudit                         北极星口径自审 + 占位实体审计（Phase 35，只读）
 #   bash sttp.sh mnxrecov                           MetaNetX 对 Rhea 反应覆盖率现算（Phase 35，只读）
 #   bash sttp.sh reach35                            第二源可达性穷举侦察（Phase 35，只读）
+#   bash sttp.sh rescope                            验证语义校正 delta（Phase 36，GPT6 复评 R03/R04/R05；默认 dry-run）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -201,6 +202,12 @@ EOF
     # Phase 35 第二源可达性穷举侦察（只读 HTTP 探测；铁律 #34 负结果优先）
     shift
     "$PY" 06_PoC/_recon_phase35_reachability.py "$@"
+    ;;
+  rescope)
+    # Phase 36 验证语义校正（GPT6 复评 R03/R04/R05）：共享词典重定 + 算子桥正名
+    # + 标签直通移除；全量重算（含预期降级）生成 delta（默认 dry-run）
+    shift
+    "$PY" 11_真实数据/phase36_rescope_delta.py "$@"
     ;;
   gatecheck)
     # 门禁「非真空」自检：注入已知假边，断言不变量真的会红（铁律 #14）

@@ -799,6 +799,36 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
 - 相关工具：`06_PoC/_recon_phase35_{scope,reachability,mnx_recov}.py`；`sttp.sh {scopeaudit,mnxrecov,reach35}`。
 - **下一轮建议**：**占位实体「补名」可行性侦察** → 攻 4979 条中的分母内 **713** 条
   （唯一能同时改善北极星**可表述性**与 T7/T9 的方向）。
+  → **已由 Phase 36 改道消化（GPT6 复评：语义校正优先于补名），见 1g**。
+
+**1g. ✅ 验证语义校正（Phase 36 · 第 26 轮，已完成 · GPT6 复评 R01–R05/R07/R08）**
+- **输入**：GPT6 复评（`07_交付物/外部评审/STTP_复评与Apache2.0许可意见_20261011.md`）。
+  三项可当场核实的指摘**全部属实**（Cypher 头 `#` 回归、P35 报告文字冲突、gate 退出码只看 FAIL）
+  → 采信其合成输入类指摘，用户确认「按评估顺序 + R03 如实下调」。
+- **包 1 快修**：4 个 `.cypher` `#`→`//` + `apply_license_headers.py` 分派修正（幂等 162 全跳过）；
+  `frozen_gate --release` **fail-closed**（缺主图/任何 SKIP → rc=2，实测缺依赖环境 rc=2）；
+  许可包补全（`vendor/licenses/` 5 份版本匹配 LICENSE、`DATA_LICENSES.md`、NOTICE/README 迁移与范围声明）。
+- **R01 化学格式契约**：`smiles`→`useSmiles=True`（可 VERIFIED）；`smarts`（查询模式）氢不可判定
+  → **绝不 VERIFIED**；复评两个配平正例 + 显式氢写法**同判**。
+- **R02 判据下沉**：`vm.is_molar_mass_quantity`（能量类词一律排除；裸 mass/weight 不算），
+  gnn_infer Part A/B **同源**；B5 裸词兜底删除。
+- **R03（最重）共享词典重定**：Rhea 参与物由 ChEBI 描述 ⇒ 侧别匹配 = **数据一致性检查**（indep=False），
+  3991 条升级记录重定（**降级 4032 / 升级 0**）；formula 通道收窄为仅候选（同分异构不排除）。
+  **T9-i 95.8% → 85.9% 如实下调**（34780/40473；非独立 5693 零未归类，最大类 shared_dictionary 3002）。
+- **R04 算子桥正名**：11 条 `derived_from → uses_operator`（残留回查 0）；A9 只服务 uses_operator；
+  门禁 (l) 首获真实主体（13 桥全 rule_checked + 算子证据）。
+- **R05 直通移除**：pubchem 键在库重算 / 缺键降 source_asserted「沿用」（carryover）；
+  webbook n_references 无 references 明细不升 cross_source。
+- **纪律**：carryover 初定 rule_checked → 3 处「落库≠重算」门禁立刻 FAIL → **改模型 + 重跑 delta**
+  （不放宽门禁；fail-closed 首次实战）。
+- **数字**：规模 9657/48712（净零）；北极星 **99.6%**（40473/40617）；T9 100.0%；
+  门禁 **74 → 90**（+R01×6 +R02×8 +R04/R05×2）；审计器候选反驳 0；自检 10 条全可红；快照 phase36。
+- **新铁律**：**#51**「不同数据库」≠「独立证据」（判独立先查血缘）；
+  **#52** 验证的命题必须与被发布的命题一致（汇总计数 ≠ 逐条重算；沿用须明示降档）。
+- 相关工具：`11_真实数据/phase36_rescope_delta.py`（`sttp.sh rescope`，默认 dry-run）；
+  报告 `07_交付物/Phase36_验证语义校正报告_20261012.md`。
+- **下一轮建议**：**R06 可复现发布包**（离线小样例 + 快照 manifest + 依赖锁 + `--release` 接入）
+  → **R11 科学任务评测集**（30–50 题热力学-化学平衡-数学专题，拒答率/置信区间/测试集冻结）。
 
 **2. 缓解分子层多节点对 GNN 嵌入的稀释**
 - 现象：8 套分子命名空间（有意的跨源对齐）会让同一实体拆成多个节点，稀释嵌入质量
@@ -908,5 +938,6 @@ git merge origin/main
 ---
 
 *本文件由 QClaw 生成于 2026-10-08，建议在每次 Phase 完成后更新「当前运行状态」和「已知问题」两节。*
-*最近更新：2026-10-10（Phase 35 · 第 25 轮：新增 §1f 北极星口径自审；门禁 72→74；非真空自检 8→10 条；
-新增 `scopeaudit`/`mnxrecov`/`reach35` 三个只读命令；新铁律 #50「北极星的分母是选择的结果」）。*
+*最近更新：2026-10-12（Phase 36 · 第 26 轮：新增 §1g 验证语义校正（GPT6 复评 R01–R05/R07/R08）；
+T9-i 95.8%→85.9% 如实下调；门禁 74→90 + `--release` fail-closed；新铁律 #51/#52；
+新增 `rescope` 命令；许可包补全 vendor/licenses + DATA_LICENSES.md）。*

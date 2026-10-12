@@ -569,11 +569,13 @@ def run(path=NORM):
         "part_of": "structure_not_in_task_set",
         "same_formula_as": "structure_not_in_task_set",
         "chemical_reaction": "structure_not_in_task_set",
+        "uses_operator": "operator_usage_not_in_task_set",
     }
     _A_INDEP = {"same_source_elementkg", "same_source_curated", "generic_class",
                 "polymer_residue", "placeholder_complex", "naming_variant_no_second_source",
                 "no_independent_citation_index", "no_second_subject_index",
-                "source_text_only", "unit_name_not_in_reference"}
+                "source_text_only", "unit_name_not_in_reference",
+                "shared_dictionary_rhea_chebi"}
     _A_PH = __import__("re").compile(r"^(FG|reaction|molecule|mol|rxn|rx)[_\-]?\d+$", __import__("re").I)
 
     def _a_disc(nid):                              # 自带学科映射（与 graph_export 独立实现）
@@ -618,6 +620,10 @@ def run(path=NORM):
             return ""
         t = e["type"]
         if t in ("reactant_of", "product_of"):
+            # R03（第 26 轮）：侧别**一致性**命中的边（证据 kind=equation_species_consistency）
+            # 是共享词典的数据一致性检查，不再算独立证据。
+            if any(x.get("kind") == "equation_species_consistency" for x in evs):
+                return "shared_dictionary_rhea_chebi"
             rp, pp = props_of(N.get(e["target"])), props_of(N.get(e["source"]))
             rsrc = rp.get("source") or "-"
             if rsrc == "ElementKG2.0":

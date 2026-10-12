@@ -130,6 +130,19 @@ def run_case(case, graph):
         ok = (verdict == "VERIFIED") if exp == "VERIFIED" else (verdict != "VERIFIED")
         return ("PASS" if ok else "FAIL"), "verdict=%s codes=%s" % (verdict, codes)
 
+    if kind == "pq_quantity_gate":
+        # R02（GPT6 复评）：摩尔质量量类判定的冻结回归。
+        # 反例：energy / kinetic_energy / mass_energy / 裸 mass / 裸 weight 都**不得**判为摩尔质量量类；
+        # 正对照：molar_mass / molecular weight / 摩尔质量 必须判中。
+        if vm is None:
+            return "SKIP", "verification_model 不可用"
+        name = case["input"]["name"]
+        got = vm.is_molar_mass_quantity(name)
+        want = (exp == "MOLAR_MASS")
+        ok = (got == want)
+        return ("PASS" if ok else "FAIL"), \
+            "is_molar_mass_quantity(%r)=%s（期望 %s）" % (name, got, exp)
+
     if kind == "level_check":
         # Phase 28：把「可信性分层」本身冻结为回归门禁。
         # 用例自带 nodes / edges（合成小图），走与主图**完全相同**的 classify_all 路径，

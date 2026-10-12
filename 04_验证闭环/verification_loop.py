@@ -73,6 +73,17 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
     """
     化学门禁：RDKit 原子守恒检查。
 
+    输入格式契约（R01，GPT6 复评 2026-10-11 修复）
+    ----------------------------------------------
+    - `smiles` 字段：**reaction SMILES**（具体分子）→ 用 `useSmiles=True` 解析，
+      隐式氢按价态补全，可做「显式原子 + 隐式氢 + 形式电荷」三重守恒，允许 VERIFIED。
+    - `smarts` 字段：**reaction SMARTS**（查询模式）→ 查询原子的氢计数**不可判定**
+      （RDKit 在 SMARTS 模式下 `CO` 不补氢、`[Na]` 氢计数失真）。此类输入只验
+      「显式原子 + 形式电荷」：违反则 REJECTED；守恒也**只能 NEEDS_REVIEW**（不可判定），
+      绝不 VERIFIED。
+    - 两字段同时给出且不一致 → NEEDS_REVIEW（R-CHEM-04 契约冲突）。
+    - 本门禁验证的是**计量守恒**，不是「反应能否发生」。
+
     Returns
     -------
     (verdict, evidence, error_codes)
@@ -93,16 +104,28 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
             ["R-CHEM-00"]
         )
 
-    smarts = candidate.get("smiles") or candidate.get("smarts") or ""
-    if not smarts:
+    smiles_in = str(candidate.get("smiles") or "").strip()
+    smarts_in = str(candidate.get("smarts") or "").strip()
+    if smiles_in and smarts_in and smiles_in != smarts_in:
+        return (
+            "NEEDS_REVIEW",
+            "R-CHEM-04：smiles 与 smarts 字段同时给出且不一致（输入格式契约冲突），不可判定",
+            ["R-CHEM-04"]
+        )
+    text = smiles_in or smarts_in
+    if not text:
         return "NEEDS_REVIEW", "候选边缺少 smiles 字段，无法验证", ["R-CHEM-02"]
+    fmt = "smiles" if smiles_in else "smarts"
 
-    def count_atoms(mols) -> Dict[str, int]:
-        """显式原子 + **隐式氢**。
+    def count_atoms(mols, implicit_h: bool) -> Dict[str, int]:
+        """显式原子 + （可选）**隐式氢**。
         ⚠ P0-3 修复（2026-10-10）：旧版只数显式原子，`CO>>C=O`（CH₃OH → CH₂O）
         两边的 C/O 计数相同 → 被误判"守恒"。现计入各原子隐式氢（GetTotalNumHs）。
         注意：SMARTS 解析出的分子需先 `UpdatePropertyCache` 才会计算隐式价，否则
-        `GetTotalNumHs()` 抛 precondition 违规（实测）。"""
+        `GetTotalNumHs()` 抛 precondition 违规（实测）。
+        ⚠ R01 修复（2026-10-12）：SMARTS 模式解析的分子其隐式氢计数**不可信**
+        （`CO` 不补氢、`[Na]` 计数失真），故 implicit_h=False 时只数显式原子，
+        氢计数异常**不得吞掉按 0 继续**。"""
         counts: Dict[str, int] = {}
         for mol in mols:
             if mol is None:
@@ -113,6 +136,8 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
                 pass
             for atom in mol.GetAtoms():
                 counts[atom.GetSymbol()] = counts.get(atom.GetSymbol(), 0) + 1
+                if not implicit_h:
+                    continue
                 try:
                     nh = atom.GetTotalNumHs()
                 except Exception:
@@ -133,27 +158,46 @@ def gate_chem(candidate: dict) -> Tuple[str, str, List[str]]:
         return q
 
     try:
-        rxn = rdChemReactions.ReactionFromSmarts(smarts)
+        # R01：按声明的格式选择解析模式 —— reaction SMILES 必须用 useSmiles=True，
+        # 否则 RDKit 按 SMARTS 处理（`CO` 不补氢），计量判断随写法漂移。
+        if fmt == "smiles":
+            rxn = rdChemReactions.ReactionFromSmarts(text, useSmiles=True)
+        else:
+            rxn = rdChemReactions.ReactionFromSmarts(text)
         if not rxn:
             return (
                 "REJECTED",
-                f"R-CHEM-02：无法解析 SMARTS 字符串 '{smarts}'",
+                f"R-CHEM-02：无法解析 {fmt} 字符串 '{text}'",
                 ["R-CHEM-02"]
             )
     except Exception as e:
         return (
             "REJECTED",
-            f"R-CHEM-02：SMARTS 解析异常 {e}",
+            f"R-CHEM-02：{fmt} 解析异常 {e}",
             ["R-CHEM-02"]
         )
 
-    r_counts = count_atoms(rxn.GetReactants())
-    p_counts = count_atoms(rxn.GetProducts())
+    r_counts = count_atoms(rxn.GetReactants(), implicit_h=(fmt == "smiles"))
+    p_counts = count_atoms(rxn.GetProducts(), implicit_h=(fmt == "smiles"))
     r_q = total_charge(rxn.GetReactants())
     p_q = total_charge(rxn.GetProducts())
 
-    scope = ("验证范围：显式原子计数 + 形式电荷守恒；"
-             "**未覆盖**隐式氢补齐 / 立体化学 / 反应可行性 / 能量")
+    if fmt == "smiles":
+        scope = ("验证范围（reaction SMILES）：显式原子 + 隐式氢 + 形式电荷三重守恒；"
+                 "**未覆盖**立体化学 / 反应可行性 / 能量。本门禁验计量守恒，非反应可否发生")
+    else:
+        scope = ("验证范围（reaction SMARTS，查询模式）：仅显式原子 + 形式电荷；"
+                 "查询型 SMARTS 的氢计数**不可判定**，故本格式**不产出 VERIFIED**")
+
+    # R01：SMARTS（查询模式）即使显式原子与电荷守恒，也只是「未发现矛盾」，
+    # 氢计数不可判定 → 守恒结论不可判定（NEEDS_REVIEW），绝不 VERIFIED。
+    if fmt == "smarts" and r_counts == p_counts and r_q == p_q:
+        return (
+            "NEEDS_REVIEW",
+            f"R-CHEM-05：SMARTS 查询模式下显式原子 {r_counts} 与净电荷 {r_q} 未发现矛盾，"
+            f"但查询原子的氢计数不可判定，计量守恒**不可判定**。{scope}",
+            ["R-CHEM-05"]
+        )
 
     if r_counts == p_counts and r_q == p_q:
         diff_str = ", ".join(

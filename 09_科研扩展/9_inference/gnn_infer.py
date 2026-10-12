@@ -71,6 +71,12 @@ try:
     import dimension_table as dt
 except Exception:
     dt = None
+# R02（GPT6 复评 2026-10-11）：摩尔质量量类判定**唯一权威**在 verification_model，
+# Part A（gate_check）与 Part B（B5）必须同源调用，禁止各写一份关键词表。
+try:
+    import verification_model as vm
+except Exception:
+    vm = None
 
 SEED = 0
 random.seed(SEED)
@@ -633,15 +639,24 @@ def gate_check(u, v):
             return role, "R-CHEM", "VERIFIED", "方程式解析：该分子为%s" % ("反应物" if role == "reactant_of" else "产物")
         return "related_to", "R-CHEM", "NEEDS_REVIEW", "反应-分子待验证"
 
-    # R-PHY：分子摩尔质量 ↔ 质量类物理量
+    # R-PHY：分子摩尔质量 ↔ 摩尔质量量类物理量
+    # ⚠ R02 修复（2026-10-12，GPT6 复评）：旧判据
+    #   `any(k in pqs for k in ("mass","weight","energy"))` 有双重错误：
+    #   ① energy 被当成质量类（摩尔质量 18.015 g/mol → energy 得 VERIFIED，可复现）；
+    #   ② 任意 mass/weight 子串（如 mass_energy）也被接受。
+    #   现统一调 verification_model.is_molar_mass_quantity（Part B 同源）。
     if {tu, tv} == {"Molecule", "PhysicalQuantity"}:
         m, pq = (u, v) if tu == "Molecule" else (v, u)
         mm, src = molar_mass(m)
         pqs = str(id2attrs[pq].get("name") or "").lower()
-        if mm is not None and any(k in pqs for k in ("mass", "weight", "energy")):
+        if mm is not None and vm is not None and vm.is_molar_mass_quantity(pqs):
             return "has_quantity", "R-PHY", "VERIFIED", \
-                "摩尔质量 %s g/mol（%s + 原子量校验）" % (mm, "组成边" if src == "composed_of" else "化学式解析")
-        return "has_quantity", "R-PHY", "NEEDS_REVIEW", "分子-物理量待验证"
+                "摩尔质量 %s g/mol（%s + 原子量校验，量类经 R02 判据确认）" % (
+                    mm, "组成边" if src == "composed_of" else "化学式解析")
+        if mm is not None:
+            # 目标量不是摩尔质量量类（如 energy / 裸 mass）：**不发边**（不可判定 ≠ 可以挂值）。
+            return None
+        return "has_quantity", "R-PHY", "NEEDS_REVIEW", "分子-物理量待验证（摩尔质量不可算）"
 
     # R-MATH：公式 LaTeX 字符串规范化等价（**仅字符串层面，不构成数学等价**）
     # ⚠ P0-2 修复：旧版返回 same_as / VERIFIED，使 `\sin(x)`/`\cos(x)` 这类误判升格为"已证实"。
@@ -861,17 +876,21 @@ for ri_ in rxns:
         if role:
             emitB(_store, None, all_ids[mi], all_ids[ri_], role, "R-CHEM",
                   "方程式解析判定为%s" % ("反应物" if role == "reactant_of" else "产物"), "B4")
-# B5 分子 × 质量类物理量 → has_quantity（摩尔质量）
+# B5 分子 × 摩尔质量量类物理量 → has_quantity（摩尔质量）
 # 优先锚定规范摩尔质量物理量（PB:pq:molar_mass，Phase 9 已确立的 131 条入边锚点）
 # ⚠ P0 修复（2026-10-10，第 19 轮）：旧版关键词表是 ("mass", "weight", "**energy**")，
 #   于是「分子 → 能量类物理量」也被当成质量桥发出去 —— 产出了 `水 --has_quantity--> 动能`
 #   这类**自相矛盾**的边（rationale 写「属质量类」，目标却是能量/动能/内能，实测 42 条）。
-#   质量类只允许 mass / weight；能量绝不在此列。
-mass_all = [i for i in pqs if any(k in str(id2attrs[all_ids[i]].get("name") or "").lower()
-                                  for k in ("mass", "weight"))]
-mass_pqs = [i for i in mass_all if "molar_mass" in str(id2attrs[all_ids[i]].get("name") or "").lower()] \
-           or mass_all
-print("    B5 质量类物理量目标 %d 个：%s" % (len(mass_pqs), [all_ids[i] for i in mass_pqs]))
+# ⚠ R02 统一（2026-10-12，GPT6 复评）：目标量类判定与 Part A **同源** ——
+#   一律调 verification_model.is_molar_mass_quantity；不再有「裸 mass/weight 兜底」，
+#   找不到语义明确的摩尔质量量类时 B5 就是 0 条（诚实），而不是硬挂到任意 mass 上。
+if vm is not None:
+    mass_pqs = [i for i in pqs
+                if vm.is_molar_mass_quantity(str(id2attrs[all_ids[i]].get("name") or ""))]
+else:
+    mass_pqs = []      # 判据不可用 = 不可判定（铁律 #20：缺依赖不得静默降级）
+    print("    [WARN] verification_model 不可用：B5 摩尔质量目标判据缺失，本轮 B5 跳过")
+print("    B5 摩尔质量量类物理量目标 %d 个：%s" % (len(mass_pqs), [all_ids[i] for i in mass_pqs]))
 for mi in mols:
     mm, msrc = molar_mass(all_ids[mi])
     if mm is None:
