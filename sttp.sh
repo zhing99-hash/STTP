@@ -33,6 +33,7 @@
 #   bash sttp.sh release                            构建可复现发布包（样例 + 清单 + fail-closed 校验，Phase 37 R06）
 #   bash sttp.sh sample [--port N]                  只用**离线样例**起可视化（页面与查询同版本，单命令）
 #   bash sttp.sh release-full                       对完整快照跑全量发布校验（--release 门禁 + manifest 现算比对）
+#   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -253,6 +254,18 @@ EOF
     "$PY" 06_PoC/release/verify_release.py --full --release "$@"
     echo "== 主图 fail-closed 门禁 =="
     "$PY" 06_PoC/frozen_gate.py --release
+    ;;
+  eval)
+    # Phase 38（R11）：科学任务评测集 —— 构建冻结任务集（幂等）→ 规则基线 → 非真空自检。
+    # 任一步失败即非零退出；额外参数（如 --split test）透传给运行器。
+    shift
+    set -e
+    echo "== [1/3] 构建/校验冻结任务集 =="
+    "$PY" 12_评测/build_tasks.py
+    echo "== [2/3] 规则基线评测 =="
+    "$PY" 12_评测/eval_runner.py --json 12_评测/eval_report.json "$@"
+    echo "== [3/3] 非真空自检（判分器必须会红）=="
+    "$PY" 12_评测/eval_runner.py --selfcheck
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

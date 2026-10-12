@@ -1,0 +1,746 @@
+{
+  "schema": "sttp-eval-report/v1",
+  "tasks_schema": "sttp-eval-tasks/v1",
+  "seed": 20261012,
+  "split_rule": "按类别分层；困难题与基本题各自对半交替分入 dev/test（固定 seed=20261012，确定性）",
+  "solution_space": {
+    "graph": "06_PoC/etl/normalized.json（权威规范图，9657 节点 / 48712 边）",
+    "truth_tables": [
+      "11_真实数据/element_reference.py",
+      "11_真实数据/dimension_table.py"
+    ],
+    "note": "基线只读上述候选空间；不访问网络、不使用 LLM。"
+  },
+  "answer_policy": "expected 锚定独立权威源（CODATA/SI/IUPAC/标准热力学关系），不由被测图生成；学科人员外部审查待进行。",
+  "n_tasks": 40,
+  "summary": {
+    "overall": {
+      "n": 40,
+      "correct": 40,
+      "incorrect": 0,
+      "answered": 32,
+      "refused": 8,
+      "correct_rate": 1.0,
+      "attempt_rate": 0.8,
+      "refusal_rate": 0.2,
+      "correct_ci95": [
+        0.9124,
+        1.0
+      ],
+      "false_answer": 0,
+      "false_refusal": 0
+    },
+    "by_category": {
+      "data_verification": {
+        "n": 10,
+        "correct": 10,
+        "incorrect": 0,
+        "answered": 10,
+        "refused": 0,
+        "correct_rate": 1.0,
+        "attempt_rate": 1.0,
+        "refusal_rate": 0.0,
+        "correct_ci95": [
+          0.7225,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "method_selection": {
+        "n": 6,
+        "correct": 6,
+        "incorrect": 0,
+        "answered": 6,
+        "refused": 0,
+        "correct_rate": 1.0,
+        "attempt_rate": 1.0,
+        "refusal_rate": 0.0,
+        "correct_ci95": [
+          0.6097,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "numeric": {
+        "n": 8,
+        "correct": 8,
+        "incorrect": 0,
+        "answered": 8,
+        "refused": 0,
+        "correct_rate": 1.0,
+        "attempt_rate": 1.0,
+        "refusal_rate": 0.0,
+        "correct_ci95": [
+          0.6756,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "refusal": {
+        "n": 8,
+        "correct": 8,
+        "incorrect": 0,
+        "answered": 0,
+        "refused": 8,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.0,
+        "refusal_rate": 1.0,
+        "correct_ci95": [
+          0.6756,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "unit_state": {
+        "n": 8,
+        "correct": 8,
+        "incorrect": 0,
+        "answered": 8,
+        "refused": 0,
+        "correct_rate": 1.0,
+        "attempt_rate": 1.0,
+        "refusal_rate": 0.0,
+        "correct_ci95": [
+          0.6756,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      }
+    },
+    "by_split": {
+      "dev": {
+        "n": 23,
+        "correct": 23,
+        "incorrect": 0,
+        "answered": 19,
+        "refused": 4,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.8261,
+        "refusal_rate": 0.1739,
+        "correct_ci95": [
+          0.8569,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "test": {
+        "n": 17,
+        "correct": 17,
+        "incorrect": 0,
+        "answered": 13,
+        "refused": 4,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.7647,
+        "refusal_rate": 0.2353,
+        "correct_ci95": [
+          0.8157,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      }
+    },
+    "by_hardness": {
+      "basic": {
+        "n": 27,
+        "correct": 27,
+        "incorrect": 0,
+        "answered": 27,
+        "refused": 0,
+        "correct_rate": 1.0,
+        "attempt_rate": 1.0,
+        "refusal_rate": 0.0,
+        "correct_ci95": [
+          0.8754,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "hard": {
+        "n": 13,
+        "correct": 13,
+        "incorrect": 0,
+        "answered": 5,
+        "refused": 8,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.3846,
+        "refusal_rate": 0.6154,
+        "correct_ci95": [
+          0.7719,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      }
+    },
+    "hard_kinds": {
+      "isomer": {
+        "n": 1,
+        "correct": 1,
+        "incorrect": 0,
+        "answered": 0,
+        "refused": 1,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.0,
+        "refusal_rate": 1.0,
+        "correct_ci95": [
+          0.2065,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "log_domain": {
+        "n": 1,
+        "correct": 1,
+        "incorrect": 0,
+        "answered": 0,
+        "refused": 1,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.0,
+        "refusal_rate": 1.0,
+        "correct_ci95": [
+          0.2065,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "missing_temperature": {
+        "n": 1,
+        "correct": 1,
+        "incorrect": 0,
+        "answered": 0,
+        "refused": 1,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.0,
+        "refusal_rate": 1.0,
+        "correct_ci95": [
+          0.2065,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "phase_confusion": {
+        "n": 1,
+        "correct": 1,
+        "incorrect": 0,
+        "answered": 0,
+        "refused": 1,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.0,
+        "refusal_rate": 1.0,
+        "correct_ci95": [
+          0.2065,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "protonation_state": {
+        "n": 1,
+        "correct": 1,
+        "incorrect": 0,
+        "answered": 0,
+        "refused": 1,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.0,
+        "refusal_rate": 1.0,
+        "correct_ci95": [
+          0.2065,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      },
+      "same_dimension_diff_meaning": {
+        "n": 4,
+        "correct": 4,
+        "incorrect": 0,
+        "answered": 3,
+        "refused": 1,
+        "correct_rate": 1.0,
+        "attempt_rate": 0.75,
+        "refusal_rate": 0.25,
+        "correct_ci95": [
+          0.5101,
+          1.0
+        ],
+        "false_answer": 0,
+        "false_refusal": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "DV-01",
+      "category": "data_verification",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=8.31446 exp=8.314462618",
+      "payload": 8.31446262
+    },
+    {
+      "id": "DV-02",
+      "category": "data_verification",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=8.31446 exp=8.314462618",
+      "payload": 8.31446262
+    },
+    {
+      "id": "DV-03",
+      "category": "data_verification",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=96485.3 exp=96485.33212",
+      "payload": 96485.33212331
+    },
+    {
+      "id": "DV-04",
+      "category": "data_verification",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=107.868 exp=107.8682",
+      "payload": 107.8682
+    },
+    {
+      "id": "DV-05",
+      "category": "data_verification",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=6.02214e+23 exp=6.02214076e+23",
+      "payload": 6.02214076e+23
+    },
+    {
+      "id": "DV-06",
+      "category": "data_verification",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=1.38065e-23 exp=1.380649e-23",
+      "payload": 0.0
+    },
+    {
+      "id": "DV-07",
+      "category": "data_verification",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=1.60218e-19 exp=1.602176634e-19",
+      "payload": 0.0
+    },
+    {
+      "id": "DV-08",
+      "category": "data_verification",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=6.62607e-34 exp=6.62607015e-34",
+      "payload": 0.0
+    },
+    {
+      "id": "DV-09",
+      "category": "data_verification",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "全字段匹配",
+      "payload": {
+        "period": 4,
+        "group": 8
+      }
+    },
+    {
+      "id": "DV-10",
+      "category": "data_verification",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=12.011 exp=12.011",
+      "payload": 12.011
+    },
+    {
+      "id": "MS-01",
+      "category": "method_selection",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=reaction_quotient_Q exp=reaction_quotient_Q",
+      "payload": "reaction_quotient_Q"
+    },
+    {
+      "id": "MS-02",
+      "category": "method_selection",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=dG_equals_dG0_plus_RT_lnQ exp=dG_equals_dG0_plus_RT_lnQ",
+      "payload": "dG_equals_dG0_plus_RT_lnQ"
+    },
+    {
+      "id": "MS-03",
+      "category": "method_selection",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=uses_operator exp=uses_operator",
+      "payload": "uses_operator"
+    },
+    {
+      "id": "MS-04",
+      "category": "method_selection",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=MA:pq:euler_e exp=MA:pq:euler_e",
+      "payload": "MA:pq:euler_e"
+    },
+    {
+      "id": "MS-05",
+      "category": "method_selection",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=False exp=False",
+      "payload": false
+    },
+    {
+      "id": "MS-06",
+      "category": "method_selection",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=uses_operator exp=uses_operator",
+      "payload": "uses_operator"
+    },
+    {
+      "id": "NM-01",
+      "category": "numeric",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=9.99996 exp=10.0",
+      "payload": 9.99996167
+    },
+    {
+      "id": "NM-02",
+      "category": "numeric",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=-28.54 exp=-28.54",
+      "payload": -28.54004751
+    },
+    {
+      "id": "NM-03",
+      "category": "numeric",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=4.74473 exp=4.74",
+      "payload": 4.74472749
+    },
+    {
+      "id": "NM-04",
+      "category": "numeric",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=5.75 exp=5.75",
+      "payload": 5.75
+    },
+    {
+      "id": "NM-05",
+      "category": "numeric",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "全字段匹配",
+      "payload": {
+        "pKw": 14.0,
+        "pH": 7.0
+      }
+    },
+    {
+      "id": "NM-06",
+      "category": "numeric",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=-33.2769 exp=-33.28",
+      "payload": -33.276855
+    },
+    {
+      "id": "NM-07",
+      "category": "numeric",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=K>1_and_forward_spontaneous exp=K>1_and_forward_spontaneous",
+      "payload": "K>1_and_forward_spontaneous"
+    },
+    {
+      "id": "NM-08",
+      "category": "numeric",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=-11.416 exp=-11.42",
+      "payload": -11.4160095
+    },
+    {
+      "id": "RF-01",
+      "category": "refusal",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": "missing_temperature",
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(missing_temperature)",
+      "payload": {
+        "reason_class": "missing_temperature"
+      }
+    },
+    {
+      "id": "RF-02",
+      "category": "refusal",
+      "split": "test",
+      "hardness": "hard",
+      "hard_example": "phase_confusion",
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(phase_confusion)",
+      "payload": {
+        "reason_class": "phase_confusion"
+      }
+    },
+    {
+      "id": "RF-03",
+      "category": "refusal",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": "protonation_state",
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(protonation_state)",
+      "payload": {
+        "reason_class": "protonation_state"
+      }
+    },
+    {
+      "id": "RF-04",
+      "category": "refusal",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": "isomer",
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(isomer)",
+      "payload": {
+        "reason_class": "isomer"
+      }
+    },
+    {
+      "id": "RF-05",
+      "category": "refusal",
+      "split": "test",
+      "hardness": "hard",
+      "hard_example": "log_domain",
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(log_domain)",
+      "payload": {
+        "reason_class": "log_domain"
+      }
+    },
+    {
+      "id": "RF-06",
+      "category": "refusal",
+      "split": "test",
+      "hardness": "hard",
+      "hard_example": "same_dimension_diff_meaning",
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(same_dimension_diff_meaning)",
+      "payload": {
+        "reason_class": "same_dimension_diff_meaning"
+      }
+    },
+    {
+      "id": "RF-07",
+      "category": "refusal",
+      "split": "test",
+      "hardness": "hard",
+      "hard_example": null,
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(missing_standard_state)",
+      "payload": {
+        "reason_class": "missing_standard_state"
+      }
+    },
+    {
+      "id": "RF-08",
+      "category": "refusal",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": null,
+      "outcome": "refuse",
+      "verdict": "correct",
+      "detail": "拒答(missing_unit)",
+      "payload": {
+        "reason_class": "missing_unit"
+      }
+    },
+    {
+      "id": "US-01",
+      "category": "unit_state",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=True exp=True",
+      "payload": true
+    },
+    {
+      "id": "US-02",
+      "category": "unit_state",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": "same_dimension_diff_meaning",
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=same_dimension_different_meaning exp=same_dimension_different_meaning",
+      "payload": "same_dimension_different_meaning"
+    },
+    {
+      "id": "US-03",
+      "category": "unit_state",
+      "split": "dev",
+      "hardness": "hard",
+      "hard_example": "same_dimension_diff_meaning",
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=same_dimension_different_meaning exp=same_dimension_different_meaning",
+      "payload": "same_dimension_different_meaning"
+    },
+    {
+      "id": "US-04",
+      "category": "unit_state",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=True exp=True",
+      "payload": true
+    },
+    {
+      "id": "US-05",
+      "category": "unit_state",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=True exp=True",
+      "payload": true
+    },
+    {
+      "id": "US-06",
+      "category": "unit_state",
+      "split": "test",
+      "hardness": "hard",
+      "hard_example": "same_dimension_diff_meaning",
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=cannot_determine_from_dimension_alone exp=cannot_determine_from_dimension_alone",
+      "payload": "cannot_determine_from_dimension_alone"
+    },
+    {
+      "id": "US-07",
+      "category": "unit_state",
+      "split": "test",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=True exp=True",
+      "payload": true
+    },
+    {
+      "id": "US-08",
+      "category": "unit_state",
+      "split": "dev",
+      "hardness": "basic",
+      "hard_example": null,
+      "outcome": "answer",
+      "verdict": "correct",
+      "detail": "got=different_dimension_by_amount exp=different_dimension_by_amount",
+      "payload": "different_dimension_by_amount"
+    }
+  ]
+}

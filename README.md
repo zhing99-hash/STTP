@@ -47,6 +47,7 @@
 | `09_科研扩展/9_inference/` | Phase 9 推理生成层：GNN 推断、LLM 假设与复核、Aura 导出 |
 | `10_种子数据/` | 13 个垂直切片种子脚本（`build_*_mechanics.py` 等）+ 共享构造器 `seed_common.py` |
 | `11_真实数据/` | 真实数据源适配器：`elementkg_ingest.py`（ElementKG 2.0 OWL）、`physicsbabel_ingest.py`（PhysicsBabel parquet）、`pubchem_mol_ingest.py`（PubChem） |
+| `12_评测/` | **科学任务评测集**：40 题冻结任务集（热力学-化学平衡-数学）+ 规则基线运行器 + 非真空自检；见其 [README](12_评测/README.md) |
 | `*.md`（根） | 各 Phase 进展与归档 |
 
 > 大体积原始数据集（ElementKG 2.0 全集 CSV、合成语料、PhysicsBabel parquet、OWL 本体）及生成的导出图 JSON **不纳入版本库**，见 `.gitignore` 与 `07_交付物/` 内各数据源文档。
@@ -75,9 +76,12 @@ bash sttp.sh sample      # ② 只用样例起可视化 → http://127.0.0.1:876
 | `bash sttp.sh release` | 构建离线样例 + 发布清单 + fail-closed 校验 |
 | `bash sttp.sh sample` | 仅用离线样例起可视化（单命令、离线、同版本） |
 | `bash sttp.sh release-full` | 对完整快照跑全量校验（清单现算比对 + 主图 `--release` 门禁） |
+| `bash sttp.sh eval` | 科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检 |
 
 完整快照的获取与校验、依赖锁（`requirements.lock`）与口径披露，见
 [`06_PoC/release/README.md`](06_PoC/release/README.md)。
+科学任务评测集的任务构成、候选空间 / 拆分规则 / 随机种子与**诚实边界**，见
+[`12_评测/README.md`](12_评测/README.md)。
 
 ### 3.1 本地 Neo4j（推荐先跑通）
 
