@@ -26,9 +26,9 @@ nodes += [
     sc.n("RT:fo:mass_energy", "formula", "Mass-energy equivalence", "physics.relativity", latex="E=mc^2", informal="Energy equals mass times speed of light squared."),
 ]
 nodes += [
-    sc.n("RT:pq:light_speed", "constant", "Speed of light", "phys.constant", symbol="c", value=299792458, dimension="L*T^-1"),
-    sc.n("RT:pq:lorentz_factor", "physical_quantity", "Lorentz factor", "phys.quantity", symbol="gamma", dimension="dimensionless"),
-    sc.n("RT:pq:proper_time", "physical_quantity", "Proper time", "phys.quantity", symbol="tau", dimension="T"),
+    sc.n("RT:pq:light_speed", "constant", "Speed of light", "phys.constant", symbol="c", value=299792458, dimension_vector="L*T^-1"),
+    sc.n("RT:pq:lorentz_factor", "physical_quantity", "Lorentz factor", "phys.quantity", symbol="gamma", dimension_vector="dimensionless"),
+    sc.n("RT:pq:proper_time", "physical_quantity", "Proper time", "phys.quantity", symbol="tau", dimension_vector="T"),
 ]
 nodes += [
     # ⚠ 2026-10-09 连通性审计修正：原在此声明 ``RT:un:c``（unit / "speed of light"）。

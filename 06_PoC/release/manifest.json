@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 48849640,
+    "bytes": 64393164,
     "edges": 48712,
     "nodes": 9657,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "5adf7f0dce097c6ae8fc6f77bcfa1c653d01b7d4aebb49cc96c952efad057cf0",
+    "sha256": "8e12471a9e8da090324c27467429e7c6ec586c1f19f076a5133f6b6118dad936",
     "subjects": {
      "化学": 4108,
      "数学": 277,
@@ -16,32 +16,32 @@
     "tracked_in_git": false
    },
    "snapshot": {
-    "bytes": 40073259,
+    "bytes": 52438016,
     "edges": 48712,
     "nodes": 9657,
     "obtain": "原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
     "path": "06_PoC/graph_data_phase36.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "2f8808b46dadf4eff5b7012be48ef6e1e00b68fa69cdea1681d9fa9b1832968b",
+    "sha256": "1b2a53934d7aa6f2057a51330f31775359c983d38234e6130ddf9cdb5a9e59f2",
     "tracked_in_git": false
    }
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 846341,
+    "bytes": 847468,
     "edges": 701,
     "nodes": 380,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "df8eb7b248adf69af8956ca479bf95e5b2becde37ceff7bf972da508ef4ddeea",
+    "sha256": "0a14cf8e5c3ecd2deaf34c98876e5b30a14a57fa5eb76e76a212ef6056b52f01",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 1031058,
+    "bytes": 1032185,
     "edges": 701,
     "nodes": 380,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "0c54bd2bd3007b2535ac3fe88009d98db57f13ced37f3348c93f347bf95d8fbf",
+    "sha256": "d1837a0b9f8cf8e0873e4805dd6f71014624f45123c8369e21db3b2f68b8ceb9",
     "subjects": {
      "化学": 237,
      "数学": 38,
@@ -77,14 +77,23 @@
  },
  "code": {
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
-  "dirty_sample": [],
+  "dirty_sample": [
+   "M \"00_\\351\\241\\271\\347\\233\\256\\347\\256\\241\\347\\220\\206/\\344\\270\\213\\344\\270\\200\\346\\255\\245\\345\\274\\200\\345\\217\\221\\350\\256\\241\\345\\210\\222_20261008.md\"",
+   " M 06_PoC/frozen_counterexamples.json",
+   " M 06_PoC/frozen_gate.py",
+   " M 06_PoC/release/README.md",
+   " M 06_PoC/release/make_manifest.py",
+   " M 06_PoC/release/sample/sample_graph.json",
+   " M 06_PoC/release/sample/sample_normalized.json",
+   " M 06_PoC/release/verify_release.py"
+  ],
   "git_branch": "main",
-  "git_head_at_build": "4e525dc74771bbd9f6ffa86c159b47df8a93472f",
-  "git_head_at_build_short": "4e525dc",
-  "working_tree_dirty_at_build": false
+  "git_head_at_build": "d188e490d3e44416f0d9f6938677cfe47f20b61c",
+  "git_head_at_build_short": "d188e49",
+  "working_tree_dirty_at_build": true
  },
  "counterexamples": {
-  "cases": 90,
+  "cases": 101,
   "full_only_kinds": [
    "graph_scan"
   ],
@@ -96,7 +105,9 @@
    "gate_math",
    "pq_quantity_gate",
    "attrib_check",
-   "level_check"
+   "level_check",
+   "dim_field_semantics",
+   "dim_consistency"
   ]
  },
  "dependencies": {
@@ -454,7 +465,7 @@
    "edges": 48712,
    "frozen_gate": {
     "tally": {
-     "PASS": 90
+     "PASS": 101
     }
    },
    "nodes": 9657,
@@ -605,7 +616,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-12T10:09:35+08:00",
+  "created": "2026-10-12T15:00:18+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,

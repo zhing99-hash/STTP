@@ -59,6 +59,16 @@ except Exception as e:                                   # noqa: BLE001
     dt = None
     print("[WARN] dimension_table 不可用：%s" % e)
 try:
+    import si_base_table as si                            # Phase 40 R09 独立量纲基表
+except Exception as e:                                   # noqa: BLE001
+    si = None
+    print("[WARN] si_base_table 不可用：%s" % e)
+try:
+    import dimension_consistency as dc                    # Phase 40 R09 矛盾方程检测
+except Exception as e:                                   # noqa: BLE001
+    dc = None
+    print("[WARN] dimension_consistency 不可用：%s" % e)
+try:
     import verification_loop as vl
 except Exception as e:                                   # noqa: BLE001
     vl = None
@@ -97,7 +107,7 @@ def load_graph(path=None):
 
 def run_case(case, graph):
     """返回 (status, detail)。status ∈ {PASS, FAIL, SKIP}。"""
-    kind, exp = case["kind"], case["expect"]
+    kind, exp = case["kind"], case.get("expect")
 
     if kind == "dim_table":
         if dt is None:
@@ -129,6 +139,42 @@ def run_case(case, graph):
             return "SKIP", "门禁依赖缺失（%s）——未真正验证：%s" % (codes, evidence[:60])
         ok = (verdict == "VERIFIED") if exp == "VERIFIED" else (verdict != "VERIFIED")
         return ("PASS" if ok else "FAIL"), "verdict=%s codes=%s" % (verdict, codes)
+
+    if kind == "dim_field_semantics":
+        # R09（GPT6 复评）：字段语义分离的冻结回归。
+        # 旧图把「方程内指数」与「量纲向量」写在**同一字段名** `dimension` 上（同名异义）；
+        # 迁移后：`exponent_in_term`（指数）/ `dimension_vector`（量纲）/ `name`（量名）三分。
+        if dt is None:
+            return "SKIP", "dimension_table 不可用"
+        props = case["input"]["props"]
+        if "dimension" in props:
+            got = "COLLISION"
+        elif "dimension_vector" in props:
+            got = ("UNIT_SYMBOL_IN_DIM"
+                   if dt.normalize_dim_string(props["dimension_vector"]) != str(props["dimension_vector"]).strip()
+                   else "SEPARATED")
+        elif "exponent_in_term" in props:
+            got = "SEPARATED"
+        else:
+            got = "NO_DIM_FIELD"
+        return ("PASS" if got == exp else "FAIL"), \
+            "props=%s → %s（期望 %s）" % (sorted(props), got, exp)
+
+    if kind == "dim_consistency":
+        # R09：矛盾方程检测的冻结回归（**独立档**：用 SI 基表判残差）。
+        if dc is None or si is None:
+            return "SKIP", "dimension_consistency / si_base_table 不可用"
+        keys = tuple(case["input"]["keys"])
+        exp_map = {k: float(v) for k, v in case["input"]["exponents"].items()}
+        res, unknown = dc._residual(keys, exp_map, si.dim_of)
+        if res is None:
+            got = "UNDETERMINED"
+        elif all(abs(v) < dc.TOL for v in res.values()):
+            got = "HOMOGENEOUS"
+        else:
+            got = "CONTRADICTION"
+        return ("PASS" if got == exp else "FAIL"), \
+            "keys=%s → %s（期望 %s）" % (list(keys), got, exp)
 
     if kind == "pq_quantity_gate":
         # R02（GPT6 复评）：摩尔质量量类判定的冻结回归。
@@ -218,6 +264,29 @@ def run_case(case, graph):
                         if "in_values" in f and val in f["in_values"]:
                             hits.append((e["source"], e["target"]))
             return ("PASS" if not hits else "FAIL"), "命中 %d：%s" % (len(hits), hits[:3])
+
+        # (a2) 节点字段语义（R09）：指定 props 键必须**不存在**于任何节点。
+        #      用途：冻结「legacy `dimension` 字段已彻底迁走」这一不变量。
+        if scan.get("nodes_forbidden_props"):
+            keys = scan["nodes_forbidden_props"]
+            hits = [(n["id"], k) for n in graph["nodes"]
+                    for k in keys if k in (n.get("props") or {})]
+            return ("PASS" if not hits else "FAIL"), "命中节点 %d：%s" % (len(hits), hits[:3])
+
+        # (a3) `dimension_vector` 必须已是**规范形**（R09）：不可残留单位符号/乱序。
+        if scan.get("dim_vector_normalized"):
+            if dt is None:
+                return "SKIP", "dimension_table 不可用"
+            bad, n_with = [], 0
+            for n in graph["nodes"]:
+                v = (n.get("props") or {}).get("dimension_vector")
+                if v is None:
+                    continue
+                n_with += 1
+                if dt.normalize_dim_string(v) != str(v).strip():
+                    bad.append((n["id"], v))
+            return ("PASS" if not bad else "FAIL"), \
+                "含 dimension_vector %d 条，未规范化 %d 条：%s" % (n_with, len(bad), bad[:3])
 
         # (b2) 门禁归因自洽：任何**已存**的 `verification_gate` 必须与其**派生**
         #      `verification_scope` 配对合法（`_gate_matches_scope`）。这是 Phase 27
@@ -885,6 +954,7 @@ def main():
     ap.add_argument("--kinds", default=None,
                     help="只跑指定 kind（逗号分隔）。样例模式用 "
                          "dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check，"
+                         "以及自包含的 dim_field_semantics,dim_consistency；"
                          "跳过依赖全图不变量的 graph_scan。")
     ap.add_argument("--release", action="store_true",
                     help="发布门禁（fail-closed）：缺图 / 任何 SKIP / FAIL 均非零退出。"

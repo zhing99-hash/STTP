@@ -25,13 +25,13 @@ nodes += [
     sc.n("SM:fo:ideal_gas_kin", "formula", "Ideal gas (kinetic theory)", "physics.statmech", latex=r"PV=\tfrac{2}{3}N\langle E_k\rangle"),
 ]
 nodes += [
-    sc.n("SM:pq:boltz_const", "constant", "Boltzmann constant", "phys.constant", symbol="k_B", value=1.380649e-23, dimension="M*L^2*T^-2*K^-1"),
-    sc.n("SM:pq:microstates", "physical_quantity", "Number of microstates", "phys.quantity", symbol="W", dimension="dimensionless"),
-    sc.n("SM:pq:partition_fn", "physical_quantity", "Partition function", "phys.quantity", symbol="Z", dimension="dimensionless"),
-    sc.n("SM:pq:stat_entropy", "physical_quantity", "Statistical entropy", "phys.quantity", symbol="S", dimension="M*L^2*T^-2*K^-1"),
+    sc.n("SM:pq:boltz_const", "constant", "Boltzmann constant", "phys.constant", symbol="k_B", value=1.380649e-23, dimension_vector="M*L^2*T^-2*K^-1"),
+    sc.n("SM:pq:microstates", "physical_quantity", "Number of microstates", "phys.quantity", symbol="W", dimension_vector="dimensionless"),
+    sc.n("SM:pq:partition_fn", "physical_quantity", "Partition function", "phys.quantity", symbol="Z", dimension_vector="dimensionless"),
+    sc.n("SM:pq:stat_entropy", "physical_quantity", "Statistical entropy", "phys.quantity", symbol="S", dimension_vector="M*L^2*T^-2*K^-1"),
 ]
 nodes += [
-    sc.n("SM:un:j_per_k", "unit", "joule per kelvin", "phys.unit", symbol="J/K", dimension="M*L^2*T^-2*K^-1", derived_from="J/K"),
+    sc.n("SM:un:j_per_k", "unit", "joule per kelvin", "phys.unit", symbol="J/K", dimension_vector="M*L^2*T^-2*K^-1", derived_from="J/K"),
 ]
 nodes += [
     sc.n("SM:sy:k_B", "symbol", "k_B (Boltzmann constant)", "phys.symbol", latex="k_B"),

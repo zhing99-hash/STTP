@@ -26,16 +26,16 @@ nodes += [
     sc.n("QM:fo:photoelectric", "formula", "Photoelectric effect", "physics.qm", latex=r"E_{ph}=h\nu-\phi"),
 ]
 nodes += [
-    sc.n("QM:pq:planck_const", "constant", "Planck constant", "phys.constant", symbol="h", value=6.62607015e-34, dimension="M*L^2*T^-1"),
-    sc.n("QM:pq:reduced_planck", "constant", "Reduced Planck constant", "phys.constant", symbol="hbar", value=1.054571817e-34, dimension="M*L^2*T^-1"),
-    sc.n("QM:pq:frequency", "physical_quantity", "Frequency", "phys.quantity", symbol="nu", dimension="T^-1"),
-    sc.n("QM:pq:wavelength", "physical_quantity", "Wavelength", "phys.quantity", symbol="lambda", dimension="L"),
-    sc.n("QM:pq:work_function", "physical_quantity", "Work function", "phys.quantity", symbol="phi", dimension="M*L^2*T^-2"),
-    sc.n("QM:pq:action", "physical_quantity", "Action", "phys.quantity", symbol="S", dimension="M*L^2*T^-1"),
+    sc.n("QM:pq:planck_const", "constant", "Planck constant", "phys.constant", symbol="h", value=6.62607015e-34, dimension_vector="M*L^2*T^-1"),
+    sc.n("QM:pq:reduced_planck", "constant", "Reduced Planck constant", "phys.constant", symbol="hbar", value=1.054571817e-34, dimension_vector="M*L^2*T^-1"),
+    sc.n("QM:pq:frequency", "physical_quantity", "Frequency", "phys.quantity", symbol="nu", dimension_vector="T^-1"),
+    sc.n("QM:pq:wavelength", "physical_quantity", "Wavelength", "phys.quantity", symbol="lambda", dimension_vector="L"),
+    sc.n("QM:pq:work_function", "physical_quantity", "Work function", "phys.quantity", symbol="phi", dimension_vector="M*L^2*T^-2"),
+    sc.n("QM:pq:action", "physical_quantity", "Action", "phys.quantity", symbol="S", dimension_vector="M*L^2*T^-1"),
 ]
 nodes += [
-    sc.n("QM:un:hertz", "unit", "hertz", "phys.unit", symbol="Hz", dimension="T^-1"),
-    sc.n("QM:un:ev", "unit", "electronvolt", "phys.unit", symbol="eV", dimension="M*L^2*T^-2"),
+    sc.n("QM:un:hertz", "unit", "hertz", "phys.unit", symbol="Hz", dimension_vector="T^-1"),
+    sc.n("QM:un:ev", "unit", "electronvolt", "phys.unit", symbol="eV", dimension_vector="M*L^2*T^-2"),
 ]
 nodes += [
     sc.n("QM:sy:h", "symbol", "h (Planck)", "phys.symbol", latex="h"),

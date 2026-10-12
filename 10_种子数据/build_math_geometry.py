@@ -26,15 +26,15 @@ nodes += [
     sc.n("MG:fo:euler_poly", "formula", "Euler's polyhedron formula", "math.geometry", latex=r"V-E+F=2"),
 ]
 nodes += [
-    sc.n("MG:pq:area", "physical_quantity", "Area", "math.quantity", symbol="A", dimension="L^2"),
-    sc.n("MG:pq:volume", "physical_quantity", "Volume", "math.quantity", symbol="V", dimension="L^3"),
-    sc.n("MG:pq:angle", "physical_quantity", "Angle", "math.quantity", symbol="theta", dimension="dimensionless"),
-    sc.n("MG:pq:radius", "physical_quantity", "Radius", "math.quantity", symbol="r", dimension="L"),
+    sc.n("MG:pq:area", "physical_quantity", "Area", "math.quantity", symbol="A", dimension_vector="L^2"),
+    sc.n("MG:pq:volume", "physical_quantity", "Volume", "math.quantity", symbol="V", dimension_vector="L^3"),
+    sc.n("MG:pq:angle", "physical_quantity", "Angle", "math.quantity", symbol="theta", dimension_vector="dimensionless"),
+    sc.n("MG:pq:radius", "physical_quantity", "Radius", "math.quantity", symbol="r", dimension_vector="L"),
 ]
 nodes += [
-    sc.n("MG:un:sq_meter", "unit", "square meter", "math.unit", symbol="m^2", dimension="L^2"),
-    sc.n("MG:un:cubic_meter", "unit", "cubic meter", "math.unit", symbol="m^3", dimension="L^3"),
-    sc.n("MG:un:radian", "unit", "radian", "math.unit", symbol="rad", dimension="dimensionless"),
+    sc.n("MG:un:sq_meter", "unit", "square meter", "math.unit", symbol="m^2", dimension_vector="L^2"),
+    sc.n("MG:un:cubic_meter", "unit", "cubic meter", "math.unit", symbol="m^3", dimension_vector="L^3"),
+    sc.n("MG:un:radian", "unit", "radian", "math.unit", symbol="rad", dimension_vector="dimensionless"),
 ]
 nodes += [
     sc.n("MG:sy:A", "symbol", "A (area)", "math.symbol", latex="A"),

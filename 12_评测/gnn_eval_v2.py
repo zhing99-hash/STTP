@@ -212,7 +212,7 @@ def build_features(ids, idx, id2type, id2subj, id2attrs, train_by_rel, adj, rels
         X[i, off] = 1.0 if t == "Element" else 0.0
         off += 1
         if t == "Unit":
-            dstr = str(p.get("dimension") or "")
+            dstr = str(p.get("dimension_vector") or "")   # R09 字段迁移
             for j, name in enumerate(BASE_DIMS):
                 if name in dstr:
                     X[i, off + j] = 1.0

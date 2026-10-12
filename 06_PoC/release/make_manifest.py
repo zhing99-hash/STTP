@@ -325,7 +325,8 @@ def main(argv=None) -> int:
             "cases": len(json.load(open(os.path.join(POC, "frozen_counterexamples.json"),
                                         encoding="utf-8")).get("cases") or []),
             "sample_runnable_kinds": ["dim_table", "gate_chem", "gate_math",
-                                      "pq_quantity_gate", "attrib_check", "level_check"],
+                                      "pq_quantity_gate", "attrib_check", "level_check",
+                                      "dim_field_semantics", "dim_consistency"],
             "full_only_kinds": ["graph_scan"],
             "note": ("`graph_scan` 断言的是**全图不变量**（连通分量/分母外计数等），"
                      "在样例上无意义 → 样例模式只跑自包含子集（SKIP=0）。"),

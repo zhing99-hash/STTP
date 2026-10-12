@@ -18,8 +18,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "kg",
-        "dimension": "M",
-        "si_base": true
+        "si_base": true,
+        "dimension_vector": "M"
       }
     },
     {
@@ -37,8 +37,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "m",
-        "dimension": "L",
-        "si_base": true
+        "si_base": true,
+        "dimension_vector": "L"
       }
     },
     {
@@ -56,8 +56,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "s",
-        "dimension": "T",
-        "si_base": true
+        "si_base": true,
+        "dimension_vector": "T"
       }
     },
     {
@@ -75,8 +75,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "J",
-        "dimension": "M*L^2*T^-2",
-        "derived_from": "kg*m^2/s^2"
+        "derived_from": "kg*m^2/s^2",
+        "dimension_vector": "M*L^2*T^-2"
       }
     },
     {
@@ -94,7 +94,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "m/s",
-        "dimension": "L*T^-1"
+        "dimension_vector": "L*T^-1"
       }
     },
     {
@@ -112,7 +112,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "m/s^2",
-        "dimension": "L*T^-2"
+        "dimension_vector": "L*T^-2"
       }
     },
     {
@@ -130,7 +130,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "E",
-        "dimension": "M*L^2*T^-2"
+        "dimension_vector": "M*L^2*T^-2"
       }
     },
     {
@@ -148,7 +148,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "m",
-        "dimension": "M"
+        "dimension_vector": "M"
       }
     },
     {
@@ -185,7 +185,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "F",
-        "dimension": "M*L*T^-2"
+        "dimension_vector": "M*L*T^-2"
       }
     },
     {
@@ -203,7 +203,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "a",
-        "dimension": "L*T^-2"
+        "dimension_vector": "L*T^-2"
       }
     },
     {
@@ -221,7 +221,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "v",
-        "dimension": "L*T^-1"
+        "dimension_vector": "L*T^-1"
       }
     },
     {
@@ -239,7 +239,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:15:15.894421",
         "symbol": "KE",
-        "dimension": "M*L^2*T^-2"
+        "dimension_vector": "M*L^2*T^-2"
       }
     },
     {

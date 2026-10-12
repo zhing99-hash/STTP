@@ -21,10 +21,18 @@ props.ntype 保留小写（供 Aura type_stats）。domain 驱动可视化学科
 """
 import json
 import os
+import sys
 from datetime import datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "seed_energy_combustion.json")
+
+# R09：量纲声明串单点归一（与 seed_common 同一实现）
+sys.path.insert(0, os.path.join(HERE, "..", "11_真实数据"))
+try:
+    import dimension_table as _dt
+except Exception:                                                     # noqa: BLE001
+    _dt = None
 
 NOW = datetime.now().isoformat()
 SOURCE = "curated_seed/energy_combustion"
@@ -41,6 +49,8 @@ def n(id, ntype, name, domain="", **props):
     p = {"name": name, "ntype": ntype, "domain": domain, "source": SOURCE,
          "confidence": CONF, "explicit_or_inferred": "explicit", "created_at": NOW}
     p.update(props)
+    if _dt is not None and "dimension_vector" in p:
+        p["dimension_vector"] = _dt.normalize_dim_string(p["dimension_vector"])
     return {"id": id, "labels": ["Entity", TYPE_LABEL[ntype]], "props": p}
 
 
@@ -63,23 +73,23 @@ def main():
 
     # ---------- 单位 ----------
     nodes += [
-        n("UN:kg", "unit", "kilogram", "phys.unit", symbol="kg", dimension="M", si_base=True),
-        n("UN:m", "unit", "meter", "phys.unit", symbol="m", dimension="L", si_base=True),
-        n("UN:s", "unit", "second", "phys.unit", symbol="s", dimension="T", si_base=True),
-        n("UN:j", "unit", "joule", "phys.unit", symbol="J", dimension="M*L^2*T^-2", derived_from="kg*m^2/s^2"),
-        n("UN:mps", "unit", "meter per second", "phys.unit", symbol="m/s", dimension="L*T^-1"),
-        n("UN:mps2", "unit", "meter per second squared", "phys.unit", symbol="m/s^2", dimension="L*T^-2"),
+        n("UN:kg", "unit", "kilogram", "phys.unit", symbol="kg", dimension_vector="M", si_base=True),
+        n("UN:m", "unit", "meter", "phys.unit", symbol="m", dimension_vector="L", si_base=True),
+        n("UN:s", "unit", "second", "phys.unit", symbol="s", dimension_vector="T", si_base=True),
+        n("UN:j", "unit", "joule", "phys.unit", symbol="J", dimension_vector="M*L^2*T^-2", derived_from="kg*m^2/s^2"),
+        n("UN:mps", "unit", "meter per second", "phys.unit", symbol="m/s", dimension_vector="L*T^-1"),
+        n("UN:mps2", "unit", "meter per second squared", "phys.unit", symbol="m/s^2", dimension_vector="L*T^-2"),
     ]
 
     # ---------- 物理量 ----------
     nodes += [
-        n("PQ:energy", "physical_quantity", "Energy", "phys.quantity", symbol="E", dimension="M*L^2*T^-2"),
-        n("PQ:mass", "physical_quantity", "Mass", "phys.quantity", symbol="m", dimension="M"),
+        n("PQ:energy", "physical_quantity", "Energy", "phys.quantity", symbol="E", dimension_vector="M*L^2*T^-2"),
+        n("PQ:mass", "physical_quantity", "Mass", "phys.quantity", symbol="m", dimension_vector="M"),
         n("PQ:c", "physical_quantity", "Speed of light", "phys.quantity", symbol="c", value=299792458, unit="m/s"),
-        n("PQ:force", "physical_quantity", "Force", "phys.quantity", symbol="F", dimension="M*L*T^-2"),
-        n("PQ:accel", "physical_quantity", "Acceleration", "phys.quantity", symbol="a", dimension="L*T^-2"),
-        n("PQ:vel", "physical_quantity", "Velocity", "phys.quantity", symbol="v", dimension="L*T^-1"),
-        n("PQ:ke", "physical_quantity", "Kinetic energy", "phys.quantity", symbol="KE", dimension="M*L^2*T^-2"),
+        n("PQ:force", "physical_quantity", "Force", "phys.quantity", symbol="F", dimension_vector="M*L*T^-2"),
+        n("PQ:accel", "physical_quantity", "Acceleration", "phys.quantity", symbol="a", dimension_vector="L*T^-2"),
+        n("PQ:vel", "physical_quantity", "Velocity", "phys.quantity", symbol="v", dimension_vector="L*T^-1"),
+        n("PQ:ke", "physical_quantity", "Kinetic energy", "phys.quantity", symbol="KE", dimension_vector="M*L^2*T^-2"),
     ]
 
     # ---------- 符号 ----------

@@ -79,7 +79,7 @@ python 06_PoC/frozen_gate.py \
   --kinds dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check --release
 # → PASS 65 / FAIL 0 / SKIP 0，退码 0
 
-# 完整图模式：全 90 条
+# 完整图模式：全 101 条
 python 06_PoC/frozen_gate.py --release
 # → PASS 90 / FAIL 0 / SKIP 0
 ```

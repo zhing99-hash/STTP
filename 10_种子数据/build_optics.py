@@ -25,13 +25,13 @@ nodes += [
     sc.n("OP:fo:refr_speed", "formula", "Speed of light in medium", "physics.optics", latex=r"v=\frac{c}{n}"),
 ]
 nodes += [
-    sc.n("OP:pq:refractive_index", "physical_quantity", "Refractive index", "phys.quantity", symbol="n", dimension="dimensionless"),
-    sc.n("OP:pq:focal_length", "physical_quantity", "Focal length", "phys.quantity", symbol="f", dimension="L"),
-    sc.n("OP:pq:object_dist", "physical_quantity", "Object distance", "phys.quantity", symbol="u", dimension="L"),
-    sc.n("OP:pq:image_dist", "physical_quantity", "Image distance", "phys.quantity", symbol="v", dimension="L"),
+    sc.n("OP:pq:refractive_index", "physical_quantity", "Refractive index", "phys.quantity", symbol="n", dimension_vector="dimensionless"),
+    sc.n("OP:pq:focal_length", "physical_quantity", "Focal length", "phys.quantity", symbol="f", dimension_vector="L"),
+    sc.n("OP:pq:object_dist", "physical_quantity", "Object distance", "phys.quantity", symbol="u", dimension_vector="L"),
+    sc.n("OP:pq:image_dist", "physical_quantity", "Image distance", "phys.quantity", symbol="v", dimension_vector="L"),
 ]
 nodes += [
-    sc.n("OP:un:meter", "unit", "meter", "phys.unit", symbol="m", dimension="L", si_base=True),
+    sc.n("OP:un:meter", "unit", "meter", "phys.unit", symbol="m", dimension_vector="L", si_base=True),
 ]
 nodes += [
     sc.n("OP:sy:n", "symbol", "n (refractive index)", "phys.symbol", latex="n"),

@@ -48,20 +48,20 @@ nodes += [
 ]
 # 物理量（新）
 nodes += [
-    sc.n("CM:pq:momentum", "physical_quantity", "Momentum", "phys.quantity", symbol="p", dimension="M*L*T^-1"),
-    sc.n("CM:pq:work", "physical_quantity", "Work", "phys.quantity", symbol="W", dimension="M*L^2*T^-2"),
-    sc.n("CM:pq:power", "physical_quantity", "Power", "phys.quantity", symbol="P", dimension="M*L^2*T^-3"),
+    sc.n("CM:pq:momentum", "physical_quantity", "Momentum", "phys.quantity", symbol="p", dimension_vector="M*L*T^-1"),
+    sc.n("CM:pq:work", "physical_quantity", "Work", "phys.quantity", symbol="W", dimension_vector="M*L^2*T^-2"),
+    sc.n("CM:pq:power", "physical_quantity", "Power", "phys.quantity", symbol="P", dimension_vector="M*L^2*T^-3"),
     sc.n("CM:pq:grav_const", "constant", "Gravitational constant", "phys.constant", symbol="G",
-         value=6.67430e-11, dimension="M^-1*L^3*T^-2"),
-    sc.n("CM:pq:angular_momentum", "physical_quantity", "Angular momentum", "phys.quantity", symbol="L", dimension="M*L^2*T^-1"),
-    sc.n("CM:pq:torque", "physical_quantity", "Torque", "phys.quantity", symbol="tau", dimension="M*L^2*T^-2"),
-    sc.n("CM:pq:impulse", "physical_quantity", "Impulse", "phys.quantity", symbol="J", dimension="M*L*T^-1"),
+         value=6.67430e-11, dimension_vector="M^-1*L^3*T^-2"),
+    sc.n("CM:pq:angular_momentum", "physical_quantity", "Angular momentum", "phys.quantity", symbol="L", dimension_vector="M*L^2*T^-1"),
+    sc.n("CM:pq:torque", "physical_quantity", "Torque", "phys.quantity", symbol="tau", dimension_vector="M*L^2*T^-2"),
+    sc.n("CM:pq:impulse", "physical_quantity", "Impulse", "phys.quantity", symbol="J", dimension_vector="M*L*T^-1"),
 ]
 # 单位（新）
 nodes += [
-    sc.n("CM:un:newton", "unit", "newton", "phys.unit", symbol="N", dimension="M*L*T^-2", derived_from="kg*m/s^2"),
-    sc.n("CM:un:watt", "unit", "watt", "phys.unit", symbol="W", dimension="M*L^2*T^-3", derived_from="J/s"),
-    sc.n("CM:un:pascal", "unit", "pascal", "phys.unit", symbol="Pa", dimension="M*L^-1*T^-2", derived_from="N/m^2"),
+    sc.n("CM:un:newton", "unit", "newton", "phys.unit", symbol="N", dimension_vector="M*L*T^-2", derived_from="kg*m/s^2"),
+    sc.n("CM:un:watt", "unit", "watt", "phys.unit", symbol="W", dimension_vector="M*L^2*T^-3", derived_from="J/s"),
+    sc.n("CM:un:pascal", "unit", "pascal", "phys.unit", symbol="Pa", dimension_vector="M*L^-1*T^-2", derived_from="N/m^2"),
 ]
 # 符号（新）
 nodes += [

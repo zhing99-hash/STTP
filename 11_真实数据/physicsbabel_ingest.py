@@ -25,11 +25,28 @@ import json, os, re
 import pandas as pd
 
 import dimension_table as dm
+import si_base_table as si
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PARQUET = os.path.join(HERE, "physicsbabel_circuits.parquet")
 OUT = os.path.join(HERE, "physicsbabel_raw.json")
 MAX_EQ = 5000  # 接受方程上限（控制图规模，Aura 免费实例约 5 万节点上限）
+
+
+def _si_dim_vector(name):
+    """取独立 SI 基表的量纲向量串（R09）；未收录返回 None（宁缺勿滥）。"""
+    c = si.canon(name)
+    if c is None:
+        return None
+    v = si.load()[c]["dim"]
+    parts = []
+    for d in dm.DIM:
+        e = v.get(d, 0)
+        if abs(e) > 1e-9:
+            ei = int(round(e))
+            parts.append(d if ei == 1 else "%s^%d" % (d, ei))
+    return "*".join(parts) if parts else "1"
+
 
 # PhysicsBabel 量名 -> 已有图谱节点 id（直接连边 = 真实跨域桥）
 MAP = {
@@ -90,9 +107,17 @@ def main():
             else:
                 qid = "PB:pq:" + k
                 is_const = k in CONSTANTS
-                add_node(qid, "Constant" if is_const else "PhysicalQuantity",
-                         {"name": k, "domain": "phys", "source": "PhysicsBabel",
-                          "dimension": exp.get(k)})
+                # ⚠ R09 字段迁移（2026-10-12）：原写 `"dimension": exp.get(k)` 是**错命题**——
+                #   `exp.get(k)` 是该量在**本方程**里的**指数**（标量），不是量纲；且同名
+                #   `dimension` 字段在种子节点上表示**量纲向量**，二者语义冲突（复评 R09）。
+                #   现分离为：`exponent_in_term`（方程内指数）+ `dimension_vector`（真量纲，
+                #   取独立 SI 基表；查不到则不写 —— 宁缺勿滥）。
+                qprops = {"name": k, "domain": "phys", "source": "PhysicsBabel",
+                          "exponent_in_term": exp.get(k)}
+                _dv = _si_dim_vector(k)
+                if _dv is not None:
+                    qprops["dimension_vector"] = _dv
+                add_node(qid, "Constant" if is_const else "PhysicalQuantity", qprops)
             qnodes.append(qid)
             edges.append({"id": "PB:hs:%s:%s" % (foi, qid), "source": foi,
                           "target": qid, "type": "has_symbol", "kind": "real",

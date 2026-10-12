@@ -86,7 +86,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "n",
-        "dimension": "dimensionless"
+        "dimension_vector": "1",
+        "dimension_vector_declared": "dimensionless"
       }
     },
     {
@@ -104,7 +105,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "f",
-        "dimension": "L"
+        "dimension_vector": "L"
       }
     },
     {
@@ -122,7 +123,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "u",
-        "dimension": "L"
+        "dimension_vector": "L"
       }
     },
     {
@@ -140,7 +141,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "v",
-        "dimension": "L"
+        "dimension_vector": "L"
       }
     },
     {
@@ -158,8 +159,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:40.365397",
         "symbol": "m",
-        "dimension": "L",
-        "si_base": true
+        "si_base": true,
+        "dimension_vector": "L"
       }
     },
     {

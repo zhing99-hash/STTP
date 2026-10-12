@@ -19496,7 +19496,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "chem.kinetics",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:activation_energy",
@@ -19521,7 +19521,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "M*L^2*T^-3*I^-1",
+    "dimension_vector": "M*L^2*T^-3*I^-1",
     "domain": "chem.electrochem",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:cell_potential",
@@ -19546,7 +19546,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "N*L^-3",
+    "dimension_vector": "L^-3*N",
+    "dimension_vector_declared": "N*L^-3",
     "domain": "chem.quantity",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:concentration",
@@ -19573,7 +19574,8 @@
     "codata_year": 2022,
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "I*T*N^-1",
+    "dimension_vector": "T*I*N^-1",
+    "dimension_vector_declared": "I*T*N^-1",
     "domain": "chem.constant",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:faraday_const",
@@ -19606,7 +19608,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "chem.equilibrium",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:gibbs_energy",
@@ -19631,7 +19633,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "chem.equilibrium",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:gibbs_std",
@@ -19656,7 +19658,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "1",
+    "dimension_vector": "1",
     "domain": "chem.acidbase",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:ph",
@@ -19681,7 +19683,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
-    "dimension": "1",
+    "dimension_vector": "1",
     "domain": "chem.acidbase",
     "explicit_or_inferred": "explicit",
     "id": "CE:pq:pka",
@@ -19731,7 +19733,8 @@
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "derived_from": "mol/dm^3",
-    "dimension": "N*L^-3",
+    "dimension_vector": "L^-3*N",
+    "dimension_vector_declared": "N*L^-3",
     "domain": "chem.unit",
     "explicit_or_inferred": "explicit",
     "id": "CE:un:molar",
@@ -22321,7 +22324,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:33.661781",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "CM:pq:torque",
@@ -22346,7 +22349,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:33.661781",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "CM:pq:work",
@@ -23163,7 +23166,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "M*T^-2*I^-1",
+    "dimension_vector": "M*T^-2*I^-1",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "EM:pq:bfield",
@@ -23188,7 +23191,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "I*T",
+    "dimension_vector": "T*I",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "EM:pq:charge",
@@ -23213,7 +23216,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "I",
+    "dimension_vector": "I",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "EM:pq:current",
@@ -23238,7 +23241,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "M*L^2*T^-3*I^-1",
+    "dimension_vector": "M*L^2*T^-3*I^-1",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "EM:pq:emf",
@@ -23265,7 +23268,7 @@
     "codata_year": 2022,
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "M*L*T^-2*I^-2",
+    "dimension_vector": "M*L*T^-2*I^-2",
     "domain": "phys.constant",
     "explicit_or_inferred": "explicit",
     "id": "EM:pq:permeability",
@@ -23300,7 +23303,7 @@
     "codata_year": 2022,
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "M^-1*L^-3*T^4*I^2",
+    "dimension_vector": "M^-1*L^-3*T^4*I^2",
     "domain": "phys.constant",
     "explicit_or_inferred": "explicit",
     "id": "EM:pq:permittivity",
@@ -23333,7 +23336,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "M*L^2*T^-3*I^-1",
+    "dimension_vector": "M*L^2*T^-3*I^-1",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "EM:pq:voltage",
@@ -23358,7 +23361,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "I",
+    "dimension_vector": "I",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "EM:un:ampere",
@@ -23384,7 +23387,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "I*T",
+    "dimension_vector": "T*I",
+    "dimension_vector_declared": "I*T",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "EM:un:coulomb",
@@ -23409,7 +23413,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "M*T^-2*I^-1",
+    "dimension_vector": "M*T^-2*I^-1",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "EM:un:tesla",
@@ -23434,7 +23438,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
-    "dimension": "M*L^2*T^-3*I^-1",
+    "dimension_vector": "M*L^2*T^-3*I^-1",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "EM:un:volt",
@@ -23856,7 +23860,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.330252",
-    "dimension": "dimensionless",
+    "dimension_vector": "1",
+    "dimension_vector_declared": "dimensionless",
     "domain": "math.constant",
     "explicit_or_inferred": "explicit",
     "id": "MA:pq:euler_e",
@@ -24026,7 +24031,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.410402",
-    "dimension": "L",
+    "dimension_vector": "L",
     "domain": "math.quantity",
     "explicit_or_inferred": "explicit",
     "id": "MG:pq:radius",
@@ -24051,7 +24056,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.410402",
-    "dimension": "L^3",
+    "dimension_vector": "L^3",
     "domain": "math.quantity",
     "explicit_or_inferred": "explicit",
     "id": "MG:pq:volume",
@@ -24100,7 +24105,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.410402",
-    "dimension": "L^3",
+    "dimension_vector": "L^3",
     "domain": "math.unit",
     "explicit_or_inferred": "explicit",
     "id": "MG:un:cubic_meter",
@@ -25223,7 +25228,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.934047",
-    "dimension": "dimensionless",
+    "dimension_vector": "1",
+    "dimension_vector_declared": "dimensionless",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "OP:pq:refractive_index",
@@ -25270,8 +25276,9 @@
   },
   {
    "attrs": {
-    "dimension": "-1",
+    "dimension_vector": "L^-3*N",
     "domain": "phys",
+    "exponent_in_term": "-1",
     "id": "PB:pq:concentration",
     "name": "concentration",
     "source": "PhysicsBabel"
@@ -25290,8 +25297,9 @@
   },
   {
    "attrs": {
-    "dimension": "1",
+    "dimension_vector": "M*L^2*T^-2*N^-1",
     "domain": "phys",
+    "exponent_in_term": "1",
     "id": "PB:pq:molar_energy",
     "name": "molar_energy",
     "source": "PhysicsBabel"
@@ -25310,8 +25318,9 @@
   },
   {
    "attrs": {
-    "dimension": "-1",
+    "dimension_vector": "M*N^-1",
     "domain": "phys",
+    "exponent_in_term": "-1",
     "id": "PB:pq:molar_mass",
     "name": "molar_mass",
     "source": "PhysicsBabel"
@@ -25330,8 +25339,9 @@
   },
   {
    "attrs": {
-    "dimension": "1",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys",
+    "exponent_in_term": "1",
     "id": "PB:pq:torque",
     "name": "torque",
     "source": "PhysicsBabel"
@@ -25560,7 +25570,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
-    "dimension": "L*T^-2",
+    "dimension_vector": "L*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "PQ:accel",
@@ -25749,7 +25759,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "PQ:energy",
@@ -25774,7 +25784,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
-    "dimension": "M*L*T^-2",
+    "dimension_vector": "M*L*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "PQ:force",
@@ -25799,7 +25809,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "PQ:ke",
@@ -25824,7 +25834,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
-    "dimension": "M",
+    "dimension_vector": "M",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "PQ:mass",
@@ -25880,7 +25890,7 @@
     "codata_year": 2022,
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.752388",
-    "dimension": "M*L^2*T^-1",
+    "dimension_vector": "M*L^2*T^-1",
     "domain": "phys.constant",
     "explicit_or_inferred": "explicit",
     "id": "QM:pq:reduced_planck",
@@ -25913,7 +25923,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.752388",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "QM:pq:work_function",
@@ -28540,7 +28550,7 @@
     "codata_year": 2022,
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.244844",
-    "dimension": "L*T^-1",
+    "dimension_vector": "L*T^-1",
     "domain": "phys.constant",
     "explicit_or_inferred": "explicit",
     "id": "RT:pq:light_speed",
@@ -28673,7 +28683,7 @@
     "codata_year": 2022,
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
-    "dimension": "M*L^2*T^-2*K^-1",
+    "dimension_vector": "M*L^2*T^-2*Th^-1",
     "domain": "phys.constant",
     "explicit_or_inferred": "explicit",
     "id": "SM:pq:boltz_const",
@@ -28706,7 +28716,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
-    "dimension": "dimensionless",
+    "dimension_vector": "1",
+    "dimension_vector_declared": "dimensionless",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "SM:pq:microstates",
@@ -28731,7 +28742,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
-    "dimension": "dimensionless",
+    "dimension_vector": "1",
+    "dimension_vector_declared": "dimensionless",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "SM:pq:partition_fn",
@@ -28756,7 +28768,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
-    "dimension": "M*L^2*T^-2*K^-1",
+    "dimension_vector": "M*L^2*T^-2*Th^-1",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "SM:pq:stat_entropy",
@@ -28782,7 +28794,8 @@
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
     "derived_from": "J/K",
-    "dimension": "M*L^2*T^-2*K^-1",
+    "dimension_vector": "M*L^2*T^-2*Th^-1",
+    "dimension_vector_declared": "M*L^2*T^-2*K^-1",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "SM:un:j_per_k",
@@ -28953,7 +28966,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "M*L^2*T^-2*K^-1",
+    "dimension_vector": "M*L^2*T^-2*Th^-1",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:entropy",
@@ -28980,7 +28993,7 @@
     "codata_year": 2022,
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "M*L^2*T^-2*mol^-1*K^-1",
+    "dimension_vector": "M*L^2*T^-2*Th^-1*N^-1",
     "domain": "phys.constant",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:gas_const",
@@ -29013,7 +29026,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:heat",
@@ -29038,7 +29051,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "M*L^2*T^-2",
+    "dimension_vector": "M*L^2*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:internal_energy",
@@ -29063,7 +29076,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "mol",
+    "dimension_vector": "N",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:n_moles",
@@ -29088,7 +29101,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "M*L^-1*T^-2",
+    "dimension_vector": "M*L^-1*T^-2",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:pressure",
@@ -29113,7 +29126,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "K",
+    "dimension_vector": "Th",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:temperature",
@@ -29138,7 +29151,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "L^3",
+    "dimension_vector": "L^3",
     "domain": "phys.quantity",
     "explicit_or_inferred": "explicit",
     "id": "TH:pq:volume",
@@ -29187,7 +29200,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "L^3",
+    "dimension_vector": "L^3",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "TH:un:cubic_meter",
@@ -29213,7 +29226,8 @@
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
     "derived_from": "J/K",
-    "dimension": "M*L^2*T^-2*K^-1",
+    "dimension_vector": "M*L^2*T^-2*Th^-1",
+    "dimension_vector_declared": "M*L^2*T^-2*K^-1",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "TH:un:j_per_k",
@@ -29239,7 +29253,8 @@
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
     "derived_from": "J/(mol*K)",
-    "dimension": "M*L^2*T^-2*mol^-1*K^-1",
+    "dimension_vector": "M*L^2*T^-2*Th^-1*N^-1",
+    "dimension_vector_declared": "M*L^2*T^-2*mol^-1*K^-1",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "TH:un:j_per_mol_k",
@@ -29288,7 +29303,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "K",
+    "dimension_vector": "Th",
+    "dimension_vector_declared": "K",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "TH:un:kelvin",
@@ -29314,7 +29330,8 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
-    "dimension": "mol",
+    "dimension_vector": "N",
+    "dimension_vector_declared": "mol",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "TH:un:mole",
@@ -29364,7 +29381,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
-    "dimension": "M",
+    "dimension_vector": "M",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "UN:kg",
@@ -29390,7 +29407,7 @@
    "attrs": {
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
-    "dimension": "L*T^-1",
+    "dimension_vector": "L*T^-1",
     "domain": "phys.unit",
     "explicit_or_inferred": "explicit",
     "id": "UN:mps",

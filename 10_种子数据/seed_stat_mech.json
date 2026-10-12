@@ -88,7 +88,7 @@
         "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "k_B",
         "value": 1.380649e-23,
-        "dimension": "M*L^2*T^-2*K^-1"
+        "dimension_vector": "M*L^2*T^-2*Th^-1"
       }
     },
     {
@@ -106,7 +106,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "W",
-        "dimension": "dimensionless"
+        "dimension_vector": "1",
+        "dimension_vector_declared": "dimensionless"
       }
     },
     {
@@ -124,7 +125,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "Z",
-        "dimension": "dimensionless"
+        "dimension_vector": "1",
+        "dimension_vector_declared": "dimensionless"
       }
     },
     {
@@ -142,7 +144,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "S",
-        "dimension": "M*L^2*T^-2*K^-1"
+        "dimension_vector": "M*L^2*T^-2*Th^-1"
       }
     },
     {
@@ -160,8 +162,9 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:42.571782",
         "symbol": "J/K",
-        "dimension": "M*L^2*T^-2*K^-1",
-        "derived_from": "J/K"
+        "derived_from": "J/K",
+        "dimension_vector": "M*L^2*T^-2*Th^-1",
+        "dimension_vector_declared": "M*L^2*T^-2*K^-1"
       }
     },
     {

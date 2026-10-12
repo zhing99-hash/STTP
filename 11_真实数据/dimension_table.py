@@ -308,5 +308,100 @@ def same_dimension_pairs(names):
     return out
 
 
+# ---------------------------------------------------------------- 量纲串解析（R09）
+# `dimension_vector` 字段在图上以**字符串**形式存储（历史格式）：`M*L^2*T^-2`；
+# 无量纲记作 `1`。本函数把它解析回向量，用于与独立 SI 基表逐条对照。
+# 注意：符号集与 DIM 一致（M L T I Th N J A），**不退化为「单位串」解析**
+#   —— `12_评测/eval_runner.py` 里另有一套「单位串」解析器（`m` 在那里是米），
+#   两套语法不得混用（Phase 38 US-07 的教训）。
+_DIM_TOKEN = None
+
+
+def parse_dim_string(s):
+    """把量纲串（`M*L^2*T^-2` / `1`）解析为向量 dict；无法解析返回 None。"""
+    global _DIM_TOKEN
+    if _DIM_TOKEN is None:
+        _DIM_TOKEN = __import__("re").compile(r"^([A-Za-z]+)(?:\^(-?\d+))?$")
+    if s is None:
+        return None
+    t = str(s).strip()
+    if t in ("", "1", "0"):
+        return {}
+    acc = collections.defaultdict(float)
+    for tok in t.replace("·", "*").replace(" ", "*").split("*"):
+        tok = tok.strip()
+        if not tok:
+            continue
+        m = _DIM_TOKEN.match(tok)
+        if not m:
+            return None
+        sym = m.group(1)
+        if sym not in DIM:
+            return None
+        acc[sym] += float(m.group(2) or 1)
+    return {k: acc[k] for k in DIM if abs(acc.get(k, 0.0)) > 1e-9}
+
+
+# 声明串里的**符号归一**（确定性，非物理猜测；R09）：
+#   实测种子串只把两个**单位符号**混进了量纲串 —— K（开尔文）→ Th、mol（摩尔）→ N；
+#   `dimensionless` 是无量纲的书写形式。
+SYMBOL_FIX = {"K": "Th", "mol": "N"}
+_DIMENSIONLESS_TOKENS = {"dimensionless", "1", "", "0"}
+
+
+def vec_to_str(v):
+    """向量 dict → 规范量纲串（`M*L^2*T^-2`）；空 → `1`。"""
+    parts = []
+    for d in DIM:
+        e = v.get(d, 0)
+        if abs(e) > 1e-9:
+            ei = int(round(e))
+            parts.append(d if ei == 1 else "%s^%d" % (d, ei))
+    return "*".join(parts) if parts else "1"
+
+
+def normalize_dim_string(s):
+    """把（可能混用单位符号的）量纲声明串规范化为规范形；不可解析则原样返回。
+
+    例：`K` → `Th`；`M*L^2*T^-2*K^-1` → `M*L^2*T^-2*Th^-1`；`N*L^-3` → `L^-3*N`；
+        `dimensionless` → `1`。
+    """
+    t = str(s).strip()
+    if t.lower() in _DIMENSIONLESS_TOKENS:
+        return "1"
+    fixed = []
+    for tok in t.replace("·", "*").replace(" ", "*").split("*"):
+        tok = tok.strip()
+        if not tok:
+            continue
+        base, _, e = tok.partition("^")
+        base = SYMBOL_FIX.get(base, base)
+        fixed.append(base + ("^" + e if e else ""))
+    v = parse_dim_string("*".join(fixed))
+    return vec_to_str(v) if v is not None else t
+
+
 if __name__ == "__main__":
+    import sys as _sys
+    if "--compare" in _sys.argv:
+        # 反解表 vs 独立 SI 基表对照（R09）：作为「反解表可信度」的外部证据
+        _sys.path.insert(0, HERE)
+        import si_base_table as _si
+        _cmp = _si.compare(load())
+        print("反解表条目 %d / 可对照 %d" % (_cmp["n_reverse"], _cmp["n_checked"]))
+        print("  agree                 : %d" % len(_cmp["agree"]))
+        print("  convention_difference : %d  %s" % (
+            len(_cmp["convention_difference"]),
+            [x["name"] for x in _cmp["convention_difference"]]))
+        print("  conflict              : %d  %s" % (
+            len(_cmp["conflict"]), [x["name"] for x in _cmp["conflict"]]))
+        print("  only_in_reverse       : %d  %s" % (
+            len(_cmp["only_in_reverse"]), [x["name"] for x in _cmp["only_in_reverse"]]))
+        print("  only_in_si            : %d  %s" % (
+            len(_cmp["only_in_si"]), [x["name"] for x in _cmp["only_in_si"]]))
+        print("  agree_rate(checked)   : %s" % _cmp["agree_rate_of_checked"])
+        if "--json" in _sys.argv:
+            import json as _json
+            print(_json.dumps(_cmp, ensure_ascii=False, indent=2))
+        _sys.exit(1 if _cmp["conflict"] else 0)
     build(os.path.join(HERE, "physicsbabel_circuits.parquet"))

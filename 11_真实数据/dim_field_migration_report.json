@@ -1,0 +1,343 @@
+{
+  "mode": "apply",
+  "per_file": {
+    "11_真实数据/physicsbabel_raw.json": 50,
+    "06_PoC/etl/normalized.json": 148,
+    "06_PoC/graph_data_phase36.json": 148,
+    "10_种子数据/seed_chem_equilibrium.json": 13,
+    "10_种子数据/seed_classical_mechanics.json": 10,
+    "10_种子数据/seed_electromagnetism.json": 21,
+    "10_种子数据/seed_energy_combustion.json": 12,
+    "10_种子数据/seed_math_algebra.json": 1,
+    "10_种子数据/seed_math_geometry.json": 7,
+    "10_种子数据/seed_optics.json": 5,
+    "10_种子数据/seed_quantum.json": 8,
+    "10_种子数据/seed_relativity.json": 3,
+    "10_种子数据/seed_stat_mech.json": 5,
+    "10_种子数据/seed_thermo.json": 13
+  },
+  "stats": {
+    "pb_to_exponent": 150,
+    "seed_kept": 96,
+    "seed_agree": 153,
+    "seed_unit_symbol": 33,
+    "seed_canonical_order": 12
+  },
+  "changes": [
+    {
+      "id": "TH:un:kelvin",
+      "name": "kelvin",
+      "declared": "K",
+      "authoritative": "Th",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:mole",
+      "name": "mole",
+      "declared": "mol",
+      "authoritative": "N",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:j_per_k",
+      "name": "joule per kelvin",
+      "declared": "M*L^2*T^-2*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:j_per_mol_k",
+      "name": "joule per mole kelvin",
+      "declared": "M*L^2*T^-2*mol^-1*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1*N^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "EM:un:coulomb",
+      "name": "coulomb",
+      "declared": "I*T",
+      "authoritative": "T*I",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "RT:pq:lorentz_factor",
+      "name": "Lorentz factor",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "MA:pq:euler_e",
+      "name": "Euler's number",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "MG:un:radian",
+      "name": "radian",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "OP:pq:refractive_index",
+      "name": "Refractive index",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:pq:microstates",
+      "name": "Number of microstates",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:pq:partition_fn",
+      "name": "Partition function",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:un:j_per_k",
+      "name": "joule per kelvin",
+      "declared": "M*L^2*T^-2*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "CE:pq:concentration",
+      "name": "Molar concentration",
+      "declared": "N*L^-3",
+      "authoritative": "L^-3*N",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "CE:pq:faraday_const",
+      "name": "Faraday constant",
+      "declared": "I*T*N^-1",
+      "authoritative": "T*I*N^-1",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "CE:un:molar",
+      "name": "mole per litre",
+      "declared": "N*L^-3",
+      "authoritative": "L^-3*N",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "TH:un:kelvin",
+      "name": "kelvin",
+      "declared": "K",
+      "authoritative": "Th",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:mole",
+      "name": "mole",
+      "declared": "mol",
+      "authoritative": "N",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:j_per_k",
+      "name": "joule per kelvin",
+      "declared": "M*L^2*T^-2*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:j_per_mol_k",
+      "name": "joule per mole kelvin",
+      "declared": "M*L^2*T^-2*mol^-1*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1*N^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "EM:un:coulomb",
+      "name": "coulomb",
+      "declared": "I*T",
+      "authoritative": "T*I",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "RT:pq:lorentz_factor",
+      "name": "Lorentz factor",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "MA:pq:euler_e",
+      "name": "Euler's number",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "MG:un:radian",
+      "name": "radian",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "OP:pq:refractive_index",
+      "name": "Refractive index",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:pq:microstates",
+      "name": "Number of microstates",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:pq:partition_fn",
+      "name": "Partition function",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:un:j_per_k",
+      "name": "joule per kelvin",
+      "declared": "M*L^2*T^-2*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "CE:pq:concentration",
+      "name": "Molar concentration",
+      "declared": "N*L^-3",
+      "authoritative": "L^-3*N",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "CE:pq:faraday_const",
+      "name": "Faraday constant",
+      "declared": "I*T*N^-1",
+      "authoritative": "T*I*N^-1",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "CE:un:molar",
+      "name": "mole per litre",
+      "declared": "N*L^-3",
+      "authoritative": "L^-3*N",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "CE:pq:concentration",
+      "name": "Molar concentration",
+      "declared": "N*L^-3",
+      "authoritative": "L^-3*N",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "CE:pq:faraday_const",
+      "name": "Faraday constant",
+      "declared": "I*T*N^-1",
+      "authoritative": "T*I*N^-1",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "CE:un:molar",
+      "name": "mole per litre",
+      "declared": "N*L^-3",
+      "authoritative": "L^-3*N",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "EM:un:coulomb",
+      "name": "coulomb",
+      "declared": "I*T",
+      "authoritative": "T*I",
+      "reason": "canonical_order"
+    },
+    {
+      "id": "MA:pq:euler_e",
+      "name": "Euler's number",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "MG:un:radian",
+      "name": "radian",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "OP:pq:refractive_index",
+      "name": "Refractive index",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "RT:pq:lorentz_factor",
+      "name": "Lorentz factor",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:pq:microstates",
+      "name": "Number of microstates",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:pq:partition_fn",
+      "name": "Partition function",
+      "declared": "dimensionless",
+      "authoritative": "1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "SM:un:j_per_k",
+      "name": "joule per kelvin",
+      "declared": "M*L^2*T^-2*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:kelvin",
+      "name": "kelvin",
+      "declared": "K",
+      "authoritative": "Th",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:mole",
+      "name": "mole",
+      "declared": "mol",
+      "authoritative": "N",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:j_per_k",
+      "name": "joule per kelvin",
+      "declared": "M*L^2*T^-2*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1",
+      "reason": "unit_symbol"
+    },
+    {
+      "id": "TH:un:j_per_mol_k",
+      "name": "joule per mole kelvin",
+      "declared": "M*L^2*T^-2*mol^-1*K^-1",
+      "authoritative": "M*L^2*T^-2*Th^-1*N^-1",
+      "reason": "unit_symbol"
+    }
+  ]
+}

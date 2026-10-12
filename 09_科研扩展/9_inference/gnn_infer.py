@@ -260,7 +260,7 @@ for i, nid in enumerate(all_ids):
     X[i, off] = 1.0 if t == "Element" else 0.0
     off += 1
     if t == "Unit":
-        dim = str(p.get("dimension") or "")
+        dim = str(p.get("dimension_vector") or "")   # R09 字段迁移：dimension → dimension_vector
         for j, name in enumerate(BASE_DIMS):
             if name in dim:
                 X[i, off + j] = 1.0

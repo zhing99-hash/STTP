@@ -16,8 +16,18 @@ domain 驱动可视化学科着色（chem / phys / math）。
 """
 import json
 import os
+import sys
 from collections import Counter
 from datetime import datetime
+
+# R09：量纲声明串的**单点归一**（K→Th、mol→N、dimensionless→1、规范排序）。
+#   放在源头，保证「重跑 build_*.py 产出的 raw」与「迁移后的权威图」字段一致。
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                "..", "11_真实数据"))
+try:
+    import dimension_table as _dt
+except Exception:                                                     # noqa: BLE001
+    _dt = None
 
 SOURCE = "curated_seed"
 NOW = datetime.now().isoformat()
@@ -58,6 +68,8 @@ def n(id, ntype, name, domain="", **props):
     p = {"name": name, "ntype": ntype, "domain": domain, "source": SOURCE,
          "confidence": CONF, "explicit_or_inferred": "explicit", "created_at": NOW}
     p.update(props)
+    if _dt is not None and "dimension_vector" in p:
+        p["dimension_vector"] = _dt.normalize_dim_string(p["dimension_vector"])
     return {"id": id, "labels": ["Entity", TYPE_LABEL[ntype]], "props": p}
 
 

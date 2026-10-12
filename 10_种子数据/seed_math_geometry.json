@@ -103,7 +103,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:46.184164",
         "symbol": "A",
-        "dimension": "L^2"
+        "dimension_vector": "L^2"
       }
     },
     {
@@ -121,7 +121,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:46.184164",
         "symbol": "V",
-        "dimension": "L^3"
+        "dimension_vector": "L^3"
       }
     },
     {
@@ -139,7 +139,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:46.184164",
         "symbol": "theta",
-        "dimension": "dimensionless"
+        "dimension_vector": "1"
       }
     },
     {
@@ -157,7 +157,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:46.184164",
         "symbol": "r",
-        "dimension": "L"
+        "dimension_vector": "L"
       }
     },
     {
@@ -175,7 +175,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:46.184164",
         "symbol": "m^2",
-        "dimension": "L^2"
+        "dimension_vector": "L^2"
       }
     },
     {
@@ -193,7 +193,7 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:46.184164",
         "symbol": "m^3",
-        "dimension": "L^3"
+        "dimension_vector": "L^3"
       }
     },
     {
@@ -211,7 +211,8 @@
         "explicit_or_inferred": "explicit",
         "created_at": "2026-10-09T14:06:46.184164",
         "symbol": "rad",
-        "dimension": "dimensionless"
+        "dimension_vector": "1",
+        "dimension_vector_declared": "dimensionless"
       }
     },
     {

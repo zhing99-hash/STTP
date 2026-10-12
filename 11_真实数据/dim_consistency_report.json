@@ -1,0 +1,30 @@
+{
+  "schema": "sttp-dim-consistency/v1",
+  "source": "11_真实数据/physicsbabel_circuits.parquet（plausible 方程）",
+  "tier1_independent_si": {
+    "n_equations": 46720,
+    "homogeneous": 46720,
+    "contradiction": 0,
+    "undetermined": 0,
+    "contradiction_rate_of_decidable": 0.0,
+    "examples": []
+  },
+  "tier2_reverse_solved": {
+    "n_equations": 46720,
+    "homogeneous": 46095,
+    "contradiction": 0,
+    "undetermined": 625,
+    "contradiction_rate_of_decidable": 0.0,
+    "examples": []
+  },
+  "selfcheck": {
+    "pass": true,
+    "result": {
+      "n_equations": 3,
+      "homogeneous": 1,
+      "contradiction": 1,
+      "undetermined": 1
+    }
+  },
+  "note": "Tier1 与被校验对象不同源（强证据）；Tier2 为留出外自洽（与求解子集同源，须分列）。三态：不可判定既不计矛盾也不计通过。"
+}

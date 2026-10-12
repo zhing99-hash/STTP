@@ -82,31 +82,31 @@ nodes += [
 # --------------------------------------------------------------------------
 nodes += [
     sc.n("CE:pq:equilibrium_constant", "physical_quantity", "Equilibrium constant",
-         "chem.equilibrium", symbol="K", dimension="1",
+         "chem.equilibrium", symbol="K", dimension_vector="1",
          informal="无量纲（严格为活度商，理想稀溶液近似为浓度商）。"),
     sc.n("CE:pq:reaction_quotient", "physical_quantity", "Reaction quotient",
-         "chem.equilibrium", symbol="Q", dimension="1"),
+         "chem.equilibrium", symbol="Q", dimension_vector="1"),
     sc.n("CE:pq:gibbs_energy", "physical_quantity", "Gibbs free energy",
-         "chem.equilibrium", symbol="G", dimension="M*L^2*T^-2"),
+         "chem.equilibrium", symbol="G", dimension_vector="M*L^2*T^-2"),
     sc.n("CE:pq:gibbs_std", "physical_quantity", "Standard Gibbs free energy change",
-         "chem.equilibrium", symbol="G°", dimension="M*L^2*T^-2"),
-    sc.n("CE:pq:ph", "physical_quantity", "pH", "chem.acidbase", symbol="pH", dimension="1"),
+         "chem.equilibrium", symbol="G°", dimension_vector="M*L^2*T^-2"),
+    sc.n("CE:pq:ph", "physical_quantity", "pH", "chem.acidbase", symbol="pH", dimension_vector="1"),
     sc.n("CE:pq:ka", "physical_quantity", "Acid dissociation constant",
-         "chem.acidbase", symbol="Ka", dimension="1"),
-    sc.n("CE:pq:pka", "physical_quantity", "pKa", "chem.acidbase", symbol="pKa", dimension="1"),
+         "chem.acidbase", symbol="Ka", dimension_vector="1"),
+    sc.n("CE:pq:pka", "physical_quantity", "pKa", "chem.acidbase", symbol="pKa", dimension_vector="1"),
     sc.n("CE:pq:ksp", "physical_quantity", "Solubility product",
-         "chem.solubility", symbol="Ksp", dimension="1"),
+         "chem.solubility", symbol="Ksp", dimension_vector="1"),
     sc.n("CE:pq:concentration", "physical_quantity", "Molar concentration",
-         "chem.quantity", symbol="c", dimension="N*L^-3"),
+         "chem.quantity", symbol="c", dimension_vector="N*L^-3"),
     sc.n("CE:pq:cell_potential", "physical_quantity", "Cell potential",
-         "chem.electrochem", symbol="E", dimension="M*L^2*T^-3*I^-1"),
+         "chem.electrochem", symbol="E", dimension_vector="M*L^2*T^-3*I^-1"),
     sc.n("CE:pq:rate_constant", "physical_quantity", "Reaction rate constant",
          "chem.kinetics", symbol="k"),
     sc.n("CE:pq:activation_energy", "physical_quantity", "Activation energy",
-         "chem.kinetics", symbol="Ea", dimension="M*L^2*T^-2"),
+         "chem.kinetics", symbol="Ea", dimension_vector="M*L^2*T^-2"),
     sc.n("CE:pq:faraday_const", "constant", "Faraday constant",
          "chem.constant", symbol="F", value=96485.33212, unit="C/mol",
-         dimension="I*T*N^-1"),
+         dimension_vector="I*T*N^-1"),
 ]
 
 # --------------------------------------------------------------------------
@@ -114,7 +114,7 @@ nodes += [
 # --------------------------------------------------------------------------
 nodes += [
     sc.n("CE:un:molar", "unit", "mole per litre", "chem.unit",
-         symbol="mol/L", dimension="N*L^-3", derived_from="mol/dm^3"),
+         symbol="mol/L", dimension_vector="N*L^-3", derived_from="mol/dm^3"),
 ]
 
 # --------------------------------------------------------------------------

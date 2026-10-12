@@ -42,24 +42,24 @@ nodes += [
 ]
 # 物理量
 nodes += [
-    sc.n("TH:pq:pressure", "physical_quantity", "Pressure", "phys.quantity", symbol="P", dimension="M*L^-1*T^-2"),
-    sc.n("TH:pq:volume", "physical_quantity", "Volume", "phys.quantity", symbol="V", dimension="L^3"),
-    sc.n("TH:pq:temperature", "physical_quantity", "Temperature", "phys.quantity", symbol="T", dimension="K"),
+    sc.n("TH:pq:pressure", "physical_quantity", "Pressure", "phys.quantity", symbol="P", dimension_vector="M*L^-1*T^-2"),
+    sc.n("TH:pq:volume", "physical_quantity", "Volume", "phys.quantity", symbol="V", dimension_vector="L^3"),
+    sc.n("TH:pq:temperature", "physical_quantity", "Temperature", "phys.quantity", symbol="T", dimension_vector="K"),
     sc.n("TH:pq:gas_const", "constant", "Gas constant", "phys.constant", symbol="R", value=8.314,
-         dimension="M*L^2*T^-2*mol^-1*K^-1"),
-    sc.n("TH:pq:internal_energy", "physical_quantity", "Internal energy", "phys.quantity", symbol="U", dimension="M*L^2*T^-2"),
-    sc.n("TH:pq:heat", "physical_quantity", "Heat", "phys.quantity", symbol="Q", dimension="M*L^2*T^-2"),
-    sc.n("TH:pq:n_moles", "physical_quantity", "Amount of substance", "phys.quantity", symbol="n", dimension="mol"),
-    sc.n("TH:pq:entropy", "physical_quantity", "Entropy", "phys.quantity", symbol="S", dimension="M*L^2*T^-2*K^-1"),
+         dimension_vector="M*L^2*T^-2*mol^-1*K^-1"),
+    sc.n("TH:pq:internal_energy", "physical_quantity", "Internal energy", "phys.quantity", symbol="U", dimension_vector="M*L^2*T^-2"),
+    sc.n("TH:pq:heat", "physical_quantity", "Heat", "phys.quantity", symbol="Q", dimension_vector="M*L^2*T^-2"),
+    sc.n("TH:pq:n_moles", "physical_quantity", "Amount of substance", "phys.quantity", symbol="n", dimension_vector="mol"),
+    sc.n("TH:pq:entropy", "physical_quantity", "Entropy", "phys.quantity", symbol="S", dimension_vector="M*L^2*T^-2*K^-1"),
 ]
 # 单位
 nodes += [
-    sc.n("TH:un:kelvin", "unit", "kelvin", "phys.unit", symbol="K", dimension="K", si_base=True),
-    sc.n("TH:un:cubic_meter", "unit", "cubic meter", "phys.unit", symbol="m^3", dimension="L^3"),
-    sc.n("TH:un:mole", "unit", "mole", "phys.unit", symbol="mol", dimension="mol", si_base=True),
-    sc.n("TH:un:j_per_k", "unit", "joule per kelvin", "phys.unit", symbol="J/K", dimension="M*L^2*T^-2*K^-1", derived_from="J/K"),
+    sc.n("TH:un:kelvin", "unit", "kelvin", "phys.unit", symbol="K", dimension_vector="K", si_base=True),
+    sc.n("TH:un:cubic_meter", "unit", "cubic meter", "phys.unit", symbol="m^3", dimension_vector="L^3"),
+    sc.n("TH:un:mole", "unit", "mole", "phys.unit", symbol="mol", dimension_vector="mol", si_base=True),
+    sc.n("TH:un:j_per_k", "unit", "joule per kelvin", "phys.unit", symbol="J/K", dimension_vector="M*L^2*T^-2*K^-1", derived_from="J/K"),
     sc.n("TH:un:j_per_mol_k", "unit", "joule per mole kelvin", "phys.unit", symbol="J/(mol*K)",
-         dimension="M*L^2*T^-2*mol^-1*K^-1", derived_from="J/(mol*K)"),
+         dimension_vector="M*L^2*T^-2*mol^-1*K^-1", derived_from="J/(mol*K)"),
 ]
 # 符号
 nodes += [

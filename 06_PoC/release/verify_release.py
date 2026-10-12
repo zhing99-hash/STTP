@@ -63,7 +63,8 @@ LEVEL_RANK = {"unverified": 0, "model_inferred": 1, "source_asserted": 2,
 REQUIRED_MODULES = ("networkx", "sympy", "pint", "rdkit")
 REQUIRED_LOCAL = ("verification_model", "verification_loop", "dimension_table",
                   "graph_export")
-SAMPLE_KINDS = "dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check"
+SAMPLE_KINDS = ("dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check,"
+                "dim_field_semantics,dim_consistency")
 
 
 def sha256_file(path: str) -> str:

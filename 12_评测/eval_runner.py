@@ -264,7 +264,7 @@ def s_dimension_compare(task, inp, world):
 
 def s_dimensionless_check(task, inp, world):
     nid = inp["graph_node"]
-    dim = world.prop(nid, "dimension")
+    dim = world.prop(nid, "dimension_vector")   # R09 字段迁移：dimension → dimension_vector
     if dim is None:
         raise Refuse("graph_dimension_missing")
     return str(dim).strip() in ("1", "dimensionless", "")

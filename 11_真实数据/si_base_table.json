@@ -1,0 +1,518 @@
+{
+  "convention": {
+    "acceleration": "SI",
+    "action": "SI",
+    "amount": "SI",
+    "amount_conc": "SI",
+    "ang_momentum": "ISO80000-dimensionless",
+    "angle": "ISO80000-dimensionless",
+    "area": "SI",
+    "avogadro": "SI",
+    "bfield": "SI",
+    "boltzmann": "SI",
+    "capacitance": "SI",
+    "cat_activity": "SI",
+    "charge": "SI",
+    "conductivity": "SI",
+    "current": "SI",
+    "efield": "SI",
+    "elem_charge": "SI",
+    "energy": "SI",
+    "entropy": "SI",
+    "expansion": "SI",
+    "flowrate": "SI",
+    "force": "SI",
+    "frequency": "SI",
+    "gas_constant": "SI",
+    "grav_const": "SI",
+    "heat_capacity": "SI",
+    "illuminance": "SI",
+    "inductance": "SI",
+    "inertia": "SI",
+    "kin_viscosity": "SI",
+    "length": "SI",
+    "light_speed": "SI",
+    "luminance": "SI",
+    "luminous_flux": "SI",
+    "luminous_intensity": "SI",
+    "mag_flux": "SI",
+    "mass": "SI",
+    "mass_density": "SI",
+    "molar_energy": "SI",
+    "molar_entropy": "SI",
+    "molar_heat_capacity": "SI",
+    "molar_mass": "SI",
+    "momentum": "SI",
+    "omega": "ISO80000-dimensionless",
+    "permeability": "SI",
+    "permittivity": "SI",
+    "planck": "SI",
+    "power": "SI",
+    "pressure": "SI",
+    "resistance": "SI",
+    "resistivity": "SI",
+    "specific_heat": "SI",
+    "stiffness": "SI",
+    "surf_tension": "SI",
+    "temperature": "SI",
+    "thermal_cond": "SI",
+    "thermal_diff": "SI",
+    "time": "SI",
+    "torque": "SI",
+    "velocity": "SI",
+    "viscosity": "SI",
+    "voltage": "SI",
+    "volume": "SI"
+  },
+  "meta": {
+    "angle_convention": {
+      "handling": "compare() 将「仅差 A」归为 convention_difference，不判为错误",
+      "si_iso80000": "平面角无量纲（rad = 1）",
+      "sttp_reverse_table": "另立 A 为第 8 基，但实测仅 angle 一个量带 A（孤例）"
+    },
+    "base_dims": [
+      "M",
+      "L",
+      "T",
+      "I",
+      "Th",
+      "N",
+      "J",
+      "A"
+    ],
+    "n_quantities": 63,
+    "name": "独立 SI/ISO 80000 权威量纲基表",
+    "note": "手工编纂，逐条可核；不反解、不外推、不猜测。",
+    "sources": [
+      "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+      "ISO 80000-3:2019 (Space and time)",
+      "ISO 80000-4:2019 (Mechanics)",
+      "ISO 80000-5:2019 (Thermodynamics)",
+      "ISO 80000-6:2022 (Electromagnetism)",
+      "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+      "ISO 80000-12:2019 (Condensed matter physics)",
+      "CODATA 2018 recommended values"
+    ],
+    "why": "为 PhysicsBabel 反解表提供**独立外部对照**，打断同源自洽（复评 R09）"
+  },
+  "quantities": {
+    "acceleration": {
+      "L": 1,
+      "T": -2
+    },
+    "action": {
+      "L": 2,
+      "M": 1,
+      "T": -1
+    },
+    "amount": {
+      "N": 1
+    },
+    "amount_conc": {
+      "L": -3,
+      "N": 1
+    },
+    "ang_momentum": {
+      "L": 2,
+      "M": 1,
+      "T": -1
+    },
+    "angle": {},
+    "area": {
+      "L": 2
+    },
+    "avogadro": {
+      "N": -1
+    },
+    "bfield": {
+      "I": -1,
+      "M": 1,
+      "T": -2
+    },
+    "boltzmann": {
+      "L": 2,
+      "M": 1,
+      "T": -2,
+      "Th": -1
+    },
+    "capacitance": {
+      "I": 2,
+      "L": -2,
+      "M": -1,
+      "T": 4
+    },
+    "cat_activity": {
+      "N": 1,
+      "T": -1
+    },
+    "charge": {
+      "I": 1,
+      "T": 1
+    },
+    "conductivity": {
+      "I": 2,
+      "L": -3,
+      "M": -1,
+      "T": 3
+    },
+    "current": {
+      "I": 1
+    },
+    "efield": {
+      "I": -1,
+      "L": 1,
+      "M": 1,
+      "T": -3
+    },
+    "elem_charge": {
+      "I": 1,
+      "T": 1
+    },
+    "energy": {
+      "L": 2,
+      "M": 1,
+      "T": -2
+    },
+    "entropy": {
+      "L": 2,
+      "M": 1,
+      "T": -2,
+      "Th": -1
+    },
+    "expansion": {
+      "Th": -1
+    },
+    "flowrate": {
+      "L": 3,
+      "T": -1
+    },
+    "force": {
+      "L": 1,
+      "M": 1,
+      "T": -2
+    },
+    "frequency": {
+      "T": -1
+    },
+    "gas_constant": {
+      "L": 2,
+      "M": 1,
+      "N": -1,
+      "T": -2,
+      "Th": -1
+    },
+    "grav_const": {
+      "L": 3,
+      "M": -1,
+      "T": -2
+    },
+    "heat_capacity": {
+      "L": 2,
+      "M": 1,
+      "T": -2,
+      "Th": -1
+    },
+    "illuminance": {
+      "J": 1,
+      "L": -2
+    },
+    "inductance": {
+      "I": -2,
+      "L": 2,
+      "M": 1,
+      "T": -2
+    },
+    "inertia": {
+      "L": 2,
+      "M": 1
+    },
+    "kin_viscosity": {
+      "L": 2,
+      "T": -1
+    },
+    "length": {
+      "L": 1
+    },
+    "light_speed": {
+      "L": 1,
+      "T": -1
+    },
+    "luminance": {
+      "J": 1,
+      "L": -2
+    },
+    "luminous_flux": {
+      "J": 1
+    },
+    "luminous_intensity": {
+      "J": 1
+    },
+    "mag_flux": {
+      "I": -1,
+      "L": 2,
+      "M": 1,
+      "T": -2
+    },
+    "mass": {
+      "M": 1
+    },
+    "mass_density": {
+      "L": -3,
+      "M": 1
+    },
+    "molar_energy": {
+      "L": 2,
+      "M": 1,
+      "N": -1,
+      "T": -2
+    },
+    "molar_entropy": {
+      "L": 2,
+      "M": 1,
+      "N": -1,
+      "T": -2,
+      "Th": -1
+    },
+    "molar_heat_capacity": {
+      "L": 2,
+      "M": 1,
+      "N": -1,
+      "T": -2,
+      "Th": -1
+    },
+    "molar_mass": {
+      "M": 1,
+      "N": -1
+    },
+    "momentum": {
+      "L": 1,
+      "M": 1,
+      "T": -1
+    },
+    "omega": {
+      "T": -1
+    },
+    "permeability": {
+      "I": -2,
+      "L": 1,
+      "M": 1,
+      "T": -2
+    },
+    "permittivity": {
+      "I": 2,
+      "L": -3,
+      "M": -1,
+      "T": 4
+    },
+    "planck": {
+      "L": 2,
+      "M": 1,
+      "T": -1
+    },
+    "power": {
+      "L": 2,
+      "M": 1,
+      "T": -3
+    },
+    "pressure": {
+      "L": -1,
+      "M": 1,
+      "T": -2
+    },
+    "resistance": {
+      "I": -2,
+      "L": 2,
+      "M": 1,
+      "T": -3
+    },
+    "resistivity": {
+      "I": -2,
+      "L": 3,
+      "M": 1,
+      "T": -3
+    },
+    "specific_heat": {
+      "L": 2,
+      "T": -2,
+      "Th": -1
+    },
+    "stiffness": {
+      "M": 1,
+      "T": -2
+    },
+    "surf_tension": {
+      "M": 1,
+      "T": -2
+    },
+    "temperature": {
+      "Th": 1
+    },
+    "thermal_cond": {
+      "L": 1,
+      "M": 1,
+      "T": -3,
+      "Th": -1
+    },
+    "thermal_diff": {
+      "L": 2,
+      "T": -1
+    },
+    "time": {
+      "T": 1
+    },
+    "torque": {
+      "L": 2,
+      "M": 1,
+      "T": -2
+    },
+    "velocity": {
+      "L": 1,
+      "T": -1
+    },
+    "viscosity": {
+      "L": -1,
+      "M": 1,
+      "T": -1
+    },
+    "voltage": {
+      "I": -1,
+      "L": 2,
+      "M": 1,
+      "T": -3
+    },
+    "volume": {
+      "L": 3
+    }
+  },
+  "schema": "sttp-si-base-table/v1",
+  "scope": {
+    "acceleration": "加速度（含重力加速度）",
+    "action": "作用量（与角动量、普朗克常量同量纲）",
+    "amount": "SI 基本量（物质的量）",
+    "amount_conc": "物质的量浓度（含 concentration）",
+    "ang_momentum": "角动量：rad 无量纲故为 ML^2T^-1；若采 angle 为基则应含 A",
+    "angle": "平面角：ISO 80000-3 规定 rad = 1（无量纲）；STTP 反解表另立 A 基",
+    "area": "面积",
+    "avogadro": "阿伏伽德罗常量（1/mol）",
+    "bfield": "磁感应强度（特斯拉）",
+    "boltzmann": "玻尔兹曼常量（与熵同量纲）",
+    "capacitance": "电容",
+    "cat_activity": "催化活性（katal）",
+    "charge": "电荷（与元电荷同量纲）",
+    "conductivity": "电导率（电阻率之倒数）",
+    "current": "SI 基本量",
+    "efield": "电场强度",
+    "elem_charge": "元电荷",
+    "energy": "能量/功/热量（同量纲）",
+    "entropy": "熵/热容（同量纲）",
+    "expansion": "体胀系数",
+    "flowrate": "体积流量",
+    "force": "力",
+    "frequency": "频率（周期现象，非角频率）",
+    "gas_constant": "摩尔气体常量（与摩尔熵、摩尔热容同量纲）",
+    "grav_const": "万有引力常量",
+    "heat_capacity": "热容（与熵同量纲）",
+    "illuminance": "照度 lx=lm/m^2；与亮度同量纲、意义不同",
+    "inductance": "电感",
+    "inertia": "转动惯量",
+    "kin_viscosity": "运动黏度",
+    "length": "SI 基本量",
+    "light_speed": "真空光速",
+    "luminance": "亮度 cd/m^2；与照度同量纲、意义不同",
+    "luminous_flux": "光通量 lm=cd*sr（sr 无量纲）；与光强度同量纲",
+    "luminous_intensity": "SI 基本量",
+    "mag_flux": "磁通量",
+    "mass": "SI 基本量",
+    "mass_density": "密度（kg/m^3）",
+    "molar_energy": "摩尔能（含标准吉布斯能、摩尔焓）",
+    "molar_entropy": "摩尔熵（= 熵/物质的量；NIST WebBook std_entropy 锚定量）",
+    "molar_heat_capacity": "摩尔热容（与摩尔熵同量纲）",
+    "molar_mass": "摩尔质量",
+    "momentum": "动量；冲量同量纲",
+    "omega": "角频率/角速度：rad 无量纲故为 T^-1；若采 angle 为基则应含 A",
+    "permeability": "磁导率",
+    "permittivity": "电容率（与电容同量纲，比 F/m 需再除 L）",
+    "planck": "普朗克常量",
+    "power": "功率",
+    "pressure": "压强/应力",
+    "resistance": "电阻",
+    "resistivity": "电阻率",
+    "specific_heat": "比热容/比熵",
+    "stiffness": "刚度（力/长度）",
+    "surf_tension": "表面张力（同为 N/m，与刚度同量纲不同物理意义）",
+    "temperature": "SI 基本量（热力学温度）",
+    "thermal_cond": "热导率",
+    "thermal_diff": "热扩散率（与运动黏度同量纲）",
+    "time": "SI 基本量",
+    "torque": "力矩（与能量同量纲，物理意义不同）",
+    "velocity": "速度（含 speed）",
+    "viscosity": "动力黏度",
+    "voltage": "电压/电动势",
+    "volume": "体积"
+  },
+  "source": {
+    "acceleration": "ISO 80000-3:2019 (Space and time)",
+    "action": "ISO 80000-4:2019 (Mechanics)",
+    "amount": "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+    "amount_conc": "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+    "ang_momentum": "ISO 80000-4:2019 (Mechanics)",
+    "angle": "ISO 80000-3:2019 (Space and time)",
+    "area": "ISO 80000-3:2019 (Space and time)",
+    "avogadro": "CODATA 2018 / ISO 80000-9",
+    "bfield": "ISO 80000-6:2022 (Electromagnetism)",
+    "boltzmann": "ISO 80000-5:2019 (Thermodynamics)",
+    "capacitance": "ISO 80000-6:2022 (Electromagnetism)",
+    "cat_activity": "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+    "charge": "ISO 80000-6:2022 (Electromagnetism)",
+    "conductivity": "ISO 80000-6:2022 (Electromagnetism)",
+    "current": "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+    "efield": "ISO 80000-6:2022 (Electromagnetism)",
+    "elem_charge": "ISO 80000-6:2022 (Electromagnetism)",
+    "energy": "ISO 80000-4:2019 (Mechanics)",
+    "entropy": "ISO 80000-5:2019 (Thermodynamics)",
+    "expansion": "ISO 80000-5:2019 (Thermodynamics)",
+    "flowrate": "ISO 80000-3:2019 (Space and time)",
+    "force": "ISO 80000-4:2019 (Mechanics)",
+    "frequency": "ISO 80000-3:2019 (Space and time)",
+    "gas_constant": "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+    "grav_const": "CODATA 2018",
+    "heat_capacity": "ISO 80000-5:2019 (Thermodynamics)",
+    "illuminance": "ISO 80000-7:2019 (Light and radiation)",
+    "inductance": "ISO 80000-6:2022 (Electromagnetism)",
+    "inertia": "ISO 80000-4:2019 (Mechanics)",
+    "kin_viscosity": "ISO 80000-3:2019 (Space and time)",
+    "length": "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+    "light_speed": "CODATA 2018",
+    "luminance": "ISO 80000-7:2019 (Light and radiation)",
+    "luminous_flux": "ISO 80000-7:2019 (Light and radiation)",
+    "luminous_intensity": "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+    "mag_flux": "ISO 80000-6:2022 (Electromagnetism)",
+    "mass": "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+    "mass_density": "ISO 80000-4:2019 (Mechanics)",
+    "molar_energy": "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+    "molar_entropy": "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+    "molar_heat_capacity": "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+    "molar_mass": "ISO 80000-9:2019 (Physical chemistry / molecular physics)",
+    "momentum": "ISO 80000-4:2019 (Mechanics)",
+    "omega": "ISO 80000-3:2019 (Space and time)",
+    "permeability": "ISO 80000-6:2022 (Electromagnetism)",
+    "permittivity": "ISO 80000-6:2022 (Electromagnetism)",
+    "planck": "CODATA 2018",
+    "power": "ISO 80000-4:2019 (Mechanics)",
+    "pressure": "ISO 80000-4:2019 (Mechanics)",
+    "resistance": "ISO 80000-6:2022 (Electromagnetism)",
+    "resistivity": "ISO 80000-6:2022 (Electromagnetism)",
+    "specific_heat": "ISO 80000-5:2019 (Thermodynamics)",
+    "stiffness": "ISO 80000-4:2019 (Mechanics)",
+    "surf_tension": "ISO 80000-4:2019 (Mechanics)",
+    "temperature": "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+    "thermal_cond": "ISO 80000-5:2019 (Thermodynamics)",
+    "thermal_diff": "ISO 80000-5:2019 (Thermodynamics)",
+    "time": "SI Brochure 9th ed. (BIPM, 2019) Table 1/2",
+    "torque": "ISO 80000-4:2019 (Mechanics)",
+    "velocity": "ISO 80000-3:2019 (Space and time)",
+    "viscosity": "ISO 80000-4:2019 (Mechanics)",
+    "voltage": "ISO 80000-6:2022 (Electromagnetism)",
+    "volume": "ISO 80000-3:2019 (Space and time)"
+  }
+}

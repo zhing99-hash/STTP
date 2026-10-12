@@ -29,7 +29,7 @@ nodes += [
     sc.n("MA:pq:discriminant", "physical_quantity", "Discriminant", "math.quantity", symbol="Delta"),
     sc.n("MA:pq:roots", "physical_quantity", "Roots of polynomial", "math.quantity", symbol="x"),
     sc.n("MA:pq:binomial_coeff", "physical_quantity", "Binomial coefficient", "math.quantity", symbol=r"\binom{n}{k}"),
-    sc.n("MA:pq:euler_e", "constant", "Euler's number", "math.constant", symbol="e", value=2.718281828459045, dimension="dimensionless"),
+    sc.n("MA:pq:euler_e", "constant", "Euler's number", "math.constant", symbol="e", value=2.718281828459045, dimension_vector="dimensionless"),
 ]
 nodes += [
     sc.n("MA:sy:e", "symbol", "e (Euler's number)", "math.symbol", latex="e"),

@@ -36,6 +36,7 @@
 #   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
 #   bash sttp.sh gnneval [--gnn-seeds 1,2]           推理增量评测协议 v2：P1/P2 + 基线对照 + 种子方差（Phase 39 R11续）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
+#   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -277,6 +278,17 @@ EOF
     "$PY" 12_评测/gnn_eval_v2.py --epochs 120 --cap-test 100 "$@"
     echo "== [2/2] 非真空自检（判据必须会红）=="
     "$PY" 12_评测/gnn_eval_v2.py --quick --selfcheck
+    ;;
+  dimaudit)
+    # Phase 40（R09）：量纲审计 —— 独立 SI 基表对照 + 矛盾方程检测 + 判据非真空自检。
+    # 任一步发现「非约定性分歧」或「矛盾方程」即非零退出。
+    shift
+    echo "== [1/3] 反解表 vs 独立 SI 基表 =="
+    "$PY" 11_真实数据/dimension_table.py --compare
+    echo "== [2/3] 矛盾方程检测（一般线性一致性）=="
+    "$PY" 11_真实数据/dimension_consistency.py --json 11_真实数据/dim_consistency_report.json "$@"
+    echo "== [3/3] 判据非真空自检 =="
+    "$PY" 11_真实数据/dimension_consistency.py --selfcheck
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

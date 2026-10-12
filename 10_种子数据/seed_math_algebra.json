@@ -156,7 +156,8 @@
         "created_at": "2026-10-09T14:06:45.444282",
         "symbol": "e",
         "value": 2.718281828459045,
-        "dimension": "dimensionless"
+        "dimension_vector": "1",
+        "dimension_vector_declared": "dimensionless"
       }
     },
     {
