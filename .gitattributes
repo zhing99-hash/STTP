@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# 行尾策略：机器可读产物必须**逐字节稳定**。
+#
+# 背景（Phase 37 · R06）：本机 git 为 `core.autocrlf=true`，检出时会把 LF 转成 CRLF。
+# 发布包用 sha256 钉死产物（manifest.json / verify_release.py），若检出后行尾被改，
+# **clone 出来的文件校验和就对不上** —— 「可复现发布」当场失效。
+# 故对 JSON / lock 一律禁止行尾转换（-text），保证「仓库里的字节 == 检出后的字节」。
+
+*.json  -text
+*.lock  -text
+
+# 文本源码保持默认（交给 core.autocrlf 处理）

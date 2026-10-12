@@ -46,5 +46,7 @@ Thumbs.db
 
 # 长驻服务运行日志（本机）
 .runlog/
+# 发布包打包产物（Phase 37 R06：完整快照 tarball，由 make_manifest.py --pack 生成，不入库）
+dist/
 # Kuzu 演示数据库产物（本机）—— kuzu_db 实为文件，用 kuzu_db* 同时覆盖文件 / 目录 / .wal
 06_PoC/etl/kuzu_db*

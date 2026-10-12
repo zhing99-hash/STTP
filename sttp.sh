@@ -30,6 +30,9 @@
 #   bash sttp.sh mnxrecov                           MetaNetX 对 Rhea 反应覆盖率现算（Phase 35，只读）
 #   bash sttp.sh reach35                            第二源可达性穷举侦察（Phase 35，只读）
 #   bash sttp.sh rescope                            验证语义校正 delta（Phase 36，GPT6 复评 R03/R04/R05；默认 dry-run）
+#   bash sttp.sh release                            构建可复现发布包（样例 + 清单 + fail-closed 校验，Phase 37 R06）
+#   bash sttp.sh sample [--port N]                  只用**离线样例**起可视化（页面与查询同版本，单命令）
+#   bash sttp.sh release-full                       对完整快照跑全量发布校验（--release 门禁 + manifest 现算比对）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -47,7 +50,7 @@ if [ -f "$ROOT/.env" ]; then
     _k="$(printf '%s' "$_k" | tr -d '[:space:]\r')"
     _v="$(printf '%s' "$_v" | tr -d '\r')"
     case "$_k" in
-      NEO4J_URI|NEO4J_USER|NEO4J_PASSWORD|NEO4J_DATABASE|GRAPH_DATA_FILE|VIZ_PORT|STTP_PYTHON)
+      NEO4J_URI|NEO4J_USER|NEO4J_PASSWORD|NEO4J_DATABASE|GRAPH_DATA_FILE|GRAPH_SOURCE_FILE|VIZ_PORT|STTP_PYTHON)
         export "$_k=$_v" ;;
     esac
   done < "$ROOT/.env"
@@ -213,6 +216,43 @@ EOF
     # 门禁「非真空」自检：注入已知假边，断言不变量真的会红（铁律 #14）
     shift
     "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
+    ;;
+  release)
+    # Phase 37（R06）：可复现发布包 = 离线样例 → 发布清单 → fail-closed 校验。
+    # 全流程幂等；任一步失败即非零退出（验证样例可与页面/查询同版本独立运行）。
+    # 额外参数（如 --node-cap N）原样透传给采样器。
+    shift
+    set -e
+    echo "== [1/3] 构建离线样例 =="
+    "$PY" 06_PoC/release/make_sample.py "$@"
+    echo "== [2/3] 生成发布清单 =="
+    "$PY" 06_PoC/release/make_manifest.py
+    echo "== [3/3] 发布校验（fail-closed）=="
+    "$PY" 06_PoC/release/verify_release.py --release
+    ;;
+  sample)
+    # 只用**入库的离线样例**起可视化：页面(GRAPH_DATA_FILE) 与查询(GRAPH_SOURCE_FILE)
+    # 指向同一份切片的两种投影 —— 单命令即可离线运行，无需 48 MB 的 normalized.json。
+    shift
+    _port="$PORT"
+    if [ "${1:-}" = "--port" ] && [ -n "${2:-}" ]; then _port="$2"; shift 2; fi
+    _sn="06_PoC/release/sample/sample_normalized.json"
+    _sg="06_PoC/release/sample/sample_graph.json"
+    if [ ! -f "$_sg" ] || [ ! -f "$_sn" ]; then
+      echo "缺少离线样例，请先运行：bash sttp.sh release"
+      exit 2
+    fi
+    echo "启动离线样例可视化: http://127.0.0.1:$_port/"
+    echo "  页面数据: $_sg"
+    echo "  查询数据: $_sn"
+    GRAPH_DATA_FILE="$_sg" GRAPH_SOURCE_FILE="$_sn" VIZ_PORT="$_port" "$PY" 06_PoC/viz_server.py
+    ;;
+  release-full)
+    # 对完整快照（不入库）跑全量校验：manifest 现算比对 + 主图 fail-closed 门禁
+    shift
+    "$PY" 06_PoC/release/verify_release.py --full --release "$@"
+    echo "== 主图 fail-closed 门禁 =="
+    "$PY" 06_PoC/frozen_gate.py --release
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

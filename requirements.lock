@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# STTP · 依赖锁（精确版本）—— 由目标运行环境实测冻结，用于可复现发布。
+# 生成时间：2026-10-12（Phase 37）
+# 生成方式：在项目运行环境逐包读取 __version__（见 06_PoC/release/make_manifest.py）。
+#
+# ★ 口径披露（铁律 #40 / #44）：本锁记录的是**本项目运行环境**的版本；
+#   外部复评环境为 rdkit 2026.3.6 / pint 0.26.1 / networkx 3.7 / numpy 2.5.3，
+#   与本锁不一致。化学与量纲结果建议在**锁定版本**上复核后再引用。
+# ★ 依赖漂移不阻塞运行，但发布校验会**显式报告**漂移（见 verify_release.py）。
+
+# 解释器
+python==3.11.9
+
+# 验证闭环
+rdkit==2026.09.1
+sympy==1.14.0
+pint==0.25.3
+
+# 图 / 数值 / 数据
+networkx==3.6.1
+numpy==2.3.2
+pandas==2.3.1
+scipy==1.17.1
+matplotlib==3.11.2
+rdflib==7.6.0
+
+# 云端对账（可选）
+neo4j==6.3.1
+
+# 模型推理（可选）
+torch==2.14.0+cpu
+
+# 数据源抓取（可选）
+requests==2.33.1

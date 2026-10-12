@@ -23,6 +23,13 @@
     GET /api/path?src=<id>&dst=<id> → queries.paths_between（返回 {paths}）
     GET /api/stats               → 图谱统计
 
+数据源（**页面与查询必须同版本**）
+----------------------------------
+    GRAPH_DATA_FILE   → 页面 `/graph_data.json` 读的前端投影（schema=formula-graph-view/v1）
+    GRAPH_SOURCE_FILE → 查询后端 `/api/*` 读的规范图（nodes[].props / edges[].props）
+    ★ Phase 37（R06）：两者应指向**同一份切片**的两种投影；发布样例由
+      `bash sttp.sh sample` 同时设定，并由 `verify_release.py` 断言 id 集合逐元素相等。
+
 健壮性
 ------
 * import 守卫：networkx / queries 缺失时给出友好提示而非崩溃；
@@ -118,7 +125,21 @@ def _load_queries():
 
 
 def _graph_path():
-    """查询层数据源：优先 with_inferred.json（与 graph_data.json 一致）。"""
+    """查询层数据源（**必须与页面同版本**）。
+
+    Phase 37（GPT6 复评 R06）：原先本函数只认 `with_inferred.json` / `normalized.json`，
+    而页面数据源是 `GRAPH_DATA_FILE` —— 两者可被各自指向**不同版本**，正是复评指出的
+    「页面和查询可能不属于同一数据版本」缺口。现允许用 `GRAPH_SOURCE_FILE` **显式钉死**：
+    发布样例把页面指到 `sample/sample_graph.json`、把查询指到
+    `sample/sample_normalized.json`（同一份切片的两种投影，id 集合逐元素相等）。
+
+    优先级：GRAPH_SOURCE_FILE > with_inferred.json > normalized.json
+    """
+    explicit = os.environ.get("GRAPH_SOURCE_FILE")
+    if explicit:
+        p = explicit if os.path.isabs(explicit) else os.path.join(ROOT, explicit)
+        if os.path.exists(p):
+            return p
     return WITH_INFERRED if os.path.exists(WITH_INFERRED) else NORMALIZED
 
 

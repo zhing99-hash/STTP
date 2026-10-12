@@ -90,8 +90,8 @@ def qname(nid):
     return None
 
 
-def load_graph():
-    with open(NORM, encoding="utf-8") as f:
+def load_graph(path=None):
+    with open(path or NORM, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -879,17 +879,28 @@ def run_case(case, graph):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--graph", default=None,
+                    help="被检图（默认 06_PoC/etl/normalized.json）。发布包可指向离线样例 "
+                         "06_PoC/release/sample/sample_normalized.json（Phase 37 · R06）。")
+    ap.add_argument("--kinds", default=None,
+                    help="只跑指定 kind（逗号分隔）。样例模式用 "
+                         "dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check，"
+                         "跳过依赖全图不变量的 graph_scan。")
     ap.add_argument("--release", action="store_true",
-                    help="发布门禁（fail-closed）：缺主图 / 任何 SKIP / FAIL 均非零退出。"
+                    help="发布门禁（fail-closed）：缺图 / 任何 SKIP / FAIL 均非零退出。"
                          "默认（smoke）模式只在 FAIL 时非零退出。")
     a = ap.parse_args()
 
     cases = json.load(open(CASES, encoding="utf-8"))["cases"]
+    if a.kinds:
+        want = {k.strip() for k in a.kinds.split(",") if k.strip()}
+        cases = [c for c in cases if c["kind"] in want]
+    graph_path = a.graph or NORM
     graph = None
     try:
-        graph = load_graph()
+        graph = load_graph(graph_path)
     except Exception as e:                                # noqa: BLE001
-        print("[WARN] 主图载入失败：%s" % e)
+        print("[WARN] 被检图载入失败：%s（%s）" % (graph_path, e))
 
     results, tally = [], collections.Counter()
     for c in cases:
@@ -902,15 +913,17 @@ def main():
             print("%s %-30s [%s] %s" % (mark, c["id"], c["kind"], detail))
 
     if a.json:
-        print(json.dumps({"tally": dict(tally), "results": results},
+        print(json.dumps({"graph": os.path.relpath(graph_path, os.path.dirname(HERE)),
+                          "tally": dict(tally), "results": results},
                          ensure_ascii=False, indent=2))
     else:
         print("-" * 78)
+        print("被检图：%s" % graph_path)
         print("汇总：PASS %d / FAIL %d / SKIP %d" % (tally["PASS"], tally["FAIL"], tally["SKIP"]))
         if tally["FAIL"]:
             print("★ 冻结反例集回归：%d 条已坐实的错误模式重新出现" % tally["FAIL"])
         if tally["SKIP"]:
-            print("⚠ %d 条 SKIP：这些检查**不曾执行**（缺主图/缺依赖），不能当作通过。" % tally["SKIP"])
+            print("⚠ %d 条 SKIP：这些检查**不曾执行**（缺图/缺依赖），不能当作通过。" % tally["SKIP"])
 
     # 退出码（fail-closed 语义，铁律 #20/#37：SKIP ≠ 通过）
     if tally["FAIL"]:

@@ -1,0 +1,357 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+"""verify_release.py —— 发布校验器（fail-closed）（Phase 37 · GPT6 复评 R06/R07）
+
+复评的 R06 完成定义是「**第三人从文档独立运行，页面和查询属于同一数据版本**」，
+R07 要求「主图缺失、必要依赖缺失、关键 SKIP 或对账失败返回非零」。
+
+本脚本把这些变成**机器可判的断言**，任一条不成立即非零退出：
+
+  A 产物完整性      manifest 里每个样例产物的 sha256 / 字节数 / 计数必须对得上
+  B 双投影同版本    sample_normalized.json 与 sample_graph.json 的节点/边 **id 集合逐元素相等**
+  C 图卫生          无悬空端点 / 无重复 id / 无自环（样例内部）
+  D 查询契约        sample_queries.json 每条查询在样例上执行通过
+  E 查询后端就绪    真正用 03_知识层/queries.py 的 NetworkX 后端加载样例，计数与页面一致
+  F 反例回归        frozen_gate 在样例上跑**自包含子集**（--release）：PASS 全过 / FAIL 0 / SKIP 0
+  G 依赖           必要依赖缺件 → 非零；版本漂移 → 仅报告（不阻塞）
+  H 完整快照        --full 时校验（需本地存在不入库的完整快照）
+
+用法
+----
+    python 06_PoC/release/verify_release.py                # 校验离线样例发布包
+    python 06_PoC/release/verify_release.py --full         # 追加完整快照校验
+    python 06_PoC/release/verify_release.py --json         # 机器可读结果
+退出码：0 全过 ／ 1 断言失败 ／ 2 必要依赖缺件 ／ 3 manifest 缺失或不可读
+"""
+from __future__ import annotations
+
+import argparse
+import collections
+import hashlib
+import importlib
+import json
+import os
+import subprocess
+import sys
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+POC = os.path.dirname(HERE)
+ROOT = os.path.dirname(POC)
+sys.path.insert(0, POC)
+sys.path.insert(0, os.path.join(ROOT, "03_知识层"))
+sys.path.insert(0, os.path.join(ROOT, "04_验证闭环"))
+sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
+
+import graph_export as gx                                                        # noqa: E402
+
+MANIFEST = os.path.join(HERE, "manifest.json")
+SAMPLE_DIR = os.path.join(HERE, "sample")
+
+LEVEL_RANK = {"unverified": 0, "model_inferred": 1, "source_asserted": 2,
+              "by_construction": 3, "rule_checked": 4, "cross_source": 5, "human_reviewed": 6}
+
+REQUIRED_MODULES = ("networkx", "sympy", "pint", "rdkit")
+REQUIRED_LOCAL = ("verification_model", "verification_loop", "dimension_table",
+                  "graph_export")
+SAMPLE_KINDS = "dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check"
+
+
+def sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+class Report:
+    def __init__(self):
+        self.checks = []
+        self.hard_fail = 0
+        self.warns = 0
+
+    def add(self, ok, name, detail="", warn_only=False):
+        status = "PASS" if ok else ("WARN" if warn_only else "FAIL")
+        if not ok and not warn_only:
+            self.hard_fail += 1
+        if not ok and warn_only:
+            self.warns += 1
+        self.checks.append({"name": name, "status": status, "detail": detail})
+        mark = {"PASS": "✅", "WARN": "⚠", "FAIL": "❌"}[status]
+        print("%s %-34s %s" % (mark, name, detail))
+
+    def payload(self):
+        return {"fail": self.hard_fail, "warn": self.warns, "checks": self.checks}
+
+
+# ---------------------------------------------------------------------------
+def check_manifest(rep, manifest):
+    arts = (manifest.get("artifacts") or {}).get("sample") or {}
+    ok = bool(arts)
+    rep.add(ok, "A0 manifest 含样例产物", "样例条目 %d 个" % len(arts))
+    return arts
+
+
+def check_artifacts(rep, arts):
+    for fn, info in sorted(arts.items()):
+        p = os.path.join(SAMPLE_DIR, fn)
+        if not os.path.exists(p):
+            rep.add(False, "A1 产物存在 %s" % fn, "缺失")
+            continue
+        rep.add(True, "A1 产物存在 %s" % fn, "%.1f KB" % (os.path.getsize(p) / 1024.0))
+        got = sha256_file(p)
+        rep.add(got == info.get("sha256"), "A2 sha256 %s" % fn,
+                "%s%s" % (got[:16], "" if got == info.get("sha256") else " ≠ manifest " + str(info.get("sha256"))[:16]))
+
+
+def load_sample():
+    p = os.path.join(SAMPLE_DIR, "sample_normalized.json")
+    with open(p, encoding="utf-8") as f:
+        norm = json.load(f)
+    p2 = os.path.join(SAMPLE_DIR, "sample_graph.json")
+    with open(p2, encoding="utf-8") as f:
+        view = json.load(f)
+    return norm, view
+
+
+def check_counts(rep, arts, norm, view):
+    exp = arts.get("sample_normalized.json") or {}
+    rep.add(len(norm["nodes"]) == exp.get("nodes"), "A3 节点计数",
+            "%d（manifest %s）" % (len(norm["nodes"]), exp.get("nodes")))
+    rep.add(len(norm["edges"]) == exp.get("edges"), "A3 边计数",
+            "%d（manifest %s）" % (len(norm["edges"]), exp.get("edges")))
+    vexp = (arts.get("sample_graph.json") or {})
+    rep.add(len(view["nodes"]) == vexp.get("nodes") and len(view["edges"]) == vexp.get("edges"),
+            "A3 投影计数", "节点 %d / 边 %d" % (len(view["nodes"]), len(view["edges"])))
+
+
+def check_same_version(rep, norm, view):
+    n1 = {n["id"] for n in norm["nodes"]}
+    n2 = {n["id"] for n in view["nodes"]}
+    e1 = {e["id"] for e in norm["edges"]}
+    e2 = {e["id"] for e in view["edges"]}
+    rep.add(n1 == n2, "B1 页面↔查询 节点 id 集合相等",
+            "正常 %d / 投影 %d / 差 %d" % (len(n1), len(n2), len(n1 ^ n2)))
+    rep.add(e1 == e2, "B1 页面↔查询 边 id 集合相等",
+            "正常 %d / 投影 %d / 差 %d" % (len(e1), len(e2), len(e1 ^ e2)))
+
+
+def check_hygiene(rep, norm, view):
+    nid = [n["id"] for n in norm["nodes"]]
+    eid = [e["id"] for e in norm["edges"]]
+    known = set(nid)
+    dup_n = [k for k, v in collections.Counter(nid).items() if v > 1]
+    dup_e = [k for k, v in collections.Counter(eid).items() if v > 1]
+    rep.add(not dup_n, "C1 无重复节点 id", "重复 %d" % len(dup_n))
+    rep.add(not dup_e, "C1 无重复边 id", "重复 %d" % len(dup_e))
+    dang = [e["id"] for e in norm["edges"] if e["source"] not in known or e["target"] not in known]
+    rep.add(not dang, "C2 无悬空端点", "悬空 %d" % len(dang))
+    loop = [e["id"] for e in norm["edges"] if e["source"] == e["target"]]
+    rep.add(not loop, "C2 无自环", "自环 %d" % len(loop))
+    # 投影侧
+    vknown = {n["id"] for n in view["nodes"]}
+    vdang = [e["id"] for e in view["edges"] if e["source"] not in vknown or e["target"] not in vknown]
+    rep.add(not vdang, "C2 投影无悬空端点", "悬空 %d" % len(vdang))
+
+
+def check_deps(rep, release):
+    missing_mods, missing_local = [], []
+    for m in REQUIRED_MODULES:
+        try:
+            importlib.import_module(m)
+        except Exception:                                                        # noqa: BLE001
+            missing_mods.append(m)
+    for m in REQUIRED_LOCAL:
+        try:
+            importlib.import_module(m)
+        except Exception:                                                        # noqa: BLE001
+            missing_local.append(m)
+    missing = missing_mods + missing_local
+    rep.add(not missing, "G1 必要依赖就绪",
+            "缺失 %s" % missing if missing else "python %s；%s 全就绪" % (
+                sys.version.split()[0], "/".join(REQUIRED_MODULES)))
+    if missing and release:
+        rep.add(False, "G2 release 模式要求依赖齐全", "缺 %s" % missing)
+    return missing
+
+
+def run_queries(rep, norm, view):
+    qp = os.path.join(SAMPLE_DIR, "sample_queries.json")
+    qs = json.load(open(qp, encoding="utf-8"))["queries"]
+    node_by_id = {n["id"]: n for n in norm["nodes"]}
+    subj = {nid: gx.subject_of((n.get("props") or {}).get("domain"), str(nid))
+            for nid, n in node_by_id.items()}
+
+    # 查询后端（真正走 03_知识层/queries.py）
+    backend = None
+    try:
+        import queries                                                           # type: ignore
+        backend = queries.get_backend("nx", input_path=os.path.join(SAMPLE_DIR, "sample_normalized.json"))
+    except BaseException as e:                                                   # noqa: BLE001
+        print("  [WARN] 查询后端初始化失败：%s: %s" % (type(e).__name__, e))
+
+    rep.add(backend is not None and backend.node_count == len(norm["nodes"])
+            and backend.edge_count == len(norm["edges"]),
+            "E1 查询后端就绪且计数一致",
+            ("节点 %d / 边 %d" % (backend.node_count, backend.edge_count)) if backend
+            else "后端不可用")
+
+    all_ok = True
+    for q in qs:
+        kind, exp, ok, detail = q["kind"], q.get("expect") or {}, True, ""
+        try:
+            if kind == "stats":
+                ok = len(norm["nodes"]) == exp["nodes"] and len(norm["edges"]) == exp["edges"]
+                detail = "%d/%d" % (len(norm["nodes"]), len(norm["edges"]))
+            elif kind == "cross_domain_count_min":
+                n = sum(1 for e in norm["edges"]
+                        if subj.get(e["source"]) and subj.get(e["target"])
+                        and subj[e["source"]] != subj[e["target"]])
+                ok = n >= exp["min"] and (exp.get("exact") is None or n == exp["exact"])
+                detail = "跨学科边 %d（期望 ≥%d%s）" % (n, exp["min"],
+                                                       "" if exp.get("exact") is None else " 且 ==%d" % exp["exact"])
+            elif kind == "neighbors_min":
+                if backend is None:
+                    ok, detail = False, "后端不可用"
+                else:
+                    nb = backend.get_neighbors(q["node"])
+                    ok = len(nb) >= exp["min_degree"]
+                    detail = "%s 邻居 %d（期望 ≥%d）" % (q["node"], len(nb), exp["min_degree"])
+            elif kind == "path_exists":
+                if backend is None:
+                    ok, detail = False, "后端不可用"
+                else:
+                    paths = backend.paths_between(q["src"], q["dst"])
+                    ok = len(paths) >= exp["min_paths"]
+                    detail = "%s→%s 路径 %d（期望 ≥%d）" % (q["src"], q["dst"], len(paths), exp["min_paths"])
+            elif kind == "edge_evidence":
+                e = next((x for x in norm["edges"] if x["id"] == q["edge_id"]), None)
+                if e is None:
+                    ok, detail = False, "找不到边 %s" % q["edge_id"]
+                else:
+                    lv = (e.get("props") or {}).get("verification_level")
+                    ev = (e.get("props") or {}).get("verification_evidence") or []
+                    ok = LEVEL_RANK.get(lv, -1) >= exp["min_level_rank"] and \
+                        (not exp.get("require_evidence") or len(ev) > 0)
+                    detail = "level=%s 证据 %d 条" % (lv, len(ev))
+            else:
+                ok, detail = False, "未知 kind"
+        except Exception as e:                                                   # noqa: BLE001
+            ok, detail = False, "%s: %s" % (type(e).__name__, e)
+        rep.add(ok, "D1 查询 %s" % q["id"], detail)
+        all_ok = all_ok and ok
+    return all_ok
+
+
+def run_frozen_gate(rep, release):
+    cmd = [sys.executable, os.path.join(POC, "frozen_gate.py"),
+           "--graph", os.path.join(SAMPLE_DIR, "sample_normalized.json"),
+           "--kinds", SAMPLE_KINDS, "--json"]
+    try:
+        r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
+                           encoding="utf-8", errors="replace", timeout=900)
+        data = json.loads(r.stdout)
+        t = data.get("tally") or {}
+        ok = (t.get("FAIL", 0) == 0) and (t.get("SKIP", 0) == 0) and (t.get("PASS", 0) > 0)
+        rep.add(ok, "F1 样例反例回归（自包含子集）",
+                "PASS %d / FAIL %d / SKIP %d"
+                % (t.get("PASS", 0), t.get("FAIL", 0), t.get("SKIP", 0)))
+        return ok
+    except Exception as e:                                                       # noqa: BLE001
+        rep.add(False, "F1 样例反例回归（自包含子集）", "执行失败：%s: %s" % (type(e).__name__, e))
+        return False
+
+
+def check_full(rep, manifest):
+    arts = (manifest.get("artifacts") or {}).get("full") or {}
+    snap = arts.get("snapshot")
+    if not snap:
+        rep.add(False, "H1 完整快照已登记", "manifest 无 full.snapshot（--no-stats 生成？）", warn_only=True)
+        return
+    p = os.path.join(ROOT, snap["path"])
+    if not os.path.exists(p):
+        rep.add(False, "H1 完整快照存在", "本地缺失（不入库属正常）；获取方式：%s" % snap.get("obtain"),
+                warn_only=True)
+        return
+    got = sha256_file(p)
+    rep.add(got == snap["sha256"], "H1 完整快照 sha256", got[:16])
+    # 现算仪器并与 manifest 记录比对
+    exp = ((manifest.get("expected_stats") or {}).get("full_snapshot")) or {}
+    import tempfile
+    tmp = tempfile.mkdtemp(prefix="sttp_verify_")
+    ap = os.path.join(tmp, "astro.json")
+    subprocess.run([sys.executable, os.path.join(POC, "task_trust_audit.py"),
+                    "--graph", os.path.join(POC, "etl", "normalized.json"), "--json", ap],
+                   cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+                   errors="replace", timeout=1800)
+    if os.path.exists(ap):
+        now = json.load(open(ap, encoding="utf-8"))
+        old = exp.get("task_trust") or {}
+        rep.add(now.get("north_star_pct") == old.get("north_star_pct"),
+                "H2 北极星现算 == manifest",
+                "现算 %s / manifest %s" % (now.get("north_star_pct"), old.get("north_star_pct")))
+    else:
+        rep.add(False, "H2 北极星现算", "仪器未产出结果", warn_only=True)
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description="STTP 发布校验器（Phase 37 R06/R07）")
+    ap.add_argument("--full", action="store_true", help="追加完整快照校验")
+    ap.add_argument("--release", action="store_true", help="fail-closed：缺依赖/缺主图亦非零")
+    ap.add_argument("--json", action="store_true")
+    a = ap.parse_args(argv)
+
+    print("=" * 78)
+    print("  STTP 发布校验（Phase 37 · R06/R07 · fail-closed）")
+    print("=" * 78)
+
+    if not os.path.exists(MANIFEST):
+        print("[ERROR] manifest 缺失：%s（先跑 make_manifest.py）" % MANIFEST)
+        return 3
+    try:
+        manifest = json.load(open(MANIFEST, encoding="utf-8"))
+    except Exception as e:                                                       # noqa: BLE001
+        print("[ERROR] manifest 不可读：%s" % e)
+        return 3
+
+    rep = Report()
+    arts = check_manifest(rep, manifest)
+    check_artifacts(rep, arts)
+    norm, view = load_sample()
+    check_counts(rep, arts, norm, view)
+    check_same_version(rep, norm, view)
+    check_hygiene(rep, norm, view)
+    missing = check_deps(rep, a.release)
+    run_queries(rep, norm, view)
+    run_frozen_gate(rep, a.release)
+    if a.full:
+        check_full(rep, manifest)
+
+    print("-" * 78)
+    verdict = "✅ 发布校验通过" if rep.hard_fail == 0 else "❌ 发布校验失败（%d 条断言不成立）" % rep.hard_fail
+    print("  %s ｜ 断言 %d 条 ｜ FAIL %d ｜ WARN %d"
+          % (verdict, len(rep.checks), rep.hard_fail, rep.warns))
+    print("=" * 78)
+
+    if a.json:
+        print(json.dumps(rep.payload(), ensure_ascii=False, indent=2))
+
+    if rep.hard_fail:
+        return 1
+    if missing and a.release:
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

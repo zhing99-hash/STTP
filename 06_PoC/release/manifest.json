@@ -1,0 +1,624 @@
+{
+ "artifacts": {
+  "full": {
+   "normalized": {
+    "bytes": 48849640,
+    "edges": 48712,
+    "nodes": 9657,
+    "path": "06_PoC/etl/normalized.json",
+    "sha256": "5adf7f0dce097c6ae8fc6f77bcfa1c653d01b7d4aebb49cc96c952efad057cf0",
+    "subjects": {
+     "化学": 4108,
+     "数学": 277,
+     "物理": 5247,
+     "跨学科": 25
+    },
+    "tracked_in_git": false
+   },
+   "snapshot": {
+    "bytes": 40073259,
+    "edges": 48712,
+    "nodes": 9657,
+    "obtain": "原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
+    "path": "06_PoC/graph_data_phase36.json",
+    "schema": "formula-graph-view/v1",
+    "sha256": "2f8808b46dadf4eff5b7012be48ef6e1e00b68fa69cdea1681d9fa9b1832968b",
+    "tracked_in_git": false
+   }
+  },
+  "sample": {
+   "sample_graph.json": {
+    "bytes": 846341,
+    "edges": 701,
+    "nodes": 380,
+    "path": "06_PoC/release/sample/sample_graph.json",
+    "schema": "formula-graph-view/v1",
+    "sha256": "df8eb7b248adf69af8956ca479bf95e5b2becde37ceff7bf972da508ef4ddeea",
+    "tracked_in_git": true
+   },
+   "sample_normalized.json": {
+    "bytes": 1031058,
+    "edges": 701,
+    "nodes": 380,
+    "path": "06_PoC/release/sample/sample_normalized.json",
+    "sha256": "0c54bd2bd3007b2535ac3fe88009d98db57f13ced37f3348c93f347bf95d8fbf",
+    "subjects": {
+     "化学": 237,
+     "数学": 38,
+     "物理": 80,
+     "跨学科": 25
+    },
+    "tracked_in_git": true
+   },
+   "sample_queries.json": {
+    "bytes": 1417,
+    "path": "06_PoC/release/sample/sample_queries.json",
+    "queries": 5,
+    "sha256": "be9ae76021866bae2d2a3af57aafd7d3429c9e643797c32f14a4ceda93e6c470",
+    "tracked_in_git": true
+   }
+  }
+ },
+ "build": {
+  "commands": [
+   "bash sttp.sh export                 # 从 Aura/本地重建完整快照（大数据，不入库）",
+   "python 06_PoC/release/make_sample.py # 从规范图确定性抽取离线样例",
+   "python 06_PoC/release/make_manifest.py --pack",
+   "python 06_PoC/release/verify_release.py --release"
+  ],
+  "pipeline": [
+   "11_真实数据/*_raw.json",
+   "→ 06_PoC/etl/normalized.json（权威规范图）",
+   "→ graph_export.build_graph_data()",
+   "→ 06_PoC/graph_data_phase<N>.json（前端快照，.env GRAPH_DATA_FILE）",
+   "→ 06_PoC/viz_server.py（页面 /graph_data.json + 查询 /api/*）"
+  ],
+  "python": "3.11.9"
+ },
+ "code": {
+  "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
+  "dirty_sample": [
+   "M .gitignore",
+   " M 06_PoC/frozen_gate.py",
+   " M 06_PoC/viz_server.py",
+   " M README.md",
+   " M sttp.sh",
+   "?? 06_PoC/release/",
+   "?? requirements.lock",
+   "?? requirements.txt"
+  ],
+  "git_branch": "main",
+  "git_head_at_build": "cf71e724820b91327f33dfe86111bc2772b6599a",
+  "git_head_at_build_short": "cf71e72",
+  "working_tree_dirty_at_build": true
+ },
+ "counterexamples": {
+  "cases": 90,
+  "full_only_kinds": [
+   "graph_scan"
+  ],
+  "note": "`graph_scan` 断言的是**全图不变量**（连通分量/分母外计数等），在样例上无意义 → 样例模式只跑自包含子集（SKIP=0）。",
+  "path": "06_PoC/frozen_counterexamples.json",
+  "sample_runnable_kinds": [
+   "dim_table",
+   "gate_chem",
+   "gate_math",
+   "pq_quantity_gate",
+   "attrib_check",
+   "level_check"
+  ]
+ },
+ "dependencies": {
+  "drift": {},
+  "drift_note": "漂移**不阻塞**运行（缺件才阻塞）；但化学/量纲结果建议在锁定版本上复核。外部复评环境为 rdkit 2026.3.6 / pint 0.26.1 / networkx 3.7 / numpy 2.5.3。",
+  "installed": {
+   "matplotlib": "3.11.2",
+   "neo4j": "6.3.1",
+   "networkx": "3.6.1",
+   "numpy": "2.3.2",
+   "pandas": "2.3.1",
+   "pint": "0.25.3",
+   "python": "3.11.9",
+   "rdflib": "7.6.0",
+   "rdkit": "2026.09.1",
+   "requests": "2.33.1",
+   "scipy": "1.17.1",
+   "sympy": "1.14.0",
+   "torch": "2.14.0+cpu"
+  },
+  "lock_file": "requirements.lock",
+  "target": {
+   "matplotlib": "3.11.2",
+   "neo4j": "6.3.1",
+   "networkx": "3.6.1",
+   "numpy": "2.3.2",
+   "pandas": "2.3.1",
+   "pint": "0.25.3",
+   "python": "3.11.9",
+   "rdflib": "7.6.0",
+   "rdkit": "2026.09.1",
+   "requests": "2.33.1",
+   "scipy": "1.17.1",
+   "sympy": "1.14.0",
+   "torch": "2.14.0+cpu"
+  }
+ },
+ "expected_stats": {
+  "full_snapshot": {
+   "connectivity": {
+    "components": {
+     "count": 6,
+     "isolated_count": 0,
+     "isolated_sample": [],
+     "largest": [
+      9628,
+      16,
+      5,
+      3,
+      3
+     ],
+     "small": [
+      {
+       "nodes": [
+        "MC:fo:chain_rule",
+        "MC:fo:ftc",
+        "MC:fo:limit_def",
+        "MC:fo:power_rule",
+        "MC:fo:taylor",
+        "MC:pq:derivative",
+        "MC:pq:integral",
+        "MC:pq:limit",
+        "MC:pq:order",
+        "MC:sy:dx",
+        "MC:sy:f",
+        "MC:sy:g",
+        "MC:sy:n",
+        "MX:math:derivative_power",
+        "MX:math:power_rule",
+        "WD:Q1190543"
+       ],
+       "sample": [
+        "MX:math:derivative_power",
+        "MX:math:power_rule",
+        "WD:Q1190543",
+        "MC:fo:power_rule"
+       ],
+       "size": 16,
+       "subjects": {
+        "数学": 15,
+        "跨学科": 1
+       },
+       "types": {
+        "Formula": 5,
+        "MathConcept": 2,
+        "PhysicalQuantity": 4,
+        "Symbol": 4,
+        "WikidataEntity": 1
+       }
+      },
+      {
+       "nodes": [
+        "MG:fo:law_cosines",
+        "MG:fo:law_sines",
+        "MG:pq:angle",
+        "MG:sy:theta",
+        "MG:un:radian"
+       ],
+       "sample": [
+        "MG:fo:law_cosines",
+        "MG:fo:law_sines",
+        "MG:pq:angle",
+        "MG:un:radian"
+       ],
+       "size": 5,
+       "subjects": {
+        "数学": 5
+       },
+       "types": {
+        "Formula": 2,
+        "PhysicalQuantity": 1,
+        "Symbol": 1,
+        "Unit": 1
+       }
+      },
+      {
+       "nodes": [
+        "MX:math:binomial",
+        "MX:math:expand",
+        "WD:Q114727876"
+       ],
+       "sample": [
+        "MX:math:binomial",
+        "MX:math:expand",
+        "WD:Q114727876"
+       ],
+       "size": 3,
+       "subjects": {
+        "数学": 2,
+        "跨学科": 1
+       },
+       "types": {
+        "MathConcept": 2,
+        "WikidataEntity": 1
+       }
+      },
+      {
+       "nodes": [
+        "EM:pq:inductance",
+        "EM:sy:L",
+        "EM:un:henry"
+       ],
+       "sample": [
+        "EM:pq:inductance",
+        "EM:un:henry",
+        "EM:sy:L"
+       ],
+       "size": 3,
+       "subjects": {
+        "物理": 3
+       },
+       "types": {
+        "PhysicalQuantity": 1,
+        "Symbol": 1,
+        "Unit": 1
+       }
+      },
+      {
+       "nodes": [
+        "EM:pq:capacitance",
+        "EM:un:farad"
+       ],
+       "sample": [
+        "EM:pq:capacitance",
+        "EM:un:farad"
+       ],
+       "size": 2,
+       "subjects": {
+        "物理": 2
+       },
+       "types": {
+        "PhysicalQuantity": 1,
+        "Unit": 1
+       }
+      }
+     ]
+    },
+    "cross_domain": {
+     "by_pair": {
+      "化学 ↔ 数学": 10,
+      "化学 ↔ 物理": 898,
+      "化学 ↔ 跨学科": 5,
+      "数学 ↔ 物理": 11,
+      "数学 ↔ 跨学科": 16,
+      "物理 ↔ 跨学科": 5
+     },
+     "by_type": {
+      "chemical_reaction": 1,
+      "defines": 1,
+      "derived_from": 7,
+      "dimensionally_consistent": 2,
+      "has_quantity": 877,
+      "has_symbol": 16,
+      "has_unit": 3,
+      "releases": 1,
+      "same_as": 27,
+      "uses_operator": 10
+     },
+     "cross": 945,
+     "cross_ratio": 1.94,
+     "edges_total": 48712,
+     "same": 47767
+    },
+    "defects": {
+     "dangling_edges": 0,
+     "dangling_sample": [],
+     "isolated_nodes": 0,
+     "self_loop_edges": 0,
+     "selfloop_sample": []
+    },
+    "edges": 48712,
+    "island_freeze": {
+     "actual_components": 6,
+     "actual_islands": 5,
+     "actual_nodes": 29,
+     "known_islands": 5,
+     "known_nodes": 29,
+     "max_components": 6,
+     "notes": [],
+     "verdict": "FROZEN-OK"
+    },
+    "namespace_subject": {
+     "BC": {
+      "化学": 16
+     },
+     "CE": {
+      "化学": 41
+     },
+     "CH": {
+      "化学": 1378
+     },
+     "CM": {
+      "物理": 29
+     },
+     "CO": {
+      "物理": 10
+     },
+     "EK": {
+      "化学": 118
+     },
+     "EK2": {
+      "化学": 1547
+     },
+     "EM": {
+      "物理": 39
+     },
+     "FO": {
+      "物理": 3
+     },
+     "IC": {
+      "化学": 15
+     },
+     "MA": {
+      "数学": 17
+     },
+     "MC": {
+      "数学": 13
+     },
+     "MG": {
+      "数学": 17
+     },
+     "MO": {
+      "化学": 4
+     },
+     "MX": {
+      "化学": 3,
+      "数学": 28,
+      "物理": 4,
+      "跨学科": 1
+     },
+     "NT": {
+      "数学": 21
+     },
+     "OM": {
+      "化学": 11
+     },
+     "OP": {
+      "物理": 15
+     },
+     "PA": {
+      "数学": 181
+     },
+     "PB": {
+      "物理": 5050
+     },
+     "PC": {
+      "化学": 14
+     },
+     "PQ": {
+      "化学": 20,
+      "物理": 8
+     },
+     "QM": {
+      "物理": 19
+     },
+     "RH": {
+      "化学": 939
+     },
+     "RT": {
+      "物理": 11
+     },
+     "RX": {
+      "化学": 1
+     },
+     "SM": {
+      "物理": 14
+     },
+     "SY": {
+      "物理": 7
+     },
+     "TH": {
+      "物理": 31
+     },
+     "UN": {
+      "物理": 6
+     },
+     "WD": {
+      "跨学科": 19
+     },
+     "ek": {
+      "化学": 1
+     },
+     "pb": {
+      "物理": 1
+     },
+     "wd": {
+      "跨学科": 5
+     }
+    },
+    "nodes": 9657,
+    "subjects": {
+     "化学": 4108,
+     "数学": 277,
+     "物理": 5247,
+     "跨学科": 25
+    },
+    "types": {
+     "Constant": 23,
+     "Definition": 4,
+     "Element": 118,
+     "Formula": 5082,
+     "FunctionalGroup": 76,
+     "Lemma": 2,
+     "MathConcept": 13,
+     "Molecule": 2133,
+     "Paper": 181,
+     "PhysicalQuantity": 145,
+     "Reaction": 1708,
+     "Symbol": 113,
+     "Theorem": 2,
+     "Unit": 33,
+     "WikidataEntity": 24
+    }
+   },
+   "edges": 48712,
+   "frozen_gate": {
+    "tally": {
+     "PASS": 90
+    }
+   },
+   "nodes": 9657,
+   "recomputable": "full_snapshot（不入库；`bash sttp.sh release-full` 现算校验）",
+   "task_trust": {
+    "T9_evidence_traceable": {
+     "graph_evidence_coverage_pct": 100.0,
+     "graph_independent_evidence_pct": 71.38,
+     "independent": 34780,
+     "independent_rate_pct": 85.93,
+     "ok_edges": 40473,
+     "traceable": 40473,
+     "traceable_rate_pct": 100.0
+    },
+    "graph": "06_PoC\\etl\\normalized.json",
+    "levels": {
+     "by_construction": 11,
+     "cross_source": 3249,
+     "model_inferred": 135,
+     "rule_checked": 31520,
+     "source_asserted": 13797
+    },
+    "north_star_pct": 99.65,
+    "tasks": [
+     {
+      "coverage_pct": 100.0,
+      "desc": "同周期 / 同族 —— 可用权威周期表复算",
+      "edges": 1734,
+      "gaps": {},
+      "min_level": "rule_checked",
+      "name": "元素周期律",
+      "ok": 1734,
+      "rate_pct": 100.0,
+      "task": "T1"
+     },
+     {
+      "coverage_pct": 100.0,
+      "desc": "分子↔元素 及化学计量数 —— 需可由分子式独立复算",
+      "edges": 7756,
+      "gaps": {
+       "source_asserted": 8
+      },
+      "min_level": "rule_checked",
+      "name": "分子组成（元素计数）",
+      "ok": 7748,
+      "rate_pct": 99.9,
+      "task": "T2"
+     },
+     {
+      "coverage_pct": 100.0,
+      "desc": "物理量↔物理量 同量纲",
+      "edges": 47,
+      "gaps": {
+       "model_inferred": 8,
+       "source_asserted": 1
+      },
+      "min_level": "rule_checked",
+      "name": "量纲一致性",
+      "ok": 38,
+      "rate_pct": 80.85,
+      "task": "T3"
+     },
+     {
+      "coverage_pct": 100.0,
+      "desc": "反应物/生成物 归属 —— 方向由源方程唯一确定",
+      "edges": 5312,
+      "gaps": {
+       "model_inferred": 37
+      },
+      "min_level": "source_asserted",
+      "name": "化学方程式方向",
+      "ok": 5275,
+      "rate_pct": 99.3,
+      "task": "T4"
+     },
+     {
+      "coverage_pct": 100.0,
+      "desc": "公式↔参与物理量/符号",
+      "edges": 24341,
+      "gaps": {
+       "source_asserted": 31
+      },
+      "min_level": "rule_checked",
+      "name": "公式—参与量",
+      "ok": 24310,
+      "rate_pct": 99.87,
+      "task": "T5"
+     },
+     {
+      "coverage_pct": 100.0,
+      "desc": "常量派生 / 单位挂靠",
+      "edges": 128,
+      "gaps": {
+       "model_inferred": 6
+      },
+      "min_level": "source_asserted",
+      "name": "常量溯源与单位",
+      "ok": 122,
+      "rate_pct": 95.31,
+      "task": "T6"
+     },
+     {
+      "coverage_pct": 100.0,
+      "desc": "两端点学科不同的**任意类型**语义边 —— **本项目的核心命题**",
+      "edges": 945,
+      "gaps": {
+       "model_inferred": 24,
+       "source_asserted": 29
+      },
+      "min_level": "rule_checked",
+      "name": "跨域桥（跨学科端点）",
+      "ok": 892,
+      "rate_pct": 94.39,
+      "task": "T7"
+     },
+     {
+      "coverage_pct": 100.0,
+      "desc": "论文↔主题/引用",
+      "edges": 354,
+      "gaps": {},
+      "min_level": "source_asserted",
+      "name": "文献元数据",
+      "ok": 354,
+      "rate_pct": 100.0,
+      "task": "T8"
+     }
+    ]
+   }
+  },
+  "sample": {
+   "edges": 701,
+   "nodes": 380,
+   "recomputable": "sample（入库产物，verify_release 现算比对）",
+   "subjects": {
+    "化学": 237,
+    "数学": 38,
+    "物理": 80,
+    "跨学科": 25
+   }
+  }
+ },
+ "licenses": {
+  "code": "Apache-2.0（根 LICENSE + NOTICE + 全部第一方源码 SPDX 头）",
+  "data": "DATA_LICENSES.md（逐源登记 + 打包纪律三态）",
+  "raw_data_excluded": "公共数据集/ 与 *_raw.json 不入库；见 DATA_LICENSES.md 的对分发限制",
+  "vendor": "06_PoC/vendor/licenses/（cytoscape/cose-base/layout-base/cytoscape-fcose=MIT，MathJax=Apache-2.0）"
+ },
+ "packed_snapshot": null,
+ "release": {
+  "code_license": "Apache-2.0",
+  "created": "2026-10-12T10:07:20+08:00",
+  "data_license_doc": "DATA_LICENSES.md",
+  "name": "STTP 研究快照",
+  "phase": 37,
+  "positioning": "路线 A：研究原型（收敛版）—— 可复现研究 / 真实跨学科任务 / 方法比较"
+ },
+ "schema": "sttp-release-manifest/v1"
+}

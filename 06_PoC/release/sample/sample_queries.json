@@ -1,0 +1,54 @@
+{
+ "note": "这些查询由 make_sample.py 从切片**生成**（非手写），verify_release.py 逐条执行；全过才认为「页面与查询同一数据版本」。",
+ "queries": [
+  {
+   "desc": "页面与查询必须属于同一数据版本：节点/边计数一致（页面 /graph_data.json ↔ 查询后端）",
+   "expect": {
+    "edges": 701,
+    "nodes": 380
+   },
+   "id": "Q1-stats",
+   "kind": "stats"
+  },
+  {
+   "desc": "样例必须保留跨学科桥：跨学科边数量不低于所报值",
+   "expect": {
+    "exact": 154,
+    "min": 154
+   },
+   "id": "Q2-cross-domain",
+   "kind": "cross_domain_count_min"
+  },
+  {
+   "desc": "查询后端 get_neighbors 在样例上可用",
+   "expect": {
+    "min_degree": 45
+   },
+   "id": "Q3-neighbors",
+   "kind": "neighbors_min",
+   "node": "EK:el:C"
+  },
+  {
+   "desc": "跨学科桥两端在同一连通分量内，路径查询可用",
+   "dst": "MX:chem:co2",
+   "expect": {
+    "min_paths": 1,
+    "via_edge": "chemical_reaction|MX:sym:c|MX:chem:co2"
+   },
+   "id": "Q4-path",
+   "kind": "path_exists",
+   "src": "MX:sym:c"
+  },
+  {
+   "desc": "样例保留证据链：达标边必须带 verification_level 与逐条 evidence",
+   "edge_id": "composed_of|CH:cpd:14750|EK:el:C",
+   "expect": {
+    "min_level_rank": 4,
+    "require_evidence": true
+   },
+   "id": "Q5-evidence",
+   "kind": "edge_evidence"
+  }
+ ],
+ "schema": "sttp-sample-queries/v1"
+}

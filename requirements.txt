@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# STTP · Python 依赖（松约束 / 供人阅读）
+# 精确锁定版本见同目录 requirements.lock —— 复现请优先用 lock。
+#
+# 运行环境：CPython 3.11.x（本项目在 3.11.9 上实测；**不要**用 3.13，
+# 该项目未在 3.13 上验证，且本机 3.13 为无依赖的空环境）。
+
+# ---- 验证闭环：化学计量 / 数学恒等 / 量纲 ----
+rdkit>=2024.3
+sympy>=1.12
+pint>=0.23
+
+# ---- 图 / 数值 / 数据 ----
+networkx>=3.2
+numpy>=1.26
+pandas>=2.0
+scipy>=1.11
+matplotlib>=3.8
+rdflib>=7.0
+
+# ---- 云端对账（可选：仅 Aura 同步路径需要，离线复现不需要）----
+neo4j>=5.20
+
+# ---- 模型推理（可选：仅 GNN 路径需要；CPU 版即可）----
+torch>=2.2
+
+# ---- 数据源抓取（可选：仅在线重建路径需要）----
+requests>=2.31
