@@ -10,6 +10,13 @@ elementkg_synthetic_corpus_40w/
 06_PoC/etl/neo4j/*_aura_delta.json
 11_真实数据/*_raw.json
 11_真实数据/*_cache.json
+# Phase 41 证据血缘绑定 delta：26 MB 派生中间产物（可由
+#   `python 11_真实数据/phase41_lineage_delta.py --base 06_PoC/etl/normalized.before_lineage.json`
+# 确定性重算，但需本地保有 Phase 41 之前的权威图，故本就不可能在干净 clone 处重放）。
+# 本机到 GitHub 上行实测 ≈ 4 KB/s（100 KB 需 26 s），服务端 ~49 s 超时 ⇒
+# 单个提交的 pack 增量必须 ≲ 100 KB，否则 `git push` 一律 HTTP 408。
+# 故**大体积派生 delta 不入库**（与上方 `*_aura_delta.json` 同类处理）。
+06_PoC/etl/neo4j/phase41_lineage_delta.json
 # 摄入前的自动备份 raw（每个约 16 MB，仅本地回溯用）与临时探索脚本
 11_真实数据/*.before_*.json
 11_真实数据/_*

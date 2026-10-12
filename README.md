@@ -46,7 +46,7 @@
 | `08_部署包/neo4j/` | 自包含 Docker + Neo4j 部署包（`deploy.py` 一键编排） |
 | `09_科研扩展/9_inference/` | Phase 9 推理生成层：GNN 推断、LLM 假设与复核、Aura 导出 |
 | `10_种子数据/` | 13 个垂直切片种子脚本（`build_*_mechanics.py` 等）+ 共享构造器 `seed_common.py` |
-| `11_真实数据/` | 真实数据源适配器：`elementkg_ingest.py`（ElementKG 2.0 OWL）、`physicsbabel_ingest.py`（PhysicsBabel parquet）、`pubchem_mol_ingest.py`（PubChem）；量纲真值源 `dimension_table.py`（反解表）+ **`si_base_table.py`（独立 SI/ISO 80000 权威基表）** + `dimension_consistency.py`（矛盾方程检测） |
+| `11_真实数据/` | 真实数据源适配器：`elementkg_ingest.py`（ElementKG 2.0 OWL）、`physicsbabel_ingest.py`（PhysicsBabel parquet）、`pubchem_mol_ingest.py`（PubChem）；量纲真值源 `dimension_table.py`（反解表）+ **`si_base_table.py`（独立 SI/ISO 80000 权威基表）** + `dimension_consistency.py`（矛盾方程检测）；**证据血缘 `source_registry.py`（来源登记：版本/locator/内容哈希/imports_from 血缘）+ `phase41_lineage_delta.py`（证据→来源绑定）+ `lineage_invalidation.py`（来源变更定位受影响断言并重验）** + `migrate_dimension_field.py`（字段语义迁移） |
 | `12_评测/` | **科学任务评测集 + 推理增量协议 v2**：40 题冻结任务集（热力学-化学平衡-数学）+ 规则基线运行器 + 两级链接预测协议（RHC/EPD）+ 4 类基线对照；见其 [README](12_评测/README.md) |
 | `*.md`（根） | 各 Phase 进展与归档 |
 
@@ -68,8 +68,13 @@ bash sttp.sh sample      # ② 只用样例起可视化 → http://127.0.0.1:876
 
 `sample` 会把**页面数据**（`GRAPH_DATA_FILE`）与**查询后端**（`GRAPH_SOURCE_FILE`）
 指向**同一份切片的两种投影**，并由校验器断言两者 **id 集合逐元素相等** ——
-即「**页面和查询属于同一数据版本**」。已知反例（冻结 101 条，其中 65 条自包含、
+即「**页面和查询属于同一数据版本**」。已知反例（冻结 108 条，其中 78 条自包含、
 样例模式可跑且 **SKIP=0**）见 [发布包 README](06_PoC/release/README.md)。
+
+> **行尾锁定**（`.gitattributes`）：`*.json` / `*.lock` 为 `-text`，被登记为证据输入的源码
+> （`11_真实数据/*.py`）为 `text eol=lf` —— 保证「**仓库里的字节 == 检出后的字节**」，
+> 否则 `core.autocrlf` 会在 clone 上改行尾、让 sha256 与证据哈希（`content_hash` / `src_hash`）集体对不上。
+> 该不变量由 `source_registry.py --check` 的第 ⑥⑦ 条判据（含「配置是否真的声明了锁」）**强制**，而非默认。
 
 | 命令 | 用途 |
 |---|---|
@@ -79,6 +84,7 @@ bash sttp.sh sample      # ② 只用样例起可视化 → http://127.0.0.1:876
 | `bash sttp.sh eval` | 科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检 |
 | `bash sttp.sh gnneval` | 推理增量评测协议 v2：P1 关系留出补全 / P2 实体对发现 + 4 类基线对照 |
 | `bash sttp.sh dimaudit` | 量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据非真空自检 |
+| `bash sttp.sh lineage` | 证据血缘审计：来源登记（版本/哈希/血缘）+ 来源变更定位受影响断言 + 判据非真空自检 |
 
 完整快照的获取与校验、依赖锁（`requirements.lock`）与口径披露，见
 [`06_PoC/release/README.md`](06_PoC/release/README.md)。

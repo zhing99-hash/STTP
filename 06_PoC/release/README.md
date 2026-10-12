@@ -69,19 +69,19 @@ python 06_PoC/release/verify_release.py --release   # 25 条断言，全过才�
 
 | 类别 | 条数 | 样例模式可跑？ | 说明 |
 |---|---|---|---|
-| `dim_table` / `gate_chem` / `gate_math` / `pq_quantity_gate` / `attrib_check` / `level_check` | **65** | ✅ 可跑（自包含） | 纯函数 / 自带节点与边 |
-| `graph_scan` | 25 | ❌ 仅完整图 | 断言的是**全图不变量**（连通分量、分母外计数等），在样例上无意义 |
+| `dim_table` / `gate_chem` / `gate_math` / `pq_quantity_gate` / `attrib_check` / `level_check` / `dim_field_semantics` / `dim_consistency` / `src_registered` / `lineage_acyclic` | **78** | ✅ 可跑（自包含） | 纯函数 / 自带节点与边 / 仅依赖随包来源登记表 |
+| `graph_scan` / `lineage_selfcheck` | 30 | ❌ 仅完整图 | `graph_scan` 断言**全图不变量**（连通分量、分母外计数等）；`lineage_selfcheck` 依赖全图定位断言 |
 
 ```bash
 # 样例模式：自包含子集，要求 PASS 全过 / FAIL 0 / SKIP 0
 python 06_PoC/frozen_gate.py \
   --graph 06_PoC/release/sample/sample_normalized.json \
-  --kinds dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check --release
-# → PASS 65 / FAIL 0 / SKIP 0，退码 0
+  --kinds dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check,dim_field_semantics,dim_consistency,src_registered,lineage_acyclic --release
+# → PASS 78 / FAIL 0 / SKIP 0，退码 0
 
-# 完整图模式：全 101 条
+# 完整图模式：全 108 条
 python 06_PoC/frozen_gate.py --release
-# → PASS 90 / FAIL 0 / SKIP 0
+# → PASS 108 / FAIL 0 / SKIP 0
 ```
 
 ---

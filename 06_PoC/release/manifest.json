@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 64393164,
+    "bytes": 57524194,
     "edges": 48712,
     "nodes": 9657,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "8e12471a9e8da090324c27467429e7c6ec586c1f19f076a5133f6b6118dad936",
+    "sha256": "1545ac8e5ada7a6ab73cf2ce79e11c2fa26ef1233123795f96c7b4182299bf2a",
     "subjects": {
      "化学": 4108,
      "数学": 277,
@@ -16,32 +16,32 @@
     "tracked_in_git": false
    },
    "snapshot": {
-    "bytes": 52438016,
+    "bytes": 48740769,
     "edges": 48712,
     "nodes": 9657,
     "obtain": "原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
-    "path": "06_PoC/graph_data_phase36.json",
+    "path": "06_PoC/graph_data_phase41.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "1b2a53934d7aa6f2057a51330f31775359c983d38234e6130ddf9cdb5a9e59f2",
+    "sha256": "2857b6189e2c798bc7cb2c1ba6f861940ac41f2663acfefaf3e1100090beb470",
     "tracked_in_git": false
    }
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 847468,
+    "bytes": 1022820,
     "edges": 701,
     "nodes": 380,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "0a14cf8e5c3ecd2deaf34c98876e5b30a14a57fa5eb76e76a212ef6056b52f01",
+    "sha256": "a754e69f27b428014814f14afeeecafbceb89e61a74dd9e410a908458359d86e",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 1032185,
+    "bytes": 1217615,
     "edges": 701,
     "nodes": 380,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "d1837a0b9f8cf8e0873e4805dd6f71014624f45123c8369e21db3b2f68b8ceb9",
+    "sha256": "7a96d498469d5c393c704cea77ba37b4d3f4d9661c34c19d504113cc4e5ad19d",
     "subjects": {
      "化学": 237,
      "数学": 38,
@@ -79,12 +79,12 @@
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "5a35389bdaa9be7a02989127f45e2eb878244b9b",
-  "git_head_at_build_short": "5a35389",
+  "git_head_at_build": "1e07ad2edd17dca8cd45449a50c3649e19359d8b",
+  "git_head_at_build_short": "1e07ad2",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
-  "cases": 101,
+  "cases": 108,
   "full_only_kinds": [
    "graph_scan"
   ],
@@ -98,7 +98,9 @@
    "attrib_check",
    "level_check",
    "dim_field_semantics",
-   "dim_consistency"
+   "dim_consistency",
+   "src_registered",
+   "lineage_acyclic"
   ]
  },
  "dependencies": {
@@ -456,7 +458,7 @@
    "edges": 48712,
    "frozen_gate": {
     "tally": {
-     "PASS": 101
+     "PASS": 108
     }
    },
    "nodes": 9657,
@@ -607,7 +609,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-12T15:03:16+08:00",
+  "created": "2026-10-12T15:53:26+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,

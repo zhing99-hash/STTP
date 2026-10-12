@@ -37,6 +37,7 @@
 #   bash sttp.sh gnneval [--gnn-seeds 1,2]           推理增量评测协议 v2：P1/P2 + 基线对照 + 种子方差（Phase 39 R11续）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
+#   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -289,6 +290,18 @@ EOF
     "$PY" 11_真实数据/dimension_consistency.py --json 11_真实数据/dim_consistency_report.json "$@"
     echo "== [3/3] 判据非真空自检 =="
     "$PY" 11_真实数据/dimension_consistency.py --selfcheck
+    ;;
+
+  lineage)
+    # Phase 41（R10）：证据血缘/版本/失效审计 —— 来源登记表 + 变更定位 + 判据非真空自检。
+    # 若某来源内容哈希与证据记录不一致（来源已变更）则非零退出。
+    shift
+    echo "== [1/3] 来源登记表（版本 + locator + 内容哈希 + 血缘）=="
+    "$PY" 11_真实数据/source_registry.py --check
+    echo "== [2/3] 来源变更 → 受影响断言（含血缘传递）=="
+    "$PY" 11_真实数据/lineage_invalidation.py --json "$@"
+    echo "== [3/3] 失效机制判据非真空自检 =="
+    "$PY" 11_真实数据/lineage_invalidation.py --selfcheck
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

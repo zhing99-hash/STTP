@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import contextlib
 import json
 import os
 import sys
@@ -68,6 +69,16 @@ try:
 except Exception as e:                                   # noqa: BLE001
     dc = None
     print("[WARN] dimension_consistency 不可用：%s" % e)
+try:
+    import source_registry as sr                          # Phase 41 R10 来源登记表
+except Exception as e:                                   # noqa: BLE001
+    sr = None
+    print("[WARN] source_registry 不可用：%s" % e)
+try:
+    import lineage_invalidation as li                     # Phase 41 R10 血缘失效机制
+except Exception as e:                                   # noqa: BLE001
+    li = None
+    print("[WARN] lineage_invalidation 不可用：%s" % e)
 try:
     import verification_loop as vl
 except Exception as e:                                   # noqa: BLE001
@@ -175,6 +186,40 @@ def run_case(case, graph):
             got = "CONTRADICTION"
         return ("PASS" if got == exp else "FAIL"), \
             "keys=%s → %s（期望 %s）" % (list(keys), got, exp)
+
+    if kind == "src_registered":
+        # R10（GPT6 复评）：来源登记冻结回归 —— 判决某来源是否已在 source_registry 登记。
+        if sr is None:
+            return "SKIP", "source_registry 不可用"
+        sid = case["input"]["source_id"]
+        got = "REGISTERED" if sr.is_registered(sid) else "NOT_REGISTERED"
+        return ("PASS" if got == exp else "FAIL"), \
+            "source_registry[%s] kind=%s → %s（期望 %s）" \
+            % (sid, sr.kind_of(sid), got, exp)
+
+    if kind == "lineage_acyclic":
+        # R10：来源间 imports_from 血缘必须**无环**（否则传递失效不收敛）。
+        if sr is None:
+            return "SKIP", "source_registry 不可用"
+        cyc = sr.check_acyclic()
+        got = "ACYCLIC" if not cyc else "CYCLIC"
+        return ("PASS" if got == exp else "FAIL"), \
+            "血缘环 %d 个 %s（期望 %s）" % (len(cyc), cyc[:2], exp)
+
+    if kind == "lineage_selfcheck":
+        # R10：失效机制**判据非真空**自检（变异一个来源 → 恰好标记其断言 + 纯血缘传递）。
+        # ⚠ 子调用会 print 过程信息 → 必须重定向到 stderr，否则污染 `--json` 输出
+        #   （Phase 41 实测：样例模式 JSONDecodeError）。本判据依赖**全图**（读 normalized.json），
+        #   故不进「自包含样例子集」kinds（样例模式不含全图）。
+        if li is None:
+            return "SKIP", "lineage_invalidation 不可用"
+        try:
+            with contextlib.redirect_stdout(sys.stderr):
+                rc = li.selfcheck()
+        except Exception as e:                            # noqa: BLE001
+            return "FAIL", "selfcheck 异常：%s" % e
+        got = "SELFCHECK_PASS" if rc == 0 else "SELFCHECK_FAIL"
+        return ("PASS" if got == exp else "FAIL"), "lineage_invalidation.selfcheck rc=%d" % rc
 
     if kind == "pq_quantity_gate":
         # R02（GPT6 复评）：摩尔质量量类判定的冻结回归。
@@ -822,6 +867,50 @@ def run_case(case, graph):
                         bad.append(("node", n.get("id"), k, str(v)[:40]))
             return ("PASS" if not bad else "FAIL"), \
                 "扫描 %d 个属性值，repr 残留 %d 条：%s" % (n_scanned, len(bad), bad[:3])
+
+        # (x) **证据来源绑定**（Phase 41 · R10）：全图每条边的每条证据记录必须携带
+        #     `src`（非空）且该来源**已在 source_registry 登记**（非哨兵 `unregistered`）。
+        #     为什么必须断言：这是「来源变更能定位受影响断言」的**前置条件** ——
+        #     若断言不知道自己来自哪个源，任何来源变更都无法定位它。
+        #     Phase 41 侦察坐实：R04a 正名曾丢失 11 条 `uses_operator` 桥的 `props.source`，
+        #     连同其余共 53 条断言「来源不明」。本断言把它钉死。
+        if "evidence_source_bound" in scan:
+            if sr is None:
+                return "SKIP", "source_registry 不可用"
+            unreg, nobind, n_seen = [], [], 0
+            for e in (graph.get("edges") or []):
+                evs = (e.get("props") or {}).get("verification_evidence") or []
+                for it in evs:
+                    if not isinstance(it, dict):
+                        continue
+                    n_seen += 1
+                    sid = it.get("src")
+                    if not sid:
+                        nobind.append((e.get("type"), e.get("source"), e.get("target")))
+                    elif not sr.is_registered(sid):
+                        unreg.append((e.get("type"), e.get("source"), e.get("target"), sid))
+            lo = float(scan["evidence_source_bound"].get("min_ratio", 1.0))
+            fails = []
+            if nobind:
+                fails.append("未绑定来源 %d 条：%s" % (len(nobind), nobind[:3]))
+            if unreg:
+                fails.append("未登记来源 %d 条：%s" % (len(unreg), unreg[:3]))
+            if n_seen and (n_seen - len(nobind) - len(unreg)) / float(n_seen) < lo:
+                fails.append("绑定率 %.1f%% < 下限 %.1f%%"
+                             % (100.0 * (n_seen - len(nobind) - len(unreg)) / n_seen, 100.0 * lo))
+            return ("PASS" if not fails else "FAIL"), \
+                "证据 %d 条，未绑定 %d，未登记 %d，绑定率 %.1f%%%s" % (
+                    n_seen, len(nobind), len(unreg),
+                    (100.0 * (n_seen - len(nobind) - len(unreg)) / n_seen if n_seen else 0.0),
+                    "" if not fails else "  ← " + "; ".join(fails))
+
+        # (y) **断言来源齐全**（Phase 41 · R10）：全图每条边的 `props.source` 必须非空
+        #     （归因后不得再有 `source=None`）。这是上一条的边级镜像。
+        if "edge_source_present" in scan:
+            miss = [(e.get("type"), e.get("source"), e.get("target"))
+                    for e in (graph.get("edges") or []) if not (e.get("props") or {}).get("source")]
+            return ("PASS" if not miss else "FAIL"), \
+                "props.source 缺失 %d 条：%s" % (len(miss), miss[:3])
 
         # (t) **判级可重算重现**（Phase 33 · 铁律 #25）：全图每条边**落库**的
         #     `verification_level` / `verification_scope` / `verifier` 必须与

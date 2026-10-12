@@ -1,0 +1,470 @@
+{
+ "meta": {
+  "hash_algo": "sha256(relpath NUL content NUL ...) over sorted locators",
+  "n_lineage_gap": 7,
+  "n_sources": 31,
+  "n_without_content_hash": 9,
+  "phase": 41,
+  "theme": "R10 证据血缘/版本/失效"
+ },
+ "schema": "sttp-source-registry/v1",
+ "sources": {
+  "ChEBI": {
+   "content_hash": "dbc1751d9ee860b8ba66eb2c6dba57fb89eece86c54e3ad8972ae55fc738a47e",
+   "has_locator": true,
+   "kind": "database",
+   "license": "CC BY 4.0（EMBL-EBI）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/chebi_cache.json",
+    "11_真实数据/chebi_synonym_cache.json"
+   ],
+   "note": "本体主名/同义词/分子式；与 Rhea 分别登记",
+   "retrieved": "2026-10-09",
+   "upstream": [],
+   "version": "ChEBI（OLS4 API 缓存）"
+  },
+  "ElementKG2.0": {
+   "content_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+   "has_locator": true,
+   "kind": "database",
+   "license": "待核对（DATA_LICENSES.md 二）；不入发布包",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/elementkg10m_raw.json",
+    "11_真实数据/elementkg_raw.json"
+   ],
+   "note": "元素关系源；自述型关系（same_source_elementkg）",
+   "retrieved": "2026-10-08",
+   "upstream": [],
+   "version": "ElementKG 2.0（本地 raw）"
+  },
+  "LLM-review": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "model",
+   "license": "—（项目内模型产物）",
+   "lineage_recorded": false,
+   "locator": [],
+   "note": "⚠ 血缘缺口",
+   "retrieved": null,
+   "upstream": [],
+   "version": "LLM 复核（反应侧别）"
+  },
+  "NIST Chemistry WebBook": {
+   "content_hash": "703eecc8ac5b2f57b841e1eab4e87180b39ad1bd4fa5c99afeed681027f8379f",
+   "has_locator": true,
+   "kind": "database",
+   "license": "NIST 数据通常可自由使用（附声明）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/webbook_raw.json",
+    "11_真实数据/webbook_cache.json"
+   ],
+   "note": "热化学桥（std_entropy 等锚定量）",
+   "retrieved": "2026-10-10",
+   "upstream": [],
+   "version": "NIST Chemistry WebBook（本地 raw+cache）"
+  },
+  "Phase13.GNN.typed": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "model",
+   "license": "—（项目内模型产物）",
+   "lineage_recorded": false,
+   "locator": [],
+   "note": "⚠ 血缘缺口：训练时所用快照版本未记录 ⇒ 无法传递失效（R10 指出的问题本身）",
+   "retrieved": null,
+   "upstream": [],
+   "version": "Phase13 带类型 GNN（typed 推理）"
+  },
+  "Phase13.Gate.B1": {
+   "content_hash": "a68edec165e4f4e077333e55bbfc1b185f4fe51cda2b15734385ca324d68af99",
+   "has_locator": true,
+   "kind": "derived",
+   "license": "—（项目内派生）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/physicsbabel_raw.json"
+   ],
+   "note": "composed_of 计数复算（parse_formula_independent）",
+   "retrieved": null,
+   "upstream": [
+    "PhysicsBabel"
+   ],
+   "version": "Phase13 门禁 B1（分子式计数独立复算）"
+  },
+  "Phase13.Gate.B2": {
+   "content_hash": "1fe029a4cdc898eb6baf2070bdea914565258200da4a908a7711c66037235f71",
+   "has_locator": true,
+   "kind": "derived",
+   "license": "—（项目内派生）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/element_reference.py"
+   ],
+   "note": "same_period 权威相等",
+   "retrieved": null,
+   "upstream": [
+    "element_reference"
+   ],
+   "version": "Phase13 门禁 B2（周期权威核对）"
+  },
+  "Phase13.Gate.B3": {
+   "content_hash": "872aa53074788793b703986332f990fae42a141cd06ed0854c46b0659d424c6a",
+   "has_locator": true,
+   "kind": "derived",
+   "license": "—（项目内派生）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/dimension_table.py"
+   ],
+   "note": "dimensionally_consistent 复算",
+   "retrieved": null,
+   "upstream": [
+    "dimension_table"
+   ],
+   "version": "Phase13 门禁 B3（量纲严格相等）"
+  },
+  "Phase13.Gate.B4": {
+   "content_hash": "a68edec165e4f4e077333e55bbfc1b185f4fe51cda2b15734385ca324d68af99",
+   "has_locator": true,
+   "kind": "derived",
+   "license": "—（项目内派生）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/physicsbabel_raw.json"
+   ],
+   "note": "reactant_of/product_of 模型链接预测（未独立复核）",
+   "retrieved": null,
+   "upstream": [
+    "PhysicsBabel"
+   ],
+   "version": "Phase13 门禁 B4（反应侧别模型判定）"
+  },
+  "Phase13.Gate.B5": {
+   "content_hash": "1fe029a4cdc898eb6baf2070bdea914565258200da4a908a7711c66037235f71",
+   "has_locator": true,
+   "kind": "derived",
+   "license": "—（项目内派生）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/element_reference.py"
+   ],
+   "note": "has_quantity 摩尔质量复算",
+   "retrieved": null,
+   "upstream": [
+    "PhysicsBabel",
+    "element_reference"
+   ],
+   "version": "Phase13 门禁 B5（摩尔质量独立复算）"
+  },
+  "Phase9.GNN": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "model",
+   "license": "—（项目内模型产物）",
+   "lineage_recorded": false,
+   "locator": [],
+   "note": "⚠ 血缘缺口：训练快照版本未记录",
+   "retrieved": null,
+   "upstream": [],
+   "version": "Phase9 GNN（早期无类型）"
+  },
+  "Phase9.GNN+LLM": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "model",
+   "license": "—（项目内模型产物）",
+   "lineage_recorded": false,
+   "locator": [],
+   "note": "⚠ 血缘缺口",
+   "retrieved": null,
+   "upstream": [],
+   "version": "Phase9 GNN + LLM 复核"
+  },
+  "PhysicsBabel": {
+   "content_hash": "a68edec165e4f4e077333e55bbfc1b185f4fe51cda2b15734385ca324d68af99",
+   "has_locator": true,
+   "kind": "database",
+   "license": "待核对（DATA_LICENSES.md 二）；不入发布包",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/physicsbabel_raw.json"
+   ],
+   "note": "方程/量/符号主源；dim_exponents 为方程内指数（Phase 40 起改指 exponent_in_term）",
+   "retrieved": "2026-10-09",
+   "upstream": [],
+   "version": "PhysicsBabel（本地 raw）"
+  },
+  "PubChem": {
+   "content_hash": "b03d2bf56cc4879e45d4ce891f5487d4be5ab7898f7aa7ef9bfd569f8336a736",
+   "has_locator": true,
+   "kind": "database",
+   "license": "逐字段核对前不外发快照（DATA_LICENSES.md 二）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/pubchem_mol_raw.json",
+    "11_真实数据/pubchem_validate_raw.json"
+   ],
+   "note": "分子层（分子式/分子量核验）",
+   "retrieved": "2026-10-08",
+   "upstream": [],
+   "version": "PubChem（本地 raw）"
+  },
+  "Rhea": {
+   "content_hash": "8540f6adfef8c70cfa618560fc4713bfe882c1d3cde8c5a49404d48962f2cba3",
+   "has_locator": true,
+   "kind": "database",
+   "license": "CC BY 4.0（rhea-db.org）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/rhea_raw.json"
+   ],
+   "note": "反应方程源",
+   "retrieved": "2026-10-09",
+   "upstream": [],
+   "version": "Rhea（EBI 反应库，本地 raw）"
+  },
+  "chembl_api": {
+   "content_hash": "64b4a8e287ca269ea309f7eec2ffbeb1cc9a0c0d598593ad907397718f3ec4c7",
+   "has_locator": true,
+   "kind": "database",
+   "license": "CC BY-SA 3.0 Unported",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/chembl_raw.json"
+   ],
+   "note": "药学维度（max_phase/ATC/类药性）",
+   "retrieved": "2026-10-09",
+   "upstream": [],
+   "version": "ChEMBL（API）"
+  },
+  "cross_source_alignment": {
+   "content_hash": "6657db95a06032fc4afb19164f3966cfb3d980d3a9153bd997dd5818c390f605",
+   "has_locator": true,
+   "kind": "constructed",
+   "license": "CC0（Wikidata）+ Apache-2.0（STTP 原创）",
+   "lineage_recorded": true,
+   "locator": [
+    "06_PoC/sample_mathxiv.json"
+   ],
+   "note": "数学定义↔Wikidata 实体的 same_as 对齐（multi_source_alignment）",
+   "retrieved": null,
+   "upstream": [
+    "curated_seed",
+    "wikidata"
+   ],
+   "version": "跨源对齐（Wikidata 实体对齐）"
+  },
+  "curated_seed": {
+   "content_hash": "652804e9933b102d889c7e4fc9386976823fbfd0a65924e5018f37649d4f419d",
+   "has_locator": true,
+   "kind": "curated",
+   "license": "Apache-2.0（STTP 原创）",
+   "lineage_recorded": true,
+   "locator": [
+    "10_种子数据/seed_biochem.json",
+    "10_种子数据/seed_chem_equilibrium.json",
+    "10_种子数据/seed_classical_mechanics.json",
+    "10_种子数据/seed_electromagnetism.json",
+    "10_种子数据/seed_energy_combustion.json",
+    "10_种子数据/seed_inorganic.json",
+    "10_种子数据/seed_math_algebra.json",
+    "10_种子数据/seed_math_calculus.json",
+    "10_种子数据/seed_math_geometry.json",
+    "10_种子数据/seed_math_numbertheory.json",
+    "10_种子数据/seed_optics.json",
+    "10_种子数据/seed_organic_chem.json",
+    "10_种子数据/seed_quantum.json",
+    "10_种子数据/seed_relativity.json",
+    "10_种子数据/seed_stat_mech.json",
+    "10_种子数据/seed_thermo.json"
+   ],
+   "note": "专题种子（热力学/化学平衡/数学/力学/电磁/光学…）",
+   "retrieved": null,
+   "upstream": [],
+   "version": "STTP 自策划种子（16 个 seed_*.json）"
+  },
+  "curated_seed/energy_combustion": {
+   "content_hash": "de46bf0f471ae17446e4e9c3dee1c131c1018fbacee284fc6cd3f3d1a74744da",
+   "has_locator": true,
+   "kind": "curated",
+   "license": "Apache-2.0（STTP 原创）",
+   "lineage_recorded": true,
+   "locator": [
+    "10_种子数据/seed_energy_combustion.json"
+   ],
+   "note": "燃烧能专题切片（历史独立命名）",
+   "retrieved": null,
+   "upstream": [],
+   "version": "STTP 自策划种子（能燃切片）"
+  },
+  "dimension_table": {
+   "content_hash": "8413f6ce5cbd693a24a19811159cd9fbc5a23dbe4774293c6c3eaa038099c43a",
+   "has_locator": true,
+   "kind": "constructed",
+   "license": "Apache-2.0（STTP 原创）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/dimension_table.py",
+    "11_真实数据/si_base_table.py"
+   ],
+   "note": "量纲真值源；Phase 40 已引入独立 SI/ISO 80000 外对照（铁律 #57）",
+   "retrieved": null,
+   "upstream": [],
+   "version": "STTP 量纲真值表（+ Phase 40 独立 SI 基表）"
+  },
+  "element_reference": {
+   "content_hash": "1fe029a4cdc898eb6baf2070bdea914565258200da4a908a7711c66037235f71",
+   "has_locator": true,
+   "kind": "constructed",
+   "license": "Apache-2.0（STTP 原创，数据源 IUPAC）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/element_reference.py"
+   ],
+   "note": "元素真值源（周期/族/块/family 与原子量）",
+   "retrieved": null,
+   "upstream": [],
+   "version": "STTP 元素参考表（118 元素）"
+  },
+  "heuristic": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "model",
+   "license": "—（项目内模型产物）",
+   "lineage_recorded": false,
+   "locator": [],
+   "note": "⚠ 血缘缺口",
+   "retrieved": null,
+   "upstream": [],
+   "version": "启发式规则产出（早期）"
+  },
+  "llm_inferred_gnn": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "model",
+   "license": "—（项目内模型产物）",
+   "lineage_recorded": false,
+   "locator": [],
+   "note": "⚠ 血缘缺口",
+   "retrieved": null,
+   "upstream": [],
+   "version": "LLM/GNN 推断（模型链接预测）"
+  },
+  "mathxiv": {
+   "content_hash": "6657db95a06032fc4afb19164f3966cfb3d980d3a9153bd997dd5818c390f605",
+   "has_locator": true,
+   "kind": "database",
+   "license": "待核对（含 arXiv 派生内容）；不外发原始文本",
+   "lineage_recorded": true,
+   "locator": [
+    "06_PoC/sample_mathxiv.json"
+   ],
+   "note": "数学文献元数据（derived_from 的 source_text_only）",
+   "retrieved": "2026-09-30",
+   "upstream": [],
+   "version": "MathXiv/ArxiTeX 样例（项目内加工语料）"
+  },
+  "nist_codata_2022": {
+   "content_hash": "955eb59e2862c6bd66114af8d02007306d81ca783af2813d22660f219ae6f0d0",
+   "has_locator": true,
+   "kind": "database",
+   "license": "NIST 数据通常可自由使用（附声明）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/codata2022_raw.json"
+   ],
+   "note": "基本物理常数数值与单位",
+   "retrieved": "2026-10-09",
+   "upstream": [],
+   "version": "CODATA 2022（allascii.txt 派生 raw）"
+  },
+  "openalex": {
+   "content_hash": "9575056cb6aa0d97d4c924f5630d4e77e9e3d21fb2afb063fda4c695e0b93d6d",
+   "has_locator": true,
+   "kind": "database",
+   "license": "元数据 CC0",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/openalex_math_raw.json",
+    "11_真实数据/seed_papers_openalex.json"
+   ],
+   "note": "文献层（cites/discusses）",
+   "retrieved": "2026-10-09",
+   "upstream": [],
+   "version": "OpenAlex v0.2（本地 raw）"
+  },
+  "openalex-topic-align": {
+   "content_hash": "afd25d97fbd18860e93b555c1c8bb3f00fcf297a656cb065c2810bc074ee010e",
+   "has_locator": true,
+   "kind": "derived",
+   "license": "CC0",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/seed_papers_openalex.json"
+   ],
+   "note": "文献↔主题词对齐",
+   "retrieved": null,
+   "upstream": [
+    "openalex"
+   ],
+   "version": "OpenAlex 主题对齐"
+  },
+  "rhea_chebi": {
+   "content_hash": "e14700ab990f1e4d6f1c5e2e97cea8dcbc0e37e0c217db9e75113acff2a13608",
+   "has_locator": true,
+   "kind": "derived",
+   "license": "CC BY 4.0（Rhea）/ CC BY 4.0（ChEBI）",
+   "lineage_recorded": true,
+   "locator": [
+    "11_真实数据/rhea_raw.json",
+    "11_真实数据/chebi_cache.json"
+   ],
+   "note": "★ 共享词典：一致性命中 ≠ 独立证据（铁律 #51 / 复评 R03）",
+   "retrieved": null,
+   "upstream": [
+    "Rhea",
+    "ChEBI"
+   ],
+   "version": "Rhea 方程 × ChEBI 词典匹配"
+  },
+  "schema-axiom": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "constructed",
+   "license": "Apache-2.0（STTP 原创）",
+   "lineage_recorded": true,
+   "locator": [],
+   "note": "由 schema 公理直接给出的结构边",
+   "retrieved": null,
+   "upstream": [],
+   "version": "图 schema 公理（part_of 传递律）"
+  },
+  "unregistered": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "unregistered",
+   "license": "—",
+   "lineage_recorded": false,
+   "locator": [],
+   "note": "哨兵：任何断言若落到此处 ⇒ 门禁 `evidence_source_bound` FAIL",
+   "retrieved": null,
+   "upstream": [],
+   "version": "(未登记)"
+  },
+  "wikidata": {
+   "content_hash": null,
+   "has_locator": false,
+   "kind": "database",
+   "license": "CC0",
+   "lineage_recorded": true,
+   "locator": [],
+   "note": "实体节点（WD:Q*，节点 props.source='wikidata'）；无入库 raw（API 只读查询）",
+   "retrieved": null,
+   "upstream": [],
+   "version": "Wikidata（MediaWiki API 离线对齐）"
+  }
+ }
+}

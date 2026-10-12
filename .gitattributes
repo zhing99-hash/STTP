@@ -11,4 +11,12 @@
 *.json  -text
 *.lock  -text
 
-# 文本源码保持默认（交给 core.autocrlf 处理）
+# 背景（Phase 41 · R10）：`source_registry` 把**源码内容**也当作证据输入——
+# 每个来源的 `content_hash`、每条证据的 `src_hash` 都是「文件原始字节的 sha256」。
+# 若被登记的文本源码在检出时被 core.autocrlf 改成 CRLF，则在干净 clone 上
+# 「重算哈希 == 存档哈希」必然不成立 → 失效机制会把**未改动的来源误判为已变更**。
+# 故被登记为 locator 的文本源码必须与 JSON 同样逐字节稳定：显式锁为 LF。
+# 守卫见 `11_真实数据/source_registry.py:check_locator_stability()`（门禁自检项）。
+11_真实数据/*.py  text eol=lf
+
+# 其余文本源码保持默认（交给 core.autocrlf 处理）
