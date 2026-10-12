@@ -1,0 +1,414 @@
+{
+ "schema": "sttp-gnn-eval/v2",
+ "generated": "2026-10-12T14:30:21+0800",
+ "data_source": {
+  "path": "06_PoC/etl/normalized.json",
+  "sha256": "5adf7f0dce097c6ae8fc6f77bcfa1c653d01b7d4aebb49cc96c952efad057cf0",
+  "nodes": 9657,
+  "edges": 48712
+ },
+ "protocols": {
+  "P1_relation_held_out": {
+   "candidate_space": "全实体（filtered：过滤该关系下已知真三元组）",
+   "filter_rule": "排除 (r,u) 的全部已知真尾（含训练集）后排名",
+   "seed": 0,
+   "test_frac": 0.1,
+   "cap_test": 100,
+   "n_train": 47762,
+   "n_test": 923,
+   "leakage": {
+    "n_test_pairs": 923,
+    "leaked_pairs": 33,
+    "leak_rate": 0.0358,
+    "by_relation": {
+     "cites": {
+      "n": 17,
+      "leaked": 0
+     },
+     "composed_of": {
+      "n": 100,
+      "leaked": 0
+     },
+     "defines": {
+      "n": 11,
+      "leaked": 0
+     },
+     "derived_from": {
+      "n": 8,
+      "leaked": 0
+     },
+     "dimensionally_consistent": {
+      "n": 4,
+      "leaked": 0
+     },
+     "discusses": {
+      "n": 17,
+      "leaked": 0
+     },
+     "has_element": {
+      "n": 10,
+      "leaked": 0
+     },
+     "has_functionalgroup": {
+      "n": 100,
+      "leaked": 0
+     },
+     "has_quantity": {
+      "n": 100,
+      "leaked": 0
+     },
+     "has_symbol": {
+      "n": 100,
+      "leaked": 0
+     },
+     "has_unit": {
+      "n": 4,
+      "leaked": 0
+     },
+     "product_of": {
+      "n": 100,
+      "leaked": 0
+     },
+     "reactant_of": {
+      "n": 100,
+      "leaked": 0
+     },
+     "reagent_of": {
+      "n": 100,
+      "leaked": 0
+     },
+     "related_to": {
+      "n": 5,
+      "leaked": 0
+     },
+     "same_as": {
+      "n": 10,
+      "leaked": 0
+     },
+     "same_family": {
+      "n": 37,
+      "leaked": 22
+     },
+     "same_period": {
+      "n": 100,
+      "leaked": 11
+     }
+    }
+   },
+   "results_all_entity": {
+    "random": {
+     "mrr": 0.0011,
+     "hits1": 0.0,
+     "hits10": 0.0011,
+     "n": 1846
+    },
+    "simple_graph_cn": {
+     "mrr": 0.1273,
+     "hits1": 0.0856,
+     "hits10": 0.1972,
+     "n": 1846
+    },
+    "simple_graph_aa": {
+     "mrr": 0.112,
+     "hits1": 0.0683,
+     "hits10": 0.1918,
+     "n": 1846
+    },
+    "simple_graph_ra": {
+     "mrr": 0.105,
+     "hits1": 0.0623,
+     "hits10": 0.1885,
+     "n": 1846
+    },
+    "feature_similarity": {
+     "mrr": 0.0368,
+     "hits1": 0.0195,
+     "hits10": 0.0666,
+     "n": 1846
+    },
+    "rule_retrieval": {
+     "mrr": 0.1992,
+     "hits1": 0.136,
+     "hits10": 0.2952,
+     "n": 1846
+    },
+    "gnn_complex": {
+     "mrr": 0.1005,
+     "hits1": 0.0542,
+     "hits10": 0.2021,
+     "n": 1846
+    },
+    "gnn_complex_schema": {
+     "mrr": 0.1379,
+     "hits1": 0.0748,
+     "hits10": 0.2503,
+     "n": 1846
+    }
+   },
+   "results_typed_candidate": {
+    "random": {
+     "mrr": 0.0382,
+     "hits1": 0.0065,
+     "hits10": 0.085,
+     "n": 1846
+    },
+    "simple_graph_cn": {
+     "mrr": 0.3332,
+     "hits1": 0.1972,
+     "hits10": 0.5211,
+     "n": 1846
+    },
+    "simple_graph_aa": {
+     "mrr": 0.312,
+     "hits1": 0.1771,
+     "hits10": 0.494,
+     "n": 1846
+    },
+    "simple_graph_ra": {
+     "mrr": 0.3151,
+     "hits1": 0.1809,
+     "hits10": 0.493,
+     "n": 1846
+    },
+    "feature_similarity": {
+     "mrr": 0.1671,
+     "hits1": 0.1273,
+     "hits10": 0.2362,
+     "n": 1846
+    },
+    "rule_retrieval": {
+     "mrr": 0.5208,
+     "hits1": 0.4626,
+     "hits10": 0.5986,
+     "n": 1846
+    },
+    "gnn_complex": {
+     "mrr": 0.4623,
+     "hits1": 0.4171,
+     "hits10": 0.5352,
+     "n": 1846
+    },
+    "gnn_complex_schema": {
+     "mrr": 0.4958,
+     "hits1": 0.4567,
+     "hits10": 0.558,
+     "n": 1846
+    }
+   }
+  },
+  "P2_entity_pair_discovery": {
+   "definition": "EPD1=训练子图内两端点无直连；EPD2=且无共同邻居（非传导）",
+   "candidate_space": "全实体（filtered）",
+   "epd1_stats": {
+    "n": 890,
+    "mean_deg_fixed": 40.18,
+    "mean_deg_other": 428.33,
+    "mean_common_neighbors": 4.327,
+    "pairs_with_empty_side": 18,
+    "note": "mean_common_neighbors≈0 且 empty_side 低，才说明「非传导」是结构事实而非空邻域假象"
+   },
+   "epd2_stats": {
+    "n": 546,
+    "mean_deg_fixed": 45.24,
+    "mean_deg_other": 382.24,
+    "mean_common_neighbors": 0.0,
+    "pairs_with_empty_side": 18,
+    "note": "mean_common_neighbors≈0 且 empty_side 低，才说明「非传导」是结构事实而非空邻域假象"
+   },
+   "results": {
+    "EPD1_pairheld": {
+     "n_pairs": 890,
+     "methods": {
+      "random": {
+       "mrr": 0.0007,
+       "hits1": 0.0,
+       "hits10": 0.0006,
+       "n": 1780
+      },
+      "simple_graph_cn": {
+       "mrr": 0.1133,
+       "hits1": 0.0747,
+       "hits10": 0.177,
+       "n": 1780
+      },
+      "simple_graph_aa": {
+       "mrr": 0.1008,
+       "hits1": 0.0612,
+       "hits10": 0.1713,
+       "n": 1780
+      },
+      "simple_graph_ra": {
+       "mrr": 0.0949,
+       "hits1": 0.0562,
+       "hits10": 0.1691,
+       "n": 1780
+      },
+      "feature_similarity": {
+       "mrr": 0.0255,
+       "hits1": 0.0124,
+       "hits10": 0.0449,
+       "n": 1780
+      },
+      "rule_retrieval": {
+       "mrr": 0.2052,
+       "hits1": 0.141,
+       "hits10": 0.3062,
+       "n": 1780
+      },
+      "gnn_complex": {
+       "mrr": 0.1013,
+       "hits1": 0.0556,
+       "hits10": 0.2022,
+       "n": 1780
+      },
+      "gnn_complex_schema": {
+       "mrr": 0.1395,
+       "hits1": 0.077,
+       "hits10": 0.25,
+       "n": 1780
+      }
+     }
+    },
+    "EPD2_strict": {
+     "n_pairs": 546,
+     "methods": {
+      "random": {
+       "mrr": 0.0008,
+       "hits1": 0.0,
+       "hits10": 0.0,
+       "n": 1092
+      },
+      "simple_graph_cn": {
+       "mrr": 0.0347,
+       "hits1": 0.0211,
+       "hits10": 0.0586,
+       "n": 1092
+      },
+      "simple_graph_aa": {
+       "mrr": 0.0347,
+       "hits1": 0.0211,
+       "hits10": 0.0586,
+       "n": 1092
+      },
+      "simple_graph_ra": {
+       "mrr": 0.0347,
+       "hits1": 0.0211,
+       "hits10": 0.0586,
+       "n": 1092
+      },
+      "feature_similarity": {
+       "mrr": 0.0037,
+       "hits1": 0.0009,
+       "hits10": 0.0092,
+       "n": 1092
+      },
+      "rule_retrieval": {
+       "mrr": 0.1671,
+       "hits1": 0.0989,
+       "hits10": 0.283,
+       "n": 1092
+      },
+      "gnn_complex": {
+       "mrr": 0.1124,
+       "hits1": 0.0687,
+       "hits10": 0.228,
+       "n": 1092
+      },
+      "gnn_complex_schema": {
+       "mrr": 0.1437,
+       "hits1": 0.0824,
+       "hits10": 0.2555,
+       "n": 1092
+      }
+     }
+    }
+   }
+  }
+ },
+ "gnn": {
+  "model": "ComplEx + 2 层稀疏 GCN encoder",
+  "epochs": 120,
+  "n_train_used": 26521,
+  "dim": 64,
+  "seed_sweep": [
+   {
+    "seed": 0,
+    "mrr_all": 0.1005,
+    "mrr_typed": 0.4623,
+    "mrr_all_schema": 0.1379,
+    "mrr_typed_schema": 0.4958
+   },
+   {
+    "seed": 1,
+    "mrr_all": 0.1285,
+    "mrr_typed": 0.4485,
+    "mrr_all_schema": 0.1642,
+    "mrr_typed_schema": 0.5116
+   },
+   {
+    "seed": 2,
+    "mrr_all": 0.1566,
+    "mrr_typed": 0.4912,
+    "mrr_all_schema": 0.1951,
+    "mrr_typed_schema": 0.5416
+   }
+  ]
+ },
+ "delta": {
+  "best_baseline": "rule_retrieval",
+  "verdict": "GNN 显著劣于规则基线 —— 保留规则方案",
+  "gnn_complex_schema": {
+   "delta_mrr": -0.0613,
+   "ci95": [
+    -0.0767,
+    -0.0469
+   ],
+   "p_le_0": 1.0
+  },
+  "gnn_complex_plain": {
+   "delta_mrr": -0.0987,
+   "ci95": [
+    -0.1134,
+    -0.0841
+   ],
+   "p_le_0": 1.0
+  }
+ },
+ "selfcheck": {
+  "random_mrr": 0.0011,
+  "gnn_mrr": 0.1005,
+  "gnn_gt_random": true,
+  "random_near_baseline": true,
+  "leakage_diag_selfcheck": {
+   "pass": true,
+   "leak_detected": {
+    "n_test_pairs": 1,
+    "leaked_pairs": 1,
+    "leak_rate": 1.0,
+    "by_relation": {
+     "r1": {
+      "n": 1,
+      "leaked": 1
+     }
+    }
+   },
+   "clean_reported_zero": {
+    "n_test_pairs": 1,
+    "leaked_pairs": 0,
+    "leak_rate": 0.0,
+    "by_relation": {
+     "r1": {
+      "n": 1,
+      "leaked": 0
+     }
+    }
+   }
+  }
+ },
+ "caveats": [
+  "P1 关系留出下跨关系信息对传导式链接预测未必违规，但须披露泄漏率。",
+  "P2 严格非传导样本受图密度限制，规模可能很小。",
+  "全量 filtered 候选=全实体，未做 schema 掩码；类型一致档另报。",
+  "GNN 为单次主运行 + 种子扫描；结果对训练超参/种子敏感（30ep 与 120ep 差异显著）。"
+ ]
+}

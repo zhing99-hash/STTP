@@ -34,6 +34,7 @@
 #   bash sttp.sh sample [--port N]                  只用**离线样例**起可视化（页面与查询同版本，单命令）
 #   bash sttp.sh release-full                       对完整快照跑全量发布校验（--release 门禁 + manifest 现算比对）
 #   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
+#   bash sttp.sh gnneval [--gnn-seeds 1,2]           推理增量评测协议 v2：P1/P2 + 基线对照 + 种子方差（Phase 39 R11续）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -266,6 +267,16 @@ EOF
     "$PY" 12_评测/eval_runner.py --json 12_评测/eval_report.json "$@"
     echo "== [3/3] 非真空自检（判分器必须会红）=="
     "$PY" 12_评测/eval_runner.py --selfcheck
+    ;;
+  gnneval)
+    # Phase 39（R11 续）：推理增量评测协议 v2 —— P1 关系留出补全 / P2 实体对发现。
+    # 单线程确定性训练；额外参数透传（如 --gnn-seeds 1,2）。
+    shift
+    set -e
+    echo "== [1/2] 推理增量评测（全量 filtered MRR + 4 类基线对照）=="
+    "$PY" 12_评测/gnn_eval_v2.py --epochs 120 --cap-test 100 "$@"
+    echo "== [2/2] 非真空自检（判据必须会红）=="
+    "$PY" 12_评测/gnn_eval_v2.py --quick --selfcheck
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py
