@@ -1,0 +1,287 @@
+{
+ "schema": "sttp-phase43-selfcheck/v1",
+ "counts": {
+  "PASS": 51,
+  "FAIL": 0,
+  "SKIP": 3
+ },
+ "query_source": "06_PoC\\etl\\normalized.json",
+ "rows": [
+  {
+   "status": "PASS",
+   "name": "C1 subgraph 响应通过 subgraph.schema.json",
+   "detail": "[]"
+  },
+  {
+   "status": "PASS",
+   "name": "C2 search 响应通过 search.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "C3 overview 响应通过 overview.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "C4 错误信封通过 error.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "C5 注入非法 error_code ⇒ 校验器变红",
+   "detail": "（注入反例，必须报错）"
+  },
+  {
+   "status": "PASS",
+   "name": "C5b 四份 schema 只用「已实现关键字」（无静默跳过）",
+   "detail": "12 个关键字全部受支持"
+  },
+  {
+   "status": "PASS",
+   "name": "C6 queries._RANK == graph_export.RANK_ORDER",
+   "detail": "一致"
+  },
+  {
+   "status": "PASS",
+   "name": "C7 queries._RANK == verification_model.RANK",
+   "detail": "一致"
+  },
+  {
+   "status": "PASS",
+   "name": "C8 VERIFIED_MIN/STRICT_MIN 两处一致",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V1a /api/subgraph 不读 graph_data.json",
+   "detail": "load_graph_data 调用 0 次；返回 4 节点"
+  },
+  {
+   "status": "PASS",
+   "name": "V1b /api/overview 亦不读全图",
+   "detail": "调用 0 次"
+  },
+  {
+   "status": "PASS",
+   "name": "V1 反例：/graph_data.json 确实读全图（证明探针有效）",
+   "detail": "调用 1 次"
+  },
+  {
+   "status": "PASS",
+   "name": "V2a 正例：max_nodes=50 ⇒ truncated/nodes，reason 非空",
+   "detail": "truncated / pre={'n_nodes': 731, 'n_edges': 855} / got=72"
+  },
+  {
+   "status": "PASS",
+   "name": "V2 反例：预算放大 ⇒ status=ok（证明 truncated 不是恒真）",
+   "detail": "ok n_nodes=731"
+  },
+  {
+   "status": "PASS",
+   "name": "V3a 正例：seeds=DOES:NOT:EXIST ⇒ no_result",
+   "detail": "no_result"
+  },
+  {
+   "status": "PASS",
+   "name": "V3 反例：存在的 seed ⇒ ok（证明 no_result 不是恒真）",
+   "detail": "ok"
+  },
+  {
+   "status": "PASS",
+   "name": "V4a 正例：deadline_ms=1 ⇒ timeout/GRAPH_QUERY_TIMEOUT",
+   "detail": "timeout elapsed=15ms"
+  },
+  {
+   "status": "PASS",
+   "name": "V4 反例：预算充足 ⇒ 不超时（证明 timeout 不是恒真）",
+   "detail": "truncated"
+  },
+  {
+   "status": "PASS",
+   "name": "V5a snapshot_id == sha256(查询源)[:12]",
+   "detail": "sha256:1545ac8e5ada"
+  },
+  {
+   "status": "PASS",
+   "name": "V5b 换一份图 ⇒ snapshot_id 变（且等于该图哈希）",
+   "detail": "sha256:1545ac8e5ada vs sha256:2c2c54ff4eef"
+  },
+  {
+   "status": "PASS",
+   "name": "V6a 全部证据对象四项齐备",
+   "detail": "17 条证据 / 0 处缺失"
+  },
+  {
+   "status": "PASS",
+   "name": "V6 反例：抹掉 evidence[].src ⇒ 校验器变红",
+   "detail": "（必须报错）"
+  },
+  {
+   "status": "PASS",
+   "name": "V7a 基线（exclude_stale=false）确实含 stale 边",
+   "detail": "2 / 25 条"
+  },
+  {
+   "status": "PASS",
+   "name": "V7b exclude_stale=true ⇒ 无 stale 边且边数下降",
+   "detail": "25 → 23"
+  },
+  {
+   "status": "SKIP",
+   "name": "V8 五态在 UI 上颜色可区分",
+   "detail": "属步骤 B（前端 js/*.js）；本轮未覆盖"
+  },
+  {
+   "status": "SKIP",
+   "name": "V9 mode=bundle 发布样例链路",
+   "detail": "由回归 `bash sttp.sh release` 覆盖（本轮脚本不替代）"
+  },
+  {
+   "status": "PASS",
+   "name": "V10a 两次响应逐元素相同",
+   "detail": "hash=7e39f7b22ec00af6"
+  },
+  {
+   "status": "PASS",
+   "name": "V10 反例：换参数 ⇒ query_hash 变（证明 hash 不是常量）",
+   "detail": "7e39f7b22ec00af6 vs 75aa829a5c02faa5"
+  },
+  {
+   "status": "PASS",
+   "name": "V11a types=has_quantity 有结果",
+   "detail": "truncated n_edges=67"
+  },
+  {
+   "status": "PASS",
+   "name": "V11b kinds=has_quantity ⇒ 0 条（证明未混用）",
+   "detail": "no_result"
+  },
+  {
+   "status": "PASS",
+   "name": "V12a 反复展开 ⇒ SUBGRAPH_LIMIT_REACHED",
+   "detail": "第 6 次拒绝；session={'tracked': True, 'n_nodes': 120, 'n_edges': 114, 'limit_nodes': 120, 'limit_edges': 200, 'exhausted': True}"
+  },
+  {
+   "status": "PASS",
+   "name": "V12b 会话计数不超限且标记 exhausted",
+   "detail": "{'tracked': True, 'n_nodes': 120, 'n_edges': 114, 'limit_nodes': 120, 'limit_edges': 200, 'exhausted': True}"
+  },
+  {
+   "status": "PASS",
+   "name": "V12 反例：新会话可正常展开（证明硬门按会话记账）",
+   "detail": "ok"
+  },
+  {
+   "status": "PASS",
+   "name": "V13a 正例：合法 token ⇒ 可展开",
+   "detail": "ok"
+  },
+  {
+   "status": "PASS",
+   "name": "V13b 反例：篡改 token 预算字段 ⇒ 400 BAD_REQUEST",
+   "detail": "400/BAD_REQUEST"
+  },
+  {
+   "status": "PASS",
+   "name": "V13c 反例：任意字符串 token ⇒ 400",
+   "detail": "400/BAD_REQUEST"
+  },
+  {
+   "status": "PASS",
+   "name": "V14a hidden_by_trust 随档位变化（非零、非恒等）",
+   "detail": "verified=13932 / strict=13943"
+  },
+  {
+   "status": "PASS",
+   "name": "V14b visible(v)−visible(s) == hidden(s)−hidden(v)",
+   "detail": "11 == 11"
+  },
+  {
+   "status": "PASS",
+   "name": "V14c visible+hidden 两档相等（可加总回全量）",
+   "detail": "48712 == 48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V15a 覆盖完整且取值合法",
+   "detail": "缺失=0"
+  },
+  {
+   "status": "PASS",
+   "name": "V15b why_shown 取值分布非单一",
+   "detail": "['expansion', 'user_specified', 'verified_context']"
+  },
+  {
+   "status": "PASS",
+   "name": "V15 反例：抹掉 why_shown ⇒ 校验器变红",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V16a 找到负对照目标文件（被登记 locator）",
+   "detail": "06_PoC\\sample_mathxiv.json"
+  },
+  {
+   "status": "PASS",
+   "name": "V16b 改动登记文件 ⇒ stale 边增加（判据非真空）",
+   "detail": "2 → 25"
+  },
+  {
+   "status": "PASS",
+   "name": "V16c 缓存键随内容身份变化（不是按时间猜）",
+   "detail": "键已更新"
+  },
+  {
+   "status": "PASS",
+   "name": "V16d 负对照后逐字节还原（铁律 #61）",
+   "detail": "496d836b64b9d507"
+  },
+  {
+   "status": "PASS",
+   "name": "V16e 还原后 stale 计数回到基线",
+   "detail": "2"
+  },
+  {
+   "status": "PASS",
+   "name": "V16f 响应里的字节忠实性计数 == 独立重算",
+   "detail": "响应 7 / 独立 7"
+  },
+  {
+   "status": "PASS",
+   "name": "V17a 无 session_id ⇒ tracked=False 且连续 3 次都不被硬门拒绝",
+   "detail": "status=['truncated', 'truncated', 'truncated'] tracked=[False, False, False]"
+  },
+  {
+   "status": "PASS",
+   "name": "V17b 匿名调用不改写会话表（计数恒为 0）",
+   "detail": "n_nodes=[0, 0, 0]"
+  },
+  {
+   "status": "PASS",
+   "name": "V17c 有 session_id ⇒ tracked=True 且展开次数递增",
+   "detail": "exp 1→2 / n 20→40"
+  },
+  {
+   "status": "PASS",
+   "name": "V17d reset=1 ⇒ 该会话计数先清零再计本次",
+   "detail": "n 40→20 / exp=1"
+  },
+  {
+   "status": "PASS",
+   "name": "V17e 会话表超上限 ⇒ 按最久未写淘汰（内存不无界增长）",
+   "detail": "V.SESSION_MAX=3 ⇒ 实存 3"
+  },
+  {
+   "status": "SKIP",
+   "name": "N1 Neo4j 子图契约一致",
+   "detail": "回退到 NetworkX（未连上 Neo4j）"
+  }
+ ],
+ "notes": [
+  "V6 覆盖率（如实披露）：9/9 条边带证据",
+  "V14 实测：verified 可见 34780 / 隐藏 13932；verified_strict 可见 34769 / 隐藏 13943（差 11 条=by_construction）",
+  "★ 已知缺陷（本轮发现并登记）：7/21 个登记 locator 的 worktree 字节 ≠ 仓库 blob ⇒ 证据里的 src_hash 在干净检出下不可复现、stale 判据会假阳。根因与修法见 `07_交付物/Phase43_*.md`；**exclude_stale 默认仍为 false**。"
+ ],
+ "elapsed_s": 20.36
+}
