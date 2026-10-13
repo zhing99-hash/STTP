@@ -28,33 +28,32 @@
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 1022820,
-    "edges": 701,
-    "nodes": 380,
+    "bytes": 341783,
+    "edges": 255,
+    "nodes": 170,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "a754e69f27b428014814f14afeeecafbceb89e61a74dd9e410a908458359d86e",
+    "sha256": "39cf56ff0feb62f03e5a2be110637dd78a748e05e9b213dccea61d5480b07c38",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 1217615,
-    "edges": 701,
-    "nodes": 380,
+    "bytes": 378457,
+    "edges": 255,
+    "nodes": 170,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "7a96d498469d5c393c704cea77ba37b4d3f4d9661c34c19d504113cc4e5ad19d",
+    "sha256": "2c2c54ff4eef4a56813abb5f9713d843e4d72210c408c98db1236680685b8b3b",
     "subjects": {
-     "化学": 237,
-     "数学": 38,
-     "物理": 80,
-     "跨学科": 25
+     "化学": 49,
+     "数学": 18,
+     "物理": 103
     },
     "tracked_in_git": true
    },
    "sample_queries.json": {
-    "bytes": 1417,
+    "bytes": 1455,
     "path": "06_PoC/release/sample/sample_queries.json",
     "queries": 5,
-    "sha256": "be9ae76021866bae2d2a3af57aafd7d3429c9e643797c32f14a4ceda93e6c470",
+    "sha256": "3d75c3b5c3ebe18dc1189e1006edac7145dd699c7fcfb7030c902e2661cdbc11",
     "tracked_in_git": true
    }
   }
@@ -77,11 +76,20 @@
  },
  "code": {
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
-  "dirty_sample": [],
+  "dirty_sample": [
+   "M 06_PoC/release/make_manifest.py",
+   " M 06_PoC/release/make_sample.py",
+   " M 06_PoC/release/sample/sample_graph.json",
+   " M 06_PoC/release/sample/sample_normalized.json",
+   " M 06_PoC/release/sample/sample_queries.json",
+   " M 06_PoC/release/verify_release.py",
+   " M \"11_\\347\\234\\237\\345\\256\\236\\346\\225\\260\\346\\215\\256/source_registry.py\"",
+   " M \"12_\\350\\257\\204\\346\\265\\213/eval_runner.py\""
+  ],
   "git_branch": "main",
-  "git_head_at_build": "fa0fffa03bff090886c2151b02bbeb5d1ec0e6c8",
-  "git_head_at_build_short": "fa0fffa",
-  "working_tree_dirty_at_build": false
+  "git_head_at_build": "e47e09ddf8adf865e37c21665f699f51a6759972",
+  "git_head_at_build_short": "e47e09d",
+  "working_tree_dirty_at_build": true
  },
  "counterexamples": {
   "cases": 108,
@@ -589,16 +597,65 @@
    }
   },
   "sample": {
-   "edges": 701,
-   "nodes": 380,
+   "edges": 255,
+   "nodes": 170,
    "recomputable": "sample（入库产物，verify_release 现算比对）",
    "subjects": {
-    "化学": 237,
-    "数学": 38,
-    "物理": 80,
-    "跨学科": 25
+    "化学": 49,
+    "数学": 18,
+    "物理": 103
    }
   }
+ },
+ "license": {
+  "audit_violations": 0,
+  "excluded_by_source": {
+   "ChEBI": 5092,
+   "ElementKG2.0": 7797,
+   "LLM-review": 9,
+   "NIST Chemistry WebBook": 157,
+   "Phase13.GNN.typed": 76,
+   "Phase13.Gate.B1": 2578,
+   "Phase13.Gate.B2": 5,
+   "Phase13.Gate.B4": 23,
+   "Phase13.Gate.B5": 698,
+   "Phase9.GNN": 18,
+   "Phase9.GNN+LLM": 5,
+   "PhysicsBabel": 24104,
+   "PubChem": 53,
+   "chembl_api": 2512,
+   "cross_source_alignment": 15,
+   "curated_seed": 78,
+   "curated_seed/energy_combustion": 13,
+   "dimension_table": 8,
+   "heuristic": 7,
+   "llm_inferred_gnn": 1,
+   "mathxiv": 41,
+   "rhea_chebi": 5
+  },
+  "excluded_edges": 43295,
+  "excluded_nodes": 6820,
+  "note": "★ 铁律 #64：许可政策由程序执行 —— 发布样例必须 public_demo（默认）；verify_release 会**独立重算**样例内每条边/每个节点的来源血缘闭包并断言 0 违规，且断言剔除计数非真空（0 边 ⇒ 白名单形同虚设）。",
+  "policy": "只保留血缘闭包 = redistributable 的边与端点；缺 props.source 视为不可再分发",
+  "profile": "public_demo",
+  "redistributable_sources": [
+   "ChEBI",
+   "NIST Chemistry WebBook",
+   "Phase13.Gate.B2",
+   "Phase13.Gate.B3",
+   "Rhea",
+   "cross_source_alignment",
+   "curated_seed",
+   "curated_seed/energy_combustion",
+   "dimension_table",
+   "element_reference",
+   "nist_codata_2022",
+   "openalex",
+   "openalex-topic-align",
+   "rhea_chebi",
+   "schema-axiom",
+   "wikidata"
+  ]
  },
  "licenses": {
   "code": "Apache-2.0（根 LICENSE + NOTICE + 全部第一方源码 SPDX 头）",
@@ -609,7 +666,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-12T16:09:48+08:00",
+  "created": "2026-10-13T13:57:56+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
