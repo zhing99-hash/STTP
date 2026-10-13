@@ -38,6 +38,7 @@
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
+#   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V16 正/反例（Phase 43 / 复评 A06）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -312,6 +313,14 @@ EOF
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py
+    ;;
+  subgraph)
+    # Phase 43 / 复评 A06：局部图谱查询（/api/search · /api/subgraph · /api/path · /api/overview）
+    # 真 HTTP 响应体断言 + 契约 JSON Schema 校验 + V1–V16 正/反例（反例必须变红）。
+    # Neo4j 不可达 ⇒ 记 SKIP（不计入通过数，铁律 #20/#37）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/phase43_subgraph_selfcheck.py "$@"
     ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"
