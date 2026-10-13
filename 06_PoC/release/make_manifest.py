@@ -196,6 +196,23 @@ def main(argv=None) -> int:
             "tracked_in_git": True, **st,
         }
 
+    # ---------------- license profile（Phase 42 · A03）----------------
+    #  从**样例产物自身**读出许可 profile 与剔除计数（读产物，不信构建器内存 —— 铁律 #14）。
+    _sm = json.load(open(os.path.join(SAMPLE_DIR, "sample_normalized.json"), encoding="utf-8"))
+    _met = _sm.get("meta") or {}
+    license_block = {
+        "profile": _met.get("license_profile"),
+        "policy": _met.get("license_policy"),
+        "excluded_edges": _met.get("license_excluded_edges"),
+        "excluded_nodes": _met.get("license_excluded_nodes"),
+        "excluded_by_source": _met.get("license_excluded_by_source"),
+        "audit_violations": _met.get("license_audit_violations"),
+        "redistributable_sources": _met.get("license_redistributable_sources"),
+        "note": ("★ 铁律 #64：许可政策由程序执行 —— 发布样例必须 public_demo（默认）；"
+                 "verify_release 会**独立重算**样例内每条边/每个节点的来源血缘闭包并断言 0 违规，"
+                 "且断言剔除计数非真空（0 边 ⇒ 白名单形同虚设）。"),
+    }
+
     snap = resolve_snapshot(a.snapshot)
     if snap:
         artifacts["full"]["snapshot"] = {
@@ -319,6 +336,7 @@ def main(argv=None) -> int:
         },
         "dependencies": deps,
         "artifacts": artifacts,
+        "license": license_block,
         "expected_stats": exp,
         "counterexamples": {
             "path": "06_PoC/frozen_counterexamples.json",

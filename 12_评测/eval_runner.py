@@ -186,6 +186,37 @@ def _R(world):
     return float(v)
 
 
+# ---- 输入域守卫（铁律 #63：拒绝分支必须显式；非有限值不得进入算式）----
+def _is_finite(x) -> bool:
+    try:
+        return math.isfinite(float(x))
+    except (TypeError, ValueError):
+        return False
+
+
+def _pos_float(inp, key, reason="log_domain"):
+    """取一个**必须为正有限**的量（K / Ka / Q / Kw / 比值）：否则显式拒答。
+
+    NaN / Inf 会穿透 `x <= 0` 这类否定式判断（`NaN <= 0` 恒 False），
+    进而让 `math.log(NaN)` 把 NaN 一路带到判分器 —— 必须在入口拒绝。
+    """
+    x = float(inp[key])
+    if not math.isfinite(x) or x <= 0:
+        raise Refuse(reason)
+    return x
+
+
+def _T_K(inp):
+    """取并校验绝对温度：须存在、有限且 **> 0**（T=0/负为无物理意义的输入域外值）。"""
+    t = inp.get("T_K")
+    if t is None:
+        raise Refuse("missing_temperature")
+    tf = float(t)
+    if not math.isfinite(tf) or tf <= 0:
+        raise Refuse("temperature_not_positive")
+    return tf
+
+
 def solve(task, world):
     """返回 (outcome, payload)。outcome ∈ {'answer','refuse'}。"""
     m = task["method"]
@@ -293,50 +324,39 @@ def s_unit_dimension_match(task, inp, world):
 
 # ---- 3) 有限数值计算 ----
 def s_compute_K_from_dG(task, inp, world):
-    if inp.get("T_K") is None:
-        raise Refuse("missing_temperature")
+    T = _T_K(inp)
     R = _R(world)
     dG = float(inp["delta_g_kj"]) * 1000.0
-    return math.exp(-dG / (R * float(inp["T_K"])))
+    return math.exp(-dG / (R * T))
 
 
 def s_compute_dG_from_K(task, inp, world):
-    if inp.get("T_K") is None:
-        raise Refuse("missing_temperature")
-    K = float(inp["K"])
-    if K <= 0:
-        raise Refuse("log_domain")
+    T = _T_K(inp)
+    K = _pos_float(inp, "K", "log_domain")
     R = _R(world)
-    return -R * float(inp["T_K"]) * math.log(K) / 1000.0
+    return -R * T * math.log(K) / 1000.0
 
 
 def s_compute_pKa_from_Ka(task, inp, world):
-    Ka = float(inp["Ka"])
-    if Ka <= 0:
-        raise Refuse("log_domain")
+    Ka = _pos_float(inp, "Ka", "log_domain")
     return -math.log10(Ka)
 
 
 def s_compute_pH_HH(task, inp, world):
-    ratio = float(inp["ratio_base_acid"])
-    if ratio <= 0:
-        raise Refuse("log_domain")
+    ratio = _pos_float(inp, "ratio_base_acid", "log_domain")
     return float(inp["pKa"]) + math.log10(ratio)
 
 
 def s_compute_pKw_neutral_pH(task, inp, world):
-    Kw = float(inp["Kw"])
-    if Kw <= 0:
-        raise Refuse("log_domain")
+    Kw = _pos_float(inp, "Kw", "log_domain")
     return {"pKw": -math.log10(Kw), "pH": -math.log10(math.sqrt(Kw))}
 
 
 def s_compute_dG_from_dH_dS(task, inp, world):
-    if inp.get("T_K") is None:
-        raise Refuse("missing_temperature")
+    T = _T_K(inp)
     dH = float(inp["delta_h_kj"])
     dS = float(inp["delta_s_j"]) / 1000.0
-    return dH - float(inp["T_K"]) * dS
+    return dH - T * dS
 
 
 def s_sign_to_direction(task, inp, world):
@@ -349,13 +369,10 @@ def s_sign_to_direction(task, inp, world):
 
 
 def s_compute_dG_at_composition(task, inp, world):
-    if inp.get("T_K") is None:
-        raise Refuse("missing_temperature")
-    Q = float(inp["Q"])
-    if Q <= 0:
-        raise Refuse("log_domain")
+    T = _T_K(inp)
+    Q = _pos_float(inp, "Q", "log_domain")
     R = _R(world)
-    return (float(inp["delta_g_kj"]) + R * float(inp["T_K"]) * math.log(Q) / 1000.0)
+    return (float(inp["delta_g_kj"]) + R * T * math.log(Q) / 1000.0)
 
 
 # ---- 4) 方法选择 ----
@@ -517,13 +534,21 @@ def grade(task, outcome, payload):
 
 
 def _grade_value(payload, exp):
+    """数值判分。★ 铁律 #63：**拒绝分支必须显式** —— 结构化分支若写成
+    「不满足容差才判错」的否定式，则 NaN 会穿透（`NaN > tol` 恒 False ⇒ 判对）。
+    """
     ev = exp["value"]
     if isinstance(ev, dict):            # 结构化（如 period_group / pKw+pH）
         if not isinstance(payload, dict):
             return "incorrect", "期望结构对象，得到 %r" % (payload,)
+        tol = exp.get("abs_tol", 1e-6)
         for k, v in ev.items():
             got = payload.get(k)
-            if got is None or abs(float(got) - float(v)) > exp.get("abs_tol", 1e-6):
+            if got is None:
+                return "incorrect", "字段 %s 缺失（exp=%s）" % (k, v)
+            if not (_is_finite(got) and _is_finite(v)):
+                return "incorrect", "字段 %s 非有限值 got=%r exp=%r" % (k, got, v)
+            if abs(float(got) - float(v)) > tol:
                 return "incorrect", "字段 %s: got=%s exp=%s" % (k, got, v)
         return "correct", "全字段匹配"
     if payload is None:
@@ -532,6 +557,8 @@ def _grade_value(payload, exp):
         got = float(payload)
     except (TypeError, ValueError):
         return "incorrect", "非数值: %r" % (payload,)
+    if not (_is_finite(got) and _is_finite(ev)):
+        return "incorrect", "非有限值 got=%r exp=%r" % (got, ev)
     if "rel_tol" in exp:
         ok = abs(got - float(ev)) <= abs(float(ev)) * exp["rel_tol"] + 1e-15
     elif "abs_tol" in exp:
@@ -622,6 +649,76 @@ def selfcheck(doc, world):
     return {"n": n, "detected": det, "all_detected": det == n, "rows": rows}
 
 
+def selfcheck_edges(world):
+    """边界与域自检（A02 · GPT6 复评）：证**判分器与求解器的拒绝分支是显式的**。
+
+    ★ 铁律 #63：只跑题库会漏掉「输入域」这一层 —— 必须用 NaN / Inf / 域外值
+      直接打判分器与求解器，断言它们**真的会拒绝**；同时保留**边界正例**，
+      证明修复没有把正常路径也一并误杀（否则就成了「一律判错」的假守卫）。
+    """
+    checks = []
+
+    def chk(name, ok, detail=""):
+        checks.append({"name": name, "ok": bool(ok), "detail": detail})
+
+    # ---- 判分器：非有限值一律不得判 correct（修复前结构化分支会穿透）----
+    v, _ = _grade_value({"pKw": float("nan"), "pH": float("nan")},
+                        {"kind": "value", "value": {"pKw": 14.0, "pH": 7.0}})
+    chk("E1 结构化 NaN 作答（期望有限）⇒ incorrect", v == "incorrect", v)
+    v, _ = _grade_value({"pKw": float("nan")},
+                        {"kind": "value", "value": {"pKw": float("nan")}})
+    chk("E2 结构化 NaN vs NaN ⇒ 不得 correct（原穿透点）", v != "correct", v)
+    v, _ = _grade_value({"period": float("inf"), "group": 1},
+                        {"kind": "value", "value": {"period": 1, "group": 1}})
+    chk("E3 结构化 Inf ⇒ incorrect", v == "incorrect", v)
+    v, _ = _grade_value({"period": 1},
+                        {"kind": "value", "value": {"period": 1, "group": 1}})
+    chk("E4 结构化字段缺失 ⇒ incorrect", v == "incorrect", v)
+    v, _ = _grade_value({"period": 3, "group": 15},
+                        {"kind": "value", "value": {"period": 3, "group": 15}})
+    chk("E5 结构化正确值 ⇒ correct（边界正例）", v == "correct", v)
+    v, _ = _grade_value(float("nan"), {"kind": "value", "value": 1.0})
+    chk("E6 标量 NaN ⇒ incorrect", v == "incorrect", v)
+    v, _ = _grade_value(float("inf"), {"kind": "value", "value": 1.0})
+    chk("E7 标量 Inf ⇒ incorrect", v == "incorrect", v)
+    v, _ = _grade_value(1.0, {"kind": "value", "value": 1.0})
+    chk("E8 标量正常值 ⇒ correct（边界正例）", v == "correct", v)
+
+    # ---- 求解器：域外输入必须 refuse（NaN/Inf 不得进入算式）----
+    def sol(method, inputs):
+        return solve({"method": method, "inputs": inputs}, world)
+
+    for T in (0.0, -298.15, float("nan")):
+        o, p = sol("compute_K_from_dG", {"delta_g_kj": -10.0, "T_K": T})
+        chk("E9 compute_K_from_dG T=%s ⇒ refuse" % T, o == "refuse", "%s %s" % (o, p))
+        o, p = sol("compute_dG_from_K", {"K": 1e5, "T_K": T})
+        chk("E10 compute_dG_from_K T=%s ⇒ refuse" % T, o == "refuse", "%s %s" % (o, p))
+    o, p = sol("compute_dG_from_dH_dS", {"delta_h_kj": -50.0, "delta_s_j": -100.0, "T_K": -1.0})
+    chk("E11 compute_dG_from_dH_dS T=-1 ⇒ refuse", o == "refuse", "%s %s" % (o, p))
+    o, p = sol("compute_dG_from_K", {"K": float("nan"), "T_K": 298.15})
+    chk("E12 compute_dG_from_K K=NaN ⇒ refuse", o == "refuse", "%s %s" % (o, p))
+    o, p = sol("compute_dG_at_composition", {"delta_g_kj": -10.0, "T_K": 298.15, "Q": float("nan")})
+    chk("E13 compute_dG_at_composition Q=NaN ⇒ refuse", o == "refuse", "%s %s" % (o, p))
+    o, p = sol("compute_pH_HH", {"pKa": 4.76, "ratio_base_acid": float("inf")})
+    chk("E14 compute_pH_HH ratio=Inf ⇒ refuse", o == "refuse", "%s %s" % (o, p))
+    o, p = sol("compute_pKw_neutral_pH", {"Kw": float("-inf")})
+    chk("E15 compute_pKw_neutral_pH Kw=-Inf ⇒ refuse", o == "refuse", "%s %s" % (o, p))
+
+    # ---- 边界正例：正常输入必须作答且为有限值（防「一律判错」的假守卫）----
+    o, p = sol("compute_dG_from_K", {"K": 1.0, "T_K": 298.15})
+    chk("E16 compute_dG_from_K K=1 正常 ⇒ answer 且 ΔG=0",
+        o == "answer" and _is_finite(p) and abs(float(p)) < 1e-9, "%s %s" % (o, p))
+    o, p = sol("compute_K_from_dG", {"delta_g_kj": 0.0, "T_K": 298.15})
+    chk("E17 compute_K_from_dG ΔG=0 正常 ⇒ answer 且 K=1",
+        o == "answer" and abs(float(p) - 1.0) < 1e-9, "%s %s" % (o, p))
+    o, p = sol("compute_K_from_dG", {"delta_g_kj": -10.0, "T_K": 298.15})
+    chk("E18 compute_K_from_dG ΔG<0 正常 ⇒ answer 且 K>1",
+        o == "answer" and float(p) > 1.0, "%s %s" % (o, p))
+
+    bad = [c for c in checks if not c["ok"]]
+    return {"n": len(checks), "failed": len(bad), "all_ok": not bad, "checks": checks}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", help="另存 JSON 报告到该路径")
@@ -639,13 +736,21 @@ def main():
 
     if a.selfcheck:
         sc = selfcheck(doc, world)
-        print("非真空自检：%d/%d 题扰动后判为非通过 ⇒ %s"
+        ec = selfcheck_edges(world)
+        print("非真空自检（题库扰动）：%d/%d 题扰动后判为非通过 ⇒ %s"
               % (sc["detected"], sc["n"], "判分器有牙 ✅" if sc["all_detected"] else "存在哑判 ❌"))
         if not sc["all_detected"]:
             for r in sc["rows"]:
                 if not r["detected"]:
                     print("  ⚠ 未检出扰动: %s（%s → %s）" % (r["id"], r["baseline"], r["mutated"]))
-        return 0 if sc["all_detected"] else 3
+        print("非真空自检（边界/域）：%d/%d 项通过 ⇒ %s"
+              % (ec["n"] - ec["failed"], ec["n"],
+                 "输入域守卫生效 ✅" if ec["all_ok"] else "存在穿透 ❌"))
+        if not ec["all_ok"]:
+            for c in ec["checks"]:
+                if not c["ok"]:
+                    print("  ⚠ 未拒绝: %s（%s）" % (c["name"], c["detail"]))
+        return 0 if (sc["all_detected"] and ec["all_ok"]) else 3
 
     rows, summary = run(doc, world, split=a.split, verbose=not a.quiet)
 

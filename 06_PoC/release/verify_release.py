@@ -16,6 +16,10 @@ R07 要求「主图缺失、必要依赖缺失、关键 SKIP 或对账失败返�
 本脚本把这些变成**机器可判的断言**，任一条不成立即非零退出：
 
   A 产物完整性      manifest 里每个样例产物的 sha256 / 字节数 / 计数必须对得上
+  A4-A6 许可合规    manifest 声明的 profile 必须是 public_demo；**独立重算**样例内每条边/
+                    每个节点的来源血缘闭包（`source_registry.redistribution_closure`），
+                    `redistributable` 之外一律违规（0 违规才 PASS）。
+                    ★ 复评 A03：原先打包器**不看许可**（`make_sample` 无白名单）。
   B 双投影同版本    sample_normalized.json 与 sample_graph.json 的节点/边 **id 集合逐元素相等**
   C 图卫生          无悬空端点 / 无重复 id / 无自环（样例内部）
   D 查询契约        sample_queries.json 每条查询在样例上执行通过
@@ -53,6 +57,7 @@ sys.path.insert(0, os.path.join(ROOT, "04_验证闭环"))
 sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
 
 import graph_export as gx                                                        # noqa: E402
+import source_registry as sr                                                     # noqa: E402
 
 MANIFEST = os.path.join(HERE, "manifest.json")
 SAMPLE_DIR = os.path.join(HERE, "sample")
@@ -62,7 +67,7 @@ LEVEL_RANK = {"unverified": 0, "model_inferred": 1, "source_asserted": 2,
 
 REQUIRED_MODULES = ("networkx", "sympy", "pint", "rdkit")
 REQUIRED_LOCAL = ("verification_model", "verification_loop", "dimension_table",
-                  "graph_export")
+                  "graph_export", "source_registry")
 SAMPLE_KINDS = ("dim_table,gate_chem,gate_math,pq_quantity_gate,attrib_check,level_check,"
                 "dim_field_semantics,dim_consistency,src_registered,lineage_acyclic")
 
@@ -163,6 +168,41 @@ def check_hygiene(rep, norm, view):
     vknown = {n["id"] for n in view["nodes"]}
     vdang = [e["id"] for e in view["edges"] if e["source"] not in vknown or e["target"] not in vknown]
     rep.add(not vdang, "C2 投影无悬空端点", "悬空 %d" % len(vdang))
+
+
+def check_license(rep, manifest, norm):
+    """A4-A6 许可合规（Phase 42 · A03：许可进打包）。
+
+    ★ 铁律 #64：许可政策必须由程序执行 —— 打包时不过滤、校验时不复查，等于没有政策。
+    ★ 铁律 #14 / #45：**独立重算**，不听构建器自述 —— 直接从样例产物重算来源血缘闭包。
+    ★ fail-closed：缺 `props.source` 或未登记来源 ⇒ 视为不可再分发（不猜测 —— 铁律 #60）。
+    """
+    lic = manifest.get("license") or {}
+    prof = lic.get("profile")
+    rep.add(prof == "public_demo", "A4 许可 profile",
+            "manifest profile=%s（发布样例必须 public_demo）" % prof)
+
+    nodes = norm.get("nodes") or []
+    edges = norm.get("edges") or []
+    nsrc = {n["id"]: (n.get("props") or {}).get("source") for n in nodes}
+    bad = []
+    for e in edges:
+        s = (e.get("props") or {}).get("source")
+        if not (s and sr.is_redistributable(s)):
+            bad.append(("edge", e.get("id"), s or "<none>"))
+        for nid in (e["source"], e["target"]):
+            t = nsrc.get(nid)
+            if not (t and sr.is_redistributable(t)):
+                bad.append(("node", nid, t or "<none>"))
+    rep.add(not bad, "A5 许可合规（独立重算）",
+            "样例 %d 节点 / %d 边 ｜ 违规 %d%s"
+            % (len(nodes), len(edges), len(bad),
+               "（来源闭包全 = redistributable）" if not bad else "：%s" % bad[:3]))
+
+    ex_e, ex_n = lic.get("excluded_edges"), lic.get("excluded_nodes")
+    rep.add(isinstance(ex_e, int) and isinstance(ex_n, int) and ex_e > 0,
+            "A6 许可剔除已登记且非真空",
+            "剔除 %s 边 / %s 节点（0 边 ⇒ 白名单形同虚设）" % (ex_e, ex_n))
 
 
 def check_deps(rep, release):
@@ -273,20 +313,44 @@ def run_frozen_gate(rep, release):
         return False
 
 
-def check_full(rep, manifest):
+def check_full(rep, manifest, release=False):
+    """H 完整快照校验。
+
+    ★ 复评 A01b：原先只核「前端展示快照」的 sha256，**不核规范图（权威图）**，
+      且缺失一律记为 WARN ⇒ 在 `--release` 下形成 fail-open。
+      本版：① 增 `H1b 规范图 sha256`；② `--release` 下所有缺失/不一致一律 FAIL（不再 WARN）。
+    """
     arts = (manifest.get("artifacts") or {}).get("full") or {}
+
+    # ---- H1 前端展示快照 ----
     snap = arts.get("snapshot")
     if not snap:
-        rep.add(False, "H1 完整快照已登记", "manifest 无 full.snapshot（--no-stats 生成？）", warn_only=True)
-        return
-    p = os.path.join(ROOT, snap["path"])
-    if not os.path.exists(p):
-        rep.add(False, "H1 完整快照存在", "本地缺失（不入库属正常）；获取方式：%s" % snap.get("obtain"),
-                warn_only=True)
-        return
-    got = sha256_file(p)
-    rep.add(got == snap["sha256"], "H1 完整快照 sha256", got[:16])
-    # 现算仪器并与 manifest 记录比对
+        rep.add(False, "H1 完整快照已登记", "manifest 无 full.snapshot（--no-stats 生成？）",
+                warn_only=not release)
+    else:
+        p = os.path.join(ROOT, snap["path"])
+        if not os.path.exists(p):
+            rep.add(False, "H1 完整快照存在",
+                    "本地缺失（不入库属正常）；获取方式：%s" % snap.get("obtain"),
+                    warn_only=not release)
+        else:
+            got = sha256_file(p)
+            rep.add(got == snap["sha256"], "H1 完整快照 sha256", got[:16])
+
+    # ---- H1b 规范图（权威图）★ 复评 A01b 缺口 ----
+    nrm = arts.get("normalized")
+    if not nrm:
+        rep.add(False, "H1b 规范图已登记", "manifest 无 full.normalized", warn_only=not release)
+    else:
+        p = os.path.join(ROOT, nrm["path"])
+        if not os.path.exists(p):
+            rep.add(False, "H1b 规范图存在",
+                    "本地缺失（不入库属正常）：%s" % nrm["path"], warn_only=not release)
+        else:
+            got = sha256_file(p)
+            rep.add(got == nrm["sha256"], "H1b 规范图 sha256", got[:16])
+
+    # ---- H2 北极星现算 == manifest ----
     exp = ((manifest.get("expected_stats") or {}).get("full_snapshot")) or {}
     import tempfile
     tmp = tempfile.mkdtemp(prefix="sttp_verify_")
@@ -302,7 +366,7 @@ def check_full(rep, manifest):
                 "H2 北极星现算 == manifest",
                 "现算 %s / manifest %s" % (now.get("north_star_pct"), old.get("north_star_pct")))
     else:
-        rep.add(False, "H2 北极星现算", "仪器未产出结果", warn_only=True)
+        rep.add(False, "H2 北极星现算", "仪器未产出结果（规范图缺失？）", warn_only=not release)
 
 
 def main(argv=None) -> int:
@@ -332,11 +396,12 @@ def main(argv=None) -> int:
     check_counts(rep, arts, norm, view)
     check_same_version(rep, norm, view)
     check_hygiene(rep, norm, view)
+    check_license(rep, manifest, norm)
     missing = check_deps(rep, a.release)
     run_queries(rep, norm, view)
     run_frozen_gate(rep, a.release)
     if a.full:
-        check_full(rep, manifest)
+        check_full(rep, manifest, release=a.release)
 
     print("-" * 78)
     verdict = "✅ 发布校验通过" if rep.hard_fail == 0 else "❌ 发布校验失败（%d 条断言不成立）" % rep.hard_fail

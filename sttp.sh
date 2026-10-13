@@ -227,11 +227,13 @@ EOF
     # 额外参数（如 --node-cap N）原样透传给采样器。
     shift
     set -e
-    echo "== [1/3] 构建离线样例 =="
+    echo "== [0/4] 许可判据非真空自检（A03：合成图注入 ⇒ 白名单必须真剔除）=="
+    "$PY" 06_PoC/release/make_sample.py --selfcheck
+    echo "== [1/4] 构建离线样例（public_demo：只打包可再分发内容）=="
     "$PY" 06_PoC/release/make_sample.py "$@"
-    echo "== [2/3] 生成发布清单 =="
+    echo "== [2/4] 生成发布清单 =="
     "$PY" 06_PoC/release/make_manifest.py
-    echo "== [3/3] 发布校验（fail-closed）=="
+    echo "== [3/4] 发布校验（fail-closed）=="
     "$PY" 06_PoC/release/verify_release.py --release
     ;;
   sample)
@@ -252,11 +254,14 @@ EOF
     GRAPH_DATA_FILE="$_sg" GRAPH_SOURCE_FILE="$_sn" VIZ_PORT="$_port" "$PY" 06_PoC/viz_server.py
     ;;
   release-full)
-    # 对完整快照（不入库）跑全量校验：manifest 现算比对 + 主图 fail-closed 门禁
+    # 对完整快照（不入库）跑全量校验：manifest 现算比对（含规范图哈希）+ 主图 fail-closed 门禁。
+    # ★ 铁律 #62：发布链必须 fail-closed 且**逐项传递退出码**（任一步非零 ⇒ 整体非零）；
+    #   不得让后一步的通过掩盖前一步的失败。
     shift
-    "$PY" 06_PoC/release/verify_release.py --full --release "$@"
-    echo "== 主图 fail-closed 门禁 =="
-    "$PY" 06_PoC/frozen_gate.py --release
+    echo "== [1/2] 发布校验（--full --release；含规范图 sha256 与 manifest 现算比对）=="
+    "$PY" 06_PoC/release/verify_release.py --full --release "$@" || exit $?
+    echo "== [2/2] 主图 fail-closed 门禁 =="
+    "$PY" 06_PoC/frozen_gate.py --release || exit $?
     ;;
   eval)
     # Phase 38（R11）：科学任务评测集 —— 构建冻结任务集（幂等）→ 规则基线 → 非真空自检。
@@ -283,25 +288,27 @@ EOF
   dimaudit)
     # Phase 40（R09）：量纲审计 —— 独立 SI 基表对照 + 矛盾方程检测 + 判据非真空自检。
     # 任一步发现「非约定性分歧」或「矛盾方程」即非零退出。
+    # ★ 铁律 #62：逐项传递退出码（否则第 1/2 步的分歧会被第 3 步的通过掩盖）。
     shift
     echo "== [1/3] 反解表 vs 独立 SI 基表 =="
-    "$PY" 11_真实数据/dimension_table.py --compare
+    "$PY" 11_真实数据/dimension_table.py --compare || exit $?
     echo "== [2/3] 矛盾方程检测（一般线性一致性）=="
-    "$PY" 11_真实数据/dimension_consistency.py --json 11_真实数据/dim_consistency_report.json "$@"
+    "$PY" 11_真实数据/dimension_consistency.py --json 11_真实数据/dim_consistency_report.json "$@" || exit $?
     echo "== [3/3] 判据非真空自检 =="
-    "$PY" 11_真实数据/dimension_consistency.py --selfcheck
+    "$PY" 11_真实数据/dimension_consistency.py --selfcheck || exit $?
     ;;
 
   lineage)
     # Phase 41（R10）：证据血缘/版本/失效审计 —— 来源登记表 + 变更定位 + 判据非真空自检。
     # 若某来源内容哈希与证据记录不一致（来源已变更）则非零退出。
+    # ★ 铁律 #62：逐项传递退出码。
     shift
     echo "== [1/3] 来源登记表（版本 + locator + 内容哈希 + 血缘）=="
-    "$PY" 11_真实数据/source_registry.py --check
+    "$PY" 11_真实数据/source_registry.py --check || exit $?
     echo "== [2/3] 来源变更 → 受影响断言（含血缘传递）=="
-    "$PY" 11_真实数据/lineage_invalidation.py --json "$@"
+    "$PY" 11_真实数据/lineage_invalidation.py --json "$@" || exit $?
     echo "== [3/3] 失效机制判据非真空自检 =="
-    "$PY" 11_真实数据/lineage_invalidation.py --selfcheck
+    "$PY" 11_真实数据/lineage_invalidation.py --selfcheck || exit $?
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

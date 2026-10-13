@@ -64,8 +64,86 @@ sys.path.insert(0, POC)
 
 import graph_export as gx                                          # noqa: E402
 
+sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
+import source_registry as sr                                       # noqa: E402
+
 DEFAULT_SRC = os.path.join(POC, "etl", "normalized.json")
 SAMPLE_DIR = os.path.join(HERE, "sample")
+
+# ---------------------------------------------------------------------------
+# 许可 profile（Phase 42 · A03）—— 把 `DATA_LICENSES.md` 的政策**变成程序**
+#
+#   public_demo       **对外可用**：只保留「边来源 + 两端节点来源」的**血缘闭包**均为
+#                     `redistributable` 的部分；其余一律剔除并计数（fail-closed）。
+#                     缺 `props.source` ⇒ 视为不可再分发（不猜测 —— 铁律 #60）。
+#   internal_research 内部研究复现：不过滤（须随附 `DATA_LICENSES.md` 声明）。
+#
+# ★ 发布物（进 git / 进 release 包）**必须**是 public_demo —— `verify_release.py`
+#   会**独立重算**样例内每条边/每个节点的来源三态并断言 0 违规（不是听构建器自述）。
+# ---------------------------------------------------------------------------
+PROFILES = ("public_demo", "internal_research")
+DEFAULT_PROFILE = "public_demo"
+
+
+def license_partition(nodes, edges, profile):
+    """按 profile 剔除不可再分发内容。返回 (nodes, edges, info)。"""
+    if profile not in PROFILES:
+        raise ValueError("未知 profile: %r（可选 %s）" % (profile, PROFILES))
+    if profile == "internal_research":
+        return nodes, edges, {
+            "license_profile": profile,
+            "license_policy": "不过滤（内部研究复现；随附 DATA_LICENSES.md 声明）",
+            "license_excluded_edges": 0, "license_excluded_nodes": 0,
+            "license_excluded_by_source": {}, "license_excluded_node_sources": [],
+        }
+
+    nsrc = {n["id"]: (n.get("props") or {}).get("source") for n in nodes}
+
+    def ok(sid):
+        # 缺来源 ⇒ 不可再分发（fail-closed；不猜测）
+        return bool(sid) and sr.redistribution_closure(sid) == sr.REDISTRIBUTABLE
+
+    keep, by_src, node_src = [], collections.Counter(), set()
+    for e in edges:
+        s = (e.get("props") or {}).get("source")
+        if ok(s) and ok(nsrc.get(e["source"])) and ok(nsrc.get(e["target"])):
+            keep.append(e)
+        else:
+            by_src[s or "<none>"] += 1
+            for nid in (e["source"], e["target"]):
+                t = nsrc.get(nid)
+                if not ok(t):
+                    node_src.add(t or "<none>")
+    live = set()
+    for e in keep:
+        live.add(e["source"])
+        live.add(e["target"])
+    nodes_out = [n for n in nodes if n["id"] in live]
+    return nodes_out, keep, {
+        "license_profile": profile,
+        "license_policy": ("只保留血缘闭包 = redistributable 的边与端点；"
+                           "缺 props.source 视为不可再分发"),
+        "license_excluded_edges": len(edges) - len(keep),
+        "license_excluded_nodes": len(nodes) - len(nodes_out),
+        "license_excluded_by_source": dict(sorted(by_src.items())),
+        "license_excluded_node_sources": sorted(node_src),
+    }
+
+
+def audit_redistribution(nodes, edges):
+    """**独立重算**：返回样例内违反 redistributable 的 (边/节点) 列表。
+    只信 `source_registry` 的三态，不信构建器的自述（铁律 #14：自检输入须独立）。"""
+    nsrc = {n["id"]: (n.get("props") or {}).get("source") for n in nodes}
+    bad = []
+    for e in edges:
+        s = (e.get("props") or {}).get("source")
+        if not (s and sr.redistribution_closure(s) == sr.REDISTRIBUTABLE):
+            bad.append(("edge", e.get("id"), s or "<none>"))
+        for nid in (e["source"], e["target"]):
+            t = nsrc.get(nid)
+            if not (t and sr.redistribution_closure(t) == sr.REDISTRIBUTABLE):
+                bad.append(("node", nid, t or "<none>"))
+    return bad
 
 # 扩展时允许纳入的**核心语义关系**（定义 / 计量 / 组成 / 反应 / 元数据）。
 # 只走白名单，避免把 24000+ 条 `has_symbol` 之类的低信息边全拉进来把样例撑爆。
@@ -307,15 +385,75 @@ def build_queries(nodes_out, edges_out):
     }
 
 
+def license_selfcheck() -> int:
+    """A03 判据**非真空**自检：合成四类来源，断言 public_demo 的「保留」与「剔除」都真的发生。
+
+    ★ 铁律 #14：自检输入必须**独立于**被检产物 —— 这里用合成图，不用真实样例（否则
+      「白名单没生效」也会因为真实样例恰好干净而静默通过）。
+    """
+    def nd(nid, src):
+        return {"id": nid, "props": ({"source": src} if src is not None else {})}
+
+    def ed(eid, s, t, src):
+        return {"id": eid, "source": s, "target": t,
+                "props": ({"source": src} if src is not None else {})}
+
+    nodes = [nd("A1", "Rhea"), nd("A2", "ChEBI"),                 # 可再分发
+             nd("B1", "PhysicsBabel"), nd("B2", "ElementKG2.0"),  # internal_only
+             nd("C1", "<unknown_source>"), nd("C2", None)]        # 未登记 / 缺来源
+    edges = [ed("e1", "A1", "A2", "Rhea"),                        # 源+端点皆可 ⇒ **保留**
+             ed("e2", "A1", "B1", "Rhea"),                        # 端点 internal_only ⇒ 剔
+             ed("e3", "B1", "B2", "PhysicsBabel"),                # 源+端点皆不可 ⇒ 剔
+             ed("e4", "C1", "C2", "curated_seed"),                # 端点为未登记/缺 ⇒ 剔
+             ed("e5", "A1", "A2", None)]                          # **源缺失** ⇒ 剔（fail-closed）
+
+    out_n, out_e, info = license_partition(nodes, edges, "public_demo")
+    keep = {e["id"] for e in out_e}
+    _, int_e, _ = license_partition(nodes, edges, "internal_research")
+
+    cases = [
+        ("保留可再分发边 e1",                  keep == {"e1"}),
+        ("剔除 e2/e3/e4/e5（端点/源受限）",     not (keep & {"e2", "e3", "e4", "e5"})),
+        ("剔除计数非真空（4 边）",              info["license_excluded_edges"] == 4),
+        ("剔除节点非真空",                     info["license_excluded_nodes"] > 0),
+        ("未登记来源计入剔除",                 "<unknown_source>" in info["license_excluded_node_sources"]),
+        ("缺来源计入剔除（fail-closed）",       "<none>" in info["license_excluded_node_sources"]),
+        ("保留集后置审计 0 违规",              audit_redistribution(out_n, out_e) == []),
+        ("未登记来源 ⇒ forbidden",             sr.redistribution_of("<unknown_source>") == sr.FORBIDDEN),
+        ("缺来源 ⇒ 非 redistributable",         not sr.is_redistributable(None)),
+        ("internal_only 不被放行",             not sr.is_redistributable("PhysicsBabel")),
+        ("internal_research 不过滤（全部保留）", len(int_e) == len(edges)),
+        ("三态表全来源覆盖（⑧）",               not sr.check_redistribution_coverage()),
+    ]
+    print("=" * 70)
+    print("  A03 许可判据 · 非真空自检（合成图，独立于真实样例）")
+    print("=" * 70)
+    ok = True
+    for name, good in cases:
+        print("  %s %s" % ("✅" if good else "❌", name))
+        ok &= bool(good)
+    print("-" * 70)
+    print("  ⇒ %s（%d/%d）" % ("全过" if ok else "未通过",
+                               sum(1 for _, g in cases if g), len(cases)))
+    return 0 if ok else 1
+
+
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="STTP 离线研究样例构建器（Phase 37 R06）")
+    ap = argparse.ArgumentParser(description="STTP 离线研究样例构建器（Phase 37 R06 / Phase 42 A03）")
     ap.add_argument("--source", default=DEFAULT_SRC, help="规范图输入（默认 06_PoC/etl/normalized.json）")
     ap.add_argument("--out-dir", default=SAMPLE_DIR)
+    ap.add_argument("--profile", default=DEFAULT_PROFILE, choices=PROFILES,
+                    help="许可 profile：public_demo（默认，对外；按来源三态剔除）/ internal_research（不过滤）")
     ap.add_argument("--node-cap", type=int, default=380)
     ap.add_argument("--edge-cap", type=int, default=900)
     ap.add_argument("--per-node-cap", type=int, default=5)
     ap.add_argument("--seed-cap", type=int, default=90)
+    ap.add_argument("--selfcheck", action="store_true",
+                    help="A03 许可判据非真空自检（合成图注入，独立于真实产物）")
     a = ap.parse_args(argv)
+
+    if a.selfcheck:
+        return license_selfcheck()
 
     if not os.path.exists(a.source):
         print("[ERROR] 找不到规范图：%s" % a.source)
@@ -327,16 +465,22 @@ def main(argv=None) -> int:
     nodes = data.get("nodes") or []
     edges = data.get("edges") or []
 
+    # ---- 0. 许可 partition（A03）：先按 profile 剔除不可再分发内容 ----
+    nodes, edges, lic = license_partition(nodes, edges, a.profile)
+
     nodes_out, edges_out, info = slice_graph(
         nodes, edges,
         node_cap=a.node_cap, edge_cap=a.edge_cap,
         per_node_cap=a.per_node_cap, seed_cap=a.seed_cap,
     )
 
+    # ---- 0b. fail-closed 后置审计：public_demo 下样例内不得残留不可再分发内容 ----
+    violations = audit_redistribution(nodes_out, edges_out) if a.profile == "public_demo" else []
+
     # ---- 规范格式（查询/门禁读）----
     norm_path = os.path.join(a.out_dir, "sample_normalized.json")
     dump_json(norm_path, {
-        "schema": "sttp-sample-normalized/v1",
+        "schema": "sttp-sample-normalized/v2",
         "meta": {
             "note": ("跨域桥核心样例（确定性抽取）。查询后端与 frozen_gate 读本文件。"
                      "与 sample_graph.json 同源同切片，id 集合必须逐元素相等。"),
@@ -348,7 +492,13 @@ def main(argv=None) -> int:
             "node_count": len(nodes_out),
             "edge_count": len(edges_out),
             "params": {"node_cap": a.node_cap, "edge_cap": a.edge_cap,
-                       "per_node_cap": a.per_node_cap, "seed_cap": a.seed_cap},
+                       "per_node_cap": a.per_node_cap, "seed_cap": a.seed_cap,
+                       "profile": a.profile},
+            # Phase 42 · A03：许可进打包（来源三态 + 剔除计数）
+            **lic,
+            "license_redistributable_sources": sorted(
+                s for s in sr.ids() if sr.is_redistributable(s)),
+            "license_audit_violations": len(violations),
         },
         "nodes": nodes_out,
         "edges": edges_out,
@@ -372,10 +522,19 @@ def main(argv=None) -> int:
     same = (nid_norm == nid_view) and (eid_norm == eid_view)
 
     print("=" * 70)
-    print("  离线研究样例（Phase 37 · R06）")
+    print("  离线研究样例（Phase 37 · R06 ｜ Phase 42 · A03 许可进打包）")
     print("=" * 70)
     print("  源图        : %s (%d 节点 / %d 边)" % (os.path.basename(a.source),
                                                    info["source_nodes_total"], info["source_edges_total"]))
+    print("  许可 profile: %s —— %s" % (lic["license_profile"], lic["license_policy"]))
+    if a.profile == "public_demo":
+        print("  许可剔除    : %d 边 / %d 节点（来源 %d 个：%s）"
+              % (lic["license_excluded_edges"], lic["license_excluded_nodes"],
+                 len(lic["license_excluded_by_source"]),
+                 ",".join(list(lic["license_excluded_by_source"])[:6]) + ("…" if
+                          len(lic["license_excluded_by_source"]) > 6 else "")))
+        print("  后置审计    : %s（违规 %d —— 独立重算，不听构建器自述）"
+              % ("✅ 0 违规" if not violations else "❌ %d 违规" % len(violations), len(violations)))
     print("  跨学科边    : %d（学科对 %s；取前 %d 条为种子）"
           % (info["cross_domain_edges_total"], "/".join(info["cross_domain_pairs"]), info["seeds_taken"]))
     print("  样例        : %d 节点 / %d 边 ｜ 学科 %s"
@@ -390,7 +549,13 @@ def main(argv=None) -> int:
             os.path.relpath(p, ROOT).replace("\\", "/"),
             os.path.getsize(p) / 1024.0, sha256_file(p)[:16]))
     print("=" * 70)
-    return 0 if same else 3
+    if not same:
+        return 3
+    if violations:                       # A03：fail-closed（对外 profile 残留不可再分发内容）
+        print("[FAIL] public_demo 下样例仍含不可再分发内容 %d 处（前 5：%s）"
+              % (len(violations), violations[:5]))
+        return 4
+    return 0
 
 
 if __name__ == "__main__":

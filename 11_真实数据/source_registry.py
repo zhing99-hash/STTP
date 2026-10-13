@@ -33,6 +33,8 @@
 `upstream` **imports_from 血缘**：本来源直接依赖的上游来源 id（空 = 无上游）
 `lineage_recorded`  upstream 是否已确证（False ⇒ 血缘缺口，失效传递不可用）
 `license`  引自 `DATA_LICENSES.md` 的条款结论
+`redistribution` **机器可读**再分发三态（A03）：`redistributable / internal_only / forbidden`；
+   血缘闭包取最严者（`redistribution_closure`）—— 派生对象不得比上游更宽松
 `note`     说明
 
 用法
@@ -43,6 +45,7 @@
 from __future__ import annotations
 
 import argparse
+import collections
 import hashlib
 import json
 import os
@@ -290,6 +293,67 @@ INFER_RULES = {
 
 VALID_KINDS = ("database", "curated", "derived", "model", "constructed", "unregistered")
 
+# ---------------------------------------------------------------------------
+# 再分发三态（Phase 42 · A03：把 `DATA_LICENSES.md` §三.4 的「政策」变成**可执行判据**）
+#
+#     redistributable  可再分发（CC BY / CC0 / NIST 可自由使用 / STTP 自有 Apache-2.0）
+#     internal_only    仅内部（条款待核对、须专项核对、或模型产物而训练数据血缘缺口）
+#     forbidden        禁止（未登记来源的哨兵）
+#
+# ★ 铁律 #64：「政策」必须由程序执行 —— 写在文档里的许可边界若无程序判据即等于没有。
+# ★ 铁律 #60：模型产物的**训练快照血缘未记录** ⇒ 不得默认按「可再分发」纳入，保守记为 internal_only。
+# ★ fail-closed：本表**必须覆盖 REGISTRY 全部来源**（自检 ⑧ 强制）；未列出的 id ⇒ forbidden，不猜测。
+# ---------------------------------------------------------------------------
+REDISTRIBUTABLE = "redistributable"
+INTERNAL_ONLY = "internal_only"
+FORBIDDEN = "forbidden"
+REDIST_STATES = (REDISTRIBUTABLE, INTERNAL_ONLY, FORBIDDEN)
+# 严格度：越大越严（血缘闭包取 max）
+_REDIST_RANK = {REDISTRIBUTABLE: 0, INTERNAL_ONLY: 1, FORBIDDEN: 2}
+
+REDISTRIBUTION = {
+    # ---- 外部数据库 ----
+    "Rhea": REDISTRIBUTABLE,                       # CC BY 4.0（须署名）
+    "ChEBI": REDISTRIBUTABLE,                      # CC BY 4.0（须署名）
+    "NIST Chemistry WebBook": REDISTRIBUTABLE,     # NIST 可自由使用（附声明）
+    "nist_codata_2022": REDISTRIBUTABLE,           # 同上
+    "openalex": REDISTRIBUTABLE,                   # 元数据 CC0
+    "wikidata": REDISTRIBUTABLE,                   # CC0
+    "chembl_api": INTERNAL_ONLY,                   # CC BY-SA 3.0：对外分发须专项核对（DATA_LICENSES 一）
+    "PhysicsBabel": INTERNAL_ONLY,                 # 待核对；不入发布包（DATA_LICENSES 二）
+    "ElementKG2.0": INTERNAL_ONLY,                 # 待核对；不入发布包
+    "PubChem": INTERNAL_ONLY,                      # 逐字段核对前不外发快照
+    "mathxiv": INTERNAL_ONLY,                      # 含 arXiv 派生内容；不外发原始文本
+    # ---- 项目自策划 ----
+    "curated_seed": REDISTRIBUTABLE,               # Apache-2.0（STTP 原创）
+    "curated_seed/energy_combustion": REDISTRIBUTABLE,
+    # ---- 构造（真值表/规则）----
+    "dimension_table": REDISTRIBUTABLE,            # Apache-2.0（数据源 SI/ISO 80000）
+    "element_reference": REDISTRIBUTABLE,          # Apache-2.0（数据源 IUPAC）
+    "schema-axiom": REDISTRIBUTABLE,
+    "cross_source_alignment": REDISTRIBUTABLE,     # 上游 curated_seed + wikidata
+    # ---- 派生（值必须等于血缘闭包，自检 ⑨ 强制）----
+    "rhea_chebi": REDISTRIBUTABLE,                 # 上游 Rhea + ChEBI
+    "openalex-topic-align": REDISTRIBUTABLE,       # 上游 openalex
+    "Phase13.Gate.B1": INTERNAL_ONLY,              # 上游 PhysicsBabel
+    "Phase13.Gate.B2": REDISTRIBUTABLE,            # 上游 element_reference
+    "Phase13.Gate.B3": REDISTRIBUTABLE,            # 上游 dimension_table
+    "Phase13.Gate.B4": INTERNAL_ONLY,              # 上游 PhysicsBabel
+    "Phase13.Gate.B5": INTERNAL_ONLY,              # 上游 PhysicsBabel + element_reference
+    # ---- 模型（训练快照血缘未记录 ⇒ 保守 internal_only）----
+    "Phase13.GNN.typed": INTERNAL_ONLY,
+    "Phase9.GNN": INTERNAL_ONLY,
+    "Phase9.GNN+LLM": INTERNAL_ONLY,
+    "LLM-review": INTERNAL_ONLY,
+    "llm_inferred_gnn": INTERNAL_ONLY,
+    "heuristic": INTERNAL_ONLY,
+    # ---- 哨兵 ----
+    "unregistered": FORBIDDEN,
+}
+
+# 许可文本中一旦出现这些词，就**不得**标为 redistributable（自检 ⑩，防文档与代码脱钩）
+_NON_REDIST_KEYWORDS = ("待核对", "不外发", "不打包", "仅侦察", "订阅", "受限")
+
 
 # ---------------------------------------------------------------- 基本访问
 def load() -> dict:
@@ -316,6 +380,54 @@ def version_of(sid) -> str:
 def kind_of(sid) -> str:
     e = REGISTRY.get(sid) or {}
     return e.get("kind") or "unregistered"
+
+
+# ---------------------------------------------------------------- 再分发（A03）
+def redistribution_of(sid) -> str:
+    """本来源**自身**的再分发立场。未登记/未列入 ⇒ forbidden（fail-closed）。"""
+    return REDISTRIBUTION.get(sid, FORBIDDEN)
+
+
+def redistribution_closure(sid) -> str:
+    """**血缘闭包**下的再分发立场 = 上游链上最严者。
+    派生对象不得比其上游更宽松（否则即是把受限内容「洗白」）。"""
+    chain = upstream_closure(sid)
+    return max((redistribution_of(s) for s in chain),
+               key=lambda st: _REDIST_RANK.get(st, 99), default=FORBIDDEN)
+
+
+def is_redistributable(sid) -> bool:
+    return redistribution_closure(sid) == REDISTRIBUTABLE
+
+
+def check_redistribution_coverage() -> list:
+    """⑧ 三态表必须覆盖 REGISTRY 全部来源（否则存在「默认放行/默认禁止」的暗角）。"""
+    missing = sorted(set(REGISTRY) - set(REDISTRIBUTION))
+    extra = sorted(set(REDISTRIBUTION) - set(REGISTRY))
+    bad = [k for k, v in REDISTRIBUTION.items() if v not in REDIST_STATES]
+    return [("missing", m) for m in missing] + [("extra", e) for e in extra] + \
+           [("bad_state", b) for b in bad]
+
+
+def check_redistribution_lineage() -> list:
+    """⑨ 派生来源的三态**必须等于**其血缘闭包（不得声明得比上游宽松）。"""
+    bad = []
+    for sid in REGISTRY:
+        declared, closure = redistribution_of(sid), redistribution_closure(sid)
+        if _REDIST_RANK.get(declared, 99) < _REDIST_RANK.get(closure, 99):
+            bad.append((sid, declared, closure))
+    return bad
+
+
+def check_redistribution_vs_license() -> list:
+    """⑩ 许可文本里写明「待核对/不外发/不打包/仅侦察/订阅/受限」的来源，
+    不得被标为 redistributable（防 `DATA_LICENSES.md` 与代码脱钩 —— 铁律 #61）。"""
+    bad = []
+    for sid, e in REGISTRY.items():
+        lic = str(e.get("license") or "")
+        if any(k in lic for k in _NON_REDIST_KEYWORDS) and redistribution_of(sid) == REDISTRIBUTABLE:
+            bad.append((sid, lic))
+    return bad
 
 
 # ---------------------------------------------------------------- 内容哈希
@@ -463,16 +575,23 @@ def build_payload(base=ROOT) -> dict:
         e = dict(REGISTRY[sid])
         e["content_hash"] = hm.get(sid)
         e["has_locator"] = bool(e.get("locator"))
+        # Phase 42 · A03：机器可读的再分发三态（自身 + 血缘闭包）
+        e["redistribution"] = redistribution_of(sid)
+        e["redistribution_closure"] = redistribution_closure(sid)
         out[sid] = e
     n_no_hash = sum(1 for v in out.values() if v["content_hash"] is None)
     n_gap = sum(1 for v in out.values() if not v.get("lineage_recorded"))
+    by_redist = collections.Counter(v["redistribution_closure"] for v in out.values())
     return {
-        "schema": "sttp-source-registry/v1",
+        "schema": "sttp-source-registry/v2",
         "meta": {
-            "phase": 41, "theme": "R10 证据血缘/版本/失效",
+            "phase": 42, "theme": "R10 血缘/版本/失效 + A03 再分发三态（政策可执行）",
             "n_sources": len(out),
             "n_without_content_hash": n_no_hash,
             "n_lineage_gap": n_gap,
+            "redistribution_closure": dict(sorted(by_redist.items())),
+            "redistributable_sources": sorted(s for s in out
+                                              if out[s]["redistribution_closure"] == REDISTRIBUTABLE),
             "hash_algo": "sha256(relpath NUL content NUL ...) over sorted locators",
         },
         "sources": out,
@@ -518,6 +637,18 @@ def selfcheck() -> int:
     missg = check_gitattributes_declares()
     print("  ⑦ .gitattributes 已声明: %s" % ("PASS" if not missg else "FAIL 缺 %s" % missg))
     ok &= not missg
+    # ⑧ 再分发三态必须覆盖全部来源（A03：政策可执行 + fail-closed）
+    cov = check_redistribution_coverage()
+    print("  ⑧ 再分发三态全覆盖   : %s" % ("PASS" if not cov else "FAIL %s" % cov[:5]))
+    ok &= not cov
+    # ⑨ 派生来源的三态不得比其血缘闭包更宽松（A03：派生递归）
+    lin = check_redistribution_lineage()
+    print("  ⑨ 派生 ≤ 上游严格度  : %s" % ("PASS" if not lin else "FAIL %s" % lin[:5]))
+    ok &= not lin
+    # ⑩ 许可文本与三态不得脱钩（写「待核对/不外发」却标可再分发）
+    dsc = check_redistribution_vs_license()
+    print("  ⑩ 许可文本 ↔ 三态   : %s" % ("PASS" if not dsc else "FAIL %s" % dsc[:5]))
+    ok &= not dsc
     return 0 if ok else 1
 
 
@@ -531,16 +662,19 @@ def main():
     print("来源登记表 source_registry —— Phase 41（R10：证据血缘/版本/失效）")
     print("=" * 92)
     hm = hash_map()
-    print("%-32s %-12s %-8s %s" % ("source_id", "kind", "lineage", "content_hash"))
+    print("%-32s %-12s %-8s %-16s %s" % ("source_id", "kind", "lineage", "redistribution", "content_hash"))
     for sid in sorted(REGISTRY):
         e = REGISTRY[sid]
-        print("%-32s %-12s %-8s %s" % (
+        print("%-32s %-12s %-8s %-16s %s" % (
             sid, e.get("kind"), "ok" if e.get("lineage_recorded") else "GAP",
+            redistribution_closure(sid),
             short(hm.get(sid)) if hm.get(sid) else "-"))
     n_gap = sum(1 for s in REGISTRY if not REGISTRY[s].get("lineage_recorded"))
     n_nohash = sum(1 for s in REGISTRY if hm.get(s) is None)
-    print("-" * 92)
-    print("共 %d 个来源 ｜ 血缘缺口 %d ｜ 无内容哈希 %d（无 locator）" % (len(REGISTRY), n_gap, n_nohash))
+    n_red = sum(1 for s in REGISTRY if is_redistributable(s))
+    print("-" * 104)
+    print("共 %d 个来源 ｜ 血缘缺口 %d ｜ 无内容哈希 %d（无 locator）｜ **可再分发（血缘闭包）%d**"
+          % (len(REGISTRY), n_gap, n_nohash, n_red))
     print("【自检】")
     rc = selfcheck()
     print("  ⇒ %s" % ("全过" if rc == 0 else "未通过"))
