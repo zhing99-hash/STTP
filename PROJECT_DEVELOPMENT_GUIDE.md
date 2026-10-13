@@ -50,6 +50,31 @@
 - **证据血缘缺口 116 条**（6 个模型来源训练快照版本未记录）：**如实计数、不伪造历史**。
 - **5 个真孤岛（29 节点）**：回退假边所致，是「恢复真相」而非退化，**不补边**。
 
+#### 0.3.1 Phase 43（局部图谱查询）已承认的边界 —— 2026-10-13 · 详见 `07_交付物/Phase43_局部图谱查询与后端_20261013.md` §6
+
+- ★★ **证据哈希依赖的字节在干净检出下不可复现（根因未修）**：`stale` 判据依赖「worktree 字节 == 仓库 blob」，
+  实测 **7/21** 个已入库登记 `locator` 不成立（CRLF vs LF，含 `06_PoC/sample_mathxiv.json`、`10_种子数据/seed_*.json` ×5、
+  `11_真实数据/seed_papers_openalex.json`），另有 **13/34** 个 `locator` **未入库**（`.gitignore`）。
+  ⇒ 干净检出下 `stale` 会**假阳**。已加探针 `locator_byte_fidelity()`（随响应暴露于 `stats.stale_registry`）+ 自检 V16f 独立重算；
+  **因假阳风险，`exclude_stale` 默认仍为 `false`（有意为之，非遗漏）**。修法与 Phase 44 的对齐要求见报告 §6-D1。
+- **默认 `trust=verified` 隐藏 28.6% 的边**（13 932 / 48 712，V14 实测；两档差 11 = `by_construction`）：
+  `has_symbol` 这类未定级边被整体排除（例：`MX:def:manifold hops=1` 由 9 条边降到 3 条）。**已回显 `hidden_by_trust` 且可加总回全量**；
+  前端默认档与提示文案属**步骤 B**，尚未实现。
+- **`stats.pending_frontier` 只是下界**（中断时 BFS 队列长度），**不得**渲染成"还有 N 个"；字段旁已附 `pending_frontier_note`。
+- **`mode=filter&trust=all`（无其他条件）⇒ HTTP 400** 是**刻意**设计（防用 filter 倒出全图，全图请走 `/api/overview`）。
+- **响应体积**：默认预算下最坏 **2.4 MB**（`filter` 500/2000）；硬上限下 **10.3 MB**（5000 节点 / 30 s）。默认入口不得请求硬上限。
+- **`path` 模式在 hub 端点必超时**（`PQ:mass → MX:def:manifold`，hops≥3 ⇒ 3.1–3.3 s `timeout`）：
+  单向无启发 BFS 前沿爆炸。返回 `timeout`（非空、非失败）是**正确行为**；双向 BFS/剪枝为**待办**。
+- **`/api/path` 保留 legacy 扁平信封**（旧页面兼容），**不合统一信封** ⇒ 新代码一律用 `/api/subgraph?mode=path`。
+- **Neo4j 双后端契约一致**：本环境不可达 ⇒ 自检 N1 记 **SKIP（不计通过）**。语义一致由「NX/Neo4j 共用 `Backend` 基类全部查询逻辑、
+  子类只给 3 个原语」**架构保证**，属论证**非实测**。
+- **`error_code` 中 `ENTITY_AMBIGUOUS` / `MISSING_CONDITION` 是接口预留**，本轮**无产生路径**（属科学任务层，未接入查询层）。
+- **契约校验器是 JSON-Schema 子集**（12 个关键字，见 `contracts/README.md`）；自检 **C5b** 断言 schema 不得使用未实现关键字
+  ⇒ 不存在"写了但不检查"的静默失效。校验器自身可红性由 C5 注入反例证明。
+- **未覆盖且不计通过**：**V8**（五态 UI 颜色）、**V9**（`mode=bundle` 发布样例链路）⇒ 属**步骤 B 前端**；
+  **Phase 44**（A04 验证依赖绑定 + `valid/stale/needs_review/rejected` 生命周期，★ 须与上述字节忠实性口径对齐）、
+  **Phase 45**（A05 `pyproject.toml` 可安装入口）**未开工**。
+
 ---
 
 ## 一、项目愿景与目标
@@ -361,14 +386,24 @@ Paper > WikidataEntity > Definition > Theorem > Lemma > Equation > MathConcept >
 数据源：   graph_data.json 或 GRAPH_DATA_FILE 环境变量
 API 端点：
   GET /                        → graph_view.html
-  GET /graph_data.json         → 完整图谱（JSON）
-  GET /api/neighbors?node=<id>→ 邻接节点
-  GET /api/path?src=<id>&dst=<id> → 两节点间路径
+  GET /graph_data.json         → 完整图谱（JSON）★ 46.5 MB，前端默认【不】请求（铁律 #66）
+  GET /api/neighbors?node=<id>→ 邻接节点（legacy）
   GET /api/stats              → 图谱统计
-启动：     python 06_PoC/viz_server.py
+  ★ GET /api/search?q=<文本>&limit=N      → 文本搜索（命中 + 分数）
+  ★ GET /api/subgraph?...                 → 局部子图（ego / path / filter 三模式，五态 + 预算）
+  ★ GET /api/path?src=<id>&dst=<id>&max_paths=20&max_hops=5&deadline_ms=3000
+                                          → 有界路径（legacy 扁平信封；新代码请用 mode=path）
+  ★ GET /api/overview?mode=aggregate|sample&k=N → 概览元图（替代「全图浏览」）
+启动：     python 06_PoC/viz_server.py      ★ 一律用 `bash sttp.sh viz`（长驻须后台 + 重定向）
 参数：     --port 8080 / --host 0.0.0.0
 ```
 > ⚠️ 后端依赖 `06_PoC/etl/normalized.json`（Aura 原始格式）。该文件已被 `export_normalized.py` 维护，若缺失 viz 可正常启动但 API 降级。
+> ★ **Phase 43 新增端点的契约**：`contracts/*.schema.json`（+ `contracts/README.md`）；
+> 自检 `bash sttp.sh subgraph`（**51 / 0 / 3**，留痕 `07_交付物/Phase43_selfcheck.json`）；
+> 五态 = `ok / no_result / truncated / timeout / error`（**业务态一律 HTTP 200**，只有参数非法才 400）；
+> 会话预算 `120 节点 / 200 边`（无 `session_id` ⇒ 不记账；`reset=1` 清空）；`expand_token` 服务端 HMAC 签发。
+> ★ **已知边界（务必先读）**：`PROJECT_DEVELOPMENT_GUIDE.md` §0.3.1 与
+> `07_交付物/Phase43_局部图谱查询与后端_20261013.md` §6（D1–D12）。
 
 ### 5.3 `06_PoC/robust_aura_loader.py` — ★健壮加载器
 ```powershell
