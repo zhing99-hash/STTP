@@ -74,6 +74,15 @@
 - **未覆盖且不计通过**：**V8**（五态 UI 颜色）、**V9**（`mode=bundle` 发布样例链路）⇒ 属**步骤 B 前端**；
   **Phase 44**（A04 验证依赖绑定 + `valid/stale/needs_review/rejected` 生命周期，★ 须与上述字节忠实性口径对齐）、
   **Phase 45**（A05 `pyproject.toml` 可安装入口）**未开工**。
+- ★ **干净检出（clone）的能力与限制**（2026-10-13 实测，`07_交付物/Phase43_*` §9.1）：
+  ① `contracts/*.json` 与 `Phase43_selfcheck.json` **逐字节一致**；发布样例三产物 sha256 与 manifest 一致；
+  ② **路径 A `verify_release.py --release` 28/0/0 RC=0**、**路径 B 缺权威图 RC=2**（刻意）—— 发布链**可在裸 clone 验证**；
+  ③ ★ **`bash sttp.sh subgraph` 在裸 clone 不能运行**（`06_PoC/etl/normalized.json` 不入库）——
+  已改为**明确原因 + RC=2**（修复前是 `KeyError` 崩溃）；**契约目前只能在下游产物层被 clone 验证**，
+  若要"契约也可从 clone 验证"需入库小基线图 + 样例口径断言子集（**未做，有意取舍**）。
+  ④ **`.gitattributes` 只锁 `*.json -text` 与 `11_真实数据/*.py`**：`*.md` 与其余 `*.py` 在 `autocrlf=true` 检出里变 CRLF
+  ⇒ 与工作区不逐字节相同（对文档/脚本无害；**对被哈希为证据的文件即是 D1 成因**）。
+  ⑤ **`env.sh` 依赖不入库的 `.env`** ⇒ 裸 clone 里 `$STTP_PYTHON` 为空，请**直接指定解释器**。
 
 ---
 
