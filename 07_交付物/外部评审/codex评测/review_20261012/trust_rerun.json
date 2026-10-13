@@ -1,0 +1,124 @@
+{
+  "graph": "06_PoC\\etl\\normalized.json",
+  "north_star_pct": 99.65,
+  "tasks": [
+    {
+      "task": "T1",
+      "name": "元素周期律",
+      "min_level": "rule_checked",
+      "edges": 1734,
+      "coverage_pct": 100.0,
+      "ok": 1734,
+      "rate_pct": 100.0,
+      "gaps": {},
+      "desc": "同周期 / 同族 —— 可用权威周期表复算"
+    },
+    {
+      "task": "T2",
+      "name": "分子组成（元素计数）",
+      "min_level": "rule_checked",
+      "edges": 7756,
+      "coverage_pct": 100.0,
+      "ok": 7748,
+      "rate_pct": 99.9,
+      "gaps": {
+        "source_asserted": 8
+      },
+      "desc": "分子↔元素 及化学计量数 —— 需可由分子式独立复算"
+    },
+    {
+      "task": "T3",
+      "name": "量纲一致性",
+      "min_level": "rule_checked",
+      "edges": 47,
+      "coverage_pct": 100.0,
+      "ok": 38,
+      "rate_pct": 80.85,
+      "gaps": {
+        "model_inferred": 8,
+        "source_asserted": 1
+      },
+      "desc": "物理量↔物理量 同量纲"
+    },
+    {
+      "task": "T4",
+      "name": "化学方程式方向",
+      "min_level": "source_asserted",
+      "edges": 5312,
+      "coverage_pct": 100.0,
+      "ok": 5275,
+      "rate_pct": 99.3,
+      "gaps": {
+        "model_inferred": 37
+      },
+      "desc": "反应物/生成物 归属 —— 方向由源方程唯一确定"
+    },
+    {
+      "task": "T5",
+      "name": "公式—参与量",
+      "min_level": "rule_checked",
+      "edges": 24341,
+      "coverage_pct": 100.0,
+      "ok": 24310,
+      "rate_pct": 99.87,
+      "gaps": {
+        "source_asserted": 31
+      },
+      "desc": "公式↔参与物理量/符号"
+    },
+    {
+      "task": "T6",
+      "name": "常量溯源与单位",
+      "min_level": "source_asserted",
+      "edges": 128,
+      "coverage_pct": 100.0,
+      "ok": 122,
+      "rate_pct": 95.31,
+      "gaps": {
+        "model_inferred": 6
+      },
+      "desc": "常量派生 / 单位挂靠"
+    },
+    {
+      "task": "T7",
+      "name": "跨域桥（跨学科端点）",
+      "min_level": "rule_checked",
+      "edges": 945,
+      "coverage_pct": 100.0,
+      "ok": 892,
+      "rate_pct": 94.39,
+      "gaps": {
+        "source_asserted": 29,
+        "model_inferred": 24
+      },
+      "desc": "两端点学科不同的**任意类型**语义边 —— **本项目的核心命题**"
+    },
+    {
+      "task": "T8",
+      "name": "文献元数据",
+      "min_level": "source_asserted",
+      "edges": 354,
+      "coverage_pct": 100.0,
+      "ok": 354,
+      "rate_pct": 100.0,
+      "gaps": {},
+      "desc": "论文↔主题/引用"
+    }
+  ],
+  "levels": {
+    "source_asserted": 13797,
+    "rule_checked": 31520,
+    "cross_source": 3249,
+    "model_inferred": 135,
+    "by_construction": 11
+  },
+  "T9_evidence_traceable": {
+    "ok_edges": 40473,
+    "traceable": 40473,
+    "traceable_rate_pct": 100.0,
+    "independent": 34780,
+    "independent_rate_pct": 85.93,
+    "graph_evidence_coverage_pct": 100.0,
+    "graph_independent_evidence_pct": 71.38
+  }
+}

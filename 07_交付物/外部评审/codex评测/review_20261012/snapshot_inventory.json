@@ -1,0 +1,1244 @@
+{
+  "date": "2026-10-12",
+  "nodes": 9657,
+  "edges": 48712,
+  "node_types": {
+    "Definition": 4,
+    "Lemma": 2,
+    "Theorem": 2,
+    "Symbol": 113,
+    "Molecule": 2133,
+    "PhysicalQuantity": 145,
+    "MathConcept": 13,
+    "WikidataEntity": 24,
+    "Formula": 5082,
+    "Unit": 33,
+    "Reaction": 1708,
+    "Constant": 23,
+    "Element": 118,
+    "FunctionalGroup": 76,
+    "Paper": 181
+  },
+  "edge_types": {
+    "defines": 115,
+    "has_symbol": 24341,
+    "same_as": 101,
+    "derived_from": 80,
+    "chemical_reaction": 2,
+    "dimensionally_consistent": 47,
+    "proves": 2,
+    "has_unit": 48,
+    "composed_of": 7756,
+    "reactant_of": 2753,
+    "product_of": 2559,
+    "releases": 1,
+    "same_period": 1360,
+    "same_family": 374,
+    "has_quantity": 4478,
+    "has_functionalgroup": 2350,
+    "reagent_of": 1807,
+    "has_element": 109,
+    "related_to": 53,
+    "cites": 176,
+    "discusses": 178,
+    "part_of": 5,
+    "same_formula_as": 6,
+    "uses_operator": 11
+  },
+  "levels": {
+    "source_asserted": 13797,
+    "rule_checked": 31520,
+    "cross_source": 3249,
+    "model_inferred": 135,
+    "by_construction": 11
+  },
+  "sources": {
+    "mathxiv": 41,
+    "curated_seed": 526,
+    "cross_source_alignment": 15,
+    "llm_inferred_gnn": 1,
+    "heuristic": 7,
+    "curated_seed/energy_combustion": 45,
+    "LLM-review": 9,
+    "Phase9.GNN+LLM": 5,
+    "Phase9.GNN": 18,
+    "ElementKG2.0": 7797,
+    "PubChem": 53,
+    "PhysicsBabel": 24104,
+    "Phase13.Gate.B1": 2578,
+    "Phase13.Gate.B2": 5,
+    "Phase13.Gate.B3": 20,
+    "Phase13.Gate.B4": 23,
+    "Phase13.Gate.B5": 698,
+    "Phase13.GNN.typed": 76,
+    "openalex": 176,
+    "openalex-topic-align": 178,
+    "schema-axiom": 5,
+    "chembl_api": 2512,
+    "nist_codata_2022": 24,
+    "rhea_chebi": 4539,
+    "ChEBI": 5092,
+    "dimension_table": 8,
+    "NIST Chemistry WebBook": 157
+  },
+  "sample": {
+    "nodes": 380,
+    "edges": 701,
+    "node_prefix": {
+      "BC": 12,
+      "CE": 17,
+      "CH": 69,
+      "CM": 3,
+      "CO": 7,
+      "EK2": 3,
+      "EK": 5,
+      "EM": 14,
+      "FO": 2,
+      "IC": 11,
+      "MA": 6,
+      "MC": 2,
+      "MG": 6,
+      "MO": 4,
+      "MX": 31,
+      "NT": 1,
+      "OM": 1,
+      "OP": 4,
+      "PB": 4,
+      "PC": 7,
+      "PQ": 12,
+      "QM": 2,
+      "RH": 97,
+      "RT": 1,
+      "RX": 1,
+      "SM": 8,
+      "SY": 1,
+      "TH": 21,
+      "UN": 2,
+      "WD": 19,
+      "ek": 1,
+      "pb": 1,
+      "wd": 5
+    },
+    "node_sources": {
+      "curated_seed": 102,
+      "nist_codata_2022": 14,
+      "ChEBI": 69,
+      "ElementKG2.0": 14,
+      "curated_seed/energy_combustion": 15,
+      "llm_hypothesis": 14,
+      "mathxiv": 17,
+      "PhysicsBabel": 4,
+      "PubChem": 7,
+      "dimension_table(algebra: entropy/amount) 派生": 1,
+      "Rhea": 97,
+      "wikidata": 19,
+      "ek": 1,
+      "pb": 1,
+      "wd": 5
+    },
+    "edge_sources": {
+      "heuristic": 4,
+      "curated_seed": 137,
+      "ChEBI": 115,
+      "Phase13.Gate.B1": 1,
+      "PubChem": 9,
+      "Phase13.GNN.typed": 50,
+      "curated_seed/energy_combustion": 15,
+      "mathxiv": 15,
+      "nist_codata_2022": 17,
+      "llm_inferred_gnn": 1,
+      "Phase13.Gate.B3": 14,
+      "Phase9.GNN": 9,
+      "dimension_table": 1,
+      "Phase9.GNN+LLM": 2,
+      "Phase13.Gate.B5": 27,
+      "NIST Chemistry WebBook": 55,
+      "ElementKG2.0": 20,
+      "LLM-review": 1,
+      "Phase13.Gate.B4": 5,
+      "rhea_chebi": 193,
+      "cross_source_alignment": 10
+    }
+  },
+  "manifest_code": {
+    "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
+    "dirty_sample": [],
+    "git_branch": "main",
+    "git_head_at_build": "1e07ad2edd17dca8cd45449a50c3649e19359d8b",
+    "git_head_at_build_short": "1e07ad2",
+    "working_tree_dirty_at_build": false
+  },
+  "manifest_build": {
+    "commands": [
+      "bash sttp.sh export                 # 从 Aura/本地重建完整快照（大数据，不入库）",
+      "python 06_PoC/release/make_sample.py # 从规范图确定性抽取离线样例",
+      "python 06_PoC/release/make_manifest.py --pack",
+      "python 06_PoC/release/verify_release.py --release"
+    ],
+    "pipeline": [
+      "11_真实数据/*_raw.json",
+      "→ 06_PoC/etl/normalized.json（权威规范图）",
+      "→ graph_export.build_graph_data()",
+      "→ 06_PoC/graph_data_phase<N>.json（前端快照，.env GRAPH_DATA_FILE）",
+      "→ 06_PoC/viz_server.py（页面 /graph_data.json + 查询 /api/*）"
+    ],
+    "python": "3.11.9"
+  },
+  "manifest_dependencies": {
+    "drift": {},
+    "drift_note": "漂移**不阻塞**运行（缺件才阻塞）；但化学/量纲结果建议在锁定版本上复核。外部复评环境为 rdkit 2026.3.6 / pint 0.26.1 / networkx 3.7 / numpy 2.5.3。",
+    "installed": {
+      "matplotlib": "3.11.2",
+      "neo4j": "6.3.1",
+      "networkx": "3.6.1",
+      "numpy": "2.3.2",
+      "pandas": "2.3.1",
+      "pint": "0.25.3",
+      "python": "3.11.9",
+      "rdflib": "7.6.0",
+      "rdkit": "2026.09.1",
+      "requests": "2.33.1",
+      "scipy": "1.17.1",
+      "sympy": "1.14.0",
+      "torch": "2.14.0+cpu"
+    },
+    "lock_file": "requirements.lock",
+    "target": {
+      "matplotlib": "3.11.2",
+      "neo4j": "6.3.1",
+      "networkx": "3.6.1",
+      "numpy": "2.3.2",
+      "pandas": "2.3.1",
+      "pint": "0.25.3",
+      "python": "3.11.9",
+      "rdflib": "7.6.0",
+      "rdkit": "2026.09.1",
+      "requests": "2.33.1",
+      "scipy": "1.17.1",
+      "sympy": "1.14.0",
+      "torch": "2.14.0+cpu"
+    }
+  },
+  "manifest_full": {
+    "normalized": {
+      "bytes": 57524194,
+      "edges": 48712,
+      "nodes": 9657,
+      "path": "06_PoC/etl/normalized.json",
+      "sha256": "1545ac8e5ada7a6ab73cf2ce79e11c2fa26ef1233123795f96c7b4182299bf2a",
+      "subjects": {
+        "化学": 4108,
+        "数学": 277,
+        "物理": 5247,
+        "跨学科": 25
+      },
+      "tracked_in_git": false
+    },
+    "snapshot": {
+      "bytes": 48740769,
+      "edges": 48712,
+      "nodes": 9657,
+      "obtain": "原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
+      "path": "06_PoC/graph_data_phase41.json",
+      "schema": "formula-graph-view/v1",
+      "sha256": "2857b6189e2c798bc7cb2c1ba6f861940ac41f2663acfefaf3e1100090beb470",
+      "tracked_in_git": false
+    }
+  },
+  "actual_full_hashes": {
+    "normalized": "1545ac8e5ada7a6ab73cf2ce79e11c2fa26ef1233123795f96c7b4182299bf2a",
+    "snapshot": "2857b6189e2c798bc7cb2c1ba6f861940ac41f2663acfefaf3e1100090beb470"
+  },
+  "python_files": 188,
+  "syntax_errors": [],
+  "disk_bytes": 5388780030,
+  "inventory_by_directory": {
+    ".runlog": {
+      "files": 53,
+      "bytes": 208257709
+    },
+    "00_项目管理": {
+      "files": 3,
+      "bytes": 208190
+    },
+    "01_架构与数据模型": {
+      "files": 3,
+      "bytes": 34686
+    },
+    "02_数据层": {
+      "files": 2,
+      "bytes": 25839
+    },
+    "03_知识层": {
+      "files": 28,
+      "bytes": 404480
+    },
+    "04_验证闭环": {
+      "files": 10,
+      "bytes": 205070
+    },
+    "05_可视化": {
+      "files": 1,
+      "bytes": 17668
+    },
+    "06_PoC": {
+      "files": 272,
+      "bytes": 1923394332
+    },
+    "07_交付物": {
+      "files": 46,
+      "bytes": 507943
+    },
+    "08_部署包": {
+      "files": 18,
+      "bytes": 211511
+    },
+    "09_科研扩展": {
+      "files": 84,
+      "bytes": 3833853
+    },
+    "10_种子数据": {
+      "files": 62,
+      "bytes": 742951
+    },
+    "11_真实数据": {
+      "files": 96,
+      "bytes": 152879594
+    },
+    "12_评测": {
+      "files": 7,
+      "bytes": 159919
+    },
+    "公共数据集": {
+      "files": 3,
+      "bytes": 3097663956
+    }
+  },
+  "top_files": [
+    {
+      "path": "公共数据集\\elementkg_synthetic_corpus_40w\\ElementKG_Synthetic_Corpus_40w\\knowlege_description_20w.json",
+      "bytes": 1899926419
+    },
+    {
+      "path": "公共数据集\\10m_elementkg_release.csv",
+      "bytes": 858154955
+    },
+    {
+      "path": "公共数据集\\elementkg_synthetic_corpus_40w\\ElementKG_Synthetic_Corpus_40w\\multihop_planing_20w.json",
+      "bytes": 339582582
+    },
+    {
+      "path": "11_真实数据\\physicsbabel_circuits.parquet",
+      "bytes": 108474889
+    },
+    {
+      "path": "06_PoC\\etl\\kuzu_db",
+      "bytes": 78123008
+    },
+    {
+      "path": "06_PoC\\etl\\normalized.before_lineage.json",
+      "bytes": 64393164
+    },
+    {
+      "path": "06_PoC\\graph_data_phase11b.json",
+      "bytes": 64372178
+    },
+    {
+      "path": "06_PoC\\etl\\normalized.json",
+      "bytes": 57524194
+    },
+    {
+      "path": ".runlog\\g41\\inject_unreg.json",
+      "bytes": 54567622
+    },
+    {
+      "path": ".runlog\\g41\\inject_nosource.json",
+      "bytes": 54567599
+    },
+    {
+      "path": ".runlog\\g41\\inject_nobind.json",
+      "bytes": 54567524
+    },
+    {
+      "path": "06_PoC\\graph_data_phase36.json",
+      "bytes": 52438016
+    }
+  ],
+  "tasks_top_keys": [
+    "schema",
+    "description",
+    "seed",
+    "split_rule",
+    "answer_policy",
+    "solution_space",
+    "hard_examples",
+    "categories",
+    "counts",
+    "tasks"
+  ],
+  "task_details": [
+    {
+      "id": "DV-01",
+      "category": "data_verification",
+      "question": "NIST CODATA(2018) 给出的摩尔气体常数 R 是多少？图谱节点 TH:pq:gas_const 记录的值是否与之相符（相对误差 ≤1e-9）？",
+      "method": "lookup_constant",
+      "inputs": {
+        "graph_node": "TH:pq:gas_const",
+        "quantity": "R"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 8.314462618,
+        "unit": "J mol^-1 K^-1",
+        "rel_tol": 1e-09
+      },
+      "split": "test"
+    },
+    {
+      "id": "DV-02",
+      "category": "data_verification",
+      "question": "由 N_A 与 k_B 复算摩尔气体常数 R=N_A·k_B，结果是否与 CODATA 的 R 一致？",
+      "method": "recompute_derived_constant",
+      "inputs": {
+        "derived": "R",
+        "from": [
+          "CO:pq:avogadro",
+          "SM:pq:boltz_const"
+        ],
+        "relation": "product"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 8.314462618,
+        "unit": "J mol^-1 K^-1",
+        "rel_tol": 1e-08
+      },
+      "split": "dev"
+    },
+    {
+      "id": "DV-03",
+      "category": "data_verification",
+      "question": "由 N_A 与元电荷 e 复算法拉第常数 F=N_A·e，结果是否与 CODATA 一致？",
+      "method": "recompute_derived_constant",
+      "inputs": {
+        "derived": "F",
+        "from": [
+          "CO:pq:avogadro",
+          "CO:pq:elementary_charge"
+        ],
+        "relation": "product"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 96485.33212,
+        "unit": "C mol^-1",
+        "rel_tol": 1e-08
+      },
+      "split": "dev"
+    },
+    {
+      "id": "DV-04",
+      "category": "data_verification",
+      "question": "银（Ag）的标准原子量（IUPAC 2021）是多少？",
+      "method": "lookup_element",
+      "inputs": {
+        "symbol": "Ag",
+        "field": "atomic_weight"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 107.8682,
+        "unit": "g mol^-1",
+        "abs_tol": 0.001
+      },
+      "split": "dev"
+    },
+    {
+      "id": "DV-05",
+      "category": "data_verification",
+      "question": "阿伏伽德罗常数（SI 2019 定义，精确值）是多少？图谱 CO:pq:avogadro 是否相符？",
+      "method": "lookup_constant",
+      "inputs": {
+        "graph_node": "CO:pq:avogadro",
+        "quantity": "NA"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 6.02214076e+23,
+        "unit": "mol^-1",
+        "rel_tol": 1e-12
+      },
+      "split": "test"
+    },
+    {
+      "id": "DV-06",
+      "category": "data_verification",
+      "question": "玻尔兹曼常数（SI 2019 定义，精确值）是多少？图谱 SM:pq:boltz_const 是否相符？",
+      "method": "lookup_constant",
+      "inputs": {
+        "graph_node": "SM:pq:boltz_const",
+        "quantity": "kB"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 1.380649e-23,
+        "unit": "J K^-1",
+        "rel_tol": 1e-12
+      },
+      "split": "test"
+    },
+    {
+      "id": "DV-07",
+      "category": "data_verification",
+      "question": "元电荷（SI 2019 定义，精确值）是多少？图谱 CO:pq:elementary_charge 是否相符？",
+      "method": "lookup_constant",
+      "inputs": {
+        "graph_node": "CO:pq:elementary_charge",
+        "quantity": "e"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 1.602176634e-19,
+        "unit": "C",
+        "rel_tol": 1e-12
+      },
+      "split": "dev"
+    },
+    {
+      "id": "DV-08",
+      "category": "data_verification",
+      "question": "普朗克常数（SI 2019 定义，精确值）是多少？图谱 QM:pq:planck_const 是否相符？",
+      "method": "lookup_constant",
+      "inputs": {
+        "graph_node": "QM:pq:planck_const",
+        "quantity": "h"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 6.62607015e-34,
+        "unit": "J s",
+        "rel_tol": 1e-12
+      },
+      "split": "dev"
+    },
+    {
+      "id": "DV-09",
+      "category": "data_verification",
+      "question": "铁（Fe）在元素周期表中的周期与族分别是多少？",
+      "method": "lookup_element",
+      "inputs": {
+        "symbol": "Fe",
+        "field": "period_group"
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "period": 4,
+          "group": 8
+        }
+      },
+      "split": "test"
+    },
+    {
+      "id": "DV-10",
+      "category": "data_verification",
+      "question": "碳（C）的常规标准原子量（IUPAC 2021 惯例值）是多少？",
+      "method": "lookup_element",
+      "inputs": {
+        "symbol": "C",
+        "field": "atomic_weight"
+      },
+      "expected": {
+        "kind": "value",
+        "value": 12.011,
+        "unit": "g mol^-1",
+        "abs_tol": 0.002
+      },
+      "split": "dev"
+    },
+    {
+      "id": "MS-01",
+      "category": "method_selection",
+      "question": "反应尚未达到平衡，已知各组分瞬时浓度，应使用「质量作用定律的平衡常数 K」还是「反应商 Q」来描述当前状态？",
+      "method": "select_law",
+      "inputs": {
+        "at_equilibrium": false,
+        "known": "瞬时浓度"
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "reaction_quotient_Q"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "MS-02",
+      "category": "method_selection",
+      "question": "已知标准态 ΔG° 与某非标准组成下的反应商 Q，求该组成下的 ΔG，应使用哪个关系式？",
+      "method": "select_gibbs_relation",
+      "inputs": {
+        "known": [
+          "delta_g_std",
+          "Q"
+        ]
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "dG_equals_dG0_plus_RT_lnQ"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "MS-03",
+      "category": "method_selection",
+      "question": "pH 定义式 pH=−log10 a(H⁺) 在使用「对数」时，图谱把它连到了哪个数学对象？该连接应以 uses_operator 还是 derived_from 表达？",
+      "method": "select_operator_bridge",
+      "inputs": {
+        "formula": "CE:fo:ph",
+        "math_object": "MA:fo:log_product"
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "uses_operator"
+      },
+      "split": "test"
+    },
+    {
+      "id": "MS-04",
+      "category": "method_selection",
+      "question": "Arrhenius 方程 k=A exp(−Ea/(RT)) 使用的数学对象是哪个？",
+      "method": "select_math_object",
+      "inputs": {
+        "formula": "CE:fo:arrhenius"
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "MA:pq:euler_e"
+      },
+      "split": "test"
+    },
+    {
+      "id": "MS-05",
+      "category": "method_selection",
+      "question": "已知一个反应的平衡常数 K 很大，能否据此判断该反应进行得很快（动力学速率高）？",
+      "method": "concept_equilibrium_vs_rate",
+      "inputs": {
+        "K": "large"
+      },
+      "expected": {
+        "kind": "boolean",
+        "value": false
+      },
+      "split": "dev"
+    },
+    {
+      "id": "MS-06",
+      "category": "method_selection",
+      "question": "公式 ΔG°=−RT ln K（CE:fo:gibbs_standard）与数学对象「对数之积」（MA:fo:log_product）之间的关系，正确的关系类型是什么？",
+      "method": "select_operator_bridge",
+      "inputs": {
+        "formula": "CE:fo:gibbs_standard",
+        "math_object": "MA:fo:log_product"
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "uses_operator"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "NM-01",
+      "category": "numeric",
+      "question": "298.15 K 下某反应标准吉布斯自由能变 ΔG°=−5.708 kJ/mol，求标准平衡常数 K。",
+      "method": "compute_K_from_dG",
+      "inputs": {
+        "delta_g_kj": -5.708,
+        "T_K": 298.15
+      },
+      "expected": {
+        "kind": "value",
+        "value": 10.0,
+        "unit": "1",
+        "rel_tol": 0.01
+      },
+      "split": "dev"
+    },
+    {
+      "id": "NM-02",
+      "category": "numeric",
+      "question": "298.15 K 下某反应标准平衡常数 K=1.0×10⁵，求标准吉布斯自由能变 ΔG°。",
+      "method": "compute_dG_from_K",
+      "inputs": {
+        "K": 100000.0,
+        "T_K": 298.15
+      },
+      "expected": {
+        "kind": "value",
+        "value": -28.54,
+        "unit": "kJ mol^-1",
+        "abs_tol": 0.05
+      },
+      "split": "test"
+    },
+    {
+      "id": "NM-03",
+      "category": "numeric",
+      "question": "乙酸在 298.15 K 的酸解离常数 Ka=1.8×10⁻⁵，求 pKa。",
+      "method": "compute_pKa_from_Ka",
+      "inputs": {
+        "Ka": 1.8e-05
+      },
+      "expected": {
+        "kind": "value",
+        "value": 4.74,
+        "unit": "1",
+        "abs_tol": 0.01
+      },
+      "split": "dev"
+    },
+    {
+      "id": "NM-04",
+      "category": "numeric",
+      "question": "某弱酸 pKa=4.75，其共轭碱/酸浓度比 [A⁻]/[HA]=10，用 Henderson–Hasselbalch 方程求 pH。",
+      "method": "compute_pH_HH",
+      "inputs": {
+        "pKa": 4.75,
+        "ratio_base_acid": 10.0
+      },
+      "expected": {
+        "kind": "value",
+        "value": 5.75,
+        "unit": "1",
+        "abs_tol": 0.01
+      },
+      "split": "test"
+    },
+    {
+      "id": "NM-05",
+      "category": "numeric",
+      "question": "298.15 K 下水的离子积 Kw=1.0×10⁻¹⁴，求 pKw 与中性水的 pH。",
+      "method": "compute_pKw_neutral_pH",
+      "inputs": {
+        "Kw": 1e-14
+      },
+      "expected": {
+        "kind": "value",
+        "value": {
+          "pKw": 14.0,
+          "pH": 7.0
+        },
+        "abs_tol": 0.01
+      },
+      "split": "dev"
+    },
+    {
+      "id": "NM-06",
+      "category": "numeric",
+      "question": "哈伯合成氨反应在 298.15 K：ΔH°=−92.4 kJ/mol、ΔS°=−198.3 J mol⁻¹ K⁻¹，求 ΔG°。",
+      "method": "compute_dG_from_dH_dS",
+      "inputs": {
+        "delta_h_kj": -92.4,
+        "delta_s_j": -198.3,
+        "T_K": 298.15
+      },
+      "expected": {
+        "kind": "value",
+        "value": -33.28,
+        "unit": "kJ mol^-1",
+        "abs_tol": 0.1
+      },
+      "split": "test"
+    },
+    {
+      "id": "NM-07",
+      "category": "numeric",
+      "question": "某反应 ΔG°=−33.28 kJ/mol（298.15 K）。该反应的平衡常数大于 1 还是小于 1？正反应在当前标准条件下自发吗？",
+      "method": "sign_to_direction",
+      "inputs": {
+        "delta_g_kj": -33.28,
+        "T_K": 298.15
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "K>1_and_forward_spontaneous"
+      },
+      "split": "test"
+    },
+    {
+      "id": "NM-08",
+      "category": "numeric",
+      "question": "298.15 K 下某反应 ΔG°=−5.708 kJ/mol，在某非标准组成下反应商 Q=0.10，求该组成下的 ΔG（用 ΔG=ΔG°+RT ln Q）。",
+      "method": "compute_dG_at_composition",
+      "inputs": {
+        "delta_g_kj": -5.708,
+        "K": null,
+        "Q": 0.1,
+        "T_K": 298.15
+      },
+      "expected": {
+        "kind": "value",
+        "value": -11.42,
+        "unit": "kJ mol^-1",
+        "abs_tol": 0.05
+      },
+      "split": "dev"
+    },
+    {
+      "id": "RF-01",
+      "category": "refusal",
+      "question": "已知某反应 ΔG°=−5.708 kJ/mol，求平衡常数 K。（未给出温度）",
+      "method": "refuse_missing_T",
+      "inputs": {
+        "delta_g_kj": -5.708,
+        "T_K": null
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "missing_temperature"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "RF-02",
+      "category": "refusal",
+      "question": "求某物质在水溶液中的 pH，但该物质实际处于固相、且未声明溶解/电离平衡。能否直接给出溶液 pH？",
+      "method": "refuse_missing_phase",
+      "inputs": {
+        "phase": "solid",
+        "medium": null,
+        "equilibrium_declared": false
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "phase_confusion"
+      },
+      "split": "test"
+    },
+    {
+      "id": "RF-03",
+      "category": "refusal",
+      "question": "已知某多元酸的总酸解离常数 Ka，求 pH，但未指明溶液 pH 落在哪个质子化态区间、也未给出各级 Ka。能否直接计算？",
+      "method": "refuse_protonation",
+      "inputs": {
+        "Ka_given": "first_only",
+        "protonation_state": null,
+        "n_protons": 3
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "protonation_state"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "RF-04",
+      "category": "refusal",
+      "question": "给出某化合物的分子式 C₂H₆O 与其分子量，问「该物质的摩尔标准生成吉布斯能」。能否给出唯一值？",
+      "method": "refuse_isomer",
+      "inputs": {
+        "formula": "C2H6O",
+        "same_formula_isomers": [
+          "ethanol",
+          "dimethyl ether"
+        ]
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "isomer"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "RF-05",
+      "category": "refusal",
+      "question": "计算 ln(K)，其中 K=0。",
+      "method": "refuse_log_domain",
+      "inputs": {
+        "K": 0.0
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "log_domain"
+      },
+      "split": "test"
+    },
+    {
+      "id": "RF-06",
+      "category": "refusal",
+      "question": "给一个数值 25 N·m。请判断它是功还是力矩。",
+      "method": "refuse_dimension_ambiguous",
+      "inputs": {
+        "value": 25,
+        "unit": "N*m",
+        "dimension": "M*L^2*T^-2"
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "same_dimension_diff_meaning"
+      },
+      "split": "test"
+    },
+    {
+      "id": "RF-07",
+      "category": "refusal",
+      "question": "求某反应的标准吉布斯自由能变 ΔG°。但既未声明标准态（浓度/分压基准），也未给出温度。",
+      "method": "refuse_missing_standard_state",
+      "inputs": {
+        "standard_state": null,
+        "T_K": null
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "missing_standard_state"
+      },
+      "split": "test"
+    },
+    {
+      "id": "RF-08",
+      "category": "refusal",
+      "question": "给出一个数「8.314」。请判断它是否是能量量纲的量。",
+      "method": "refuse_missing_unit",
+      "inputs": {
+        "value": 8.314,
+        "unit": null
+      },
+      "expected": {
+        "kind": "refusal",
+        "reason_class": "missing_unit"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "US-01",
+      "category": "unit_state",
+      "question": "ΔG°=−RT ln K 中的 R·T 是否具有「能量/物质的量」的量纲？（用图上 R 与温度量的量纲做乘积检验）",
+      "method": "dimensional_product_check",
+      "inputs": {
+        "quantities": [
+          "gas_constant",
+          "temperature"
+        ],
+        "exponents": [
+          1,
+          1
+        ],
+        "expected_class": "molar_energy"
+      },
+      "expected": {
+        "kind": "boolean",
+        "value": true
+      },
+      "split": "dev"
+    },
+    {
+      "id": "US-02",
+      "category": "unit_state",
+      "question": "功（work）与力矩（torque）量纲相同（M L² T⁻²）。能否据此断定它们是同一物理量？",
+      "method": "dimension_compare",
+      "inputs": {
+        "a": "Work",
+        "b": "Torque"
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "same_dimension_different_meaning"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "US-03",
+      "category": "unit_state",
+      "question": "冲量（impulse）与动量（momentum）量纲相同（M L T⁻¹）。它们是同一物理量吗？",
+      "method": "dimension_compare",
+      "inputs": {
+        "a": "Impulse",
+        "b": "Momentum"
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "same_dimension_different_meaning"
+      },
+      "split": "dev"
+    },
+    {
+      "id": "US-04",
+      "category": "unit_state",
+      "question": "标准平衡常数 K 是无量纲量吗？（核对图谱节点 CE:pq:equilibrium_constant 声明的 dimension）",
+      "method": "dimensionless_check",
+      "inputs": {
+        "graph_node": "CE:pq:equilibrium_constant"
+      },
+      "expected": {
+        "kind": "boolean",
+        "value": true
+      },
+      "split": "dev"
+    },
+    {
+      "id": "US-05",
+      "category": "unit_state",
+      "question": "pH 是无量纲量吗？（核对图谱节点 CE:pq:ph 声明的 dimension）",
+      "method": "dimensionless_check",
+      "inputs": {
+        "graph_node": "CE:pq:ph"
+      },
+      "expected": {
+        "kind": "boolean",
+        "value": true
+      },
+      "split": "test"
+    },
+    {
+      "id": "US-06",
+      "category": "unit_state",
+      "question": "仅凭量纲 M L² T⁻²，能否唯一判定某量是能量还是力矩？",
+      "method": "dimension_ambiguity",
+      "inputs": {
+        "dimension": "M*L^2*T^-2",
+        "candidates": [
+          "energy",
+          "torque"
+        ]
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "cannot_determine_from_dimension_alone"
+      },
+      "split": "test"
+    },
+    {
+      "id": "US-07",
+      "category": "unit_state",
+      "question": "单位 J mol⁻¹ K⁻¹ 与量纲 M L² T⁻² mol⁻¹ K⁻¹ 是否等价？",
+      "method": "unit_dimension_match",
+      "inputs": {
+        "unit": "J mol^-1 K^-1",
+        "dimension": "M*L^2*T^-2*mol^-1*K^-1"
+      },
+      "expected": {
+        "kind": "boolean",
+        "value": true
+      },
+      "split": "test"
+    },
+    {
+      "id": "US-08",
+      "category": "unit_state",
+      "question": "摩尔熵（molar entropy）与熵（entropy）的量纲是否相同？",
+      "method": "dimension_compare",
+      "inputs": {
+        "a": "molar_entropy",
+        "b": "entropy"
+      },
+      "expected": {
+        "kind": "choice",
+        "value": "different_dimension_by_amount"
+      },
+      "split": "dev"
+    }
+  ],
+  "gnn_report_keys": [
+    "schema",
+    "generated",
+    "data_source",
+    "protocols",
+    "gnn",
+    "delta",
+    "selfcheck",
+    "caveats"
+  ],
+  "git_status_count": {
+    " M": 211,
+    "??": 121
+  },
+  "code_hashes": {
+    "03_知识层/build_neo4j_ready.py": "b027092cd4f8e94f708a25a4e206f2e3f2c22c9aadea56f27bb5639b6dab0eea",
+    "03_知识层/etl_pipeline.py": "53d063983d38e188c4a2ec9cfb34956c5dc0e64577840e19da0c65376cf3cbfa",
+    "03_知识层/load_kuzu_demo.py": "0fa723c2f03fa23657570abadf4dd1b29312665eb2ad42fe6146aff74d89c66c",
+    "03_知识层/load_neo4j.py": "fd1524b209e55efeaec6a04e8a64308fe05c4546fc4f5b5ae8653f6cfaec3039",
+    "03_知识层/normalize_elements.py": "579b2a097dd790c3ca9dc49eef05503c87461df3d9dc9fd67f465d4c074a8833",
+    "03_知识层/normalize_labels.py": "40935d00db54e6b9c379d985fc56089c1cfc8b740b066216150245bee24c25e3",
+    "03_知识层/normalize_periodic.py": "1473805fb6fa6ce7f27c7fa70cf0f2c2a93baf1e4de701cd1be9b808b746c23d",
+    "03_知识层/preflight_neo4j.py": "72d20a0a9d179d37d79a40c605781fe2378e960583f0b565c224794338f41f62",
+    "03_知识层/queries.py": "e9369369b13207f19f681544a1557f1917dd1767f462d9c85a79e7dd699fbfd7",
+    "03_知识层/verify_deploy.py": "c5634640d5be9a787e174482df1c188e1d0e45409aa5d40170a689c6b668b124",
+    "04_验证闭环/llm_hypothesis.py": "0c96fc6302952b94e608bfcfcbc20131abe9ff118ee5cb4e2ae7ed323f1a04b5",
+    "04_验证闭环/phase3_demo.py": "58fda4220e92e7d8312f028e95956b4b2cfd4016d5d4982e0b6845e473831c28",
+    "04_验证闭环/verification_loop.py": "b2065ddd167ee220bbeeb531bd20679e3667c050be08f3930e16defa98f6aadf",
+    "06_PoC/apply_delta.py": "2c84d68521b26811ec1b249e153aeaeada9de62f5b388da38c830aeac3289ee2",
+    "06_PoC/apply_license_headers.py": "b8595618950fb19329851236516feeef79a91a3d6b83775ef8f629c428fa4d42",
+    "06_PoC/build_full_graph.py": "43ca3d9a3c107f81147fe94972fbaaa35bd5e5bd436a0b5ccedfa5e21ad8762b",
+    "06_PoC/build_phase10.py": "4dbd9b1bff4c5e6918039535529087187976c63b60ed0fd66a51e5ca17e4760d",
+    "06_PoC/build_phase11.py": "4cb4cdf97fbb6d89939a8590d335a68437bddf6c6f7c22dfee44b1ac51fcdc72",
+    "06_PoC/build_phase11b.py": "0b68ee98ce007a8d3ddbeea6ad6474beb4f1a79620431f367e6240681253d178",
+    "06_PoC/build_phase12.py": "cd41715e26a388f6067d408bbf1a21d3baea7bd658b145900e34539252d0a334",
+    "06_PoC/build_phase6_viz.py": "993b7ffd3e3d8eaf92010e0f6bdc353fa7a5212b7f9f735307730e0fa34315e8",
+    "06_PoC/build_phase7.py": "5155da0fe2bc041560a8ec4655fc7babad9500342b51baf0d52b2e49e74c3a5f",
+    "06_PoC/build_phase8.py": "b6f39dc6d2e814a3ced472b14f21aa1fd16ab97ae1d8981c09a7845fb59df978",
+    "06_PoC/build_phase9.py": "4e94421a300de000e376874eedd5dd70cb9f60624f8a6230c93317fb5585534a",
+    "06_PoC/connectivity_audit.py": "56487e102c050f75e291a560d9d47871c4b9d1afdd780525f02d04a44736d23c",
+    "06_PoC/export_normalized.py": "407656dd37d5619e18785425c1b6c496cbe4c2e502e3781e63a2b4df4e93d41b",
+    "06_PoC/frozen_gate.py": "bb4bf4e9fa9f2f18a07c3103ad3e102734ca892523c0ef0f2fd55b02dd42a4ab",
+    "06_PoC/graph_export.py": "236f84fc82022e2d74613bb61c3ecf5f835a7b68ae85f6424c5bb06c0e09eab2",
+    "06_PoC/load_mathxiv_networkx.py": "de602e66bf4faa477ced4e49042397d9d886b723bbdb6ca74b234425f1099345",
+    "06_PoC/merge_seed_delta.py": "48075d18d140440a50ff6db80c1ec8bf05cc8a1c6c8f01aa19ed4704d5812da5",
+    "06_PoC/neo4j_props.py": "6cb1cbb79be57bb83e70045de468dca3f68eb0bc4dcd57ca7c0b8088b8e72ff1",
+    "06_PoC/phase12_complete.py": "8eda1cfd636c17875393319e96025b34fe3816cff3ae7e7540d6fa6b807ed855",
+    "06_PoC/phase12_finalize.py": "9c23883c36c1ff6eb249ecfb3a2c5d262f3784381d4b89cfc5f46ef078ea9fc1",
+    "06_PoC/reconcile_aura_edges.py": "a61567a34cc6d29e18e51823069e3d7f94bc40b800ccc404afecae777237caae",
+    "06_PoC/robust_aura_loader.py": "87ac914afc35fada47f25b6f5c922decc63cdbd9a9ab31b4814c685cbf97257a",
+    "06_PoC/semantic_noise_audit.py": "949ff5d4e50606355d90accee1dadfdadb0bfbe14d6612621ff6784c5619a52c",
+    "06_PoC/split_aura_delta.py": "40fc676d18cfa03f8682fd94535a47daf4cd24f08be4b4d12ea09f33077d78b2",
+    "06_PoC/sync_seed_delta.py": "38e9896c4e3ce849ff8b5ed5f38b814816cc243cf0d551fb7909567fb39e17a5",
+    "06_PoC/task_trust_audit.py": "a09dea27943c05a849fd241a1c53e04ef45e0009d27051b37953bd3f2eac9e39",
+    "06_PoC/validate_demo.py": "3faf5edf478a0cc71ee9bd58e2815e58274f1360758b4445ac588caa688a2074",
+    "06_PoC/viz_server.py": "bfd3aff49c745747d36e46ebc734a960b97e689e498ea5c1a252dbe452a03795",
+    "06_PoC/_add_phase31_cases.py": "f534b663b59716df22750c9cbf15cf21de09ee2a4e50c9306997ecef5f29342c",
+    "06_PoC/_add_phase32_cases.py": "13f85ae40b692f583e002bcefd61ea31741b8eb641196d70a93fdc08c2622720",
+    "06_PoC/_add_phase33_cases.py": "072850e80ad895d0aa6aca483c780f10b601bc28dfe948b7e57bbf9fc9ce62a1",
+    "06_PoC/_add_phase34_cases.py": "479252e0ab249f3b0c6487076da8ecbac92a399e63d6322bdc81bb605b47952c",
+    "06_PoC/_add_phase35_cases.py": "73483a13409f50eea997662255c333efd1fb3f0dddf619c670d05b445a4da8ae",
+    "06_PoC/_gate_selfcheck_phase31.py": "c50a4cc5f52b0ac613be37438a8a2bae9ed9fea6dd2fab500bb3e03a90b0f085",
+    "06_PoC/_recon_alias_sim.py": "9b61bcd5f3b1072370484b8fe0d17c4210297874b1bf05136b4b085be20b433a",
+    "06_PoC/_recon_derived.py": "eb823193c3f3daabbd0cf2e7ca87f21ac866e757d339c0f4ac55f417ff734261",
+    "06_PoC/_recon_diff.py": "df502c39304153bda777d7554789ab4e8ff22cb641527c7fdec0561728f697a7",
+    "06_PoC/_recon_evidence.py": "c5ae51ceb7d44264ffa6981b3da470182962755af1121d555cd08c5f45a4acd7",
+    "06_PoC/_recon_phase32_detail.py": "f2321ef265c17081b0b730fd06f281aa9ed4b2e1981d3bc5837cdcb48fa54483",
+    "06_PoC/_recon_phase32_evidence.py": "a17a624108392beba436b94ea3a736db30f89a1c28d5776da6024cfb9adc7195",
+    "06_PoC/_recon_phase32_repr.py": "6d3d134b7c2f938b92669cadfcfb7542b7629ed5789fe79fe9cc4936f55a9b11",
+    "06_PoC/_recon_phase33_align.py": "0d8de16c2737e9c5b46c43531b9f6ffbe9e5ba04009319ca6474135fd28f577e",
+    "06_PoC/_recon_phase33_align2.py": "cbf3cbe5093f424810f2e4def844e689adc633221b46f9ed44393577cab20391",
+    "06_PoC/_recon_phase33_align3.py": "a15882a5cd0fbc365fb1d612eeba32f0064fab8b703d6ec0a57d3ac23df5f2d8",
+    "06_PoC/_recon_phase33_feasible.py": "ce5e33aab1dc2e1909dda142880c1855bc28e17634d3e23dc4a834ec681c6149",
+    "06_PoC/_recon_phase33_indep.py": "1c246a07ff3ecb7c2624e59d69a77c128938e6a3795355122813125260dace08",
+    "06_PoC/_recon_phase33_rulepreview.py": "25e268ce137591cc6d60553ed4ae2cefc7c760a6705aa2c15a69dcfc66aeb124",
+    "06_PoC/_recon_phase34_residual.py": "8a328d340fee2687555a1d538ac31a46d9629daa786b892e21d0bd537000b414",
+    "06_PoC/_recon_phase34_rulepreview.py": "f2669dbe55de8f26e12d07cb1c3bd3d02be2493f4b0fcf0cf6ca30129da185b4",
+    "06_PoC/_recon_phase34_synpreview.py": "44530ada304a6e81c7ba13ee0a74838d7cc1312ca9d23b90927c0dca2ebba3e7",
+    "06_PoC/_recon_phase35_mnx_recov.py": "2e1d6a91adf281f02054aaac0be4aa6b6c966af296b4ab18ed65f991df6df080",
+    "06_PoC/_recon_phase35_reachability.py": "8cf3e75e95fdf5a64833775549b12e433984b6773c787d15384957cb88b56524",
+    "06_PoC/_recon_phase35_scope.py": "3f49625af2d2dd7dd475498b767bca8ea149b3618bbd66df9683c43e93f1775a",
+    "06_PoC/_recon_repr.py": "fcd2ef067b4368f5d95629b9ca59e7b7ddf6697f3216308c7ddbee80edaa184c",
+    "06_PoC/_recon_repr2.py": "ac048a5787603bc85ad4983f03d29ada9b7a55a99a8d92e598a36ea6e1d6c16b",
+    "06_PoC/_recon_t3.py": "0b66e31eec5a5fefc39492acf2da27cf3af5f410c43fd5466d66af1337394bc0",
+    "06_PoC/_recon_t3b.py": "d762fd113b21e3614b620ac4a540ad1a328685af976b365644d501f721a0bd68",
+    "06_PoC/_recon_t5t2_sim.py": "023fc02a5802490088786865793f2d136d7a196178feedbe78c25f21cc83ad61",
+    "06_PoC/_recon_t6.py": "fbcaf936a73921a9410b004ad17e54dd731ff2f8f7292cc5037975d2fdcaed19",
+    "10_种子数据/build_biochem.py": "600146b86718b25ad0dc291d1456e8fc9937c50cfb7f65710218f29038812c60",
+    "10_种子数据/build_chem_equilibrium.py": "a134bf367852c3fd8049d551868116b47e20985ac0f5662084e96acc6f0f8b1b",
+    "10_种子数据/build_classical_mechanics.py": "eb3040895a31845cad0742355e06724e6d9d245ee0962d8acb051f131df1838e",
+    "10_种子数据/build_electromagnetism.py": "40caf2d88623b0a8691faae2900333bd4ab9ba39bcefe8e5cea5e8fbe7d8e951",
+    "10_种子数据/build_energy_combustion.py": "723f634c621bd411e67f8307d7e6adcecf3677c02b271c43ce9a46dfb071b5b6",
+    "10_种子数据/build_inorganic.py": "b3fd8897bf5ed97d5f1cf9c449ddf0c244eef94be0c6b2a7b9d7f23ee76ea613",
+    "10_种子数据/build_math_algebra.py": "4fab358b6eacd0b59330aa64da0e112446b5b28cb5bbbf9c4a5ffe9a1c2b7e1a",
+    "10_种子数据/build_math_calculus.py": "77fa251819318c75b74d26be6b56ee03c0f8a768afc7ae64c4c0ef8626735722",
+    "10_种子数据/build_math_geometry.py": "6fdf9275cb69223326152fc993ce1ed262cc63330450582b5b8152db5bdb96fc",
+    "10_种子数据/build_math_numbertheory.py": "c6d5c466d9dea6aa8c36c5a96d2d14a4369c099b5fda21cae08c4bed740c7eb1",
+    "10_种子数据/build_optics.py": "c3295f1122867ad5ce8847f554d5a0470e0fb55af362b01c5a914dcf6fdbe1a5",
+    "10_种子数据/build_organic_chem.py": "8984c9544e186cbee16a0f0e1096220eb571c44b7c01c428128b460caee3198f",
+    "10_种子数据/build_quantum.py": "10e2f3af927e08fb4fd4a9beded06369a8a4a8c2c05d15142aae94eaac2ad443",
+    "10_种子数据/build_relativity.py": "5a503d1f1469bb3b420712b1c356167115391461764d9b638ece9c7c4b4b895e",
+    "10_种子数据/build_stat_mech.py": "acffa2acf8048a3d79da87f9944844dbefe575ff9dead5df2e521d1195a64ccd",
+    "10_种子数据/build_thermo.py": "34daea4eb8cdb5bb5826dca3c7ad68debe4f1d887f980e8c8011730f1b04c67f",
+    "10_种子数据/seed_biochem.py": "3d7c613c0ebd67ede8758795a17b234e50632d65b16ca767b2b073a3aa99e1a9",
+    "10_种子数据/seed_common.py": "2e0a2d2787abb4339a1f9f24467f41f0441ebec89e340f6a9b891f0b425e3184",
+    "10_种子数据/seed_math_algebra.py": "739a10fe8aa234fb3d9e80af6d1900cc31afd357a0def69b29e932c3854c7d8a",
+    "10_种子数据/seed_math_calculus.py": "97c53dd26e70c744ad38d013a0931d63593917a5df81cfcc6e031a7f9bb50760",
+    "10_种子数据/seed_math_geometry.py": "c1032d1a9b4fe1131a2680699fb175471b676023536237c0f809c0a503b67f50",
+    "10_种子数据/seed_optics.py": "a082fa1934459f4264cccfde81d6850797ff88ec033a8835ab7a1b67d203903a",
+    "10_种子数据/seed_stat_mech.py": "581de3f94620622c7ab619f93e0b7d567ef56a8c698c2ce15d72c457b8a8238d",
+    "11_真实数据/apply_element_fix.py": "2bc2c90c9d18bce8bee407e90662598a5a5704b1eb9c0805021ae902b432af00",
+    "11_真实数据/chebi_synonym_fetch.py": "02236ac103b56b984f2e9ac41ba1f605cab1643a423b594f2cfb62d673641050",
+    "11_真实数据/chembl_ingest.py": "b011cef9e2ae71f334abfe18ba5eddf96cc5a00ea245175471ce5472695a39f9",
+    "11_真实数据/codata_ingest.py": "efb8972d8d1229a195a8dd4ee1d335b114442e1a2a6f0783c4856e1ddf065c5c",
+    "11_真实数据/dimension_consistency.py": "8ce12cb79d5f7780834f08f25a52f2b7bb87dcfb4e2fcf3150fcefb88c30252e",
+    "11_真实数据/dimension_table.py": "08a5fd5d64444f8bbb138ff70dff79a5465b1098f4ddec11260d27ed38270d7d",
+    "11_真实数据/elementkg10m_ingest.py": "9b945c9f0ab2abe4ee3d533ea0bb7ebe1d3e2acf63a22c84d7d91a9e6f36f726",
+    "11_真实数据/elementkg_ingest.py": "7deaf8a8f0bc65e0d3ddda5d70f04ca2574ac3c8d3892c33a67768def49988fb",
+    "11_真实数据/element_reference.py": "a6ad4fec1dfdb61b3d496bc05ae3edf22ad712bd80112dfa01253942ad16c465",
+    "11_真实数据/lineage_invalidation.py": "eb09f8d52fcc2196745e98c5f480c4f78656f0adf42e9d7369c02e354d90e158",
+    "11_真实数据/literature_validate.py": "35e5b3348d0a36fd3b252ecd41adc850778a814ce637de50f0e919f8156ef8d5",
+    "11_真实数据/migrate_dimension_field.py": "ff770b0a05868dc7ac36f999b37ef63a34287833f08e0b2cb993fed4d1214ec4",
+    "11_真实数据/openalex_ingest.py": "539f141f58c465af643d1d7de2e4a967a98e9f3413a599d9cdb1fb861f510271",
+    "11_真实数据/phase27_trustfix_delta.py": "21ba04f190be3c48765c087d21edc1127f96ee9c80c1fcb722c79dfac9f1d6e4",
+    "11_真实数据/phase28_trust_delta.py": "154462598972a25cdf2162b9c65f577130aaaa25d23b0fb471901ed8ccbc8a0c",
+    "11_真实数据/phase29_bridge_delta.py": "f8532fe79bc3a26ffe1652ee39ebddce7a5a3df25aa89b85f92b781a8a286815",
+    "11_真实数据/phase30_dedup_delta.py": "8ccc3e1d49162e7a44339e35b1d4c447ec8de42fe016ec5a862528a160c0dbfb",
+    "11_真实数据/phase31_recompute_delta.py": "97bcaf0308d190636d13ec63c76d5b675d02ccae4fa2cf7ac9a1a375b4e80d4f",
+    "11_真实数据/phase32_evidence_delta.py": "73487ca2df145612c963b9919b9fe87eee75a7baa17c0631ad3c8dde9306c315",
+    "11_真实数据/phase33_indep_delta.py": "f415de9dddb9bbeba1482605367acd4e85683f933a706ef671e6be82132ff75d",
+    "11_真实数据/phase34_alias_delta.py": "8ae64783160303c0ac8abf1129588a884db98b1d8bf32c893796110d90d19440",
+    "11_真实数据/phase36_rescope_delta.py": "298dd0ace354342c2660d5d059253a6c17455f713b8bfa32e21c3ecdcd47e352",
+    "11_真实数据/phase41_lineage_delta.py": "a7a0becbfe31e4861d26bd9e7374159f08a11236ef8798c040b1b8a18cbb9613",
+    "11_真实数据/physicsbabel_ingest.py": "e10be50664a43eb8b94e129cebb86e7901686a0a5ba34636e4bba769cb1cd5b5",
+    "11_真实数据/probe_sources.py": "d07bed308f6d5378cfd31370c11578a703c98c9b30a8c09e27c713093d6b3055",
+    "11_真实数据/pubchem_ingest.py": "a7ab8170a15c018ad18a010b4c540f8c9b20343e796add0e7e4e8255c8973d05",
+    "11_真实数据/pubchem_mol_ingest.py": "5c9f3297e26f355f5d8e19a5656707ca48fe02e894e2db5734eaf97a2a352505",
+    "11_真实数据/push_element_fix.py": "69cfabc74b7ecfe10977c37d9dc7d38959165d7fad15b4074d50246ce9f739a7",
+    "11_真实数据/push_element_merge.py": "8c886d6f5b48711cfab8d764c33eb01a52212b0ec409595e1c48129cf4fd0e5a",
+    "11_真实数据/rhea_ingest.py": "c82600b4643efdf77e6e99e4ab40f67237e633b6875c2984d0cbefd90f58a057",
+    "11_真实数据/si_base_table.py": "0c5de8ba3eabf9998da2a72fd4f710386c9655acea9fb232dfe4085f00830253",
+    "11_真实数据/source_registry.py": "7b2b291138a73924b8ed0b7d3c6f7c188dc834c5f7cd4b7a6954b9a408c4073d",
+    "11_真实数据/verification_model.py": "100148c147cb0adc8118c8358d664579faf6b814142a274ea399eee96b7238b2",
+    "11_真实数据/webbook_ingest.py": "6bf547c9cda051b77b8ae8bd06f991fdbacbd298edaaa3c2e723b13eb63239b3",
+    "11_真实数据/_explore_dim.py": "744f252e928027e3549de715331e5186661dc457e074cc24cdb53d39cfbaeb08",
+    "12_评测/build_tasks.py": "81e370c3699646e708d7745d1feb24807478e5af6e2031256e03b2c767cbf620",
+    "12_评测/eval_runner.py": "08757cef2a1a315a9844265475e21675b5126e538c2456ea3a54dac69f5bbbd7",
+    "12_评测/gnn_eval_v2.py": "89304feb77f51aaedb78b0421612fbaa8487cbb3c43a421c38ea8049f736614e",
+    ".runlog/mnx25/_dbg47.py": "1558c38b648825c7cd557bdf8dfdc00dc91cc019cb342e616f67f208d5aa4a01",
+    ".runlog/mnx25/_dump_disc.py": "94940137951223a8911563036514c554b4f23845c1012158b688613581b05015",
+    ".runlog/mnx25/_dump_ek2.py": "0fdef5f4d68422d4dee2136c7481d93449d15d47588040ba8872c004b0165eb1",
+    ".runlog/mnx25/_dump_hq.py": "281b253254220fa93466834bdc4ec4050ffa6f6d848c92367d42bbc20748029d",
+    ".runlog/mnx25/_dump_out.py": "e3828168724fa14fae654c15ae176a23256ed08016fdfe1ec3cb72ce7bf83dfa",
+    ".runlog/mnx25/_dump_t6.py": "d2af19d92796e5035d7f10400a1143f3e33182914ed0d4343e91540f385983ae",
+    ".runlog/mnx25/_dump_t8.py": "bc003e83f849642fc5ef5e59b0cc1d51beb38b59ade16bc9c8146a5fd2ff777b",
+    ".runlog/mnx25/_exact1702.py": "adb60cb0cfd7a5199588d331bb2a8763e307b1e68f55276ecf0a999f94ae0677",
+    ".runlog/mnx25/_probe_p921.py": "c275096910590b2585afc54ef31caab5ba8a57efc49d0ef82412e84f7c0cdea1",
+    ".runlog/mnx25/_probe_t8.py": "68ee357ad59eb6a34ca16eb71d43c2f56788fbc16129a80acdb21f11fe8542b5",
+    ".runlog/mnx25/_probe_wd.py": "3e661ddf4703cd8d3317c987ba28375a93eac3c0288d5c27b9b79fad754207de",
+    ".runlog/mnx25/_probe_wd2.py": "99ab55095f4fce11882c4574e3e0c2d3073144c89a031d6a01e1e040a317093c",
+    ".runlog/mnx25/_probe_wd3.py": "cbe385e45befef92ca33f61efd86c7a8d5fa36b4ad9a7adebd53cc9791ac1e47",
+    ".runlog/mnx25/_probe_wd4.py": "7d752555c4326574d08262703d3cb009af781db0d01c9a4b8ae78f9bb5394ba2",
+    ".runlog/mnx25/_recon25_mnx.py": "72beaf85b77dd3e108af9ed2212d4d44b2600c49c27e24d7a43d7370d940d38c",
+    ".runlog/mnx25/_rehearse_wd.py": "0c9da74a762cf364a90eb99bad79a72442e5358190fbecaba8c370bb781e3d12",
+    ".runlog/mnx25/_scope_audit.py": "de526c851cd325e6a0004a0b9971a199bba4325f103df14ce458eae26bf06b6b",
+    ".runlog/mnx25/_wd_isakind.py": "80ac0ed18fb9621802ae8187946aa421fde4c43cff23efb1ec7854d24bc2f84f",
+    ".runlog/mnx25/_wd_match.py": "1438676049f0c14ee4d176bb9d9622493911adb6687bd7360412ea02b5e3d9ec",
+    ".runlog/mnx25/_wd_p921.py": "1b81c34a54868a8d33b90b37815cffc094e2add14d8a9207aba86ab4b6608da9",
+    "06_PoC/release/make_manifest.py": "464e73cb2ce1529bee959848c4a20d7c291d8a03aa717fed1db63f53be001b1f",
+    "06_PoC/release/make_sample.py": "a59bdd88b0d0e6d06e17be8bcc4d9192a7dd9a4660de673485bc40a11105f0d7",
+    "06_PoC/release/verify_release.py": "9647518267ac5b59b7471e1d3a483eee64e463d8efebf5e198590889190078ba",
+    "06_PoC/tests/a4_offline_render.py": "69c0a1683ea83f2e303fd4b8121f44ec877dbb1da5d384b3171d410d6cb5a40b",
+    "06_PoC/vendor/fetch_vendor.py": "e50068e9c9b7c56ee88d23f23c3e9821a65a1df8fa71db0d8b36296909709c3e",
+    "08_部署包/neo4j/deploy.py": "02bc19a4441b64886d22ee4ecf833c338cb3fb0ac1d4813394627eebcaa01497",
+    "08_部署包/neo4j/load_neo4j.py": "d8f99118c1ce3edb4b72aaecfd3397e3824a4f05aea8490b1e2139faf363a417",
+    "08_部署包/neo4j/preflight_neo4j.py": "617f6f8ea0bd6f030197db5265b931fe22de9424b757c2076fbf7f4f78a99890",
+    "08_部署包/neo4j/verify_deploy.py": "ea853afbe78ae2f7dca43bdf38c1a9c687d4372e2e7d19e9e7cc44975c953b25",
+    "09_科研扩展/5A_wikidata/align_to_existing_graph.py": "0b82670f5b374cde543814400d018a07b64ca769a196e0b926b749fff7e83d7f",
+    "09_科研扩展/5A_wikidata/wikidata_adapter.py": "782671783ca3ccbd552f6ec3747f8647dca85d4fb11bdcd8659be7db95ccc597",
+    "09_科研扩展/5B_gnn/gnn_model.py": "40252b159effe6085fe0171fffacde4d7afd157d1f5770707577f0cff5019354",
+    "09_科研扩展/5B_gnn/predict.py": "0ba7e024dc54c8ae20dc8893051634ac5f238c9efee2e74b4794d7cbdec888b2",
+    "09_科研扩展/5B_gnn/train.py": "ad245b2766c743e3e2114c6fb12279ed28b76c2409768f055dd1a6c658b93b03",
+    "09_科研扩展/5C_entity_linker/entity_linker.py": "f4d26d1136c38c53b16c1b8ad1b3a221a8ead63ea5e294b1e4ac87601265e491",
+    "09_科研扩展/5C_entity_linker/linker_demo.py": "240c47aab2cebc6414d49899dd7b910c8862f7717b7e80f06c37b8c91f1069dc",
+    "09_科研扩展/5D_adapters/elementkg_adapter.py": "3d81c1ef9181a9976d5b0d22819eb671503722bb9242db1272b24e48fb82b336",
+    "09_科研扩展/5D_adapters/reactionatlas_adapter.py": "556c0d28a9812b603a9ca83332b0a0966969a723dcc1d94b0b62b8e69219e288",
+    "09_科研扩展/5D_adapters/synthetic_elementkg_demo.py": "4c3c084cfe0cd2b4bf3addebbf3b6784f551978e3c2b093d04d47387d7447ea2",
+    "09_科研扩展/5D_adapters/synthetic_reactionatlas_demo.py": "354218b4c2cc270f7b5faf83561da60c3533e0b902a1237ccd3443bf24f6b4a7",
+    "09_科研扩展/5E_integration/build_aura_delta.py": "2d01ec15109b0e1430a4b9934d47df9aed7960fc4b473133dd0f302bc723abf4",
+    "09_科研扩展/5E_integration/build_phase5_delta.py": "d521e3d7013652b843d7a63391ab2fdff3bb22e4edbcd9269e1f737f4789d7a4",
+    "09_科研扩展/5E_integration/phase5_integration.py": "1616e7e5c1a02c47a386f06c2db74a6dccaaa01986773be2453b085b5d474484",
+    "09_科研扩展/9_inference/apply_typed_edges.py": "148fd8b43073b03a94e24b737e13e3dbe068ff04277b4c0a8850a216acc2ec3c",
+    "09_科研扩展/9_inference/export_aura.py": "eb80b93df7ddb7d2bb59bf098722026fe76b8441a82221a8016294bf5d5fc7f9",
+    "09_科研扩展/9_inference/gnn_infer.py": "d88ce41b9458448f037dbbafc60d1a5f752180048d0a44ad8e4b523e860e4c98",
+    "09_科研扩展/9_inference/llm_hypotheses.py": "2f7799d787d3a15c2f63dd6702896280c75631906ea7ef0596e713b7b97e316a",
+    "09_科研扩展/9_inference/llm_review_85.py": "656206b3f64c324c20f5171a626e9dcec3c78c547348964ca1dc7691fda168b0",
+    "09_科研扩展/9_inference/periodic_trends.py": "ef84f573a2371c0507f5bb63f6fc4cf99de24cefb67e4dffc3aece1b21b777f4",
+    "09_科研扩展/9_inference/phase9_deepen.py": "e7ef499422c77d62aedd536cc4589d5385872bf3a753623227ea2237a2c72986",
+    "09_科研扩展/9_inference/push_pending.py": "3df501de89567edea82a7170a22c086f6c78709695a512e20637510201a0dd9a",
+    "09_科研扩展/9_inference/sync_aura_phase9b.py": "b1484ab7f5800c6ba218313fd14fa4b17590dc26c0f6f3e387731ec648296915",
+    "09_科研扩展/9_inference/sync_aura_review.py": "74d767bec4133e75a83ffccd6ca9d35f4095344ebd38d804d34b021dd526621c",
+    "09_科研扩展/9_inference/_probe_graph.py": "6b2e529e49309824151c7defed15769a05929f0af0d522d47da0e8c1de207d9d",
+    "09_科研扩展/9_inference/_recon.py": "103fc4786746fc565ee5dd2add9aa92990c8086b865b9417ffee125396b5773d"
+  }
+}

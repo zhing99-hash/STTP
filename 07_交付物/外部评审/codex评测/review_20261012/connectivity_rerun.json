@@ -1,0 +1,315 @@
+{
+  "nodes": 9657,
+  "edges": 48712,
+  "subjects": {
+    "物理": 5247,
+    "化学": 4108,
+    "数学": 277,
+    "跨学科": 25
+  },
+  "types": {
+    "Formula": 5082,
+    "Molecule": 2133,
+    "Reaction": 1708,
+    "Paper": 181,
+    "PhysicalQuantity": 145,
+    "Element": 118,
+    "Symbol": 113,
+    "FunctionalGroup": 76,
+    "Unit": 33,
+    "WikidataEntity": 24,
+    "Constant": 23,
+    "MathConcept": 13,
+    "Definition": 4,
+    "Lemma": 2,
+    "Theorem": 2
+  },
+  "components": {
+    "count": 6,
+    "largest": [
+      9628,
+      16,
+      5,
+      3,
+      3
+    ],
+    "isolated_count": 0,
+    "isolated_sample": [],
+    "small": [
+      {
+        "size": 16,
+        "subjects": {
+          "数学": 15,
+          "跨学科": 1
+        },
+        "types": {
+          "MathConcept": 2,
+          "WikidataEntity": 1,
+          "Formula": 5,
+          "PhysicalQuantity": 4,
+          "Symbol": 4
+        },
+        "sample": [
+          "MX:math:derivative_power",
+          "MX:math:power_rule",
+          "WD:Q1190543",
+          "MC:fo:power_rule"
+        ],
+        "nodes": [
+          "MC:fo:chain_rule",
+          "MC:fo:ftc",
+          "MC:fo:limit_def",
+          "MC:fo:power_rule",
+          "MC:fo:taylor",
+          "MC:pq:derivative",
+          "MC:pq:integral",
+          "MC:pq:limit",
+          "MC:pq:order",
+          "MC:sy:dx",
+          "MC:sy:f",
+          "MC:sy:g",
+          "MC:sy:n",
+          "MX:math:derivative_power",
+          "MX:math:power_rule",
+          "WD:Q1190543"
+        ]
+      },
+      {
+        "size": 5,
+        "subjects": {
+          "数学": 5
+        },
+        "types": {
+          "Formula": 2,
+          "PhysicalQuantity": 1,
+          "Unit": 1,
+          "Symbol": 1
+        },
+        "sample": [
+          "MG:fo:law_cosines",
+          "MG:fo:law_sines",
+          "MG:pq:angle",
+          "MG:un:radian"
+        ],
+        "nodes": [
+          "MG:fo:law_cosines",
+          "MG:fo:law_sines",
+          "MG:pq:angle",
+          "MG:sy:theta",
+          "MG:un:radian"
+        ]
+      },
+      {
+        "size": 3,
+        "subjects": {
+          "数学": 2,
+          "跨学科": 1
+        },
+        "types": {
+          "MathConcept": 2,
+          "WikidataEntity": 1
+        },
+        "sample": [
+          "MX:math:binomial",
+          "MX:math:expand",
+          "WD:Q114727876"
+        ],
+        "nodes": [
+          "MX:math:binomial",
+          "MX:math:expand",
+          "WD:Q114727876"
+        ]
+      },
+      {
+        "size": 3,
+        "subjects": {
+          "物理": 3
+        },
+        "types": {
+          "PhysicalQuantity": 1,
+          "Unit": 1,
+          "Symbol": 1
+        },
+        "sample": [
+          "EM:pq:inductance",
+          "EM:un:henry",
+          "EM:sy:L"
+        ],
+        "nodes": [
+          "EM:pq:inductance",
+          "EM:sy:L",
+          "EM:un:henry"
+        ]
+      },
+      {
+        "size": 2,
+        "subjects": {
+          "物理": 2
+        },
+        "types": {
+          "PhysicalQuantity": 1,
+          "Unit": 1
+        },
+        "sample": [
+          "EM:pq:capacitance",
+          "EM:un:farad"
+        ],
+        "nodes": [
+          "EM:pq:capacitance",
+          "EM:un:farad"
+        ]
+      }
+    ]
+  },
+  "cross_domain": {
+    "edges_total": 48712,
+    "same": 47767,
+    "cross": 945,
+    "cross_ratio": 1.94,
+    "by_pair": {
+      "化学 ↔ 物理": 898,
+      "数学 ↔ 跨学科": 16,
+      "数学 ↔ 物理": 11,
+      "化学 ↔ 数学": 10,
+      "化学 ↔ 跨学科": 5,
+      "物理 ↔ 跨学科": 5
+    },
+    "by_type": {
+      "has_quantity": 877,
+      "same_as": 27,
+      "has_symbol": 16,
+      "uses_operator": 10,
+      "derived_from": 7,
+      "has_unit": 3,
+      "dimensionally_consistent": 2,
+      "chemical_reaction": 1,
+      "releases": 1,
+      "defines": 1
+    }
+  },
+  "namespace_subject": {
+    "BC": {
+      "化学": 16
+    },
+    "CE": {
+      "化学": 41
+    },
+    "CH": {
+      "化学": 1378
+    },
+    "CM": {
+      "物理": 29
+    },
+    "CO": {
+      "物理": 10
+    },
+    "EK": {
+      "化学": 118
+    },
+    "EK2": {
+      "化学": 1547
+    },
+    "EM": {
+      "物理": 39
+    },
+    "FO": {
+      "物理": 3
+    },
+    "IC": {
+      "化学": 15
+    },
+    "MA": {
+      "数学": 17
+    },
+    "MC": {
+      "数学": 13
+    },
+    "MG": {
+      "数学": 17
+    },
+    "MO": {
+      "化学": 4
+    },
+    "MX": {
+      "数学": 28,
+      "物理": 4,
+      "化学": 3,
+      "跨学科": 1
+    },
+    "NT": {
+      "数学": 21
+    },
+    "OM": {
+      "化学": 11
+    },
+    "OP": {
+      "物理": 15
+    },
+    "PA": {
+      "数学": 181
+    },
+    "PB": {
+      "物理": 5050
+    },
+    "PC": {
+      "化学": 14
+    },
+    "PQ": {
+      "化学": 20,
+      "物理": 8
+    },
+    "QM": {
+      "物理": 19
+    },
+    "RH": {
+      "化学": 939
+    },
+    "RT": {
+      "物理": 11
+    },
+    "RX": {
+      "化学": 1
+    },
+    "SM": {
+      "物理": 14
+    },
+    "SY": {
+      "物理": 7
+    },
+    "TH": {
+      "物理": 31
+    },
+    "UN": {
+      "物理": 6
+    },
+    "WD": {
+      "跨学科": 19
+    },
+    "ek": {
+      "化学": 1
+    },
+    "pb": {
+      "物理": 1
+    },
+    "wd": {
+      "跨学科": 5
+    }
+  },
+  "defects": {
+    "dangling_edges": 0,
+    "self_loop_edges": 0,
+    "isolated_nodes": 0,
+    "dangling_sample": [],
+    "selfloop_sample": []
+  },
+  "island_freeze": {
+    "known_islands": 5,
+    "known_nodes": 29,
+    "max_components": 6,
+    "actual_components": 6,
+    "actual_islands": 5,
+    "actual_nodes": 29,
+    "verdict": "FROZEN-OK",
+    "notes": []
+  }
+}

@@ -1,0 +1,76 @@
+[
+  {
+    "name": "frozen_gate",
+    "command": [
+      "06_PoC/frozen_gate.py",
+      "--release",
+      "--json"
+    ],
+    "rc": 0,
+    "elapsed_s": 22.2
+  },
+  {
+    "name": "release_full",
+    "command": [
+      "06_PoC/release/verify_release.py",
+      "--full",
+      "--release",
+      "--json"
+    ],
+    "rc": 0,
+    "elapsed_s": 83.88
+  },
+  {
+    "name": "eval",
+    "command": [
+      "12_评测/eval_runner.py",
+      "--strict",
+      "--json",
+      "F:\\codex\\sttp\\review_20261012\\eval_rerun.json"
+    ],
+    "rc": 0,
+    "elapsed_s": 2.8
+  },
+  {
+    "name": "source_registry",
+    "command": [
+      "11_真实数据/source_registry.py",
+      "--check"
+    ],
+    "rc": 0,
+    "elapsed_s": 1.25
+  },
+  {
+    "name": "lineage",
+    "command": [
+      "11_真实数据/lineage_invalidation.py",
+      "--json",
+      "--out",
+      "F:\\codex\\sttp\\review_20261012\\lineage_rerun.json"
+    ],
+    "rc": 0,
+    "elapsed_s": 3.16
+  },
+  {
+    "name": "connectivity",
+    "command": [
+      "06_PoC/connectivity_audit.py",
+      "--json",
+      "F:\\codex\\sttp\\review_20261012\\connectivity_rerun.json"
+    ],
+    "rc": 0,
+    "elapsed_s": 3.31
+  },
+  {
+    "name": "task_trust",
+    "command": [
+      "06_PoC/task_trust_audit.py",
+      "--graph",
+      "06_PoC/etl/normalized.json",
+      "--json",
+      "F:\\codex\\sttp\\review_20261012\\trust_rerun.json"
+    ],
+    "rc": 0,
+    "elapsed_s": 74.19
+  }
+]

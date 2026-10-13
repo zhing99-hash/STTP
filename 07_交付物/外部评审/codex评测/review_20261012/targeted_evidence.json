@@ -1,0 +1,589 @@
+{
+  "baseline": {
+    "n": 40,
+    "correct": 40,
+    "incorrect": 0,
+    "answered": 32,
+    "refused": 8,
+    "correct_rate": 1.0,
+    "attempt_rate": 0.8,
+    "refusal_rate": 0.2,
+    "correct_ci95": [
+      0.9124,
+      1.0
+    ],
+    "false_answer": 0,
+    "false_refusal": 0
+  },
+  "remove_all_edges": {
+    "summary": {
+      "n": 40,
+      "correct": 37,
+      "incorrect": 3,
+      "answered": 29,
+      "refused": 11,
+      "correct_rate": 0.925,
+      "attempt_rate": 0.725,
+      "refusal_rate": 0.275,
+      "correct_ci95": [
+        0.8014,
+        0.9742
+      ],
+      "false_answer": 0,
+      "false_refusal": 3
+    },
+    "failed": [
+      "MS-03",
+      "MS-04",
+      "MS-06"
+    ]
+  },
+  "remove_all_nodes_and_edges": {
+    "summary": {
+      "n": 40,
+      "correct": 25,
+      "incorrect": 15,
+      "answered": 17,
+      "refused": 23,
+      "correct_rate": 0.625,
+      "attempt_rate": 0.425,
+      "refusal_rate": 0.575,
+      "correct_ci95": [
+        0.4703,
+        0.7578
+      ],
+      "false_answer": 0,
+      "false_refusal": 15
+    },
+    "failed": [
+      "DV-01",
+      "DV-02",
+      "DV-03",
+      "DV-05",
+      "DV-06",
+      "DV-07",
+      "DV-08",
+      "MS-03",
+      "MS-04",
+      "MS-06",
+      "NM-01",
+      "NM-02",
+      "NM-08",
+      "US-04",
+      "US-05"
+    ]
+  },
+  "replace_all_question_text": {
+    "n": 40,
+    "correct": 40,
+    "incorrect": 0,
+    "answered": 32,
+    "refused": 8,
+    "correct_rate": 1.0,
+    "attempt_rate": 0.8,
+    "refusal_rate": 0.2,
+    "correct_ci95": [
+      0.9124,
+      1.0
+    ],
+    "false_answer": 0,
+    "false_refusal": 0
+  },
+  "numeric_domain_probes": {
+    "-298.15": [
+      "answer",
+      5.708009502430058
+    ],
+    "0.0": [
+      "answer",
+      -0.0
+    ]
+  },
+  "nonfinite_grader": [
+    {
+      "id": "DV-09",
+      "payload": "all expected numeric fields = NaN",
+      "verdict": [
+        "correct",
+        "全字段匹配"
+      ]
+    },
+    {
+      "id": "NM-05",
+      "payload": "all expected numeric fields = NaN",
+      "verdict": [
+        "correct",
+        "全字段匹配"
+      ]
+    }
+  ],
+  "full_missing_snapshot": {
+    "fail": 0,
+    "warn": 1,
+    "checks": [
+      {
+        "name": "H1 完整快照存在",
+        "status": "WARN",
+        "detail": "本地缺失（不入库属正常）；获取方式：原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照"
+      }
+    ]
+  },
+  "same_ids_changed_relation": {
+    "fail": 0,
+    "warn": 0,
+    "checks": [
+      {
+        "name": "B1 页面↔查询 节点 id 集合相等",
+        "status": "PASS",
+        "detail": "正常 380 / 投影 380 / 差 0"
+      },
+      {
+        "name": "B1 页面↔查询 边 id 集合相等",
+        "status": "PASS",
+        "detail": "正常 701 / 投影 701 / 差 0"
+      }
+    ]
+  },
+  "evidence_impl_source_counts": [
+    {
+      "impl": "verification_model.formula_members",
+      "src": "PhysicsBabel",
+      "n": 24104
+    },
+    {
+      "impl": "ElementKG2.0",
+      "src": "ElementKG2.0",
+      "n": 6062
+    },
+    {
+      "impl": "verification_model.parse_formula_independent",
+      "src": "ChEBI",
+      "n": 5092
+    },
+    {
+      "impl": "PubChem(pubchem_formula) × 图内组成边",
+      "src": "Phase13.Gate.B1",
+      "n": 2573
+    },
+    {
+      "impl": "ChEMBL API",
+      "src": "chembl_api",
+      "n": 2512
+    },
+    {
+      "impl": "verification_model.reaction_side_cross_check(Rhea 方程 × ChEBI label，共享词典)",
+      "src": "rhea_chebi",
+      "n": 1784
+    },
+    {
+      "impl": "element_reference.py",
+      "src": "ElementKG2.0",
+      "n": 1729
+    },
+    {
+      "impl": "Rhea/ChEBI",
+      "src": "rhea_chebi",
+      "n": 1532
+    },
+    {
+      "impl": "verification_model.reaction_side_cross_check(Rhea 方程 × ChEBI synonym，共享词典)",
+      "src": "rhea_chebi",
+      "n": 1218
+    },
+    {
+      "impl": "element_reference.py × PubChem(pubchem_molecular_weight)",
+      "src": "Phase13.Gate.B5",
+      "n": 697
+    },
+    {
+      "impl": "NIST WebBook × dimension_table(单位量纲)",
+      "src": "NIST Chemistry WebBook",
+      "n": 581
+    },
+    {
+      "impl": "openalex-topic-align",
+      "src": "openalex-topic-align",
+      "n": 356
+    },
+    {
+      "impl": "openalex",
+      "src": "openalex",
+      "n": 352
+    },
+    {
+      "impl": "curated_seed",
+      "src": "curated_seed",
+      "n": 267
+    },
+    {
+      "impl": "verification_model.symbol_in_source",
+      "src": "curated_seed",
+      "n": 169
+    },
+    {
+      "impl": "Phase13.GNN.typed",
+      "src": "Phase13.GNN.typed",
+      "n": 72
+    },
+    {
+      "impl": "verification_model.symbol_in_source",
+      "src": "mathxiv",
+      "n": 52
+    },
+    {
+      "impl": "verification_model.parse_formula_independent(源节点 formula)",
+      "src": "curated_seed",
+      "n": 38
+    },
+    {
+      "impl": "verification_model.parse_formula_independent × element_reference.py",
+      "src": "Phase13.Gate.B5",
+      "n": 37
+    },
+    {
+      "impl": "dimension_table(量纲) × 单位符号解析",
+      "src": "curated_seed",
+      "n": 35
+    },
+    {
+      "impl": "verification_model.parse_formula_independent",
+      "src": "PubChem",
+      "n": 33
+    },
+    {
+      "impl": "mathxiv",
+      "src": "mathxiv",
+      "n": 30
+    },
+    {
+      "impl": "curated_seed",
+      "src": "curated_seed/energy_combustion",
+      "n": 23
+    },
+    {
+      "impl": "Phase13.Gate.B4",
+      "src": "Phase13.Gate.B4",
+      "n": 23
+    },
+    {
+      "impl": "PubChem（**沿用**摄入时键匹配；键未落库，未能重算）",
+      "src": "PubChem",
+      "n": 20
+    },
+    {
+      "impl": "verification_model.dimension_table",
+      "src": "Phase13.Gate.B3",
+      "n": 20
+    },
+    {
+      "impl": "verification_model.codata_derivation_recheck(CODATA 定义式)",
+      "src": "nist_codata_2022",
+      "n": 18
+    },
+    {
+      "impl": "Phase9.GNN",
+      "src": "Phase9.GNN",
+      "n": 17
+    },
+    {
+      "impl": "cross_source_alignment",
+      "src": "cross_source_alignment",
+      "n": 15
+    },
+    {
+      "impl": "verification_model.math_operator_presence",
+      "src": "curated_seed",
+      "n": 11
+    },
+    {
+      "impl": "schema-axiom",
+      "src": "schema-axiom",
+      "n": 10
+    },
+    {
+      "impl": "verification_model.symbol_in_source",
+      "src": "curated_seed/energy_combustion",
+      "n": 9
+    },
+    {
+      "impl": "LLM-review",
+      "src": "LLM-review",
+      "n": 9
+    },
+    {
+      "impl": "dimension_table.py",
+      "src": "dimension_table",
+      "n": 8
+    },
+    {
+      "impl": "heuristic",
+      "src": "heuristic",
+      "n": 7
+    },
+    {
+      "impl": "verification_model.parse_formula_independent(源节点 formula)",
+      "src": "curated_seed/energy_combustion",
+      "n": 7
+    },
+    {
+      "impl": "verification_model.dimension_table",
+      "src": "curated_seed",
+      "n": 6
+    },
+    {
+      "impl": "NIST CODATA",
+      "src": "nist_codata_2022",
+      "n": 6
+    },
+    {
+      "impl": "elementkg10m_ingest.py(skeleton)",
+      "src": "ElementKG2.0",
+      "n": 6
+    },
+    {
+      "impl": "dimension_table(量纲) × 单位符号解析",
+      "src": "curated_seed/energy_combustion",
+      "n": 5
+    },
+    {
+      "impl": "Phase9.GNN+LLM",
+      "src": "Phase9.GNN+LLM",
+      "n": 5
+    },
+    {
+      "impl": "verification_model.parse_formula_independent",
+      "src": "Phase13.Gate.B1",
+      "n": 5
+    },
+    {
+      "impl": "element_reference.py",
+      "src": "Phase13.Gate.B2",
+      "n": 5
+    },
+    {
+      "impl": "ChEBI label",
+      "src": "rhea_chebi",
+      "n": 5
+    },
+    {
+      "impl": "verification_model.dimension_table",
+      "src": "Phase13.GNN.typed",
+      "n": 2
+    },
+    {
+      "impl": "verification_model.symbol_in_source",
+      "src": "Phase13.GNN.typed",
+      "n": 2
+    },
+    {
+      "impl": "llm_inferred_gnn",
+      "src": "llm_inferred_gnn",
+      "n": 1
+    },
+    {
+      "impl": "verification_model.dimension_table",
+      "src": "curated_seed/energy_combustion",
+      "n": 1
+    },
+    {
+      "impl": "verification_model.dimension_table",
+      "src": "Phase9.GNN",
+      "n": 1
+    }
+  ],
+  "evidence_current_impl_versions": {
+    "100148c147cb": 49572
+  },
+  "verifier_actual_hash": "100148c147cb",
+  "obsolete_impl_version": {
+    "id": "defines|MX:def:manifold|MX:sym:m",
+    "n_affected": 0,
+    "changed_sources": []
+  },
+  "dimension_table_hash_change": {
+    "affected": 28,
+    "source_distribution": {
+      "Phase13.Gate.B3": 20,
+      "dimension_table": 8
+    },
+    "diag": {
+      "n_sources": 31,
+      "n_compared_sources": 20,
+      "n_no_hash_sources": 9,
+      "changed_direct": [
+        "dimension_table"
+      ],
+      "changed_with_lineage": [
+        "Phase13.Gate.B3"
+      ],
+      "lineage_gap_sources": [
+        "LLM-review",
+        "Phase13.GNN.typed",
+        "Phase9.GNN",
+        "Phase9.GNN+LLM",
+        "heuristic",
+        "llm_inferred_gnn",
+        "unregistered"
+      ],
+      "n_claims_on_lineage_gap": 116,
+      "n_affected_edges": 28,
+      "compared": {
+        "ChEBI": {
+          "recorded": "dbc1751d9ee8",
+          "current": "dbc1751d9ee8",
+          "equal": true
+        },
+        "ElementKG2.0": {
+          "recorded": "5c407a5ee1f3",
+          "current": "5c407a5ee1f3",
+          "equal": true
+        },
+        "NIST Chemistry WebBook": {
+          "recorded": "703eecc8ac5b",
+          "current": "703eecc8ac5b",
+          "equal": true
+        },
+        "Phase13.Gate.B1": {
+          "recorded": "a68edec165e4",
+          "current": "a68edec165e4",
+          "equal": true
+        },
+        "Phase13.Gate.B2": {
+          "recorded": "1fe029a4cdc8",
+          "current": "1fe029a4cdc8",
+          "equal": true
+        },
+        "Phase13.Gate.B3": {
+          "recorded": "872aa5307478",
+          "current": "872aa5307478",
+          "equal": true
+        },
+        "Phase13.Gate.B4": {
+          "recorded": "a68edec165e4",
+          "current": "a68edec165e4",
+          "equal": true
+        },
+        "Phase13.Gate.B5": {
+          "recorded": "1fe029a4cdc8",
+          "current": "1fe029a4cdc8",
+          "equal": true
+        },
+        "PhysicsBabel": {
+          "recorded": "a68edec165e4",
+          "current": "a68edec165e4",
+          "equal": true
+        },
+        "PubChem": {
+          "recorded": "b03d2bf56cc4",
+          "current": "b03d2bf56cc4",
+          "equal": true
+        },
+        "chembl_api": {
+          "recorded": "64b4a8e287ca",
+          "current": "64b4a8e287ca",
+          "equal": true
+        },
+        "cross_source_alignment": {
+          "recorded": "6657db95a060",
+          "current": "6657db95a060",
+          "equal": true
+        },
+        "curated_seed": {
+          "recorded": "652804e9933b",
+          "current": "652804e9933b",
+          "equal": true
+        },
+        "curated_seed/energy_combustion": {
+          "recorded": "de46bf0f471a",
+          "current": "de46bf0f471a",
+          "equal": true
+        },
+        "dimension_table": {
+          "recorded": "8413f6ce5cbd",
+          "current": "000000000000",
+          "equal": false
+        },
+        "mathxiv": {
+          "recorded": "6657db95a060",
+          "current": "6657db95a060",
+          "equal": true
+        },
+        "nist_codata_2022": {
+          "recorded": "955eb59e2862",
+          "current": "955eb59e2862",
+          "equal": true
+        },
+        "openalex": {
+          "recorded": "9575056cb6aa",
+          "current": "9575056cb6aa",
+          "equal": true
+        },
+        "openalex-topic-align": {
+          "recorded": "afd25d97fbd1",
+          "current": "afd25d97fbd1",
+          "equal": true
+        },
+        "rhea_chebi": {
+          "recorded": "e14700ab990f",
+          "current": "e14700ab990f",
+          "equal": true
+        }
+      }
+    }
+  },
+  "raw_node_examples": [
+    {
+      "id": "MX:def:manifold",
+      "labels": [
+        "Definition",
+        "Formula",
+        "Entity"
+      ],
+      "props": {
+        "confidence": 1.0,
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "type": "definition",
+        "latex": "M",
+        "version": "v0.1",
+        "symbols": [
+          "M",
+          "n"
+        ],
+        "explicit_or_inferred": "explicit",
+        "domain": "math.DG",
+        "name": "definition",
+        "id": "MX:def:manifold",
+        "informal": "A smooth n-dimensional manifold M is a second-countable Hausdorff topological space equipped with a maximal smooth atlas of charts."
+      }
+    },
+    {
+      "id": "MX:def:tangent_space",
+      "labels": [
+        "Definition",
+        "Formula",
+        "Entity"
+      ],
+      "props": {
+        "confidence": 1.0,
+        "created_at": "2026-09-28T15:33:30+08:00",
+        "source_ref": "arXiv:2103.12345",
+        "source": "mathxiv",
+        "type": "definition",
+        "latex": "T_p M",
+        "version": "v0.1",
+        "symbols": [
+          "T_p M",
+          "M",
+          "p"
+        ],
+        "explicit_or_inferred": "explicit",
+        "domain": "math.DG",
+        "name": "definition",
+        "id": "MX:def:tangent_space",
+        "informal": "The tangent space T_p M at a point p in M is the vector space of all tangent vectors (derivations) at p."
+      }
+    }
+  ]
+}
