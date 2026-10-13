@@ -207,6 +207,78 @@ RANK_ORDER = {
 }
 
 
+def project_node(n: dict) -> dict:
+    """规范化节点 → 前端投影节点。
+
+    ★ **唯一投影口径**（Phase 43）：全图（`build_graph_data`）与局部子图
+    （`viz_server /api/subgraph`）共用本函数，避免出现"第二套格式"
+    （方案 §2.2）。字段与 `formula-graph-view/v1` 保持一致。
+    """
+    props = dict(n.get("props") or {})
+    labels = list(n.get("labels") or [])
+    ntype = pick_type(labels)
+    if not ntype or ntype == "Unknown":
+        # 强制非空：即使 labels 全空，也退化为 props.type / "Formula"
+        ntype = str(props.get("type") or "Formula")
+    return {
+        "id": n.get("id"),
+        "label": (props.get("name") or n.get("local_id") or n.get("id")),
+        "type": ntype,                                  # ← 来自 labels，非空
+        "labels": labels,
+        "subject": subject_of(props.get("domain"), str(n.get("id") or "")),
+        "domain": props.get("domain", ""),
+        "formula": props.get("latex") or "",            # LaTeX（供 MathJax）
+        "confidence": props.get("confidence"),
+        "attrs": props,                                 # 原始属性全量透传
+    }
+
+
+def derive_verified(props: dict) -> bool:
+    """派生：`verification_level` ≥ `by_construction`（无 level 时退回旧 `verified`）。"""
+    lv = (props or {}).get("verification_level")
+    if lv is None:
+        return bool((props or {}).get("verified", False))
+    return RANK_ORDER.get(lv, -1) >= RANK_ORDER["by_construction"]
+
+
+def derive_strict(props: dict) -> bool:
+    """派生：`verification_level` ≥ `rule_checked`（`verified_strict` 档）。"""
+    lv = (props or {}).get("verification_level")
+    return RANK_ORDER.get(lv, -1) >= RANK_ORDER["rule_checked"]
+
+
+def project_edge(e: dict) -> dict:
+    """规范化边 → 前端投影边（★ 与 `project_node` 同为**唯一口径**）。"""
+    props = dict(e.get("props") or {})
+    kind = e.get("kind") or props.get("kind") or ""
+    eoi = props.get("explicit_or_inferred")
+    if not eoi:                                          # 兜底推导
+        eoi = "explicit" if kind in EXPLICIT_KINDS else "inferred"
+    out = {
+        "id": e.get("id"),
+        "source": e.get("source"),
+        "target": e.get("target"),
+        "type": e.get("type") or kind,
+        "kind": kind,
+        "confidence": props.get("confidence"),
+        "explicit_or_inferred": eoi,                     # explicit / inferred
+        "verified": derive_verified(props),              # 派生：level ≥ by_construction
+        "verified_strict": derive_strict(props),         # 派生：level ≥ rule_checked
+        "verification_level": props.get("verification_level"),
+        "verification_scope": props.get("verification_scope"),
+        "verifier": props.get("verifier"),
+        "gate": props.get("verification_gate"),          # R-MATH / R-PHY / R-CHEM
+        "evidence": props.get("verification_evidence") or props.get("evidence"),
+        "rationale": props.get("rationale"),
+        "domain": props.get("domain"),
+    }
+    # 化学计量数等数值属性透传（否则 viz 投影丢字段，下游按 count=1 误算摩尔质量）
+    for k in ("count", "value", "unit", "element_symbol"):
+        if props.get(k) is not None:
+            out[k] = props[k]
+    return out
+
+
 def build_graph_data(src_path: str) -> dict:
     """把规范化图谱 JSON 转成前端友好结构（纯函数，供 server 复用）。"""
     with open(src_path, "r", encoding="utf-8") as f:
@@ -217,69 +289,17 @@ def build_graph_data(src_path: str) -> dict:
     # ------------------------ 节点 ------------------------
     nodes_out = []
     for n in data.get("nodes", []):
-        props = dict(n.get("props") or {})
         labels = list(n.get("labels") or [])
-        ntype = pick_type(labels)
-        if not ntype or ntype == "Unknown":
-            # 强制非空：即使 labels 全空，也退化为 props.type / "Formula"
-            ntype = str(props.get("type") or "Formula")
-            warnings.append(f"节点 {n.get('id')} 无有效 labels，type 回退为 {ntype}")
-
-        nodes_out.append({
-            "id": n.get("id"),
-            "label": (props.get("name") or n.get("local_id") or n.get("id")),
-            "type": ntype,                                  # ← 来自 labels，非空
-            "labels": labels,
-            "subject": subject_of(props.get("domain"), str(n.get("id") or "")),
-            "domain": props.get("domain", ""),
-            "formula": props.get("latex") or "",            # LaTeX（供 MathJax）
-            "confidence": props.get("confidence"),
-            "attrs": props,                                 # 原始属性全量透传
-        })
+        if pick_type(labels) == "Unknown":
+            warnings.append("节点 %s 无有效 labels，type 回退为 %s"
+                            % (n.get("id"), (n.get("props") or {}).get("type") or "Formula"))
+        nodes_out.append(project_node(n))
 
     # ------------------------ 边 ------------------------
     # 可信性分层（Phase 28 / 第 18 轮）：`verified` 不再是唯一口径。
     # 权威侧由 `11_真实数据/verification_model.py` 落 `verification_level`；
     # 此处仅做**派生**（避免 06_PoC 反向依赖 11_真实数据），并保留旧 `verified` 字段兼容。
-    def _derive_verified(props):
-        lv = props.get("verification_level")
-        if lv is None:
-            return bool(props.get("verified", False))
-        return RANK_ORDER.get(lv, -1) >= RANK_ORDER["by_construction"]
-
-    def _derive_strict(props):
-        lv = props.get("verification_level")
-        return RANK_ORDER.get(lv, -1) >= RANK_ORDER["rule_checked"]
-
-    edges_out = []
-    for e in data.get("edges", []):
-        props = dict(e.get("props") or {})
-        kind = e.get("kind") or props.get("kind") or ""
-        eoi = props.get("explicit_or_inferred")
-        if not eoi:                                          # 兜底推导
-            eoi = "explicit" if kind in EXPLICIT_KINDS else "inferred"
-
-        edges_out.append({
-            "id": e.get("id"),
-            "source": e.get("source"),
-            "target": e.get("target"),
-            "type": e.get("type") or kind,
-            "kind": kind,
-            "confidence": props.get("confidence"),
-            "explicit_or_inferred": eoi,                     # explicit / inferred
-            "verified": _derive_verified(props),             # 派生：level ≥ by_construction
-            "verified_strict": _derive_strict(props),        # 派生：level ≥ rule_checked
-            "verification_level": props.get("verification_level"),
-            "verification_scope": props.get("verification_scope"),
-            "verifier": props.get("verifier"),
-            "gate": props.get("verification_gate"),          # R-MATH / R-PHY / R-CHEM
-            "evidence": props.get("verification_evidence") or props.get("evidence"),
-            "rationale": props.get("rationale"),
-            "domain": props.get("domain"),
-            # 化学计量数等数值属性透传（否则 viz 投影丢字段，下游按 count=1 误算摩尔质量）
-            **({k: props[k] for k in ("count", "value", "unit", "element_symbol")
-                if props.get(k) is not None}),
-        })
+    edges_out = [project_edge(e) for e in data.get("edges", [])]
 
     # ------------------------ 统计 meta ------------------------
     id_fixed = uniquify_edge_ids(edges_out)     # 保证 viz 快照边 id 唯一（见函数 docstring）
