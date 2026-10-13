@@ -41,7 +41,7 @@
 | `01_架构与数据模型/` | 架构、Schema 与数据源技术文档 |
 | `03_知识层/` | Neo4j 知识层脚本、`.env.example`、本地部署说明 |
 | `06_PoC/` | 端到端 PoC：`graph_export.py`（权威 raw→viz 转换器）、`viz_server.py`、`build_phase*.py`（各阶段构建器）、`robust_aura_loader.py` |
-| `06_PoC/release/` | **可复现发布包**：离线样例（380 节点 / 701 边）+ 发布清单 + fail-closed 校验器；见其 [README](06_PoC/release/README.md) |
+| `06_PoC/release/` | **可复现发布包**：离线样例（**public_demo**：170 节点 / 255 边，仅含可再分发来源）+ 发布清单 + fail-closed 校验器（28 条断言，含许可合规）；见其 [README](06_PoC/release/README.md) |
 | `07_交付物/` | 各 Phase 部署 / 接入 / 推理报告 |
 | `08_部署包/neo4j/` | 自包含 Docker + Neo4j 部署包（`deploy.py` 一键编排） |
 | `09_科研扩展/9_inference/` | Phase 9 推理生成层：GNN 推断、LLM 假设与复核、Aura 导出 |
@@ -59,10 +59,11 @@
 ### 3.0 离线可复现（推荐第一站：**不需要任何数据文件**）
 
 完整图（`normalized.json`，48 MB）与阶段快照**不入库**。为了让第三人能从文档独立运行，
-仓库自带一个**自包含的离线研究样例**（跨域桥核心切片：380 节点 / 701 边 / 154 条跨学科边）：
+仓库自带一个**自包含的离线研究样例**（跨域桥核心切片；**默认 `public_demo`** —— 只含
+许可上可再分发的内容：170 节点 / 255 边 / 36 条跨学科边）：
 
 ```bash
-bash sttp.sh release     # ① 构建样例 → 生成发布清单 → fail-closed 校验（25 条断言）
+bash sttp.sh release     # ① 许可自检 → 构建样例 → 生成发布清单 → fail-closed 校验（28 条断言）
 bash sttp.sh sample      # ② 只用样例起可视化 → http://127.0.0.1:8765/
 ```
 

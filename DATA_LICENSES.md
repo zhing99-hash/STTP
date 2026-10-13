@@ -42,3 +42,19 @@
 3. **完整研究快照**：通过 Release 分发时，逐文件标注来源与许可；含 CC BY-SA（ChEMBL）
    改编内容时单独成包并满足相同方式共享要求。
 4. 任何新源接入前，先在本表登记条款结论（「可再分发 / 仅内部 / 禁止」三态）。
+
+---
+
+## 四、本表如何被**程序执行**（Phase 42 · A03）
+
+> ★ 铁律 #64：「政策」必须由程序执行 —— 写在文档里的许可边界若无程序判据，等于没有。
+
+| 环节 | 程序 | 断言 |
+|---|---|---|
+| 三态表（唯一权威） | `11_真实数据/source_registry.py`：`REDISTRIBUTION` 字典 + `redistribution_closure()`（血缘闭包取上游最严者）+ 自检 ⑧⑨⑩ | ⑧ 覆盖全部来源（未列出 = `forbidden`，fail-closed）⑨ 派生不得宽于上游 ⑩ 与本表文本不脱钩 |
+| 打包过滤 | `06_PoC/release/make_sample.py --profile {public_demo,internal_research}`；**默认 `public_demo`** | `--selfcheck` 合成图注入 12 条：未登记/缺来源/`internal_only` 必须真被剔除（非真空） |
+| 发布复查 | `06_PoC/release/verify_release.py` A4–A6 | A4 manifest profile 必须 `public_demo`；**A5 独立重算**样例内每条边/每个节点的来源血缘闭包（0 违规）；A6 剔除计数非真空 |
+
+**后果（如实披露）**：全图 48712 边中，`PhysicsBabel`（24104 边）与 `ElementKG2.0`（7797 边）
+属本表 §二「待核对、不入发布包」⇒ 发布样例按政策只能给出 **170 节点 / 255 边**
+（剔除 43295 边 / 6820 节点）。这是政策生效后的**真实可分发规模**，不是缺陷。

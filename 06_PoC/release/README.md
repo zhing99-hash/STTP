@@ -20,7 +20,7 @@ bash sttp.sh sample            # → http://127.0.0.1:8765/
 不需要 48 MB 的 `normalized.json`，也不需要联网。若只想复验：
 
 ```bash
-python 06_PoC/release/verify_release.py --release   # 25 条断言，全过才退 0
+python 06_PoC/release/verify_release.py --release   # 28 条断言（含许可合规），全过才退 0
 ```
 
 ---
@@ -37,9 +37,24 @@ python 06_PoC/release/verify_release.py --release   # 25 条断言，全过才�
 | `make_manifest.py` | 清单生成器（含仪器现算的预期统计） | 构建 |
 | `verify_release.py` | 发布校验器（fail-closed） | 验收 |
 
-样例规模（当前）：**380 节点 / 701 边**，其中**跨学科边 154 条**；
-学科分布 化学 237 / 物理 80 / 数学 38 / 跨学科 25；**覆盖全部 6 个学科对**
-（化学↔数学、化学↔物理、化学↔跨学科、数学↔物理、数学↔跨学科、物理↔跨学科）。
+样例规模（当前 · **public_demo**）：**170 节点 / 255 边**，其中**跨学科边 36 条**；
+学科分布 物理 103 / 化学 49 / 数学 18（3 个学科对：化学↔数学、化学↔物理、数学↔物理）。
+**注意**：样例只包含**许可上可再分发**的内容。
+
+### 许可 profile（Phase 42 · A03：许可进打包）
+
+`make_sample.py` 有两个 profile，**默认 `public_demo`**（发布物必须用它）：
+
+| profile | 行为 | 样例规模 |
+|---|---|---|
+| `public_demo`（默认） | 只保留「边来源 + 两端节点来源」的**血缘闭包 = `redistributable`** 的部分；缺 `props.source` ⇒ 视为不可再分发（fail-closed，不猜测） | 170 节点 / 255 边 |
+| `internal_research` | 不过滤（内部研究复现，须随附 `DATA_LICENSES.md` 声明） | 380 节点 / 701 边 |
+
+来源三态表在 `11_真实数据/source_registry.py`（`REDISTRIBUTABLE / INTERNAL_ONLY / FORBIDDEN`，
+血缘闭包取上游最严者）。**发布样例为什么只有 170 节点**：全图 48712 边中，头两大来源
+`PhysicsBabel`（24104 边）与 `ElementKG2.0`（7797 边）在 `DATA_LICENSES.md` 里是「待核对、不打包」，
+按政策只能剔除；剔除 **43295 边 / 6820 节点**，剩下可再分发的核心即本样例 —— 这是
+「政策由程序执行」（铁律 #64）后的**如实结果**，不是 bug。
 
 样例怎么选的：以**跨学科边**为种子 → 按 (是否 `verified_strict`, type, id) 稳定排序 →
 **按学科对分层轮转**取种子（保证每个学科对都有代表）→ 按语义优先级 BFS 扩展
