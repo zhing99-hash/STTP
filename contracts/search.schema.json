@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sttp-search/v1",
+  "title": "STTP 文本搜索响应（GET /api/search）",
+  "description": "Phase 43。命中为空时 status=no_result（**不是** ok + 空数组），前端须给放宽建议。",
+  "type": "object",
+  "required": ["status", "reason", "hits", "count", "total_matches", "snapshot_id", "query_hash"],
+  "properties": {
+    "status": { "enum": ["ok", "no_result", "error"] },
+    "reason": { "type": "string" },
+    "error_code": {
+      "enum": [null, "BAD_REQUEST", "TOOL_EXECUTION_ERROR"]
+    },
+    "snapshot_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{12}$" },
+    "query_hash": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "query": { "type": "object" },
+    "count": { "type": "integer", "minimum": 0 },
+    "total_matches": { "type": "integer", "minimum": 0 },
+    "truncated": { "type": "boolean" },
+    "elapsed_ms": { "type": "integer", "minimum": 0 },
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "subject", "label", "score"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "subject": { "type": "string" },
+          "label": { "type": "string" },
+          "formula": { "type": "string" },
+          "score": { "type": "integer", "minimum": 1, "maximum": 100 }
+        }
+      }
+    }
+  }
+}

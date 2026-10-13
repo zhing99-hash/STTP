@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sttp-overview/v1",
+  "title": "STTP 概览元图响应（GET /api/overview）",
+  "description": "Phase 43。**概览，非全图**（铁律 #66）：聚合节点 id 形如 `<学科>::<类型>`；mode=sample 返回度优先抽样骨架。",
+  "type": "object",
+  "required": ["status", "note", "mode", "nodes", "edges", "stats"],
+  "properties": {
+    "status": { "enum": ["ok", "error"] },
+    "note": { "type": "string", "pattern": "概览" },
+    "mode": { "enum": ["aggregate", "sample"] },
+    "k": { "type": "integer", "minimum": 1 },
+    "snapshot_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{12}$" },
+    "query_hash": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "subject", "type"],
+        "properties": {
+          "id": { "type": "string" },
+          "subject": { "type": "string" },
+          "type": { "type": "string" },
+          "n_nodes": { "type": "integer", "minimum": 0 },
+          "degree": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "edges": { "type": "array" },
+    "stats": {
+      "type": "object",
+      "required": ["n_nodes", "n_edges", "full_nodes", "full_edges"],
+      "properties": {
+        "n_nodes": { "type": "integer", "minimum": 0 },
+        "n_edges": { "type": "integer", "minimum": 0 },
+        "full_nodes": { "type": "integer", "minimum": 0 },
+        "full_edges": { "type": "integer", "minimum": 0 },
+        "elapsed_ms": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

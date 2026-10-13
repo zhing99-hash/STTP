@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sttp-error/v1",
+  "title": "STTP 顶层错误信封（所有 /api/* 端点通用）",
+  "description": "Phase 43。『业务态』（no_result/truncated/timeout）一律 HTTP 200 + 完整信封；**只有参数非法**才 HTTP 400。异常**绝不**吞成空数组（铁律 #67）。",
+  "type": "object",
+  "required": ["status", "reason", "error_code"],
+  "properties": {
+    "status": { "enum": ["error"] },
+    "reason": { "type": "string", "minLength": 1 },
+    "error_code": {
+      "enum": ["ENTITY_AMBIGUOUS", "MISSING_CONDITION", "SNAPSHOT_MISMATCH",
+               "EVIDENCE_STALE", "SUBGRAPH_LIMIT_REACHED", "GRAPH_QUERY_TIMEOUT",
+               "TOOL_EXECUTION_ERROR", "BAD_REQUEST"]
+    },
+    "snapshot_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{12}$" },
+    "query": { "type": "object" },
+    "query_hash": { "type": "string" },
+    "stats": { "type": "object" }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sttp-subgraph/v1",
+  "title": "STTP 局部子图响应（GET /api/subgraph）",
+  "description": "Phase 43 / 复评 A06。五态 status 与 error_code 共存：前者管『结果类别』，后者管『原因』。零依赖校验：由 06_PoC/tests/phase43_subgraph_selfcheck.py 内置的子集校验器执行。",
+  "type": "object",
+  "required": ["status", "reason", "error_code", "snapshot_id", "query", "query_hash", "nodes", "edges", "stats"],
+  "properties": {
+    "status": { "enum": ["ok", "no_result", "truncated", "timeout", "error"] },
+    "reason": { "type": "string" },
+    "error_code": {
+      "enum": [null, "ENTITY_AMBIGUOUS", "MISSING_CONDITION", "SNAPSHOT_MISMATCH",
+               "EVIDENCE_STALE", "SUBGRAPH_LIMIT_REACHED", "GRAPH_QUERY_TIMEOUT",
+               "TOOL_EXECUTION_ERROR", "BAD_REQUEST"]
+    },
+    "snapshot_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{12}$" },
+    "query_hash": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "seed": { "type": ["object", "null"] },
+    "hidden_by_trust": { "type": "integer", "minimum": 0 },
+    "nodes": { "type": "array", "items": { "$ref": "#/$defs/node" } },
+    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } },
+    "expandable": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "estimated_neighbors", "token"],
+        "properties": {
+          "node_id": { "type": "string" },
+          "estimated_neighbors": { "type": "integer", "minimum": 1 },
+          "token": { "type": "string", "minLength": 16 }
+        }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "required": ["n_nodes", "n_edges", "elapsed_ms"],
+      "properties": {
+        "n_nodes": { "type": "integer", "minimum": 0 },
+        "n_edges": { "type": "integer", "minimum": 0 },
+        "elapsed_ms": { "type": "integer", "minimum": 0 },
+        "truncated_by": { "enum": [null, "nodes", "edges", "hops", "paths", "deadline"] },
+        "pending_frontier": { "type": "integer", "minimum": 0 },
+        "hidden_by_trust": { "type": "integer", "minimum": 0 },
+        "missing_seeds": { "type": "array" },
+        "hops": { "type": "integer" },
+        "requested_hops": { "type": ["integer", "null"] },
+        "pre_truncation": { "type": ["object", "null"] },
+        "clamped": { "type": "object" },
+        "expansions": { "type": "integer", "minimum": 0 },
+        "session": {
+          "type": "object",
+          "required": ["n_nodes", "n_edges", "limit_nodes", "limit_edges"],
+          "properties": {
+            "n_nodes": { "type": "integer", "minimum": 0 },
+            "n_edges": { "type": "integer", "minimum": 0 },
+            "limit_nodes": { "type": "integer", "minimum": 1 },
+            "limit_edges": { "type": "integer", "minimum": 1 },
+            "exhausted": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "why": {
+      "enum": ["used_in_step", "evidence_path", "user_specified", "task_anchor",
+               "verified_context", "expansion"]
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "type", "labels", "subject", "why_shown"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": ["string", "null"] },
+        "type": { "type": "string", "minLength": 1 },
+        "labels": { "type": "array" },
+        "subject": { "type": "string" },
+        "domain": { "type": "string" },
+        "formula": { "type": "string" },
+        "confidence": { "type": ["number", "null"] },
+        "attrs": { "type": "object" },
+        "why_shown": { "$ref": "#/$defs/why" }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "source", "target", "type", "kind", "verified",
+                   "verified_strict", "why_shown", "stale"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "type": { "type": "string" },
+        "kind": { "type": "string" },
+        "confidence": { "type": ["number", "null"] },
+        "explicit_or_inferred": { "enum": ["explicit", "inferred"] },
+        "verified": { "type": "boolean" },
+        "verified_strict": { "type": "boolean" },
+        "verification_level": { "type": ["string", "null"] },
+        "verifier": { "type": ["string", "null"] },
+        "evidence": { "type": ["array", "null"], "items": { "$ref": "#/$defs/evidence" } },
+        "rationale": { "type": ["string", "null"] },
+        "why_shown": { "$ref": "#/$defs/why" },
+        "stale": { "type": "boolean" },
+        "stale_reasons": { "type": "array" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["kind", "src", "src_ver", "src_hash", "impl", "impl_ver"],
+      "properties": {
+        "kind": { "type": "string" },
+        "detail": { "type": "string" },
+        "src": { "type": "string", "minLength": 1 },
+        "src_ver": { "type": "string" },
+        "src_hash": { "type": "string", "pattern": "^[0-9a-f]{8,64}$" },
+        "impl": { "type": "string", "minLength": 1 },
+        "impl_ver": { "type": "string" },
+        "indep": { "type": "boolean" }
+      }
+    }
+  }
+}
