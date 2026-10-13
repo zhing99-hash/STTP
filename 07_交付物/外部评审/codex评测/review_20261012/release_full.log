@@ -1,0 +1,176 @@
+==============================================================================
+  STTP 发布校验（Phase 37 · R06/R07 · fail-closed）
+==============================================================================
+✅ A0 manifest 含样例产物                  样例条目 3 个
+✅ A1 产物存在 sample_graph.json          998.8 KB
+✅ A2 sha256 sample_graph.json        a754e69f27b42801
+✅ A1 产物存在 sample_normalized.json     1189.1 KB
+✅ A2 sha256 sample_normalized.json   7a96d498469d5c39
+✅ A1 产物存在 sample_queries.json        1.4 KB
+✅ A2 sha256 sample_queries.json      be9ae76021866bae
+✅ A3 节点计数                            380（manifest 380）
+✅ A3 边计数                             701（manifest 701）
+✅ A3 投影计数                            节点 380 / 边 701
+✅ B1 页面↔查询 节点 id 集合相等                正常 380 / 投影 380 / 差 0
+✅ B1 页面↔查询 边 id 集合相等                 正常 701 / 投影 701 / 差 0
+✅ C1 无重复节点 id                        重复 0
+✅ C1 无重复边 id                         重复 0
+✅ C2 无悬空端点                           悬空 0
+✅ C2 无自环                             自环 0
+✅ C2 投影无悬空端点                         悬空 0
+✅ G1 必要依赖就绪                          python 3.12.14；networkx/sympy/pint/rdkit 全就绪
+✅ E1 查询后端就绪且计数一致                     节点 380 / 边 701
+✅ D1 查询 Q1-stats                     380/701
+✅ D1 查询 Q2-cross-domain              跨学科边 154（期望 ≥154 且 ==154）
+✅ D1 查询 Q3-neighbors                 EK:el:C 邻居 45（期望 ≥45）
+✅ D1 查询 Q4-path                      MX:sym:c→MX:chem:co2 路径 1（期望 ≥1）
+✅ D1 查询 Q5-evidence                  level=rule_checked 证据 1 条
+✅ F1 样例反例回归（自包含子集）                   PASS 78 / FAIL 0 / SKIP 0
+✅ H1 完整快照 sha256                     2857b6189e2c798b
+✅ H2 北极星现算 == manifest               现算 99.65 / manifest 99.65
+------------------------------------------------------------------------------
+  ✅ 发布校验通过 ｜ 断言 27 条 ｜ FAIL 0 ｜ WARN 0
+==============================================================================
+{
+  "fail": 0,
+  "warn": 0,
+  "checks": [
+    {
+      "name": "A0 manifest 含样例产物",
+      "status": "PASS",
+      "detail": "样例条目 3 个"
+    },
+    {
+      "name": "A1 产物存在 sample_graph.json",
+      "status": "PASS",
+      "detail": "998.8 KB"
+    },
+    {
+      "name": "A2 sha256 sample_graph.json",
+      "status": "PASS",
+      "detail": "a754e69f27b42801"
+    },
+    {
+      "name": "A1 产物存在 sample_normalized.json",
+      "status": "PASS",
+      "detail": "1189.1 KB"
+    },
+    {
+      "name": "A2 sha256 sample_normalized.json",
+      "status": "PASS",
+      "detail": "7a96d498469d5c39"
+    },
+    {
+      "name": "A1 产物存在 sample_queries.json",
+      "status": "PASS",
+      "detail": "1.4 KB"
+    },
+    {
+      "name": "A2 sha256 sample_queries.json",
+      "status": "PASS",
+      "detail": "be9ae76021866bae"
+    },
+    {
+      "name": "A3 节点计数",
+      "status": "PASS",
+      "detail": "380（manifest 380）"
+    },
+    {
+      "name": "A3 边计数",
+      "status": "PASS",
+      "detail": "701（manifest 701）"
+    },
+    {
+      "name": "A3 投影计数",
+      "status": "PASS",
+      "detail": "节点 380 / 边 701"
+    },
+    {
+      "name": "B1 页面↔查询 节点 id 集合相等",
+      "status": "PASS",
+      "detail": "正常 380 / 投影 380 / 差 0"
+    },
+    {
+      "name": "B1 页面↔查询 边 id 集合相等",
+      "status": "PASS",
+      "detail": "正常 701 / 投影 701 / 差 0"
+    },
+    {
+      "name": "C1 无重复节点 id",
+      "status": "PASS",
+      "detail": "重复 0"
+    },
+    {
+      "name": "C1 无重复边 id",
+      "status": "PASS",
+      "detail": "重复 0"
+    },
+    {
+      "name": "C2 无悬空端点",
+      "status": "PASS",
+      "detail": "悬空 0"
+    },
+    {
+      "name": "C2 无自环",
+      "status": "PASS",
+      "detail": "自环 0"
+    },
+    {
+      "name": "C2 投影无悬空端点",
+      "status": "PASS",
+      "detail": "悬空 0"
+    },
+    {
+      "name": "G1 必要依赖就绪",
+      "status": "PASS",
+      "detail": "python 3.12.14；networkx/sympy/pint/rdkit 全就绪"
+    },
+    {
+      "name": "E1 查询后端就绪且计数一致",
+      "status": "PASS",
+      "detail": "节点 380 / 边 701"
+    },
+    {
+      "name": "D1 查询 Q1-stats",
+      "status": "PASS",
+      "detail": "380/701"
+    },
+    {
+      "name": "D1 查询 Q2-cross-domain",
+      "status": "PASS",
+      "detail": "跨学科边 154（期望 ≥154 且 ==154）"
+    },
+    {
+      "name": "D1 查询 Q3-neighbors",
+      "status": "PASS",
+      "detail": "EK:el:C 邻居 45（期望 ≥45）"
+    },
+    {
+      "name": "D1 查询 Q4-path",
+      "status": "PASS",
+      "detail": "MX:sym:c→MX:chem:co2 路径 1（期望 ≥1）"
+    },
+    {
+      "name": "D1 查询 Q5-evidence",
+      "status": "PASS",
+      "detail": "level=rule_checked 证据 1 条"
+    },
+    {
+      "name": "F1 样例反例回归（自包含子集）",
+      "status": "PASS",
+      "detail": "PASS 78 / FAIL 0 / SKIP 0"
+    },
+    {
+      "name": "H1 完整快照 sha256",
+      "status": "PASS",
+      "detail": "2857b6189e2c798b"
+    },
+    {
+      "name": "H2 北极星现算 == manifest",
+      "status": "PASS",
+      "detail": "现算 99.65 / manifest 99.65"
+    }
+  ]
+}
+
+[STDERR]

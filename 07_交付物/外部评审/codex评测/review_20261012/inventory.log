@@ -1,0 +1,302 @@
+{
+  "date": "2026-10-12",
+  "nodes": 9657,
+  "edges": 48712,
+  "node_types": {
+    "Definition": 4,
+    "Lemma": 2,
+    "Theorem": 2,
+    "Symbol": 113,
+    "Molecule": 2133,
+    "PhysicalQuantity": 145,
+    "MathConcept": 13,
+    "WikidataEntity": 24,
+    "Formula": 5082,
+    "Unit": 33,
+    "Reaction": 1708,
+    "Constant": 23,
+    "Element": 118,
+    "FunctionalGroup": 76,
+    "Paper": 181
+  },
+  "edge_types": {
+    "defines": 115,
+    "has_symbol": 24341,
+    "same_as": 101,
+    "derived_from": 80,
+    "chemical_reaction": 2,
+    "dimensionally_consistent": 47,
+    "proves": 2,
+    "has_unit": 48,
+    "composed_of": 7756,
+    "reactant_of": 2753,
+    "product_of": 2559,
+    "releases": 1,
+    "same_period": 1360,
+    "same_family": 374,
+    "has_quantity": 4478,
+    "has_functionalgroup": 2350,
+    "reagent_of": 1807,
+    "has_element": 109,
+    "related_to": 53,
+    "cites": 176,
+    "discusses": 178,
+    "part_of": 5,
+    "same_formula_as": 6,
+    "uses_operator": 11
+  },
+  "levels": {
+    "source_asserted": 13797,
+    "rule_checked": 31520,
+    "cross_source": 3249,
+    "model_inferred": 135,
+    "by_construction": 11
+  },
+  "sample": {
+    "nodes": 380,
+    "edges": 701,
+    "node_prefix": {
+      "BC": 12,
+      "CE": 17,
+      "CH": 69,
+      "CM": 3,
+      "CO": 7,
+      "EK2": 3,
+      "EK": 5,
+      "EM": 14,
+      "FO": 2,
+      "IC": 11,
+      "MA": 6,
+      "MC": 2,
+      "MG": 6,
+      "MO": 4,
+      "MX": 31,
+      "NT": 1,
+      "OM": 1,
+      "OP": 4,
+      "PB": 4,
+      "PC": 7,
+      "PQ": 12,
+      "QM": 2,
+      "RH": 97,
+      "RT": 1,
+      "RX": 1,
+      "SM": 8,
+      "SY": 1,
+      "TH": 21,
+      "UN": 2,
+      "WD": 19,
+      "ek": 1,
+      "pb": 1,
+      "wd": 5
+    },
+    "node_sources": {
+      "curated_seed": 102,
+      "nist_codata_2022": 14,
+      "ChEBI": 69,
+      "ElementKG2.0": 14,
+      "curated_seed/energy_combustion": 15,
+      "llm_hypothesis": 14,
+      "mathxiv": 17,
+      "PhysicsBabel": 4,
+      "PubChem": 7,
+      "dimension_table(algebra: entropy/amount) 派生": 1,
+      "Rhea": 97,
+      "wikidata": 19,
+      "ek": 1,
+      "pb": 1,
+      "wd": 5
+    },
+    "edge_sources": {
+      "heuristic": 4,
+      "curated_seed": 137,
+      "ChEBI": 115,
+      "Phase13.Gate.B1": 1,
+      "PubChem": 9,
+      "Phase13.GNN.typed": 50,
+      "curated_seed/energy_combustion": 15,
+      "mathxiv": 15,
+      "nist_codata_2022": 17,
+      "llm_inferred_gnn": 1,
+      "Phase13.Gate.B3": 14,
+      "Phase9.GNN": 9,
+      "dimension_table": 1,
+      "Phase9.GNN+LLM": 2,
+      "Phase13.Gate.B5": 27,
+      "NIST Chemistry WebBook": 55,
+      "ElementKG2.0": 20,
+      "LLM-review": 1,
+      "Phase13.Gate.B4": 5,
+      "rhea_chebi": 193,
+      "cross_source_alignment": 10
+    }
+  },
+  "manifest_code": {
+    "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
+    "dirty_sample": [],
+    "git_branch": "main",
+    "git_head_at_build": "1e07ad2edd17dca8cd45449a50c3649e19359d8b",
+    "git_head_at_build_short": "1e07ad2",
+    "working_tree_dirty_at_build": false
+  },
+  "manifest_build": {
+    "commands": [
+      "bash sttp.sh export                 # 从 Aura/本地重建完整快照（大数据，不入库）",
+      "python 06_PoC/release/make_sample.py # 从规范图确定性抽取离线样例",
+      "python 06_PoC/release/make_manifest.py --pack",
+      "python 06_PoC/release/verify_release.py --release"
+    ],
+    "pipeline": [
+      "11_真实数据/*_raw.json",
+      "→ 06_PoC/etl/normalized.json（权威规范图）",
+      "→ graph_export.build_graph_data()",
+      "→ 06_PoC/graph_data_phase<N>.json（前端快照，.env GRAPH_DATA_FILE）",
+      "→ 06_PoC/viz_server.py（页面 /graph_data.json + 查询 /api/*）"
+    ],
+    "python": "3.11.9"
+  },
+  "manifest_dependencies": {
+    "drift": {},
+    "drift_note": "漂移**不阻塞**运行（缺件才阻塞）；但化学/量纲结果建议在锁定版本上复核。外部复评环境为 rdkit 2026.3.6 / pint 0.26.1 / networkx 3.7 / numpy 2.5.3。",
+    "installed": {
+      "matplotlib": "3.11.2",
+      "neo4j": "6.3.1",
+      "networkx": "3.6.1",
+      "numpy": "2.3.2",
+      "pandas": "2.3.1",
+      "pint": "0.25.3",
+      "python": "3.11.9",
+      "rdflib": "7.6.0",
+      "rdkit": "2026.09.1",
+      "requests": "2.33.1",
+      "scipy": "1.17.1",
+      "sympy": "1.14.0",
+      "torch": "2.14.0+cpu"
+    },
+    "lock_file": "requirements.lock",
+    "target": {
+      "matplotlib": "3.11.2",
+      "neo4j": "6.3.1",
+      "networkx": "3.6.1",
+      "numpy": "2.3.2",
+      "pandas": "2.3.1",
+      "pint": "0.25.3",
+      "python": "3.11.9",
+      "rdflib": "7.6.0",
+      "rdkit": "2026.09.1",
+      "requests": "2.33.1",
+      "scipy": "1.17.1",
+      "sympy": "1.14.0",
+      "torch": "2.14.0+cpu"
+    }
+  },
+  "manifest_full": {
+    "normalized": {
+      "bytes": 57524194,
+      "edges": 48712,
+      "nodes": 9657,
+      "path": "06_PoC/etl/normalized.json",
+      "sha256": "1545ac8e5ada7a6ab73cf2ce79e11c2fa26ef1233123795f96c7b4182299bf2a",
+      "subjects": {
+        "化学": 4108,
+        "数学": 277,
+        "物理": 5247,
+        "跨学科": 25
+      },
+      "tracked_in_git": false
+    },
+    "snapshot": {
+      "bytes": 48740769,
+      "edges": 48712,
+      "nodes": 9657,
+      "obtain": "原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
+      "path": "06_PoC/graph_data_phase41.json",
+      "schema": "formula-graph-view/v1",
+      "sha256": "2857b6189e2c798bc7cb2c1ba6f861940ac41f2663acfefaf3e1100090beb470",
+      "tracked_in_git": false
+    }
+  },
+  "actual_full_hashes": {
+    "normalized": "1545ac8e5ada7a6ab73cf2ce79e11c2fa26ef1233123795f96c7b4182299bf2a",
+    "snapshot": "2857b6189e2c798bc7cb2c1ba6f861940ac41f2663acfefaf3e1100090beb470"
+  },
+  "python_files": 188,
+  "syntax_errors": [],
+  "disk_bytes": 5388780030,
+  "top_files": [
+    {
+      "path": "公共数据集\\elementkg_synthetic_corpus_40w\\ElementKG_Synthetic_Corpus_40w\\knowlege_description_20w.json",
+      "bytes": 1899926419
+    },
+    {
+      "path": "公共数据集\\10m_elementkg_release.csv",
+      "bytes": 858154955
+    },
+    {
+      "path": "公共数据集\\elementkg_synthetic_corpus_40w\\ElementKG_Synthetic_Corpus_40w\\multihop_planing_20w.json",
+      "bytes": 339582582
+    },
+    {
+      "path": "11_真实数据\\physicsbabel_circuits.parquet",
+      "bytes": 108474889
+    },
+    {
+      "path": "06_PoC\\etl\\kuzu_db",
+      "bytes": 78123008
+    },
+    {
+      "path": "06_PoC\\etl\\normalized.before_lineage.json",
+      "bytes": 64393164
+    },
+    {
+      "path": "06_PoC\\graph_data_phase11b.json",
+      "bytes": 64372178
+    },
+    {
+      "path": "06_PoC\\etl\\normalized.json",
+      "bytes": 57524194
+    },
+    {
+      "path": ".runlog\\g41\\inject_unreg.json",
+      "bytes": 54567622
+    },
+    {
+      "path": ".runlog\\g41\\inject_nosource.json",
+      "bytes": 54567599
+    },
+    {
+      "path": ".runlog\\g41\\inject_nobind.json",
+      "bytes": 54567524
+    },
+    {
+      "path": "06_PoC\\graph_data_phase36.json",
+      "bytes": 52438016
+    }
+  ],
+  "tasks_top_keys": [
+    "schema",
+    "description",
+    "seed",
+    "split_rule",
+    "answer_policy",
+    "solution_space",
+    "hard_examples",
+    "categories",
+    "counts",
+    "tasks"
+  ],
+  "gnn_report_keys": [
+    "schema",
+    "generated",
+    "data_source",
+    "protocols",
+    "gnn",
+    "delta",
+    "selfcheck",
+    "caveats"
+  ],
+  "git_status_count": {
+    " M": 211,
+    "??": 121
+  }
+}

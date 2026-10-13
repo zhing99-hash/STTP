@@ -1,0 +1,82 @@
+====================================================================================================
+北极星 · 任务级可信完成率 —— 06_PoC\etl\normalized.json
+  规模 9657 节点 / 48712 边
+====================================================================================================
+  ID   任务族                          边数      覆盖率      达标数      达标率   主要缺档
+  ------------------------------------------------------------------------------------------------
+  T1   元素周期律                      1734   100.0%     1734   100.0%   -
+  T2   分子组成（元素计数）                 7756   100.0%     7748    99.9%   source_asserted×8
+  T3   量纲一致性                        47   100.0%       38    80.9%   model_inferred×8 / source_asserted×1
+  T4   化学方程式方向                    5312   100.0%     5275    99.3%   model_inferred×37
+  T5   公式—参与量                    24341   100.0%    24310    99.9%   source_asserted×31
+  T6   常量溯源与单位                     128   100.0%      122    95.3%   model_inferred×6
+  T7   跨域桥（跨学科端点）                  945   100.0%      892    94.4%   source_asserted×29 / model_inferred×24
+  T8   文献元数据                       354   100.0%      354   100.0%   -
+  ------------------------------------------------------------------------------------------------
+  合计                             40617        -    40473    99.6%   ← **北极星**
+
+  【T9 证据可追溯（Phase 32 新增 · 横向不变量）】
+    北极星原文含「**证据可追溯**」，但第 18–21 轮只仪器化了「正确」（T1–T8 档位）。
+    ⚠ 「可追溯」≠「独立」—— 两级分列，不得用前者掩盖后者。
+    指标                                               分母       达标       比例
+    T9  达标边证据**可追溯**（detail+impl≡verifier）        40473    40473   100.0%
+    T9-i 其中证据**独立**（indep=真）                      40473    34780    85.9%   ← **下一轮靶子**（T4/T6/T8 门槛=source_asserted）
+    （横向）全图边带证据对象                                  48712    48712   100.0%   ← 全图证据对象覆盖率（Phase 31 为 1.2%）
+    （横向）全图边带独立证据                                  48712    34769    71.4%   ← 全图「有独立可追溯证据」的边
+    → **北极星（正确且可追溯）** = 99.6% × 100.0% = 99.6%
+    → 若按**独立**证据严口径：99.6% × 85.9% = 85.6%（← 这就是下一轮的提升空间）
+    → 口径留档（铁律 #16）：T1–T8 口径不变（与 Phase 31 可比，99.6%）；
+       T9 是**新增的横向不变量**，不改变 T1–T8 的分母，故 headline 数字保持可比。
+
+  【T9-i 非独立 5693 条的「为何不可独立」逐类清算（Phase 35）】
+    shared_dictionary_rhea_chebi               3002
+    naming_variant_no_second_source            1070
+    same_source_elementkg                       707
+    placeholder_complex                         370
+    no_second_subject_index                     178
+    no_independent_citation_index               176
+    same_source_curated                          85
+    generic_class                                54
+    polymer_residue                              38
+    source_text_only                              7
+    unit_name_not_in_reference                    6
+    ⚠ 未归类 0 条（门禁 (v) `independence_accounted` 断言为 0）
+
+  【★ 口径披露 · 北极星的分母是选择的结果（Phase 35 · 铁律 #50）】
+    全图边 48712 ｜ 分母（**并集**）40589 ／ 分母（**逐族求和**，headline 所用）40617 ｜ **分母外 8123（16.7%）**
+    分母外逐族理由：{'ekg_relation_not_in_task_set': 4266, 'descriptor_assertion_not_in_task_set': 3601, 'symbol_binding': 114, 'identity_not_in_task_set': 74, 'gnn_link_prediction': 55, 'structure_not_in_task_set': 12, 'operator_usage_not_in_task_set': 1}
+    分母外**弱证据**（< rule_checked）：8112 / 8123 = **99.9%**
+    **占位实体边**（端点为 ElementKG2.0 匿名节点 `FG52`/`reaction_1`/`molecule_1000`）：4979（全图 10.2%）—— 语义**不可读**，既非「正确」也非「错误」
+    【反向对照 · 口径扩展】+has_quantity/has_functionalgroup/reagent_of/has_element，门槛 rule_checked：
+       分母 48484（+7867），达标 40473 = **83.5%**  ← 现口径 99.6% ｜ **两个口径不得单读**
+    ⚠ 口径**未改**（铁律 #16：改口径须留反向对照）；本块仅作**披露**，headline 仍为 99.6%。
+
+  【反向对照 · T7 口径变更留档】
+    口径                                                       分母 ≥rule_checked      达标率
+    ----------------------------------------------------------------------------------
+    旧口径（5 类语义边，门槛 human_reviewed）                            35          0     0.0%
+    新口径（任意类型跨域边，门槛 rule_checked）                            945        892    94.4%
+    → 旧口径的 `human_reviewed` 金标准子集（新口径下）：0 条
+
+  【跨域边的学科对 × 证据档】
+    化学↔物理              共  898  ≥rule_checked  867  ( 96.5%)   cross_source×661 rule_checked×206 model_inferred×22 source_asserted×9
+    数学↔跨学科             共   16  ≥rule_checked    3  ( 18.8%)   source_asserted×13 cross_source×3
+    数学↔物理              共   11  ≥rule_checked   10  ( 90.9%)   rule_checked×10 model_inferred×1
+    化学↔数学              共   10  ≥rule_checked   10  (100.0%)   rule_checked×10
+    化学↔跨学科             共    5  ≥rule_checked    1  ( 20.0%)   source_asserted×3 model_inferred×1 cross_source×1
+    物理↔跨学科             共    5  ≥rule_checked    1  ( 20.0%)   source_asserted×4 cross_source×1
+  [敏感性] T7 门槛=human_reviewed   → 达标 0 / 945 (0.0%)
+  [敏感性] T7 门槛=cross_source     → 达标 666 / 945 (70.5%)
+  [敏感性] T7 门槛=rule_checked     → 达标 892 / 945 (94.4%)
+  [敏感性] T7 门槛=source_asserted  → 达标 921 / 945 (97.5%)
+
+  【全图档位分布】
+    model_inferred      135    0.3%
+    source_asserted   13797   28.3%
+    by_construction      11    0.0%
+    rule_checked      31520   64.7%
+    cross_source       3249    6.7%
+====================================================================================================
+结果 -> F:\codex\sttp\review_20261012\trust_rerun.json
+
+[STDERR]

@@ -1,0 +1,1008 @@
+{
+  "graph": "06_PoC\\etl\\normalized.json",
+  "tally": {
+    "PASS": 108
+  },
+  "results": [
+    {
+      "id": "P0-1-dim-energy-mass",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "expect": "DIM_NOT_EQUAL",
+      "status": "PASS",
+      "detail": "equal=False"
+    },
+    {
+      "id": "P0-1-dim-angular-energy",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "expect": "DIM_NOT_EQUAL",
+      "status": "PASS",
+      "detail": "equal=False"
+    },
+    {
+      "id": "P0-1-dim-voltage-efield",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "expect": "DIM_NOT_EQUAL",
+      "status": "PASS",
+      "detail": "equal=False"
+    },
+    {
+      "id": "P0-1-dim-positive-control",
+      "p0": "P0-1",
+      "kind": "dim_table",
+      "expect": "DIM_EQUAL",
+      "status": "PASS",
+      "detail": "equal=True"
+    },
+    {
+      "id": "P0-1-main-dc-no-mismatch",
+      "p0": "P0-1",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "违规 0：[]"
+    },
+    {
+      "id": "P0-2-latex-not-same-as",
+      "p0": "P0-2",
+      "kind": "graph_scan",
+      "expect": "ABSENT",
+      "status": "PASS",
+      "detail": "命中 0：[]"
+    },
+    {
+      "id": "P0-3-chem-implicit-H",
+      "p0": "P0-3",
+      "kind": "gate_chem",
+      "expect": "NOT_VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=REJECTED codes=['R-CHEM-01']"
+    },
+    {
+      "id": "P0-3-chem-charge",
+      "p0": "P0-3",
+      "kind": "gate_chem",
+      "expect": "NOT_VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=REJECTED codes=['R-CHEM-03']"
+    },
+    {
+      "id": "P0-3-chem-positive-control",
+      "p0": "P0-3",
+      "kind": "gate_chem",
+      "expect": "VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=VERIFIED codes=[]"
+    },
+    {
+      "id": "P0-3-math-domain-sqrt",
+      "p0": "P0-3",
+      "kind": "gate_math",
+      "expect": "NOT_VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=REJECTED codes=['R-MATH-01']"
+    },
+    {
+      "id": "P0-3-math-positive-control",
+      "p0": "P0-3",
+      "kind": "gate_math",
+      "expect": "VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=VERIFIED codes=[]"
+    },
+    {
+      "id": "P0-4-skeleton-bridge-absent",
+      "p0": "P0-4",
+      "kind": "graph_scan",
+      "expect": "ABSENT",
+      "status": "PASS",
+      "detail": "剩余 0 条"
+    },
+    {
+      "id": "P0-5-level-model-not-rule",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "model_inferred",
+        "max_level": "model_inferred"
+      },
+      "status": "PASS",
+      "detail": "level=model_inferred scope=model_link_prediction"
+    },
+    {
+      "id": "P0-5-level-dim-table-positive",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "dimensional_strict_equal"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=dimensional_strict_equal"
+    },
+    {
+      "id": "P0-5-level-dim-mismatch",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "unverified",
+        "scope": "dimensional_mismatch"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=dimensional_mismatch"
+    },
+    {
+      "id": "P0-5-level-has-symbol-ok",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "formula_participation_membership"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=formula_participation_membership"
+    },
+    {
+      "id": "P0-5-level-has-symbol-stale",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "unverified",
+        "scope": "formula_participation_not_found"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=formula_participation_not_found"
+    },
+    {
+      "id": "P0-5-level-composed-self-only",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "not_level": "cross_source",
+        "max_level": "rule_checked"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=formula_count_independent_recheck"
+    },
+    {
+      "id": "P0-5-level-composed-cross-positive",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "cross_source",
+        "scope": "formula_count_cross_source"
+      },
+      "status": "PASS",
+      "detail": "level=cross_source scope=formula_count_cross_source"
+    },
+    {
+      "id": "P0-5-level-latex-not-verified",
+      "p0": "P0-5",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "model_inferred"
+      },
+      "status": "PASS",
+      "detail": "level=model_inferred scope=model_link_prediction"
+    },
+    {
+      "id": "P0-6-attrib-has-symbol-phy-bogus",
+      "p0": "P0-6",
+      "kind": "attrib_check",
+      "expect": "NOT_MATCH",
+      "status": "PASS",
+      "detail": "gate=R-PHY scope=formula_participation_membership matched=False（期望 NOT_MATCH）"
+    },
+    {
+      "id": "P0-6-attrib-r-phy-positive",
+      "p0": "P0-6",
+      "kind": "attrib_check",
+      "expect": "MATCH",
+      "status": "PASS",
+      "detail": "gate=R-PHY scope=dimensional_strict_equal matched=True（期望 MATCH）"
+    },
+    {
+      "id": "P0-6-attrib-r-chem-positive",
+      "p0": "P0-6",
+      "kind": "attrib_check",
+      "expect": "MATCH",
+      "status": "PASS",
+      "detail": "gate=R-CHEM scope=formula_count_independent_recheck matched=True（期望 MATCH）"
+    },
+    {
+      "id": "P0-5-main-has-symbol-no-phy-gate",
+      "p0": "P0-5",
+      "kind": "graph_scan",
+      "expect": "ABSENT",
+      "status": "PASS",
+      "detail": "命中 0：[]"
+    },
+    {
+      "id": "P0-5-main-gate-attrib-consistent",
+      "p0": "P0-5",
+      "kind": "graph_scan",
+      "expect": "CONSISTENT",
+      "status": "PASS",
+      "detail": "已归因 2619 条，归因-范围不符 0 条：[]"
+    },
+    {
+      "id": "P0-5-main-level-consistent",
+      "p0": "P0-5",
+      "kind": "graph_scan",
+      "expect": "CONSISTENT",
+      "status": "PASS",
+      "detail": "已分层 48712 条，布尔-分层不符 0 条：[]"
+    },
+    {
+      "id": "P1-bridge-no-contradictory",
+      "p0": "P1-bridge",
+      "kind": "graph_scan",
+      "expect": "CONSISTENT",
+      "status": "PASS",
+      "detail": "已标注类 718 条，自相矛盾 0 条：[]"
+    },
+    {
+      "id": "P1-bridge-molar-mass-evidenced",
+      "p0": "P1-bridge",
+      "kind": "graph_scan",
+      "expect": "EVIDENCED",
+      "status": "PASS",
+      "detail": "PB:pq:molar_mass：共 698 条（需≥600），低于 rule_checked 的 0 条 []"
+    },
+    {
+      "id": "P1-level-molar-mass-positive-control",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "min_level": "rule_checked",
+        "not_level": "model_inferred"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=molar_mass_independent_recompute"
+    },
+    {
+      "id": "P1-level-molar-mass-cross-source-control",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "cross_source",
+        "scope": "molar_mass_cross_source"
+      },
+      "status": "PASS",
+      "detail": "level=cross_source scope=molar_mass_cross_source"
+    },
+    {
+      "id": "P1-level-contradictory-bridge-rejected",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "unverified",
+        "scope": "rationale_target_mismatch"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=rationale_target_mismatch"
+    },
+    {
+      "id": "P1-level-consistent-class-not-flagged",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "not_scope": [
+          "rationale_target_mismatch"
+        ],
+        "min_level": "model_inferred"
+      },
+      "status": "PASS",
+      "detail": "level=model_inferred scope=model_link_prediction"
+    },
+    {
+      "id": "P1-level-numeric-mass-on-molar-mass-ok",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "scope": "molar_mass_independent_recompute",
+        "min_level": "rule_checked"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=molar_mass_independent_recompute"
+    },
+    {
+      "id": "P1-level-numeric-mass-on-energy-rejected",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "scope": "rationale_target_mismatch",
+        "level": "unverified"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=rationale_target_mismatch"
+    },
+    {
+      "id": "P1-level-webbook-unit-ok",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "webbook_unit_dimension_recompute"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=webbook_unit_dimension_recompute"
+    },
+    {
+      "id": "P1-level-webbook-multi-ref",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "cross_source",
+        "scope": "webbook_multi_reference_agreement"
+      },
+      "status": "PASS",
+      "detail": "level=cross_source scope=webbook_multi_reference_agreement"
+    },
+    {
+      "id": "P1-level-webbook-unit-mismatch",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "unverified",
+        "scope": "webbook_unit_dimension_mismatch"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=webbook_unit_dimension_mismatch"
+    },
+    {
+      "id": "P1-main-level-matches-recompute",
+      "p0": "P1-bridge",
+      "kind": "graph_scan",
+      "expect": "CONSISTENT",
+      "status": "PASS",
+      "detail": "已重算 48712 条，落库≠复算 0 条：[]"
+    },
+    {
+      "id": "P1-bridge-source-traceable",
+      "p0": "P1-bridge",
+      "kind": "graph_scan",
+      "expect": "TRACEABLE",
+      "status": "PASS",
+      "detail": "webbook_thermochemistry：共 157 条（需 n_references≥1），不可追溯 0 条 []"
+    },
+    {
+      "id": "P1-level-webbook-disagreement-not-cross",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "webbook_unit_dimension_recompute"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=webbook_unit_dimension_recompute"
+    },
+    {
+      "id": "P1-level-unit-dim-ok",
+      "p0": "P1-dedup",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "unit_dimension_recompute"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=unit_dimension_recompute"
+    },
+    {
+      "id": "P1-level-unit-dim-mismatch",
+      "p0": "P1-dedup",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "unverified",
+        "scope": "unit_dimension_mismatch"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=unit_dimension_mismatch"
+    },
+    {
+      "id": "P1-level-unit-force-kg-rejected",
+      "p0": "P1-dedup",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "unverified",
+        "scope": "unit_dimension_mismatch"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=unit_dimension_mismatch"
+    },
+    {
+      "id": "P1-level-math-bridge-log-ok",
+      "p0": "P1-math",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "source_asserted",
+        "scope": "manual_curation"
+      },
+      "status": "PASS",
+      "detail": "level=source_asserted scope=manual_curation"
+    },
+    {
+      "id": "P1-level-math-bridge-no-op-rejected",
+      "p0": "P1-math",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "not_level": "rule_checked"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=unclassified"
+    },
+    {
+      "id": "P1-level-math-bridge-wrong-target-rejected",
+      "p0": "P1-math",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "not_level": "rule_checked"
+      },
+      "status": "PASS",
+      "detail": "level=by_construction scope=symbol_scan_from_text"
+    },
+    {
+      "id": "P1-level-model-defines-absent-symbol-rejected",
+      "p0": "P1-dedup",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "not_level": "rule_checked"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=semantic_target_absent"
+    },
+    {
+      "id": "P1-den-main-unit-dim-consistent",
+      "p0": "P1-dedup",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "可判定 40 条 / 不可判定 8 条，量纲不符 0 条：[]"
+    },
+    {
+      "id": "P1-den-main-unit-unique",
+      "p0": "P1-dedup",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "多单位量的 48 个，量纲互斥 0 个：[]"
+    },
+    {
+      "id": "P1-den-main-semantic-target-present",
+      "p0": "P1-dedup",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "可判定 4 条，符号缺失 0 条：[]"
+    },
+    {
+      "id": "P1-den-main-math-bridge-evidenced",
+      "p0": "P1-math",
+      "kind": "graph_scan",
+      "expect": "ALL_EVIDENCED",
+      "status": "PASS",
+      "detail": "数学桥 13 条（需≥13），无证据/低于 rule_checked 的 0 条：[]"
+    },
+    {
+      "id": "P1-level-unit-molar-mass-not-flagged",
+      "p0": "P1-dedup",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "unit_dimension_recompute"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=unit_dimension_recompute"
+    },
+    {
+      "id": "P1-den-main-island-freeze",
+      "p0": "P1-struct",
+      "kind": "graph_scan",
+      "expect": "FROZEN_OK",
+      "status": "PASS",
+      "detail": "分量 6 个（上限 6）；冻结岛 5 个 / 29 节点；实际孤岛 5 个 / 29 节点"
+    },
+    {
+      "id": "P1-level-symbol-expr-recompute-ok",
+      "p0": "P1-symbol",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "symbol_expr_recompute"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=symbol_expr_recompute"
+    },
+    {
+      "id": "P1-level-symbol-expr-absent-not-upgraded",
+      "p0": "P1-symbol",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "source_asserted",
+        "scope": "manual_curation"
+      },
+      "status": "PASS",
+      "detail": "level=source_asserted scope=manual_curation"
+    },
+    {
+      "id": "P1-level-model-semantic-target-absent-rejected",
+      "p0": "P1-symbol",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "unverified",
+        "scope": "semantic_target_absent"
+      },
+      "status": "PASS",
+      "detail": "level=unverified scope=semantic_target_absent"
+    },
+    {
+      "id": "P1-level-model-semantic-target-present-not-upgraded",
+      "p0": "P1-symbol",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "model_inferred",
+        "scope": "model_link_prediction"
+      },
+      "status": "PASS",
+      "detail": "level=model_inferred scope=model_link_prediction"
+    },
+    {
+      "id": "P1-dim-alias-speed-of-light-eq-light-speed",
+      "p0": "P1-dim",
+      "kind": "dim_table",
+      "expect": "DIM_EQUAL",
+      "status": "PASS",
+      "detail": "equal=True"
+    },
+    {
+      "id": "P1-dim-alias-electric-charge-eq-charge",
+      "p0": "P1-dim",
+      "kind": "dim_table",
+      "expect": "DIM_EQUAL",
+      "status": "PASS",
+      "detail": "equal=True"
+    },
+    {
+      "id": "P1-dim-alias-electromotive-force-eq-voltage",
+      "p0": "P1-dim",
+      "kind": "dim_table",
+      "expect": "DIM_EQUAL",
+      "status": "PASS",
+      "detail": "equal=True"
+    },
+    {
+      "id": "P1-dim-alias-focal-length-eq-length",
+      "p0": "P1-dim",
+      "kind": "dim_table",
+      "expect": "DIM_EQUAL",
+      "status": "PASS",
+      "detail": "equal=True"
+    },
+    {
+      "id": "P1-dim-alias-gibbs-free-energy-eq-energy",
+      "p0": "P1-dim",
+      "kind": "dim_table",
+      "expect": "DIM_EQUAL",
+      "status": "PASS",
+      "detail": "equal=True"
+    },
+    {
+      "id": "P1-dim-alias-reduced-planck-eq-planck",
+      "p0": "P1-dim",
+      "kind": "dim_table",
+      "expect": "DIM_EQUAL",
+      "status": "PASS",
+      "detail": "equal=True"
+    },
+    {
+      "id": "P1-dim-not-efield-eq-voltage",
+      "p0": "P1-dim",
+      "kind": "dim_table",
+      "expect": "DIM_NOT_EQUAL",
+      "status": "PASS",
+      "detail": "equal=False"
+    },
+    {
+      "id": "P1-den-main-symbol-expr-evidenced",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "symbol_expr_recompute 206 条（需≥196），无证据 0 条"
+    },
+    {
+      "id": "P1-den-main-model-semantic-target-present",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "可判定 8 条，目标缺席 0 条：[]"
+    },
+    {
+      "id": "P1-den-main-dim-consistent-recompute",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "可判定 38 条，量纲互斥 0 条：[]"
+    },
+    {
+      "id": "P1-den-main-evidence-traceable",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "level>=rule_checked 34769 条；带证据链 34769 条（100.0%）；缺独立证据 0 条"
+    },
+    {
+      "id": "P1-den-main-evidence-wellformed",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "证据对象覆盖 48712 / 48712（100.0%）；不良构 0 条"
+    },
+    {
+      "id": "P1-den-main-no-repr-residue",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "扫描 784804 个属性值，repr 残留 0 条：[]"
+    },
+    {
+      "id": "P1-den-main-level-scope-reproducible",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "重算覆盖 48712 条，落库≠重算 0 条：[]"
+    },
+    {
+      "id": "P1-den-main-residual-accounted",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "T4 残差 5312 条，未归类 0 条：[]  {'same_source_curated': 71, 'same_source_elementkg': 707, 'shared_dictionary_rhea_chebi': 3002, 'naming_variant_no_second_source': 1070, 'placeholder_complex': 370, 'polymer_residue': 38, 'generic_class': 54}"
+    },
+    {
+      "id": "P1-den-main-independence-accounted",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "T1–T8 达标边 40451 条；独立 34758；**非独立 5693 条**，未归类 0 条：[]  {'source_text_only': 7, 'same_source_curated': 85, 'same_source_elementkg': 707, 'no_independent_citation_index': 176, 'no_second_subject_index': 178, 'unit_name_not_in_reference': 6, 'shared_dictionary_rhea_chebi': 3002, 'naming_variant_no_second_source': 1070, 'placeholder_complex': 370, 'polymer_residue': 38, 'generic_class': 54}"
+    },
+    {
+      "id": "P1-den-main-scope-accounted",
+      "p0": "P1-den",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "全图 48712 边；分母内 40589；**分母外 8123（16.7%）**；占位实体边 4266；未归类 0 条：[]  {'symbol_binding': 114, 'task_family': 40589, 'identity_not_in_task_set': 74, 'structure_not_in_task_set': 12, 'gnn_link_prediction': 55, 'ekg_relation_not_in_task_set': 4266, 'descriptor_assertion_not_in_task_set': 3601, 'operator_usage_not_in_task_set': 1}"
+    },
+    {
+      "id": "P1-r02-molar-mass-energy",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "NOT_MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('energy')=False（期望 NOT_MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r02-molar-mass-kinetic",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "NOT_MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('kinetic_energy')=False（期望 NOT_MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r02-molar-mass-massenergy",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "NOT_MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('mass_energy')=False（期望 NOT_MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r02-molar-mass-bare-mass",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "NOT_MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('mass')=False（期望 NOT_MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r02-molar-mass-bare-weight",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "NOT_MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('weight')=False（期望 NOT_MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r02-molar-mass-positive",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('molar_mass')=True（期望 MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r02-molar-mass-molweight",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('molecular weight')=True（期望 MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r02-molar-mass-zh",
+      "p0": true,
+      "kind": "pq_quantity_gate",
+      "expect": "MOLAR_MASS",
+      "status": "PASS",
+      "detail": "is_molar_mass_quantity('摩尔质量')=True（期望 MOLAR_MASS）"
+    },
+    {
+      "id": "P1-r01-chem-balanced-methanol",
+      "p0": true,
+      "kind": "gate_chem",
+      "expect": "VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=VERIFIED codes=[]"
+    },
+    {
+      "id": "P1-r01-chem-balanced-ethene",
+      "p0": true,
+      "kind": "gate_chem",
+      "expect": "VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=VERIFIED codes=[]"
+    },
+    {
+      "id": "P1-r01-chem-explicit-H-same",
+      "p0": true,
+      "kind": "gate_chem",
+      "expect": "VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=VERIFIED codes=[]"
+    },
+    {
+      "id": "P1-r01-chem-smarts-never-verified",
+      "p0": true,
+      "kind": "gate_chem",
+      "expect": "NOT_VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=REJECTED codes=['R-CHEM-01']"
+    },
+    {
+      "id": "P1-r01-chem-smarts-undetermined",
+      "p0": true,
+      "kind": "gate_chem",
+      "expect": "NOT_VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=NEEDS_REVIEW codes=['R-CHEM-05']"
+    },
+    {
+      "id": "P1-r01-chem-field-conflict",
+      "p0": true,
+      "kind": "gate_chem",
+      "expect": "NOT_VERIFIED",
+      "status": "PASS",
+      "detail": "verdict=NEEDS_REVIEW codes=['R-CHEM-04']"
+    },
+    {
+      "id": "P1-r05-webbook-multi-ref-no-detail",
+      "p0": "P1-bridge",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "webbook_unit_dimension_recompute"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=webbook_unit_dimension_recompute"
+    },
+    {
+      "id": "P1-r04-uses-operator-log-ok",
+      "p0": "P1-math",
+      "kind": "level_check",
+      "expect": {
+        "edge": 0,
+        "level": "rule_checked",
+        "scope": "log_rule_usage"
+      },
+      "status": "PASS",
+      "detail": "level=rule_checked scope=log_rule_usage"
+    },
+    {
+      "id": "R09-01-pb-separated",
+      "p0": "R09",
+      "kind": "dim_field_semantics",
+      "expect": "SEPARATED",
+      "status": "PASS",
+      "detail": "props=['dimension_vector', 'exponent_in_term'] → SEPARATED（期望 SEPARATED）"
+    },
+    {
+      "id": "R09-02-legacy-collision",
+      "p0": "R09",
+      "kind": "dim_field_semantics",
+      "expect": "COLLISION",
+      "status": "PASS",
+      "detail": "props=['dimension'] → COLLISION（期望 COLLISION）"
+    },
+    {
+      "id": "R09-03-unit-symbol-in-dim",
+      "p0": "R09",
+      "kind": "dim_field_semantics",
+      "expect": "UNIT_SYMBOL_IN_DIM",
+      "status": "PASS",
+      "detail": "props=['dimension_vector'] → UNIT_SYMBOL_IN_DIM（期望 UNIT_SYMBOL_IN_DIM）"
+    },
+    {
+      "id": "R09-04-seed-clean",
+      "p0": "R09",
+      "kind": "dim_field_semantics",
+      "expect": "SEPARATED",
+      "status": "PASS",
+      "detail": "props=['dimension_vector'] → SEPARATED（期望 SEPARATED）"
+    },
+    {
+      "id": "R09-05-dimensionless",
+      "p0": "R09",
+      "kind": "dim_field_semantics",
+      "expect": "SEPARATED",
+      "status": "PASS",
+      "detail": "props=['dimension_vector'] → SEPARATED（期望 SEPARATED）"
+    },
+    {
+      "id": "R09-06-force-ma-homogeneous",
+      "p0": "R09",
+      "kind": "dim_consistency",
+      "expect": "HOMOGENEOUS",
+      "status": "PASS",
+      "detail": "keys=['force', 'mass', 'acceleration'] → HOMOGENEOUS（期望 HOMOGENEOUS）"
+    },
+    {
+      "id": "R09-07-contradiction",
+      "p0": "R09",
+      "kind": "dim_consistency",
+      "expect": "CONTRADICTION",
+      "status": "PASS",
+      "detail": "keys=['force', 'mass'] → CONTRADICTION（期望 CONTRADICTION）"
+    },
+    {
+      "id": "R09-08-undetermined",
+      "p0": "R09",
+      "kind": "dim_consistency",
+      "expect": "UNDETERMINED",
+      "status": "PASS",
+      "detail": "keys=['force', 'mystery_quantity'] → UNDETERMINED（期望 UNDETERMINED）"
+    },
+    {
+      "id": "R09-09-work-energy-homogeneous",
+      "p0": "R09",
+      "kind": "dim_consistency",
+      "expect": "HOMOGENEOUS",
+      "status": "PASS",
+      "detail": "keys=['energy', 'work'] → HOMOGENEOUS（期望 HOMOGENEOUS）"
+    },
+    {
+      "id": "R09-10-graph-no-legacy-dimension",
+      "p0": "R09",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "命中节点 0：[]"
+    },
+    {
+      "id": "R09-11-graph-dim-vector-normalized",
+      "p0": "R09",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "含 dimension_vector 148 条，未规范化 0 条：[]"
+    },
+    {
+      "id": "R10-01-lineage-acyclic",
+      "p0": "R10",
+      "kind": "lineage_acyclic",
+      "expect": "ACYCLIC",
+      "status": "PASS",
+      "detail": "血缘环 0 个 []（期望 ACYCLIC）"
+    },
+    {
+      "id": "R10-02-src-registered-database",
+      "p0": "R10",
+      "kind": "src_registered",
+      "expect": "REGISTERED",
+      "status": "PASS",
+      "detail": "source_registry[PhysicsBabel] kind=database → REGISTERED（期望 REGISTERED）"
+    },
+    {
+      "id": "R10-03-src-sentinel-unregistered",
+      "p0": "R10",
+      "kind": "src_registered",
+      "expect": "NOT_REGISTERED",
+      "status": "PASS",
+      "detail": "source_registry[unregistered] kind=unregistered → NOT_REGISTERED（期望 NOT_REGISTERED）"
+    },
+    {
+      "id": "R10-04-src-unknown",
+      "p0": "R10",
+      "kind": "src_registered",
+      "expect": "NOT_REGISTERED",
+      "status": "PASS",
+      "detail": "source_registry[NoSuchSource] kind=unregistered → NOT_REGISTERED（期望 NOT_REGISTERED）"
+    },
+    {
+      "id": "R10-05-lineage-selfcheck",
+      "p0": "R10",
+      "kind": "lineage_selfcheck",
+      "expect": "SELFCHECK_PASS",
+      "status": "PASS",
+      "detail": "lineage_invalidation.selfcheck rc=0"
+    },
+    {
+      "id": "R10-06-graph-evidence-source-bound",
+      "p0": "R10",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "证据 49572 条，未绑定 0，未登记 0，绑定率 100.0%"
+    },
+    {
+      "id": "R10-07-graph-edge-source-present",
+      "p0": "R10",
+      "kind": "graph_scan",
+      "expect": "ZERO",
+      "status": "PASS",
+      "detail": "props.source 缺失 0 条：[]"
+    }
+  ]
+}
+
+[STDERR]
+  ① 变异文件              : ['11_真实数据/elementkg10m_raw.json', '11_真实数据/elementkg_raw.json']
+  ① 独立期望直接变更      : ['ElementKG2.0']
+  ① 工具判定直接变更      : ['ElementKG2.0']
+     直接变更集合相等      : PASS
+     受影响断言集合相等    : PASS（期望 7797 / 命中 7797，差 0）
+  ② 纯血缘：PhysicsBabel(变异) → chembl_api(临时 imports_from)
+     chembl_api 文件未变但被传递标记 : PASS
+  ③ 未变异图无变更        : PASS（受影响 0）

@@ -1,0 +1,48 @@
+============================================================================================
+来源登记表 source_registry —— Phase 41（R10：证据血缘/版本/失效）
+============================================================================================
+source_id                        kind         lineage  content_hash
+ChEBI                            database     ok       dbc1751d9ee8
+ElementKG2.0                     database     ok       5c407a5ee1f3
+LLM-review                       model        GAP      -
+NIST Chemistry WebBook           database     ok       703eecc8ac5b
+Phase13.GNN.typed                model        GAP      -
+Phase13.Gate.B1                  derived      ok       a68edec165e4
+Phase13.Gate.B2                  derived      ok       1fe029a4cdc8
+Phase13.Gate.B3                  derived      ok       872aa5307478
+Phase13.Gate.B4                  derived      ok       a68edec165e4
+Phase13.Gate.B5                  derived      ok       1fe029a4cdc8
+Phase9.GNN                       model        GAP      -
+Phase9.GNN+LLM                   model        GAP      -
+PhysicsBabel                     database     ok       a68edec165e4
+PubChem                          database     ok       b03d2bf56cc4
+Rhea                             database     ok       8540f6adfef8
+chembl_api                       database     ok       64b4a8e287ca
+cross_source_alignment           constructed  ok       6657db95a060
+curated_seed                     curated      ok       652804e9933b
+curated_seed/energy_combustion   curated      ok       de46bf0f471a
+dimension_table                  constructed  ok       8413f6ce5cbd
+element_reference                constructed  ok       1fe029a4cdc8
+heuristic                        model        GAP      -
+llm_inferred_gnn                 model        GAP      -
+mathxiv                          database     ok       6657db95a060
+nist_codata_2022                 database     ok       955eb59e2862
+openalex                         database     ok       9575056cb6aa
+openalex-topic-align             derived      ok       afd25d97fbd1
+rhea_chebi                       derived      ok       e14700ab990f
+schema-axiom                     constructed  ok       -
+unregistered                     unregistered GAP      -
+wikidata                         database     ok       -
+--------------------------------------------------------------------------------------------
+共 31 个来源 ｜ 血缘缺口 7 ｜ 无内容哈希 9（无 locator）
+【自检】
+  ① 血缘无环          : PASS
+  ② 上游 id 均已登记   : PASS
+  ③ kind ∈ 受控词表    : PASS
+  ④ 有 locator ⇒ 有哈希 : PASS
+  ⑤ 模型源无上游⇒标记缺口: PASS
+  ⑥ locator 行尾已锁   : PASS
+  ⑦ .gitattributes 已声明: PASS
+  ⇒ 全过
+
+[STDERR]
