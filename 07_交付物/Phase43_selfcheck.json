@@ -283,5 +283,5 @@
   "V14 实测：verified 可见 34780 / 隐藏 13932；verified_strict 可见 34769 / 隐藏 13943（差 11 条=by_construction）",
   "★ 已知缺陷（本轮发现并登记）：7/21 个登记 locator 的 worktree 字节 ≠ 仓库 blob ⇒ 证据里的 src_hash 在干净检出下不可复现、stale 判据会假阳。根因与修法见 `07_交付物/Phase43_*.md`；**exclude_stale 默认仍为 false**。"
  ],
- "elapsed_s": 20.36
+ "elapsed_s": 20.48
 }

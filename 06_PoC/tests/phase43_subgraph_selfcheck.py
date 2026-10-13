@@ -250,13 +250,36 @@ def main(argv=None) -> int:
     print("  Phase 43 · 局部图谱查询自检（V1–V16）")
     print("=" * 78)
 
+    # ★ 前置：本自检需要**权威图**（不入库）。缺源时给**明确原因 + RC=2**，
+    #   而不是让后续断言以 KeyError/一串 FAIL 的形式崩掉（干净检出必读此提示）。
+    source = V._graph_path()
+    if not os.path.exists(source):
+        print("-" * 78)
+        print("  ⛔ 找不到查询源：%s" % source)
+        print("     该文件被 .gitignore 排除（**不入库**）⇒ 干净检出下本自检**不可能**运行。")
+        print("     三种可用做法：")
+        print("       ① 在已有权威图的副本上运行（本项目主工作区默认如此）；")
+        print("       ② 指定替代源：GRAPH_SOURCE_FILE=<path> bash sttp.sh subgraph"
+              "（★ 但权威图口径的断言，如「48712 边」「hidden_by_trust 两档恒等」，")
+        print("          在小样例上**必然 FAIL** —— 本自检不是为样例设计的）；")
+        print("       ③ 干净检出只验**下游链路**：bash sttp.sh release（离线样例 + 发布校验）"
+              "／ bash sttp.sh sample（用入库样例起服务）。")
+        print("-" * 78)
+        return 2
     srv = V.ThreadingHTTPServer(("127.0.0.1", 0), V.VizHandler)
     port = srv.server_address[1]
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     print("  HTTP 服务: 127.0.0.1:%d（真响应体断言）" % port)
-    source = V._graph_path()
     print("  查询源   : %s" % os.path.relpath(source, ROOT))
+    _b = V.get_backend()
+    n_full = _b.node_count if _b is not None else 0
+    print("  后端规模 : %d 节点" % n_full)
     print("-" * 78)
+    if n_full < 1000:
+        print("  ⛔ 查询层后端不可用，或当前查询源只有 %d 个节点（疑似入库样例）——"
+              "本自检的多数断言以**权威图口径**（9657/48712）为前提。" % n_full)
+        print("     请改用权威图运行，或改跑 `bash sttp.sh release`。")
+        return 2
 
     # ---------- 0. 契约与跨模块一致性（前置） ----------
     print("\n[0] 契约 / 口径一致性")
