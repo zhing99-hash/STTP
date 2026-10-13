@@ -7,21 +7,25 @@
 
 ---
 
-## 1. 快速开始（两条命令）
+## 1. 快速开始
 
-```bash
-# ① 构建 + 校验发布包（构建离线样例 → 生成清单 → fail-closed 校验）
-bash sttp.sh release
-
-# ② 只用离线样例起可视化（页面与查询指向同一份切片）
-bash sttp.sh sample            # → http://127.0.0.1:8765/
-```
-
-不需要 48 MB 的 `normalized.json`，也不需要联网。若只想复验：
+**路径 A · 干净检出即可复验（不需要 48 MB 的 `normalized.json`，也不需要联网）**
 
 ```bash
 python 06_PoC/release/verify_release.py --release   # 28 条断言（含许可合规），全过才退 0
+bash sttp.sh sample            # 只用已入库样例起可视化（页面与查询指向同一份切片）→ http://127.0.0.1:8765/
 ```
+
+**路径 B · 重建样例（需要完整图 `normalized.json`，48 MB，不入库）**
+
+```bash
+bash sttp.sh export            # 从本地/Aura 重建权威规范图（大数据，不入库）
+bash sttp.sh release           # [0/4] 许可自检 → [1/4] 构建样例 → [2/4] 清单 → [3/4] fail-closed 校验
+```
+
+> ⚠ 在**没有** `normalized.json` 的干净检出上，`bash sttp.sh release` 会在构建步
+> **fail-closed（退码 2）** —— 这是刻意行为（缺输入不得静默产出）。样例产物已入库，
+> **复验不需要重建**（实测见 `07_交付物/Phase42_*` 的干净检出正/负对照）。
 
 ---
 

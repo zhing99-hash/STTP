@@ -63,9 +63,16 @@
 许可上可再分发的内容：170 节点 / 255 边 / 36 条跨学科边）：
 
 ```bash
-bash sttp.sh release     # ① 许可自检 → 构建样例 → 生成发布清单 → fail-closed 校验（28 条断言）
-bash sttp.sh sample      # ② 只用样例起可视化 → http://127.0.0.1:8765/
+# 路径 A（干净检出即可 · 不需要任何数据文件）：复验已入库样例 + 起可视化
+python 06_PoC/release/verify_release.py --release   # 28 条断言（含许可合规），全过才退 0
+bash sttp.sh sample                                  # 只用样例起可视化 → http://127.0.0.1:8765/
+
+# 路径 B（重建样例 · 需要完整图 normalized.json，48 MB 不入库）：
+bash sttp.sh export && bash sttp.sh release           # 许可自检 → 重建样例 → 清单 → fail-closed 校验
 ```
+
+> 注：`bash sttp.sh release` 在**没有** `normalized.json` 的干净检出上会 **fail-closed（退码 2）** ——
+> 这是刻意行为（缺输入不得静默产出）；样例产物已入库，**复验不需要重建**。
 
 `sample` 会把**页面数据**（`GRAPH_DATA_FILE`）与**查询后端**（`GRAPH_SOURCE_FILE`）
 指向**同一份切片的两种投影**，并由校验器断言两者 **id 集合逐元素相等** ——
@@ -79,7 +86,7 @@ bash sttp.sh sample      # ② 只用样例起可视化 → http://127.0.0.1:876
 
 | 命令 | 用途 |
 |---|---|
-| `bash sttp.sh release` | 构建离线样例 + 发布清单 + fail-closed 校验 |
+| `bash sttp.sh release` | 构建离线样例 + 发布清单 + fail-closed 校验（**需完整图**；干净检出请直接复验 `verify_release.py --release`） |
 | `bash sttp.sh sample` | 仅用离线样例起可视化（单命令、离线、同版本） |
 | `bash sttp.sh release-full` | 对完整快照跑全量校验（清单现算比对 + 主图 `--release` 门禁） |
 | `bash sttp.sh eval` | 科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检 |
