@@ -84,16 +84,18 @@ def main():
     print("=" * 92)
 
     hmap = sr.hash_map()
+    rsm = sr.repo_status_map()
     impl_ver = verifier_version()
     print("  验证器版本 impl_ver = %s（verification_model.py sha256[:12]）" % impl_ver)
-    print("  已登记来源 %d 个；有内容哈希 %d 个；血缘缺口 %d 个"
-          % (len(sr.load()), sum(1 for v in hmap.values() if v),
+    print("  已登记来源 %d 个；**可从仓库复算** %d 个；血缘缺口 %d 个"
+          % (len(sr.load()), sum(1 for v in rsm.values() if v == "in_repo"),
              sum(1 for s in sr.load() if not sr.load()[s].get("lineage_recorded"))))
 
     stamp = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec="seconds")
     out_edges = []
     n_backfill = 0
     n_ev_aug = 0
+    n_hash_preserved = 0
     infer_kinds = collections.Counter()
     src_of_edge = collections.Counter()   # 归因后：来源 → 边数
     n_dropped_key = collections.Counter()  # 浅合并无法表达的「删除键」（应为 0）
@@ -128,7 +130,21 @@ def main():
                 ev2 = dict(ev)
                 ev2["src"] = sid
                 ev2["src_ver"] = sr.version_of(sid)
-                ev2["src_hash"] = hmap.get(sid)
+                # ★ Phase 44 · D1：`src_hash` 的字节源
+                #   * 来源**已入库** ⇒ 用**仓库字节**摘要（权威、与检出无关）；**覆盖**旧值；
+                #   * 来源**未入库**（locator 不可从仓库取到）⇒ **保留**生成时刻已记录的值。
+                #     不覆盖成 None 的理由：那是**操作环境**的存档（R10「来源变更 ⇒ 定位
+                #     受影响断言」在**有缓存的环境**里仍可显式复核，见
+                #     `lineage_invalidation.py --byte-source worktree`）；覆盖成 None 会
+                #     不可逆地丢掉它，而保留并不影响裁决 —— 裁决由 `queries.edge_fidelity`
+                #     按 **repo_status** 静态分列，那个值**从不**参与比较。
+                new_hash = hmap.get(sid)
+                if new_hash is not None:
+                    ev2["src_hash"] = new_hash
+                elif ev2.get("src_hash"):
+                    n_hash_preserved += 1
+                else:
+                    ev2["src_hash"] = None
                 ev2["impl_ver"] = impl_ver
                 if ev2 != ev:
                     n_ev_aug += 1
@@ -156,6 +172,10 @@ def main():
     for (t, s), v in sorted(infer_kinds.items(), key=lambda x: -x[1]):
         print("   %-16s -> %-24s %5d" % (t, s, v))
     print("\n【证据绑定】%d 条证据记录被绑定来源/版本/哈希/验证器版本" % n_ev_aug)
+    print("【字节源分列】src_hash 取自**仓库 blob** 的来源 %d 个；"
+          "不可从仓库复算 ⇒ **保留存档值**的证据 %d 条（其来源 %d 个，未入库）"
+          % (sum(1 for v in rsm.values() if v == "in_repo"), n_hash_preserved,
+             sum(1 for v in rsm.values() if v == "not_in_repo")))
     print("\n【归因后：来源 → 断言数（前 12）】")
     for k, v in src_of_edge.most_common(12):
         print("   %-28s %6d" % (k, v))
@@ -185,6 +205,17 @@ def main():
             "inferred": {("%s|%s" % k): v for k, v in infer_kinds.items()},
             "source_counts": dict(src_of_edge),
             "hashes": {k: v for k, v in hmap.items() if v},
+            # ★ Phase 44 · D1：`src_hash` 的字节源必须**随记录一起留痕**
+            #   repo     = 仓库 blob 摘要（权威、可复算、与检出无关）
+            #   worktree = 生成时刻本机工作区字节（不可从仓库复算，仅供显式 opt-in 复核）
+            #   null     = 无 locator（本就无可记录）
+            "hashes_source": {k: {"in_repo": "repo", "not_in_repo": "worktree",
+                                  "no_locator": None}.get(v) for k, v in rsm.items()},
+            "n_src_hash_preserved": n_hash_preserved,
+            "byte_source_note": (
+                "权威口径 = 仓库字节（git cat-file blob HEAD:<path>）。locator 未入库的"
+                "来源不可从仓库复算 ⇒ 分类为 unverifiable_not_in_repo（分列披露，不计入 stale），"
+                "其 src_hash 保留生成时刻的存档值，**从不**参与裁决。"),
         },
         "nodes": [],
         "delete_nodes": [],

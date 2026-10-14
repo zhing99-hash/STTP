@@ -1,28 +1,9 @@
 {
  "meta": {
+  "byte_source": "repo",
   "changed_direct": [],
   "changed_with_lineage": [],
   "compared": {
-   "ChEBI": {
-    "current": "dbc1751d9ee8",
-    "equal": true,
-    "recorded": "dbc1751d9ee8"
-   },
-   "ElementKG2.0": {
-    "current": "5c407a5ee1f3",
-    "equal": true,
-    "recorded": "5c407a5ee1f3"
-   },
-   "NIST Chemistry WebBook": {
-    "current": "703eecc8ac5b",
-    "equal": true,
-    "recorded": "703eecc8ac5b"
-   },
-   "Phase13.Gate.B1": {
-    "current": "a68edec165e4",
-    "equal": true,
-    "recorded": "a68edec165e4"
-   },
    "Phase13.Gate.B2": {
     "current": "1fe029a4cdc8",
     "equal": true,
@@ -33,40 +14,20 @@
     "equal": true,
     "recorded": "872aa5307478"
    },
-   "Phase13.Gate.B4": {
-    "current": "a68edec165e4",
-    "equal": true,
-    "recorded": "a68edec165e4"
-   },
    "Phase13.Gate.B5": {
     "current": "1fe029a4cdc8",
     "equal": true,
     "recorded": "1fe029a4cdc8"
    },
-   "PhysicsBabel": {
-    "current": "a68edec165e4",
-    "equal": true,
-    "recorded": "a68edec165e4"
-   },
-   "PubChem": {
-    "current": "b03d2bf56cc4",
-    "equal": true,
-    "recorded": "b03d2bf56cc4"
-   },
-   "chembl_api": {
-    "current": "64b4a8e287ca",
-    "equal": true,
-    "recorded": "64b4a8e287ca"
-   },
    "cross_source_alignment": {
-    "current": "6657db95a060",
+    "current": "ca629f7bb4ff",
     "equal": true,
-    "recorded": "6657db95a060"
+    "recorded": "ca629f7bb4ff"
    },
    "curated_seed": {
-    "current": "652804e9933b",
+    "current": "afc7e96cef93",
     "equal": true,
-    "recorded": "652804e9933b"
+    "recorded": "afc7e96cef93"
    },
    "curated_seed/energy_combustion": {
     "current": "de46bf0f471a",
@@ -79,29 +40,14 @@
     "recorded": "8413f6ce5cbd"
    },
    "mathxiv": {
-    "current": "6657db95a060",
+    "current": "ca629f7bb4ff",
     "equal": true,
-    "recorded": "6657db95a060"
-   },
-   "nist_codata_2022": {
-    "current": "955eb59e2862",
-    "equal": true,
-    "recorded": "955eb59e2862"
-   },
-   "openalex": {
-    "current": "9575056cb6aa",
-    "equal": true,
-    "recorded": "9575056cb6aa"
+    "recorded": "ca629f7bb4ff"
    },
    "openalex-topic-align": {
-    "current": "afd25d97fbd1",
+    "current": "33526591fdfd",
     "equal": true,
-    "recorded": "afd25d97fbd1"
-   },
-   "rhea_chebi": {
-    "current": "e14700ab990f",
-    "equal": true,
-    "recorded": "e14700ab990f"
+    "recorded": "33526591fdfd"
    }
   },
   "lineage_gap_sources": [
@@ -115,9 +61,29 @@
   ],
   "n_affected_edges": 0,
   "n_claims_on_lineage_gap": 116,
-  "n_compared_sources": 20,
-  "n_no_hash_sources": 9,
-  "n_sources": 31
+  "n_claims_on_not_reproducible": 47055,
+  "n_compared_sources": 9,
+  "n_no_hash_sources": 21,
+  "n_sources": 31,
+  "not_reproducible_sources": [
+   "ChEBI",
+   "ElementKG2.0",
+   "NIST Chemistry WebBook",
+   "Phase13.Gate.B1",
+   "Phase13.Gate.B4",
+   "PhysicsBabel",
+   "PubChem",
+   "Rhea",
+   "chembl_api",
+   "nist_codata_2022",
+   "openalex",
+   "rhea_chebi"
+  ],
+  "repo_status": {
+   "in_repo": 10,
+   "no_locator": 9,
+   "not_in_repo": 12
+  }
  },
- "schema": "sttp-lineage-invalidation/v1"
+ "schema": "sttp-lineage-invalidation/v2"
 }
