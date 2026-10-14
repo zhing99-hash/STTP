@@ -388,6 +388,72 @@ def main(argv=None):
                 (f"键差 {sorted(fe_rank ^ set(be_rank))}；" if not same_keys else "")
                 + ("；".join(bad_rank) if bad_rank else f"{len(be_rank)} 档逐值一致"))
 
+        # X8 证据字节忠实度四分类 == queries.FIDELITY_CLASSES
+        #    ★ D1 修复引入的新跨层契约：前端 FIDELITY_CLASSES **逐值 + 顺序**都要相等，
+        #      且徽标键集合必须齐全（四档无多无少）。漏一档 ⇒ 后端能算出而前端渲染成
+        #      「未判定」，恰好会把 `unverifiable_not_in_repo`（47 055 条**并未变更**的边）
+        #      伪装成不可判定 —— 正是本次要防的误报。
+        #    ★ 另断言 `FIDELITY_UNKNOWN` 不占用任何已定义档位的键，避免「未判定」被当成
+        #      真实分类参与加总（那会让四分类合计 ≠ 边总数）。
+        fm = re.search(r"export\s+const\s+FIDELITY_CLASSES\s*=\s*Object\.freeze\(\[([\s\S]*?)\]\)", style_src)
+        fe_fid = re.findall(r'"([a-z_]+)"', fm.group(1)) if fm else []
+        be_fid = list(getattr(Q, "FIDELITY_CLASSES", ()) or ())
+        rep.add(bool(fm) and fe_fid == be_fid,
+                f"X8a 忠实度四分类：前端 == queries.FIDELITY_CLASSES（{len(be_fid)} 档，逐值 + 顺序）",
+                f"前端 {fe_fid} ≠ 后端 {be_fid}" if fe_fid != be_fid else "；".join(be_fid))
+        if fm:
+            bm = re.search(r"export\s+const\s+FIDELITY_BADGE\s*=\s*Object\.freeze\(\{([\s\S]*?)\n\}\)", style_src)
+            badge_keys = set(re.findall(r"^\s*([a-z_]+)\s*:\s*\{", bm.group(1), re.M)) if bm else set()
+            miss_badge = sorted(set(be_fid) - badge_keys)
+            extra_badge = sorted(badge_keys - set(be_fid))
+            # 每档必须给出 color/label/short/note 四项，缺 note 会让「为何不是已变更」无处解释
+            thin = []
+            if bm:
+                for k in sorted(badge_keys):
+                    kb = re.search(r"^\s*" + re.escape(k) + r"\s*:\s*\{([\s\S]*?)^\s{2}\},", bm.group(1),
+                                   re.M)
+                    seg = kb.group(1) if kb else ""
+                    lack = [f for f in ("color", "label", "short", "note") if not re.search(f + r"\s*:", seg)]
+                    if lack:
+                        thin.append(f"{k} 缺 {lack}")
+            um = re.search(r"export\s+const\s+FIDELITY_UNKNOWN\s*=\s*\{([\s\S]*?)\n\};", style_src)
+            unknown_ok = bool(um) and not re.search(r"^\s*([a-z_]+)\s*:\s*\{", um.group(1), re.M)
+            rep.add(not miss_badge and not extra_badge and not thin,
+                    f"X8b 忠实度徽标键集合 == 四分类（{len(be_fid)} 档齐全，各带 color/label/short/note）",
+                    (f"缺徽标 {miss_badge}；多徽标 {extra_badge}；" if (miss_badge or extra_badge) else "")
+                    + ("；".join(thin) if thin else f"{len(badge_keys)} 档字段齐全"))
+            rep.add(unknown_ok, "X8c FIDELITY_UNKNOWN 不占用任何已定义档位键（不参与加总）",
+                    "FIDELITY_UNKNOWN 是独立兜底对象" if unknown_ok else "未解析到 FIDELITY_UNKNOWN 或含分类键")
+            # stale 口径不变：STALE_FIDELITIES ⊂ FIDELITY_CLASSES
+            stale_fid = tuple(getattr(Q, "STALE_FIDELITIES", ()) or ())
+            sub_ok = bool(stale_fid) and set(stale_fid) <= set(be_fid)
+            rep.add(sub_ok, "X8d STALE_FIDELITIES ⊆ FIDELITY_CLASSES（stale 仍是四分类的子集）",
+                    f"{list(stale_fid)} ⊆ {len(be_fid)} 档" if sub_ok else f"{list(stale_fid)} ⊄ {be_fid}")
+
+    # X9 契约 ↔ 前端：`evidence[].src_hash` 可为 null，前端必须**显式**说明（不静默）
+    #   实测背景：9 个无 locator 的模型/规则源（GNN/schema-axiom/LLM-review/heuristic）
+    #   共 126 条证据 / 121 条边，其 `src_hash` 为 `null`。
+    #   ★ 塌陷风险：若契约把 `src_hash` 收紧回 `string`，前端那枚徽标就成了死代码
+    #     （或反过来：契约放宽而前端没做提示 ⇒ 「不可复算」被静默吞掉）。故两侧同断言。
+    sc_path = os.path.join(ROOT, "contracts", "subgraph.schema.json")
+    try:
+        with io.open(sc_path, "r", encoding="utf-8") as f:
+            sc = json.load(f)
+        ev_def = ((sc.get("$defs") or {}).get("evidence") or {})
+        sh = (ev_def.get("properties") or {}).get("src_hash") or {}
+        t = sh.get("type")
+        types_ = t if isinstance(t, list) else [t]
+        nullable = "null" in types_
+        required_has = "src_hash" in (ev_def.get("required") or [])
+        ev_src = js_src.get("evidence", "")
+        fe_has_pill = "无 locator · 不可复算" in ev_src
+        rep.add(nullable and required_has and fe_has_pill,
+                "X9 契约 src_hash 可空 ⇔ 前端显式「无 locator · 不可复算」徽标（两侧同步）",
+                f"schema.type={t}｜required={'src_hash' in (ev_def.get('required') or [])}"
+                f"｜前端徽标={'有' if fe_has_pill else '缺'}")
+    except Exception as e:  # noqa: BLE001
+        rep.skip("X9 契约 src_hash 可空 ⇔ 前端显式徽标", f"读取契约失败：{e}")
+
     # ---------------------------------------------------------------- N 段
     rep.section("[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）")
     node = find_node()

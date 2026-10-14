@@ -8,7 +8,7 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 
 """
-Phase 43 · 局部图谱查询 **非真空自检**（V1–V16）
+Phase 43 · 局部图谱查询 **非真空自检**（V1–V18）
 ==================================================================
 
 目的
@@ -230,7 +230,7 @@ def snap_via_subprocess(path: str) -> str:
 # 主流程
 # ---------------------------------------------------------------------------
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Phase 43 局部图谱查询自检（V1–V16）")
+    ap = argparse.ArgumentParser(description="Phase 43 局部图谱查询自检（V1–V18）")
     ap.add_argument("--json", default=None, help="把报告写成 JSON（审计留痕）")
     ap.add_argument("--keep-going", action="store_true")
     args = ap.parse_args(argv)
@@ -247,7 +247,7 @@ def main(argv=None) -> int:
     rep = Rep()
     t_all = time.time()
     print("=" * 78)
-    print("  Phase 43 · 局部图谱查询自检（V1–V16）")
+    print("  Phase 43 · 局部图谱查询自检（V1–V18）")
     print("=" * 78)
 
     # ★ 前置：本自检需要**权威图**（不入库）。缺源时给**明确原因 + RC=2**，
@@ -568,38 +568,87 @@ def main(argv=None) -> int:
     sch = load_schema("subgraph.schema.json")
     rep.add(bool(validate(inj, sch, sch)), "V15 反例：抹掉 why_shown ⇒ 校验器变红")
 
-    # ---------- V16 stale 判据非真空（负对照，铁律 #61） ----------
-    print("\n[V16] stale 判据非真空：改动被登记来源 ⇒ 相关边判 stale")
+    # ---------- V16 stale 判据：D1 后「裁定与检出无关」+ 判据仍非真空（铁律 #61） ----------
+    #   ★ D1 根因修复**翻转了本段的断言方向**：权威字节源已是仓库 blob ⇒ **工作区**
+    #     变异**不应**再影响裁决（这正是修复要的性质）。旧形式断言「变异 ⇒ stale 增加」，
+    #     测的是**旧缺陷**，在修好之后必然变红 —— 那不是回归，是断言过期。
+    #   故拆成两件独立的事：
+    #     ① D1 性质（HTTP 层，走生产路径）：worktree 变异 ⇒ 服务端裁决**不变**；
+    #     ② 非真空：把某个已登记来源的**当前哈希**改成不同值（等价于"该来源文件真的变了"）
+    #        ⇒ 相关边必须由 verified 翻成 changed（证明判据本身能动，不是恒绿）。
+    print("\n[V16] stale 判据：D1 后裁定与检出/行尾无关 + 判据仍非真空")
     target = os.path.join(POC, "sample_mathxiv.json")
     orig_bytes = open(target, "rb").read() if os.path.exists(target) else None
     orig_sha = hashlib.sha256(orig_bytes).hexdigest() if orig_bytes else None
     probe = q(seeds="MX:def:manifold", mode="ego", hops=3, max_nodes=500)
-    try:
-        base = http_get(port, "/api/subgraph" + probe)[1]
-        base_stale = sum(1 for e in base["edges"] if e.get("stale"))
-        key_before = V._STALE_CACHE["key"]
-        rep.add(orig_bytes is not None, "V16a 找到负对照目标文件（被登记 locator）",
-                os.path.relpath(target, ROOT))
-        with open(target, "ab") as f:
-            f.write(b"\n/* phase43 selfcheck negative control */\n")
-        after = http_get(port, "/api/subgraph" + probe)[1]
-        after_stale = sum(1 for e in after["edges"] if e.get("stale"))
-        key_after = V._STALE_CACHE["key"]
-        rep.add(after_stale > base_stale,
-                "V16b 改动登记文件 ⇒ stale 边增加（判据非真空）",
-                "%d → %d" % (base_stale, after_stale))
-        rep.add(key_before != key_after,
-                "V16c 缓存键随内容身份变化（不是按时间猜）", "键已更新")
-    finally:
-        if orig_bytes is not None:
-            with open(target, "wb") as f:
-                f.write(orig_bytes)
-    if orig_sha is not None:
-        rep.add(sha256_file(target) == orig_sha, "V16d 负对照后逐字节还原（铁律 #61）",
+    rep.add(orig_bytes is not None, "V16a 找到负对照目标文件（被登记 locator）",
+            os.path.relpath(target, ROOT))
+    if orig_bytes is not None:
+        sr = V._load_source_registry()
+        rsm = sr.repo_status_map(ROOT)
+        all_e = V.get_backend().all_edges()
+        s_before = sum(1 for e in http_get(port, "/api/subgraph" + probe)[1]["edges"]
+                       if e.get("stale"))
+        try:
+            with open(target, "ab") as f:
+                f.write(b"\n/* phase43 selfcheck negative control */\n")
+            s_after = sum(1 for e in http_get(port, "/api/subgraph" + probe)[1]["edges"]
+                          if e.get("stale"))
+            rep.add(s_after == s_before,
+                    "V16b ★ D1：worktree 变异 ⇒ 服务端 stale **不变**（裁定与检出/行尾无关）",
+                    "%d → %d" % (s_before, s_after))
+        finally:
+            if orig_bytes is not None:
+                with open(target, "wb") as f:
+                    f.write(orig_bytes)
+        rep.add(sha256_file(target) == orig_sha, "V16e 负对照后逐字节还原（铁律 #61）",
                 sha256_file(target)[:16])
-        restored = http_get(port, "/api/subgraph" + probe)[1]
-        rep.add(sum(1 for e in restored["edges"] if e.get("stale")) == base_stale,
-                "V16e 还原后 stale 计数回到基线", "%d" % base_stale)
+        s_restored = sum(1 for e in http_get(port, "/api/subgraph" + probe)[1]["edges"]
+                         if e.get("stale"))
+        rep.add(s_restored == s_before, "V16e2 还原后服务端 stale 计数回到基线",
+                "%d" % s_restored)
+
+        # ② 非真空：翻转某个"被最多边引用"的已登记来源的当前哈希
+        hm = sr.hash_map(ROOT)
+        refs = {}
+        for e in all_e:
+            for ev in ((e.get("props") or {}).get("verification_evidence") or []):
+                if isinstance(ev, dict) and hm.get(ev.get("src")):
+                    refs[ev["src"]] = refs.get(ev["src"], 0) + 1
+        sid_t = max(refs, key=refs.get) if refs else None
+        reg0 = V.stale_registry()
+        n0 = sum(1 for e in all_e if Q.edge_is_stale(e, reg0))
+        if sid_t:
+            hm2 = dict(hm)
+            hm2[sid_t] = "0" * 64
+            reg1 = Q.build_stale_registry(sr.ids(), hm2, rsm)
+            n1 = sum(1 for e in all_e if Q.edge_is_stale(e, reg1))
+            n_ch = sum(1 for e in all_e if Q.edge_fidelity(e, reg1) == "changed")
+            rep.add(n1 > n0 and n_ch > 0,
+                    "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 相关边翻成 changed",
+                    "stale %d → %d（changed=%d，来源 %s，引用 %d 条）"
+                    % (n0, n1, n_ch, sid_t, refs.get(sid_t, 0)))
+        else:
+            rep.add(False, "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 相关边翻成 changed",
+                    "找不到有当前哈希的来源（hashes 全为 None？）")
+
+        # 缓存键：HEAD 变 ⇒ 键必变；不得按 mtime/size 猜
+        with V._STALE_LOCK:
+            V._STALE_CACHE["key"] = None
+        V.stale_registry()
+        k0 = V._STALE_CACHE["key"]
+        real_head = V._head_sha(ROOT)
+        real_head_fn = V._head_sha                # 捕获原函数对象（monkeypatch 后要还回）
+        try:
+            V._head_sha = (lambda *a, **k: "f" * 40)
+            V.stale_registry()
+            k1 = V._STALE_CACHE["key"]
+        finally:
+            V._head_sha = real_head_fn
+        V.stale_registry()
+        rep.add(k0 != k1 and isinstance(k0, tuple) and k0[0] == real_head,
+                "V16d 缓存键随 HEAD 变化（HEAD 变 ⇒ 键变 ⇒ 重算；不含 mtime/size）",
+                "HEAD=%s｜伪 HEAD 下键已变=%s" % (str(real_head)[:12], k0 != k1))
 
     # ---------- V16 附带：字节忠实性探针（铁律 #61 推广） ----------
     print("\n[V16f] 字节忠实性探针：worktree 字节 vs 仓库 blob")
@@ -635,12 +684,29 @@ def main(argv=None) -> int:
             "V16f 响应里的字节忠实性计数 == 独立重算",
             "响应 %s / 独立 %d" % (fid.get("n_unfaithful"), n_unf))
     if n_unf:
-        rep.note("★ 已知缺陷（本轮发现并登记）：%d/%d 个登记 locator 的 worktree 字节 ≠ 仓库 blob "
-                 "⇒ 证据里的 src_hash 在干净检出下不可复现、stale 判据会假阳。"
-                 "根因与修法见 `07_交付物/Phase43_*.md`；**exclude_stale 默认仍为 false**。"
+        rep.note("★ D1 已修根因（本轮）：%d/%d 个**已入库** locator 的 worktree 字节 ≠ 仓库 blob "
+                 "（本机 `core.autocrlf=true` 把 LF 检出成 CRLF）。**这不影响裁决** —— "
+                 "权威字节源已是 `git cat-file blob HEAD:<path>`（见 V16b/V18d/V18e），"
+                 "此计数只作**诊断披露**（`affects_verdict: false`）。"
+                 "另有 13 个 locator 未入库（`*_raw.json`/`*_cache.json`，按「大体积派生对象不入库」"
+                 "有意排除）⇒ 占 47055 条边的 `unverifiable_not_in_repo`。"
+                 "完整论证见 `07_交付物/Phase44_D1_*.md`；**exclude_stale 默认仍为 false**。"
                  % (n_unf, fid.get("checked")))
     else:
-        rep.note("字节忠实性：全部登记 locator 与仓库 blob 一致")
+        rep.note("字节忠实性：全部已入库 locator 的工作区字节与仓库 blob 一致（无需归一化差异披露）")
+
+    # V16g ★ 构造性非真空：本机若已归一化（上面 n_unfaithful=0），「两口径差异」就无从观测
+    #   ⇒ 在**临时仓库**里把差异造出来，证明「口径选择」不是同义反复（干净 clone 亦能跑）。
+    pr = SR.divergence_probe()
+    try:
+        probe_ok = bool(pr.get("differ")) and bool(pr.get("restored_equal"))
+    finally:
+        import shutil as _sh
+        _sh.rmtree(pr.get("tmp"), ignore_errors=True)
+    rep.add(probe_ok,
+            "V16g 两口径可构造差异（blob=LF / 工作区=CRLF ⇒ 哈希必不同；还原后必相等）",
+            "differ=%s / restored_equal=%s %s"
+            % (pr.get("differ"), pr.get("restored_equal"), pr.get("error", "")))
 
     # ---------- V17 会话记账语义（无 id ⇒ 不记账；有 id ⇒ 累加 + reset 清空 + 表有上限） ----------
     print("\n[V17] 会话记账语义：匿名不记账 / reset 清空 / 会话表有上限")
@@ -692,6 +758,136 @@ def main(argv=None) -> int:
                 "V.SESSION_MAX=3 ⇒ 实存 %d" % n_live)
     finally:
         V.SESSION_MAX = old_max
+
+    # ---------- V18 证据字节忠实度四分类（Phase 44 · D1 根因修复，铁律 #41/#61/#67） ----------
+    #   本段守三件事：
+    #     ① **可加总**：四分类之和 == 边总数（分列而不合并 ⇒ 不丢不可判定项）；
+    #     ② **口径不变**：`stale` 仍 == `changed + unverifiable_no_source`，
+    #        且 `unverifiable_not_in_repo` **不计入** stale（那些来源并未变更）；
+    #     ③ **响应自洽**：每条边的 `fidelity` 与 `stale` 布尔必须互相推出（两处口径防漂移）。
+    #   数值不写死 —— 全部从响应读 + 独立重算对比，图变时不会假红。
+    print("\n[V18] 证据字节忠实度四分类（D1：仓库字节为准 ⇒ changed 应为 0）")
+    if "SR" not in dir():                       # V16f 已导入；此处防御性重导（幂等）
+        sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
+        import source_registry as SR        # noqa: E402, F811
+    _, fid_r = http_get(port, "/api/subgraph"
+                        + q(seeds="MX:def:manifold", mode="ego", hops=3, max_nodes=800))
+    gstats = fid_r["stats"]
+    gcounts = gstats.get("evidence_fidelity_global") or {}
+    loccounts = gstats.get("evidence_fidelity") or {}
+
+    # V18a 四分类齐备 + 求和 == 边总数（分列可加总）
+    classes = list(Q.FIDELITY_CLASSES)
+    have_all = all(k in gcounts for k in classes) and gcounts.get("n_edges_total")
+    nsum = sum(gcounts.get(k, 0) for k in classes) if have_all else None
+    rep.add(bool(have_all) and nsum == gcounts.get("n_edges_total"),
+            "V18a 全图四分类齐备且求和 == 边总数（分列可加总）",
+            " ".join("%s=%s" % (k, gcounts.get(k)) for k in classes)
+            + "  Σ=%s / 总=%s" % (nsum, gcounts.get("n_edges_total")) if have_all
+            else "字段缺失：%s" % gcounts)
+
+    # V18b 本地（本次可见子图）同样可加总，且 ≤ 全图
+    lsum = sum(loccounts.get(k, 0) for k in classes) if loccounts else None
+    n_edges_seen = len(fid_r["edges"])
+    rep.add(lsum == n_edges_seen,
+            "V18b 本次子图四分类求和 == 本次返回边数",
+            "Σ=%s / 边=%d" % (lsum, n_edges_seen))
+    rep.add(all(loccounts.get(k, 0) <= gcounts.get(k, 0) for k in classes) if loccounts else False,
+            "V18c 本次子图各分类 ≤ 全图同类（无越界）",
+            " ".join("%s %s≤%s" % (k, loccounts.get(k), gcounts.get(k)) for k in classes)
+            if loccounts else "缺 evidence_fidelity")
+
+    # V18d ★ D1 修复的核心断言：以仓库字节为准 ⇒ 全图 `changed` 必须为 0
+    rep.add(gcounts.get("changed") == 0,
+            "V18d 全图 changed == 0（D1 根因已修：裁决与检出/行尾无关）",
+            "changed=%s（若 >0 ⇒ 有已登记来源的真实字节与仓库 blob 不符，须查来源而非行尾）"
+            % gcounts.get("changed"))
+
+    # V18e 字节源必须是仓库（不是 worktree）——否则 D1 会回归
+    #   ★ 这两个字段是**图级事实**（不随子图变），发布在 `/api/stats`；
+    #     子图响应只带 `evidence_fidelity_global`（也是图级，但为读数方便一并给了）。
+    _, stats_r = http_get(port, "/api/stats")
+    fsrc = stats_r.get("evidence_byte_source") or ""
+    rep.add(fsrc.startswith("repo"),
+            "V18e 证据字节源 == 仓库 blob（不是 worktree，D1 防回退）",
+            fsrc or "缺 evidence_byte_source")
+
+    # V18f `stale` 口径不变：stale == changed + unverifiable_no_source
+    reg = V.stale_registry()
+    b_all = V.get_backend().all_edges()
+    ind_counts = Q.fidelity_counts(b_all, reg)          # 独立重算（不复用服务端缓存）
+    ind_stale = sum(1 for e in b_all if Q.edge_is_stale(e, reg))
+    rep.add(ind_stale == ind_counts["changed"] + ind_counts["unverifiable_no_source"],
+            "V18f stale 口径不变：全图 stale == changed + unverifiable_no_source",
+            "stale=%d == %d + %d" % (ind_stale, ind_counts["changed"],
+                                     ind_counts["unverifiable_no_source"]))
+
+    # V18g 独立重算 == 响应（服务端不是另算一套）
+    diffs = [k for k in classes if ind_counts.get(k) != gcounts.get(k)]
+    rep.add(not diffs,
+            "V18g 独立重算四分类 == 响应 evidence_fidelity_global",
+            "全部一致" if not diffs else "差：%s" % {k: (ind_counts.get(k), gcounts.get(k))
+                                                    for k in diffs})
+
+    # V18h ★ `unverifiable_not_in_repo` 明确**不**计入 stale（已知边界，不是缺陷信号）
+    notinrepo = gcounts.get("unverifiable_not_in_repo") or 0
+    rep.add(ind_stale == gcounts.get("changed", 0) + gcounts.get("unverifiable_no_source", 0),
+            "V18h unverifiable_not_in_repo 不计入 stale（已知边界：locator 未入库，并非变更）",
+            "not_in_repo=%d（占 %.1f%%）｜stale=%d（不含它）"
+            % (notinrepo, 100.0 * notinrepo / max(1, gcounts.get("n_edges_total") or 1), ind_stale))
+
+    # V18i 来源侧三分类：in_repo + not_in_repo + no_locator == 来源总数
+    rsrc = stats_r.get("source_repo_status") if isinstance(stats_r.get("source_repo_status"), dict) else {}
+    n_src = sum(rsrc.values()) if rsrc else 0
+    rep.add(bool(rsrc) and n_src > 0 and set(rsrc) == set(SR.REPO_STATUS),
+            "V18i 来源 repo_status 三分类齐备（in_repo/not_in_repo/no_locator）",
+            " ".join("%s=%s" % (k, rsrc.get(k)) for k in SR.REPO_STATUS) if rsrc
+            else "缺 source_repo_status")
+    # not_in_repo 的来源数 == 独立重算
+    ind_rsm = SR.repo_status_map(ROOT)
+    ind_rs = {k: sum(1 for v in ind_rsm.values() if v == k) for k in SR.REPO_STATUS}
+    rep.add(rsrc == ind_rs, "V18i2 来源分列 == 独立重算 repo_status_map",
+            "响应 %s / 独立 %s" % (rsrc, ind_rs))
+
+    # V18i3 `/api/subgraph` 与 `/api/stats` 的图级读数必须一致（防两处各算一套）
+    rep.add(stats_r.get("evidence_fidelity") == gcounts,
+            "V18i3 /api/stats 与 /api/subgraph 的 evidence_fidelity_global 逐值一致",
+            "stats=%s" % stats_r.get("evidence_fidelity") if stats_r.get("evidence_fidelity") == gcounts
+            else "subgraph=%s ≠ stats=%s" % (gcounts, stats_r.get("evidence_fidelity")))
+
+    # V18j 响应内每条边：fidelity ∈ 四分类或 null，且 stale ⇔ fidelity ∈ STALE_FIDELITIES
+    bad_val, bad_pair = [], []
+    for e in fid_r["edges"]:
+        fv = e.get("fidelity")
+        if fv is not None and fv not in Q.FIDELITY_CLASSES:
+            bad_val.append((e["id"], fv))
+        if fv is None:
+            continue
+        if bool(e.get("stale")) != (fv in Q.STALE_FIDELITIES):
+            bad_pair.append((e["id"], fv, e.get("stale")))
+    rep.add(not bad_val, "V18j 每条边 fidelity ∈ 四分类 ∪ {null}（无越界取值）",
+            "越界=%s" % bad_val[:3] if bad_val else "%d 条合法" % len(fid_r["edges"]))
+    rep.add(not bad_pair, "V18k 边 stale ⇔ fidelity ∈ STALE_FIDELITIES（两处口径不漂移）",
+            "矛盾=%s" % bad_pair[:3] if bad_pair else "一致")
+
+    # V18l 契约：带 fidelity 字段的响应仍通过 schema；反例（非法枚举）必须变红
+    sch_sg = load_schema("subgraph.schema.json")
+    rep.add(not validate(fid_r, sch_sg, sch_sg),
+            "V18l 含 fidelity/fidelity_reasons 的响应通过 subgraph.schema.json")
+    import copy as _copy
+    inj_f = _copy.deepcopy(fid_r)
+    if inj_f["edges"]:
+        inj_f["edges"][0]["fidelity"] = "totally_bogus"
+    rep.add(bool(validate(inj_f, sch_sg, sch_sg)),
+            "V18m 反例：注入非法 fidelity ⇒ schema 必须变红（枚举非常真）")
+
+    # V18n 负对照：四分类**恒等式**不是真空 —— 人为篡改 n_edges_total 必须破坏求和
+    tamper = _copy.deepcopy(gcounts)
+    tamper["n_edges_total"] = (tamper.get("n_edges_total") or 0) + 1
+    tamper_sum = sum(tamper.get(k, 0) for k in classes)
+    rep.add(tamper_sum != tamper["n_edges_total"],
+            "V18n 负对照：篡改边总数 ⇒ 求和恒等式必然不成立（断言非真空）",
+            "Σ=%d ≠ 篡改后总数=%d" % (tamper_sum, tamper["n_edges_total"]))
 
     # ---------- Neo4j 契约（本环境不可达 ⇒ SKIP，不计通过） ----------
     print("\n[Neo4j] 双后端同契约（本环境不可达 ⇒ SKIP）")

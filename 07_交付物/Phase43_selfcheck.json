@@ -1,7 +1,7 @@
 {
  "schema": "sttp-phase43-selfcheck/v1",
  "counts": {
-  "PASS": 51,
+  "PASS": 69,
   "FAIL": 0,
   "SKIP": 3
  },
@@ -90,7 +90,7 @@
   {
    "status": "PASS",
    "name": "V4a 正例：deadline_ms=1 ⇒ timeout/GRAPH_QUERY_TIMEOUT",
-   "detail": "timeout elapsed=15ms"
+   "detail": "timeout elapsed=16ms"
   },
   {
    "status": "PASS",
@@ -100,12 +100,12 @@
   {
    "status": "PASS",
    "name": "V5a snapshot_id == sha256(查询源)[:12]",
-   "detail": "sha256:1545ac8e5ada"
+   "detail": "sha256:282717073b1f"
   },
   {
    "status": "PASS",
    "name": "V5b 换一份图 ⇒ snapshot_id 变（且等于该图哈希）",
-   "detail": "sha256:1545ac8e5ada vs sha256:2c2c54ff4eef"
+   "detail": "sha256:282717073b1f vs sha256:26f809376c45"
   },
   {
    "status": "PASS",
@@ -224,28 +224,38 @@
   },
   {
    "status": "PASS",
-   "name": "V16b 改动登记文件 ⇒ stale 边增加（判据非真空）",
-   "detail": "2 → 25"
+   "name": "V16b ★ D1：worktree 变异 ⇒ 服务端 stale **不变**（裁定与检出/行尾无关）",
+   "detail": "2 → 2"
   },
   {
    "status": "PASS",
-   "name": "V16c 缓存键随内容身份变化（不是按时间猜）",
-   "detail": "键已更新"
+   "name": "V16e 负对照后逐字节还原（铁律 #61）",
+   "detail": "57822ea11cb52475"
   },
   {
    "status": "PASS",
-   "name": "V16d 负对照后逐字节还原（铁律 #61）",
-   "detail": "496d836b64b9d507"
-  },
-  {
-   "status": "PASS",
-   "name": "V16e 还原后 stale 计数回到基线",
+   "name": "V16e2 还原后服务端 stale 计数回到基线",
    "detail": "2"
   },
   {
    "status": "PASS",
+   "name": "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 相关边翻成 changed",
+   "detail": "stale 121 → 819（changed=698，来源 Phase13.Gate.B5，引用 734 条）"
+  },
+  {
+   "status": "PASS",
+   "name": "V16d 缓存键随 HEAD 变化（HEAD 变 ⇒ 键变 ⇒ 重算；不含 mtime/size）",
+   "detail": "HEAD=dc236a7d354f｜伪 HEAD 下键已变=True"
+  },
+  {
+   "status": "PASS",
    "name": "V16f 响应里的字节忠实性计数 == 独立重算",
-   "detail": "响应 7 / 独立 7"
+   "detail": "响应 0 / 独立 0"
+  },
+  {
+   "status": "PASS",
+   "name": "V16g 两口径可构造差异（blob=LF / 工作区=CRLF ⇒ 哈希必不同；还原后必相等）",
+   "detail": "differ=True / restored_equal=True "
   },
   {
    "status": "PASS",
@@ -273,6 +283,86 @@
    "detail": "V.SESSION_MAX=3 ⇒ 实存 3"
   },
   {
+   "status": "PASS",
+   "name": "V18a 全图四分类齐备且求和 == 边总数（分列可加总）",
+   "detail": "verified=1536 changed=0 unverifiable_no_source=121 unverifiable_not_in_repo=47055  Σ=48712 / 总=48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V18b 本次子图四分类求和 == 本次返回边数",
+   "detail": "Σ=25 / 边=25"
+  },
+  {
+   "status": "PASS",
+   "name": "V18c 本次子图各分类 ≤ 全图同类（无越界）",
+   "detail": "verified 23≤1536 changed 0≤0 unverifiable_no_source 2≤121 unverifiable_not_in_repo 0≤47055"
+  },
+  {
+   "status": "PASS",
+   "name": "V18d 全图 changed == 0（D1 根因已修：裁决与检出/行尾无关）",
+   "detail": "changed=0（若 >0 ⇒ 有已登记来源的真实字节与仓库 blob 不符，须查来源而非行尾）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18e 证据字节源 == 仓库 blob（不是 worktree，D1 防回退）",
+   "detail": "repo（git cat-file blob HEAD:<path>）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18f stale 口径不变：全图 stale == changed + unverifiable_no_source",
+   "detail": "stale=121 == 0 + 121"
+  },
+  {
+   "status": "PASS",
+   "name": "V18g 独立重算四分类 == 响应 evidence_fidelity_global",
+   "detail": "全部一致"
+  },
+  {
+   "status": "PASS",
+   "name": "V18h unverifiable_not_in_repo 不计入 stale（已知边界：locator 未入库，并非变更）",
+   "detail": "not_in_repo=47055（占 96.6%）｜stale=121（不含它）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18i 来源 repo_status 三分类齐备（in_repo/not_in_repo/no_locator）",
+   "detail": "no_locator=9 not_in_repo=12 in_repo=10"
+  },
+  {
+   "status": "PASS",
+   "name": "V18i2 来源分列 == 独立重算 repo_status_map",
+   "detail": "响应 {'no_locator': 9, 'not_in_repo': 12, 'in_repo': 10} / 独立 {'no_locator': 9, 'not_in_repo': 12, 'in_repo': 10}"
+  },
+  {
+   "status": "PASS",
+   "name": "V18i3 /api/stats 与 /api/subgraph 的 evidence_fidelity_global 逐值一致",
+   "detail": "stats={'verified': 1536, 'changed': 0, 'unverifiable_no_source': 121, 'unverifiable_not_in_repo': 47055, 'n_edges_total': 48712}"
+  },
+  {
+   "status": "PASS",
+   "name": "V18j 每条边 fidelity ∈ 四分类 ∪ {null}（无越界取值）",
+   "detail": "25 条合法"
+  },
+  {
+   "status": "PASS",
+   "name": "V18k 边 stale ⇔ fidelity ∈ STALE_FIDELITIES（两处口径不漂移）",
+   "detail": "一致"
+  },
+  {
+   "status": "PASS",
+   "name": "V18l 含 fidelity/fidelity_reasons 的响应通过 subgraph.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V18m 反例：注入非法 fidelity ⇒ schema 必须变红（枚举非常真）",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V18n 负对照：篡改边总数 ⇒ 求和恒等式必然不成立（断言非真空）",
+   "detail": "Σ=48712 ≠ 篡改后总数=48713"
+  },
+  {
    "status": "SKIP",
    "name": "N1 Neo4j 子图契约一致",
    "detail": "回退到 NetworkX（未连上 Neo4j）"
@@ -281,7 +371,7 @@
  "notes": [
   "V6 覆盖率（如实披露）：9/9 条边带证据",
   "V14 实测：verified 可见 34780 / 隐藏 13932；verified_strict 可见 34769 / 隐藏 13943（差 11 条=by_construction）",
-  "★ 已知缺陷（本轮发现并登记）：7/21 个登记 locator 的 worktree 字节 ≠ 仓库 blob ⇒ 证据里的 src_hash 在干净检出下不可复现、stale 判据会假阳。根因与修法见 `07_交付物/Phase43_*.md`；**exclude_stale 默认仍为 false**。"
+  "字节忠实性：全部已入库 locator 的工作区字节与仓库 blob 一致（无需归一化差异披露）"
  ],
- "elapsed_s": 20.48
+ "elapsed_s": 35.49
 }

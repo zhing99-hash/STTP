@@ -1,7 +1,7 @@
 {
   "schema": "sttp-phase43-frontend-selfcheck/v1",
   "generated_by": "06_PoC/tests/phase43_frontend_selfcheck.py",
-  "n_pass": 59,
+  "n_pass": 64,
   "n_fail": 0,
   "n_skip": 2,
   "rows": [
@@ -201,6 +201,31 @@
       "detail": "7 档逐值一致"
     },
     {
+      "kind": "PASS",
+      "name": "X8a 忠实度四分类：前端 == queries.FIDELITY_CLASSES（4 档，逐值 + 顺序）",
+      "detail": "verified；changed；unverifiable_no_source；unverifiable_not_in_repo"
+    },
+    {
+      "kind": "PASS",
+      "name": "X8b 忠实度徽标键集合 == 四分类（4 档齐全，各带 color/label/short/note）",
+      "detail": "4 档字段齐全"
+    },
+    {
+      "kind": "PASS",
+      "name": "X8c FIDELITY_UNKNOWN 不占用任何已定义档位键（不参与加总）",
+      "detail": "FIDELITY_UNKNOWN 是独立兜底对象"
+    },
+    {
+      "kind": "PASS",
+      "name": "X8d STALE_FIDELITIES ⊆ FIDELITY_CLASSES（stale 仍是四分类的子集）",
+      "detail": "['changed', 'unverifiable_no_source'] ⊆ 4 档"
+    },
+    {
+      "kind": "PASS",
+      "name": "X9 契约 src_hash 可空 ⇔ 前端显式「无 locator · 不可复算」徽标（两侧同步）",
+      "detail": "schema.type=['string', 'null']｜required=True｜前端徽标=有"
+    },
+    {
       "kind": "--",
       "name": "[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）",
       "detail": ""
@@ -208,7 +233,7 @@
     {
       "kind": "PASS",
       "name": "N1 前端纯逻辑断言全过（node.exe）",
-      "detail": "frontend_core_check: PASS 53 / FAIL 0（共 53）"
+      "detail": "frontend_core_check: PASS 66 / FAIL 0（共 66）"
     },
     {
       "kind": "--",
@@ -228,7 +253,7 @@
     {
       "kind": "PASS",
       "name": "H3 / 返回页面（text/html）",
-      "detail": "200 text/html; charset=utf-8 18954 字节"
+      "detail": "200 text/html; charset=utf-8 19386 字节"
     },
     {
       "kind": "PASS",

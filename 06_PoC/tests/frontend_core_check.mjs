@@ -27,6 +27,8 @@ import * as C from "../js/core.js";
 import { Api } from "../js/api.js";
 import { detectMode } from "../js/modes.js";
 import { renderStatusLine, renderBanner } from "../js/panels.js";
+import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge } from "../js/style.js";
+import { renderEdgeDetail } from "../js/evidence.js";
 
 let pass = 0, fail = 0;
 const rows = [];
@@ -377,6 +379,98 @@ renderStatusLine(sl1, {
 check("F27 状态行回显 snapshot_id / query_hash / 已隐藏 N 条 / error_code",
       sl1.innerHTML.includes("sha256:abcdef123456") && sl1.innerHTML.includes("0123456789abcdef")
       && sl1.innerHTML.includes("13932") && sl1.innerHTML.includes("SUBGRAPH_LIMIT_REACHED"), "");
+
+// ---------------------------------------------------------------------------
+// F28 证据字节忠实度四分类（Phase 44 · D1）—— 纯逻辑面
+//   ★ 与 `phase43_frontend_selfcheck.py: X8` 分工：X8 守「前端常量 == 后端常量」，
+//     本节守「徽标解析行为本身」—— 尤其「未知值**不得**被渲染成 `verified`」。
+// ---------------------------------------------------------------------------
+check("F28 忠实度四分类：名称齐全且与徽标键集合一一对应",
+      FIDELITY_CLASSES.length === 4
+      && FIDELITY_CLASSES.every((k) => Object.prototype.hasOwnProperty.call(FIDELITY_BADGE, k)),
+      FIDELITY_CLASSES.join(" "));
+
+const fidColors = FIDELITY_CLASSES.map((k) => FIDELITY_BADGE[k].color);
+const fidLabels = FIDELITY_CLASSES.map((k) => FIDELITY_BADGE[k].label);
+check("F28b 四档颜色两两不同（★ 不只靠文字区分）",
+      new Set(fidColors).size === 4, fidColors.join(" "));
+check("F28c 四档短标签两两不同（★ 图注/图例可读）",
+      new Set(FIDELITY_CLASSES.map((k) => FIDELITY_BADGE[k].short)).size === 4,
+      FIDELITY_CLASSES.map((k) => FIDELITY_BADGE[k].short).join(" "));
+
+check("F28d fidelityBadge(已知档) 原样返回同一对象（零转换、零降级）",
+      FIDELITY_CLASSES.every((k) => fidelityBadge(k) === FIDELITY_BADGE[k]),
+      "");
+
+// ★ 关键否定断言：登记表不可用 ⇒ `fidelity === null` ⇒ 必须落 `未判定`，
+//   绝不能默认成 `verified`（那会把「无法判定」伪装成「已复算一致」）。
+check("F28e fidelityBadge(未知值) ⇒ FIDELITY_UNKNOWN，且**不**等于 verified 徽标",
+      fidelityBadge(null) === FIDELITY_UNKNOWN
+      && fidelityBadge(undefined) === FIDELITY_UNKNOWN
+      && fidelityBadge("bogus") === FIDELITY_UNKNOWN
+      && fidelityBadge(undefined) !== FIDELITY_BADGE.verified,
+      "null/undefined/bogus 三路均落未判定");
+
+check("F28f FIDELITY_UNKNOWN 的颜色/标签与任何已定义档位均不同",
+      !fidColors.includes(FIDELITY_UNKNOWN.color) && !fidLabels.includes(FIDELITY_UNKNOWN.label),
+      `${FIDELITY_UNKNOWN.color} ${FIDELITY_UNKNOWN.label}`);
+
+// 文字对比度：徽标色作前景、深色面板作底 —— 与 F4 同口径（≥4.5:1）
+const fidContrast = FIDELITY_CLASSES.map((k) => {
+  const r = C.contrastRatio(FIDELITY_BADGE[k].color, C.SURFACE_BG);
+  return [k, r === null ? null : Math.round(r * 100) / 100];
+});
+check("F28g 四档徽标色对深色底对比度 ≥ 4.5:1",
+      fidContrast.every(([, r]) => r !== null && r >= 4.5),
+      fidContrast.map(([k, r]) => `${k}=${r}`).join(" "));
+
+check("F28h 每档都给出 note（解释「为何」—— 尤其 not_in_repo 的「并未变更」）",
+      FIDELITY_CLASSES.every((k) => typeof FIDELITY_BADGE[k].note === "string"
+                                    && FIDELITY_BADGE[k].note.length >= 8),
+      "");
+check("F28i unverifiable_not_in_repo 的 note 明说「并未变更」（防止误报为 stale）",
+      FIDELITY_BADGE.unverifiable_not_in_repo.note.includes("并未变更"),
+      FIDELITY_BADGE.unverifiable_not_in_repo.note.slice(0, 40) + "…");
+
+// ---------------------------------------------------------------------------
+// F29 证据卡片：`src_hash === null`（无 locator 的模型/规则源）必须**显式**说明
+//   ★ 契约（subgraph.schema.json）把 `src_hash` 声明为 `["string","null"]`，
+//     且字段**始终存在**（在 required 内）。若前端只是「空则不渲染哈希」，
+//     读者会把「不可复算」误读成「哈希恰好没显示」。故要求落一个可见徽标。
+// ---------------------------------------------------------------------------
+const evEl = fakeEl();
+renderEdgeDetail(evEl, {
+  type: "uses_operator", kind: "Phase13.GNN.typed", source: "MX:def:x", target: "MX:def:y",
+  fidelity: "unverifiable_no_source", stale: true, fidelity_reasons: ["来源无 locator（不可复算）"],
+  evidence: [{ kind: "model", src: "Phase13.GNN.typed", src_ver: "v1", src_hash: null,
+               impl: "gnn_eval_v2", impl_ver: "v1", indep: false }],
+});
+check("F29 src_hash=null ⇒ 渲染可见的「无 locator · 不可复算」徽标（不是静默留空）",
+      evEl.innerHTML.includes("无 locator · 不可复算"),
+      "");
+check("F29b src_hash=null 时**不得**把 null 字面量当作哈希打印",
+      !evEl.innerHTML.includes("nullnull") && !/>null</.test(evEl.innerHTML), "");
+
+const evEl2 = fakeEl();
+renderEdgeDetail(evEl2, {
+  type: "uses_operator", kind: "Phase13.GNN.typed", source: "MX:def:x", target: "MX:def:y",
+  fidelity: "verified", stale: false,
+  evidence: [{ kind: "recompute", src: "NIST.CODATA", src_ver: "2022", src_hash: "abcdef0123456789",
+               impl: "verification_model", impl_ver: "1", indep: true }],
+});
+check("F29c src_hash 有值 ⇒ 显示哈希前缀且**不**出现「无 locator」徽标",
+      evEl2.innerHTML.includes("abcdef012345") && !evEl2.innerHTML.includes("无 locator · 不可复算"), "");
+
+const evEl3 = fakeEl();
+renderEdgeDetail(evEl3, {
+  type: "uses_operator", kind: "Phase13.GNN.typed", source: "MX:def:x", target: "MX:def:y",
+  fidelity: "unverifiable_no_source", stale: true,
+  evidence: [{ kind: "model", src: "Phase13.GNN.typed", impl: "gnn", indep: false }],
+});
+check("F29d src_hash 键**缺失**（旧响应）⇒ 不加徽标也不崩（向后兼容）",
+      !evEl3.innerHTML.includes("无 locator · 不可复算")
+      && evEl3.innerHTML.includes("Phase13.GNN.typed"), "",
+);
 
 // ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）
