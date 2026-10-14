@@ -76,20 +76,11 @@
  },
  "code": {
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
-  "dirty_sample": [
-   "M 06_PoC/release/make_manifest.py",
-   " M ENV_README.txt",
-   " M PROJECT_DEVELOPMENT_GUIDE.md",
-   " M requirements.lock",
-   " M requirements.txt",
-   " M sttp.sh",
-   "?? .env.example",
-   "?? 06_PoC/tests/phase45_install_selfcheck.py"
-  ],
+  "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "d2103317ed2119d196f47256b360d9a304057b3b",
-  "git_head_at_build_short": "d210331",
-  "working_tree_dirty_at_build": true
+  "git_head_at_build": "e15ff604227d348842c9f1fff9806311f90106c6",
+  "git_head_at_build_short": "e15ff60",
+  "working_tree_dirty_at_build": false
  },
  "counterexamples": {
   "cases": 108,
@@ -671,7 +662,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-14T14:27:57+08:00",
+  "created": "2026-10-14T14:34:35+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
