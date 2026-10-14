@@ -16,9 +16,11 @@
 
 端点
 ----
-    GET /                        → graph_view.html
+    GET /                        → graph_view.html（壳；★ Phase 43 起默认「查询面板 + 局部子图」）
     GET /vendor/<file>           → 本地化的前端依赖（Cytoscape / fcose / MathJax；A4）
+    GET /js/<file>.js            → ★ Phase 43 前端 ES Module（零构建；必须 text/javascript）
     GET /graph_data.json         → 导出的图谱数据（缺失时即时调用 graph_export）
+                                   ★ 仅供 `mode=bundle`（离线样例/小图）使用；live 模式不请求它
     GET /api/neighbors?node=<id> → queries.get_neighbors（返回 {node, neighbors, edges}）
     GET /api/stats               → 图谱统计
     ★ Phase 43（复评 A06 合并）—— 局部图谱查询：
@@ -101,6 +103,7 @@ NORMALIZED = os.path.join(ETL_DIR, "normalized.json")
 GRAPH_DATA = os.environ.get("GRAPH_DATA_FILE", os.path.join(HERE, "graph_data.json"))
 HTML_FILE = os.path.join(HERE, "graph_view.html")
 VENDOR_DIR = os.path.join(HERE, "vendor")                   # A4：本地化的前端依赖（Cytoscape / MathJax）
+JS_DIR = os.path.join(HERE, "js")                           # ★ Phase 43：前端 ES Module（零构建）
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = int(os.environ.get("PORT", "8765"))
 
@@ -546,6 +549,11 @@ class VizHandler(BaseHTTPRequestHandler):
             if route == "/vendor" or route.startswith("/vendor/"):
                 return self._static(parsed.path[len("/vendor"):], VENDOR_DIR)
 
+            # ★ Phase 43：前端 ES Module（零构建，浏览器原生 import）
+            # 必须走 text/javascript（见 VENDOR_MIME）——MIME 不对浏览器会拒绝加载 module。
+            if route == "/js" or route.startswith("/js/"):
+                return self._static(parsed.path[len("/js"):], JS_DIR)
+
             if route == "/graph_data.json":
                 return self._json(200, load_graph_data())
 
@@ -887,11 +895,13 @@ def main(argv=None) -> int:
     get_backend()
     print("-" * 68)
     print(f"  访问地址 : {url}")
-    print(f"  端点     : /  ·  /graph_data.json  ·  /api/stats  ·  /api/neighbors?node=<id>")
+    print(f"  端点     : /  ·  /js/<module>.js  ·  /vendor/<lib>  ·  /graph_data.json")
+    print(f"             /api/stats  ·  /api/neighbors?node=<id>")
     print(f"             ★ /api/search?q=<文本>            （局部图谱：搜索）")
     print(f"             ★ /api/subgraph?seeds=<id>&mode=ego&hops=1   （局部子图，五态+预算）")
-    print(f"             ★ /api/path?src=<id>&dst=<id>&max_paths=20    （有界路径）")
+    print(f"             ★ /api/path?src=<id>&dst=<id>&max_paths=20    （有界路径；legacy 扁平信封）")
     print(f"             ★ /api/overview                    （概览元图，替代全图）")
+    print(f"  前端模式 : ?mode=live（默认，查询面板+子图）｜ ?mode=bundle（样例全量，小图）")
     print(f"  会话预算 : {SESSION_NODES} 节点 / {SESSION_EDGES} 边（超出即拒绝继续展开）")
     print(f"             无 session_id ⇒ 不记账、不限流；reset=1 清空该会话（前端「重置」）")
     print(f"             会话表上限 {SESSION_MAX} 个（超出按最久未写淘汰）")

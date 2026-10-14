@@ -39,6 +39,7 @@
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
 #   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V16 正/反例（Phase 43 / 复评 A06）
+#   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -321,6 +322,15 @@ EOF
     shift
     set -e
     "$PY" 06_PoC/tests/phase43_subgraph_selfcheck.py "$@"
+    ;;
+  frontend)
+    # Phase 43 步骤 B：前端「局部图谱查询浏览」自检。
+    # 静态结构 + 无障碍 + 模块图完整性 + **跨层一致性**（前端常量 ↔ 后端契约）
+    # + Node 纯逻辑断言（缺 node ⇒ SKIP，不计通过）+ HTTP MIME 层。
+    # ★ 真实浏览器渲染**未实测**（零第三方依赖）⇒ 脚本内如实记 SKIP。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/phase43_frontend_selfcheck.py "$@"
     ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"

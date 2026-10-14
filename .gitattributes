@@ -29,4 +29,15 @@
 # 同上原则：外部原件只读、可溯源 ⇒ 目录内字节不被检出改写。
 07_交付物/外部评审/codex设计/**  -text
 
+# 背景（Phase 43 步骤 B · 2026-10-14）：前端是**浏览器逐字节加载**的静态资源
+# （`graph_view.html` + `06_PoC/js/*.js`，ES Module 原生 import，零构建）。
+# 本机 `core.autocrlf=true` ⇒ 无属性时 `git checkout` 会把 LF 改写成 CRLF，
+# 于是「本机验过的字节 ≠ clone 出来的字节」，铁律 #53「干净检出实测」在**前端**上无法成立。
+# 故锁为 LF，使「仓库字节 == 检出字节」。
+# ★ 附带实证：自检**本身**是 CRLF 鲁棒的（把 9 个 js 全转 CRLF 后
+#   `bash sttp.sh frontend` 仍 PASS 55 / FAIL 0 / SKIP 2，`node` 仍 53/0）——
+#   即本行只保证**字节可复现**，并非修一个会导致自检失败的行尾缺陷。
+06_PoC/js/*.js       text eol=lf
+06_PoC/graph_view.html  text eol=lf
+
 # 其余文本源码保持默认（交给 core.autocrlf 处理）
