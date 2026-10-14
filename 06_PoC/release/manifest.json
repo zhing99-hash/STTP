@@ -76,20 +76,11 @@
  },
  "code": {
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
-  "dirty_sample": [
-   "M \"03_\\347\\237\\245\\350\\257\\206\\345\\261\\202/queries.py\"",
-   " M 06_PoC/graph_view.html",
-   " M 06_PoC/js/evidence.js",
-   " M 06_PoC/js/panels.js",
-   " M 06_PoC/js/style.js",
-   " M 06_PoC/js/viz.js",
-   " M 06_PoC/release/sample/sample_graph.json",
-   " M 06_PoC/release/sample/sample_normalized.json"
-  ],
+  "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "dc236a7d354fa9a168687ff7582a18d1d3e342d5",
-  "git_head_at_build_short": "dc236a7",
-  "working_tree_dirty_at_build": true
+  "git_head_at_build": "62a493f85435c03e018de541a60e17e66b20a0c0",
+  "git_head_at_build_short": "62a493f",
+  "working_tree_dirty_at_build": false
  },
  "counterexamples": {
   "cases": 108,
@@ -666,7 +657,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-14T10:19:13+08:00",
+  "created": "2026-10-14T10:45:55+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
