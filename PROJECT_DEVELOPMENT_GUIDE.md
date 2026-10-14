@@ -1253,9 +1253,15 @@ git merge origin/main
   后台回归期间不得改被其读取的文件）、**E21 发布清单 `dirty_sample` 非幂等**（P1，未修，含三条 Option 处方）、
   **E22 `evdeps --check` ⑦ 段干净检出假红**（P1，**已修**：⑦ 段输入源改为临时仓库内可控构造 `_probe_input.json`，
   与「大文件是否入库」解耦 + 防回退断言；主仓库与真·缺数据环境均**七段全过**）。
-- **干净检出实测（clone `d2327ee`）**：`evdeps --check` 首测 **RC=1**（⑦ 段假红 ⇒ **E22**）⇒ 修复后 **RC=0**；
-  `"$STTP_PYTHON" 06_PoC/release/verify_release.py --release` ⇒ **28/0/0**（F1 样例反例 78/0/0）；
-  ★ 裸 `python` 跑同一条会 RC=1（缺 networkx/sympy/pint/rdkit）—— **解释器选型问题，非缺陷**。)*
+- **干净检出实测（`git clone --depth 1`，HEAD `164a711` == 远端 `main`）**：
+  | 命令 | RC | 结果 |
+  |---|---|---|
+  | `bash sttp.sh evdeps --check` | **0** | **七段全过**（首测 RC=1 ⇒ ⑦ 段假红 ⇒ **E22**，已修） |
+  | `"$STTP_PYTHON" 06_PoC/release/verify_release.py --release` | **0** | **28/0/0**（F1 样例反例 78/0/0） |
+  | `bash sttp.sh frontend` | **0** | **62/0/4**（= 上轮 56/0/4 +6 条 X10–X15；4 条 SKIP 如实登记） |
+  | `bash sttp.sh subgraph` | **2** | **明确原因**（缺不入库权威图）+ 三种可用做法，**非裸 traceback** |
+  ★ **解释器选型**：裸 `python`（托管 3.13 空环境）跑 `verify_release.py --release` 会 RC=1/6 FAIL
+  （`G1/G2` 缺 networkx/sympy/pint/rdkit）—— **解释器问题，非缺陷**；而 `G1/G2` 正是为**分离这两种情形**而设的断言。)*
 *前次更新：2026-10-14（**Phase 44 · 第 36 轮：D1 根因修复 —— 证据字节忠实度以「仓库 blob」为准**。
 - 权威字节源 `git cat-file blob HEAD:<rel>`（与检出/行尾无关）；`git` 不可用 ⇒ `None`（fail-closed 而非空字节）。
 - 四分类 `verified / changed / unverifiable_no_source / unverifiable_not_in_repo` **取代二态**、**可加总回 48 712**；
