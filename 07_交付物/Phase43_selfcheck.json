@@ -245,7 +245,7 @@
   {
    "status": "PASS",
    "name": "V16d 缓存键随 HEAD 变化（HEAD 变 ⇒ 键变 ⇒ 重算；不含 mtime/size）",
-   "detail": "HEAD=dc236a7d354f｜伪 HEAD 下键已变=True"
+   "detail": "HEAD=3236858defe3｜伪 HEAD 下键已变=True"
   },
   {
    "status": "PASS",
@@ -373,5 +373,5 @@
   "V14 实测：verified 可见 34780 / 隐藏 13932；verified_strict 可见 34769 / 隐藏 13943（差 11 条=by_construction）",
   "字节忠实性：全部已入库 locator 的工作区字节与仓库 blob 一致（无需归一化差异披露）"
  ],
- "elapsed_s": 35.49
+ "elapsed_s": 35.33
 }

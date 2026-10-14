@@ -262,8 +262,12 @@ def main(argv=None) -> int:
         print("       ② 指定替代源：GRAPH_SOURCE_FILE=<path> bash sttp.sh subgraph"
               "（★ 但权威图口径的断言，如「48712 边」「hidden_by_trust 两档恒等」，")
         print("          在小样例上**必然 FAIL** —— 本自检不是为样例设计的）；")
-        print("       ③ 干净检出只验**下游链路**：bash sttp.sh release（离线样例 + 发布校验）"
-              "／ bash sttp.sh sample（用入库样例起服务）。")
+        print("       ③ 干净检出只验**下游链路**："
+              "python 06_PoC/release/verify_release.py --release")
+        print("          （只校验**已入库**的离线样例；实测裸 clone 下 PASS 28 / FAIL 0。）")
+        print("          ★ 不要用 `bash sttp.sh release`：它会先**重建**样例、需要权威图 ⇒")
+        print("            在裸 clone 上必定失败（那是**正确**的 fail-closed，不是可用路径）。")
+        print("          ★ `bash sttp.sh frontend` 可在裸 clone 跑（56/0/4，缺图处记 SKIP 不假通过）。")
         print("-" * 78)
         return 2
     srv = V.ThreadingHTTPServer(("127.0.0.1", 0), V.VizHandler)
