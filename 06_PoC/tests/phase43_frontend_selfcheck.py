@@ -454,6 +454,77 @@ def main(argv=None):
     except Exception as e:  # noqa: BLE001
         rep.skip("X9 契约 src_hash 可空 ⇔ 前端显式徽标", f"读取契约失败：{e}")
 
+    # X10–X14 A04 验证依赖状态跨层一致（Phase 45）
+    #   为什么必须逐值断言：前端要按状态给徽标 / 决定哪些进图例说明。
+    #   若后端加了第 5 个状态而前端徽标表没跟上，那条边就会落到「未判定」兜底 ——
+    #   **看起来正常**，实则把新状态静默吞掉（正是 #38「PASS≠无红」的家族）。
+    if Q is None:
+        rep.skip("X10–X14 A04 状态跨层一致", "import queries 失败（见 X3）")
+    else:
+        # style_src 已在 X8 段取好（`js_src["style"]`），此处复用，避免两处各取一份
+        m10 = re.search(r"export\s+const\s+EVIDENCE_STATUSES\s*=\s*"
+                        r"Object\.freeze\(\[([\s\S]*?)\]\)", style_src)
+        fe_stat = re.findall(r'"([a-z_]+)"', m10.group(1)) if m10 else []
+        be_stat = list(getattr(Q, "EVIDENCE_STATUSES", ()) or ())
+        rep.add(bool(fe_stat) and fe_stat == be_stat,
+                f"X10 A04 五态：前端 EVIDENCE_STATUSES == queries.EVIDENCE_STATUSES"
+                f"（{len(be_stat)} 态，逐值 + 顺序）",
+                f"前端={fe_stat} / 后端={be_stat}")
+        be_ses = list(getattr(Q, "STALE_EVIDENCE_STATUSES", ()) or ())
+        m11 = re.search(r"export\s+const\s+STALE_EVIDENCE_STATUSES\s*=\s*"
+                        r"Object\.freeze\(\[([\s\S]*?)\]\)", style_src)
+        fe_ses = re.findall(r'"([a-z_]+)"', m11.group(1)) if m11 else []
+        rep.add(bool(fe_ses) and fe_ses == be_ses,
+                "X11 排除集：前端 STALE_EVIDENCE_STATUSES == 后端（needs_review 不在其中）",
+                f"前端={fe_ses} / 后端={be_ses}")
+        # X12 徽标表：键集合 == 五态，且每档带 color/label/short/note
+        bm = re.search(r"export\s+const\s+EVIDENCE_STATUS_BADGE\s*=\s*Object\.freeze\(\{([\s\S]*?)\n\}\)",
+                       style_src)
+        badge_keys, thin = [], []
+        if bm:
+            blk = bm.group(1)
+            badge_keys = re.findall(r"^\s{2}([a-z_]+)\s*:\s*\{", blk, re.M)
+            for k in badge_keys:
+                mm = re.search(r"^\s{2}%s\s*:\s*\{([\s\S]*?)^\s{2}\}" % re.escape(k), blk, re.M)
+                body = mm.group(1) if mm else ""
+                if ("color" not in body
+                        or not all(x in body for x in ("label", "short", "note"))):
+                    thin.append(k)
+        rep.add(badge_keys == be_stat and not thin,
+                f"X12 A04 徽标键集合 == 五态（{len(be_stat)} 档齐全，各带 color/label/short/note）",
+                f"键={badge_keys}｜缺字段={thin}" if (badge_keys != be_stat or thin)
+                else f"{len(badge_keys)} 档字段齐全")
+        # X13 契约 enum == 五态 + null（既不缺也不能多）
+        try:
+            with io.open(sc_path, "r", encoding="utf-8") as f:
+                sc2 = json.load(f)
+            enum_es = (((sc2.get("$defs") or {}).get("evidence_status") or {})
+                       .get("enum") or [])
+            want_enum = set(be_stat) | {None}
+            rep.add(set(enum_es) == want_enum and len(enum_es) == len(want_enum),
+                    "X13 契约 $defs.evidence_status.enum == 五态 + null（不漏不多）",
+                    f"contract={enum_es} / queries={be_stat}+null")
+        except Exception as e:  # noqa: BLE001
+            rep.skip("X13 契约 evidence_status enum", f"读取契约失败：{e}")
+        # X14 ★ 缺记录必须有**独立**兜底徽标，且 evidence.js 显式写出「无 A04 记录」
+        ev2 = js_src.get("evidence", "")
+        absent_ok = ("EVIDENCE_STATUS_ABSENT" in style_src and "无 A04 记录" in style_src
+                     and "无 A04 记录" in ev2)
+        rep.add(absent_ok,
+                "X14 缺记录独立兜底：EVIDENCE_STATUS_ABSENT + 「无 A04 记录」文案在 style/evidence 两侧",
+                "已覆盖" if absent_ok else "缺：EVIDENCE_STATUS_ABSENT 或文案")
+        # X15 A04 等级表 == queries.EVIDENCE_STATUS_RANK（数值也要相等：聚合取最坏靠它）
+        rk = re.search(r"export\s+const\s+EVIDENCE_STATUS_RANK\s*=\s*Object\.freeze\(\{([\s\S]*?)\}\)",
+                       style_src)
+        fe_rank = {}
+        if rk:
+            for k, v in re.findall(r"([a-z_]+)\s*:\s*(\d+)", rk.group(1)):
+                fe_rank[k] = int(v)
+        be_rank = dict(getattr(Q, "EVIDENCE_STATUS_RANK", {}) or {})
+        rep.add(bool(fe_rank) and fe_rank == be_rank,
+                "X15 A04 严重度表：前端 EVIDENCE_STATUS_RANK == queries（聚合取最坏的口径一致）",
+                f"前端={fe_rank} / 后端={be_rank}")
+
     # ---------------------------------------------------------------- N 段
     rep.section("[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）")
     node = find_node()

@@ -8,7 +8,7 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 
 """
-Phase 43 · 局部图谱查询 **非真空自检**（V1–V18）
+Phase 43 · 局部图谱查询 **非真空自检**（V1–V19）
 ==================================================================
 
 目的
@@ -115,9 +115,22 @@ def validate(inst, schema, root, path="$", errs=None):
         for req in schema.get("required", []) or []:
             if req not in inst:
                 errs.append("%s: 缺必填字段 %s" % (path, req))
-        for k, sub in (schema.get("properties") or {}).items():
+        props = schema.get("properties") or {}
+        for k, sub in props.items():
             if k in inst:
                 validate(inst[k], sub, root, "%s.%s" % (path, k), errs)
+        # ★ Phase 45 补齐 `additionalProperties`（此前 C5b 报「未实现」⇒ 该约束**根本没被检查**，
+        #   正是 D12 登记的那类「静默跳过」。A04 契约用它约束 `evidence[].refs`
+        #   （`{ref_id: 哈希}` 的**动态键**）与 `ref_bindings`，无法用 `properties` 表达。
+        ap = schema.get("additionalProperties")
+        if ap is not None and ap is not True:
+            for k, v in inst.items():
+                if k in props:
+                    continue
+                if ap is False:
+                    errs.append("%s: 不允许额外属性 %s" % (path, k))
+                elif isinstance(ap, dict):
+                    validate(v, ap, root, "%s.%s" % (path, k), errs)
     if isinstance(inst, list) and "items" in schema:
         for i, x in enumerate(inst):
             validate(x, schema["items"], root, "%s[%d]" % (path, i), errs)
@@ -134,7 +147,7 @@ def load_schema(name: str) -> dict:
 SUPPORTED_KEYWORDS = {
     "$schema", "$id", "$defs", "$ref", "title", "description",
     "type", "enum", "pattern", "minLength", "minimum", "maximum",
-    "required", "properties", "items",
+    "required", "properties", "items", "additionalProperties",
 }
 
 
@@ -149,6 +162,10 @@ def collect_keywords(node, out=None):
                     collect_keywords(sub, out)
             elif k == "items":
                 collect_keywords(v, out)
+            elif k == "additionalProperties":
+                out.add(k)
+                if isinstance(v, dict):        # 值里的关键字也要被检查（防「约束里再藏未实现关键字」）
+                    collect_keywords(v, out)
             else:
                 out.add(k)
     elif isinstance(node, list):
@@ -230,7 +247,7 @@ def snap_via_subprocess(path: str) -> str:
 # 主流程
 # ---------------------------------------------------------------------------
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Phase 43 局部图谱查询自检（V1–V18）")
+    ap = argparse.ArgumentParser(description="Phase 43 局部图谱查询自检（V1–V19）")
     ap.add_argument("--json", default=None, help="把报告写成 JSON（审计留痕）")
     ap.add_argument("--keep-going", action="store_true")
     args = ap.parse_args(argv)
@@ -247,7 +264,7 @@ def main(argv=None) -> int:
     rep = Rep()
     t_all = time.time()
     print("=" * 78)
-    print("  Phase 43 · 局部图谱查询自检（V1–V18）")
+    print("  Phase 43 · 局部图谱查询自检（V1–V19）")
     print("=" * 78)
 
     # ★ 前置：本自检需要**权威图**（不入库）。缺源时给**明确原因 + RC=2**，
@@ -318,6 +335,19 @@ def main(argv=None) -> int:
     if unsupported:
         rep.note("★ %s 出现在 schema 中但校验器不实现 ⇒ 这些约束**根本没被检查**，"
                  "须补实现或改写 schema。" % unsupported)
+
+    # ★ C5b2 反例：`additionalProperties` 必须**真的生效**
+    #   为什么单独证一次：把关键字加进 `SUPPORTED_KEYWORDS` 只是「声明」，
+    #   若不真正执行，C5b 会**变绿而约束仍为空**（铁律 #38 的典型形态）。
+    #   A04 契约用它约束 `evidence[].refs` 的**动态键**（`{ref_id: 哈希}`），
+    #   无法改用 `properties` 表达 ⇒ 它必须真被检查。
+    ap_sch = {"type": "object", "properties": {"a": {"type": "string"}},
+              "additionalProperties": {"type": "integer"}}
+    rep.add(bool(validate({"a": "x", "b": "not-int"}, ap_sch, ap_sch)),
+            "C5b2 additionalProperties 生效：动态键值类型不符 ⇒ 校验器变红",
+            "（注入反例，必须报错）")
+    rep.add(not validate({"a": "x", "b": 3}, ap_sch, ap_sch),
+            "C5b3 additionalProperties 正例：动态键值合法 ⇒ 通过（断言非恒真）")
 
     # 跨模块等级表一致性（防 3 处表漂移）
     gx_rank = dict(GX.RANK_ORDER)
@@ -816,15 +846,29 @@ def main(argv=None) -> int:
             "V18e 证据字节源 == 仓库 blob（不是 worktree，D1 防回退）",
             fsrc or "缺 evidence_byte_source")
 
-    # V18f `stale` 口径不变：stale == changed + unverifiable_no_source
+    # V18f 【Phase 45 重写，铁律 #74】`stale` 口径 = **两层并集**（不是仅字节层）
+    #   为什么必须重写而不是删除：Phase 45 起 `edge_is_stale()` 把「字节忠实度」与
+    #   「A04 依赖状态」合流到**一处**。旧断言 `stale == changed + unverifiable_no_source`
+    #   在 A04 判出 stale/rejected 时会**假红**；但它守的性质（字节层不丢项）仍然重要
+    #   ⇒ 拆成两条：① 字节层那部分**恰好**等于旧口径；② 总数 ⊇ 字节层且 ⊆ 两层并集。
     reg = V.stale_registry()
     b_all = V.get_backend().all_edges()
     ind_counts = Q.fidelity_counts(b_all, reg)          # 独立重算（不复用服务端缓存）
+    ind_fid_stale = sum(1 for e in b_all
+                        if Q.edge_fidelity(e, reg) in Q.STALE_FIDELITIES)
+    base_stale = ind_counts["changed"] + ind_counts["unverifiable_no_source"]
+    ind_a04_stale = sum(1 for e in b_all
+                        if (Q.edge_evidence_status(e, reg) or {}).get("status")
+                        in Q.STALE_EVIDENCE_STATUSES)
     ind_stale = sum(1 for e in b_all if Q.edge_is_stale(e, reg))
-    rep.add(ind_stale == ind_counts["changed"] + ind_counts["unverifiable_no_source"],
-            "V18f stale 口径不变：全图 stale == changed + unverifiable_no_source",
-            "stale=%d == %d + %d" % (ind_stale, ind_counts["changed"],
-                                     ind_counts["unverifiable_no_source"]))
+    rep.add(ind_fid_stale == base_stale,
+            "V18f 字节层 stale 计数 == changed + unverifiable_no_source（旧口径原样保留）",
+            "字节层 stale=%d == %d + %d" % (ind_fid_stale, ind_counts["changed"],
+                                            ind_counts["unverifiable_no_source"]))
+    rep.add(base_stale <= ind_stale <= base_stale + ind_a04_stale,
+            "V18f2 【重写】全图 stale = 字节层 ∪ A04 层（两层并集，含于区间内）",
+            "stale=%d ∈ [%d, %d]（A04 层贡献 %d）"
+            % (ind_stale, base_stale, base_stale + ind_a04_stale, ind_a04_stale))
 
     # V18g 独立重算 == 响应（服务端不是另算一套）
     diffs = [k for k in classes if ind_counts.get(k) != gcounts.get(k)]
@@ -860,19 +904,28 @@ def main(argv=None) -> int:
             else "subgraph=%s ≠ stats=%s" % (gcounts, stats_r.get("evidence_fidelity")))
 
     # V18j 响应内每条边：fidelity ∈ 四分类或 null，且 stale ⇔ fidelity ∈ STALE_FIDELITIES
-    bad_val, bad_pair = [], []
+    bad_val = []
     for e in fid_r["edges"]:
         fv = e.get("fidelity")
         if fv is not None and fv not in Q.FIDELITY_CLASSES:
             bad_val.append((e["id"], fv))
-        if fv is None:
-            continue
-        if bool(e.get("stale")) != (fv in Q.STALE_FIDELITIES):
-            bad_pair.append((e["id"], fv, e.get("stale")))
     rep.add(not bad_val, "V18j 每条边 fidelity ∈ 四分类 ∪ {null}（无越界取值）",
             "越界=%s" % bad_val[:3] if bad_val else "%d 条合法" % len(fid_r["edges"]))
-    rep.add(not bad_pair, "V18k 边 stale ⇔ fidelity ∈ STALE_FIDELITIES（两处口径不漂移）",
-            "矛盾=%s" % bad_pair[:3] if bad_pair else "一致")
+    # V18k 【Phase 45 重写，铁律 #74】旧断言「stale ⇔ fidelity ∈ STALE_FIDELITIES」
+    #   在 A04 接入后**不再成立**（依赖层可单独把一条边判 stale）。
+    #   改守**真性质**：`stale ⇔ 字节层命中 ∪ 依赖层命中` —— 两处口径仍不漂移。
+    bad_pair2 = []
+    for e in fid_r["edges"]:
+        fv = e.get("fidelity")
+        sv = e.get("evidence_status")
+        expect = ((fv in Q.STALE_FIDELITIES) if fv else False) \
+            or (sv in Q.STALE_EVIDENCE_STATUSES)
+        if bool(e.get("stale")) != expect:
+            bad_pair2.append((e["id"], fv, sv, e.get("stale")))
+    rep.add(not bad_pair2,
+            "V18k 【重写】边 stale ⇔ (fidelity ∈ STALE_FIDELITIES) ∪ (evidence_status ∈ "
+            "{stale,rejected}) —— 两层合流于一处，不漂移",
+            "矛盾=%s" % bad_pair2[:3] if bad_pair2 else "一致（%d 条）" % len(fid_r["edges"]))
 
     # V18l 契约：带 fidelity 字段的响应仍通过 schema；反例（非法枚举）必须变红
     sch_sg = load_schema("subgraph.schema.json")
@@ -892,6 +945,170 @@ def main(argv=None) -> int:
     rep.add(tamper_sum != tamper["n_edges_total"],
             "V18n 负对照：篡改边总数 ⇒ 求和恒等式必然不成立（断言非真空）",
             "Σ=%d ≠ 篡改后总数=%d" % (tamper_sum, tamper["n_edges_total"]))
+
+    # ---------- V19 A04 验证依赖状态（Phase 45：五态 + 两层合流 + 缺记录不假装） ----------
+    #   本段守四件事：
+    #     ① **跨模块枚举一致**：`queries` 与 `evidence_deps` 的状态/映射逐值相同（防漂移）；
+    #     ② **可加总**：五态 + no_record 之和 == 边总数（含 `no_record` ⇒ 不把缺记录吞进 valid）；
+    #     ③ **合流于一处**：`stale ⇔ 字节层 ∪ 依赖层`（V18k 已守），且 `needs_review` **不**被排除；
+    #     ④ **构造性非真空**：人为把一条「字节层 verified」的边标成 A04 stale ⇒ 必须立即被排除
+    #        （否则 A04 只是挂在响应里好看，并没有真的参与裁决）。
+    print("\n[V19] A04 验证依赖状态（五态 / 两层合流 / 缺记录不假装 / 构造性非真空）")
+    try:
+        if "ED" not in dir():               # noqa: F821  （V18 已插 path）
+            sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
+            import evidence_deps as ED      # noqa: E402, F811
+        ed_ok, ed_err = True, ""
+    except Exception as e:  # noqa: BLE001
+        ED, ed_ok, ed_err = None, False, "%s: %s" % (type(e).__name__, e)
+
+    if not ed_ok:
+        rep.skip("V19a–V19e A04 状态", "evidence_deps 不可导入：%s" % ed_err)
+    else:
+        # V19a 跨模块枚举与映射逐值一致（两处各写一份 = 必然漂移）
+        rep.add(tuple(Q.EVIDENCE_STATUSES) == tuple(ED.STATUSES),
+                "V19a queries.EVIDENCE_STATUSES == evidence_deps.STATUSES（跨模块防漂移）",
+                "queries=%s / evidence_deps=%s" % (Q.EVIDENCE_STATUSES, ED.STATUSES))
+        rep.add(dict(Q.FIDELITY_OF_EVIDENCE_STATUS) == dict(ED.FIDELITY_OF_STATUS),
+                "V19a2 状态→四分类映射逐值一致（needs_review→unverifiable_no_source 等）",
+                "%s" % Q.FIDELITY_OF_EVIDENCE_STATUS)
+        rep.add(tuple(Q.STALE_EVIDENCE_STATUSES) == ("stale", "rejected"),
+                "V19a3 计入排除的 A04 状态 == {stale, rejected}（needs_review 不排除）",
+                "%s" % (Q.STALE_EVIDENCE_STATUSES,))
+
+        # V19b 全图分列可加总（五键 + no_record）
+        sc_glob = stats_r.get("evidence_status")
+        keys5 = list(Q.EVIDENCE_STATUSES) + ["no_record"]
+        have5 = bool(sc_glob) and all(k in sc_glob for k in keys5) and sc_glob.get("n_edges_total")
+        ssum = sum(sc_glob.get(k, 0) for k in keys5) if have5 else None
+        rep.add(bool(have5) and ssum == sc_glob.get("n_edges_total"),
+                "V19b 全图 A04 分列齐备（五态 + no_record）且求和 == 边总数",
+                " ".join("%s=%s" % (k, sc_glob.get(k)) for k in keys5)
+                + "  Σ=%s / 总=%s" % (ssum, sc_glob.get("n_edges_total")) if have5
+                else "字段缺失：%s" % sc_glob)
+
+        # V19c 本次可见子图同样可加总（子图口径 == 响应边数）
+        sc_loc = (fid_r["stats"].get("evidence_status"))
+        lsum2 = sum(sc_loc.get(k, 0) for k in keys5) if sc_loc else None
+        rep.add(lsum2 == len(fid_r["edges"]),
+                "V19c 本次子图 A04 分列求和 == 本次返回边数",
+                "Σ=%s / 边=%d" % (lsum2, len(fid_r["edges"])))
+
+        # V19d 独立重算 == 响应（服务端不是另算一套）
+        ind_sc = Q.evidence_status_counts(b_all, reg)
+        diffs2 = [k for k in keys5 + ["n_excluded_by_status"]
+                  if (ind_sc or {}).get(k) != (sc_glob or {}).get(k)]
+        rep.add(not diffs2 and ind_sc is not None,
+                "V19d 独立重算 A04 分列 == 响应 evidence_status_global",
+                "全部一致" if not diffs2 else "差：%s" % {k: ((ind_sc or {}).get(k),
+                                                              (sc_glob or {}).get(k))
+                                                         for k in diffs2})
+
+        # V19e 取值合法 + `source` 与 `null` 严格对应（缺记录 **不得**写成 valid）
+        bad_sv, bad_src = [], []
+        for e in fid_r["edges"]:
+            sv = e.get("evidence_status")
+            src_flag = e.get("evidence_status_source")
+            if sv is not None and sv not in Q.EVIDENCE_STATUSES:
+                bad_sv.append((e["id"], sv))
+            if src_flag not in ("recorded", "absent"):
+                bad_src.append((e["id"], "source=%r" % src_flag))
+            elif (sv is None) != (src_flag == "absent"):
+                bad_src.append((e["id"], "status=%r 与 source=%r 不自洽" % (sv, src_flag)))
+        rep.add(not bad_sv, "V19e 每条边 evidence_status ∈ 五态 ∪ {null}（无越界取值）",
+                "越界=%s" % bad_sv[:3] if bad_sv else "%d 条合法" % len(fid_r["edges"]))
+        rep.add(not bad_src,
+                "V19e2 缺记录 ⇒ status=null 且 source=absent（**不得**渲染成 valid）",
+                "矛盾=%s" % bad_src[:3] if bad_src else "自洽（%d 条）" % len(fid_r["edges"]))
+
+        # V19f `needs_review` **不**参与排除（铁律 #70：不可判定 ≠ 已变更）
+        bad_nr = [e["id"] for e in fid_r["edges"]
+                  if e.get("evidence_status") == "needs_review"
+                  and (e.get("fidelity") not in Q.STALE_FIDELITIES)
+                  and e.get("stale")]
+        rep.add(not bad_nr,
+                "V19f needs_review **不**导致 stale（缺数据本身 ≠ 已变更；否则排除开关自毁）",
+                "误判=%s" % bad_nr[:3] if bad_nr else "无（%d 条 needs_review）"
+                % sum(1 for e in fid_r["edges"] if e.get("evidence_status") == "needs_review"))
+
+        # V19g stale/rejected **确实**参与排除（端到端，非截断子图）
+        _, gb = http_get(port, "/api/subgraph"
+                         + q(seeds="MX:def:manifold", mode="ego", hops=2,
+                             max_nodes=4000, max_edges=8000, trust="all"))
+        _, ge = http_get(port, "/api/subgraph"
+                         + q(seeds="MX:def:manifold", mode="ego", hops=2,
+                             max_nodes=4000, max_edges=8000, trust="all",
+                             exclude_stale="1"))
+        if gb["stats"].get("truncated_by"):
+            rep.skip("V19g exclude_stale 端到端集合差",
+                     "子图被截断（%s）⇒ 集合差不可精确判定" % gb["stats"]["truncated_by"])
+        else:
+            ids_b = {e["id"] for e in gb["edges"]}
+            ids_e = {e["id"] for e in ge["edges"]}
+            want = {e["id"] for e in gb["edges"] if e.get("stale")}
+            cond = (not any(e.get("stale") for e in ge["edges"])
+                    and ids_e <= ids_b and want <= (ids_b - ids_e)
+                    and len(ids_e) < len(ids_b))
+            rep.add(bool(cond) and bool(want),
+                    "V19g exclude_stale：结果内无 stale、结果 ⊆ 基线、且所有 stale 边都被移出",
+                    "基线 %d 边（含 stale %d）→ 排除后 %d 边"
+                    % (len(ids_b), len(want), len(ids_e)))
+
+        # V19h ★ 构造性非真空（铁律 #75）：人为把一条**字节层 verified**的边标 A04 stale
+        fake = {"known": reg.get("known"), "hashes": reg.get("hashes"),
+                "repo_status": reg.get("repo_status"),
+                "status": dict(reg.get("status") or {})}
+        target = next((e for e in b_all
+                       if Q.edge_fidelity(e, reg) == "verified" and not Q.edge_is_stale(e, reg)),
+                      None)
+        if target is None:
+            rep.skip("V19h 构造性 A04 排除", "找不到「字节层 verified 且当前不 stale」的边")
+        else:
+            tkey = Q.edge_key(target)
+            fake["status"][tkey] = {"status": "stale",
+                                    "reasons": ["ref_changed:dimension_table"],
+                                    "source": "recorded"}
+            rep.add((not Q.edge_is_stale(target, reg)) and Q.edge_is_stale(target, fake)
+                    and bool(Q.stale_reasons(target, fake)),
+                    "V19h 构造性：字节层 verified 的边被标 A04 stale ⇒ 立即被排除且给出理由",
+                    "key=%s（标记前 stale=False，标记后 True）" % tkey)
+            # V19i 同一条边标成 `needs_review` ⇒ **不得**被排除（反向对照）
+            fake["status"][tkey] = {"status": "needs_review",
+                                    "reasons": ["unverifiable_reference:dimension_table"],
+                                    "source": "recorded"}
+            rep.add(not Q.edge_is_stale(target, fake),
+                    "V19i 反向对照：同一条边标成 needs_review ⇒ **不**被排除",
+                    "key=%s result_stale=%s" % (tkey, Q.edge_is_stale(target, fake)))
+
+        # V19j 负对照：篡改分列计数 ⇒ 求和恒等式必然破裂（断言非真空）
+        tamper2 = dict(sc_glob or {})
+        tamper2["valid"] = (tamper2.get("valid") or 0) + 1
+        tamper2_sum = sum(tamper2.get(k, 0) for k in keys5)
+        rep.add(tamper2 and tamper2_sum != tamper2.get("n_edges_total"),
+                "V19j 负对照：篡改 valid 计数 ⇒ 五态求和必然不等于边总数（非真空）",
+                "Σ=%s ≠ 总=%s" % (tamper2_sum, tamper2.get("n_edges_total")))
+
+    # V19k 契约：含 A04 字段的响应通过 subgraph.schema.json；反例必须变红
+    sch_sg2 = load_schema("subgraph.schema.json")
+    rep.add(not validate(fid_r, sch_sg2, sch_sg2),
+            "V19k 含 evidence_status 的响应通过 subgraph.schema.json")
+    inj_s = _copy.deepcopy(fid_r)
+    if inj_s["edges"]:
+        inj_s["edges"][0]["evidence_status"] = "totally_bogus"
+    rep.add(bool(validate(inj_s, sch_sg2, sch_sg2)),
+            "V19l 反例：注入非法 evidence_status ⇒ schema 必须变红（枚举非常真）")
+    # V19m `/api/stats` 与 `/api/subgraph` 的图级 A04 读数一致（防两处各算一套）
+    rep.add(stats_r.get("evidence_status") == sc_glob,
+            "V19m /api/stats 与 /api/subgraph 的 evidence_status_global 逐值一致",
+            "stats=%s" % stats_r.get("evidence_status") if stats_r.get("evidence_status") == sc_glob
+            else "subgraph=%s ≠ stats=%s" % (sc_glob, stats_r.get("evidence_status")))
+    # V19n A04 登记摘要可用（参考表 + 验证器身份），且字节源为仓库
+    a04 = stats_r.get("a04") or {}
+    rep.add(bool(a04.get("available")) and (a04.get("n_references") or 0) > 0
+            and (a04.get("byte_source") == "repo"),
+            "V19n /api/stats 披露 A04 参考表登记（可用 + 字节源=repo）",
+            "available=%s n_refs=%s byte_source=%s"
+            % (a04.get("available"), a04.get("n_references"), a04.get("byte_source")))
 
     # ---------- Neo4j 契约（本环境不可达 ⇒ SKIP，不计通过） ----------
     print("\n[Neo4j] 双后端同契约（本环境不可达 ⇒ SKIP）")

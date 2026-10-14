@@ -27,7 +27,10 @@ import * as C from "../js/core.js";
 import { Api } from "../js/api.js";
 import { detectMode } from "../js/modes.js";
 import { renderStatusLine, renderBanner } from "../js/panels.js";
-import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge } from "../js/style.js";
+import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
+         EVIDENCE_STATUSES, STALE_EVIDENCE_STATUSES, EVIDENCE_STATUS_RANK,
+         EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
+         evidenceStatusBadge } from "../js/style.js";
 import { renderEdgeDetail } from "../js/evidence.js";
 
 let pass = 0, fail = 0;
@@ -471,6 +474,164 @@ check("F29d src_hash 键**缺失**（旧响应）⇒ 不加徽标也不崩（向
       !evEl3.innerHTML.includes("无 locator · 不可复算")
       && evEl3.innerHTML.includes("Phase13.GNN.typed"), "",
 );
+
+// ---------------------------------------------------------------------------
+// F30 A04 验证依赖状态（Phase 45）—— 纯逻辑面
+//   ★ 与 `phase43_frontend_selfcheck.py: X10–X15` 分工：那边守「前端常量 == 后端常量」，
+//     本节守「徽标解析行为本身」—— 尤其
+//       ① **缺记录**（`null`）**不得**被渲染成「有效」；
+//       ② `needs_review` **不得**被渲染成「已变更」（那是两回事）。
+// ---------------------------------------------------------------------------
+check("F30 A04 五态：名称齐全且与徽标键集合一一对应",
+      EVIDENCE_STATUSES.length === 4
+      && EVIDENCE_STATUSES.every((k) => Object.prototype.hasOwnProperty.call(EVIDENCE_STATUS_BADGE, k)),
+      EVIDENCE_STATUSES.join(" "));
+
+const esColors = EVIDENCE_STATUSES.map((k) => EVIDENCE_STATUS_BADGE[k].color);
+check("F30b 四档颜色两两不同（★ 不只靠文字区分）",
+      new Set(esColors).size === 4, esColors.join(" "));
+check("F30c 四档短标签两两不同（图注/徽标可读）",
+      new Set(EVIDENCE_STATUSES.map((k) => EVIDENCE_STATUS_BADGE[k].short)).size === 4,
+      EVIDENCE_STATUSES.map((k) => EVIDENCE_STATUS_BADGE[k].short).join(" "));
+
+check("F30d severity 表与语义一致：valid < needs_review < stale < rejected",
+      EVIDENCE_STATUS_RANK.valid < EVIDENCE_STATUS_RANK.needs_review
+      && EVIDENCE_STATUS_RANK.needs_review < EVIDENCE_STATUS_RANK.stale
+      && EVIDENCE_STATUS_RANK.stale < EVIDENCE_STATUS_RANK.rejected,
+      JSON.stringify(EVIDENCE_STATUS_RANK));
+
+check("F30e 排除集 == {stale, rejected}（needs_review **不**在其中）",
+      STALE_EVIDENCE_STATUSES.length === 2
+      && STALE_EVIDENCE_STATUSES.includes("stale")
+      && STALE_EVIDENCE_STATUSES.includes("rejected")
+      && !STALE_EVIDENCE_STATUSES.includes("needs_review"),
+      STALE_EVIDENCE_STATUSES.join(" "));
+
+check("F30f evidenceStatusBadge(已知态) 原样返回同一对象（零转换、零降级）",
+      EVIDENCE_STATUSES.every((k) => evidenceStatusBadge(k) === EVIDENCE_STATUS_BADGE[k]), "");
+
+// ★ 关键否定断言 1：缺记录 ⇒ 独立兜底「无 A04 记录」，**绝不**默认成 valid
+check("F30g evidenceStatusBadge(null/undefined/'') ⇒ EVIDENCE_STATUS_ABSENT，"
+      + "且**不**等于 valid 徽标（缺记录 ≠ 已验证）",
+      evidenceStatusBadge(null) === EVIDENCE_STATUS_ABSENT
+      && evidenceStatusBadge(undefined) === EVIDENCE_STATUS_ABSENT
+      && evidenceStatusBadge("") === EVIDENCE_STATUS_ABSENT
+      && evidenceStatusBadge(null) !== EVIDENCE_STATUS_BADGE.valid,
+      "null/undefined/空串 三路均落「无 A04 记录」");
+
+check("F30h evidenceStatusBadge(未知值) ⇒ EVIDENCE_STATUS_UNKNOWN（不静默吞新状态）",
+      evidenceStatusBadge("bogus") === EVIDENCE_STATUS_UNKNOWN
+      && evidenceStatusBadge("bogus") !== EVIDENCE_STATUS_BADGE.valid,
+      "");
+
+check("F30i ABSENT / UNKNOWN 的颜色/标签与任何已定义档位均不同（可分辨）",
+      !esColors.includes(EVIDENCE_STATUS_ABSENT.color)
+      && !esColors.includes(EVIDENCE_STATUS_UNKNOWN.color)
+      && !EVIDENCE_STATUSES.map((k) => EVIDENCE_STATUS_BADGE[k].label)
+          .includes(EVIDENCE_STATUS_ABSENT.label),
+      `${EVIDENCE_STATUS_ABSENT.color} / ${EVIDENCE_STATUS_UNKNOWN.color}`);
+
+// 文字对比度：与 F4 / F28g 同口径（徽标色作前景、深色面板作底，≥4.5:1）
+const esContrast = EVIDENCE_STATUSES.map((k) => {
+  const r = C.contrastRatio(EVIDENCE_STATUS_BADGE[k].color, C.SURFACE_BG);
+  return [k, r === null ? null : Math.round(r * 100) / 100];
+});
+check("F30j 四档徽标色对深色底对比度 ≥ 4.5:1",
+      esContrast.every(([, r]) => r !== null && r >= 4.5),
+      esContrast.map(([k, r]) => `${k}=${r}`).join(" "));
+
+// ★ 关键否定断言 2：`needs_review` 的 note **必须**点明「并非已变更」
+check("F30k needs_review 的 note 明说「并非」已变更（不可判定 ≠ 已变更，铁律 #70）",
+      EVIDENCE_STATUS_BADGE.needs_review.note.includes("并非"),
+      EVIDENCE_STATUS_BADGE.needs_review.note.slice(0, 48) + "…");
+check("F30l rejected 的 note 说明它会与 stale 一同被排除（口径可预期）",
+      EVIDENCE_STATUS_BADGE.rejected.note.includes("排除"),
+      EVIDENCE_STATUS_BADGE.rejected.note.slice(0, 48) + "…");
+
+// ---------------------------------------------------------------------------
+// F31 证据卡片：A04 状态 / 依赖参考表 / 绑定强度 的渲染行为
+// ---------------------------------------------------------------------------
+const evA = fakeEl();
+renderEdgeDetail(evA, {
+  type: "uses_operator", kind: "Phase45.deps", source: "MX:def:x", target: "MX:def:y",
+  fidelity: "changed", stale: true, evidence_status: "stale",
+  evidence_status_source: "recorded",
+  evidence_status_reasons: ["ref_changed:dimension_table", "dep_version_changed:dimension_table.py"],
+  evidence_status_n: { evidence: 1, with_deps: 1 },
+  evidence: [{
+    kind: "recompute", src: "NIST.CODATA", src_ver: "2022", src_hash: "abcdef0123456789",
+    impl: "verification_model.quantity_dimension", impl_ver: "100148c147cb", indep: true,
+    evd: "evd:0123456789abcdef", vfr: "verification_model", vch: "43845b11d643880c",
+    refs: { dimension_table: "ab9c5bcde8932ae5" },
+    ref_bindings: { dimension_table: "impl_declared" },
+    status: "stale", status_reasons: ["ref_changed:dimension_table"],
+  }],
+});
+check("F31 有 A04 记录 ⇒ 渲染「验证依赖」banner 与状态原因",
+      evA.innerHTML.includes("验证依赖") && evA.innerHTML.includes("依赖已变更")
+      && evA.innerHTML.includes("ref_changed:dimension_table"),
+      "");
+check("F31b 证据卡显示 evidence_id / 验证器身份 / 依赖参考表（可追溯到具体表）",
+      evA.innerHTML.includes("evd:0123456789abcdef")
+      && evA.innerHTML.includes("43845b11d643")
+      && evA.innerHTML.includes("dimension_table"),
+      "");
+check("F31c 旧 impl_ver 被标注为「全库单一值、区分不出」（不把它当验证器版本用）",
+      evA.innerHTML.includes("100148c147cb")
+      && evA.innerHTML.includes("全库为单一值")
+      && evA.innerHTML.includes("A04a"),
+      "");
+check("F31d impl_declared 绑定被明确标出（与 code_import 过近似区分开）",
+      evA.innerHTML.includes("impl") && !evA.innerHTML.includes("code_import"), "");
+
+const evB = fakeEl();
+renderEdgeDetail(evB, {
+  type: "uses_operator", kind: "Phase45.deps", source: "MX:def:x", target: "MX:def:y",
+  fidelity: "verified", stale: false, evidence_status: "valid",
+  evidence_status_source: "recorded", evidence_status_n: { evidence: 1, with_deps: 1 },
+  evidence: [{
+    kind: "recompute", src: "NIST.CODATA", src_hash: "abcdef0123456789",
+    impl: "verification_model.x", indep: true, evd: "evd:ffffffffffffffff",
+    vfr: "verification_model", vch: "43845b11d643880c",
+    refs: { element_reference: "3a4e6d035f109462" },
+    ref_bindings: { element_reference: "code_import" },
+    status: "valid", status_reasons: [],
+  }],
+});
+check("F31e code_import 绑定显示为短标签「· import」且 tooltip 说明「保守过近似」（不假装强绑定）",
+      evB.innerHTML.includes("· import")
+      && evB.innerHTML.includes("保守过近似")
+      && !evB.innerHTML.includes("· impl<"),
+      "");
+
+const evC = fakeEl();
+renderEdgeDetail(evC, {
+  type: "uses_operator", kind: "Phase45.deps", source: "MX:def:x", target: "MX:def:y",
+  fidelity: "verified", stale: false, evidence_status: null,   // ★ 缺记录
+  evidence: [{ kind: "src", src: "NIST.CODATA", src_hash: "abcdef0123456789",
+               impl: "x", indep: true }],
+});
+check("F31f evidence_status=null ⇒ 显式写「无 A04 记录」，**不**渲染成「有效」",
+      evC.innerHTML.includes("无 A04 记录")
+      && !evC.innerHTML.includes("验证依赖：依赖一致"),
+      "");
+
+const evD = fakeEl();
+renderEdgeDetail(evD, {
+  type: "uses_operator", kind: "Phase45.deps", source: "MX:def:x", target: "MX:def:y",
+  fidelity: "verified", stale: false, evidence_status: "needs_review",
+  evidence_status_source: "recorded",
+  evidence_status_reasons: ["unverifiable_source:ElementKG2.0"],
+  evidence_status_n: { evidence: 1, with_deps: 1 },
+  evidence: [{ kind: "model", src: "ElementKG2.0", src_hash: null, impl: "x", indep: false,
+               evd: "evd:0000000000000000", status: "needs_review",
+               status_reasons: ["unverifiable_source:ElementKG2.0"] }],
+});
+check("F31g needs_review ⇒ 渲染「待复核（不可判定）」而**非**「依赖已变更」（不误报）",
+      evD.innerHTML.includes("待复核")
+      && !evD.innerHTML.includes("依赖已变更")
+      && !evD.innerHTML.includes("命题已否决"),
+      "");
 
 // ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）
