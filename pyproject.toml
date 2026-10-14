@@ -1,0 +1,102 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
+#
+# STTP · 打包元数据与命令行入口（Phase 45 · A05「第三人可安装入口」）
+# ============================================================================
+# 设计口径（请与 PROJECT_DEVELOPMENT_GUIDE.md §0.1 / §0.3.3 一起读）
+# ----------------------------------------------------------------------------
+# 1. 本文件**只**提供「打包元数据 + 入口声明」。它**不**引入前端构建链：
+#    前端仍是 §5.2.1 的**原生 ES Module**（无 npm / 无打包器 / 无转译）。
+#    仓库至今**无 `package.json`**，本文件也不改变这一点。
+# 2. **安装是可选的**。`bash sttp.sh <cmd>` 依旧是**零安装**路径，且是唯一的
+#    效果权威；`[project.scripts]` 里的入口只是它的**薄封装**
+#    （见 `sttp_cli/cli.py`，不复制任何逻辑）。
+# 3. **解释器约束放 `requires-python`（机器可读），不放进 `requirements.lock`**：
+#    早先 `requirements.lock` 里有 `python==3.11.9` 一行，会让
+#    `pip install -r requirements.lock` 去找一个名为 `python` 的**分发**（A05b）。
+# 4. `dependencies`（核心）刻意 **= 离线样例「重放级」验收真正需要的最小集**，
+#    与 `06_PoC/release/verify_release.py` 的 `REQUIRED_MODULES` **同源**
+#    （自检 A05-3 **读该常量比对**，不在此重复维护第二份）。
+#    重物（torch / rdkit 之外的数据栈 / 云端驱动）一律进可选分组 —— 第三人
+#    只为「跑通随包样例」不应被迫装 2 GB 的推理栈。
+# ============================================================================
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sttp-kg"
+version = "0.45.0"
+description = "STTP · 跨学科公式知识图谱（研究原型）：图谱构建方法论 + 可审计验证纪律"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = { file = "LICENSE" }
+authors = [{ name = "zhing" }]
+keywords = ["knowledge-graph", "cross-disciplinary", "reproducibility", "auditable-evidence"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering",
+]
+
+# ---- 核心依赖 = 「随包成品样例重放」（L1）的最小可运行集 ----
+dependencies = [
+  "networkx>=3.2",
+  "sympy>=1.12",
+  "pint>=0.23",
+  "rdkit>=2024.3",
+]
+
+[project.optional-dependencies]
+# ★ 版本规则（勿违反）：**本项目运行环境已安装的**给下限（实测可得）；
+#   **未安装的可选能力**给**裸名、不给版本**——宁可缺版本也不伪造「实测」值。
+#   见 `bash sttp.sh install` 的 A05-7（声明必须覆盖全仓实际 import，未列即 FAIL）。
+# 图 / 数值 / 数据：ETL、分析、导出、GNN 评测的公共底座（L2 重建路径也用它）
+analysis = ["numpy>=1.26", "pandas>=2.0", "scipy>=1.11", "matplotlib>=3.8", "rdflib>=7.0"]
+# ETL 替代后端（03_知识层/etl_pipeline.py 的 duckdb / polars 路径；未安装 ⇒ 裸名）
+etl_alt = ["duckdb", "polars"]
+# 嵌入式图数据库演示（03_知识层/load_kuzu_demo.py；未安装 ⇒ 裸名）
+kuzu = ["kuzu"]
+# 云端对账：仅 Aura 同步 / 反向导出需要；离线复现不需要（已安装 ⇒ 给下限）
+neo4j = ["neo4j>=5.20"]
+# 模型推理：仅 GNN 路径需要（CPU 版即可；已安装 ⇒ 给下限）
+torch = ["torch>=2.2"]
+# 数据源抓取：仅在线重建 / 可达性侦察需要（已安装 ⇒ 给下限）
+fetch = ["requests>=2.31"]
+# LLM 假设生成（04_验证闭环/llm_hypothesis.py；需联网与密钥；未安装 ⇒ 裸名）
+llm = ["openai"]
+# 实体链接（09_科研扩展/5C_entity_linker；未安装 ⇒ 裸名）
+# ★ A05 顺带登记：`sklearn` / `rapidfuzz` 此前在**任何**依赖清单里都没有声明。
+linker = ["scikit-learn", "rapidfuzz"]
+# 一次装全（含全部可选能力；★ 不含 playwright —— 见下方说明与 ACK 白名单）
+all = [
+  "numpy>=1.26", "pandas>=2.0", "scipy>=1.11", "matplotlib>=3.8", "rdflib>=7.0",
+  "duckdb", "polars", "kuzu", "neo4j>=5.20", "torch>=2.2", "requests>=2.31",
+  "openai", "scikit-learn", "rapidfuzz",
+]
+# ★ **刻意不声明** `playwright`：`06_PoC/tests/a4_offline_render.py` 会 import 它，
+#   但 §0.1 / D14 明确「不安装 Playwright / jsdom」（零第三方依赖 ⇒ 真实浏览器渲染未实测）。
+#   声明它会给第三人「这是受支持路径」的错觉。故改为在安装自检的**显式 ACK 白名单**
+#   里登记并写明原因（A05-7 对未列项一律 FAIL ⇒ 白名单是 fail-closed 的，不是静默漏网）。
+
+[project.urls]
+Homepage = "https://github.com/zhing99-hash/STTP"
+Source = "https://github.com/zhing99-hash/STTP"
+
+# ---- 入口（全部是 `bash sttp.sh` / 既有脚本的薄封装）----
+[project.scripts]
+sttp = "sttp_cli.cli:main"
+sttp-repro-level = "sttp_cli.cli:repro_level"
+sttp-sample-verify = "sttp_cli.cli:sample_verify"
+sttp-sample-serve = "sttp_cli.cli:sample_serve"
+sttp-sample-build = "sttp_cli.cli:sample_build"
+sttp-release-verify = "sttp_cli.cli:release_verify"
+
+[tool.setuptools]
+# ★ 本仓库**不是 Python 包布局**（全仓没有任何包的 `__init__.py`，目录名是
+#   `01_架构与数据模型`…`12_评测` 这类非标识符）。只打包入口薄封装；
+#   若留给 setuptools 自动发现，它会把整个仓库当包扫。
+packages = ["sttp_cli"]
