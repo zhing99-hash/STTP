@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sttp/evidence.schema.json",
+  "title": "STTP 版本化证据对象（Phase 45 · A04 验证依赖绑定）",
+  "description": "证据对象 v2：从「来源绑定」升级为「验证依赖绑定」。除原有的提出者来源身份（src/src_ver/src_hash/impl/impl_ver）外，显式登记 (a) 输入依赖 input_refs、(b) 参考表/规则依赖 reference_refs、(c) 验证器身份 verifier{verifier_id,code_hash,dependency_versions}，并给出可复算的生命周期 status ∈ {valid,stale,needs_review,rejected}。★ 契约本身不规定「哪些字段必须能从历史记录里恢复」——对 100% 的历史证据，凡不可恢复者一律走 needs_review 并在 status_reasons 里写明原因，**不伪造**。",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "claim_id",
+    "kind",
+    "impl",
+    "src",
+    "status",
+    "status_reasons"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^evd:[0-9a-f]{16}$",
+      "description": "证据对象自身的确定性身份 = sha256(claim_id | 序号 | src | impl | kind | detail)[:16]。同一图、同一输入 ⇒ 同一 id，可跨轮比对。"
+    },
+    "claim_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "被验证命题的身份 = 边 id（`type|source|target`）。证据是**关于**某命题的，命题不随证据更替而改变。"
+    },
+    "claim_version": {
+      "type": ["string", "null"],
+      "description": "命题版本 = sha256(claim 文本 | 该边全部 evidence_id 排序拼接)[:12]。证据集一变，命题版本即变 ⇒ 「同一 claim_id 的两个版本」可被识别（旧证据被新证据取代时）。"
+    },
+    "conditions": {
+      "type": ["object", "null"],
+      "description": "本次验证成立的条件（如 `T>0`、单位约定）。未记录 ⇒ null，**不编造**。",
+      "additionalProperties": true
+    },
+    "conditions_schema_version": {
+      "type": "string",
+      "description": "conditions 的结构版本；conditions 为 null 时为 \"none\"。"
+    },
+    "kind": {
+      "type": "string",
+      "description": "证据类别（source_assertion / recompute / cross_source / equation_species_consistency / model_prediction / carryover / construction）。"
+    },
+    "impl": {
+      "type": "string",
+      "description": "实现名（验证器函数或参考表名），由产出方在生成时刻记录。"
+    },
+    "detail": {"type": "string"},
+    "indep": {
+      "type": "boolean",
+      "description": "是否构成**独立**证据（同源复算不算独立，见铁律 #45）。"
+    },
+    "src": {
+      "type": "string",
+      "description": "提出者来源 id（source_registry 的键）。"
+    },
+    "src_ver": {"type": ["string", "null"]},
+    "src_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{8,64}$",
+      "description": "提出者来源在生成时刻的内容哈希。null = 该来源无 locator（模型/规则源），不可字节复算。"
+    },
+    "input_refs": {
+      "type": "array",
+      "description": "输入依赖：本证据依赖哪些可字节复算的输入。当前粒度 = 提出者来源（整文件级，`binding=input_source`）；★ 记录级（record_id）**尚未实现**，属已知边界。",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "content_hash", "binding"],
+        "additionalProperties": true,
+        "properties": {
+          "source_id": {"type": "string"},
+          "record_id": {"type": ["string", "null"], "description": "记录级定位；当前恒为 null（未细化到记录）。"},
+          "content_hash": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-f]{8,64}$",
+            "description": "记录时刻该输入的哈希；null 表示不可从仓库复算。"
+          },
+          "byte_source": {"enum": ["repo", "worktree", null]},
+          "binding": {"enum": ["input_source", "record_level"]}
+        }
+      }
+    },
+    "reference_refs": {
+      "type": "array",
+      "description": "参考表 / 规则依赖：本证据在验证时**读取**了哪些权威表或规则。★ A04b 的核心修复——旧实现只绑提出者来源，`impl` 里出现的量纲表/元素表依赖**从未登记**，故变异它们时无法定位受影响证据。",
+      "items": {
+        "type": "object",
+        "required": ["ref_id", "kind", "version", "content_hash", "binding"],
+        "additionalProperties": true,
+        "properties": {
+          "ref_id": {"type": "string"},
+          "kind": {"enum": ["python_module", "data_table", "rule_set"]},
+          "version": {"type": ["string", "null"]},
+          "content_hash": {
+            "type": ["string", "null"],
+            "pattern": "^[0-9a-f]{8,64}$",
+            "description": "复合哈希 = sha256(\"rel:文件哈希\" 逐文件拼接)[:16]；多文件参考表任一文件变更即变。"
+          },
+          "binding": {
+            "enum": ["impl_declared", "code_import"],
+            "description": "impl_declared = `impl` 串显式点名的参考表（强）；code_import = 由验证器模块的**代码级 import** 推出的保守依赖（可能过近似，见 §已知边界）。"
+          }
+        }
+      }
+    },
+    "verifier": {
+      "type": "object",
+      "description": "验证器身份：产出本条证据的**代码**（而非数据）。★ A04a 的核心修复——旧实现的 `impl_ver` 全库只有一个常量值，且失效器**从不比对**它。",
+      "required": ["verifier_id", "code_hash", "dependency_versions"],
+      "additionalProperties": true,
+      "properties": {
+        "verifier_id": {
+          "type": ["string", "null"],
+          "description": "验证器模块 id；null = 无代码验证器（纯数据断言 / 由人工或外部管线断言）。"
+        },
+        "code_hash": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{8,64}$",
+          "description": "验证器模块内容的 sha256[:12]。变更 ⇒ 其产出的全部证据转 stale。"
+        },
+        "dependency_versions": {
+          "type": "object",
+          "description": "验证器的直接本地依赖（rel 路径 → sha256[:12]）。变更任一 ⇒ 依赖版本漂移。",
+          "additionalProperties": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "result": {
+      "type": ["string", "null"],
+      "description": "本次验证的结论（与 verification_scope 配套）。"
+    },
+    "verification_scope": {"type": "string"},
+    "checked_at": {
+      "type": "string",
+      "description": "本条证据**最近一次**被复核的时刻（ISO 8601）。与证据生成时刻 evidence_at 不同：status 重算不改变 checked_at 之外的字段。"
+    },
+    "status": {
+      "enum": ["valid", "stale", "needs_review", "rejected"],
+      "description": "生命周期：valid = 全部已登记依赖与当前一致；stale = 至少一项已登记依赖与当前不符（可复算）；needs_review = **不可判定**（依赖哈希不可复算 / 缺少记录）——与 stale **分列**，不得合并；rejected = 该命题已被显式否决。★ 「不可从仓库复算」≠「已变更」（铁律 #70）。"
+    },
+    "status_reasons": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "状态原因码，形如 `src_changed:PhysicsBabel`、`ref_changed:dimension_table`、`verifier_changed:verification_model`、`dep_version_changed:element_reference.py`、`unverifiable_source`、`no_reference_declared`、`claim_rejected`。valid 时为空数组。"
+    },
+    "supersedes_evidence_id": {
+      "type": ["string", "null"],
+      "pattern": "^evd:[0-9a-f]{16}$",
+      "description": "重验产生的新证据指向它所取代的旧证据 id。★ 旧证据**保留**（不删除），只在 status 上体现；且**单纯重写哈希不恢复 valid** —— 必须有本次重验的留痕（`reverified_at` + 新证据）才转回 valid。"
+    },
+    "reverified_at": {
+      "type": ["string", "null"],
+      "description": "非 null ⇒ 本条证据是**重验产物**。配合 supersedes_evidence_id 可追溯新旧记录与判定变化。"
+    }
+  }
+}

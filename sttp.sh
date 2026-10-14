@@ -38,6 +38,7 @@
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
+#   bash sttp.sh evdeps [--report|--check|--emit-registry] A04 验证依赖绑定：参考表/验证器依赖推导 + 状态机自检（Phase 45）
 #   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V18 正/反例（Phase 43 / 复评 A06）
 #   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
@@ -349,6 +350,25 @@ EOF
     "$PY" 11_真实数据/lineage_invalidation.py --json "$@" || exit $?
     echo "== [3/3] 失效机制判据非真空自检 =="
     "$PY" 11_真实数据/lineage_invalidation.py --selfcheck || exit $?
+    ;;
+  evdeps)
+    # Phase 45（复评 A04）：验证依赖绑定 —— 参考表/验证器依赖推导 + 证据生命周期状态机。
+    # ★ 不依赖权威图的部分（参考表登记 / AST 依赖 / 状态机 / 五类变异定位）在干净检出里**可运行**；
+    #   只有 `--report`（需 normalized.json）走 require_authority 守卫。
+    shift
+    if [ "${1:-}" = "--check" ]; then
+      "$PY" 11_真实数据/evidence_deps.py --check || exit $?
+    elif [ "${1:-}" = "--emit-registry" ]; then
+      "$PY" 11_真实数据/evidence_deps.py --emit-registry || exit $?
+    else
+      require_authority evdeps "$NORM_GRAPH"
+      echo "== 参考表登记 =="
+      "$PY" 11_真实数据/evidence_deps.py --emit-registry || exit $?
+      echo "== 依赖推导报告 =="
+      "$PY" 11_真实数据/evidence_deps.py "$@" || exit $?
+      echo "== 判据自检（七段 · 构造性非真空）=="
+      "$PY" 11_真实数据/evidence_deps.py --check || exit $?
+    fi
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py
