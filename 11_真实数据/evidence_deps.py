@@ -774,13 +774,10 @@ def _mutation_probe():
     detail = []
     tmp = tempfile.mkdtemp(prefix="sttp_evdeps_probe_")
     try:
-        # 镜像参考表 + 一个输入源到临时仓库
+        # 镜像参考表到临时仓库
         files = set()
         for meta in REFERENCE_REGISTRY.values():
             files |= set(meta["paths"])
-        input_rel = "11_真实数据/elementkg_raw.json"
-        if os.path.exists(os.path.join(ROOT, input_rel)):
-            files.add(input_rel)
         for rel in sorted(files):
             ap = os.path.join(tmp, rel)
             os.makedirs(os.path.dirname(ap), exist_ok=True)
@@ -795,6 +792,17 @@ def _mutation_probe():
                     body = f.read()
             with open(ap, "wb") as f:
                 f.write(body)
+        # ★★ 输入源改为**在临时仓库内可控构造**（不再依赖 `11_真实数据/elementkg_raw.json` 是否入库）。
+        #   原实现在**干净检出**里会假红：该 raw 被 `.gitignore` 排除 ⇒ `src_hash` 取不到
+        #   ⇒ 基线 `needs_review:unverifiable_source` ⇒ ⑦ 段 FAIL（而 ⑦ 段本应「环境无关」）。
+        #   ★ 原实现另有一处 key 不一致缺陷：条件式取 key `"X"`，而 `src_sid` 硬编码 `"ElementKG2.0"`
+        #   ⇒ `.get(src_sid)` 恒为 None。改为可控构造后，**干净检出与主仓库都能真跑五类变异**（铁律 #20/#75）。
+        src_sid = "ElementKG2.0"
+        input_rel = "11_真实数据/_probe_input.json"
+        ap = os.path.join(tmp, input_rel)
+        os.makedirs(os.path.dirname(ap), exist_ok=True)
+        with open(ap, "wb") as f:
+            f.write(b'{"probe_input": true}\n')
         _g(["init", "-q"], tmp)
         _g(["-c", "core.autocrlf=false", "-c", "core.safecrlf=false", "add", "-A"], tmp)
         _g(["-c", "user.email=p@x", "-c", "user.name=p", "commit", "-q", "-m", "base"], tmp)
@@ -803,10 +811,12 @@ def _mutation_probe():
         cur0 = {
             "reference_hashes": reference_hashes(base=tmp),
             "verifiers": verifier_identity(base=tmp),
-            "src_hashes": {("ElementKG2.0" if os.path.exists(os.path.join(ROOT, input_rel))
-                            else "X"): _repo_bytes_hash(input_rel, tmp)},
+            "src_hashes": {src_sid: _repo_bytes_hash(input_rel, tmp)},
         }
-        src_sid = "ElementKG2.0"
+        # 防回退（本轮新增）：探测输入源的 blob 哈希**必须**可取，否则 ⑦ 段会退化成真空。
+        if cur0["src_hashes"].get(src_sid) is None:
+            detail.append("探针输入源 `%s` 取不到仓库 blob ⇒ ⑦ 段不可信（不得静默通过）" % input_rel)
+            return False, detail
         rec = {
             "src": src_sid,
             "src_hash": cur0["src_hashes"].get(src_sid),
