@@ -68,6 +68,18 @@ export function renderStatusLine(el, env, extra = {}) {
     }
     const hid = (env.hidden_by_trust != null) ? env.hidden_by_trust : stats.hidden_by_trust;
     if (hid) pills.push(`<span class="pill warn" title="因可信范围被排除的边数">已隐藏 ${esc(hid)} 条</span>`);
+    // ★ 证据字节忠实度**分列**（Phase 44 · D1）：必须在状态行可见 ——
+    //   否则「stale 很小」会被误读成「证据都能字节复算」。全图口径优先（那是真规模）。
+    const fidAll = stats.evidence_fidelity_global || stats.evidence_fidelity;
+    if (fidAll && typeof fidAll === "object") {
+      const bits = [`一致 ${fidAll.verified == null ? "?" : fidAll.verified}`];
+      if (fidAll.changed) bits.push(`已变更 ${fidAll.changed}`);
+      if (fidAll.unverifiable_no_source) bits.push(`不可判定 ${fidAll.unverifiable_no_source}`);
+      if (fidAll.unverifiable_not_in_repo) bits.push(`需上游 ${fidAll.unverifiable_not_in_repo}`);
+      const scope = stats.evidence_fidelity_global ? "全图" : "本次";
+      pills.push(`<span class="pill ${fidAll.changed ? "warn" : ""}" title="证据字节忠实度分列（${scope}）：一致=locator 在仓库内且哈希相符；已变更=需重验；不可判定=无来源（模型/规则源）；需上游=locator 未入库、需上游原始数据（已知边界，**并非**变更，不计入 stale）">`
+        + `证据字节 ${scope}：${esc(bits.join(" / "))}</span>`);
+    }
     if (env.error_code) {
       const txt = ERROR_CODE_TEXT[env.error_code] || "（未登记的 error_code）";
       pills.push(`<span class="pill ${/^(BAD_REQUEST|TOOL_EXECUTION_ERROR|SNAPSHOT_MISMATCH)$/.test(env.error_code) ? "err" : "warn"}" title="${esc(txt)}">error_code <code>${esc(env.error_code)}</code></span>`);
@@ -212,7 +224,10 @@ export class QueryPanel {
         <input type="range" id="f-conf" min="0" max="1" step="0.05" value="0">
         <label class="chkline"><input type="checkbox" class="chk" id="f-exclude-inferred"><span>排除推断边（explicit_or_inferred = inferred）</span></label>
         <label class="chkline"><input type="checkbox" class="chk" id="f-exclude-stale"><span>排除 stale 边</span></label>
-        <div class="hint">★ 「排除 stale」暂默认关闭：stale 判据当前会<b>假阳</b>（字节忠实性缺陷，见报告 §6-D1），开启会误删正常边。</div>
+        <div class="hint">★ 「排除 stale」**默认关闭**（有意）：它只排除「不可确认新鲜」的边
+          （已变更 + 无来源的模型/规则源，全图实测 <b>121</b> 条）；
+          <b>不</b>排除「locator 未入库 ⇒ 需上游原始数据」的 47 055 条 —— 那些**并未变更**
+          （字节忠实性口径见报告 D1，已修根因）。</div>
       </div>
       <div class="section">
         <h3>⑦ 预算</h3>

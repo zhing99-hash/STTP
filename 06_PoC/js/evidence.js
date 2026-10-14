@@ -21,7 +21,8 @@
  */
 
 import { WHY_SHOWN_LABEL } from "./core.js";
-import { verificationBadge, EVIDENCE_FIELDS, edgeTypeColor, eoiStyle } from "./style.js";
+import { verificationBadge, EVIDENCE_FIELDS, edgeTypeColor, eoiStyle,
+         fidelityBadge } from "./style.js";
 
 export function esc(s) {
   return String(s == null ? "" : s)
@@ -118,10 +119,20 @@ export function renderEdgeDetail(el, edge) {
 
   const parts = [];
   parts.push(whyRow(d.why || d.why_shown));
-  if (d.stale) {
-    parts.push('<div class="stale-banner">★ 该边证据判 <b>stale</b>：'
-      + esc(Array.isArray(d.stale_reasons) ? d.stale_reasons.join("；") : (d.stale_reasons || "源不可复算"))
+  // ★ 证据字节忠实度四分类（Phase 44 · D1）：**不得**把「不可从仓库复算」渲染成「已变更」——
+  //   前者是已知边界（未入库的大体积拉取缓存，需上游原始数据），后者才是真待重验。
+  const fid = d.fidelity || (d.stale ? "changed" : "verified");
+  const fb = fidelityBadge(fid);
+  if (fid !== "verified") {
+    parts.push(`<div class="stale-banner" style="border-left-color:${fb.color}">`
+      + `<b style="color:${fb.color}">证据忠实度：${esc(fb.label)}</b>`
+      + `<div class="hint">${esc(fb.note)}</div>`
+      + (Array.isArray(d.fidelity_reasons) && d.fidelity_reasons.length
+          ? `<div class="hint">${esc(d.fidelity_reasons.join("；"))}</div>` : "")
       + "</div>");
+  } else {
+    parts.push(`<div class="fidelity-ok" style="color:${fb.color}">`
+      + `证据忠实度：${esc(fb.label)}（${esc(fb.note)}）</div>`);
   }
   parts.push(`<div class="detail-title" style="font-size:14px">${esc(d.type)}</div>`);
   parts.push(`<div><span class="badge" style="border-color:${edgeTypeColor(d.type)}">语义关系 type=${esc(d.type)}</span>`
@@ -151,7 +162,11 @@ export function renderEdgeDetail(el, edge) {
         + `</div>`
         + `<div class="evrow"><span class="k">src（读的源）</span><span class="v"><code>${esc(ev.src)}</code>`
         + (ev.src_ver ? ` <span class="pill">${esc(ev.src_ver)}</span>` : "")
-        + (ev.src_hash ? ` <code class="hash">${esc(String(ev.src_hash).slice(0, 12))}…</code>` : "")
+        + (ev.src_hash ? ` <code class="hash">${esc(String(ev.src_hash).slice(0, 12))}…</code>`
+           : ("src_hash" in ev
+              ? ' <span class="pill warn" title="该来源无 locator（模型/规则源）⇒ 不可字节复算"'
+                + '>无 locator · 不可复算</span>'
+              : ""))
         + `</span></div>`
         + `<div class="evrow"><span class="k">impl（谁验的）</span><span class="v"><code>${esc(ev.impl)}</code>`
         + (ev.impl_ver ? ` <span class="pill">${esc(ev.impl_ver)}</span>` : "")

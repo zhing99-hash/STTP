@@ -146,6 +146,44 @@ export function verificationBadge(v) {
 }
 
 // ---------------------------------------------------------------------------
+// 证据字节忠实度四分类（Phase 44 · D1）
+// ★ 与 `03_知识层/queries.py:FIDELITY_CLASSES` **逐值一致**（自检 X8 守住）。
+// ★ 关键：`unverifiable_not_in_repo` **不是**「已变更」——
+//   它是**已知边界**（locator 未入库的大体积拉取缓存，需上游原始数据）。
+//   前端若把两者渲染成同一个红徽标，就会把 47 055 条正常边误报成待重验。
+// ---------------------------------------------------------------------------
+export const FIDELITY_CLASSES = Object.freeze([
+  "verified", "changed", "unverifiable_no_source", "unverifiable_not_in_repo",
+]);
+export const FIDELITY_BADGE = Object.freeze({
+  verified: {
+    color: "#3fb950", label: "已复算一致", short: "一致",
+    note: "来源 locator 在仓库内，且 src_hash == 当前仓库字节哈希（与检出/行尾无关）",
+  },
+  changed: {
+    color: "#f85149", label: "来源已变更", short: "已变更",
+    note: "可从仓库复算但哈希不符 ⇒ 该断言需重验",
+  },
+  unverifiable_no_source: {
+    color: "#d29922", label: "不可判定（无来源）", short: "不可判定",
+    note: "无证据 / 来源未登记 / 来源无 locator（模型或规则源）⇒ fail-closed 视为 stale",
+  },
+  unverifiable_not_in_repo: {
+    color: "#8b949e", label: "不可从仓库复算", short: "需上游",
+    note: "locator 未入库（*_raw.json / *_cache.json 等大体积拉取缓存，按「大体积派生对象"
+        + "不入库」有意排除）⇒ 需上游原始数据；**并未变更**，不计入 stale",
+  },
+});
+export const FIDELITY_UNKNOWN = {
+  color: "#8f9bb3", label: "未判定", short: "未判定",
+  note: "登记表不可用 ⇒ 不可判定（不得渲染成「一致」）",
+};
+
+export function fidelityBadge(v) {
+  return FIDELITY_BADGE[v] || FIDELITY_UNKNOWN;
+}
+
+// ---------------------------------------------------------------------------
 // 置信度 → 线宽 / 不透明度（沿用既有口径，避免"改了视觉但没改语义"）
 // ---------------------------------------------------------------------------
 export function confToWidth(c) { return 1 + (Math.max(0, (c == null ? 0.5 : c)) - 0.5) * 8; }
@@ -157,7 +195,7 @@ export function confToOpacity(c) { return 0.35 + (c == null ? 0.5 : c) * 0.6; }
 export const EVIDENCE_FIELDS = Object.freeze([
   { key: "src",      label: "源 id",        note: "读的是哪个源" },
   { key: "src_ver",  label: "源版本",       note: "该源的版本号" },
-  { key: "src_hash", label: "源哈希",       note: "与 source_registry 现算比对判 stale" },
+  { key: "src_hash", label: "源哈希",       note: "生成时刻的输入哈希；与当前**仓库字节**哈希比对判 fidelity" },
   { key: "impl",     label: "验证器",       note: "谁验的（= verifier）" },
   { key: "impl_ver", label: "验证器版本",   note: "验证实现版本" },
 ]);

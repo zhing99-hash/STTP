@@ -26,7 +26,7 @@ import {
   subjectColor, nodeTypeStyle, edgeTypeColor, eoiStyle,
   confToWidth, confToOpacity,
   SUBJECT_COLOR, SUBJECT_ORDER, NODE_TYPE_STYLE, NODE_TYPE_ORDER,
-  EDGE_TYPE_COLOR, EOI_STYLE,
+  EDGE_TYPE_COLOR, EOI_STYLE, fidelityBadge,
 } from "./style.js";
 
 function cyLib() {
@@ -300,7 +300,7 @@ export function createViz(opts = {}) {
         + `<span class="note">置信度：</span>${d.confidence == null ? "—" : d.confidence}<br>`
         + `<span class="note">验证档：</span>${esc(d.vl || "—")}`
         + `<br><span class="note">explicit/inferred：</span>${d._line === "dashed" ? "inferred（推断）" : "explicit（显式）"}`
-        + (d.stale ? `<br><span style="color:#d29922">该边证据判 stale</span>` : "")
+        + (d.stale ? `<br><span style="color:${fidelityBadge(d.fidelity).color}">证据忠实度：${esc(fidelityBadge(d.fidelity).label)}</span>` : "")
         + (d.why ? `<br><span class="note">why_shown：</span>${esc(d.why)}` : "");
       tooltip.style.display = "block";
       // 定位到画布内（跟随鼠标）
@@ -370,7 +370,10 @@ export function buildLegend(el, { nodeTypes = [], edgeTypes = [] } = {}) {
     const st = EOI_STYLE[k];
     parts.push(`<div class="legend-item"><span class="line-chip" style="border-top-color:${st.color};border-top-style:${st.line}"></span>${esc(st.label)}</div>`);
   });
-  parts.push('<div class="legend-item"><span class="line-chip" style="border-top-color:#d29922"></span>证据判 stale（琥珀）</div>');
+  parts.push('<div class="legend-item"><span class="line-chip" style="border-top-color:#d29922"></span>证据判 stale（琥珀 = 已变更 / 不可判定）</div>');
+  parts.push('<div class="legend-item note">「locator 未入库 ⇒ 不可从仓库复算」'
+    + '<b>不</b>着色（全图 47 055 条，着色会淹没真实信号）；'
+    + '见状态行「证据字节」分列与右栏证据卡。</div>');
 
   el.innerHTML = parts.join("");
 }
