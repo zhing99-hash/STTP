@@ -22,7 +22,7 @@
 
 import { WHY_SHOWN_LABEL } from "./core.js";
 import { verificationBadge, EVIDENCE_FIELDS, edgeTypeColor, eoiStyle,
-         fidelityBadge } from "./style.js";
+         fidelityBadge, evidenceStatusBadge } from "./style.js";
 
 export function esc(s) {
   return String(s == null ? "" : s)
@@ -134,6 +134,32 @@ export function renderEdgeDetail(el, edge) {
     parts.push(`<div class="fidelity-ok" style="color:${fb.color}">`
       + `证据忠实度：${esc(fb.label)}（${esc(fb.note)}）</div>`);
   }
+
+  // ★ A04 · 验证依赖状态（Phase 45）—— **第二层**判据，与上面的字节忠实度并列显示。
+  //   两者都可能是「不可判定」，但**原因不同**：忠实度缺的是来源字节，
+  //   本项缺的是参考表 / 验证器 / 依赖记录。合并成一个徽标就是把两种缺口混为一谈。
+  const sbadge = evidenceStatusBadge(d.evidence_status);
+  const sAbsent = (d.evidence_status == null || d.evidence_status === "");
+  if (!sAbsent) {
+    const cls = (d.evidence_status === "valid") ? "fidelity-ok" : "stale-banner";
+    const style = (cls === "stale-banner") ? ` style="border-left-color:${sbadge.color}"` : "";
+    const inner = (cls === "stale-banner")
+      ? `<b style="color:${sbadge.color}">验证依赖：${esc(sbadge.label)}</b>`
+      : `<span style="color:${sbadge.color}">验证依赖：${esc(sbadge.label)}（${esc(sbadge.note)}）</span>`;
+    parts.push(`<div class="${cls}"${style}>${inner}`
+      + `<div class="hint">${esc(sbadge.note)}</div>`
+      + (Array.isArray(d.evidence_status_reasons) && d.evidence_status_reasons.length
+          ? `<div class="hint">原因：${esc(d.evidence_status_reasons.join("；"))}</div>` : "")
+      + (d.evidence_status_n
+          ? `<div class="hint">带依赖记录的证据 ${esc(d.evidence_status_n.with_deps)} / ${esc(d.evidence_status_n.evidence)} 条</div>` : "")
+      + "</div>");
+  } else {
+    // ★ 缺 A04 记录 ⇒ 有**独立**兜底徽标（`EVIDENCE_STATUS_ABSENT` = 「无 A04 记录」），
+    //   **不得**渲染成「有效」：缺记录 ≠ 已验证。
+    parts.push(`<div class="note" style="margin:4px 0">验证依赖：${esc(sbadge.label)}`
+      + `（${esc(sbadge.note)}）</div>`);
+  }
+
   parts.push(`<div class="detail-title" style="font-size:14px">${esc(d.type)}</div>`);
   parts.push(`<div><span class="badge" style="border-color:${edgeTypeColor(d.type)}">语义关系 type=${esc(d.type)}</span>`
            + `<span class="badge">来源/管线 kind=${esc(d.kind)}</span></div>`);
@@ -155,11 +181,30 @@ export function renderEdgeDetail(el, edge) {
     parts.push('<div class="val"><span class="warn">该边没有 evidence 条目 —— 这正是可追溯性的缺口，不应被隐藏。</span></div>');
   } else {
     evs.forEach((ev, i) => {
+      const sb = (ev.status != null) ? evidenceStatusBadge(ev.status) : null;
+      const refs = (ev.refs && typeof ev.refs === "object") ? ev.refs : null;
+      const binds = (ev.ref_bindings && typeof ev.ref_bindings === "object") ? ev.ref_bindings : null;
+      const refChips = refs ? Object.keys(refs).sort().map((rid) => {
+        const b = binds ? binds[rid] : null;
+        const h = refs[rid] ? String(refs[rid]).slice(0, 12) + "…" : "null";
+        const bt = b === "impl_declared"
+          ? "该参考表由 impl 串显式点名（强绑定）"
+          : (b === "code_import"
+             ? "由验证器模块的代码级 import 推出（保守过近似：该模块 import 了这张表，"
+               + "不等于本次判定真的读了它 —— 任务单允许的「先按整文件保守失效」）"
+             : "绑定强度未知");
+        return `<span class="pill" title="${esc(bt)}（记录时刻内容哈希 ${esc(h)}）">`
+             + `${esc(rid)}${b ? " · " + esc(b === "impl_declared" ? "impl" : "import") : ""}</span>`;
+      }).join(" ") : "";
       parts.push(`<div class="evcard">
         <div class="evhead">证据 #${i + 1} <span class="pill">kind=${esc(ev.kind)}</span>`
         + (ev.indep === true ? '<span class="pill ok">独立</span>'
            : (ev.indep === false ? '<span class="pill warn">非独立</span>' : ""))
+        + (sb ? `<span class="pill" style="border-color:${sb.color};color:${sb.color}"`
+              + ` title="${esc(sb.note)}">${esc(sb.label)}</span>` : "")
         + `</div>`
+        + (ev.evd ? `<div class="evrow"><span class="k">evidence_id</span>`
+                  + `<span class="v"><code class="hash">${esc(ev.evd)}</code></span></div>` : "")
         + `<div class="evrow"><span class="k">src（读的源）</span><span class="v"><code>${esc(ev.src)}</code>`
         + (ev.src_ver ? ` <span class="pill">${esc(ev.src_ver)}</span>` : "")
         + (ev.src_hash ? ` <code class="hash">${esc(String(ev.src_hash).slice(0, 12))}…</code>`
@@ -169,8 +214,25 @@ export function renderEdgeDetail(el, edge) {
               : ""))
         + `</span></div>`
         + `<div class="evrow"><span class="k">impl（谁验的）</span><span class="v"><code>${esc(ev.impl)}</code>`
-        + (ev.impl_ver ? ` <span class="pill">${esc(ev.impl_ver)}</span>` : "")
+        + (ev.impl_ver ? ` <span class="pill" title="旧字段 impl_ver：实测全库为单一值（49572/49572），无法区分是哪个验证器版本产出了哪条证据（A04a 指摘）⇒ 请以下方 A04 的 code_hash 为准">`
+                        + `${esc(ev.impl_ver)}</span>` : "")
         + `</span></div>`
+        + (ev.vfr || ev.vch
+           ? `<div class="evrow"><span class="k">验证器身份（A04）</span><span class="v">`
+             + (ev.vfr ? `<code>${esc(ev.vfr)}</code>` : '<span class="pill warn">无验证器</span>')
+             + (ev.vch ? ` <code class="hash" title="验证器实现代码哈希（记录时刻）">${esc(String(ev.vch).slice(0, 12))}…</code>`
+                       : ' <span class="pill warn" title="缺 code_hash ⇒ 失效器判 needs_review（不可判定）">无 code_hash</span>')
+             + `</span></div>` : "")
+        + (refChips
+           ? `<div class="evrow"><span class="k">依赖参考表（A04）</span><span class="v">${refChips}</span></div>`
+           : (ev.status != null
+              ? `<div class="evrow"><span class="k">依赖参考表（A04）</span>`
+                + `<span class="v"><span class="pill">未声明参考表</span> `
+                + `<span class="hint">no_reference_declared（信息性：该证据不依赖参考表）</span></span></div>`
+              : ""))
+        + (Array.isArray(ev.status_reasons) && ev.status_reasons.length
+           ? `<div class="evrow"><span class="k">状态原因</span>`
+             + `<span class="v">${esc(ev.status_reasons.join("；"))}</span></div>` : "")
         + (ev.detail ? `<div class="evrow"><span class="k">说明</span><span class="v">${esc(ev.detail)}</span></div>` : "")
         + `</div>`);
     });

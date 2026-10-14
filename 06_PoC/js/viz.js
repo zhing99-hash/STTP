@@ -26,7 +26,7 @@ import {
   subjectColor, nodeTypeStyle, edgeTypeColor, eoiStyle,
   confToWidth, confToOpacity,
   SUBJECT_COLOR, SUBJECT_ORDER, NODE_TYPE_STYLE, NODE_TYPE_ORDER,
-  EDGE_TYPE_COLOR, EOI_STYLE, fidelityBadge,
+  EDGE_TYPE_COLOR, EOI_STYLE, fidelityBadge, evidenceStatusBadge,
 } from "./style.js";
 
 function cyLib() {
@@ -87,6 +87,10 @@ export function toCyEdge(e) {
       confidence: typeof e.confidence === "number" ? e.confidence : null,
       why: e.why_shown || null,
       stale: !!e.stale,
+      // ★ A04（Phase 45）：`stale` 已把两层合流（字节忠实度 ∪ 依赖状态）；
+      //   这里另存状态本身，供 tooltip / 证据卡分辨「是来源变了还是依赖变了」。
+      //   `null` = 该图上无 A04 记录（**不得**当作 valid）。
+      status: (e.evidence_status == null) ? null : e.evidence_status,
       _color: edgeTypeColor(e.type),
       _line: eoi.line,
       _width: confToWidth(c),
@@ -301,6 +305,9 @@ export function createViz(opts = {}) {
         + `<span class="note">验证档：</span>${esc(d.vl || "—")}`
         + `<br><span class="note">explicit/inferred：</span>${d._line === "dashed" ? "inferred（推断）" : "explicit（显式）"}`
         + (d.stale ? `<br><span style="color:${fidelityBadge(d.fidelity).color}">证据忠实度：${esc(fidelityBadge(d.fidelity).label)}</span>` : "")
+        + (d.status
+           ? `<br><span class="note">验证依赖（A04）：</span><span style="color:${evidenceStatusBadge(d.status).color}">${esc(evidenceStatusBadge(d.status).label)}</span>`
+           : '<br><span class="note">验证依赖（A04）：</span>无记录（缺记录 ≠ 已验证）')
         + (d.why ? `<br><span class="note">why_shown：</span>${esc(d.why)}` : "");
       tooltip.style.display = "block";
       // 定位到画布内（跟随鼠标）
@@ -370,10 +377,15 @@ export function buildLegend(el, { nodeTypes = [], edgeTypes = [] } = {}) {
     const st = EOI_STYLE[k];
     parts.push(`<div class="legend-item"><span class="line-chip" style="border-top-color:${st.color};border-top-style:${st.line}"></span>${esc(st.label)}</div>`);
   });
-  parts.push('<div class="legend-item"><span class="line-chip" style="border-top-color:#d29922"></span>证据判 stale（琥珀 = 已变更 / 不可判定）</div>');
+  parts.push('<div class="legend-item"><span class="line-chip" style="border-top-color:#d29922"></span>证据判 stale（琥珀）＝ 两层任一命中：'
+    + '<b>字节忠实度</b>「已变更 / 不可判定」<b>或</b> <b>验证依赖（A04）</b>「依赖已变更 / 命题已否决」</div>');
   parts.push('<div class="legend-item note">「locator 未入库 ⇒ 不可从仓库复算」'
     + '<b>不</b>着色（全图 47 055 条，着色会淹没真实信号）；'
     + '见状态行「证据字节」分列与右栏证据卡。</div>');
+  parts.push('<div class="legend-item note">★ <b>「无可复算依赖（待复核 needs_review）」不等同「已变更」</b>：'
+    + '它是本环境<b>不可判定</b>（缺的正是数据本身），故<b>不</b>着色也<b>不</b>被「排除 stale」排除 —— '
+    + '但它始终出现在状态行「验证依赖」分列里。'
+    + '<b>缺 A04 记录</b>（新图/旧图）同样<b>不</b>当作「有效」。</div>');
 
   el.innerHTML = parts.join("");
 }

@@ -80,6 +80,23 @@ export function renderStatusLine(el, env, extra = {}) {
       pills.push(`<span class="pill ${fidAll.changed ? "warn" : ""}" title="证据字节忠实度分列（${scope}）：一致=locator 在仓库内且哈希相符；已变更=需重验；不可判定=无来源（模型/规则源）；需上游=locator 未入库、需上游原始数据（已知边界，**并非**变更，不计入 stale）">`
         + `证据字节 ${scope}：${esc(bits.join(" / "))}</span>`);
     }
+    // ★ A04 验证依赖状态（Phase 45）—— 与字节忠实度**并列的第二层**：
+    //   上一行只答「来源那个字节文件变了吗」；本行还答「它依赖的参考表 / 验证器变了吗」。
+    //   `needs_review`（本环境不可判定）**不在** exclude_stale 里，但**必须显示** ——
+    //   否则会被读成「全都是 valid」。
+    const stAll = stats.evidence_status_global || stats.evidence_status;
+    if (stAll && typeof stAll === "object") {
+      const sbits = [];
+      if (stAll.valid) sbits.push(`有效 ${stAll.valid}`);
+      if (stAll.stale) sbits.push(`已变更 ${stAll.stale}`);
+      if (stAll.needs_review) sbits.push(`待复核 ${stAll.needs_review}`);
+      if (stAll.rejected) sbits.push(`已否决 ${stAll.rejected}`);
+      if (stAll.no_record) sbits.push(`无记录 ${stAll.no_record}`);
+      if (!sbits.length) sbits.push("无");
+      const sscope = stats.evidence_status_global ? "全图" : "本次";
+      pills.push(`<span class="pill ${(stAll.stale || stAll.rejected) ? "warn" : ""}" title="A04 验证依赖状态分列（${sscope}）：有效=来源·参考表·验证器·依赖版本均与当前一致；已变更=可复算依赖不符（需重验）；待复核=本环境不可判定（缺数据本身，**并非**变更，不计入「排除 stale」）；已否决=命题被显式否决；无记录=该图上还没有 A04 记录（缺记录 ≠ 已验证）">`
+        + `验证依赖 ${sscope}：${esc(sbits.join(" / "))}</span>`);
+    }
     if (env.error_code) {
       const txt = ERROR_CODE_TEXT[env.error_code] || "（未登记的 error_code）";
       pills.push(`<span class="pill ${/^(BAD_REQUEST|TOOL_EXECUTION_ERROR|SNAPSHOT_MISMATCH)$/.test(env.error_code) ? "err" : "warn"}" title="${esc(txt)}">error_code <code>${esc(env.error_code)}</code></span>`);
@@ -224,10 +241,13 @@ export class QueryPanel {
         <input type="range" id="f-conf" min="0" max="1" step="0.05" value="0">
         <label class="chkline"><input type="checkbox" class="chk" id="f-exclude-inferred"><span>排除推断边（explicit_or_inferred = inferred）</span></label>
         <label class="chkline"><input type="checkbox" class="chk" id="f-exclude-stale"><span>排除 stale 边</span></label>
-        <div class="hint">★ 「排除 stale」**默认关闭**（有意）：它只排除「不可确认新鲜」的边
-          （已变更 + 无来源的模型/规则源，全图实测 <b>121</b> 条）；
-          <b>不</b>排除「locator 未入库 ⇒ 需上游原始数据」的 47 055 条 —— 那些**并未变更**
-          （字节忠实性口径见报告 D1，已修根因）。</div>
+        <div class="hint">★ 「排除 stale」<b>默认关闭</b>（有意）。命中条件是<b>两层任一</b>（Phase 45 起）：
+          <br>① <b>字节忠实度</b>：已变更 + 无来源的模型/规则源（全图实测 <b>121</b> 条）；
+          <br>② <b>验证依赖（A04）</b>：依赖已变更 或 <b>命题已否决</b>。
+          <br><b>不</b>排除：「locator 未入库 ⇒ 需上游原始数据」的 47 055 条（它们<b>并未变更</b>，见报告 D1）；
+          也不排除「待复核 needs_review」—— 那是本环境<b>不可判定</b>（缺的正是数据本身），
+          若算作 stale 会把「排除 stale」退化成「几乎清空全图」（铁律 #70）。
+          它始终出现在状态行「验证依赖」分列里。</div>
       </div>
       <div class="section">
         <h3>⑦ 预算</h3>

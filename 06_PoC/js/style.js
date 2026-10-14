@@ -184,6 +184,59 @@ export function fidelityBadge(v) {
 }
 
 // ---------------------------------------------------------------------------
+// A04 · 验证依赖状态五态（Phase 45）
+// ★ 与 `03_知识层/queries.py:EVIDENCE_STATUSES` **逐值一致**（自检 X9 守住）。
+// ★ 与上面「字节忠实度」是**两层**，不可互相替代：
+//     忠实度只答「来源那个字节文件变了吗」；
+//     本项还答「它依赖的参考表 / 验证器 / 依赖版本变了吗、命题是否被否决」。
+// ★ `needs_review`（本环境不可判定 = 缺数据本身）**不**被 exclude_stale 排除，
+//   但**必须显示** —— 否则整张图会被读成「全都是 valid」。
+// ---------------------------------------------------------------------------
+export const EVIDENCE_STATUSES = Object.freeze([
+  "valid", "stale", "needs_review", "rejected",
+]);
+//: 计入「排除 stale」的状态（与 queries.STALE_EVIDENCE_STATUSES **逐值一致**，X12 守住）。
+//  ★ `needs_review` **不在**其中：它是「本环境不可判定」（缺数据本身），
+//    并入就会让「排除 stale」退化成「几乎清空全图」（铁律 #70）。
+export const STALE_EVIDENCE_STATUSES = Object.freeze(["stale", "rejected"]);
+//: 严重度（多证据聚合取最坏；与 queries.EVIDENCE_STATUS_RANK 同口径）
+export const EVIDENCE_STATUS_RANK = Object.freeze({
+  valid: 0, needs_review: 1, stale: 2, rejected: 3,
+});
+export const EVIDENCE_STATUS_BADGE = Object.freeze({
+  valid: {
+    color: "#3fb950", label: "依赖一致", short: "有效",
+    note: "来源 · 参考表 · 验证器 · 依赖版本均与当前仓库字节一致",
+  },
+  stale: {
+    color: "#f85149", label: "依赖已变更", short: "已变更",
+    note: "某条**可复算**依赖（来源 / 参考表 / 验证器 / 依赖版本）与记录值不符 ⇒ 需重验",
+  },
+  needs_review: {
+    color: "#d29922", label: "待复核（不可判定）", short: "待复核",
+    note: "本环境**不可判定**：来源或参考表不可从仓库复算 / 缺记录 / 哈希来路不明。"
+        + "**并非**「已变更」⇒ 不计入「排除 stale」，但也不等于通过",
+  },
+  rejected: {
+    color: "#a371f7", label: "命题已否决", short: "已否决",
+    note: "该断言已被显式否决（props.rejected）⇒ 与 stale 一同被「排除 stale」排除",
+  },
+});
+export const EVIDENCE_STATUS_ABSENT = {
+  color: "#8f9bb3", label: "无 A04 记录", short: "无记录",
+  note: "该图上没有这条边的验证依赖记录（缺记录 ≠ 已验证）——不得渲染成「有效」",
+};
+export const EVIDENCE_STATUS_UNKNOWN = {
+  color: "#8f9bb3", label: "未判定", short: "未判定",
+  note: "A04 不可用 ⇒ 不可判定（不得渲染成「有效」）",
+};
+
+export function evidenceStatusBadge(v) {
+  if (v == null || v === "") return EVIDENCE_STATUS_ABSENT;
+  return EVIDENCE_STATUS_BADGE[v] || EVIDENCE_STATUS_UNKNOWN;
+}
+
+// ---------------------------------------------------------------------------
 // 置信度 → 线宽 / 不透明度（沿用既有口径，避免"改了视觉但没改语义"）
 // ---------------------------------------------------------------------------
 export function confToWidth(c) { return 1 + (Math.max(0, (c == null ? 0.5 : c)) - 0.5) * 8; }
