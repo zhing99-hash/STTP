@@ -154,7 +154,7 @@
   A04 验证依赖绑定 + `valid/stale/needs_review/rejected`
   生命周期**已于 2026-10-14 完成**（见 §0.3.2 的 E10–E22：记录级绑定、`code_import` 过近似、`needs_review` 不可重验消除、
   **A04 `stale` 通道无自然正例**等边界）；
-  **A05 第三人可安装入口已于 2026-10-14 完成**（见 §0.3.3 的 **E23–E28**）。
+  **A05 第三人可安装入口已于 2026-10-14 完成**（见 §0.3.3 的 **E23–E29**）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -253,7 +253,7 @@
 
 #### 0.3.3 Phase 45（A05 第三人可安装入口）已承认的边界 —— 更新于 2026-10-14
 
-> 全文见 `07_交付物/Phase45_A05第三人可安装入口_20261014.md`（**E23–E28** + §9 未覆盖项）。
+> 全文见 `07_交付物/Phase45_A05第三人可安装入口_20261014.md`（**E23–E29** + §9 未覆盖项）。
 
 - ✅ **复评 A05 三条现场全部坐实并已修**（`00_项目管理/codex复评响应与下一阶段规划_20261013.md` §2）：
   **A05a** 无 `pyproject.toml` ｜ **A05b** `requirements.lock` 里 `python==3.11.9` 与 pip 分发**混列**
@@ -1358,7 +1358,7 @@ git merge origin/main
   还原后 `pyproject.toml` sha256 **逐字节回基线** `9c4f143e…`。
 - ★ **离线 wheel 构建**（**临时目录**，不污染仓库）：`sttp_kg-0.45.0-py3-none-any.whl` **21.0 KB**，含 `sttp_cli/cli.py`
   与全部 6 个入口点。
-- §0.3.3 新增 Phase 45 A05 已知边界 **E23–E28**：**E23 测量器陷阱**（`grep -c $'\r'` 在本环境**恒等于总行数**
+- §0.3.3 新增 Phase 45 A05 已知边界 **E23–E29**：**E23 测量器陷阱**（`grep -c $'\r'` 在本环境**恒等于总行数**
   ⇒ 「全 CRLF」假象，**已误导本轮判断一次**；**铁律候选 #81：行尾只用 `od`/`tr`/`awk` 判定**）；E24 L1/L2 口径边界；
   **E25 未实测 `pip install .`**（不计通过）；E26 5 个依赖只声明未验证（刻意裸名）；**E27 隐蔽耦合（已修）**；
   **E28 仪器自指（已修）**——`install` 在自检脚本**未跟踪**时 **24/0/0（绿）**、`git add` 后 **23/1（红）**：
@@ -1366,6 +1366,19 @@ git merge origin/main
   修法 = `declared` 并入 `[build-system].requires` + 新增 A05-7c（从 `build-backend` 派生比对名）+
   枚举改「入库 ∪ 未跟踪（`--others --exclude-standard`）」。
   ★★ **教训（铁律候选 #82）：仪器一旦入库，它自己就是被测对象** —— 静态扫描型自检**必须**枚举未跟踪文件。
+- **E29（自检写回入库文件 · 已识别未修 · P2/Option）**：干净检出（GitHub clone `d544a64`）跑完
+  `bash sttp.sh install` 后做字节对账 ⇒ **`OK 457 / DIFF 1`**，唯一 DIFF = `07_交付物/Phase45_install_selfcheck.json`
+  —— **自检把自己的留痕写回了入库文件**。**因果链闭合成环**：留痕含本机 `root` ⇒ 跑过 `install` 的检出
+  **必然变脏** ⇒ 紧接着 `release` 时 `make_manifest` 读到脏树 ⇒ 清单
+  `dirty_sample = ["M \"07_…/Phase45_install_selfcheck.json\""]`、`working_tree_dirty_at_build: true`。
+  ⇒ 即 **§7.5.1 观察到的「脏树清单」，脏源就是上一步的自检自己**（与 E21 同源）。
+  **不修**（P2，只登记）：凡把「工作区是否干净」当判据的流程**必须知道自检会弄脏它**。
+  3 条 Option：① 运行时留痕默认写 `.runlog/`（已 gitignore），入库路径只作提交时快照；
+  ② 留痕**不含本机 `root`**（或脱敏为 `<repo>`）⇒ 跨机重跑内容相同、写入幂等；③ 维持现状但写进 `ENV_README.txt`。
+- ★ **干净检出矩阵（clone `d544a64`，独立复核 A05 的核心主张）**：`bash sttp.sh install` **RC=0 ｜ 25/0/0**
+  （枚举「入库 174 + 未跟踪 0」与主工作区**完全一致**）｜`verify_release.py --release` **RC=0 ｜ 28/0/0**｜
+  `evdeps --check` **RC=0 七段全过**｜`bash sttp.sh release` **RC=2**（明确原因：找不到被 `.gitignore` 排除的规范图）。
+  ⇒ **第三方 clone 后无需权威图、无需联网即可跑通自检与 L1**；需要权威图的路径**以明确原因拒绝**，不假通过。
 - ★ **全量回归 13/13 全绿**（逐条记 RC，不抽样）：`install` 25/0/0 ｜ `release` 28/0/0 ｜ `release-full` 108/0/0 ｜
   `subgraph` 89/0/3 ｜ `frontend` 70/0/2 ｜ `node` 85/0 ｜ `evdeps/lineage/check/gatecheck/eval/dimaudit/noise` 全 RC=0。
   顺带**再实证 E21**：同一份清单在**脏树**非幂等（`working_tree_dirty_at_build: true`）、干净树幂等（`dirty_sample: []`）。
@@ -1377,6 +1390,13 @@ git merge origin/main
   **458 / 458「工作区字节 == 仓库 blob」**、DIFF 0（核对时唯一 DIFF 是本报告自身，提交后归零）。
   ★ `pyproject.toml` / `phase45_install_selfcheck.py` 全程 `\r` 计数 **0**（`tr` 口径）；
   反例注入脚本一律 `newline=''`（铁律 #77）。
+- ★ **干净检出实测（GitHub clone `d544a64`）**：`install` **RC=0 ｜ 25/0/0**（枚举与主工作区一致）｜
+  `verify_release --release` **28/0/0**｜`evdeps --check` **RC=0**｜裸 `release` **RC=2 明确原因**。
+  ★ 顺带发现并登记 **E29**：clone 里跑完 `install` 后字节对账 `DIFF 1` = 自检**把留痕写回入库文件**
+  ⇒ 跑过自检的检出**必然变脏** ⇒ 这正是 §7.5.1「脏树清单」的**脏源**（与 E21 同源，P2/Option）。
+- ★ **E21 已量化到字段级**：干净树连续两次 `release`，247 个字段仅 **3** 个不同
+  （自指 head ×2 + `created` ×1），其余 **244 个逐字节相同** ⇒ `manifest.git_head_at_build`
+  ≠ 产出它的提交**是设计使然**。
 - 报告：`07_交付物/Phase45_A05第三人可安装入口_20261014.md`。)*
 *前次更新：2026-10-14（**Phase 44 · 第 36 轮：D1 根因修复 —— 证据字节忠实度以「仓库 blob」为准**。
 - 权威字节源 `git cat-file blob HEAD:<rel>`（与检出/行尾无关）；`git` 不可用 ⇒ `None`（fail-closed 而非空字节）。
