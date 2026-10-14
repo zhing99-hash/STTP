@@ -66,6 +66,35 @@ PY="${STTP_PYTHON:-python}"
 GRAPH="${GRAPH_DATA_FILE:-06_PoC/graph_data_phase22.json}"
 PORT="${VIZ_PORT:-8765}"
 
+# ---- 前置守卫（Phase 43 步骤 B · D25；铁律 #53/#63）--------------------------------
+# 部分命令的断言以**权威图口径**（9657 节点 / 48712 边）为前提，而权威输入被 `.gitignore`
+# 刻意排除、**不入库**。此前这些命令在**干净检出**（clone）里会抛**裸 `FileNotFoundError`**
+# （RC=1）——评审者会误读成「代码坏了」。现统一改为：**明确原因 + 不适用清单 + RC=2**
+# （与 `subgraph`/`release` 的既有口径一致）。
+# 恢复方式：① 本地 `bash sttp.sh export` 从 Aura 反向导出；② 或从 Release 资产下载同名快照。
+require_authority() {   # 用法: require_authority <命令名> <相对路径>...
+  local cmd="$1"; shift
+  local _missing=() _p
+  for _p in "$@"; do [ -e "$ROOT/$_p" ] || _missing+=("$_p"); done
+  [ ${#_missing[@]} -eq 0 ] && return 0
+  {
+    echo ""
+    echo "[不可用] 命令 '$cmd' 缺少**权威输入**（以下文件被 .gitignore 刻意排除、不入库）："
+    for _p in "${_missing[@]}"; do echo "           - $_p"; done
+    echo "  原因：本命令的断言以**权威图口径**（9657 节点 / 48712 边）为前提 ⇒ 干净检出里"
+    echo "        **结构性不可用**，这是**已知边界而非代码缺陷**（见 PROJECT_DEVELOPMENT_GUIDE.md §0.3.1）。"
+    echo "  恢复：① 本地 bash sttp.sh export（从 Aura 反向导出权威图）"
+    echo "        ② 或从 Release 资产下载同名快照，放到上述路径。"
+    echo "  干净检出里**可运行**的替代验证："
+    echo "        - bash sttp.sh frontend        （可运行；缺图处记 SKIP 而**不假通过**）"
+    echo "        - bash sttp.sh check           （环境自检）"
+    echo "        - $PY 06_PoC/release/verify_release.py --release   （28/0/0，RC=0）"
+    echo ""
+  } >&2
+  exit 2
+}
+NORM_GRAPH="06_PoC/etl/normalized.json"
+
 case "${1:-help}" in
   check)
     echo "== Python =="
@@ -111,6 +140,7 @@ EOF
     fi
     ;;
   stats)
+    require_authority stats "$GRAPH"
     "$PY" - "$GRAPH" <<'EOF'
 import json,sys
 from collections import Counter
@@ -156,6 +186,7 @@ EOF
   t7)
     # 北极星 T7（跨域桥）达标率；--legacy-t7 打印旧口径反向对照
     shift
+    require_authority t7 "$NORM_GRAPH"
     "$PY" 06_PoC/task_trust_audit.py "$@"
     ;;
   dedup)
@@ -195,11 +226,13 @@ EOF
   noise)
     # 独立实现的语义噪声审计器（只读，用于与 verification_model 交叉核对）
     shift
+    require_authority noise "$NORM_GRAPH"
     "$PY" 06_PoC/semantic_noise_audit.py "$@"
     ;;
   scopeaudit)
     # Phase 35 北极星口径自审：分母内/外占比 + 反向对照 + 占位实体审计（只读）
     shift
+    require_authority scopeaudit "$NORM_GRAPH"
     "$PY" 06_PoC/_recon_phase35_scope.py "$@"
     ;;
   mnxrecov)
@@ -221,6 +254,7 @@ EOF
   gatecheck)
     # 门禁「非真空」自检：注入已知假边，断言不变量真的会红（铁律 #14）
     shift
+    require_authority gatecheck "$NORM_GRAPH"
     "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
     ;;
   release)
@@ -270,6 +304,7 @@ EOF
     # 任一步失败即非零退出；额外参数（如 --split test）透传给运行器。
     shift
     set -e
+    require_authority eval "$NORM_GRAPH"
     echo "== [1/3] 构建/校验冻结任务集 =="
     "$PY" 12_评测/build_tasks.py
     echo "== [2/3] 规则基线评测 =="
@@ -282,6 +317,7 @@ EOF
     # 单线程确定性训练；额外参数透传（如 --gnn-seeds 1,2）。
     shift
     set -e
+    require_authority gnneval "$NORM_GRAPH"
     echo "== [1/2] 推理增量评测（全量 filtered MRR + 4 类基线对照）=="
     "$PY" 12_评测/gnn_eval_v2.py --epochs 120 --cap-test 100 "$@"
     echo "== [2/2] 非真空自检（判据必须会红）=="
@@ -292,6 +328,7 @@ EOF
     # 任一步发现「非约定性分歧」或「矛盾方程」即非零退出。
     # ★ 铁律 #62：逐项传递退出码（否则第 1/2 步的分歧会被第 3 步的通过掩盖）。
     shift
+    require_authority dimaudit "11_真实数据/physicsbabel_circuits.parquet"
     echo "== [1/3] 反解表 vs 独立 SI 基表 =="
     "$PY" 11_真实数据/dimension_table.py --compare || exit $?
     echo "== [2/3] 矛盾方程检测（一般线性一致性）=="
@@ -305,6 +342,7 @@ EOF
     # 若某来源内容哈希与证据记录不一致（来源已变更）则非零退出。
     # ★ 铁律 #62：逐项传递退出码。
     shift
+    require_authority lineage "$NORM_GRAPH"
     echo "== [1/3] 来源登记表（版本 + locator + 内容哈希 + 血缘）=="
     "$PY" 11_真实数据/source_registry.py --check || exit $?
     echo "== [2/3] 来源变更 → 受影响断言（含血缘传递）=="

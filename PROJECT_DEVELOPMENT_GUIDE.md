@@ -53,7 +53,7 @@
 #### 0.3.1 Phase 43（局部图谱查询**与前端**）已承认的边界 —— 更新于 2026-10-14
 
 - 后端（步骤 A）详见 `07_交付物/Phase43_局部图谱查询与后端_20261013.md` §6（**D1–D13**）
-- 前端（步骤 B）详见 `07_交付物/Phase43_局部图谱查询与前端_20261014.md` §5（**D14–D24**）
+- 前端（步骤 B）详见 `07_交付物/Phase43_局部图谱查询与前端_20261014.md` §5（**D14–D25**）
 
 - ★★ **证据哈希依赖的字节在干净检出下不可复现（根因未修）**：`stale` 判据依赖「worktree 字节 == 仓库 blob」，
   实测 **7/21** 个已入库登记 `locator` 不成立（CRLF vs LF，含 `06_PoC/sample_mathxiv.json`、`10_种子数据/seed_*.json` ×5、
@@ -99,21 +99,38 @@
 - **前端静态资源的行尾可复现性（D24，已修 + 已实证）**：本机 `core.autocrlf=true` 且前端原**无** `.gitattributes` 规则 ⇒
   `git checkout`（含 clone）会把 `06_PoC/js/*.js` 与 `graph_view.html` 的 LF 改写成 CRLF（实测 `git checkout -- 06_PoC/js`
   写入 **2446 处 CRLF**）⇒「本机验过的字节 ≠ 检出字节」。**已加** `06_PoC/js/*.js` / `graph_view.html` 的 `text eol=lf`。
-  ★ **两件事分开陈述**：① **自检本身对行尾鲁棒**——把 9 个 js 全转 CRLF 后 `frontend` 仍 **55/0/2**、`node` 仍 **53/0**（实测）；
+  ★ **两件事分开陈述**：① **自检本身对行尾鲁棒**——把 9 个 js 全转 CRLF 后 `frontend` 仍 **59/0/2**、`node` 仍 **53/0**（实测）；
   ② 加锁是**字节可复现**口径的统一，**不是**修一个会导致自检失败的行尾缺陷（与 D1 同源但性质不同：D1 是**证据哈希**依赖字节、**根因未修**）。
+- ★ **9 个命令在裸 clone 里抛裸 traceback（D25，已修）**：`stats`/`gatecheck`/`t7`/`scopeaudit`/`eval`/`gnneval`/`dimaudit`/`lineage`/`noise`
+  的断言以**不入库**的权威输入为前提却无前置守卫 ⇒ 裸 clone 里 **RC=1 + 裸 `FileNotFoundError`**，易被误读成「代码坏了」，
+  且与已做对的 `subgraph`/`make_sample`（明确原因 + RC=2）**口径不一致**。**已修**：`sttp.sh` 新增
+  `require_authority <命令> <路径…>`（9 处挂载；明确原因 + 恢复方式 + 替代验证 + **RC=2**）；防回退断言 **G1–G4**（含可红性自证）。
+  ★ 这条是「干净检出实测」本身才暴露出来的 —— 铁律 #53 的价值实证。
 - **未覆盖且不计通过**：**真实浏览器渲染（D14）**、**V8c 浏览器计算样式**、**Neo4j（N1）**；
   **Phase 44**（A04 验证依赖绑定 + `valid/stale/needs_review/rejected` 生命周期，★ 须与上述字节忠实性口径对齐）、
   **Phase 45**（A05 `pyproject.toml` 可安装入口）**未开工**。
-- ★ **干净检出（clone）的能力与限制**（2026-10-13 实测，`07_交付物/Phase43_*` §9.1）：
-  ① `contracts/*.json` 与 `Phase43_selfcheck.json` **逐字节一致**；发布样例三产物 sha256 与 manifest 一致；
-  ② **路径 A `verify_release.py --release` 28/0/0 RC=0**、**路径 B 缺权威图 RC=2**（刻意）—— 发布链**可在裸 clone 验证**；
+- ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
+  `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
+  ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
+  以及（2026-10-14 起）**`06_PoC/js/*.js` ×9 与 `graph_view.html`** 均**逐字节一致**；发布样例三产物 sha256 与 manifest 一致；
+  ② **`python 06_PoC/release/verify_release.py --release`（步骤 A 的"路径 A"）⇒ 28/0/0 RC=0**
+  （`--full` ⇒ 31 条 FAIL 0 / **WARN 3**）；**`make_sample.py`（"路径 B"）缺权威图 ⇒ RC=2**（刻意）。
+  ★ **不要把 ② 读成"整条 `sttp.sh release` 可在裸 clone 验证"** —— 实测 `bash sttp.sh release` = **RC=2**
+  （第 1 步 `make_sample` 即需不入库的权威图），`release-full` = **RC=1**（fail-closed FAIL 3）。裸 clone 里要跑发布链，
+  **只能直接调 `verify_release.py`**。
   ③ ★ **`bash sttp.sh subgraph` 在裸 clone 不能运行**（`06_PoC/etl/normalized.json` 不入库）——
   已改为**明确原因 + RC=2**（修复前是 `KeyError` 崩溃）；**契约目前只能在下游产物层被 clone 验证**，
   若要"契约也可从 clone 验证"需入库小基线图 + 样例口径断言子集（**未做，有意取舍**）。
   ④ **`.gitattributes` 锁 `*.json -text`、`11_真实数据/*.py text eol=lf`，以及（2026-10-14 新增）
-  `06_PoC/js/*.js` 与 `06_PoC/graph_view.html` 的 `text eol=lf`**：`*.md` 与其余 `*.py` 在 `autocrlf=true` 检出里仍变 CRLF
-  ⇒ 与工作区不逐字节相同（对文档/脚本无害；**对被哈希为证据的文件即是 D1 成因**，**根因未修**；前端资产则见 D24）。
+  `06_PoC/js/*.js` 与 `06_PoC/graph_view.html` 的 `text eol=lf`**：`*.md` 与其余 `*.py`/`*.mjs` 在 `autocrlf=true` 检出里仍变 CRLF
+  ⇒ 与工作区**仅行尾不同**（归一化后 sha256 相等，已逐项核过；对文档/脚本无害；
+  **对被哈希为证据的文件即是 D1 成因**，**根因未修**；前端资产则见 D24）。
   ⑤ **`env.sh` 依赖不入库的 `.env`** ⇒ 裸 clone 里 `$STTP_PYTHON` 为空，请**直接指定解释器**。
+  ⑥ **裸 clone 命令可用性矩阵（2026-10-14 实测）**：✅ 可运行 = `check` / `frontend`（**PASS 51/0/4**，
+  `X1`·`H6` 降级 SKIP 而**不假通过**）/ `verify` / `verify_release.py --release`；
+  ⛔ **结构性不可用但给明确原因 + RC=2** = `subgraph` / `release` / `stats` / `gatecheck` / `t7` / `scopeaudit` /
+  `eval` / `gnneval` / `dimaudit` / `lineage` / `noise`（后 9 个为 **D25** 本轮修复项，原为 RC=1 裸 traceback）；
+  ⛔ `release-full` = RC=1（fail-closed FAIL 3，带逐条 ❌ 原因）。
 
 ---
 
@@ -460,10 +477,10 @@ API 端点：
 
 **自检（两条，互不替代）**：
 ```bash
-bash sttp.sh frontend                                  # 55 PASS / 0 FAIL / 2 SKIP（含 HTTP 层 H1–H6g、跨层 X1–X7）
+bash sttp.sh frontend                                  # 59 PASS / 0 FAIL / 2 SKIP（含 HTTP 层 H1–H6g、跨层 X1–X7、守卫 G1–G4）
 node 06_PoC/tests/frontend_core_check.mjs              # 53 PASS / 0 FAIL（纯逻辑 + panels 真实渲染，零依赖）
 ```
-> 留痕 `07_交付物/Phase43_frontend_selfcheck.json`；报告 `07_交付物/Phase43_局部图谱查询与前端_20261014.md`（含 D14–D23）。
+> 留痕 `07_交付物/Phase43_frontend_selfcheck.json`；报告 `07_交付物/Phase43_局部图谱查询与前端_20261014.md`（含 D14–D25 + §7 干净检出实测）。
 > **已知边界见 §0.3.1** —— 尤其 **D14 无头浏览器渲染未实测**（零依赖环境无 Playwright/jsdom，自检内 SKIP 且**不计通过**）。
 > ★ **Phase 43 新增端点的契约**：`contracts/*.schema.json`（+ `contracts/README.md`）；
 > 自检 `bash sttp.sh subgraph`（**51 / 0 / 3**，留痕 `07_交付物/Phase43_selfcheck.json`）；
@@ -1089,7 +1106,7 @@ git merge origin/main
 *本文件由 QClaw 生成于 2026-10-08，建议在每次 Phase 完成后更新「当前运行状态」和「已知问题」两节。*
 *最近更新：2026-10-14（Phase 43 步骤 B · 第 35 轮：前端「局部图谱查询浏览」落地 —— `06_PoC/js/` 9 个原生
 ES Module（零构建）、`graph_view.html` 整页重写、`viz_server.py` 新增 `/js/` 路由、双自检
-`bash sttp.sh frontend`（55/0/2）+ `node frontend_core_check.mjs`（53/0）；§0.3.1 增列前端已知边界 D14–D23；
+`bash sttp.sh frontend`（59/0/2）+ `node frontend_core_check.mjs`（53/0）；§0.3.1 增列前端已知边界 D14–D25；
 §5.2.1 新增前端模块表）。*
 *前次更新：2026-10-12（Phase 36 · 第 26 轮：新增 §1g 验证语义校正（GPT6 复评 R01–R05/R07/R08）；
 T9-i 95.8%→85.9% 如实下调；门禁 74→90 + `--release` fail-closed；新铁律 #51/#52；

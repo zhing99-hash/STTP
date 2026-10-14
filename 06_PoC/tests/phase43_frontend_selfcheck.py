@@ -518,6 +518,34 @@ def main(argv=None):
             "V9b 发布样例链路由 `bash sttp.sh release`（28 条）/`release-full` 覆盖 —— "
             "本脚本**不替代**", "见回归")
 
+    # ---------------------------------------------------------------- G 段
+    # D25（步骤 B 干净检出实测发现并修复）：部分命令的断言以**不入库**的权威图
+    # （`06_PoC/etl/normalized.json` / `physicsbabel_circuits.parquet`）为前提，
+    # 在裸 clone 里原先抛**裸 `FileNotFoundError`（RC=1）** ⇒ 评审者会误读成「代码坏了」。
+    # 已统一改为「明确原因 + 不适用清单 + RC=2」（与 `subgraph`/`release` 既有口径一致）。
+    # 本段是**防回退**断言（静态；真正的行为证据是裸 clone 实测，见报告 §9）。
+    rep.section("[G] 干净检出可用性守卫（D25 防回退；铁律 #53/#63）")
+    sh_src = read(os.path.join(ROOT, "sttp.sh"))
+    _NEED_GUARD = ["stats", "t7", "noise", "scopeaudit", "gatecheck",
+                   "eval", "gnneval", "dimaudit", "lineage"]
+
+    def _guard_probe(text):
+        has_def = "require_authority()" in text
+        has_reason = ("不可用" in text) and ("exit 2" in text)
+        miss = [c for c in _NEED_GUARD if ("require_authority %s" % c) not in text]
+        return has_def, has_reason, miss
+
+    _g1, _g2, _gmiss = _guard_probe(sh_src)
+    rep.add(_g1, "G1 sttp.sh 定义 require_authority 前置守卫（缺权威图 ⇒ 明确原因而非裸 traceback）", "")
+    rep.add(not _gmiss, "G2 9 个「需权威图」命令均已挂守卫（漏一个 ⇒ 该命令在裸 clone 退回裸 traceback）",
+            ("缺: " + ",".join(_gmiss)) if _gmiss else "9/9")
+    rep.add(_g2, "G3 守卫以**明确原因 + RC=2** 退出（不冒充成功、不冒充代码缺陷）", "")
+    # 可红性：把守卫整体抹掉后，同一探针必须报「无定义 + 有缺失」
+    _mut = sh_src.replace("require_authority() {", "REMOVED_GUARD() {", 1).replace("require_authority ", "removed_guard ")
+    _m1, _m2, _mmiss = _guard_probe(_mut)
+    rep.add((not _m1) and bool(_mmiss) and len(_mmiss) == len(_NEED_GUARD),
+            "G4 本段**可红**：抹掉守卫后 G1/G2 必须变红（断言非常真）", "")
+
     print("-" * 78)
     rep.section("[未实测 · 如实登记，不计通过]")
     rep.skip("D14 真实浏览器渲染（布局/像素/交互链路）",

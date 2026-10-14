@@ -1,7 +1,7 @@
 {
   "schema": "sttp-phase43-frontend-selfcheck/v1",
   "generated_by": "06_PoC/tests/phase43_frontend_selfcheck.py",
-  "n_pass": 55,
+  "n_pass": 59,
   "n_fail": 0,
   "n_skip": 2,
   "rows": [
@@ -309,6 +309,31 @@
       "kind": "PASS",
       "name": "V9b 发布样例链路由 `bash sttp.sh release`（28 条）/`release-full` 覆盖 —— 本脚本**不替代**",
       "detail": "见回归"
+    },
+    {
+      "kind": "--",
+      "name": "[G] 干净检出可用性守卫（D25 防回退；铁律 #53/#63）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "G1 sttp.sh 定义 require_authority 前置守卫（缺权威图 ⇒ 明确原因而非裸 traceback）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "G2 9 个「需权威图」命令均已挂守卫（漏一个 ⇒ 该命令在裸 clone 退回裸 traceback）",
+      "detail": "9/9"
+    },
+    {
+      "kind": "PASS",
+      "name": "G3 守卫以**明确原因 + RC=2** 退出（不冒充成功、不冒充代码缺陷）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "G4 本段**可红**：抹掉守卫后 G1/G2 必须变红（断言非常真）",
+      "detail": ""
     },
     {
       "kind": "--",
