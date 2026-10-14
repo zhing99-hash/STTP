@@ -25,7 +25,7 @@
 
 import { readFileSync } from "node:fs";
 import * as C from "../js/core.js";
-import { Api } from "../js/api.js";
+import { Api, normalizeEnvelope } from "../js/api.js";
 import { detectMode } from "../js/modes.js";
 import { renderStatusLine, renderBanner, bindSearch } from "../js/panels.js";
 import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
@@ -968,6 +968,28 @@ function probeImpl({ statsBody, statsStatus = 200, bundleBytes, bundleStatus = 2
 
   check("F35h MIN_QUERY_LEN 为正整数且 ≥2（跨层等式 queries.MIN_QUERY_LEN 由 X5b 断言）",
         Number.isInteger(C.MIN_QUERY_LEN) && C.MIN_QUERY_LEN >= 2, String(C.MIN_QUERY_LEN));
+
+  // ⑥ `search.schema.json` 的截断披露字段**不得在归一化时丢掉**（#66/#67）
+  //    实测：`co2` ⇒ hits=20 / total_matches=81 / truncated=true；前端此前两者皆丢 ⇒ UI 无从披露。
+  const norm = normalizeEnvelope
+    ? normalizeEnvelope({ status: "ok", hits: [], total_matches: 81, truncated: true })
+    : null;
+  check("F36a normalizeEnvelope 保留 total_matches / truncated（契约声明的截断披露字段不得丢失）",
+        !!norm && norm.total_matches === 81 && norm.truncated === true,
+        norm ? `${norm.total_matches} / ${norm.truncated}` : "normalizeEnvelope 未导出");
+
+  // ⑦ 下拉必须把截断写出来（显示前 N 条 / 共 M 条）
+  const input6 = mkInput("co2");
+  const list6 = mkList();
+  bindSearch(input6, list6, { search: async () => ({
+    status: "ok", total_matches: 81, truncated: true,
+    hits: Array.from({ length: 20 }, (_, i) => hit(`RH:rxn:${10000 + i}`, `rxn ${i}`)) }) },
+    () => {}, { debounceMs: 1 });
+  input6.fire("input");
+  await new Promise((r) => setTimeout(r, 25));
+  check("F36b 结果被 limit 截断 ⇒ 下拉显式写「显示前 20 条 / 共 81 条（已截断）」",
+        /显示前 20 条/.test(list6.innerHTML) && /共 81 条/.test(list6.innerHTML),
+        (list6.innerHTML.match(/<div class="sr-head">[^<]*/) || ["(无 sr-head)"])[0]);
 }
 
 

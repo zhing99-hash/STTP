@@ -54,6 +54,11 @@ export function normalizeEnvelope(raw) {
     seed: r.seed == null ? null : r.seed,
     query: r.query && typeof r.query === "object" ? r.query : null,
     hidden_by_trust: typeof r.hidden_by_trust === "number" ? r.hidden_by_trust : null,
+    // ★ `search.schema.json` 声明的**截断披露**字段：此前归一化时被静默丢掉 ⇒
+    //   搜索结果被 limit 截过（`co2`: hits=20 / total=81 / truncated=true）而 UI 无从知道
+    //   ⇒ **UI 层把后端已经说清楚的截断又回吞了一次**（#66/#67：截断必须显式披露）。
+    total_matches: typeof r.total_matches === "number" ? r.total_matches : null,
+    truncated: typeof r.truncated === "boolean" ? r.truncated : null,
     nodes: Array.isArray(r.nodes) ? r.nodes : [],
     edges: Array.isArray(r.edges) ? r.edges : [],
     expandable: Array.isArray(r.expandable) ? r.expandable : [],
@@ -74,6 +79,7 @@ export function localErrorEnvelope({ status = "error", errorCode = "TOOL_EXECUTI
     reason, error_code: errorCode, snapshot_id: null, query_hash: null, seed: null,
     query: null, hidden_by_trust: null, nodes: [], edges: [], expandable: [],
     hits: [], meta: null, stats: {}, raw: null, client_aborted: clientAborted,
+    total_matches: null, truncated: null,
   };
 }
 

@@ -429,7 +429,15 @@ export function bindSearch(inputEl, listEl, api, onPick, { debounceMs = 180 } = 
       return;
     }
     listEl.hidden = false;
-    listEl.innerHTML = env.hits.map((h) =>
+    // ★ 截断必须显式披露（铁律 #66/#67）：搜索被 `limit` 截过时写「显示前 N 条 / 共 M 条」。
+    //   实测 `co2` ⇒ `hits=20 / total_matches=81 / truncated=true`；旧实现把后两个字段
+    //   一起丢掉 ⇒ **UI 层把后端已经说清楚的截断又静默回吞了一次**。
+    const total = env.total_matches;
+    const capped = env.truncated === true || (total != null && total > env.hits.length);
+    const head = capped
+      ? `<div class="sr-head">显示前 ${env.hits.length} 条 / 共 ${total == null ? "未知" : total} 条（已截断）—— 可缩短关键词</div>`
+      : `<div class="sr-head">共 ${total == null ? env.hits.length : total} 条命中</div>`;
+    listEl.innerHTML = head + env.hits.map((h) =>
       `<div class="sr-item" data-id="${esc(h.id)}" tabindex="0">
          <div class="sr-label">${esc(h.label || h.id)}</div>
          <div class="sr-meta"><span class="badge">${esc(h.type || "?")}</span><span class="badge">${esc(h.subject || "?")}</span><code>${esc(h.id)}</code>

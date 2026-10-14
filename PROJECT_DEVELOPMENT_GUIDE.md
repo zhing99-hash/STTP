@@ -397,6 +397,7 @@
 | ① | **搜索框完全不可用** | `06_PoC/js/core.js` 的 `buildParams()` **参数列举里没有 `q`** ⇒ 搜索词静默丢弃 ⇒ `GET /api/search?limit=20&mode=ego` ⇒ 后端 **400「缺少参数 q」**（旧实例日志 **26/26 全 400**） | **P0** | ✅ |
 | ② | 「后端执行异常（非空结果，属失败）」 | 传输层失败（`TypeError: Failed to fetch`，本机 viz **未在运行**）被压成 `TOOL_EXECUTION_ERROR`；后端**当次未被调用** | **P1** | ✅ |
 | ③ | 单字符输入即报错；失败显示成「没有匹配」 | 前端只在**空串**时不发请求，后端约束是 **≥2 字符** ⇒ **"第一次按键"就制造一次 400**；且 400 被渲染成 `没有匹配（no_result）` | P2 | ✅ |
+| ④ | 结果被截断却看不出来 | 搜索被 `limit=20` 截断（`co2`：hits=20 / `total_matches=81` / `truncated=true`），而 `api.js::normalizeEnvelope` **没搬运这两个契约字段** ⇒ 下拉既无总数也无"已截断" ⇒ **UI 层把后端已经说清楚的截断又静默回吞一次** | P2 | ✅ |
 
 **★ 覆盖缺口（本条最值得评审注意的部分）——为什么"全绿而搜索框是坏的"**：
 
@@ -412,7 +413,8 @@
 契约 `enum` 增至 **9** 个并在 `description` 声明**产生侧**；新增 `ERROR_CODE_SEVERITY` + `errorCodeSeverity()`
 （**显式归类，不设"其它一律"回落**；未登记 ⇒ `err`，**往响处失败**）；`/api/search` 的 `mode` 已被抑制；
 **约束同源**：`queries.MIN_QUERY_LEN = 2` 为单点定义、前端 `core.js::MIN_QUERY_LEN` 镜像（**X5b** 跨层等式），
-单字符 ⇒ **如实提示「至少输入 2 个字符」且不发请求**；下拉遇 `status="error"` ⇒ 显示「**查询失败**+`error_code`」而非「没有匹配」（#67）。
+单字符 ⇒ **如实提示「至少输入 2 个字符」且不发请求**；下拉遇 `status="error"` ⇒ 显示「**查询失败**+`error_code`」而非「没有匹配」（#67）；
+`api.js::normalizeEnvelope` **补搬 `total_matches`/`truncated`**（契约已声明却曾被丢）⇒ 截断时下拉写「**显示前 20 条 / 共 81 条（已截断）**」（#66）。
 
 **新增断言（均已构造性反证）**：
 
@@ -427,9 +429,12 @@
 | `X6 / X6a / X6b / X6c` | 文案表覆盖**契约全景**；传输层码**只由前端合成**（后端源码不得出现）；严重度显式归类 | 同上 ⇒ X6/X6c **红**；后端出现该码 ⇒ X6b **红** ✓ |
 | `H7a–H7d` | **跨层端到端**：前端生成的查询串 ⇒ 真实后端 **200**（含 `q=`）；真的命中（`F=ma` ⇒ `MX:phy:newton2`）；**`H7c` 为内建负对照**（旧行为无 `q` ⇒ 400）；**`H7d`**：单字符 ⇒ 400（证明阈值有真实依据） | `H7c`/`H7d` 即负对照 ✓ |
 
-**收尾值**：node **90 → 112/0**｜`frontend` **72 → 80/0/2**｜`subgraph` 89/0/3｜`install` 25/0/0｜
-`gatecheck` RC=0｜`evdeps --check` RC=0｜`lineage` **八段全过**｜`dimaudit`/`noise`/`eval` RC=0｜**无头 Chrome**：`RC=0`、DOM **37,643 B**、
-badge `live`、请求序列**含 `graph_data.json` 0 次**、`GET /api/stats` 200 后即止。
+| `F36a–F36b` | `normalizeEnvelope` **保留 `total_matches`/`truncated`**（契约声明的字段不得在归一化时丢失）；截断时下拉显式写「显示前 20 条 / 共 81 条（已截断）」 | — |
+
+**收尾值**：node **90 → 114/0**｜`frontend` **72 → 80/0/2**｜`subgraph` 89/0/3｜`install` 25/0/0｜
+`release` **28/0/0 · WARN 0**｜`release-full` **108/0/0**｜`gatecheck` RC=0｜`evdeps --check` RC=0｜`lineage` **八段全过**｜
+`dimaudit`/`noise`/`eval` RC=0｜**无头 Chrome**：`RC=0`、DOM **37,643 B**、badge `live`、
+请求序列**含 `graph_data.json` 0 次**、`GET /api/stats` 200 后即止。
 
 **本轮新登记（E）**：**E31 测量器比被测对象更脆**（X6c 首轮误报"未归类"：python 解析用 `^\s*KEY:` **只认行首**，
 而严重度表写成**一行多对** ⇒ 解析**不得依赖换行**；与 #76 同族）｜
@@ -448,7 +453,9 @@ badge `live`、请求序列**含 `graph_data.json` 0 次**、`GET /api/stats` 20
 （契约只描述**响应**）⇒ 建议新增 `contracts/endpoints.schema.json` 并让 `buildParams` 与之**双向求差**｜
 **D32** UI 无"请求进行中"禁用态（`busy` 期重入仅在会话记账层限流）｜
 **D33** **约束镜像只覆盖 `q` 的最短长度**（`queries.MIN_QUERY_LEN` ⇔ `core.js::MIN_QUERY_LEN`，X5b）；
-其余输入约束（`limit` 范围、`subject` 枚举、`max_hops` 上限…）仍**各自硬编码**（与 D31 同族）。
+其余输入约束（`limit` 范围、`subject` 枚举、`max_hops` 上限…）仍**各自硬编码**（与 D31 同族）｜
+**D34** **归一化层可能吞掉契约字段**（本轮：`total_matches`/`truncated` 被 `normalizeEnvelope` 丢弃；`F36a` 只钉住这两个，
+**没有"契约字段 ⊇ 归一化输出"的通用断言**）⇒ 建议与 D31 同批做（由 `contracts/*.schema.json` 派生字段清单求覆盖）。
 
 ---
 
