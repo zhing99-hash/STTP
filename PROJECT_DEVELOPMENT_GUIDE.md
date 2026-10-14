@@ -50,28 +50,58 @@
 - **证据血缘缺口 116 条**（6 个模型来源训练快照版本未记录）：**如实计数、不伪造历史**。
 - **5 个真孤岛（29 节点）**：回退假边所致，是「恢复真相」而非退化，**不补边**。
 
-#### 0.3.1 Phase 43（局部图谱查询）已承认的边界 —— 2026-10-13 · 详见 `07_交付物/Phase43_局部图谱查询与后端_20261013.md` §6
+#### 0.3.1 Phase 43（局部图谱查询**与前端**）已承认的边界 —— 更新于 2026-10-14
+
+- 后端（步骤 A）详见 `07_交付物/Phase43_局部图谱查询与后端_20261013.md` §6（**D1–D13**）
+- 前端（步骤 B）详见 `07_交付物/Phase43_局部图谱查询与前端_20261014.md` §5（**D14–D24**）
 
 - ★★ **证据哈希依赖的字节在干净检出下不可复现（根因未修）**：`stale` 判据依赖「worktree 字节 == 仓库 blob」，
   实测 **7/21** 个已入库登记 `locator` 不成立（CRLF vs LF，含 `06_PoC/sample_mathxiv.json`、`10_种子数据/seed_*.json` ×5、
   `11_真实数据/seed_papers_openalex.json`），另有 **13/34** 个 `locator` **未入库**（`.gitignore`）。
   ⇒ 干净检出下 `stale` 会**假阳**。已加探针 `locator_byte_fidelity()`（随响应暴露于 `stats.stale_registry`）+ 自检 V16f 独立重算；
-  **因假阳风险，`exclude_stale` 默认仍为 `false`（有意为之，非遗漏）**。修法与 Phase 44 的对齐要求见报告 §6-D1。
+  **因假阳风险，`exclude_stale` 默认仍为 `false`（有意为之，非遗漏）**，且前端 UI 上**写明该理由**（禁止无提示剔除）。
+  修法与 Phase 44 的对齐要求见后端报告 §6-D1。
 - **默认 `trust=verified` 隐藏 28.6% 的边**（13 932 / 48 712，V14 实测；两档差 11 = `by_construction`）：
   `has_symbol` 这类未定级边被整体排除（例：`MX:def:manifold hops=1` 由 9 条边降到 3 条）。**已回显 `hidden_by_trust` 且可加总回全量**；
-  前端默认档与提示文案属**步骤 B**，尚未实现。
+  ✅ **前端已落地**：可信范围两档单选 + 状态行「已隐藏 N 条」提示（`F27` 断言）。
 - **`stats.pending_frontier` 只是下界**（中断时 BFS 队列长度），**不得**渲染成"还有 N 个"；字段旁已附 `pending_frontier_note`。
+  ✅ 前端已由 `F26b` 断死（横幅必须标"下界"，且不得出现「还有 N 个」）。
 - **`mode=filter&trust=all`（无其他条件）⇒ HTTP 400** 是**刻意**设计（防用 filter 倒出全图，全图请走 `/api/overview`）。
+  ✅ 前端 `validateParams` **先行拦截**并给可读文案（「请至少选一个筛选项…全貌请看「概览」」）——不让用户看到"系统故障"。
 - **响应体积**：默认预算下最坏 **2.4 MB**（`filter` 500/2000）；硬上限下 **10.3 MB**（5000 节点 / 30 s）。默认入口不得请求硬上限。
 - **`path` 模式在 hub 端点必超时**（`PQ:mass → MX:def:manifold`，hops≥3 ⇒ 3.1–3.3 s `timeout`）：
   单向无启发 BFS 前沿爆炸。返回 `timeout`（非空、非失败）是**正确行为**；双向 BFS/剪枝为**待办**。
 - **`/api/path` 保留 legacy 扁平信封**（旧页面兼容），**不合统一信封** ⇒ 新代码一律用 `/api/subgraph?mode=path`。
+  ✅ 前端已如此（`main.js` 的路径入口走统一信封）。
 - **Neo4j 双后端契约一致**：本环境不可达 ⇒ 自检 N1 记 **SKIP（不计通过）**。语义一致由「NX/Neo4j 共用 `Backend` 基类全部查询逻辑、
   子类只给 3 个原语」**架构保证**，属论证**非实测**。
 - **`error_code` 中 `ENTITY_AMBIGUOUS` / `MISSING_CONDITION` 是接口预留**，本轮**无产生路径**（属科学任务层，未接入查询层）。
 - **契约校验器是 JSON-Schema 子集**（12 个关键字，见 `contracts/README.md`）；自检 **C5b** 断言 schema 不得使用未实现关键字
   ⇒ 不存在"写了但不检查"的静默失效。校验器自身可红性由 C5 注入反例证明。
-- **未覆盖且不计通过**：**V8**（五态 UI 颜色）、**V9**（`mode=bundle` 发布样例链路）⇒ 属**步骤 B 前端**；
+
+**—— 以下为步骤 B（前端）新增的已知边界 ——**
+
+- ★★ **真实浏览器渲染未实测（D14，前端报告 §5）**：本项目**零第三方依赖**（§0.1 拒构建链）⇒ 未装 Playwright / jsdom，
+  因此**布局、像素、真实交互链路、浏览器计算样式**均**未实测**，`bash sttp.sh frontend` 内记 **SKIP 且不计通过**。
+  替代证据链 = **纯逻辑 `node` 断言 53 条**（含五态三重编码的**运行时渲染**与请求序列） + 静态结构 + **跨层一致性** + HTTP MIME
+  + **真实响应字段对照**。★ 要补强须引入**测试用**无头浏览器（属**新依赖**，须另起裁决）。
+- **V8 的口径**：五态 = **颜色 + 图标 + 文字**三重编码（颜色只是三通道之一），五态色对深色底实测 **≥4.5:1**（5.52–7.33）。
+  ★ `timeout` 用**橙红**、`error` 用真红，使二者在色觉上也可分。
+- **旧前端配色表已漂移，本轮校正（D15）**：旧 `EDGE_TYPE_COLOR` 含已不存在的 `depends_on` / `same_latex_normalized`、
+  缺 `uses_operator`。现以**规范图实测 24 种 `type`** 为准，并由自检 **X1** 断死（前端配色键集合 == 实测集合）。
+- **前端验证档 `rank` 曾写错，被跨层断言抓出（D16）**：现已改为 `queries._RANK` **7 档、逐值相等**（自检 **X7**）。
+- **`/api/overview` 的 `nodes[]` 没有 `label`（D20）**：前端自行补齐 `学科::类型`；若将来要统一投影口径需改后端。
+- **`bundle` 模式探测用 `HEAD`，但服务端仍会构建整个 JSON（D19）**：46 MB 图下探测仍有一次内存/时间开销（未优化）。
+- **前端会话计数是提示性的（D21）**：权威在服务端（`stats.session`）；`filter`/`path` 被前端视为"新视图"重置本地计数，
+  二者**可能短暂不一致**，状态行一律显示服务端回传值。
+- **`bash sttp.sh frontend` 与 `X1` 依赖不入库的规范图（D23）**：干净检出下 `X1` **必然 SKIP**（同 D13a 口径）；
+  其余断言只依赖已入库的前端文件与 Python 源码 ⇒ 在干净检出下仍可运行。
+- **前端静态资源的行尾可复现性（D24，已修 + 已实证）**：本机 `core.autocrlf=true` 且前端原**无** `.gitattributes` 规则 ⇒
+  `git checkout`（含 clone）会把 `06_PoC/js/*.js` 与 `graph_view.html` 的 LF 改写成 CRLF（实测 `git checkout -- 06_PoC/js`
+  写入 **2446 处 CRLF**）⇒「本机验过的字节 ≠ 检出字节」。**已加** `06_PoC/js/*.js` / `graph_view.html` 的 `text eol=lf`。
+  ★ **两件事分开陈述**：① **自检本身对行尾鲁棒**——把 9 个 js 全转 CRLF 后 `frontend` 仍 **55/0/2**、`node` 仍 **53/0**（实测）；
+  ② 加锁是**字节可复现**口径的统一，**不是**修一个会导致自检失败的行尾缺陷（与 D1 同源但性质不同：D1 是**证据哈希**依赖字节、**根因未修**）。
+- **未覆盖且不计通过**：**真实浏览器渲染（D14）**、**V8c 浏览器计算样式**、**Neo4j（N1）**；
   **Phase 44**（A04 验证依赖绑定 + `valid/stale/needs_review/rejected` 生命周期，★ 须与上述字节忠实性口径对齐）、
   **Phase 45**（A05 `pyproject.toml` 可安装入口）**未开工**。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 实测，`07_交付物/Phase43_*` §9.1）：
@@ -80,8 +110,9 @@
   ③ ★ **`bash sttp.sh subgraph` 在裸 clone 不能运行**（`06_PoC/etl/normalized.json` 不入库）——
   已改为**明确原因 + RC=2**（修复前是 `KeyError` 崩溃）；**契约目前只能在下游产物层被 clone 验证**，
   若要"契约也可从 clone 验证"需入库小基线图 + 样例口径断言子集（**未做，有意取舍**）。
-  ④ **`.gitattributes` 只锁 `*.json -text` 与 `11_真实数据/*.py`**：`*.md` 与其余 `*.py` 在 `autocrlf=true` 检出里变 CRLF
-  ⇒ 与工作区不逐字节相同（对文档/脚本无害；**对被哈希为证据的文件即是 D1 成因**）。
+  ④ **`.gitattributes` 锁 `*.json -text`、`11_真实数据/*.py text eol=lf`，以及（2026-10-14 新增）
+  `06_PoC/js/*.js` 与 `06_PoC/graph_view.html` 的 `text eol=lf`**：`*.md` 与其余 `*.py` 在 `autocrlf=true` 检出里仍变 CRLF
+  ⇒ 与工作区不逐字节相同（对文档/脚本无害；**对被哈希为证据的文件即是 D1 成因**，**根因未修**；前端资产则见 D24）。
   ⑤ **`env.sh` 依赖不入库的 `.env`** ⇒ 裸 clone 里 `$STTP_PYTHON` 为空，请**直接指定解释器**。
 
 ---
@@ -175,7 +206,9 @@ bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_P
 ├── 04_验证闭环/           # 符号校验（R-PHY / R-CHEM / R-MATH）
 ├── 05_可视化/             # D3 / Cytoscape 相关资源
 ├── 06_PoC/               # ★核心产出目录
-│   ├── graph_view.html    # 可视化前端（Cytoscape.js）
+│   ├── graph_view.html    # 可视化前端壳（Cytoscape.js）
+│   ├── js/               # ★前端 ES Module（Phase 43，原生 import，零构建）—— 见 §5.2.1
+│   ├── tests/            # 自检：phase43_frontend_selfcheck.py / frontend_core_check.mjs
 │   ├── viz_server.py     # 可视化后端（标准库 http.server，端口 8765）
 │   ├── graph_export.py   # ★权威 raw → viz 格式转换器（必须用此函数）
 │   ├── build_phase*.py   # 各 Phase 构建脚本（自动合并 seed*.json）
@@ -394,8 +427,9 @@ Paper > WikidataEntity > Definition > Theorem > Lemma > Equation > MathConcept >
 端口：     8765（默认）
 数据源：   graph_data.json 或 GRAPH_DATA_FILE 环境变量
 API 端点：
-  GET /                        → graph_view.html
+  GET /                        → graph_view.html（★ 支持 `?mode=live|bundle`；见下）
   GET /graph_data.json         → 完整图谱（JSON）★ 46.5 MB，前端默认【不】请求（铁律 #66）
+  ★ GET /js/<file>.js          → 前端 ES Module（Phase 43；★ 必须 `text/javascript`，MIME 不对浏览器拒载 module）
   GET /api/neighbors?node=<id>→ 邻接节点（legacy）
   GET /api/stats              → 图谱统计
   ★ GET /api/search?q=<文本>&limit=N      → 文本搜索（命中 + 分数）
@@ -407,6 +441,30 @@ API 端点：
 参数：     --port 8080 / --host 0.0.0.0
 ```
 > ⚠️ 后端依赖 `06_PoC/etl/normalized.json`（Aura 原始格式）。该文件已被 `export_normalized.py` 维护，若缺失 viz 可正常启动但 API 降级。
+
+#### 5.2.1 前端（Phase 43 步骤 B）—— 原生 ES Module，**零构建链**
+`06_PoC/js/` 共 9 个模块，浏览器 `import` 原生加载，**无打包器 / 无 npm / 无转译**（§0.1）。
+`graph_view.html` 仅作壳：样式 + `<script type="module" src="js/main.js">` + 容器节点。
+
+| 模块 | 职责 | 依赖 |
+|---|---|---|
+| `js/core.js` | 纯逻辑：五态归一化、参数构造、状态合并、会话预算、模式真值表、WCAG 对比度。**零 DOM / 零 fetch** | 无 |
+| `js/style.js` | 视觉常量（纯数据）：学科色、19 种节点类型、**24 种边 type 配色**、7 档验证徽章（`rank` == `queries._RANK`） | 无 |
+| `js/api.js` | HTTP 层：`class Api`（`fetchImpl` 可注入 / `AbortController` 超时 / 400⇒`BAD_REQUEST`） | `core.js` |
+| `js/modes.js` | 模式判定：**先探 `/api/stats`**，可用 ⇒ `live` 且**不触碰** `/graph_data.json`（铁律 #66） | `core.js` |
+| `js/subgraph.js` | `class SubgraphStore`：`run/expand/back/reset/jsonSnapshot` | `core.js`,`api.js` |
+| `js/viz.js` | Cytoscape 封装：样式数组、增量 `add`、**只对新元素跑布局**、导出 PNG/SVG | vendor cy |
+| `js/panels.js` | 查询表单 / 状态行 / 横幅（★ 边**语义关系 `type`** 与**来源管线 `kind`** **两组分列**）；`bindSearch` 防抖 + 过期响应丢弃 | `core.js`,`style.js` |
+| `js/evidence.js` | 节点/边证据卡（MathJax + 复制 LaTeX；证据 `src`/`impl` 分列、`src_hash[:12]`、stale 横幅） | `style.js` |
+| `js/main.js` | 编排：`applyStatusVars` 把 `STATUS_STYLE` 写入 CSS 变量（单一来源）、五个入口、布局切换、键盘可访问 | 全部 |
+
+**自检（两条，互不替代）**：
+```bash
+bash sttp.sh frontend                                  # 55 PASS / 0 FAIL / 2 SKIP（含 HTTP 层 H1–H6g、跨层 X1–X7）
+node 06_PoC/tests/frontend_core_check.mjs              # 53 PASS / 0 FAIL（纯逻辑 + panels 真实渲染，零依赖）
+```
+> 留痕 `07_交付物/Phase43_frontend_selfcheck.json`；报告 `07_交付物/Phase43_局部图谱查询与前端_20261014.md`（含 D14–D23）。
+> **已知边界见 §0.3.1** —— 尤其 **D14 无头浏览器渲染未实测**（零依赖环境无 Playwright/jsdom，自检内 SKIP 且**不计通过**）。
 > ★ **Phase 43 新增端点的契约**：`contracts/*.schema.json`（+ `contracts/README.md`）；
 > 自检 `bash sttp.sh subgraph`（**51 / 0 / 3**，留痕 `07_交付物/Phase43_selfcheck.json`）；
 > 五态 = `ok / no_result / truncated / timeout / error`（**业务态一律 HTTP 200**，只有参数非法才 400）；
@@ -1007,9 +1065,10 @@ git merge origin/main
 
 | 场景 | 文件 |
 |------|------|
-| 修改 viz 图谱配色 | `06_PoC/graph_view.html`（`TYPE_STYLE`/`EDGE_TYPE_COLOR`） |
-| 新增节点类型 | `06_PoC/graph_export.py`（`TYPE_PRIORITY`）+ `06_PoC/graph_view.html`（`TYPE_STYLE`） |
-| 新增边类型 | `06_PoC/graph_view.html`（`EDGE_TYPE_COLOR` + 图例段） |
+| 修改 viz 图谱配色 | `06_PoC/js/style.js`（`SUBJECT_COLOR`/`NODE_TYPE_STYLE`/`EDGE_TYPE_COLOR`）★ Phase 43 起已从 html 迁出 |
+| 新增节点类型 | `06_PoC/graph_export.py`（`TYPE_PRIORITY`）+ `06_PoC/js/style.js`（`NODE_TYPE_STYLE`） |
+| 新增边类型 | `06_PoC/js/style.js`（`EDGE_TYPE_COLOR`，★ 必须与规范图实测 `type` 集合逐值对齐，自检 `X1` 会判红） |
+| **前端五态/参数/会话逻辑** | `06_PoC/js/core.js`（零 DOM 纯逻辑；`bash sttp.sh frontend` + `node 06_PoC/tests/frontend_core_check.mjs` 双向自检） |
 | 新增种子切片 | `10_种子数据/build_*.py` → `10_种子数据/seed_*.json`，再走 `06_PoC/sync_seed_delta.py` 回灌差量 |
 | 接入新数据源 | `11_真实数据/<source>_ingest.py`，用 `graph_export.build_graph_data()` 转换 |
 | **量北极星连通性** | `06_PoC/connectivity_audit.py`（`--strict` 退码 2） |
@@ -1028,6 +1087,10 @@ git merge origin/main
 ---
 
 *本文件由 QClaw 生成于 2026-10-08，建议在每次 Phase 完成后更新「当前运行状态」和「已知问题」两节。*
-*最近更新：2026-10-12（Phase 36 · 第 26 轮：新增 §1g 验证语义校正（GPT6 复评 R01–R05/R07/R08）；
+*最近更新：2026-10-14（Phase 43 步骤 B · 第 35 轮：前端「局部图谱查询浏览」落地 —— `06_PoC/js/` 9 个原生
+ES Module（零构建）、`graph_view.html` 整页重写、`viz_server.py` 新增 `/js/` 路由、双自检
+`bash sttp.sh frontend`（55/0/2）+ `node frontend_core_check.mjs`（53/0）；§0.3.1 增列前端已知边界 D14–D23；
+§5.2.1 新增前端模块表）。*
+*前次更新：2026-10-12（Phase 36 · 第 26 轮：新增 §1g 验证语义校正（GPT6 复评 R01–R05/R07/R08）；
 T9-i 95.8%→85.9% 如实下调；门禁 74→90 + `--release` fail-closed；新铁律 #51/#52；
 新增 `rescope` 命令；许可包补全 vendor/licenses + DATA_LICENSES.md）。*
