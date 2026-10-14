@@ -36,6 +36,20 @@
     status ∈ {ok, no_result, truncated, timeout, error}   ← 铁律 #67
     4xx 只用于**参数非法**；业务态的"空/截断/超时"一律 HTTP 200（便于前端统一处理）。
 
+两层证据判据（Phase 44 字节忠实度 / Phase 45 验证依赖状态）
+----------------------------------------------------------
+    edge.fidelity        ∈ {verified, changed, unverifiable_no_source,
+                            unverifiable_not_in_repo}          ← **边级字节**
+    edge.evidence_status ∈ {valid, stale, needs_review, rejected} | null  ← **证据级依赖**
+    ★ 二者**并列披露，不得互相替代**：前者只答「来源那个字节文件变了吗」，
+      后者还答「它所依赖的参考表/验证器/命题本身变了吗」。
+    ★ `exclude_stale` 的**唯一**判据是 `queries.edge_is_stale()`：它把两层**合流**
+      （字节 ∈ STALE_FIDELITIES ∪ 状态 ∈ {stale, rejected}）。
+      `needs_review`（本环境不可判定 = 缺数据本身）**不**被排除 —— 否则
+      `exclude_stale` 会退化成「几乎清空全图」（铁律 #70），但**始终披露**。
+    ★ 缺记录 ≠ 已验证：图上无 A04 记录时 `evidence_status=null` +
+      `evidence_status_source="absent"`，**不得**写成 `"valid"`。
+
 数据源（**页面与查询必须同版本**）
 ----------------------------------
     GRAPH_DATA_FILE   → 页面 `/graph_data.json` 读的前端投影（schema=formula-graph-view/v1）
@@ -204,9 +218,19 @@ def _gx():
 
 
 _SOURCE_REGISTRY = None       # 模块对象 / False
+_EVIDENCE_DEPS = None         # 模块对象 / False（A04 · Phase 45）
 _STALE_CACHE = {"key": None, "val": None}
-_STALE_LOCK = threading.Lock()
+# ★ 必须用 **RLock**（可重入）：`stale_registry()` 会在持锁期间调用
+#   `evidence_status_registry()`，而后者也要拿同一把锁。用 `threading.Lock()` 会
+#   **自死锁**（单线程也一样：CPU≈0、无子进程、永久挂起 —— Phase 45 实测踩到，登记为 E11）。
+#   已同时把嵌套调用移出锁外（双保险），但保留 RLock 以防将来再引入同类嵌套。
+_STALE_LOCK = threading.RLock()
 _FIDELITY_CACHE = {"key": None, "val": None}
+_EVIDENCE_STATUS_CACHE = {"key": None, "val": None}
+#: 环境开关：A04 状态映射（默认开）。设 `STTP_EVIDENCE_STATUS=0` 可关闭
+#  —— 供「A04 未落图 / 想复现 Phase 44 行为」的对照实验，而**不是**为了静默退化。
+_EVIDENCE_STATUS_ENABLED = os.environ.get("STTP_EVIDENCE_STATUS", "1").strip().lower() \
+    not in ("0", "false", "no", "off")
 
 
 def _load_source_registry():
@@ -224,6 +248,148 @@ def _load_source_registry():
             print(f"[WARN] 无法加载 source_registry（{type(e).__name__}: {e}）；"
                   f"exclude_stale 将不可用。")
     return _SOURCE_REGISTRY
+
+
+def _load_evidence_deps():
+    """import 守卫：加载 `11_真实数据/evidence_deps.py`（A04 验证依赖模型）。
+
+    不可用时的行为是**显式降级**：`stale_registry()` 不带 `status` ⇒
+    `queries.edge_is_stale()` 回落到四分类口径（Phase 44 行为），
+    且 `/api/stats` 的 `a04.available=false` 会说明原因 —— **不静默假装没有这一层**。
+    """
+    global _EVIDENCE_DEPS
+    if _EVIDENCE_DEPS is None:
+        d = os.path.join(ROOT, "11_真实数据")
+        try:
+            if d not in sys.path:
+                sys.path.insert(0, d)
+            import evidence_deps  # type: ignore
+            _EVIDENCE_DEPS = evidence_deps
+        except Exception as e:  # noqa: BLE001
+            _EVIDENCE_DEPS = False
+            print(f"[WARN] 无法加载 evidence_deps（{type(e).__name__}: {e}）；"
+                  f"A04 验证依赖状态将不可用（回落到四分类口径）。")
+    return _EVIDENCE_DEPS
+
+
+def evidence_status_registry(edges, src_hashes=None):
+    """现算**全图** A04 状态映射 `{edge_id: {status, reasons, source, n_evidence,
+    n_with_deps, evidence:[{evidence_id, status, reasons, verifier, refs:[{ref_id,
+    binding, content_hash}], src_hash}]}}`。
+
+    ★ 为什么在服务端一次性算好（而不是每边现算）：A04 的 `evidence_status()`
+      需要**当前**参考表/验证器快照，而它**与边无关**（全图共用一份）。逐边现算会
+      重复读 5 张参考表 × 49572 条证据 ⇒ 纯浪费；且逐边现算极易出现"两条边用不同快照"
+      的静默不一致。这里**先算一次 current，再对全部证据用同一份 current**（铁律 #40）。
+    ★ 缓存键 = HEAD sha：参考表/验证器身份与证据记录都是"那一次提交的字节"的函数，
+      HEAD 不变 ⇒ 结果不变（与 `stale_registry` 同键，两处口径一致）。
+    ★ 无 A04 记录 ⇒ 返回 **{}**（不是 None）—— 与「模块不可用」区分开。
+    """
+    ed = _load_evidence_deps()
+    q = _load_queries()
+    if not ed or not q:
+        return None
+    base = ROOT
+    try:
+        key = _head_sha(base)
+        with _STALE_LOCK:
+            if _EVIDENCE_STATUS_CACHE["key"] == key and _EVIDENCE_STATUS_CACHE["val"] is not None:
+                return _EVIDENCE_STATUS_CACHE["val"]
+        ledger = ed.load_ledger(base)
+        cur = ed.current_snapshot(base=base, byte_source="repo", src_hashes=src_hashes)
+        out = {}
+        for e in edges:
+            props = e.get("props") or {}
+            evs = props.get("verification_evidence") or []
+            if not evs:
+                continue
+            recs = []
+            worst, worst_rank, reasons_all = None, -1, []
+            for idx, ev in enumerate(evs):
+                if not isinstance(ev, dict):
+                    continue
+                if not ed.has_recorded_deps(ev):
+                    continue          # 未带 A04 记录的证据**跳过**，不编造状态
+                rc = ed.recorded_deps(ev)
+                eid = ev.get("evd") or ed.evidence_id(q.edge_key(e), idx, ev)
+                declared = set(ed.impl_refs(ev.get("impl")) or [])
+                st, rs = ed.evidence_status(rc, cur, claim_rejected=bool(props.get("rejected")),
+                                            ledger_entry=ledger.get(eid))
+                rank = q.EVIDENCE_STATUS_RANK.get(st, -1)
+                if rank > worst_rank:
+                    worst, worst_rank = st, rank
+                for r in rs:
+                    if r not in reasons_all:
+                        reasons_all.append(r)
+                recs.append({
+                    "evidence_id": eid,
+                    "index": idx,
+                    "status": st,
+                    "reasons": rs,
+                    "src": ev.get("src"),
+                    "src_hash": ev.get("src_hash"),
+                    "verifier": ev.get("vfr"),
+                    "verifier_code_hash": ev.get("vch"),
+                    "refs": [{"ref_id": k, "content_hash": v,
+                              "binding": "impl_declared" if k in declared else "code_import"}
+                             for k, v in (ev.get("refs") or {}).items()],
+                })
+            if not recs:
+                continue
+            out[q.edge_key(e)] = {
+                "status": worst, "reasons": reasons_all, "source": "recorded",
+                "n_evidence": len(evs), "n_with_deps": len(recs), "evidence": recs,
+            }
+        with _STALE_LOCK:
+            _EVIDENCE_STATUS_CACHE["key"] = key
+            _EVIDENCE_STATUS_CACHE["val"] = out
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] A04 状态映射不可用（{type(e).__name__}: {e}）")
+        return None
+
+
+_A04_SUMMARY_CACHE = {"key": None, "val": None}
+
+
+def a04_registry_summary() -> dict:
+    """A04 参考表登记摘要（`/api/stats` 用；不返回全量以控体积）。按 HEAD 缓存。"""
+    ed = _load_evidence_deps()
+    if not ed:
+        return {"available": False, "reason": "evidence_deps 模块不可用"}
+    try:
+        key = _head_sha(ROOT)
+        with _STALE_LOCK:
+            if _A04_SUMMARY_CACHE["key"] == key and _A04_SUMMARY_CACHE["val"]:
+                return _A04_SUMMARY_CACHE["val"]
+        out = _a04_registry_summary_uncached(ed)
+        with _STALE_LOCK:
+            _A04_SUMMARY_CACHE["key"] = key
+            _A04_SUMMARY_CACHE["val"] = out
+        return out
+    except Exception as e:  # noqa: BLE001
+        return {"available": False, "reason": "%s: %s" % (type(e).__name__, e)}
+
+
+def _a04_registry_summary_uncached(ed) -> dict:
+    try:
+        reg = ed.load_registry(ROOT)
+        refs = (reg or {}).get("references") or {}
+        return {
+            "available": True,
+            "schema": (reg or {}).get("schema"),
+            "byte_source": (reg or {}).get("byte_source"),
+            "n_references": len(refs),
+            "references": {rid: {"kind": v.get("kind"), "version": v.get("version_label"),
+                                 "content_hash": v.get("content_hash")}
+                           for rid, v in refs.items()},
+            "verifiers": {vid: {"code_hash": v.get("code_hash"),
+                                "n_dependency_versions": len(v.get("dependency_versions") or {})}
+                          for vid, v in ((reg or {}).get("verifiers") or {}).items()},
+            "status_enabled": _EVIDENCE_STATUS_ENABLED,
+        }
+    except Exception as e:  # noqa: BLE001
+        return {"available": False, "reason": "%s: %s" % (type(e).__name__, e)}
 
 
 def _head_sha(base):
@@ -259,10 +425,24 @@ def stale_registry():
     key = (_head_sha(base),
            tuple((sid, bool((sr.get(sid) or {}).get("lineage_recorded"))) for sid in sr.ids()))
     with _STALE_LOCK:
-        if _STALE_CACHE["key"] != key:
-            _STALE_CACHE["key"] = key
-            _STALE_CACHE["val"] = q.build_stale_registry(
-                sr.ids(), sr.hash_map(base=base), sr.repo_status_map(base=base))
+        if _STALE_CACHE["key"] == key and _STALE_CACHE["val"] is not None:
+            return _STALE_CACHE["val"]
+    # ★ 计算在**锁外**做：`evidence_status_registry()` 自己要拿 `_STALE_LOCK`，
+    #   在持锁时调它会自死锁（Phase 45 · E11，实测）。锁只保护缓存读写。
+    hm = sr.hash_map(base=base)
+    rsm = sr.repo_status_map(base=base)
+    # ★ Phase 45 · A04：把**证据级验证依赖状态**注入同一份登记快照，
+    #   使 `queries.edge_is_stale()` 成为「字节忠实度 ∪ 依赖状态」的**唯一**排除口径。
+    #   映射不可用（模块缺失 / 关闭开关 / 图上无 A04 记录）⇒ 传 `{}` ⇒
+    #   行为与 Phase 44 逐位一致（**回落**，而非改判）。
+    smap = None
+    if _EVIDENCE_STATUS_ENABLED:
+        b = get_backend()
+        if b is not None:
+            smap = evidence_status_registry(b.all_edges(), src_hashes=hm)
+    val = q.build_stale_registry(sr.ids(), hm, rsm, status_by_edge=(smap or {}))
+    with _STALE_LOCK:
+        _STALE_CACHE["key"], _STALE_CACHE["val"] = key, val
         return _STALE_CACHE["val"]
 
 
@@ -298,6 +478,43 @@ def fidelity_counts_global():
         return out
     except Exception as e:  # noqa: BLE001
         print(f"[WARN] 忠实度分列计数不可用（{type(e).__name__}: {e}）")
+        return None
+
+
+_EVIDENCE_STATUS_COUNTS_CACHE = {"key": None, "val": None}
+
+
+def evidence_status_counts_global():
+    """**全图** A04 状态分列计数（`queries.evidence_status_counts`，按 HEAD 缓存）。
+
+    与 `fidelity_counts_global()` 并列但**粒度不同**（见 `queries` 模块头的两层说明）。
+    ★ `needs_review` 必须**始终可见**：它是「本环境不可判定」（缺数据本身，非变更），
+      不计入 `exclude_stale`；若不在响应里报出，就会被读成「全都是 valid」。
+    ★ `no_record` 单列：图上还没有 A04 记录的边（缺记录 ≠ 已验证）。
+    """
+    q = _load_queries()
+    b = get_backend()
+    if not q or not b:
+        return None
+    base = ROOT
+    try:
+        key = _head_sha(base)
+        with _STALE_LOCK:
+            if (_EVIDENCE_STATUS_COUNTS_CACHE["key"] == key
+                    and _EVIDENCE_STATUS_COUNTS_CACHE["val"]):
+                return _EVIDENCE_STATUS_COUNTS_CACHE["val"]
+        reg = stale_registry()
+        if reg is None:
+            return None
+        out = q.evidence_status_counts(b.all_edges(), reg)
+        if out is None:
+            return None
+        with _STALE_LOCK:
+            _EVIDENCE_STATUS_COUNTS_CACHE["key"] = key
+            _EVIDENCE_STATUS_COUNTS_CACHE["val"] = out
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] A04 状态计数不可用（{type(e).__name__}: {e}）")
         return None
 
 
@@ -499,6 +716,11 @@ def graph_stats() -> dict:
                 # ★ Phase 44 · D1：证据字节忠实度**分列**（全图）—— 必须始终可见，
                 #   否则「stale 很小」会被误读成「证据都可字节复算」。
                 "evidence_fidelity": fidelity_counts_global(),
+                # ★ Phase 45 · A04：**验证依赖状态**分列（全图）—— 与字节忠实度**并列**。
+                #   `needs_review` 不计入 stale（不可判定 ≠ 已变更），但必须始终可见；
+                #   `no_record` = 图上尚无 A04 记录的边。
+                "evidence_status": evidence_status_counts_global(),
+                "a04": a04_registry_summary(),
                 "source_repo_status": _repo_status_counts(),
                 "evidence_byte_source": "repo（git cat-file blob HEAD:<path>）",
             }
@@ -867,6 +1089,30 @@ class VizHandler(BaseHTTPRequestHandler):
                     p["fidelity_reasons"] = reasons
                 if p["stale"]:
                     p["stale_reasons"] = q.stale_reasons(e, stale)
+                # ★ A04 · 验证依赖状态（Phase 45）：**与 fidelity 并列的第二层**。
+                #   `evidence_status=None` + `evidence_status_source="absent"` 表示
+                #   「该图上没有这条边的 A04 记录」——**不得**渲染成 valid（缺记录 ≠ 已验证）。
+                rec = q.edge_evidence_status(e, stale)
+                p["evidence_status"] = (rec or {}).get("status")
+                p["evidence_status_source"] = "recorded" if rec else "absent"
+                if rec:
+                    if rec.get("reasons"):
+                        p["evidence_status_reasons"] = list(rec["reasons"])
+                    p["evidence_status_n"] = {"evidence": rec.get("n_evidence"),
+                                              "with_deps": rec.get("n_with_deps")}
+                    # 把**逐条**状态并进证据数组：前端证据卡直接读，不必再映射一遍
+                    # （少一层映射就少一类「少搬一格」型静默错位）
+                    by_id = {x["evidence_id"]: x for x in (rec.get("evidence") or [])}
+                    for ev in (p.get("evidence") or []):
+                        if not isinstance(ev, dict) or ev.get("evd") not in by_id:
+                            continue
+                        x = by_id[ev["evd"]]
+                        ev["status"] = x["status"]
+                        if x.get("reasons"):
+                            ev["status_reasons"] = list(x["reasons"])
+                        binds = {rr["ref_id"]: rr["binding"] for rr in (x.get("refs") or [])}
+                        if binds:
+                            ev["ref_bindings"] = binds
                 edges_out.append(p)
             fidelity_local = (q.fidelity_counts(r["edges"], stale) if stale else None)
         else:
@@ -900,6 +1146,11 @@ class VizHandler(BaseHTTPRequestHandler):
         #   不合并进 `stale`，避免「stale 很小」被误读成「证据都可字节复算」。
         stats["evidence_fidelity"] = fidelity_local
         stats["evidence_fidelity_global"] = fidelity_counts_global()
+        # ★ A04（Phase 45）：本次可见子图 + 全图的**验证依赖状态**分列（与上面并列）。
+        #   `stats["evidence_status"]` 由 `queries.subgraph()` 在 stats 内给出（本次可见边）；
+        #   这里补上全图口径。两者均为 None ⇒ 该图上无 A04 记录（不假装 valid）。
+        stats["evidence_status_global"] = evidence_status_counts_global()
+        stats["a04"] = a04_registry_summary()
         return self._json(200, self._env(
             status=r["status"], reason=r["reason"], error_code=r["error_code"],
             query=params, query_hash=qh, seed=seed_info,

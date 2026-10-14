@@ -11,13 +11,18 @@
 | `search.schema.json`   | `sttp-search/v1`   | `GET /api/search`   | 文本搜索（命中 + 分数） |
 | `overview.schema.json` | `sttp-overview/v1` | `GET /api/overview` | 概览元图（`aggregate` / `sample`） |
 | `error.schema.json`    | `sttp-error/v1`    | 全部端点 | 错误信封（`status/reason/error_code/snapshot_id`） |
+| `evidence.schema.json` | `sttp/evidence.schema.json` | **（非端点）** | ★ **Phase 45 · A04** 版本化证据 v2：`evidence_id` / `claim_version` / `input_refs[]` / `reference_refs[]` / `verifier{dependency_versions}` / `status ∈ {valid,stale,needs_review,rejected}` / `status_reasons[]` / `supersedes_evidence_id`。由 `11_真实数据/evidence_deps.py --check` 与 `sttp.sh evdeps` 覆盖 |
 
 ## 校验器（零第三方依赖）
 
 `06_PoC/tests/phase43_subgraph_selfcheck.py` 内置一个 **JSON-Schema 子集**校验器。
 
-**已实现的关键字**（`validate()` 的完整支持集，共 12 个）：
-`$ref` / `$defs` / `type`（含联合类型数组）/ `required` / `properties` / `items` / `enum` / `pattern` / `minLength` / `minimum` / `maximum`
+**已实现的关键字**（`validate()` 的完整支持集，共 13 个）：
+`$ref` / `$defs` / `type`（含联合类型数组）/ `required` / `properties` / `additionalProperties` / `items` / `enum` / `pattern` / `minLength` / `minimum` / `maximum`
+
+★ `additionalProperties` 是 **Phase 45 补齐**的（原为"已知边界"）：A04 契约用它约束 `evidence[].refs`
+的**动态键**（`{ref_id: 哈希}`，`properties` 无法表达）。补齐后自检新增 **C5b2/C5b3** 反例/正例各一条，
+证明该约束**真的被执行**（不是只加进"支持集"）。
 （外加 `$schema` / `$id` / `title` / `description` 这类无校验语义的元数据）。
 
 **未实现且不会被静默放过**：自检 **C5b** 会递归收集四份 schema 里出现的**全部**关键字，断言 ⊆ 上述支持集。

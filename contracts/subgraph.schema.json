@@ -67,6 +67,10 @@
             "n_edges_total": { "type": "integer", "minimum": 0 }
           }
         },
+        "evidence_status": { "$ref": "#/$defs/status_counts" },
+        "evidence_status_global": { "$ref": "#/$defs/status_counts" },
+        "evidence_status_note": { "type": "string" },
+        "a04": { "type": ["object", "null"] },
         "stale_registry": { "type": ["object", "null"] },
         "session": {
           "type": "object",
@@ -122,10 +126,40 @@
         "evidence": { "type": ["array", "null"], "items": { "$ref": "#/$defs/evidence" } },
         "rationale": { "type": ["string", "null"] },
         "why_shown": { "$ref": "#/$defs/why" },
-        "stale": { "type": "boolean" },
+        "stale": {
+          "type": "boolean",
+          "description": "**两层合流**的唯一排除口径（Phase 45）：= (fidelity ∈ {changed, unverifiable_no_source}) ∪ (evidence_status ∈ {stale, rejected})。needs_review **不**导致 stale（不可判定 ≠ 已变更，铁律 #70）。"
+        },
         "stale_reasons": { "type": "array" },
         "fidelity": { "enum": [null, "verified", "changed", "unverifiable_no_source", "unverifiable_not_in_repo"] },
-        "fidelity_reasons": { "type": "array" }
+        "fidelity_reasons": { "type": "array" },
+        "evidence_status": { "$ref": "#/$defs/evidence_status" },
+        "evidence_status_source": { "enum": ["recorded", "absent"] },
+        "evidence_status_reasons": { "type": "array" },
+        "evidence_status_n": {
+          "type": ["object", "null"],
+          "properties": {
+            "evidence": { "type": "integer", "minimum": 0 },
+            "with_deps": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "evidence_status": {
+      "enum": [null, "valid", "stale", "needs_review", "rejected"],
+      "description": "A04 验证依赖状态（Phase 45；边级聚合，多证据取**最坏**）。★ 与 `fidelity` 是**两层**，不可互相替代：fidelity 只答『来源那个字节文件变了吗』，本项还答『它依赖的参考表/验证器/依赖版本变了吗、命题是否被否决』。★ `null` = 该图上没有这条边的 A04 记录（`evidence_status_source=absent`）——**缺记录 ≠ 已验证**，不得渲染成 valid。★ `needs_review` = 本环境**不可判定**（缺的正是数据本身）⇒ 不计入 stale，但始终披露。"
+    },
+    "status_counts": {
+      "type": ["object", "null"],
+      "description": "A04 状态分列计数。六键（五态 + no_record）之和 == 边总数；`no_record` 单列（缺记录 ≠ 已验证）。",
+      "properties": {
+        "valid": { "type": "integer", "minimum": 0 },
+        "stale": { "type": "integer", "minimum": 0 },
+        "needs_review": { "type": "integer", "minimum": 0 },
+        "rejected": { "type": "integer", "minimum": 0 },
+        "no_record": { "type": "integer", "minimum": 0 },
+        "n_edges_total": { "type": "integer", "minimum": 0 },
+        "n_excluded_by_status": { "type": "integer", "minimum": 0 }
       }
     },
     "evidence": {
@@ -142,8 +176,30 @@
           "description": "证据来源在**记录时刻**的字节哈希（十六进制）。`null` = 该来源**无 locator**（模型/规则源，如 GNN/schema-axiom/LLM-review，实测 9 个来源、126 条证据、121 条边），**不可字节复算** ⇒ 与 `fidelity=unverifiable_no_source` 同源。字段**始终存在**（在 required 内），用值而非缺键表达「不可复算」——避免了「缺键」与「无值」的歧义。"
         },
         "impl": { "type": "string", "minLength": 1 },
-        "impl_ver": { "type": "string" },
-        "indep": { "type": "boolean" }
+        "impl_ver": {
+          "type": "string",
+          "description": "旧字段。★ A04a 实测：全库**只有一个值**（`100148c147cb`，49572/49572）⇒ 区分不出『哪个验证器版本产出了哪条证据』，且旧失效器**从不比对**它。请以 `vch` + `dvs` 为准。"
+        },
+        "indep": { "type": "boolean" },
+        "evd": { "type": "string", "pattern": "^evd:[0-9a-f]{16}$" },
+        "refs": {
+          "type": "object",
+          "description": "记录的参考表依赖 `{ref_id: 记录时刻内容哈希}`（仓库 blob 口径）。",
+          "additionalProperties": { "type": ["string", "null"] }
+        },
+        "vfr": { "type": ["string", "null"] },
+        "vch": { "type": ["string", "null"] },
+        "dvs": { "type": "object" },
+        "status": { "$ref": "#/$defs/evidence_status" },
+        "status_reasons": {
+          "type": "array",
+          "description": "程序化原因码：src_changed:/ref_changed:/verifier_changed:/dep_version_changed:/unverifiable_source:/unverifiable_reference:/unverifiable_verifier:/no_reference_declared/claim_rejected/hash_rewritten_without_reverify/reverified"
+        },
+        "ref_bindings": {
+          "type": "object",
+          "description": "`{ref_id: impl_declared|code_import}`。`code_import` 是**保守过近似**（验证器模块代码级 import 了该表 ⇒ 全部该验证器的证据都被判依赖它）。",
+          "additionalProperties": { "enum": ["impl_declared", "code_import"] }
+        }
       }
     }
   }

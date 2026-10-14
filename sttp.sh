@@ -39,7 +39,7 @@
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
 #   bash sttp.sh evdeps [--report|--check|--emit-registry] A04 验证依赖绑定：参考表/验证器依赖推导 + 状态机自检（Phase 45）
-#   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V18 正/反例（Phase 43 / 复评 A06）
+#   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V19 正/反例（Phase 43/45）
 #   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -375,7 +375,8 @@ EOF
     ;;
   subgraph)
     # Phase 43 / 复评 A06：局部图谱查询（/api/search · /api/subgraph · /api/path · /api/overview）
-    # 真 HTTP 响应体断言 + 契约 JSON Schema 校验 + V1–V18 正/反例（反例必须变红）。
+    # 真 HTTP 响应体断言 + 契约 JSON Schema 校验 + V1–V19 正/反例（反例必须变红）。
+    # V19 = Phase 45 A04 验证依赖状态（五态 / 两层合流 / 缺记录不假装 / 构造性非真空）。
     # Neo4j 不可达 ⇒ 记 SKIP（不计入通过数，铁律 #20/#37）。
     shift
     set -e

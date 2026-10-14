@@ -45,6 +45,13 @@
 * **口径外置**：节点类型与学科解析依赖 `06_PoC/graph_export.pick_type / subject_of`
   这一**权威口径**。03 层不反向 import 06 层 ⇒ 由调用方以
   `node_type_of` / `subject_of_fn` 形参注入（单一口径，不另起一套，铁律 #3/#40）。
+  同理，A04 的**验证依赖状态**由调用方用 `11_真实数据/evidence_deps.py` 现算后经
+  `build_stale_registry(..., status_by_edge=…)` 注入（03 层不反向 import 11 层）。
+* **两层判据不可互相替代**（Phase 45 · A04）：
+  ① `edge_fidelity()` = **边级字节忠实度**（来源那一个字节文件变了吗）；
+  ② `edge_evidence_status()` = **证据级验证依赖状态**（`valid/stale/needs_review/rejected`，
+     还看参考表 / 验证器 / 依赖版本 / 命题是否被否决 / 哈希来路是否明）。
+  二者的**排除口径合流到 `edge_is_stale()` 一处**；无 A04 记录时**完全回落**到 ①。
 
 双后端
 ------
@@ -227,7 +234,8 @@ def edge_rank(props: dict) -> int:
     return _RANK.get(lv, 0)
 
 
-def build_stale_registry(known_sources, current_hashes, repo_status=None) -> dict:
+def build_stale_registry(known_sources, current_hashes, repo_status=None,
+                         status_by_edge=None) -> dict:
     """构造 stale/fidelity 判定所需的登记快照
     （由调用方从 `11_真实数据/source_registry.py` 现算）。
 
@@ -246,10 +254,18 @@ def build_stale_registry(known_sources, current_hashes, repo_status=None) -> dic
       理由：把它并进 `stale` 会让「已变更」这一**可操作**信号被 47 176 条（96.8%）淹没，
       使 `exclude_stale` 退化为「什么都别显示」；而它**并非变更**。
       ⇒ 它**不静默**：始终以独立计数出现在 `stats.evidence_fidelity` 与边属性 `fidelity` 上。
+
+    ★ 第 4 个可选键 `status`（Phase 45 · A04）：`{edge_id: {"status":…, "reasons":[…],
+      "source":"recorded"|"absent", "n_evidence":…, "evidence":[…]}}`，
+      由调用方用 `11_真实数据/evidence_deps.py` 的 `evidence_status()` **现算后注入**
+      （03 层不反向 import 11 层 ⇒ 与 `node_type_of` 同样的「形参注入」惯例）。
+      **不注入时**（`{}`/`None`）本模块行为与 Phase 44 **逐位一致**——这是有意的：
+      发布样例图、裸 clone 前的中间图都可能还没有 A04 记录，此时不得因缺记录而改判。
     """
     return {"known": set(known_sources or ()),
             "hashes": dict(current_hashes or {}),
-            "repo_status": dict(repo_status or {})}
+            "repo_status": dict(repo_status or {}),
+            "status": dict(status_by_edge or {})}
 
 
 FIDELITY_CLASSES = ("verified", "changed", "unverifiable_no_source",
@@ -257,9 +273,68 @@ FIDELITY_CLASSES = ("verified", "changed", "unverifiable_no_source",
 #: 计入 `stale` 的忠实度类别（fail-closed 口径，与 Phase 43 保持一致）
 STALE_FIDELITIES = ("changed", "unverifiable_no_source")
 
+# ----------------------------------------------------------------------------
+# A04 · 验证依赖状态（Phase 45）—— 与 `evidence_deps.STATUSES` **逐值一致**
+#   ① 这是**证据级**判据（参考表 / 验证器 / 依赖版本 / 命题被否决 / 哈希来路不明），
+#      与上面**边级**的「字节忠实度」四分类是**两层**，不可互相替代：
+#        · 忠实度只回答「来源那一个字节文件变了吗」；
+#        · 依赖状态还回答「它所依赖的**参考表/验证器**变了吗」。
+#   ② 两层的**排除口径**必须合流到 `edge_is_stale()` 这**一个**函数（铁律 #40），
+#      否则「前端显示不 stale、后端却按 stale 排除」这类静默错位必然出现。
+# ----------------------------------------------------------------------------
+EVIDENCE_STATUSES = ("valid", "stale", "needs_review", "rejected")
+#: 严重度排序（多证据聚合取**最坏**）：值越大越严重
+EVIDENCE_STATUS_RANK = {"valid": 0, "needs_review": 1, "stale": 2, "rejected": 3}
+#: 计入 `stale`（即被 `exclude_stale` 排除）的 A04 状态。
+#   ★ `rejected`（命题已被显式否决）**一并排除**：它比 stale 更该被藏起来。
+#   ★ `needs_review` **不**排除 —— 它是「本环境不可判定」（缺数据本身，非变更），
+#     若并入就退化成「几乎清空全图」（铁律 #70），只是**必须显式披露**。
+STALE_EVIDENCE_STATUSES = ("stale", "rejected")
+#: A04 状态 → 字节忠实度四分类（与 `evidence_deps.FIDELITY_OF_STATUS` 同口径；
+#   自检 [V19] 有一条跨模块逐值一致性断言防漂移）
+FIDELITY_OF_EVIDENCE_STATUS = {"valid": "verified", "stale": "changed",
+                               "needs_review": "unverifiable_no_source",
+                               "rejected": "changed"}
+
+
+def edge_key(e) -> str:
+    """边的稳定键（与 `evidence_deps.mark_rewrites()` 的 `cid` **同口径**，避免两处不一致）。"""
+    props = e.get("props") or {}
+    return (e.get("id") or props.get("id")
+            or "%s|%s|%s" % (e.get("type") or props.get("type"), e.get("source"), e.get("target")))
+
+
+def edge_evidence_status(e, stale_registry) -> Optional[dict]:
+    """边的 **A04 验证依赖状态**（聚合到边）。
+
+    返回 `{"status","reasons","source","n_evidence","n_with_deps",…}`；
+    **无 A04 记录 ⇒ `None`**（★ 绝不写成 `"valid"` —— 那正是「被信任≠被验证」，
+    铁律 #19/#30）。聚合规则：多证据取**最坏**（`EVIDENCE_STATUS_RANK`）。
+    """
+    if not stale_registry:
+        return None
+    m = stale_registry.get("status") or {}
+    if not m:
+        return None
+    rec = m.get(edge_key(e))
+    if not rec:
+        return None
+    return rec
+
+
+def edge_evidence_statuses(e, stale_registry) -> List[dict]:
+    """逐条证据的 A04 状态（证据卡片用）。无记录 ⇒ `[]`。"""
+    rec = edge_evidence_status(e, stale_registry)
+    if not rec:
+        return []
+    return list(rec.get("evidence") or [])
+
 
 def edge_fidelity(e, stale_registry) -> str:
     """边的**证据字节忠实度**四分类（见 `build_stale_registry` 的说明）。
+
+    ★ 这是**边级字节**层（只看 `src_hash` vs 当前仓库字节），**不含**参考表/验证器依赖。
+      依赖层见 `edge_evidence_status()`，两者**并列披露、不得互相替代**。
 
     优先级（多来源时取**最强信号**）：
       无证据/畸形 → 未登记 → 哈希可算且不符 → 未入库 → 无当前哈希 → verified
@@ -308,11 +383,48 @@ def fidelity_counts(edges, stale_registry) -> dict:
     return c
 
 
+def evidence_status_counts(edges, stale_registry) -> Optional[dict]:
+    """A04 状态分列计数（**边级聚合**）。
+
+    返回 `{"valid":…, "stale":…, "needs_review":…, "rejected":…,
+           "no_record":…, "n_edges_total":…, "n_excluded_by_status":…}`。
+    ★ `no_record`（图上无 A04 记录）**单列**，不并入 `valid`：缺记录 ≠ 已验证。
+    ★ 登记表/A04 不可用 ⇒ 返回 **None**（不可判定，不假装全是 valid）。
+    """
+    if not stale_registry or not (stale_registry.get("status") or {}):
+        return None
+    c = {k: 0 for k in EVIDENCE_STATUSES}
+    c.update({"no_record": 0, "n_edges_total": 0, "n_excluded_by_status": 0})
+    for e in edges:
+        c["n_edges_total"] += 1
+        rec = edge_evidence_status(e, stale_registry)
+        if not rec:
+            c["no_record"] += 1
+            continue
+        st = rec.get("status")
+        c[st] = c.get(st, 0) + 1
+        if st in STALE_EVIDENCE_STATUSES:
+            c["n_excluded_by_status"] += 1
+    return c
+
+
 def edge_is_stale(e, stale_registry) -> bool:
     """`stale` = 「**不可确认**其证据新鲜」的 fail-closed 口径（铁律 #30）。
     由 `edge_fidelity` 单点定义，避免两处判据漂移。
-    ★ `unverifiable_not_in_repo` **不在其中**（见 `build_stale_registry`）。"""
-    return edge_fidelity(e, stale_registry) in STALE_FIDELITIES
+    ★ `unverifiable_not_in_repo` **不在其中**（见 `build_stale_registry`）。
+
+    ★ Phase 45 · A04 起，本函数是**唯一的排除口径单点**，把**两层**合流：
+      ① 边级字节忠实度 ∈ `STALE_FIDELITIES`；
+      ② 证据级 A04 状态 ∈ `STALE_EVIDENCE_STATUSES`（`stale` / `rejected`）。
+      `needs_review` **不**排除（不可判定 ≠ 已变更，铁律 #70），但由
+      `edge_evidence_status()` 单独披露 ⇒ 「不排除」不等于「不告知」。
+      **无 A04 记录 ⇒ 完全回落到 ①**，故 A04 未落图的图（发布样例、裸 clone 中期图）
+      行为与 Phase 44 逐位一致。
+    """
+    if edge_fidelity(e, stale_registry) in STALE_FIDELITIES:
+        return True
+    st = edge_evidence_status(e, stale_registry)
+    return bool(st) and st.get("status") in STALE_EVIDENCE_STATUSES
 
 
 def fidelity_reasons(e, stale_registry) -> List[str]:
@@ -343,13 +455,22 @@ def fidelity_reasons(e, stale_registry) -> List[str]:
 
 
 def stale_reasons(e, stale_registry) -> List[str]:
-    """**仅** stale 原因（`fidelity_reasons` 中属于 `STALE_FIDELITIES` 的那部分）。
+    """**仅** stale 原因（= 两层排除口径的并集，与 `edge_is_stale` 严格等价）。
 
-    保持 Phase 43 的对外口径：`stale_reasons` 非空 ⇔ `edge_is_stale` 为真。
+    保持 Phase 43 的对外契约：**`stale_reasons` 非空 ⇔ `edge_is_stale` 为真**
+    （自检 [V19] 有反例断言守住这条等价 —— 曾因 A04 只改 `edge_is_stale`
+    不改本函数而出现「被排除却说不出理由」的静默错位）。
     """
-    if edge_fidelity(e, stale_registry) not in STALE_FIDELITIES:
+    if not edge_is_stale(e, stale_registry):
         return []
-    return fidelity_reasons(e, stale_registry)
+    out = list(fidelity_reasons(e, stale_registry))
+    st = edge_evidence_status(e, stale_registry)
+    if st and st.get("status") in STALE_EVIDENCE_STATUSES:
+        for r in (st.get("reasons") or []):
+            tag = "验证依赖：%s" % r
+            if tag not in out:
+                out.append(tag)
+    return out
 
 
 def _match_score(q: str, ql: str, nid: str, label: str, latex: str) -> int:
@@ -521,7 +642,12 @@ class Backend:
 
     @staticmethod
     def _edge_ok(e: dict, f: dict) -> bool:
-        """与可信档位无关的过滤（type/kind/confidence/model_inferred/stale）。"""
+        """与可信档位无关的过滤（type/kind/confidence/model_inferred/stale）。
+
+        ★ `exclude_stale` 走 `edge_is_stale()` —— 那是**唯一**的排除口径单点，
+          已把「边级字节忠实度」与「证据级 A04 依赖状态」两层合流（Phase 45）。
+          在此处另写一套判据就会产生「显示不 stale、却被静默排除」的错位。
+        """
         p = e.get("props") or {}
         if f["types"] is not None and e["type"] not in f["types"]:
             return False
@@ -674,7 +800,7 @@ class Backend:
                  node_types=None, subjects=None, types=None, kinds=None,
                  trust: str = TRUST_VERIFIED, min_confidence: float = 0.0,
                  exclude_model_inferred: bool = False, exclude_stale: bool = False,
-                 stale_sources: Optional[dict] = None,
+                 stale_sources: Optional[dict] = None,   # 实为 stale registry（由 build_stale_registry 构造）
                  max_nodes: int = DEFAULT_NODES, max_edges: int = DEFAULT_EDGES,
                  max_hops: int = DEFAULT_HOPS, deadline_ms: int = DEFAULT_DEADLINE_MS,
                  max_paths: int = DEFAULT_MAX_PATHS,
@@ -937,6 +1063,17 @@ class Backend:
             "clamped": {k: v for k, v in clamp.items() if v},
             "elapsed_ms": _ms(t0),
         }
+        # ★ A04 · 验证依赖状态（Phase 45）：本次可见子图内的**分列**计数。
+        #   与 `evidence_fidelity` 并列但**粒度不同**：前者是**边级字节**忠实度，
+        #   本项是**证据级依赖**状态（参考表 / 验证器 / 依赖版本 / 命题被否决 / 哈希来路不明）。
+        #   无 A04 记录 ⇒ 该键**不出现**（不可判定不假装全 valid）。
+        st_counts = evidence_status_counts(edges_out, f.get("stale_sources"))
+        if st_counts is not None:
+            stats["evidence_status"] = st_counts
+            stats["evidence_status_note"] = (
+                "A04 验证依赖状态（边级聚合，多证据取最坏）。"
+                "needs_review = 本环境**不可判定**（缺数据本身，≠ 已变更）⇒ 不计入 exclude_stale；"
+                "no_record = 该图上无 A04 记录（缺记录 ≠ 已验证）。")
         return self._envelope(status, "；".join(reasons), why_nodes, why_edges,
                               nodes=nodes_out, edges=edges_out, expandable=expandable,
                               query={"mode": mode, "seeds": seed_list, "trust": trust,
