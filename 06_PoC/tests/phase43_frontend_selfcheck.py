@@ -31,6 +31,7 @@
 import io
 import json
 import os
+import pathlib
 import re
 import subprocess
 import sys
@@ -355,22 +356,66 @@ def main(argv=None):
         except Exception as e:  # noqa: BLE001
             rep.skip("X5 会话预算一致", f"import viz_server 失败：{e}")
 
-        # X6 ERROR_CODE_TEXT 覆盖后端实际会产生的 error_code
+        # X6 ERROR_CODE 文案表 / 严重度表 **从契约派生**比对（唯一真值源）
+        #   ★ 2026-10-14 改造原因：原实现是硬编码 needle 列表 + 只用后端源码正则
+        #     "捕已有"，**捕不出"应该有而没写"** —— 契约新增码时断言仍绿（#71）。
         m = re.search(r"export\s+const\s+ERROR_CODE_TEXT\s*=\s*Object\.freeze\(\{([\s\S]*?)\n\}\)", core_src)
-        fe_codes = set(re.findall(r"^\s*([A-Z_]+)\s*:", m.group(1), re.M)) if m else set()
+        # ★ 解析**不依赖换行**：`KEY: "…"` 可以一行多对（首版只认行首键 ⇒ 一行多对时
+        #   静默漏项，把"漏项"误报成"未归类" —— 测量器比被测对象更脆，正是 #76 家族）
+        fe_codes = set(re.findall(r"([A-Z_][A-Z0-9_]*)\s*:\s*[\"']", m.group(1))) if m else set()
         try:
             import viz_server as V  # type: ignore
             vs_src = read(os.path.join(POC, "viz_server.py"))
         except Exception:  # noqa: BLE001
             vs_src = ""
         q_src = read(os.path.join(ROOT, "03_知识层", "queries.py"))
+        try:
+            with io.open(os.path.join(ROOT, "contracts", "error.schema.json"), "r",
+                         encoding="utf-8") as f:
+                contract_codes = set(((json.load(f).get("properties") or {})
+                                      .get("error_code") or {}).get("enum") or [])
+        except Exception:  # noqa: BLE001
+            contract_codes = set()
         be_codes = set(re.findall(r'error_code["\']?\s*[:=]\s*["\']([A-Z_]+)["\']', vs_src + q_src))
         be_codes |= set(re.findall(r'"([A-Z_]{6,})"', vs_src))
         be_codes = {c for c in be_codes if c.endswith(("_REQUEST", "_MISMATCH", "_STALE", "_REACHED",
                                                        "_TIMEOUT", "_ERROR", "_AMBIGUOUS", "_CONDITION"))}
-        missing = sorted(be_codes - fe_codes)
-        rep.add(not missing, "X6 error_code 文案表覆盖后端实际产生的全部错误码",
-                "缺: " + ",".join(missing) if missing else f"{len(be_codes)} 个全覆盖")
+        miss_contract = sorted(contract_codes - fe_codes)
+        rep.add(bool(contract_codes) and not miss_contract,
+                "X6 error_code 文案表覆盖**契约 enum 全景**（派生比对，不硬编码）",
+                (f"契约 {len(contract_codes)} 个；缺 " + ",".join(miss_contract)) if miss_contract
+                else f"契约 {len(contract_codes)} 个全覆盖")
+        miss_be = sorted(be_codes - fe_codes)
+        rep.add(bool(be_codes) and not miss_be,
+                "X6a 文案表同时覆盖后端**实际产生**的全部错误码",
+                "缺: " + ",".join(miss_be) if miss_be else f"{len(be_codes)} 个全覆盖")
+        # X6b 传输层码**只能由前端合成** —— 把契约 description 里的声明变成可执行断言（#64）
+        TRANSPORT_CODES = {"BACKEND_UNREACHABLE"}
+        leak = sorted(c for c in (contract_codes & TRANSPORT_CODES)
+                      if re.search(r'["\']' + c + r'["\']', vs_src + q_src))
+        rep.add(bool(contract_codes & TRANSPORT_CODES) and not leak,
+                "X6b 传输层码 BACKEND_UNREACHABLE **只由前端合成**（后端源码不得出现）",
+                ("后端出现: " + ",".join(leak)) if leak else "后端 0 处引用")
+        # X6c 严重度必须**显式归类**（新增码不得静默默认成某一档 —— #84 的取向）
+        sm = re.search(r"export\s+const\s+ERROR_CODE_SEVERITY\s*=\s*"
+                       r"Object\.freeze\(\{([\s\S]*?)\n\}\)", core_src)
+        sev_codes = set(re.findall(r"([A-Z_][A-Z0-9_]*)\s*:\s*[\"']", sm.group(1))) if sm else set()
+        miss_sev = sorted(contract_codes - sev_codes)
+        rep.add(bool(contract_codes) and not miss_sev,
+                "X6c ERROR_CODE_SEVERITY 对契约每个码显式归类（防静默默认）",
+                "未归类: " + ",".join(miss_sev) if miss_sev else f"{len(sev_codes)} 个已归类")
+
+        # X5b 最短查询长度三处同源（queries.MIN_QUERY_LEN == 前端 MIN_QUERY_LEN）
+        #   ★ 为什么必须断言：前端若把阈值写小（例如 1），"第一次按键"就会发出
+        #     一次**明知会被 400 拒绝**的请求，并把 400 显示成"没有匹配" —— 与
+        #     Phase 48 修的那类"错误被伪装成正常"同族；若写大（例如 3）则静默
+        #     屏蔽掉合法的 2 字查询（如 `co2`）。两侧必须同源。
+        mm = re.search(r"export\s+const\s+MIN_QUERY_LEN\s*=\s*([0-9]+)", core_src)
+        fe_min = int(mm.group(1)) if mm else None
+        be_min = getattr(Q, "MIN_QUERY_LEN", None) if Q is not None else None
+        rep.add(mm is not None and be_min is not None and fe_min == be_min and fe_min >= 2,
+                "X5b 最短查询长度同源（前端 MIN_QUERY_LEN == queries.MIN_QUERY_LEN ≥ 2）",
+                f"前端 {fe_min} · 后端 {be_min}")
 
         # X7 验证档徽标 == queries._RANK：**键集合 + rank 数值**都必须相等
         m = re.search(r"export\s+const\s+VERIFICATION_BADGE\s*=\s*Object\.freeze\(\{([\s\S]*?)\n\}\)", style_src)
@@ -649,6 +694,61 @@ def main(argv=None):
                 ms6 = [k for k in ("node_id", "token") if k not in ex0]
                 rep.add(not ms6, "H6g expandable 字段齐备（展开用 node_id + token）",
                         "缺: " + ",".join(ms6) if ms6 else "2/2")
+
+            # ---- H7：**跨层端到端** —— 前端生成的查询串 ⇒ 真实后端 -----------------
+            #   ★ 为什么必须做（2026-10-14 P0 现场）：`buildParams` **漏掉 `q`** 时，
+            #     前端照常发请求、后端返回 400「缺少参数 q」，而 X/N 段的形状断言
+            #     （含 F11「同输入两次序列化相同」）**全绿** —— 没有任何断言看过
+            #     "真正发出去的 URL 里到底有什么"。这正是 #83（形状断言 ≠ 行为断言）
+            #     在**参数序列化**上的又一次现身。
+            #   做法：让 `Api.search` 真跑一遍（捕获型 fetchImpl 取 URL），把该 URL
+            #     原样交给**真实 HTTP 服务**；再**构造性**把旧行为（无 q）发一次，
+            #     证明这条断言不是空转（#75 负对照须可构造）。
+            if not node:
+                rep.skip("H7 跨层端到端（前端查询串 ⇒ 真实后端）",
+                         "环境无 node ⇒ **不计通过**（可用 STTP_NODE 指定）")
+            else:
+                api_uri = pathlib.Path(os.path.join(POC, "js", "api.js")).as_uri()
+                js = (
+                    "import { Api } from " + json.dumps(api_uri) + ";\n"
+                    "let seen = null;\n"
+                    "const api = new Api({ base: '', fetchImpl: (u) => { seen = u;\n"
+                    "  return Promise.resolve({ ok: true, status: 200,"
+                    " headers: { get: () => null },\n"
+                    "    json: () => Promise.resolve({ status: 'ok', hits: [], count: 0,\n"
+                    "      total_matches: 0, snapshot_id: 'sha256:000000000000',\n"
+                    "      query_hash: '0000000000000000' }) }); } });\n"
+                    "await api.search('F=ma', { limit: 3 });\n"
+                    "console.log(seen);\n"
+                )
+                rr = subprocess.run([node, "--input-type=module", "-e", js], cwd=POC,
+                                    capture_output=True, text=True, encoding="utf-8",
+                                    errors="replace")
+                lines = [x.strip() for x in (rr.stdout or "").splitlines() if x.strip()]
+                got = lines[-1] if lines else ""
+                if not got.startswith("/api/search"):
+                    rep.add(False, "H7a 前端 Api.search 的查询串 ⇒ 真实后端 200（含 q=）",
+                            f"未能取到 URL（RC={rr.returncode}）：{got!r} / {(rr.stderr or '')[:120]}")
+                else:
+                    s_be, be = probe_json(got)
+                    has_q = bool(re.search(r"[?&]q=", got))
+                    rep.add(s_be == 200 and has_q,
+                            "H7a 前端 Api.search 的查询串 ⇒ 真实后端 200（含 q=，不再是 400）",
+                            f"HTTP {s_be} · {got}")
+                    hits = (be or {}).get("hits") or []
+                    rep.add(bool(hits) and hits[0].get("id") == "MX:phy:newton2",
+                            "H7b 该查询真的命中（F=ma ⇒ MX:phy:newton2）——「能通」升级为「能查到」",
+                            f"hits={len(hits)} 首条={hits[0].get('id') if hits else None}")
+                    s_bad, bad = probe_json("/api/search?limit=3&mode=ego")
+                    rep.add(s_bad == 400 and (bad or {}).get("error_code") == "BAD_REQUEST"
+                            and "q" in ((bad or {}).get("reason") or ""),
+                            "H7c 负对照：旧行为（无 q 的查询串）确被后端 400 拒绝 ⇒ H7a 非空转",
+                            f"HTTP {s_bad} · {((bad or {}).get('reason'))}")
+                    # H7d：最短长度约束**确实存在于后端**（前端阈值不是凭空写的）
+                    s_min, mn = probe_json("/api/search?q=F&limit=3")
+                    rep.add(s_min == 400 and "至少" in ((mn or {}).get("reason") or ""),
+                            "H7d 单字符查询确被后端拒绝（400）⇒ 前端 MIN_QUERY_LEN 有真实依据（非装饰常量）",
+                            f"HTTP {s_min} · {((mn or {}).get('reason'))}")
         finally:
             srv.shutdown()
     except Exception as e:  # noqa: BLE001

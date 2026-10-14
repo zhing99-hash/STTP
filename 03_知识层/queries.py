@@ -129,6 +129,10 @@ WHY_SHOWN_VALUES = (WHY_USED, WHY_EVIDENCE, WHY_USER, WHY_TASK, WHY_CONTEXT, WHY
 DEFAULT_NODES = 500
 DEFAULT_EDGES = 2000
 DEFAULT_HOPS = 3
+# ★ 文本搜索的最短查询长度（**单一真值源**）：前端 `core.js` 的 `MIN_QUERY_LEN`
+#   必须与之相等（跨层断言 X5b）；前端据此**不发**明知会被 400 拒绝的请求
+#   （否则"第一次按键"就制造一次 BAD_REQUEST，并把 400 显示成"没有匹配"）。
+MIN_QUERY_LEN = 2
 DEFAULT_DEADLINE_MS = 3000
 DEFAULT_MAX_PATHS = 20
 DEFAULT_PATH_HOPS = 5
@@ -669,8 +673,8 @@ class Backend:
                subject_of_fn: Optional[Callable] = None) -> dict:
         t0 = time.monotonic()
         q = (q or "").strip()
-        if not q or len(q) < 2:
-            raise ValueError("参数 q 至少 2 个字符")
+        if not q or len(q) < MIN_QUERY_LEN:
+            raise ValueError("参数 q 至少 %d 个字符" % MIN_QUERY_LEN)
         limit, _ = _clamp(limit, 1, 100)
         nt, sub = _norm_set(node_types), _norm_set(subjects)
         ql = q.lower()

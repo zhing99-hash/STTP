@@ -22,8 +22,8 @@
  */
 
 import {
-  STATUS_STYLE, statusStyle, ERROR_CODE_TEXT, BUDGET, HARD, SESSION_LIMIT,
-  truncationText, sessionText, WHY_SHOWN_LABEL,
+  STATUS_STYLE, statusStyle, ERROR_CODE_TEXT, errorCodeSeverity, BUDGET, HARD, SESSION_LIMIT,
+  MIN_QUERY_LEN, truncationText, sessionText, WHY_SHOWN_LABEL,
 } from "./core.js";
 import {
   EDGE_TYPE_COLOR, NODE_TYPE_ORDER, SUBJECT_ORDER, VERIFICATION_BADGE, EOI_STYLE,
@@ -115,7 +115,7 @@ export function renderStatusLine(el, env, extra = {}) {
     }
     if (env.error_code) {
       const txt = ERROR_CODE_TEXT[env.error_code] || "（未登记的 error_code）";
-      pills.push(`<span class="pill ${/^(BAD_REQUEST|TOOL_EXECUTION_ERROR|SNAPSHOT_MISMATCH)$/.test(env.error_code) ? "err" : "warn"}" title="${esc(txt)}">error_code <code>${esc(env.error_code)}</code></span>`);
+      pills.push(`<span class="pill ${errorCodeSeverity(env.error_code)}" title="${esc(txt)}">error_code <code>${esc(env.error_code)}</code></span>`);
     }
     if (env.client_aborted) pills.push('<span class="pill err">客户端中止（服务端结果未知）</span>');
     if (env.unknownStatus != null) pills.push(`<span class="pill err">未识别的状态值「${esc(env.unknownStatus)}」</span>`);
@@ -404,9 +404,25 @@ export function bindSearch(inputEl, listEl, api, onPick, { debounceMs = 180 } = 
 
   const run = async (q) => {
     const mine = ++seq;
-    if (!q || q.trim().length < 1) { close(); return; }
-    const env = await api.search(q.trim(), { limit: 20 });
+    const s = (q == null ? "" : String(q)).trim();
+    // ★ 空 ⇒ 静默关闭；**过短 ⇒ 如实提示且不发请求**（后端 `queries.MIN_QUERY_LEN`
+    //   会以 400 拒绝，前端不该去撞它、更不该把 400 渲染成"没有匹配"）。
+    if (!s) { close(); return; }
+    if (s.length < MIN_QUERY_LEN) {
+      listEl.hidden = false;
+      listEl.innerHTML = `<div class="sr-empty">至少输入 ${MIN_QUERY_LEN} 个字符（与后端约束同源）</div>`;
+      return;
+    }
+    const env = await api.search(s, { limit: 20 });
     if (mine !== seq) return;                       // 过期响应丢弃（防竞态覆盖）
+    if (env.status === "error") {
+      // ★ 铁律 #67：**「空」与「失败」必须分列** —— 400/断连不得渲染成"没有匹配"
+      //   （那会把"请求根本没成功"伪装成"查了但没结果"，与 Phase 47 的误判同族）。
+      listEl.hidden = false;
+      listEl.innerHTML = `<div class="sr-empty">查询失败（<code>${esc(env.error_code || "error")}</code>）：`
+        + `${esc(env.reason || "无原因")}</div>`;
+      return;
+    }
     if (env.status === "no_result" || !env.hits.length) {
       listEl.hidden = false;
       listEl.innerHTML = `<div class="sr-empty">没有匹配（no_result）。可缩短关键词、或去掉学科限定。</div>`;

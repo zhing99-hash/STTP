@@ -108,9 +108,16 @@ export const WHY_SHOWN_LABEL = Object.freeze({
   expansion: "由展开引入",
 });
 
-/** `error_code` 文案表 —— 覆盖后端声明的 **8 个**（自检断言覆盖齐全，防"只写一半"） */
+/**
+ * `error_code` 文案表 —— **唯一真值源**是 `contracts/error.schema.json` 的 `enum`；
+ * 自检（F7 / X6）**从契约派生**比对名，不再硬编码列表（硬编码会在新增码时静默漏项）。
+ *
+ * 9 个 = 后端可产生的 8 个 + **传输层 1 个**（`BACKEND_UNREACHABLE`，只由前端合成：
+ * 连接根本建立不起来时后端**没有**参与，故不得记成后端执行异常 —— 见铁律候选 #86）。
+ */
 export const ERROR_CODE_TEXT = Object.freeze({
   BAD_REQUEST: "参数不合法（请检查查询条件）",
+  BACKEND_UNREACHABLE: "无法连接后端（本地服务未启动或已退出，请运行 bash sttp.sh viz）",
   SNAPSHOT_MISMATCH: "图快照与请求不一致（页面数据已过期，请刷新）",
   EVIDENCE_STALE: "证据已过期（源文件与登记哈希不一致）",
   SUBGRAPH_LIMIT_REACHED: "本次会话预算已用尽（请返回上一层或重置）",
@@ -119,6 +126,28 @@ export const ERROR_CODE_TEXT = Object.freeze({
   ENTITY_AMBIGUOUS: "实体名有歧义（需指定命名空间）",
   MISSING_CONDITION: "缺少必要条件",
 });
+
+/**
+ * `error_code` 的 UI 严重度：`err` = 真故障（红药丸）/ `warn` = 提示（黄药丸）。
+ *
+ * ★ **显式归类，不设"其它一律"回落**（铁律候选 #84）：契约 `enum` 里每个码都必须
+ *   在此出现；自检 F7c 从 `contracts/error.schema.json` **派生**比对名，新增码时
+ *   若忘了归类就会红 —— 而不是被静默当成某一档。
+ */
+export const ERROR_CODE_SEVERITY = Object.freeze({
+  BAD_REQUEST: "err", SNAPSHOT_MISMATCH: "err", TOOL_EXECUTION_ERROR: "err",
+  BACKEND_UNREACHABLE: "err",
+  EVIDENCE_STALE: "warn", SUBGRAPH_LIMIT_REACHED: "warn", GRAPH_QUERY_TIMEOUT: "warn",
+  ENTITY_AMBIGUOUS: "warn", MISSING_CONDITION: "warn",
+});
+
+/**
+ * 取严重度。**未登记 → `err`（往响处失败）**：未知错误码更该显眼，
+ * 不得静默降级成黄色提示（铁律 #38「PASS≠无红」的同族取向）。
+ */
+export function errorCodeSeverity(code) {
+  return ERROR_CODE_SEVERITY[code] === "warn" ? "warn" : "err";
+}
 
 // ---------------------------------------------------------------------------
 // 颜色工具
@@ -200,6 +229,13 @@ export const HARD = Object.freeze({
 /** 会话级累计（铁律 #66：规模是设计约束；达到即**拒绝**，不静默截断） */
 export const SESSION_LIMIT = Object.freeze({ nodes: 120, edges: 200 });
 
+/**
+ * 文本搜索的最短查询长度 —— **必须等于** `queries.MIN_QUERY_LEN`（跨层断言 **X5b**）。
+ * 前端据此**不发**明知会被 400 拒绝的请求（否则"第一次按键"就制造一次 `BAD_REQUEST`，
+ * 并把 400 误显示成"没有匹配"）。★ 与后端同源，不各自硬编码。
+ */
+export const MIN_QUERY_LEN = 2;
+
 function clampInt(v, lo, hi, dflt) {
   const n = parseInt(v, 10);
   if (!Number.isFinite(n)) return dflt;
@@ -225,7 +261,17 @@ export function buildParams(opts = {}) {
     out[k] = typeof v === "number" ? String(v) : String(v);
   };
 
-  put("mode", o.mode || "ego");
+  // ★ `q` 是 `/api/search` 的**唯一必填**参数（后端 `viz_server._api_search`：
+  //   `if not q: raise ValueError("缺少参数 q")` ⇒ HTTP 400）。
+  //   本函数**曾经漏掉它** ⇒ 搜索词被静默丢弃 ⇒ 请求退化成 `limit=20&mode=ego`
+  //   ⇒ 400 ⇒ 搜索框"没反应"（2026-10-14 实测旧实例日志 26 次 400）。
+  //   ★ 教训（铁律候选 #85）：**序列化漏字段不会自己报错**，只会在对端表现为
+  //   "参数非法"；故此处必须显式列举，且自检要断言**真正发出去的 URL**含 `q=`，
+  //   而不是只断言"函数是确定性的"（F11 那种形状断言抓不到本类缺陷 —— 见 #83）。
+  put("q", o.q);                    // 文本搜索（/api/search）
+  // `mode === null` ⇒ **显式抑制**：`/api/search` 不认 `mode`，发出去纯属噪声；
+  // 未传（undefined）⇒ 与后端一致地默认 `ego`（`/api/subgraph` 用）。
+  if (o.mode !== null) put("mode", o.mode || "ego");
   put("seeds", o.seeds);
   put("src", o.src);
   put("dst", o.dst);

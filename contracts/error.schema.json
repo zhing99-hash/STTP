@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "sttp-error/v1",
   "title": "STTP 顶层错误信封（所有 /api/* 端点通用）",
-  "description": "Phase 43。『业务态』（no_result/truncated/timeout）一律 HTTP 200 + 完整信封；**只有参数非法**才 HTTP 400。异常**绝不**吞成空数组（铁律 #67）。",
+  "description": "Phase 43。『业务态』（no_result/truncated/timeout）一律 HTTP 200 + 完整信封；**只有参数非法**才 HTTP 400。异常**绝不**吞成空数组（铁律 #67）。★ 本 `enum` 是**全链唯一真值源**：`06_PoC/js/core.js` 的 `ERROR_CODE_TEXT` 与自检 F7/X6 均**从本文件派生**比对名（硬编码列表会在新增码时静默漏项）。其中 `BACKEND_UNREACHABLE` 为**传输层码**：只由前端在「连接根本建立不起来」时合成（浏览器 `TypeError: Failed to fetch` / 本机未启动服务），**后端永不产生**它 —— 否则会把「后端没被调用」误记成「后端执行异常」。",
   "type": "object",
   "required": ["status", "reason", "error_code"],
   "properties": {
@@ -11,7 +11,7 @@
     "error_code": {
       "enum": ["ENTITY_AMBIGUOUS", "MISSING_CONDITION", "SNAPSHOT_MISMATCH",
                "EVIDENCE_STALE", "SUBGRAPH_LIMIT_REACHED", "GRAPH_QUERY_TIMEOUT",
-               "TOOL_EXECUTION_ERROR", "BAD_REQUEST"]
+               "TOOL_EXECUTION_ERROR", "BAD_REQUEST", "BACKEND_UNREACHABLE"]
     },
     "snapshot_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{12}$" },
     "query": { "type": "object" },

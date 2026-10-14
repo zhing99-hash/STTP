@@ -97,9 +97,11 @@ export class Api {
 
   async _get(path, params, { deadlineMs, maxBytes } = {}) {
     if (!this.fetchImpl) {
+      // 没有 fetch ⇒ 请求**根本发不出去**（与"连接不上"同族，而非"后端执行异常"）
       return localErrorEnvelope({
-        errorCode: "TOOL_EXECUTION_ERROR",
-        reason: "当前环境不支持 fetch（请用 python viz_server.py 打开页面）",
+        errorCode: "BACKEND_UNREACHABLE",
+        reason: "当前环境不提供 fetch（用 file:// 直接打开页面时浏览器会禁止请求本地服务）"
+          + " —— 请先运行 bash sttp.sh viz，再经 http://127.0.0.1:8765/ 打开页面",
       });
     }
     const url = this._url(path, params);
@@ -108,12 +110,44 @@ export class Api {
     let timer = null;
     if (ctl && budget > 0) timer = setTimeout(() => ctl.abort(), budget + 250);
     const t0 = (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now();
+    const elapsed = () => Math.round(
+      ((typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()) - t0);
+
+    // ---- 阶段 ①：**只包住 fetch 调用本身** -------------------------------------
+    // ★ 铁律候选 #86：只有「异常确实来自 fetch」才允许判**传输层失败**。
+    //   若把整段（含响应处理）罩进同一个 catch，我们自己的 TypeError 也会被
+    //   误标成「后端连不上」—— 那是**判别依据过宽**（#84 的镜像）。
+    //   实测教训：viz_server 未在运行时，浏览器抛 `TypeError: Failed to fetch`，
+    //   旧代码把它记成 `TOOL_EXECUTION_ERROR`「后端执行异常（非空结果，属失败）」，
+    //   把排查方向**引向后端内部**（而后端那时根本没有被调用）。
+    let res;
     try {
-      const res = await this.fetchImpl(url, {
+      res = await this.fetchImpl(url, {
         cache: "no-store",
         headers: { Accept: "application/json" },
         signal: ctl ? ctl.signal : undefined,
       });
+    } catch (e) {
+      if (timer) clearTimeout(timer);
+      const ms = elapsed();
+      this.last = { url, http: 0, ms, error: String((e && e.message) || e) };
+      const aborted = !!(e && (e.name === "AbortError" || /abort/i.test(String((e && e.message) || ""))));
+      if (aborted) {
+        // ★ 客户端等不到 ≠ 服务端超时：如实标注，不冒充
+        return { ...localErrorEnvelope({
+          status: "timeout", errorCode: "GRAPH_QUERY_TIMEOUT",
+          reason: `客户端在 ${Math.round(budget)} ms 内未收到响应（服务端可能仍在计算，结果未知）`,
+          clientAborted: true }), http: 0, elapsed_ms: ms };
+      }
+      return { ...localErrorEnvelope({
+        status: "error", errorCode: "BACKEND_UNREACHABLE",
+        reason: `无法连接后端（${(e && e.message) || e}）`
+          + " —— 后端未运行 / 端口不对 / 被代理拦截；本地请确认 bash sttp.sh viz 已启动",
+      }), http: 0, elapsed_ms: ms };
+    }
+
+    // ---- 阶段 ②：响应处理（连接已建立 ⇒ 此处的异常**不是**传输层问题）--------
+    try {
       // ★ 体积守卫（下载点，铁律 #66）：`bundle` 语义是「离线样例 / 小图」。
       //   在**读 body 之前**按 `Content-Length` 拒绝，避免把权威全图（≈48.7 MB）
       //   拉进内存再解析 ⇒ 卡死浏览器。**拒绝**并给出明确原因，不静默截断。
@@ -130,8 +164,8 @@ export class Api {
       }
       let body = null;
       try { body = await res.json(); } catch (e) { body = null; }
-      const ms = ((typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()) - t0;
-      this.last = { url, http: res.status, ms: Math.round(ms) };
+      const ms = elapsed();
+      this.last = { url, http: res.status, ms };
 
       if (res.status === 400) {
         // 唯一的 4xx 业务场景：参数非法（后端 error.schema.json）
@@ -150,19 +184,11 @@ export class Api {
       env.http_status = res.status;
       return env;
     } catch (e) {
-      const ms = ((typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()) - t0;
-      this.last = { url, http: 0, ms: Math.round(ms), error: String(e && e.message || e) };
-      const aborted = !!(e && (e.name === "AbortError" || /abort/i.test(String(e.message || ""))));
-      if (aborted) {
-        // ★ 客户端等不到 ≠ 服务端超时：如实标注，不冒充
-        return { ...localErrorEnvelope({
-          status: "timeout", errorCode: "GRAPH_QUERY_TIMEOUT",
-          reason: `客户端在 ${Math.round(budget)} ms 内未收到响应（服务端可能仍在计算，结果未知）`,
-          clientAborted: true }), http: 0, elapsed_ms: Math.round(ms) };
-      }
+      const ms = elapsed();
+      this.last = { url, http: 0, ms, error: String((e && e.message) || e) };
       return { ...localErrorEnvelope({
         status: "error", errorCode: "TOOL_EXECUTION_ERROR",
-        reason: `请求失败：${e && e.message ? e.message : e}` }), http: 0, elapsed_ms: Math.round(ms) };
+        reason: `请求失败：${(e && e.message) ? e.message : e}` }), http: 0, elapsed_ms: ms };
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -197,9 +223,15 @@ export class Api {
     return env;
   }
 
-  /** GET /api/search?q=… */
+  /**
+   * GET /api/search?q=…
+   *
+   * ★ `q` 必填（后端缺它即 400「缺少参数 q」）。`mode: null` 用于**抑制** `buildParams`
+   *   的默认 `mode=ego` —— 该端点不认 `mode`，发出去只是噪声（也曾在日志里误导定位）。
+   */
   search(q, opts = {}) {
-    const p = buildParams({ q, types: opts.types, subject: opts.subject, limit: opts.limit || 20 });
+    const p = buildParams({ q, types: opts.types, subject: opts.subject,
+                            limit: opts.limit || 20, mode: null });
     return this._get(ENDPOINTS.search, p, { deadlineMs: opts.deadlineMs || 3000 });
   }
 

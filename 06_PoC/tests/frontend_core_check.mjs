@@ -23,10 +23,11 @@
  * 退出码：0 = 全过；1 = 有 FAIL / 检测器恒真。
  */
 
+import { readFileSync } from "node:fs";
 import * as C from "../js/core.js";
 import { Api } from "../js/api.js";
 import { detectMode } from "../js/modes.js";
-import { renderStatusLine, renderBanner } from "../js/panels.js";
+import { renderStatusLine, renderBanner, bindSearch } from "../js/panels.js";
 import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUSES, STALE_EVIDENCE_STATUSES, EVIDENCE_STATUS_RANK,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
@@ -99,13 +100,38 @@ check("F6 端点常量齐备且均为绝对路径",
 
 // ---------------------------------------------------------------------------
 // F7–F8 文案表覆盖齐全（防"只写一半"）
+//   ★ 2026-10-14 改造：比对名**从契约 `contracts/error.schema.json` 的 enum 派生**
+//     （唯一真值源）。原实现是硬编码 8 个码的 needle 列表 ⇒ 契约新增码时**静默漏项**，
+//     断言仍绿（#71「白名单永远漏」的同族）。同时新增"严重度必须显式归类"。
 // ---------------------------------------------------------------------------
-const NEED_CODES = ["BAD_REQUEST", "SNAPSHOT_MISMATCH", "EVIDENCE_STALE",
-                    "SUBGRAPH_LIMIT_REACHED", "GRAPH_QUERY_TIMEOUT",
-                    "TOOL_EXECUTION_ERROR", "ENTITY_AMBIGUOUS", "MISSING_CONDITION"];
+const CONTRACT_ERROR_PATH = new URL("../../contracts/error.schema.json", import.meta.url);
+let contractCodes = null;
+try {
+  contractCodes = JSON.parse(readFileSync(CONTRACT_ERROR_PATH, "utf-8"))
+    .properties.error_code.enum.slice();
+} catch (e) {
+  contractCodes = null;
+}
+check("F7a 读到错误码契约（唯一真值源 contracts/error.schema.json）",
+      Array.isArray(contractCodes) && contractCodes.length > 0,
+      contractCodes ? `${contractCodes.length} 个码：${contractCodes.join(",")}` : "读取失败");
+
+const NEED_CODES = contractCodes || ["BAD_REQUEST", "BACKEND_UNREACHABLE"];
 const missingCodes = NEED_CODES.filter((c) => !C.ERROR_CODE_TEXT[c]);
-check("F7 ERROR_CODE_TEXT 覆盖后端声明的 8 个 error_code",
-      missingCodes.length === 0, missingCodes.length ? "缺: " + missingCodes.join(",") : "8/8");
+check("F7b ERROR_CODE_TEXT 覆盖**契约 enum 全景**（派生比对，不硬编码）",
+      missingCodes.length === 0,
+      missingCodes.length ? "缺: " + missingCodes.join(",") : `${NEED_CODES.length}/${NEED_CODES.length}`);
+
+const missingSev = (contractCodes || []).filter((c) => !C.ERROR_CODE_SEVERITY[c]);
+check("F7c ERROR_CODE_SEVERITY 对契约每个码**显式归类**（新增码不得静默默认成某一档）",
+      Array.isArray(contractCodes) && missingSev.length === 0,
+      missingSev.length ? "未归类: " + missingSev.join(",") : `${(contractCodes || []).length} 个已归类`);
+
+check("F7d 未登记码 ⇒ 严重度取 err（往响处失败，不静默降级为 warn）",
+      C.errorCodeSeverity("NOT_A_CODE") === "err"
+      && C.errorCodeSeverity("BACKEND_UNREACHABLE") === "err"
+      && C.errorCodeSeverity("GRAPH_QUERY_TIMEOUT") === "warn",
+      `NOT_A_CODE=${C.errorCodeSeverity("NOT_A_CODE")}`);
 
 const NEED_WHY = ["used_in_step", "evidence_path", "user_specified",
                   "task_anchor", "verified_context", "expansion"];
@@ -715,6 +741,235 @@ function probeImpl({ statsBody, statsStatus = 200, bundleBytes, bundleStatus = 2
         && !el.innerHTML.includes("错误"),
         el.getAttribute("data-state"));
 }
+
+// ---------------------------------------------------------------------------
+// F33 **P0 回归**（2026-10-14 实测：搜索框"没反应"）
+//   现场：`buildParams` 的参数列表**漏了 `q`** ⇒ 搜索词被静默丢弃 ⇒ 请求退化成
+//         `GET /api/search?limit=20&mode=ego` ⇒ 后端 400「缺少参数 q」
+//         （旧实例日志里 26 次 400，全部是这一条）。
+//   为什么既有断言全绿：F11 只断言「同输入两次序列化相同」——那是**形状**断言，
+//         而它的 `sample` **恰好不含 `q`** ⇒ 漏字段永远测不到。
+//         ★ 这是 #83（形状断言 ≠ 行为断言）在「参数序列化」上的又一次现身：
+//           序列化漏字段**不会自己报错**，只在**对端**表现为"参数非法"。
+//   处置：① `buildParams` 补 `put("q", …)`；② 断言**真正发出去的 URL**。
+// ---------------------------------------------------------------------------
+{
+  const p = C.buildParams({ q: "F=ma", subject: "物理", limit: 20 });
+  check("F33a buildParams 保留 `q`（/api/search 的唯一必填参数）",
+        p.q === "F=ma", JSON.stringify(p));
+
+  const qs = C.toQueryString(C.buildParams({ q: "F=ma", limit: 3, mode: null }));
+  check("F33b 查询串含 `q=` 且按 RFC3986 转义（= ⇒ %3D）",
+        /(^|&)q=F%3Dma(&|$)/.test(qs), qs);
+
+  const qsBlank = C.toQueryString(C.buildParams({ q: "   ", limit: 3, mode: null }));
+  check("F33c 纯空白 q 被剔除（不发 `q=` 空串去撞 400）",
+        !qsBlank.includes("q="), qsBlank || "(空串)");
+
+  const qsNoMode = C.toQueryString(C.buildParams({ q: "x", mode: null, limit: 3 }));
+  check("F33d mode:null ⇒ **抑制**默认 mode（/api/search 不认 mode，不发无效参数）",
+        !qsNoMode.includes("mode="), qsNoMode);
+
+  const qsDefaultMode = C.toQueryString(C.buildParams({ seeds: "PQ:mass" }));
+  check("F33e 未传 mode ⇒ 仍默认 ego（/api/subgraph 既有行为不变）",
+        /(^|&)mode=ego(&|$)/.test(qsDefaultMode), qsDefaultMode);
+}
+
+// F33f/F33g：**行为断言** —— 看 `Api.search` 实际请求的 URL（而不是看函数源码形状）
+{
+  let seen = null;
+  const api = new Api({
+    base: ".",
+    fetchImpl: async (u) => {
+      seen = u;
+      return { ok: true, status: 200, headers: { get: () => null },
+               json: async () => ({ status: "ok", reason: "", hits: [], count: 0,
+                                    total_matches: 0, snapshot_id: "sha256:aaaaaaaaaaaa",
+                                    query_hash: "0123456789abcdef" }) };
+    },
+  });
+  const env = await api.search("F=ma", { limit: 3 });
+  check("F33f Api.search 实际请求 URL 含 `q=` 且不含无意义的 `mode=`（端到端行为断言）",
+        !!seen && /[?&]q=F%3Dma(&|$)/.test(seen) && !/[?&]mode=/.test(seen),
+        String(seen));
+  check("F33g 后端 200 信封原样归一为 ok（不因字段缺失回落成 error）",
+        env.status === "ok" && env.snapshot_id === "sha256:aaaaaaaaaaaa",
+        `${env.status} / ${env.snapshot_id}`);
+}
+
+// ---------------------------------------------------------------------------
+// F34 断连 ≠ 后端异常（P1：实测把「服务未运行」记成「后端执行异常」⇒ 误导定位）
+//   现场：`viz_server` 未在运行时浏览器抛 `TypeError: Failed to fetch`，旧代码统一
+//         记成 `TOOL_EXECUTION_ERROR`「后端执行异常（非空结果，属失败）」—— 而后端
+//         **根本没被调用**。这是「判别依据过宽 ⇒ 错误归类」（#84 的镜像）。
+//   处置：`_get` 拆成**两个阶段** —— 只有异常确实来自 `fetch` 本身才允许判传输层失败；
+//         响应处理阶段的异常仍是 `TOOL_EXECUTION_ERROR`（不冒充断连）。
+// ---------------------------------------------------------------------------
+{
+  const api = new Api({ base: ".", fetchImpl: async () => {
+    throw new TypeError("Failed to fetch");
+  } });
+  const env = await api.search("F=ma", { limit: 3, deadlineMs: 1000 });
+  check("F34a fetch 抛 TypeError('Failed to fetch') ⇒ BACKEND_UNREACHABLE（且给出可操作提示）",
+        env.status === "error" && env.error_code === "BACKEND_UNREACHABLE"
+        && /sttp\.sh viz|未运行/.test(env.reason || ""),
+        `${env.status} / ${env.error_code} / ${String(env.reason).slice(0, 70)}`);
+}
+{
+  // 连接是通的（HTTP 500）但响应体不可解析 ⇒ 后端**确实**执行异常，不得记成断连
+  const api = new Api({ base: ".", fetchImpl: async () => ({
+    ok: false, status: 500, headers: { get: () => null },
+    json: async () => { throw new Error("bad json"); },
+  }) });
+  const env = await api.search("F=ma", { limit: 3, deadlineMs: 1000 });
+  check("F34b HTTP 500 且响应体不可解析 ⇒ 仍 TOOL_EXECUTION_ERROR（连接已建立，不冒充断连）",
+        env.status === "error" && env.error_code === "TOOL_EXECUTION_ERROR"
+        && env.error_code !== "BACKEND_UNREACHABLE",
+        `${env.status} / ${env.error_code} / ${String(env.reason).slice(0, 60)}`);
+}
+{
+  // 预算内未收到响应（abort）⇒ 客户端中止，既不冒充服务端超时、也不冒充断连
+  const api = new Api({ base: ".", fetchImpl: async (u, o) => {
+    await new Promise((res) => {
+      const t = setTimeout(res, 3000);
+      if (o && o.signal) o.signal.addEventListener("abort", () => { clearTimeout(t); res(); });
+    });
+    const e = new Error("The operation was aborted."); e.name = "AbortError"; throw e;
+  } });
+  const env = await api.search("F=ma", { limit: 3, deadlineMs: 60 });
+  check("F34c 客户端等不到响应 ⇒ GRAPH_QUERY_TIMEOUT + client_aborted=true（三态互不代偿）",
+        env.status === "timeout" && env.error_code === "GRAPH_QUERY_TIMEOUT"
+        && env.client_aborted === true,
+        `${env.status} / ${env.error_code} / aborted=${env.client_aborted}`);
+}
+{
+  // 完全没有 fetch 可用（例如 file:// 直开、老旧内核）⇒ 请求发不出去，同属"不可达"
+  const saved = Object.getOwnPropertyDescriptor(globalThis, "fetch");
+  let env = null, restoreOk = false;
+  try {
+    Object.defineProperty(globalThis, "fetch", { value: undefined, configurable: true, writable: true });
+    const api = new Api({ base: "." });
+    env = await api.search("F=ma", { limit: 1 });
+  } finally {
+    try {
+      if (saved) Object.defineProperty(globalThis, "fetch", saved);
+      else delete globalThis.fetch;
+      restoreOk = typeof globalThis.fetch === "function";
+    } catch (e) { restoreOk = false; }
+  }
+  check("F34d 环境无 fetch ⇒ BACKEND_UNREACHABLE（不是后端执行异常），且探针已复原全局 fetch",
+        !!env && env.error_code === "BACKEND_UNREACHABLE" && restoreOk,
+        `${env && env.error_code} / restore=${restoreOk}`);
+}
+
+
+// ---------------------------------------------------------------------------
+// F35 搜索框**交互链**（键入 ⇒ 防抖 ⇒ api.search ⇒ 列表 ⇒ 点选）
+//   ★ 2026-10-14 补：`bindSearch` 此前**零覆盖**。它正是用户报告「搜索框没有反应」
+//     的那一环：即使 F33 修好了查询串，若"键入根本没触发请求/空输入也发请求"，
+//     搜索框照样不可用。故此处用**假 DOM 真跑一遍事件链**（行为断言，非形状断言）。
+// ---------------------------------------------------------------------------
+{
+  const mkInput = (value = "") => {
+    const ls = {};
+    return {
+      value,
+      addEventListener(t, fn) { (ls[t] = ls[t] || []).push(fn); },
+      fire(t, ev = {}) { (ls[t] || []).forEach((fn) => fn(Object.assign({ key: "" }, ev))); },
+    };
+  };
+  const mkList = () => {
+    const el = fakeEl();
+    el._items = [];
+    el.querySelectorAll = (sel) => (sel === ".sr-item" ? el._items : []);
+    return el;
+  };
+  const hit = (id, label) => ({ id, label, type: "PhysicalQuantity", subject: "物理", score: 99 });
+
+  // ① 键入 ⇒ 以键入值查询 ⇒ 渲染命中 ⇒ 点选回调
+  const input = mkInput("F=ma");
+  const list = mkList();
+  const asked = [];
+  const apiStub = { search: async (q) => {
+    asked.push(q);
+    return { status: "ok", hits: [hit("MX:phy:newton2", "F=ma")] };
+  } };
+  const picked = [];
+  bindSearch(input, list, apiStub, (id) => picked.push(id), { debounceMs: 1 });
+  input.fire("input");
+  await new Promise((r) => setTimeout(r, 25));
+  check("F35a 键入 ⇒ bindSearch 以**键入值**调用 api.search（查询串里 q 的来源）",
+        asked.length === 1 && asked[0] === "F=ma", JSON.stringify(asked));
+  check("F35b 命中渲染进结果列表（≥2 条命中且含 id 与 label）",
+        asked.length === 1 && !list.hidden && /MX:phy:newton2/.test(list.innerHTML)
+        && /F=ma/.test(list.innerHTML),
+        list.innerHTML.slice(0, 70));
+  list._items = [{
+    getAttribute: () => "MX:phy:newton2",
+    addEventListener: (t, fn) => { if (t === "click") list._click = fn; },
+  }];
+  input.fire("input");
+  await new Promise((r) => setTimeout(r, 25));
+  if (list._click) list._click();
+  check("F35c 点选命中 ⇒ onPick(id)（找点链路闭合）",
+        picked.length >= 1 && picked[picked.length - 1] === "MX:phy:newton2",
+        JSON.stringify(picked));
+
+  // ② 空 / 纯空白输入 ⇒ **不发请求**（否则会去撞后端的 400「缺少参数 q」）
+  const input2 = mkInput("   ");
+  const list2 = mkList();
+  const asked2 = [];
+  bindSearch(input2, list2, { search: async (q) => { asked2.push(q); return { status: "ok", hits: [] }; } },
+             () => {}, { debounceMs: 1 });
+  input2.fire("input");
+  await new Promise((r) => setTimeout(r, 25));
+  check("F35d 纯空白输入 ⇒ 关闭列表且**不发起请求**（不制造 400 噪声）",
+        asked2.length === 0 && list2.hidden === true, JSON.stringify(asked2));
+
+  // ③ 竞态：先慢后快，过期响应必须**被丢弃**（不得覆盖更新的结果）
+  const input3 = mkInput("slow");
+  const list3 = mkList();
+  bindSearch(input3, list3, { search: async (q) => {
+    if (q === "slow") { await new Promise((r) => setTimeout(r, 60)); return { status: "ok", hits: [hit("OLD", "旧")] }; }
+    return { status: "ok", hits: [hit("NEW", "新")] };
+  } }, () => {}, { debounceMs: 1 });
+  input3.fire("input");                                     // 慢请求
+  await new Promise((r) => setTimeout(r, 10));
+  input3.value = "fast"; input3.fire("input");              // 快请求（后发）
+  await new Promise((r) => setTimeout(r, 90));
+  check("F35e 竞态：过期（慢）响应不得覆盖较新结果（列表只见 NEW）",
+        /NEW/.test(list3.innerHTML) && !/OLD/.test(list3.innerHTML),
+        list3.innerHTML.slice(0, 70));
+
+  // ④ 单字符 ⇒ 如实提示且**不发请求**（后端 `queries.MIN_QUERY_LEN=2` 会 400）
+  const input4 = mkInput("F");
+  const list4 = mkList();
+  const asked4 = [];
+  bindSearch(input4, list4, { search: async (q) => { asked4.push(q); return { status: "ok", hits: [] }; } },
+             () => {}, { debounceMs: 1 });
+  input4.fire("input");
+  await new Promise((r) => setTimeout(r, 25));
+  check("F35f 单字符输入 ⇒ 提示最短长度且**不发起请求**（不去撞后端 400）",
+        asked4.length === 0 && !list4.hidden && /至少输入/.test(list4.innerHTML),
+        `${JSON.stringify(asked4)} / ${list4.innerHTML.slice(0, 50)}`);
+
+  // ⑤ 请求失败 ⇒ 下拉**不得**渲染成「没有匹配」（铁律 #67：空 ≠ 失败）
+  const input5 = mkInput("boom");
+  const list5 = mkList();
+  bindSearch(input5, list5, { search: async () => ({
+    status: "error", error_code: "BAD_REQUEST", reason: "参数不合法", hits: [] }) },
+    () => {}, { debounceMs: 1 });
+  input5.fire("input");
+  await new Promise((r) => setTimeout(r, 25));
+  check("F35g 失败信封 ⇒ 下拉显示「查询失败 + error_code」，不伪装成 no_result",
+        /查询失败/.test(list5.innerHTML) && /BAD_REQUEST/.test(list5.innerHTML)
+        && !/没有匹配/.test(list5.innerHTML),
+        list5.innerHTML.slice(0, 70));
+
+  check("F35h MIN_QUERY_LEN 为正整数且 ≥2（跨层等式 queries.MIN_QUERY_LEN 由 X5b 断言）",
+        Number.isInteger(C.MIN_QUERY_LEN) && C.MIN_QUERY_LEN >= 2, String(C.MIN_QUERY_LEN));
+}
+
 
 // ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）
