@@ -315,7 +315,7 @@ def verifier_of(ev):
     return None
 
 
-def dependencies_for(ev, vident=None):
+def dependencies_for(ev, vident=None, base=ROOT):
     """返回 `(reference_refs, verifier_obj)`。
 
     reference_refs 的绑定强度：
@@ -348,7 +348,7 @@ def dependencies_for(ev, vident=None):
             "ref_id": rid,
             "kind": meta.get("kind"),
             "version": meta.get("version_label"),
-            "content_hash": reference_content_hash(rid),   # ★ 记录时刻的当前值
+            "content_hash": reference_content_hash(rid, base),  # ★ 记录时刻的当前值
             "binding": binding,
         })
     vobj = (dict(vident[vid]) if (vid and vid in vident)
@@ -375,13 +375,13 @@ def claim_version(claim_text, ev_ids):
 # 6. 重验账本（「单纯重写哈希不能恢复 valid」的程序化保证）
 # ---------------------------------------------------------------------------
 def load_ledger(base=ROOT):
-    """重验账本：`{evidence_id: {"old_src_hash":…, "new_src_hash":…, "at":…, "reason":…}}`。
+    """重验账本：`{evidence_id: {"old_src_hash":…, "new_src_hash":…, "at":…, …}}`。
 
     ★ 为什么必须有账本：`status` 是**每次读取时现算**的（不落库，故不会自行过期）。
       若只把记录的哈希改成当前值，status 会**直接变回 valid** —— 那就等于「重写哈希
-      即可恢复」，正是任务单禁止的。**程序化**的堵法：凡「记录的哈希」与「账本里该
-      证据的 `new_*` 值」不一致，或账本无该条记录而图里的 `evidence_at` 又晚于
-      基线时刻，一律判 `needs_review:hash_rewritten_without_reverify`。
+      即可恢复」，正是任务单禁止的。堵法见 `mark_rewrites()` 的两级说明：
+      **图级**用 `detect_inplace_rewrites()` 抓动作，**记录级**用本账本 +
+      `_src_hash_rewritten` 让「单看一份图」也能发现来路不明的哈希。
     """
     p = base if os.path.isabs(base) and base.endswith(".json") else os.path.join(base, "11_真实数据", "reverify_ledger.json")
     if not os.path.exists(p):
@@ -399,6 +399,73 @@ def load_ledger(base=ROOT):
 # ---------------------------------------------------------------------------
 # 7. 状态计算
 # ---------------------------------------------------------------------------
+# ---- 7a. 图里**记录**的依赖快照 / **当前**快照（失效器与查询层共用同一口径）----
+#   图上的紧凑编码（delta 写入，见 phase45_evidence_deps_delta.py）：
+#     evd  = evidence_id                refs = {ref_id: 记录时刻内容哈希}
+#     vfr  = verifier_id                vch  = 记录时刻验证器 code_hash
+#     dvs  = {rel: 记录时刻文件哈希}     chk  = checked_at
+#   ★ 为什么用紧凑键：49572 条证据 × 长键会把图撑大。**取值口径**与
+#     `reference_hashes()` / `verifier_identity()` 完全一致（同为仓库 blob 摘要），
+#     故两边可直接比较，无需映射表 —— 少一层映射就少一类静默错位。
+def recorded_deps(ev):
+    """从图上证据读出**记录**的依赖快照（缺字段 ⇒ None，不编造）。
+
+    ★ 必须把 `_src_hash_rewritten` **一并透传**：它是 `mark_rewrites()` 写下的
+      「本条记录的哈希来路不明」记号，`evidence_status()` 靠它判 `needs_review`。
+      漏透传 ⇒ 记号在图上、却在裁决里消失 ⇒ 「原地改哈希即恢复 valid」的假象重现
+      （这正是本轮 §已知边界 E10 记下的那类**静默错位**：字段的**取值口径**一致，
+      但**搬运**漏了一格）。
+    """
+    refs = ev.get("refs")
+    ref_list = ([{"ref_id": k, "content_hash": v} for k, v in refs.items()]
+                if isinstance(refs, dict) else [])
+    vid = ev.get("vfr")
+    ver = ({"verifier_id": vid, "code_hash": ev.get("vch"),
+            "dependency_versions": dict(ev.get("dvs") or {})}
+           if vid else {"verifier_id": None, "code_hash": None, "dependency_versions": {}})
+    return {"src": ev.get("src"), "src_hash": ev.get("src_hash"),
+            "reference_refs": ref_list, "verifier": ver,
+            "_src_hash_rewritten": bool(ev.get("_src_hash_rewritten"))}
+
+
+def current_snapshot(base=ROOT, byte_source="repo", src_hashes=None):
+    """**当前**依赖快照：参考表哈希 + 验证器身份 + （调用方提供的）来源哈希。"""
+    return {"reference_hashes": reference_hashes(base, byte_source),
+            "verifiers": verifier_identity(base=base),
+            "src_hashes": dict(src_hashes or {})}
+
+
+def has_recorded_deps(ev):
+    """该证据是否带 A04 记录（有 refs 或 vfr）。"""
+    return bool(ev.get("refs")) or bool(ev.get("vfr"))
+
+
+def mark_rewrites(edges, violations, key="_src_hash_rewritten"):
+    """把 `detect_inplace_rewrites()` 报出的违规**记到图上**，返回标记条数。
+
+    ★ 「单纯重写哈希不能恢复 valid」需要**两级**程序化保证，缺一不可：
+      1. **图级**：`detect_inplace_rewrites(old, new, ledger)` 比对前后两版图，
+         凡「记录值被改过、又没有账本条目」即报违规 —— 这是**主**保证，
+         因为它抓住的是「绕过重验流程」这个动作本身；
+      2. **记录级**：本函数把违规写进证据的 `_src_hash_rewritten=True`，
+         于是 `evidence_status()` 在**读取时**把它判成 `needs_review`
+         （原因 `hash_rewritten_without_reverify`）—— 这样**单看一份图**也能发现
+         「这条记录的哈希来路不明」，不必依赖历史版本。
+
+    没有第 2 级时，一份被就地改过的图**看起来**和「正常重验后的图」一模一样
+    （都是「记录值 == 当前值」），这正是任务单禁止的假象。
+    """
+    bad = {(v.get("claim_id"), v.get("evidence_id")) for v in violations}
+    n = 0
+    for e in edges:
+        cid = e.get("id") or "%s|%s|%s" % (e.get("type"), e.get("source"), e.get("target"))
+        for ev in ((e.get("props") or {}).get("verification_evidence") or []):
+            if isinstance(ev, dict) and (cid, ev.get("evd")) in bad:
+                ev[key] = True
+                n += 1
+    return n
+
+
 def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=None):
     """计算单条证据的 `(status, status_reasons[])`。
 
@@ -548,7 +615,7 @@ def report(base=ROOT):
             if not isinstance(ev, dict):
                 continue
             n_ev += 1
-            refs, v = dependencies_for(ev, vident)
+            refs, v = dependencies_for(ev, vident, base)
             if not refs and not v.get("verifier_id"):
                 n_no_dep += 1
             for rr in refs:
