@@ -599,6 +599,23 @@ def main(argv=None):
                 rep.add(not miss, "H6a 统一信封顶层字段齐备（前端状态行读这些）",
                         "缺: " + ",".join(miss) if miss else f"{len(need_top)}/{len(need_top)}")
 
+                # ★ H6a2/H6a3（2026-10-14 P1 回归）：`/api/stats` **必须**也带合法信封。
+                #   现场：它是 legacy 端点、响应体无 `status` ⇒ 前端 `normalizeStatus(undefined)`
+                #   判为 "error" ⇒ `detectMode` 认定后端不可用 ⇒ 退到 `bundle` ⇒
+                #   `GET /graph_data.json`（48.7 MB 全图）⇒ 浏览器卡死。
+                #   H6a 只覆盖 `/api/subgraph`，所以这个缺陷此前**无人防守**。
+                st_st, st_env = probe_json("/api/stats")
+                _five = ("ok", "no_result", "truncated", "timeout", "error")
+                rep.add(st_st == 200 and isinstance(st_env, dict)
+                        and st_env.get("status") in _five,
+                        "H6a2 /api/stats 带合法 status（探活判据；缺它 ⇒ 误判 offline ⇒ 拉全图卡死）",
+                        f"HTTP {st_st} · status={st_env.get('status') if isinstance(st_env, dict) else None}")
+                rep.add(isinstance(st_env, dict) and bool(st_env.get("snapshot_id"))
+                        and st_env.get("snapshot_id") == env.get("snapshot_id"),
+                        "H6a3 /api/stats 的 snapshot_id 与 /api/subgraph 一致（同源同快照）",
+                        f"stats={st_env.get('snapshot_id') if isinstance(st_env, dict) else None}"
+                        f" · subgraph={env.get('snapshot_id')}")
+
                 need_stats = ["n_nodes", "n_edges", "truncated_by", "pre_truncation",
                               "pending_frontier", "pending_frontier_note", "hidden_by_trust",
                               "elapsed_ms", "expansions", "session"]

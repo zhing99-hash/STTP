@@ -23,9 +23,17 @@
  * 这样 live 模式下连一次 `/graph_data.json` 的 HEAD 都不会发生。
  */
 
-import { chooseMode, MODE_BADGE, ENDPOINTS } from "./core.js";
+import { chooseMode, MODE_BADGE, ENDPOINTS, BUNDLE_MAX_BYTES } from "./core.js";
 
-/** 探测 `/graph_data.json` 是否可读（**HEAD**：只要存在性，不下载 body）。 */
+/**
+ * 探测 `/graph_data.json` 是否可读（**HEAD**：只要存在性 + 体积，不下载 body）。
+ *
+ * ★ 体积守卫（2026-10-14 实测的 P1 根因 · 铁律 #66「规模是设计约束」）：
+ *   `bundle` 语义是「**离线样例 / 小图**」；把权威全图（48.7 MB / 9657 节点）当样例读，
+ *   会**下载 + 解析 + 渲染**全图 ⇒ 浏览器卡死。而发布样例只有 ≈373 KB，
+ *   两者体量差两个数量级 ⇒ 用 `Content-Length` 在**下载前**就能可靠区分。
+ *   超限即判「不可用」并给出**明确原因**（不静默、不假装没有这一路）。
+ */
 export async function probeBundle(base = ".", { timeoutMs = 4000, fetchImpl } = {}) {
   const f = fetchImpl || (typeof fetch === "function" ? fetch.bind(globalThis) : null);
   if (!f) return { ok: false, reason: "无 fetch" };
@@ -36,7 +44,18 @@ export async function probeBundle(base = ".", { timeoutMs = 4000, fetchImpl } = 
     const res = await f(`${base}${ENDPOINTS.bundleGraph}`, {
       method: "HEAD", cache: "no-store", signal: ctl ? ctl.signal : undefined,
     });
-    return { ok: !!res.ok, http: res.status };
+    const cl = parseInt(res.headers && res.headers.get
+      ? (res.headers.get("content-length") || "") : "", 10);
+    const bytes = Number.isFinite(cl) ? cl : null;
+    if (res.ok && bytes != null && bytes > BUNDLE_MAX_BYTES) {
+      return {
+        ok: false, http: res.status, bytes,
+        reason: `文件体积 ${(bytes / 1048576).toFixed(1)} MB 超出离线样例上限 `
+          + `${(BUNDLE_MAX_BYTES / 1048576).toFixed(0)} MB —— 这是权威全图（整图浏览），`
+          + "不是样例；按设计**拒绝加载**（改用 /api/* 局部查询）",
+      };
+    }
+    return { ok: !!res.ok, http: res.status, bytes };
   } catch (e) {
     return { ok: false, reason: String((e && e.message) || e) };
   } finally {

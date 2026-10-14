@@ -53,9 +53,25 @@ export function statusIconSvg(paths, size = 14) {
  *     …若干 .pill…
  *   </div>
  */
+/**
+ * 尚未发起任何查询（`env` 为空）时的**中性**状态描述符。
+ * `status` 刻意用 `"ok"`：与 `graph_view.html` 的初始 `data-state="ok"` 一致，
+ * 且**不得**把「还没查」渲染成「错误」。可见文字是「待查询」，配色取中性灰。
+ */
+const IDLE_STATUS = Object.freeze({
+  status: "ok", cls: "st-no-result", color: "#8b949e", label: "待查询",
+  icon: ["M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18", "M12 8v5", "M12 16.5h.01"],
+  hint: "尚未发起查询 —— 顶部搜索实体 / 公式，或用左栏条件生成子图",
+  unknown: null,
+});
+
 export function renderStatusLine(el, env, extra = {}) {
   if (!el) return;
-  const st = (env && env.statusInfo) ? env.statusInfo : statusStyle("error");
+  // ★ 尚未发起任何查询（`env` 为空）⇒ **中性「待查询」**（2026-10-14 实测修正）：
+  //   原实现回落 `statusStyle("error")` ⇒ 页面刚打开、什么都没查时就显示红色「错误」，
+  //   且与 HTML 的初始 `data-state="ok"` 自相矛盾。`status` 保持 `"ok"`（不谎报错误），
+  //   配色用中性灰（`st-no-result` 类）。
+  const st = (env && env.statusInfo) ? env.statusInfo : IDLE_STATUS;
   const stats = (env && env.stats) || {};
   const pills = [];
 

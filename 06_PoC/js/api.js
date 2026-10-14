@@ -26,7 +26,7 @@
  */
 
 import {
-  ENDPOINTS, buildParams, toQueryString, statusStyle,
+  ENDPOINTS, BUNDLE_MAX_BYTES, buildParams, toQueryString, statusStyle,
 } from "./core.js";
 
 export class ApiError extends Error {
@@ -95,7 +95,7 @@ export class Api {
     return `${this.base}${path}${qs ? "?" + qs : ""}`;
   }
 
-  async _get(path, params, { deadlineMs } = {}) {
+  async _get(path, params, { deadlineMs, maxBytes } = {}) {
     if (!this.fetchImpl) {
       return localErrorEnvelope({
         errorCode: "TOOL_EXECUTION_ERROR",
@@ -114,6 +114,20 @@ export class Api {
         headers: { Accept: "application/json" },
         signal: ctl ? ctl.signal : undefined,
       });
+      // ★ 体积守卫（下载点，铁律 #66）：`bundle` 语义是「离线样例 / 小图」。
+      //   在**读 body 之前**按 `Content-Length` 拒绝，避免把权威全图（≈48.7 MB）
+      //   拉进内存再解析 ⇒ 卡死浏览器。**拒绝**并给出明确原因，不静默截断。
+      if (maxBytes) {
+        const _cl = parseInt(res.headers && res.headers.get
+          ? (res.headers.get("content-length") || "") : "", 10);
+        if (Number.isFinite(_cl) && _cl > maxBytes) {
+          return { ...localErrorEnvelope({
+            status: "error", errorCode: "SUBGRAPH_LIMIT_REACHED",
+            reason: `响应体积 ${(_cl / 1048576).toFixed(1)} MB 超出上限 `
+              + `${(maxBytes / 1048576).toFixed(0)} MB —— 按设计拒绝加载（改用 /api/* 局部查询）`,
+          }), http: res.status, http_status: res.status, bytes: _cl };
+        }
+      }
       let body = null;
       try { body = await res.json(); } catch (e) { body = null; }
       const ms = ((typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()) - t0;
@@ -154,8 +168,34 @@ export class Api {
     }
   }
 
-  /** GET /api/stats —— 兼作「后端是否在跑」的探测。 */
-  probe() { return this._get(ENDPOINTS.stats, null, { deadlineMs: 2000 }); }
+  /**
+   * GET /api/stats —— 兼作「后端是否在跑」的探测。
+   *
+   * ★ 加固（2026-10-14 实测的 P1 根因）：探测的目标是「**后端活着吗**」，
+   *   不是「五态信封是否合法」。legacy 端点可能**不带 `status`**；若把它当成
+   *   `error`，`detectMode` 会误判后端不可用 ⇒ 退到 `bundle` ⇒ 拉 48 MB 全图 ⇒ 卡死。
+   *   因此：**HTTP 200 + 响应体可解析 ⇒ 视为可用**，并把「缺 status」作为独立提示暴露
+   *   （`probe_note`），不静默吞掉。
+   *   注意：这**不放松**其他端点的五态判据 —— 只作用于「探活」这一个用途。
+   */
+  async probe() {
+    const env = await this._get(ENDPOINTS.stats, null, { deadlineMs: 2000 });
+    const httpOk = env.http_status === 200 || env.http === 200;
+    const bodyUsable = !!(env.raw && typeof env.raw === "object"
+      && Object.keys(env.raw).length > 0);
+    if (httpOk && bodyUsable && env.status !== "ok") {
+      return {
+        ...env,
+        status: "ok",
+        statusInfo: statusStyle("ok"),
+        unknownStatus: null,
+        probe_note: `HTTP ${env.http_status || env.http} 且响应体可解析；`
+          + `响应体未带合法 status${env.unknownStatus ? `（原值「${env.unknownStatus}」）` : ""}`
+          + " —— 探活按「后端可用」处理（不据此判定 offline）",
+      };
+    }
+    return env;
+  }
 
   /** GET /api/search?q=… */
   search(q, opts = {}) {
@@ -177,6 +217,7 @@ export class Api {
 
   /** GET /graph_data.json —— **仅** bundle 模式调用（验收 V1 断言的静态面） */
   bundle() {
-    return this._get(ENDPOINTS.bundleGraph, null, { deadlineMs: 15000 });
+    return this._get(ENDPOINTS.bundleGraph, null,
+      { deadlineMs: 15000, maxBytes: BUNDLE_MAX_BYTES });
   }
 }

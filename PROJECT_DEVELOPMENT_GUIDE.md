@@ -321,6 +321,71 @@
   副产品：**E21 再次被实测坐实** —— 同一份清单在**脏树**非幂等（`working_tree_dirty_at_build: true`）、
   在**干净树**幂等（`dirty_sample: []`）。
 
+#### 0.3.4 Phase 47（**用户实测现场修复**：页面打开即卡死）—— 更新于 2026-10-14
+
+> **性质：已修（P1 · 默认入口完全不可用）**。登记的不是「遗留缺陷」，而是**根因链条 + 断言覆盖缺口**，
+> 供外部评审核对「这一类错误是否还有别的入口」。
+
+**现场（用户报告）**：`bash sttp.sh viz` 后打开 `http://127.0.0.1:8765/`，页面渲染出搜索框，
+但**任何交互都无响应（卡死）**。
+
+**根因链条（逐环实测，非推断）**：
+
+```
+① /api/stats 是 legacy 端点，响应体**不带 `status` 字段**
+      ↓
+② 前端 normalizeStatus(undefined) ⇒ 判为 "error"（core.js:159）
+      ↓
+③ api.probe() 返回 status="error" ⇒ detectMode 的 apiOk = false（modes.js）
+      ↓
+④ detectMode 转去探 HEAD /graph_data.json ⇒ 200 ⇒ bundleOk = true
+      ↓
+⑤ chooseMode({apiOk:false, bundleOk:true}) ⇒ **"bundle"**
+      ↓
+⑥ boot() 走 bundle 分支 ⇒ GET /graph_data.json = **48.7 MB 全图**
+      ↓
+⑦ 解析 + state.viz.add(9657 节点 / 48712 边) + 布局 ⇒ **浏览器卡死**
+```
+
+即：**默认入口走的不是「局部查询」，而是「全图浏览」**——正是铁律 #66 与 Phase 43 要消灭的那条路径。
+请求序列的实测指纹（干净对照）：`GET /` → `GET /api/stats` → **`HEAD /graph_data.json`** → **`GET /graph_data.json`** → 卡死。
+
+**修复（三层，均在源头而非下游打补丁）**：
+
+| 层 | 改动 | 位置 |
+|---|---|---|
+| ① 契约（根因） | `/api/stats` 补齐 `status:"ok"` + `snapshot_id`，与其余 `/api/*` 同口径 | `06_PoC/viz_server.py` 路由 |
+| ② 探活加固 | `probe()` 改为「HTTP 200 + 响应体可解析 ⇒ 视为可用」，缺 `status` 记 `probe_note` 而**不**判失败（**只作用于探活**，不放松其余端点的五态判据） | `06_PoC/js/api.js` |
+| ③ 体积守卫 | `probeBundle()` 按 `Content-Length` 拒绝 > **8 MB** 的「样例」；`bundle()` 在**读 body 前**二次拒绝。依据：发布样例 ≈ **373 KB**、权威全图 ≈ **48.7 MB**（差两个数量级）⇒ **拒绝**而非静默截断 | `06_PoC/js/modes.js` / `core.js`(`BUNDLE_MAX_BYTES`) |
+
+**★ 覆盖缺口（本条最值得评审注意的部分）**：
+
+- 既有断言 **V1b**「整图加载被 `mode === "bundle"` 分支包裹（live 模式走不到）」是**源码形状**断言 ——
+  它**通过了**，而页面**依然卡死**：因为真正的错误发生在 `detectMode` 的**判定结果**里，不在分支结构里。
+  ⇒ **断言了「形状」而没有断言「行为」**（与铁律 #76「全红也可能是测量器坏了」同族：这里是**全绿而系统坏**）。
+- 既有 **H6a** 只校验 `/api/subgraph` 的统一信封，`/api/stats` 的**无人防守**。
+
+**新增回归断言（均已构造性反证）**：
+
+| 断言 | 内容 | 反证结果 |
+|---|---|---|
+| `H6a2`（`bash sttp.sh frontend`） | `/api/stats` 必须带合法五态 `status` | 回退后端修复 ⇒ **FAIL**（`status=None`）✓ |
+| `H6a3` | `/api/stats` 的 `snapshot_id` 与 `/api/subgraph` **一致** | 同上 ⇒ **FAIL** ✓ |
+| `F32a`（`node …core_check.mjs`） | HTTP 200 + 体可解析但缺 `status` ⇒ 必须 **live**，且请求序列**不含** `graph_data.json` | 回退探活加固 ⇒ **FAIL**，报出原始指纹 `bundle ｜ GET ./api/stats ; HEAD ./graph_data.json` ✓ |
+| `F32b` | 全图体积（48.7 MB）⇒ **offline** 且原因点明体积超限 | 停用阈值判断 ⇒ **FAIL**（退成 `bundle`）✓ |
+| `F32c` | 样例体积（373 KB）⇒ 仍判 bundle 可用（守卫**不误伤** V9 离线样例链路） | 停用阈值 ⇒ **PASS**（证明 F32b/F32c **互不代偿**）✓ |
+| `F32d` | `bundle()` 见超限 `Content-Length` ⇒ 返回 `SUBGRAPH_LIMIT_REACHED`，**不读 body** | — |
+| `F32e` | `env=null`（尚未查询）⇒ 渲染「**待查询**」而非「**错误**」 | — |
+
+**同轮修掉的第二条同族缺陷**：`renderStatusLine(el, null)` 原回落 `statusStyle("error")` ⇒
+页面刚打开、**什么都没查**时就显示红色「错误」，且与 `graph_view.html` 的初始 `data-state="ok"` 自相矛盾。
+⇒ 新增中性 `IDLE_STATUS`（`status:"ok"` + 中性灰 + 文案「待查询」）。断言 `F32e`。
+
+**收尾值**：`bash sttp.sh frontend` **72/0/2**（原 70/0/2）｜`node …frontend_core_check.mjs` **90/0**（原 85/0）｜
+**真实浏览器（无头 Chrome）实测**：`RC=0`、DOM **37,643 字节**、请求序列**含 `graph_data.json` 0 次**、badge=「实时查询」。
+★ 方法学副作用：`viz_server.py` 的 `[HTTP]` 日志经 stdout **块缓冲（8 KB）** ⇒ **运行中读日志会得到过期快照**
+（本轮曾据此误判「浏览器没连上」）⇒ 诊断长驻服务时须 `PYTHONUNBUFFERED=1` 或看**请求序列指纹**而非计数。
+
 ---
 
 ## 一、项目愿景与目标

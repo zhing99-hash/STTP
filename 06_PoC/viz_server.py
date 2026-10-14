@@ -853,7 +853,16 @@ class VizHandler(BaseHTTPRequestHandler):
                 return self._json(200, load_graph_data())
 
             if route == "/api/stats":
-                return self._json(200, graph_stats())
+                # ★ 统一信封补齐（2026-10-14 实测的 P1 根因）：
+                #   `/api/stats` 是 legacy 端点，历史响应体**不带 `status`**。
+                #   前端 `normalizeStatus(undefined)` ⇒ 判为 "error" ⇒ `detectMode` 认定
+                #   「后端不可用」⇒ 退到 `bundle` ⇒ `GET /graph_data.json`（48.7 MB 全图）
+                #   ⇒ 解析 + 渲染 9657 节点/48712 边 ⇒ **浏览器卡死**（正是铁律 #66 要消灭的行为）。
+                #   这里补齐 `status`/`snapshot_id`，使其与其余 `/api/*` 同口径。
+                _st = graph_stats()
+                _st["status"] = "ok"
+                _st["snapshot_id"] = self._snapshot_id()
+                return self._json(200, _st)
 
             if route == "/api/neighbors":
                 return self._api_neighbors(qs)

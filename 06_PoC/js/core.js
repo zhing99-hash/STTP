@@ -37,6 +37,16 @@ export const ENDPOINTS = Object.freeze({
   bundleGraph: "/graph_data.json",
 });
 
+/**
+ * `bundle`（离线整图）体积上限 = **8 MB**（铁律 #66「规模是设计约束：达到即拒绝」）。
+ *
+ * 依据（实测）：发布样例 `sample_graph.json` ≈ **373 KB**；权威全图
+ * `graph_data_phase41.json` ≈ **48.7 MB** —— 相差两个数量级，用 `Content-Length`
+ * 在**下载前**即可可靠区分。`bundle` 一旦读到全图，会解析 + 渲染 9657 节点/48712 边
+ * 并**卡死浏览器**，所以这里是**拒绝**而不是「静默截断」。
+ */
+export const BUNDLE_MAX_BYTES = 8 * 1024 * 1024;
+
 // 后端 `queries.py` 的五态（铁律 #67：「空」与「失败」必须分列）
 export const STATUS_ORDER = Object.freeze(["ok", "no_result", "truncated", "timeout", "error"]);
 

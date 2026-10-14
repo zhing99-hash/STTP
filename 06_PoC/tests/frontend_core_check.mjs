@@ -634,6 +634,89 @@ check("F31g needs_review ⇒ 渲染「待复核（不可判定）」而**非**�
       "");
 
 // ---------------------------------------------------------------------------
+// F32 **P1 回归**（2026-10-14 实测：页面打开即卡死）
+//   现场：`/api/stats` 是 legacy 端点，响应体**不带 `status`** ⇒ `normalizeStatus(undefined)`
+//         判为 "error" ⇒ `detectMode` 认定后端不可用 ⇒ 退到 `bundle` ⇒
+//         `GET /graph_data.json`（48.7 MB 全图）⇒ 解析 + 渲染 9657 节点 ⇒ **浏览器卡死**。
+//   注意：既有的 V1b 只断言「整图加载被 bundle 分支包裹」，那是**源码形状**断言 ——
+//         它通过了，而页面依然卡死。所以这里必须断言**行为**：探测结果本身。
+// ---------------------------------------------------------------------------
+
+/** 伪 fetch：可指定 stats 响应体是否带 status、bundle 的 content-length。 */
+function probeImpl({ statsBody, statsStatus = 200, bundleBytes, bundleStatus = 200 }) {
+  const calls = [];
+  const mk = (status, body, bytes) => ({
+    ok: status >= 200 && status < 300, status,
+    headers: { get: (k) => (k.toLowerCase() === "content-length" && bytes != null
+      ? String(bytes) : null) },
+    json: async () => body,
+  });
+  const impl = async (url, opts = {}) => {
+    calls.push(`${(opts.method || "GET")} ${url}`);
+    if (url.includes("/api/stats")) return mk(statsStatus, statsBody);
+    if (url.includes("/graph_data.json")) return mk(bundleStatus, { nodes: [], edges: [] }, bundleBytes);
+    return mk(404, {});
+  };
+  return { impl, calls };
+}
+
+// F32a：★ 逐字复现 P1 现场 —— HTTP 200 但响应体缺 `status`
+{
+  const { impl, calls } = probeImpl({ statsBody: { backend: "networkx", nodes: 9657, edges: 48712 } });
+  const api = new Api({ base: ".", fetchImpl: impl });
+  const det = await detectMode(api, { base: "." });
+  check("F32a /api/stats 无 status 但 HTTP 200 + 体可解析 ⇒ **live**（不得退 bundle ⇒ 拉 48 MB 全图）",
+        det.mode === "live" && !calls.some((u) => u.includes("graph_data.json")),
+        det.mode + " ｜ " + calls.join(" ; "));
+}
+
+// F32b：★ bundle 体积守卫 —— 权威全图（≈48.7 MB）必须**拒绝**，并给出明确原因
+{
+  const { impl, calls } = probeImpl({
+    statsBody: { status: "error" }, statsStatus: 503,
+    bundleBytes: Math.round(48.7 * 1048576),
+  });
+  const api = new Api({ base: ".", fetchImpl: impl });
+  const det = await detectMode(api, { base: "." });
+  check("F32b 后端不可用 + graph_data.json 为全图体积 ⇒ **offline**（拒绝加载，且原因点明体积超限）",
+        det.mode === "offline" && /体积|超出/.test(det.detail),
+        det.mode + " ｜ " + det.detail);
+}
+
+// F32c：守卫**不得误伤**发布样例（≈373 KB）—— 否则离线样例链路（V9）会被自己关掉
+{
+  const { impl, calls } = probeImpl({
+    statsBody: { status: "error" }, statsStatus: 503, bundleBytes: 373440,
+  });
+  const api = new Api({ base: ".", fetchImpl: impl });
+  const det = await detectMode(api, { base: "." });
+  check("F32c 样例体积（373 KB）⇒ 仍判 bundle 可用（守卫不误伤 V9 离线样例链路）",
+        det.mode === "bundle", det.mode + " ｜ " + det.detail);
+}
+
+// F32d：下载点二重守卫 —— `bundle()` 见 Content-Length 超限必须**不读 body** 直接拒绝
+{
+  const { impl } = probeImpl({ bundleBytes: Math.round(48.7 * 1048576) });
+  const api = new Api({ base: ".", fetchImpl: impl });
+  const env = await api.bundle();
+  check("F32d bundle() 见超限 Content-Length ⇒ 返回 error 信封（不下载、不卡死）",
+        env.status === "error" && env.error_code === "SUBGRAPH_LIMIT_REACHED"
+        && /超出上限/.test(env.reason || ""),
+        `${env.status} / ${env.error_code} / ${String(env.reason).slice(0, 60)}`);
+}
+
+// F32e：**中性初始态** —— 未发起任何查询时不得渲染成「错误」
+{
+  const el = fakeEl();
+  renderStatusLine(el, null, { modeText: "实时查询" });
+  check("F32e env=null（尚未查询）⇒ 渲染「待查询」而非「错误」（不谎报失败）",
+        el.getAttribute("data-state") === "ok"
+        && el.innerHTML.includes("待查询")
+        && !el.innerHTML.includes("错误"),
+        el.getAttribute("data-state"));
+}
+
+// ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）
 // ---------------------------------------------------------------------------
 check("META 注入的必然失败项（应被记为 FAIL）", false, "（注入反例）");
