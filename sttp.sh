@@ -40,6 +40,7 @@
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
 #   bash sttp.sh evdeps [--report|--check|--emit-registry] A04 验证依赖绑定：参考表/验证器依赖推导 + 状态机自检（Phase 45）
 #   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V19 正/反例（Phase 43/45）
+#   bash sttp.sh install                            第三人可安装入口自检：元数据/解释器约束分离/依赖声明覆盖/无原机路径/入口/两级可复现/离线 wheel（Phase 45 A05）
 #   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -369,6 +370,18 @@ EOF
       echo "== 判据自检（七段 · 构造性非真空）=="
       "$PY" 11_真实数据/evidence_deps.py --check || exit $?
     fi
+    ;;
+  install)
+    # Phase 45（复评 A05）：第三人可安装入口自检 —— 打包元数据 / 解释器约束与 pip 依赖
+    # 分离 / 依赖声明覆盖全仓实际 import / 无原机路径 / 入口可调用 / 两级可复现等级 /
+    # 离线 wheel 构建（在临时目录做，不污染仓库）。
+    # ★ 只依赖**已入库**文件 ⇒ 干净检出里同样可运行（**不需要**权威图）。
+    # ★ 退出码：0 全过 ／ 1 有 FAIL ／ 2 缺前置 ／ **3 仪器自证失败**（≠1，铁律 #76）。
+    shift
+    "$PY" 06_PoC/tests/phase45_install_selfcheck.py \
+      --json 07_交付物/Phase45_install_selfcheck.json "$@" || exit $?
+    echo "== 两级可复现等级（L1 随包样例重放 / L2 原始源重建；L1 通过≠L2 可复现）=="
+    "$PY" -c "import sys; from sttp_cli import cli; raise SystemExit(cli.repro_level([]))" || exit $?
     ;;
   verify)
     "$PY" 08_部署包/neo4j/verify_deploy.py

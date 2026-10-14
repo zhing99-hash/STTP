@@ -17,7 +17,9 @@
 
     code          仓库版本（git HEAD / 是否脏）+ 许可证
     build         构建命令 + 管线 + Python 版本
-    dependencies  从 requirements.lock 读的**目标**版本 + 本机实测版本 + 漂移清单
+    dependencies  从 requirements.lock 读的**目标**版本（pip 分发）+ 本机实测版本 + 漂移清单
+                  ＋ `interpreter`（解释器约束，转录自 pyproject.toml —— Phase 45 A05b：
+                    解释器约束**不**写在 requirements.lock，那是 pip 分发表）
     artifacts     每个产物的 sha256 / 字节数 / 节点边数 / 是否入库
     expected_stats 预期统计（可复算的口径，供 verify_release 现算比对）
     licenses      代码许可 + 数据许可登记文件
@@ -58,6 +60,7 @@ import source_registry as sr                                                    
 MANIFEST = os.path.join(HERE, "manifest.json")
 SAMPLE_DIR = os.path.join(HERE, "sample")
 LOCK = os.path.join(ROOT, "requirements.lock")
+PYPROJECT = os.path.join(ROOT, "pyproject.toml")
 DIST = os.path.join(ROOT, "dist")
 
 # 需要登记为「发布产物」的文件
@@ -107,6 +110,31 @@ def installed_versions(names) -> dict:
         except Exception:                                                       # noqa: BLE001
             got[m] = None
     return got
+
+
+def read_requires_python() -> tuple:
+    """读 `pyproject.toml` 的 `project.requires-python` —— 解释器约束的**单一来源**。
+
+    ★ Phase 45 · A05b：解释器约束自本轮起**不再写在 `requirements.lock`** —— 那是
+      **pip 分发**清单，而 `python==3.11.9` 会让 `pip install -r` 去找一个名为
+      `python` 的**分发**（PyPI 上确有一个长期无人维护的同名包）。
+      本函数把约束从 pyproject 取回，保证发布清单**仍然如实记录目标解释器**，
+      且与 `bash sttp.sh install`（A05-3）**同源**（同一字段，不是第二份副本）。
+
+    返回 `(constraint_or_None, source_note)`。
+    """
+    if not os.path.exists(PYPROJECT):
+        return None, "pyproject.toml 不存在（A05 之前的副本）"
+    try:
+        import tomllib
+        with open(PYPROJECT, "rb") as f:
+            pp = tomllib.load(f)
+        c = (pp.get("project") or {}).get("requires-python")
+        if c:
+            return str(c), "pyproject.toml:project.requires-python"
+        return None, "pyproject.toml 未声明 requires-python"
+    except Exception as e:                                                       # noqa: BLE001
+        return None, "pyproject.toml 不可解析：%s" % e
 
 
 def resolve_snapshot(explicit: str | None) -> str | None:
@@ -239,6 +267,7 @@ def main(argv=None) -> int:
         got = inst.get(k)
         if got != v:
             drift[k] = {"lock": v, "installed": got}
+    req_py, req_src = read_requires_python()
     deps = {
         "lock_file": os.path.relpath(LOCK, ROOT).replace("\\", "/"),
         "target": lock,
@@ -246,6 +275,15 @@ def main(argv=None) -> int:
         "drift": drift,
         "drift_note": ("漂移**不阻塞**运行（缺件才阻塞）；但化学/量纲结果建议在锁定版本上复核。"
                        "外部复评环境为 rdkit 2026.3.6 / pint 0.26.1 / networkx 3.7 / numpy 2.5.3。"),
+        # ★ Phase 45 · A05b：解释器约束与 pip 分发**分离** ——
+        #   `target` 只含 pip 能装的分发（不再含 `python`）；解释器约束从 pyproject 转录。
+        "interpreter": {
+            "constraint": req_py,
+            "constraint_source": req_src,
+            "running": inst.get("python"),
+            "note": ("约束的权威在 pyproject.toml 的 requires-python（**不在** requirements.lock）；"
+                     "求值由 `bash sttp.sh install`（A05-3）负责，本清单只如实转录。"),
+        },
     }
 
     # ---------------- expected stats ----------------
@@ -386,6 +424,8 @@ def main(argv=None) -> int:
                                                    f["bytes"] / 1048576.0, f["sha256"][:16]))
     print("  依赖漂移    : %s" % (", ".join("%s(%s≠%s)" % (k, v["installed"], v["lock"])
                                           for k, v in drift.items()) or "无"))
+    print("  解释器      : 约束 %s（%s）／ 运行 %s"
+          % (req_py, req_src, inst.get("python")))
     if packed:
         print("  打包快照    : %s (%.1f MB)" % (packed["path"], packed["bytes"] / 1048576.0))
     print("=" * 70)

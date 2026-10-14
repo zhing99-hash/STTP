@@ -10,13 +10,24 @@
 #   与本锁不一致。化学与量纲结果建议在**锁定版本**上复核后再引用。
 # ★ 依赖漂移不阻塞运行，但发布校验会**显式报告**漂移（见 verify_release.py）。
 
-# 解释器
-python==3.11.9
+# ---- 解释器约束（★ 这里**不是** pip 分发，故不再是 `python==…` 一行）----
+# 目标解释器：**CPython 3.11.9**（本项目实测环境；**不要**用 3.13 —— 未验证）。
+# ★ A05 修复：原文件此处写 `python==3.11.9`，与下方 pip 分发**混列** ⇒
+#   `pip install -r requirements.lock` 会去找一个名为 `python` 的**分发**
+#   （PyPI 上确有一个长期无人维护的同名包）⇒ 装错东西或直接失败。
+# 机器可读的解释器约束现在写在 **`pyproject.toml` 的
+#   `requires-python = ">=3.11,<3.12"`**（由 `bash sttp.sh install` 自检强制）。
+# 本文件自此**只列 pip 安装的分发**。
+#
+# 复现命令（解释器与依赖分两步，不再混在一条 pip 命令里）：
+#   python3.11 -m venv .venv && . .venv/bin/activate     # ① 先备好 3.11.x 解释器
+#   pip install -r requirements.lock                     # ② 再装分发
 
-# 验证闭环
+# ---- 验证闭环 ----
 rdkit==2026.09.1
 sympy==1.14.0
 pint==0.25.3
+
 
 # 图 / 数值 / 数据
 networkx==3.6.1
@@ -34,3 +45,9 @@ torch==2.14.0+cpu
 
 # 数据源抓取（可选）
 requests==2.33.1
+
+# 实体链接（可选）—— ★ 本锁**不给版本**，因为本项目运行环境里未安装它。
+#   宁可缺版本，也不伪造一个「实测」值（本项目纪律：不伪造历史测量）。
+#   该项已声明在 requirements.txt 与 pyproject.toml（`linker` 分组）；
+#   真要启用时请自行安装并把**实测**版本回填到此处。
+# scikit-learn==<installed-version-goes-here>

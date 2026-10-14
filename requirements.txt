@@ -3,9 +3,19 @@
 #
 # STTP · Python 依赖（松约束 / 供人阅读）
 # 精确锁定版本见同目录 requirements.lock —— 复现请优先用 lock。
+# ★ 机器可读的**打包元数据与入口**见 pyproject.toml（Phase 45 · A05）；
+#   本文件与 pyproject.toml 的**核心集**同源（`bash sttp.sh install` 自检比对）。
 #
-# 运行环境：CPython 3.11.x（本项目在 3.11.9 上实测；**不要**用 3.13，
-# 该项目未在 3.13 上验证，且本机 3.13 为无依赖的空环境）。
+# ★ 解释器约束与 pip 依赖**分离**（A05b）：
+#   - 解释器：CPython 3.11.x（本项目在 3.11.9 上实测；**不要**用 3.13，
+#     该项目未在 3.13 上验证，且本机 3.13 为无依赖的空环境）
+#     → 机器可读形式在 pyproject.toml 的 `requires-python = ">=3.11,<3.12"`
+#   - pip 分发：即本文件下列条目（**不含**、也不应含 `python==…` 这种「解释器伪包」）
+#
+# 依赖分组（与 pyproject.toml 的 optional-dependencies 对应）：
+#   核心（必须）       = 验证闭环 + networkx
+#   analysis（可选）   = 图 / 数值 / 数据
+#   neo4j / torch / fetch / linker = 各自能力的可选分组
 
 # ---- 验证闭环：化学计量 / 数学恒等 / 量纲 ----
 rdkit>=2024.3
@@ -28,3 +38,26 @@ torch>=2.2
 
 # ---- 数据源抓取（可选：仅在线重建路径需要）----
 requests>=2.31
+
+# ---- 实体链接（可选：09_科研扩展/5C_entity_linker 需要）----
+# ★ A05 顺带登记（属「声明不覆盖实际 import」）：全仓扫描发现 7 个第三方 import
+#   此前在**任何**依赖清单里都没有声明 —— sklearn / rapidfuzz / duckdb / polars /
+#   kuzu / openai / playwright。现按能力补为可选分组（与 pyproject.toml 一一对应）：
+#     linker(=scikit-learn,rapidfuzz) / etl_alt(=duckdb,polars) / kuzu / llm(=openai)
+#   ★ 唯一**刻意不声明**的是 playwright：`06_PoC/tests/a4_offline_render.py` import 它，
+#     但 §0.1 / D14 明确「零第三方依赖 ⇒ 不安装 Playwright / jsdom」（真实浏览器渲染未实测）
+#     ⇒ 声明它会给第三人「受支持路径」的错觉。该 import 在 `bash sttp.sh install` 的
+#     **显式 ACK 白名单**中登记并写明原因（白名单是 fail-closed 的：未列即 FAIL）。
+#   ★ 未在本项目环境安装的 ⇒ **给裸名、不给版本**（宁可缺版本也不伪造「实测」值）。
+scikit-learn
+rapidfuzz
+
+# ---- ETL 替代后端（可选：03_知识层/etl_pipeline.py）----
+duckdb
+polars
+
+# ---- 嵌入式图数据库演示（可选：03_知识层/load_kuzu_demo.py）----
+kuzu
+
+# ---- LLM 假设生成（可选：04_验证闭环/llm_hypothesis.py；需联网与密钥）----
+openai
