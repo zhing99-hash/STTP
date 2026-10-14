@@ -35,15 +35,20 @@ Phase 45 · A05「第三人可安装入口」**非真空自检**（A05-0 … A05
   （注入一个假包名 / 假机器路径），证明断言不是真空（铁律 #14 / #43 / #75）。
 * **可在干净检出运行**：本自检只依赖**已入库**文件（`pyproject.toml` / `requirements*.txt` /
   `.env.example` / `sttp_cli/**` / `verify_release.py`）⇒ 第三人 clone 后即可复核（铁律 #53）。
+* **★ 仪器自指（E28）**：本文件**一旦入库，它自己就进入被测集合**（`scan_third_party` 扫描全仓 `.py`）。
+  ⇒ ① 文件枚举 = `git ls-files`（入库）**∪** `--others --exclude-standard`（未跟踪），
+  否则会「**提交前绿、提交后红**」；② `declared` 必须含 **`[build-system].requires`**，
+  否则本文件里那句 `import setuptools` 会被报成「未声明」（A05-7c 专门断死构建后端已声明）。
+  教训编号：**铁律候选 #82**（仪器也是被测对象）。
 
 ★ 如实披露（**未覆盖项，不计通过**）
 ------------------------------------
 * **`pip install .` 未在本环境实测**（需构建后端；本机零第三方依赖、且无网络保证）。
   代偿：A05-13 在**临时目录**里做**离线 wheel 构建探针**
   （`pip wheel --no-deps --no-build-isolation`），并校验 wheel 内含 `sttp_cli/cli.py`
-  与 `entry_points.txt` 的 5 个入口。若构建后端缺失 ⇒ 记 **SKIP 并写明原因**，**不假通过**。
+  与 `entry_points.txt` 的 6 个入口。若构建后端缺失 ⇒ 记 **SKIP 并写明原因**，**不假通过**。
 * **`pip download` / 依赖可获取性**未验证（需联网到 PyPI）。
-* 未验证「装完之后 5 个入口都真的能跑通全链路」——那需要权威图（不入库）。
+* 未验证「装完之后 6 个入口都真的能跑通全链路」——那需要权威图（不入库）。
   已由 `repro_level` 把这件事显式分成 L1/L2 两级（见 A05-12）。
 
 退出码
@@ -213,26 +218,40 @@ class Rep:
 # 源文件扫描
 # ---------------------------------------------------------------------------
 def _iter_tracked_py(rep: Rep) -> list[str]:
-    """枚举**已入库**的 .py（用 git；git 不可用时退化为目录遍历并**如实声明**）。
+    """枚举**已入库 ∪ 未跟踪**的 .py（用 git；git 不可用时退化为目录遍历并**如实声明**）。
 
     ★ 恒**排除** `07_交付物/外部评审/**`：那是**第三方评审归档**（含复评方自己的脚本），
       不是本项目代码；把它算进「声明必须覆盖的 import」是口径错误。
+
+    ★ E28（本轮踩到）：只枚举 `git ls-files`（已入库）会产生**「提交前绿、提交后红」**——
+      自检脚本自身在**未跟踪**时不进扫描范围，`git add` 之后才暴露它的 import。
+      故**并上未跟踪文件**（`--others --exclude-standard`，仍尊重 .gitignore）⇒ fail-closed。
     """
     ext_dir = os.path.normpath(os.path.join(ROOT, "07_交付物", "外部评审"))
 
     def _keep(rel: str) -> bool:
         return not os.path.normpath(os.path.join(ROOT, rel)).startswith(ext_dir)
 
-    try:
-        r = subprocess.run(["git", "ls-files", "-z", "--", "*.py"],
+    def _ls(*extra: str):
+        """返回相对路径列表；git 调用失败 ⇒ None（与「0 个文件」**分开**，铁律 #67）。"""
+        r = subprocess.run(["git", "ls-files", "-z", *extra, "--", "*.py"],
                            cwd=ROOT, capture_output=True, check=False)
-        if r.returncode == 0 and r.stdout:
-            names = [p for p in r.stdout.decode("utf-8", "replace").split("\0")
-                     if p and _keep(p)]
-            rep.note("文件枚举：git ls-files（%d 个入库 .py，已排除 07_交付物/外部评审）"
-                     "—— 与干净检出同口径。" % len(names))
+        if r.returncode != 0:
+            return None
+        return [p for p in r.stdout.decode("utf-8", "replace").split("\0")
+                if p and _keep(p)]
+
+    try:
+        tracked = _ls()
+        if tracked is not None:
+            untracked = _ls("--others", "--exclude-standard") or []
+            names = sorted(set(tracked) | set(untracked))
+            rep.note("文件枚举：git ls-files 入库 %d + 未跟踪 %d = %d 个 .py"
+                     "（已排除 07_交付物/外部评审）—— ★ 含未跟踪项，"
+                     "避免「提交前绿、提交后红」（E28）。"
+                     % (len(tracked), len(untracked), len(names)))
             return [os.path.join(ROOT, p) for p in names]
-        rep.note("git ls-files 返回 rc=%d ⇒ 退化为目录遍历。" % r.returncode)
+        rep.note("git ls-files 返回 rc≠0 ⇒ 退化为目录遍历（★ 如实声明，非静默）。")
     except OSError as e:  # noqa: BLE001
         rep.note("git 不可用（%s）⇒ 退化为目录遍历。" % e)
 
@@ -484,18 +503,26 @@ def main(argv=None) -> int:
     print("\n[A05-7] 声明必须覆盖全仓实际 import（复评 A05 的「可安装」前提）")
     # =====================================================================
     third = scan_third_party(rep)
-    declared = set(core)
-    for k, v in extras.items():
-        declared |= {(_req_name(d) or "") for d in v}
-    declared.discard("")
+    # ★ 声明的**三个来源**：核心运行时依赖 / 可选分组 / **构建期后端**（[build-system].requires）。
+    #   E28：构建期依赖同样是「本项目声明过的第三方包」，漏掉它会把探针自身的
+    #   `import setuptools` 误报成「未声明」（`scan_third_party` 的扫描范围含**本文件**）。
+    opt_set = {(_req_name(d) or "") for k, v in extras.items() for d in v}
+    opt_set.discard("")
+    build_set = {(_req_name(d) or "") for d in
+                 ((pp.get("build-system") or {}).get("requires") or [])}
+    build_set.discard("")
+    declared = set(core) | opt_set | build_set
     declared_import = {DIST_TO_IMPORT.get(d, d) for d in declared}
     missing, stale = undeclared_of(third, declared_import, ACK_UNDECLARED)
     rep.add(not missing and not stale,
             "A05-7a 每个第三方 import 都已声明或已显式 ACK",
             ("未声明：%s" % ["%s(%d处)" % (n, len(third[n])) for n in missing]) if missing
             else ("陈旧 ACK（已声明却仍在白名单）：%s" % stale if stale
-                  else "扫描 %d 个第三方 import，全部覆盖（ACK %d 个：%s）"
-                       % (len(third), len(ACK_UNDECLARED), sorted(ACK_UNDECLARED))))
+                  else "扫描 %d 个第三方 import，全部覆盖（核心 %d ／ 可选 %d ／ 构建 %d；"
+                       "ACK %d 个：%s）"
+                       % (len(third), len(core), len(opt_set), len(build_set),
+                          len(ACK_UNDECLARED), sorted(ACK_UNDECLARED))))
+
     if ACK_UNDECLARED:
         for k in sorted(ACK_UNDECLARED):
             rep.note("ACK 未声明依赖 `%s`：%s" % (k, ACK_UNDECLARED[k]))
@@ -508,6 +535,17 @@ def main(argv=None) -> int:
             "A05-7b 负对照（假包名判为未声明、已声明项不误报）",
             "假包名命中=%s ／ networkx 未误报=%s"
             % ("zzz_a05_negative_control" in neg_missing, "networkx" not in neg_missing))
+
+    # ★ A05-7c：构建后端**必须**在 [build-system].requires 里声明（否则离线 wheel 建不出）。
+    #   从 pyproject 的 `build-backend` **派生**比对名（不硬编码 setuptools），避免换后端后失效。
+    bsys = pp.get("build-system") or {}
+    backend = str(bsys.get("build-backend") or "")
+    be_root = backend.split(".")[0] if backend else ""
+    rep.add(bool(bsys.get("requires")) and bool(be_root) and be_root in declared_import,
+            "A05-7c 构建后端已在 [build-system].requires 中声明",
+            ("requires=%s ／ build-backend=%s" % (sorted(build_set), backend))
+            if (bsys.get("requires") and be_root) else
+            "**缺** [build-system].requires 或 build-backend（★ 不静默跳过）")
 
     # =====================================================================
     print("\n[A05-8..A05-10] 无机器绝对路径（复评 A05c）—— 含反例")

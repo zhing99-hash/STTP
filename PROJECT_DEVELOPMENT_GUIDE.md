@@ -154,7 +154,7 @@
   A04 验证依赖绑定 + `valid/stale/needs_review/rejected`
   生命周期**已于 2026-10-14 完成**（见 §0.3.2 的 E10–E22：记录级绑定、`code_import` 过近似、`needs_review` 不可重验消除、
   **A04 `stale` 通道无自然正例**等边界）；
-  **A05 第三人可安装入口已于 2026-10-14 完成**（见 §0.3.3 的 **E23–E27**）。
+  **A05 第三人可安装入口已于 2026-10-14 完成**（见 §0.3.3 的 **E23–E28**）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -253,7 +253,7 @@
 
 #### 0.3.3 Phase 45（A05 第三人可安装入口）已承认的边界 —— 更新于 2026-10-14
 
-> 全文见 `07_交付物/Phase45_A05第三人可安装入口_20261014.md`（**E23–E27** + §9 未覆盖项）。
+> 全文见 `07_交付物/Phase45_A05第三人可安装入口_20261014.md`（**E23–E28** + §9 未覆盖项）。
 
 - ✅ **复评 A05 三条现场全部坐实并已修**（`00_项目管理/codex复评响应与下一阶段规划_20261013.md` §2）：
   **A05a** 无 `pyproject.toml` ｜ **A05b** `requirements.lock` 里 `python==3.11.9` 与 pip 分发**混列**
@@ -262,6 +262,8 @@
 - ★ **自查出比复评更严重的现场**：全仓 **171 个入库 `.py`** 实际用到 **19 个**第三方 import，
   其中 **7 个在**此前的**任何**依赖清单里都**没有声明**（`sklearn`/`rapidfuzz`/`duckdb`/`polars`/`kuzu`/`openai`/`playwright`）
   ⇒ 复评说「无可安装入口」；实际是**连依赖声明本身都不完整**（照抄 `requirements.txt` 补了 `pyproject.toml` 也跑不了这几条路径）。
+  ★ **口径须连范围一起写**：上句是**开工时**的测量（171 个 `.py`）；收官时为 **174 个**（+3 = Phase 45 自身新增）、
+  **20 个**第三方 import（多出的是**构建期** `setuptools`，见 **E28**）。
 - ★ **「零构建链」口径的精确化（请勿据旧表述判为违约）**：§5.2.1 的「零构建链」是关于**前端**的
   （`06_PoC/js/` 原生 ES Module，无 npm/打包器/转译），D14 的「零第三方依赖」是关于**不引入前端测试依赖**。
   **两者都不禁止一个 Python 打包元数据文件**；且 §0.1 的「**唯一例外**」明确点名「**可安装性**」照修。
@@ -275,7 +277,7 @@
   自检把它**结构化**：`L1.needs_authority_graph=False` / `L2.needs_authority_graph=True`，并**构造性**断言
   「缺 manifest ⇒ L1 判为**不可用**」。⇒ 报告路径 A / B 与 `sttp-repro-level` 三处口径一致。
 - ★ **新仪器 `bash sttp.sh install`**（`06_PoC/tests/phase45_install_selfcheck.py`，**零第三方依赖**）：
-  **PASS 24 / FAIL 0 / SKIP 0**（≈5 s）；★ **可在干净检出运行**（只依赖已入库文件）。
+  **PASS 25 / FAIL 0 / SKIP 0**（RC=0，≈4.7 s）；★ **可在干净检出运行**（只依赖已入库文件）。
   **退出码分档**：`0` 全过 ／ `1` 有 FAIL ／ `2` 缺前置 ／ **`3` 仪器自证失败（≠1）**。
   实测反例：改 `requires-python` ⇒ A05-3 红；删 `rdkit` ⇒ A05-4/A05-7a 红（A05-7b 仍 PASS ⇒ 负对照与仓库状态**解耦**）；
   塞回 `python==3.11.9` ⇒ A05-6a 红；打坏比较器 ⇒ **RC=3**；全量还原后 `pyproject.toml` sha256 **逐字节回到基线**。
@@ -302,6 +304,22 @@
   ⇒ 拆分不影响发布门禁口径（实测 `release` 仍 **28/0/0**）。
   ★★ **教训（与 E10 同族）**：**「删掉一个错误来源」之前，先查谁在读它** ——
   否则修好一处、弄丢一处，而两处都不会报错。
+- **E28（仪器自指 · 已修）**：`phase45_install_selfcheck.py` **未跟踪**时 `install` = **24/0/0（绿）**，
+  `git add` 之后 = **23/1（红）**，失败行 `A05-7a … 未声明：['setuptools(1处)']`。
+  **两段根因**：① 探针 `wheel_probe()` 自己 `import setuptools`；② 文件枚举用 `git ls-files`
+  （**只含已入库**）⇒ 该文件未跟踪时**不在扫描范围**、入库后**突然进入** ⇒ 其 import 立刻暴露。
+  **两处修复**：`declared` 由「核心 + 可选」扩为「核心 + 可选 + **构建期** `[build-system].requires`」，
+  并新增 **A05-7c**（从 `build-backend` **派生**比对名，不硬编码 `setuptools`）；
+  枚举改为 `git ls-files`（入库）**∪** `--others --exclude-standard`（未跟踪，仍尊重 `.gitignore`），
+  NOTE 里**分列「入库 N + 未跟踪 M」**（实测 `174 + 0`）。
+  ★★ **教训（铁律候选 #82）**：**仪器一旦入库，它自己就是被测对象** ——
+  任何「全仓静态扫描」型自检，**文件枚举必须包含未跟踪文件**，否则「**提交前绿、提交后红**」；
+  且改探针 = 改被测集合。**性质**：与 #76「全红也可能是测量器坏了」同族，方向相反 ——
+  这里坏的是「**绿**」（扫描范围窄于被测范围 ⇒ **假绿**）。
+  ★ 收尾值：`install` **25/0/0 RC=0**；**全量回归 13/13 全绿**（`release` 28/0/0、
+  `release-full` 108/0/0、`subgraph` 89/0/3、`frontend` 70/0/2、`node` 85/0）。
+  副产品：**E21 再次被实测坐实** —— 同一份清单在**脏树**非幂等（`working_tree_dirty_at_build: true`）、
+  在**干净树**幂等（`dirty_sample: []`）。
 
 ---
 
@@ -1334,15 +1352,23 @@ git merge origin/main
   委托既有脚本）｜`.env.example`（根级可移植模板）｜`06_PoC/tests/phase45_install_selfcheck.py`｜`sttp.sh install`。
 - **两级可复现等级结构化**（A05 要点）：**L1 随包样例重放**（全入库、不需权威图/联网）vs **L2 原始源→规范图重建**
   （需不入库 `normalized.json`）；断死 `L1.needs_authority_graph=False` / `L2.…=True`，并**构造性**断言「缺 manifest ⇒ L1 不可用」。
-- **新仪器 `bash sttp.sh install`：PASS 24 / FAIL 0 / SKIP 0**（≈5 s，**零第三方依赖**，**干净检出可运行**）；
+- **新仪器 `bash sttp.sh install`：PASS 25 / FAIL 0 / SKIP 0**（RC=0，≈4.7 s，**零第三方依赖**，**干净检出可运行**）；
   退出码分档 `0/1/2/**3(仪器自证失败)**`。实测反例：改 `requires-python` ⇒ A05-3 红；删 `rdkit` ⇒ A05-4/A05-7a 红
   （A05-7b 仍 PASS ⇒ 负对照与仓库状态**解耦**）；塞回 `python==3.11.9` ⇒ A05-6a 红；打坏比较器 ⇒ **RC=3**；
   还原后 `pyproject.toml` sha256 **逐字节回基线** `9c4f143e…`。
 - ★ **离线 wheel 构建**（**临时目录**，不污染仓库）：`sttp_kg-0.45.0-py3-none-any.whl` **21.0 KB**，含 `sttp_cli/cli.py`
   与全部 6 个入口点。
-- §0.3.3 新增 Phase 45 A05 已知边界 **E23–E27**：**E23 测量器陷阱**（`grep -c $'\r'` 在本环境**恒等于总行数**
+- §0.3.3 新增 Phase 45 A05 已知边界 **E23–E28**：**E23 测量器陷阱**（`grep -c $'\r'` 在本环境**恒等于总行数**
   ⇒ 「全 CRLF」假象，**已误导本轮判断一次**；**铁律候选 #81：行尾只用 `od`/`tr`/`awk` 判定**）；E24 L1/L2 口径边界；
-  **E25 未实测 `pip install .`**（不计通过）；E26 5 个依赖只声明未验证（刻意裸名）。
+  **E25 未实测 `pip install .`**（不计通过）；E26 5 个依赖只声明未验证（刻意裸名）；**E27 隐蔽耦合（已修）**；
+  **E28 仪器自指（已修）**——`install` 在自检脚本**未跟踪**时 **24/0/0（绿）**、`git add` 后 **23/1（红）**：
+  探针自己 `import setuptools` 且枚举用 `git ls-files`（**只含已入库**）⇒ **扫描范围 ⊂ 被测范围 = 假绿**；
+  修法 = `declared` 并入 `[build-system].requires` + 新增 A05-7c（从 `build-backend` 派生比对名）+
+  枚举改「入库 ∪ 未跟踪（`--others --exclude-standard`）」。
+  ★★ **教训（铁律候选 #82）：仪器一旦入库，它自己就是被测对象** —— 静态扫描型自检**必须**枚举未跟踪文件。
+- ★ **全量回归 13/13 全绿**（逐条记 RC，不抽样）：`install` 25/0/0 ｜ `release` 28/0/0 ｜ `release-full` 108/0/0 ｜
+  `subgraph` 89/0/3 ｜ `frontend` 70/0/2 ｜ `node` 85/0 ｜ `evdeps/lineage/check/gatecheck/eval/dimaudit/noise` 全 RC=0。
+  顺带**再实证 E21**：同一份清单在**脏树**非幂等（`working_tree_dirty_at_build: true`）、干净树幂等（`dirty_sample: []`）。
 - 报告：`07_交付物/Phase45_A05第三人可安装入口_20261014.md`。)*
 *前次更新：2026-10-14（**Phase 44 · 第 36 轮：D1 根因修复 —— 证据字节忠实度以「仓库 blob」为准**。
 - 权威字节源 `git cat-file blob HEAD:<rel>`（与检出/行尾无关）；`git` 不可用 ⇒ `None`（fail-closed 而非空字节）。

@@ -1,7 +1,7 @@
 {
   "schema": "sttp-phase45-install-selfcheck/v1",
   "counts": {
-    "PASS": 24,
+    "PASS": 25,
     "FAIL": 0,
     "SKIP": 0
   },
@@ -23,6 +23,7 @@
     "rdkit",
     "requests",
     "scipy",
+    "setuptools",
     "sklearn",
     "sympy",
     "torch"
@@ -89,12 +90,17 @@
     {
       "status": "PASS",
       "name": "A05-7a 每个第三方 import 都已声明或已显式 ACK",
-      "detail": "扫描 19 个第三方 import，全部覆盖（ACK 1 个：['playwright']）"
+      "detail": "扫描 20 个第三方 import，全部覆盖（核心 4 ／ 可选 14 ／ 构建 1；ACK 1 个：['playwright']）"
     },
     {
       "status": "PASS",
       "name": "A05-7b 负对照（假包名判为未声明、已声明项不误报）",
       "detail": "假包名命中=True ／ networkx 未误报=True"
+    },
+    {
+      "status": "PASS",
+      "name": "A05-7c 构建后端已在 [build-system].requires 中声明",
+      "detail": "requires=['setuptools'] ／ build-backend=setuptools.build_meta"
     },
     {
       "status": "PASS",
@@ -153,7 +159,7 @@
     }
   ],
   "notes": [
-    "文件枚举：git ls-files（171 个入库 .py，已排除 07_交付物/外部评审）—— 与干净检出同口径。",
+    "文件枚举：git ls-files 入库 174 + 未跟踪 0 = 174 个 .py（已排除 07_交付物/外部评审）—— ★ 含未跟踪项，避免「提交前绿、提交后红」（E28）。",
     "ACK 未声明依赖 `playwright`：06_PoC/tests/a4_offline_render.py 的离线渲染试验；§0.1 / D14 明确「零第三方依赖 ⇒ 不装 Playwright / jsdom」⇒ **只登记不声明**，避免给第三人「受支持路径」的错觉。",
     "★ L1 通过**不代表** L2 可复现：二者前置条件不同，报告见 `sttp-repro-level`。"
   ]
