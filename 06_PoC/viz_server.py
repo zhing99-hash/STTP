@@ -226,45 +226,89 @@ def _load_source_registry():
     return _SOURCE_REGISTRY
 
 
-def stale_registry():
-    """登记快照 `{known, hashes}`，用于 `exclude_stale`。
+def _head_sha(base):
+    """当前 HEAD 的 sha（拿不到则为 None）。
 
-    ★ 缓存键 = 全部 locator 文件的 `(relpath, mtime_ns, size)` + 每源的 `lineage_recorded`。
-    任一被登记文件被改动 ⇒ 键变 ⇒ **当次请求即可判定 stale**（V16 负对照要求）。
-    无 locator / 未登记 ⇒ fail-closed 视为 stale（见 queries.edge_is_stale 的说明）。
+    ★ 为什么缓存键要看它（Phase 44 · D1）：权威哈希口径已改为**仓库字节**
+      （`git cat-file blob HEAD:<path>`）⇒ **只有 HEAD 变化才会改变当前哈希**。
+      过去按 locator 的 `mtime/size` 做键，隐含「哈希依赖工作区」的旧假设；
+      HEAD 变更才是真依赖（且自检里「提交后重新读」必须能看见新 blob）。
+    """
+    try:
+        r = subprocess.run(["git", "rev-parse", "HEAD"], cwd=base,
+                           capture_output=True, text=True, timeout=15)
+        return r.stdout.strip() if r.returncode == 0 else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def stale_registry():
+    """登记快照 `{known, hashes, repo_status}`，用于 `exclude_stale` 与忠实度分列。
+
+    ★ 缓存键 = `(HEAD sha, 每源的 lineage_recorded)`。HEAD 变（提交/切换）⇒ 键变 ⇒ 重算。
+      不再把工作区 `mtime/size` 计入键：字节源既已是仓库 blob，工作区改动**本来就不该**
+      影响裁决（这正是 D1 修复要的性质）。
+    ★ `hashes` 只对**可从仓库复算**的来源有值；未入库 / 无 locator ⇒ None，
+      由 `queries.edge_fidelity` 分列（`unverifiable_not_in_repo` / `unverifiable_no_source`）。
     """
     sr = _load_source_registry()
     q = _load_queries()
     if not sr or not q:
         return None
     base = getattr(sr, "ROOT", ROOT)
-    key = []
-    for sid in sr.ids():
-        ent = sr.get(sid) or {}
-        key.append((sid, bool(ent.get("lineage_recorded"))))
-        for rel in (ent.get("locator") or []):
-            try:
-                st = os.stat(os.path.join(base, rel))
-                key.append((rel, st.st_mtime_ns, st.st_size))
-            except OSError:
-                key.append((rel, None, None))
-    key = tuple(key)
+    key = (_head_sha(base),
+           tuple((sid, bool((sr.get(sid) or {}).get("lineage_recorded"))) for sid in sr.ids()))
     with _STALE_LOCK:
         if _STALE_CACHE["key"] != key:
             _STALE_CACHE["key"] = key
-            _STALE_CACHE["val"] = q.build_stale_registry(sr.ids(), sr.hash_map(base=base))
+            _STALE_CACHE["val"] = q.build_stale_registry(
+                sr.ids(), sr.hash_map(base=base), sr.repo_status_map(base=base))
         return _STALE_CACHE["val"]
 
 
-def locator_byte_fidelity() -> dict:
-    """登记 locator 的 **worktree 字节 vs 仓库索引 blob**（铁律 #61 推广：被哈希的字节必须与仓库一致）。
+_FIDELITY_COUNTS_CACHE = {"key": None, "val": None}
 
-    ★ 为什么必须做：stale 判据靠 `evidence[].src_hash` 与 `source_registry` **当前内容哈希**
-    比对；而"当前内容哈希"是对 **worktree 文件字节**算的。若 worktree 的字节与仓库里的字节
-    不一致（哪怕只是 CRLF/LF），那么：
-      * 本机自洽，但**干净检出（clone）后全部对不上** ⇒ 假 stale；
-      * 证据哈希因此**平台相关**，违反铁律 #61。
-    本函数把"字节是否忠实"变成**响应里可见的字段**，而不是靠人记得。
+
+def fidelity_counts_global():
+    """**全图**证据字节忠实度四分类计数（`queries.edge_fidelity`，按 HEAD 缓存）。
+
+    为什么随响应暴露（而不是只写文档）：`unverifiable_not_in_repo` 是**已知边界**
+    （12 个来源的 `*_raw.json`/`*_cache.json` 约 20 MB，按「大体积派生对象不入库」有意排除，
+    实测牵连 47 055 / 48 712 条边）。它**不计入 `stale`**（那些来源并未变更），
+    但**必须**让人一眼看到 —— 否则「stale≈0」会被误读成「全部证据都可字节复算」。
+    """
+    q = _load_queries()
+    b = get_backend()
+    if not q or not b:
+        return None
+    base = ROOT
+    try:
+        key = _head_sha(base)
+        with _STALE_LOCK:
+            if _FIDELITY_COUNTS_CACHE["key"] == key and _FIDELITY_COUNTS_CACHE["val"]:
+                return _FIDELITY_COUNTS_CACHE["val"]
+        reg = stale_registry()
+        if reg is None:
+            return None
+        out = q.fidelity_counts(b.all_edges(), reg)
+        out["n_edges_total"] = b.edge_count
+        with _STALE_LOCK:
+            _FIDELITY_COUNTS_CACHE["key"] = key
+            _FIDELITY_COUNTS_CACHE["val"] = out
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] 忠实度分列计数不可用（{type(e).__name__}: {e}）")
+        return None
+
+
+def locator_byte_fidelity() -> dict:
+    """登记 locator 的 **worktree 字节 vs 仓库 blob**（铁律 #61：被哈希的字节必须可复现）。
+
+    ★ Phase 44 · D1 之后本探针的**定位变了**：权威哈希口径已改为**仓库 blob**
+      （`git cat-file blob HEAD:<path>`），裁决**不再**依赖工作区字节 ⇒ 本探针不再
+      「决定 stale 是否假阳」，而是**可观测性**：告诉你「本机工作区与仓库是否一致」，
+      从而判断显式 opt-in 的 `--byte-source worktree` 复核路径是否可信。
+      返回里以 `affects_verdict: false` + `canonical_byte_source` 明确这一点。
     实现：`git ls-files -s`（索引 blob 哈希）+ `git hash-object --no-filters`（worktree 原始哈希）。
     结果按 locator 的 `(mtime_ns,size)` 键缓存；git 不可用 ⇒ `faithful=null`（**不假装通过**）。
     """
@@ -320,11 +364,18 @@ def locator_byte_fidelity() -> dict:
     if out["note"] == "":
         out["n_unfaithful"] = len(out["unfaithful"])
         out["faithful"] = (out["n_unfaithful"] == 0)
-        if out["n_unfaithful"]:
-            out["note"] = ("★ worktree 字节 ≠ 仓库 blob（%d/%d 个已入库登记 locator）⇒ "
-                           "证据里的 src_hash 在干净检出下不可复现，stale 判据会假阳；"
-                           "另有 %d 个 locator 未入库（不可从仓库校验）"
-                           % (out["n_unfaithful"], out["checked"], out["n_untracked"]))
+        # ★ Phase 44 · D1：**裁决不再依赖 worktree 字节**（权威口径 = 仓库 blob）。
+        #   本探针因此从「缺陷证据」转为**可观测性**：它回答「本机工作区是否与仓库一致」，
+        #   只影响显式 opt-in 的 `--byte-source worktree` 复核路径。
+        out["canonical_byte_source"] = "git cat-file blob HEAD:<path>"
+        out["affects_verdict"] = False
+        out["note"] = (
+            "worktree 字节 vs 仓库 blob：%d/%d 个已入库 locator 不一致%s；"
+            "%d 个 locator 未入库（不可从仓库复算）。★ 权威口径已改为**仓库字节** ⇒ "
+            "本探针**不影响** stale/fidelity 裁决，仅用于判断 opt-in 的 worktree 复核是否可靠。"
+            % (out["n_unfaithful"], out["checked"],
+               ("（%s）" % ", ".join(out["unfaithful"][:3])) if out["unfaithful"] else "",
+               out["n_untracked"]))
     with _STALE_LOCK:
         _FIDELITY_CACHE["key"], _FIDELITY_CACHE["val"] = key, out
     return out
@@ -398,6 +449,23 @@ def _qhash(params: dict) -> str:
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
 
 
+def _repo_status_counts():
+    """来源的 `repo_status` 三分类计数（`in_repo` / `not_in_repo` / `no_locator`）。
+
+    `not_in_repo` = 有 locator 但未入库（大体积拉取缓存，有意排除）⇒ **不可从仓库复算**。
+    它是**已知边界**，随 `/api/stats` 与 `/api/subgraph` 一并暴露。
+    """
+    sr = _load_source_registry()
+    if not sr:
+        return None
+    try:
+        m = sr.repo_status_map(getattr(sr, "ROOT", ROOT))
+        return {k: sum(1 for v in m.values() if v == k) for k in sr.REPO_STATUS}
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] repo_status 统计不可用（{type(e).__name__}: {e}）")
+        return None
+
+
 def graph_stats() -> dict:
     """图谱统计：优先用查询层后端，其次读 graph_data.json。"""
     b = get_backend()
@@ -428,6 +496,11 @@ def graph_stats() -> dict:
                 "edge_types": dict(etypes),
                 "explicit_or_inferred": dict(eoi),
                 "verified_edges": verified,
+                # ★ Phase 44 · D1：证据字节忠实度**分列**（全图）—— 必须始终可见，
+                #   否则「stale 很小」会被误读成「证据都可字节复算」。
+                "evidence_fidelity": fidelity_counts_global(),
+                "source_repo_status": _repo_status_counts(),
+                "evidence_byte_source": "repo（git cat-file blob HEAD:<path>）",
             }
         except Exception as e:  # noqa: BLE001
             print(f"[WARN] 统计失败：{e}")
@@ -782,10 +855,22 @@ class VizHandler(BaseHTTPRequestHandler):
             for e in r["edges"]:
                 p = gx.project_edge(e)
                 p["why_shown"] = r["why_edges"].get(e["id"], "user_specified")
+                # ★ 证据字节忠实度**四分类**（Phase 44 · D1）：与 `stale` 并存但**语义更细** ——
+                #   `stale=True` 只说「不可确认新鲜」，`fidelity` 说清**为什么**
+                #   （已变更 / 无 locator / locator 未入库）。前端据此避免把
+                #   「不可从仓库复算」渲染成「已变更」。
+                #   ★ 登记表不可用时 `fidelity` 为 **null**（不可判定），**不得**写成 "verified"。
+                p["fidelity"] = q.edge_fidelity(e, stale) if stale else None
                 p["stale"] = bool(stale) and q.edge_is_stale(e, stale)
+                reasons = q.fidelity_reasons(e, stale) if stale else []
+                if reasons:
+                    p["fidelity_reasons"] = reasons
                 if p["stale"]:
                     p["stale_reasons"] = q.stale_reasons(e, stale)
                 edges_out.append(p)
+            fidelity_local = (q.fidelity_counts(r["edges"], stale) if stale else None)
+        else:
+            fidelity_local = None
 
         expandable = []
         for x in r["expandable"]:
@@ -810,6 +895,11 @@ class VizHandler(BaseHTTPRequestHandler):
                             "exhausted": False}
         # ★ stale 判据的**前提**必须随响应可见（铁律 #61 推广）：被哈希的字节是否与仓库一致
         stats["stale_registry"] = locator_byte_fidelity()
+        # ★ 证据字节忠实度**分列**（Phase 44 · D1）：本次可见子图 + 全图，两者都给。
+        #   `unverifiable_not_in_repo` 是已知边界（未入库的 raw/cache）⇒ 永远显式出现，
+        #   不合并进 `stale`，避免「stale 很小」被误读成「证据都可字节复算」。
+        stats["evidence_fidelity"] = fidelity_local
+        stats["evidence_fidelity_global"] = fidelity_counts_global()
         return self._json(200, self._env(
             status=r["status"], reason=r["reason"], error_code=r["error_code"],
             query=params, query_hash=qh, seed=seed_info,

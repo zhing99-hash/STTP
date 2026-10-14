@@ -37,10 +37,27 @@
    血缘闭包取最严者（`redistribution_closure`）—— 派生对象不得比上游更宽松
 `note`     说明
 
+**字节源与 `repo_status`（Phase 44 · D1 根因修复）**
+----------------------------------------------
+`content_hash` 的权威口径是**仓库里的字节**（`git cat-file blob HEAD:<path>`），
+**不是**本机工作区的字节 —— 本机 `core.autocrlf=true`，检出会把 LF 改写成 CRLF，
+若按工作区算哈希，同一份图在干净检出下会得到**不同的 `stale` 结论**。
+`repo_status` 三分类（互斥且完备）：
+
+| 取值 | 含义 | `content_hash` |
+|---|---|---|
+| `in_repo` | 全部 locator 均可从仓库取到原始字节 | 摘要 |
+| `not_in_repo` | 有 locator，但至少一个未入库（`*_raw.json`/`*_cache.json` 等大体积拉取缓存） | `null` |
+| `no_locator` | 本就无外部数据文件（model / 规则 / 领域约定） | `null` |
+
+★ `not_in_repo` 是**已知边界**（「大体积派生对象不入库」的有意取舍，约 20 MB），
+消费方**必须**把它与「内容已变更」**分列**（`queries.edge_fidelity`），
+**不得**合并成单一 stale 数字，也**不得**当成「无变化」。
+
 用法
 ----
     python 11_真实数据/source_registry.py            # 打印登记表 + 计算 content_hash，落盘 JSON
-    python 11_真实数据/source_registry.py --check    # 自检：无环 / 上游都存在 / 哈希可算
+    python 11_真实数据/source_registry.py --check    # 自检：无环/上游/哈希/行尾锁/再分发/仓库字节源
 """
 from __future__ import annotations
 
@@ -49,6 +66,7 @@ import collections
 import hashlib
 import json
 import os
+import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -430,36 +448,189 @@ def check_redistribution_vs_license() -> list:
     return bad
 
 
-# ---------------------------------------------------------------- 内容哈希
-def hash_files(rel_paths, base=ROOT) -> str:
+# --------------------------------------------- 仓库字节源（Phase 44 · D1 根因修复）
+# 权威口径（2026-10-14）：证据的字节忠实性必须以**仓库里的字节**为准，而不是
+# 「本机工作区里的字节」。本机 git 为 `core.autocrlf=true`：检出会把 LF 改写成 CRLF，
+# 于是「本机 worktree 字节 ≠ 仓库 blob 字节」⇒ 同一份图在干净检出下会得出
+# **不同**的 `stale` 结论（Phase 43 报告 §5-D1，实测 7 个 locator / 760 条证据）。
+# 故：
+#   * **已入库**（tracked）的 locator ⇒ 字节取自 `git cat-file blob HEAD:<path>`，
+#     与「本机是否检出 / 检出成什么行尾」**无关**；
+#   * **未入库**的 locator（`*_raw.json` / `*_cache.json`，按「大体积派生对象不入库」
+#     有意排除，约 20 MB）⇒ **不可从仓库复算**：`content_hash_of` 返回 None 并归入
+#     `not_in_repo`（由调用方**分列**，见 `queries.edge_fidelity`）；
+#     **不再**回落到 worktree 字节 —— 那会让裁决取决于「本机恰好有没有那份缓存」。
+# ★ 旧实现缺文件时喂入字面量 `<MISSING>` 并照样返回摘要 ⇒ 「不在仓库」与
+#   「内容恰好是 <MISSING>」不可区分（铁律 #29 的反面）。现改为显式 None。
+# ★ 反证见 `06_PoC/tests/phase43_subgraph_selfcheck.py` V19：把 worktree 字节改写成
+#   blob 字节后，**repo 口径不变、worktree 口径漂移** ⇒ 两口径真的不同，且本改动真的在修一件事。
+REPO_STATUS = ("no_locator", "not_in_repo", "in_repo")
+_GIT_CACHE: dict = {}
+
+
+def _git(args, base=ROOT):
+    """执行只读 git 命令（带进程内缓存）。失败返回 None —— **fail-closed**，
+    绝不静默给空字节（否则「命令不可用」会被误当成「文件是空的」）。"""
+    key = (os.path.abspath(base),) + tuple(args)
+    if key in _GIT_CACHE:
+        return _GIT_CACHE[key]
+    try:
+        r = subprocess.run(["git"] + list(args), capture_output=True, cwd=base)
+        val = r.stdout if r.returncode == 0 else None
+    except Exception:
+        val = None
+    _GIT_CACHE[key] = val
+    return val
+
+
+def clear_git_cache():
+    """清空 git 读取缓存。
+
+    ★ **HEAD 变更后必须调用**：缓存键是 `(base, git 参数)`，不含 HEAD 的 sha；
+      若进程中途提交/切换分支，缓存会继续返回**旧 blob** ⇒ 失效检测静默失灵
+      （自检里「变异后重新提交」就是这种场景）。
+    """
+    _GIT_CACHE.clear()
+
+
+def repo_blob(rel: str, base=ROOT):
+    """该路径在 **HEAD** 处的原始字节；不在仓库 ⇒ None。
+    ★ 取 HEAD（仓库对象）而非工作区 ⇒ 与检出/行尾无关：这是 D1 修复的核心。"""
+    return _git(["cat-file", "blob", "HEAD:" + rel], base)
+
+
+def is_tracked(rel: str, base=ROOT) -> bool:
+    """该路径是否已入库（诊断/报告用；判定本身以 `repo_blob` 是否可得为准）。"""
+    return bool(_git(["ls-files", "-z", "--", rel], base))
+
+
+def repo_status(sid: str, base=ROOT) -> str:
+    """来源的 locator 能否**从仓库复算**：`no_locator` / `not_in_repo` / `in_repo`。"""
+    loc = (REGISTRY.get(sid) or {}).get("locator") or []
+    if not loc:
+        return "no_locator"
+    for p in loc:
+        if repo_blob(p, base) is None:
+            return "not_in_repo"
+    return "in_repo"
+
+
+def repo_status_map(base=ROOT) -> dict:
+    return {sid: repo_status(sid, base) for sid in REGISTRY}
+
+
+def hash_files(rel_paths, base=ROOT, byte_source="repo"):
     """对一组文件做**确定性** sha256：按 relpath 排序，逐文件喂入
-    `relpath + NUL + 内容字节`。缺文件跳过（并计入结果元数据由调用方判断）。"""
+    `relpath + NUL + 内容字节 + NUL`。
+
+    `byte_source="repo"`（默认 · 权威口径）：字节取自**仓库 blob**；
+      任一 locator 不在仓库 ⇒ 返回 **None**（不可复算，由调用方分列）。
+    `byte_source="worktree"`：字节取自**本地工作区**（仅供诊断与反证）；
+      任一文件缺失 ⇒ 返回 **None**。
+    """
     h = hashlib.sha256()
     for rp in sorted(rel_paths):
-        ap = os.path.join(base, rp)
+        if byte_source == "repo":
+            body = repo_blob(rp, base)
+            if body is None:
+                return None
+        else:
+            ap = os.path.join(base, rp)
+            if not os.path.exists(ap):
+                return None
+            with open(ap, "rb") as f:
+                body = f.read()
         h.update(rp.encode("utf-8"))
         h.update(b"\x00")
-        if os.path.exists(ap):
-            with open(ap, "rb") as f:
-                for chunk in iter(lambda: f.read(1 << 20), b""):
-                    h.update(chunk)
-        else:
-            h.update(b"<MISSING>")
+        h.update(body)
         h.update(b"\x00")
     return h.hexdigest()
 
 
-def content_hash_of(sid: str, base=ROOT):
-    """来源的**当前**内容哈希；无 locator（如 wikidata/model）返回 None。"""
+def content_hash_of(sid: str, base=ROOT, byte_source="repo"):
+    """来源的**当前**内容哈希（权威口径 = 仓库字节）。
+    无 locator / locator 未入库 ⇒ **None**；调用方必须按 `repo_status` 分列，
+    **不得**把 None 当成 0 或当成「无变化」（fail-closed，铁律 #30）。"""
     e = REGISTRY.get(sid) or {}
     loc = e.get("locator") or []
     if not loc:
         return None
-    return hash_files(loc, base)
+    return hash_files(loc, base, byte_source=byte_source)
 
 
-def hash_map(base=ROOT) -> dict:
-    return {sid: content_hash_of(sid, base) for sid in REGISTRY}
+def hash_map(base=ROOT, byte_source="repo") -> dict:
+    return {sid: content_hash_of(sid, base, byte_source=byte_source) for sid in REGISTRY}
+
+
+def worktree_hash_map(base=ROOT) -> dict:
+    """**仅诊断**：按工作区字节算的哈希（旧口径）。用于给出「两口径差异」的证据。"""
+    return {sid: content_hash_of(sid, base, byte_source="worktree") for sid in REGISTRY}
+
+
+def byte_source_divergence(base=ROOT) -> list:
+    """返回「仓库口径 ≠ 工作区口径」的来源 [(sid, n_paths_diff)]。
+    ★ 本函数是 D1 的可观测入口：非空即说明**旧口径会漂移**。"""
+    out = []
+    for sid in sorted(REGISTRY):
+        loc = REGISTRY[sid].get("locator") or []
+        if not loc:
+            continue
+        repo, wt = hash_files(loc, base, "repo"), hash_files(loc, base, "worktree")
+        if repo is not None and wt is not None and repo != wt:
+            n = sum(1 for p in loc
+                    if repo_blob(p, base) is not None and os.path.exists(os.path.join(base, p))
+                    and repo_blob(p, base) != open(os.path.join(base, p), "rb").read())
+            out.append((sid, n))
+    return out
+
+
+def divergence_probe() -> dict:
+    """**构造性**证明：两种字节源在「字节真的不同」时给出不同哈希。
+
+    ★ 为什么需要构造（Phase 44 · D1）：`byte_source_divergence()` 读的是**本机工作区**，
+      而干净 clone 下工作区字节 ≡ 仓库 blob（`.gitattributes` 的 `*.json -text` 保证）
+      ⇒ 该函数必然返回空。若把「差异非空」当作口径有意义的**唯一**证据，那么在任何
+      干净环境里这条论证都会退化成 SKIP（铁律 #65：结论必须有消融对照）。
+      故这里在**临时仓库**里把差异**造出来**：同一路径，blob 存 LF、工作区放 CRLF。
+      两种口径必须给出不同哈希；把工作区还原成 LF 后必须重新相等（双向对照）。
+
+    返回 `{repo_hash, worktree_hash, differ, restored_equal, tmp}`；`tmp` 由调用方清理。
+    """
+    import tempfile
+    tmp = tempfile.mkdtemp(prefix="sttp-bytesrc-probe-")
+    rel = "probe.txt"
+    lf = b"line-a\nline-b\nline-c\n"
+    out = {"repo_hash": None, "worktree_hash": None, "differ": False,
+           "restored_equal": False, "tmp": tmp, "rel": rel}
+    try:
+        ap = os.path.join(tmp, rel)
+        with open(ap, "wb") as f:
+            f.write(lf)
+        _git(["init", "-q"], tmp)
+        _git(["-c", "core.autocrlf=false", "-c", "core.safecrlf=false", "add", "-A"], tmp)
+        _git(["-c", "user.email=probe@sttp.local", "-c", "user.name=sttp-probe",
+              "commit", "-q", "-m", "probe-lf"], tmp)
+        clear_git_cache()
+        out["repo_hash"] = hash_files([rel], tmp, byte_source="repo")
+        # 把工作区改成 CRLF（仓库 blob 仍是 LF）
+        with open(ap, "wb") as f:
+            f.write(lf.replace(b"\n", b"\r\n"))
+        clear_git_cache()
+        out["worktree_hash"] = hash_files([rel], tmp, byte_source="worktree")
+        out["repo_hash_after"] = hash_files([rel], tmp, byte_source="repo")
+        out["differ"] = (out["repo_hash"] is not None
+                         and out["worktree_hash"] is not None
+                         and out["repo_hash"] != out["worktree_hash"])
+        # 还原工作区 ⇒ 两侧必须重新相等（证明「差异」只来自字节源，不是哈希函数本身不稳定）
+        with open(ap, "wb") as f:
+            f.write(lf)
+        out["restored_equal"] = (hash_files([rel], tmp, byte_source="repo")
+                                 == hash_files([rel], tmp, byte_source="worktree"))
+    except Exception as e:                                    # pragma: no cover
+        out["error"] = "%s: %s" % (type(e).__name__, e)
+    finally:
+        clear_git_cache()
+    return out
 
 
 def short(x, n=12):
@@ -570,29 +741,43 @@ def proposer_source(edge) -> tuple:
 # ---------------------------------------------------------------- 落盘 / 自检
 def build_payload(base=ROOT) -> dict:
     hm = hash_map(base)
+    rsm = repo_status_map(base)
     out = {}
     for sid in sorted(REGISTRY):
         e = dict(REGISTRY[sid])
         e["content_hash"] = hm.get(sid)
         e["has_locator"] = bool(e.get("locator"))
+        # Phase 44 · D1：locator 能否**从仓库**复算（与检出/行尾无关）
+        e["repo_status"] = rsm.get(sid)
+        e["locator_in_repo"] = [p for p in (e.get("locator") or []) if repo_blob(p, base) is not None]
+        e["locator_not_in_repo"] = [p for p in (e.get("locator") or []) if repo_blob(p, base) is None]
         # Phase 42 · A03：机器可读的再分发三态（自身 + 血缘闭包）
         e["redistribution"] = redistribution_of(sid)
         e["redistribution_closure"] = redistribution_closure(sid)
         out[sid] = e
     n_no_hash = sum(1 for v in out.values() if v["content_hash"] is None)
     n_gap = sum(1 for v in out.values() if not v.get("lineage_recorded"))
+    by_rs = collections.Counter(v["repo_status"] for v in out.values())
     by_redist = collections.Counter(v["redistribution_closure"] for v in out.values())
     return {
-        "schema": "sttp-source-registry/v2",
+        "schema": "sttp-source-registry/v3",
         "meta": {
-            "phase": 42, "theme": "R10 血缘/版本/失效 + A03 再分发三态（政策可执行）",
+            "phase": 44,
+            "theme": "R10 血缘/版本/失效 + A03 再分发三态 + **D1 仓库字节源（与检出无关）**",
             "n_sources": len(out),
             "n_without_content_hash": n_no_hash,
             "n_lineage_gap": n_gap,
+            "repo_status": dict(sorted(by_rs.items())),
+            "n_not_reproducible_from_repo": by_rs.get("not_in_repo", 0),
             "redistribution_closure": dict(sorted(by_redist.items())),
             "redistributable_sources": sorted(s for s in out
                                               if out[s]["redistribution_closure"] == REDISTRIBUTABLE),
+            "byte_source": "git cat-file blob HEAD:<path>（与工作区/行尾无关）",
             "hash_algo": "sha256(relpath NUL content NUL ...) over sorted locators",
+            "not_reproducible_note": (
+                "locator 未入库（*_raw.json/*_cache.json 等大体积拉取缓存，按「大体积派生对象不入库」"
+                "有意排除）⇒ 不可从仓库复算。这类来源的 content_hash 为 null，属**已知边界**，"
+                "消费方必须与「内容已变更」分列（queries.edge_fidelity）。"),
         },
         "sources": out,
     }
@@ -620,9 +805,14 @@ def selfcheck() -> int:
     bad = [(s, e.get("kind")) for s, e in REGISTRY.items() if e.get("kind") not in VALID_KINDS]
     print("  ③ kind ∈ 受控词表    : %s" % ("PASS" if not bad else "FAIL %s" % bad))
     ok &= not bad
-    # ④ 有 locator 的源必须能算出哈希
-    nohash = [s for s in REGISTRY if REGISTRY[s].get("locator") and content_hash_of(s) is None]
-    print("  ④ 有 locator ⇒ 有哈希 : %s" % ("PASS" if not nohash else "FAIL %s" % nohash))
+    # ④ 有 locator 的源必须**要么可从仓库复算、要么被显式标为不可复算**
+    #    （Phase 44 · D1：旧实现缺文件时喂 `<MISSING>` 照样返回摘要 ⇒ 二者不可区分）
+    nohash = [s for s in REGISTRY
+              if REGISTRY[s].get("locator") and content_hash_of(s) is None
+              and repo_status(s) != "not_in_repo"]
+    n_nir = sum(1 for s in REGISTRY if repo_status(s) == "not_in_repo")
+    print("  ④ 有 locator ⇒ 可复算或显式不可复算: %s（其中不可复算 %d 个，属已知边界）"
+          % ("PASS" if not nohash else "FAIL %s" % nohash, n_nir))
     ok &= not nohash
     # ⑤ 血缘缺口必须被显式标记（model 类无 upstream ⇒ lineage_recorded 必须为 False）
     bad2 = [s for s, e in REGISTRY.items()
@@ -649,6 +839,33 @@ def selfcheck() -> int:
     dsc = check_redistribution_vs_license()
     print("  ⑩ 许可文本 ↔ 三态   : %s" % ("PASS" if not dsc else "FAIL %s" % dsc[:5]))
     ok &= not dsc
+    # ⑪ repo_status 必须覆盖全部来源且取值合法（D1：三分类必须互斥且完备）
+    bad3 = [(s, repo_status(s)) for s in REGISTRY if repo_status(s) not in REPO_STATUS]
+    print("  ⑪ repo_status 取值合法: %s" % ("PASS" if not bad3 else "FAIL %s" % bad3[:5]))
+    ok &= not bad3
+    # ⑫ 权威口径必须真的是**仓库字节**：`git` 不可用（返回 None）会让静默降级，
+    #    故对任一 in_repo 来源断言「repo 口径可算」，否则整条证据链退化为不可判定。
+    inrepo = [s for s in REGISTRY if repo_status(s) == "in_repo"]
+    git_ok = all(content_hash_of(s) is not None for s in inrepo)
+    print("  ⑫ 仓库字节源可用     : %s（已入库来源 %d 个）"
+          % ("PASS" if git_ok else "FAIL git 不可用或 blob 读失败", len(inrepo)))
+    ok &= git_ok
+    # ⑬ 【D1 证据】两口径差异必须**可见**（不硬判：本机工作区若已被归一化则差异天然为 0）
+    dv = byte_source_divergence()
+    print("  ⑬ 仓库口径≠工作区口径: %d 个来源 %s"
+          % (len(dv), "（★ 旧口径会漂移，本改动即为此而做）" if dv else "（本机工作区与仓库字节一致）"))
+    # ⑭ 【D1 非真空】口径选择**不是同义反复**：构造「blob=LF / 工作区=CRLF」，
+    #    两种口径必须给出不同哈希；还原后必须重新相等。干净环境亦能跑（不依赖本机行尾状态）。
+    import shutil as _sh
+    pr = divergence_probe()
+    try:
+        probe_ok = bool(pr.get("differ")) and bool(pr.get("restored_equal"))
+    finally:
+        _sh.rmtree(pr.get("tmp"), ignore_errors=True)
+    print("  ⑭ 两口径可构造差异   : %s（differ=%s / 还原后相等=%s）"
+          % ("PASS" if probe_ok else "FAIL %s" % pr.get("error", ""),
+             pr.get("differ"), pr.get("restored_equal")))
+    ok &= probe_ok
     return 0 if ok else 1
 
 
@@ -662,19 +879,25 @@ def main():
     print("来源登记表 source_registry —— Phase 41（R10：证据血缘/版本/失效）")
     print("=" * 92)
     hm = hash_map()
-    print("%-32s %-12s %-8s %-16s %s" % ("source_id", "kind", "lineage", "redistribution", "content_hash"))
+    rsm = repo_status_map()
+    print("%-32s %-12s %-8s %-16s %-13s %s"
+          % ("source_id", "kind", "lineage", "redistribution", "repo_status", "content_hash"))
     for sid in sorted(REGISTRY):
         e = REGISTRY[sid]
-        print("%-32s %-12s %-8s %-16s %s" % (
+        print("%-32s %-12s %-8s %-16s %-13s %s" % (
             sid, e.get("kind"), "ok" if e.get("lineage_recorded") else "GAP",
-            redistribution_closure(sid),
+            redistribution_closure(sid), rsm.get(sid),
             short(hm.get(sid)) if hm.get(sid) else "-"))
     n_gap = sum(1 for s in REGISTRY if not REGISTRY[s].get("lineage_recorded"))
     n_nohash = sum(1 for s in REGISTRY if hm.get(s) is None)
     n_red = sum(1 for s in REGISTRY if is_redistributable(s))
-    print("-" * 104)
+    n_nir = sum(1 for v in rsm.values() if v == "not_in_repo")
+    print("-" * 118)
     print("共 %d 个来源 ｜ 血缘缺口 %d ｜ 无内容哈希 %d（无 locator）｜ **可再分发（血缘闭包）%d**"
           % (len(REGISTRY), n_gap, n_nohash, n_red))
+    print("★ 仓库字节源：in_repo %d ｜ not_in_repo %d（不可从仓库复算，需上游原始数据）｜ no_locator %d"
+          % (sum(1 for v in rsm.values() if v == "in_repo"), n_nir,
+             sum(1 for v in rsm.values() if v == "no_locator")))
     print("【自检】")
     rc = selfcheck()
     print("  ⇒ %s" % ("全过" if rc == 0 else "未通过"))

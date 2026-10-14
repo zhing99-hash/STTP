@@ -47,6 +47,27 @@
         "pre_truncation": { "type": ["object", "null"] },
         "clamped": { "type": "object" },
         "expansions": { "type": "integer", "minimum": 0 },
+        "evidence_fidelity": {
+          "type": ["object", "null"],
+          "properties": {
+            "verified": { "type": "integer", "minimum": 0 },
+            "changed": { "type": "integer", "minimum": 0 },
+            "unverifiable_no_source": { "type": "integer", "minimum": 0 },
+            "unverifiable_not_in_repo": { "type": "integer", "minimum": 0 },
+            "n_edges_total": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "evidence_fidelity_global": {
+          "type": ["object", "null"],
+          "properties": {
+            "verified": { "type": "integer", "minimum": 0 },
+            "changed": { "type": "integer", "minimum": 0 },
+            "unverifiable_no_source": { "type": "integer", "minimum": 0 },
+            "unverifiable_not_in_repo": { "type": "integer", "minimum": 0 },
+            "n_edges_total": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "stale_registry": { "type": ["object", "null"] },
         "session": {
           "type": "object",
           "required": ["n_nodes", "n_edges", "limit_nodes", "limit_edges"],
@@ -102,7 +123,9 @@
         "rationale": { "type": ["string", "null"] },
         "why_shown": { "$ref": "#/$defs/why" },
         "stale": { "type": "boolean" },
-        "stale_reasons": { "type": "array" }
+        "stale_reasons": { "type": "array" },
+        "fidelity": { "enum": [null, "verified", "changed", "unverifiable_no_source", "unverifiable_not_in_repo"] },
+        "fidelity_reasons": { "type": "array" }
       }
     },
     "evidence": {
@@ -113,7 +136,11 @@
         "detail": { "type": "string" },
         "src": { "type": "string", "minLength": 1 },
         "src_ver": { "type": "string" },
-        "src_hash": { "type": "string", "pattern": "^[0-9a-f]{8,64}$" },
+        "src_hash": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{8,64}$",
+          "description": "证据来源在**记录时刻**的字节哈希（十六进制）。`null` = 该来源**无 locator**（模型/规则源，如 GNN/schema-axiom/LLM-review，实测 9 个来源、126 条证据、121 条边），**不可字节复算** ⇒ 与 `fidelity=unverifiable_no_source` 同源。字段**始终存在**（在 required 内），用值而非缺键表达「不可复算」——避免了「缺键」与「无值」的歧义。"
+        },
         "impl": { "type": "string", "minLength": 1 },
         "impl_ver": { "type": "string" },
         "indep": { "type": "boolean" }

@@ -227,50 +227,102 @@ def edge_rank(props: dict) -> int:
     return _RANK.get(lv, 0)
 
 
-def build_stale_registry(known_sources, current_hashes) -> dict:
-    """构造 stale 判定所需的登记快照（由调用方从 `11_真实数据/source_registry.py` 现算）。
+def build_stale_registry(known_sources, current_hashes, repo_status=None) -> dict:
+    """构造 stale/fidelity 判定所需的登记快照
+    （由调用方从 `11_真实数据/source_registry.py` 现算）。
 
-    ★ 语义（方案 §5.2）：一条边 **stale** ⇔ 其 `evidence[]` 中存在
-      (a) `src` **未登记** ⇒ 无法判定 ⇒ **fail-closed stale**；或
-      (b) 该来源**无 locator / 无当前内容哈希** ⇒ 无法复算 ⇒ **fail-closed stale**；或
-      (c) `src_hash` ≠ 当前内容哈希。
-    (b) 严格包含方案所指的「血缘缺口（`lineage_recorded` 缺失）」：
-    实测 7 源/116 条 ⊆ 无 locator 的 9 源/126 条（多出 `schema-axiom` 10、`wikidata` 0）。
+    ★ 语义（方案 §5.2 + Phase 44 · D1）：一条边的**证据字节忠实度**是**四分类**
+      （互斥且完备，见 `edge_fidelity`）：
+      ① `verified`                  全部来源可从仓库复算，且 `src_hash` == 当前仓库哈希；
+      ② `changed`                   可复算但哈希不符 ⇒ **真 stale**（来源已变更，需重验）；
+      ③ `unverifiable_no_source`    无证据 / 来源未登记 / 来源**无 locator** ⇒ fail-closed；
+      ④ `unverifiable_not_in_repo`  来源**有 locator 但未入库** ⇒ 不可从仓库复算。
+
+    ★ ③ 与 ④ **都**是「不可确认为新鲜」，但**性质不同**：
+      ③ 是「本就无外部数据文件」（模型/规则/领域约定），**计入 `stale`**；
+      ④ 是「数据文件存在但按『大体积派生对象不入库』有意未随仓库分发」
+      （`*_raw.json`/`*_cache.json`，约 20 MB，**可从上游原始数据复算**）——
+      它是**已知边界**，**分列披露但不计入 `stale`**。
+      理由：把它并进 `stale` 会让「已变更」这一**可操作**信号被 47 176 条（96.8%）淹没，
+      使 `exclude_stale` 退化为「什么都别显示」；而它**并非变更**。
+      ⇒ 它**不静默**：始终以独立计数出现在 `stats.evidence_fidelity` 与边属性 `fidelity` 上。
     """
-    return {"known": set(known_sources or ()), "hashes": dict(current_hashes or {})}
+    return {"known": set(known_sources or ()),
+            "hashes": dict(current_hashes or {}),
+            "repo_status": dict(repo_status or {})}
+
+
+FIDELITY_CLASSES = ("verified", "changed", "unverifiable_no_source",
+                    "unverifiable_not_in_repo")
+#: 计入 `stale` 的忠实度类别（fail-closed 口径，与 Phase 43 保持一致）
+STALE_FIDELITIES = ("changed", "unverifiable_no_source")
+
+
+def edge_fidelity(e, stale_registry) -> str:
+    """边的**证据字节忠实度**四分类（见 `build_stale_registry` 的说明）。
+
+    优先级（多来源时取**最强信号**）：
+      无证据/畸形 → 未登记 → 哈希可算且不符 → 未入库 → 无当前哈希 → verified
+    """
+    if not stale_registry:
+        return "verified"
+    known = stale_registry.get("known") or set()
+    hashes = stale_registry.get("hashes") or {}
+    rstat = stale_registry.get("repo_status") or {}
+    evs = (e.get("props") or {}).get("verification_evidence") or []
+    if not evs:
+        return "unverifiable_no_source"          # 无证据 ⇒ 无法判定（fail-closed）
+    any_mismatch = False
+    any_not_in_repo = False
+    any_no_locator = False
+    for ev in evs:
+        if not isinstance(ev, dict):
+            return "unverifiable_no_source"
+        src = ev.get("src")
+        if src not in known:
+            return "unverifiable_no_source"
+        cur = hashes.get(src)
+        if cur is None:
+            if rstat.get(src) == "not_in_repo":
+                any_not_in_repo = True
+            else:
+                any_no_locator = True
+            continue
+        if ev.get("src_hash") != cur:
+            any_mismatch = True
+    if any_mismatch:
+        return "changed"
+    if any_not_in_repo:
+        return "unverifiable_not_in_repo"
+    if any_no_locator:
+        return "unverifiable_no_source"
+    return "verified"
+
+
+def fidelity_counts(edges, stale_registry) -> dict:
+    """四分类计数（**可直接加总回边总数** —— 分列而不合并，铁律 #41/#67 同一精神）。"""
+    c = {k: 0 for k in FIDELITY_CLASSES}
+    for e in edges:
+        k = edge_fidelity(e, stale_registry)
+        c[k] = c.get(k, 0) + 1
+    return c
 
 
 def edge_is_stale(e, stale_registry) -> bool:
-    """按上面的定义判定单条边（无登记快照时一律返回 False ⇒ 该判据"真空"由调用方避免）。"""
-    if not stale_registry:
-        return False
-    known = stale_registry.get("known") or set()
-    hashes = stale_registry.get("hashes") or {}
-    evs = (e.get("props") or {}).get("verification_evidence") or []
-    if not evs:
-        # 无证据 ⇒ 无法判定 ⇒ fail-closed（与 (a)(b) 同源理由）
-        return True
-    for ev in evs:
-        if not isinstance(ev, dict):
-            return True
-        src = ev.get("src")
-        if src not in known:
-            return True
-        cur = hashes.get(src)
-        if cur is None:
-            return True
-        if ev.get("src_hash") != cur:
-            return True
-    return False
+    """`stale` = 「**不可确认**其证据新鲜」的 fail-closed 口径（铁律 #30）。
+    由 `edge_fidelity` 单点定义，避免两处判据漂移。
+    ★ `unverifiable_not_in_repo` **不在其中**（见 `build_stale_registry`）。"""
+    return edge_fidelity(e, stale_registry) in STALE_FIDELITIES
 
 
-def stale_reasons(e, stale_registry) -> List[str]:
-    """证据卡片用：逐条给出 stale 原因（便于前端琥珀色徽标旁的说明文本）。"""
+def fidelity_reasons(e, stale_registry) -> List[str]:
+    """逐条给出**非 verified** 的原因（证据卡片用；四条与四分类一一对应）。"""
     out = []
     if not stale_registry:
         return out
     known = stale_registry.get("known") or set()
     hashes = stale_registry.get("hashes") or {}
+    rstat = stale_registry.get("repo_status") or {}
     evs = (e.get("props") or {}).get("verification_evidence") or []
     if not evs:
         return ["无证据（无法判定）"]
@@ -281,11 +333,23 @@ def stale_reasons(e, stale_registry) -> List[str]:
         src = ev.get("src")
         if src not in known:
             out.append("来源未登记：%s" % src)
+        elif rstat.get(src) == "not_in_repo" and hashes.get(src) is None:
+            out.append("locator 未入库（不可从仓库复算，需上游原始数据）：%s" % src)
         elif hashes.get(src) is None:
             out.append("来源无 locator（不可复算）：%s" % src)
         elif ev.get("src_hash") != hashes.get(src):
-            out.append("内容哈希不符：%s" % src)
+            out.append("内容哈希不符（来源已变更）：%s" % src)
     return out
+
+
+def stale_reasons(e, stale_registry) -> List[str]:
+    """**仅** stale 原因（`fidelity_reasons` 中属于 `STALE_FIDELITIES` 的那部分）。
+
+    保持 Phase 43 的对外口径：`stale_reasons` 非空 ⇔ `edge_is_stale` 为真。
+    """
+    if edge_fidelity(e, stale_registry) not in STALE_FIDELITIES:
+        return []
+    return fidelity_reasons(e, stale_registry)
 
 
 def _match_score(q: str, ql: str, nid: str, label: str, latex: str) -> int:
