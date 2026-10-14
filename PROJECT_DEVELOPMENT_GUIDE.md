@@ -154,7 +154,7 @@
   A04 验证依赖绑定 + `valid/stale/needs_review/rejected`
   生命周期**已于 2026-10-14 完成**（见 §0.3.2 的 E10–E22：记录级绑定、`code_import` 过近似、`needs_review` 不可重验消除、
   **A04 `stale` 通道无自然正例**等边界）；
-  **A05 第三人可安装入口已于 2026-10-14 完成**（见 §0.3.3 的 **E23–E29**）。
+  **A05 第三人可安装入口已于 2026-10-14 完成**（见 §0.3.3 的 **E23–E30**）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -253,7 +253,7 @@
 
 #### 0.3.3 Phase 45（A05 第三人可安装入口）已承认的边界 —— 更新于 2026-10-14
 
-> 全文见 `07_交付物/Phase45_A05第三人可安装入口_20261014.md`（**E23–E29** + §9 未覆盖项）。
+> 全文见 `07_交付物/Phase45_A05第三人可安装入口_20261014.md`（**E23–E30** + §9 未覆盖项）。
 
 - ✅ **复评 A05 三条现场全部坐实并已修**（`00_项目管理/codex复评响应与下一阶段规划_20261013.md` §2）：
   **A05a** 无 `pyproject.toml` ｜ **A05b** `requirements.lock` 里 `python==3.11.9` 与 pip 分发**混列**
@@ -1358,7 +1358,7 @@ git merge origin/main
   还原后 `pyproject.toml` sha256 **逐字节回基线** `9c4f143e…`。
 - ★ **离线 wheel 构建**（**临时目录**，不污染仓库）：`sttp_kg-0.45.0-py3-none-any.whl` **21.0 KB**，含 `sttp_cli/cli.py`
   与全部 6 个入口点。
-- §0.3.3 新增 Phase 45 A05 已知边界 **E23–E29**：**E23 测量器陷阱**（`grep -c $'\r'` 在本环境**恒等于总行数**
+- §0.3.3 新增 Phase 45 A05 已知边界 **E23–E30**：**E23 测量器陷阱**（`grep -c $'\r'` 在本环境**恒等于总行数**
   ⇒ 「全 CRLF」假象，**已误导本轮判断一次**；**铁律候选 #81：行尾只用 `od`/`tr`/`awk` 判定**）；E24 L1/L2 口径边界；
   **E25 未实测 `pip install .`**（不计通过）；E26 5 个依赖只声明未验证（刻意裸名）；**E27 隐蔽耦合（已修）**；
   **E28 仪器自指（已修）**——`install` 在自检脚本**未跟踪**时 **24/0/0（绿）**、`git add` 后 **23/1（红）**：
@@ -1375,6 +1375,17 @@ git merge origin/main
   **不修**（P2，只登记）：凡把「工作区是否干净」当判据的流程**必须知道自检会弄脏它**。
   3 条 Option：① 运行时留痕默认写 `.runlog/`（已 gitignore），入库路径只作提交时快照；
   ② 留痕**不含本机 `root`**（或脱敏为 `<repo>`）⇒ 跨机重跑内容相同、写入幂等；③ 维持现状但写进 `ENV_README.txt`。
+- **E30（`finally` 保护不了强杀 · 已识别未修 · P2）**：`%TEMP%` 残留 **4 个**本轮临时目录
+  （`sttp_manifest_*` ×2、`sttp_lineage_sc3_*` ×2，各 4 KB / 315 KB）。**先排除误判**：两处创建点
+  （`make_manifest.py:301`、`lineage_invalidation.py:688`）**都已**有 `try/finally: sr.rmtree_force()`（E9 修复），
+  且 `sttp.sh` **全文无** `timeout/kill/trap`（410 行）⇒ 不是忘写 `finally`、也不是工具链自己杀。
+  **构造性验证**：同一段带 `try/finally` 的探针 —— `kill -TERM` ⇒ 输出**无** `FINALLY-RAN`、目录**残留**；
+  `SIGINT` ⇒ `FINALLY-RAN`、**已清理**。⇒ 根因 = **Python 默认不捕获 SIGTERM，进程立即终止、不展开栈 ⇒ `finally` 不执行**
+  （`TemporaryDirectory`/`__del__` 同理救不了）。★ 本工具链仪器动辄 **8–10 min**（`lineage` ≈8 min）而
+  **外部强杀是常态**（工具超时/终端关闭/CI 取消）⇒ 该路径**必然反复触发**。
+  处方（未实施）：① 仪器入口装 `SIGTERM/SIGINT` handler（`sys.exit(130)`）使 `finally` 得以执行；
+  ② **启动时自愈清扫**（按固定前缀删 `%TEMP%` 里**超过 N 分钟**的自家残留，不需要信号处理，可先做）；
+  ③ 仅登记。★ 与 **#78** 同族但**缺口不同**：#78 修「删失败被吞」，E30 修「根本没走到删」，**互不覆盖**。
 - ★ **干净检出矩阵（clone `d544a64`，独立复核 A05 的核心主张）**：`bash sttp.sh install` **RC=0 ｜ 25/0/0**
   （枚举「入库 174 + 未跟踪 0」与主工作区**完全一致**）｜`verify_release.py --release` **RC=0 ｜ 28/0/0**｜
   `evdeps --check` **RC=0 七段全过**｜`bash sttp.sh release` **RC=2**（明确原因：找不到被 `.gitignore` 排除的规范图）。
@@ -1394,6 +1405,9 @@ git merge origin/main
   `verify_release --release` **28/0/0**｜`evdeps --check` **RC=0**｜裸 `release` **RC=2 明确原因**。
   ★ 顺带发现并登记 **E29**：clone 里跑完 `install` 后字节对账 `DIFF 1` = 自检**把留痕写回入库文件**
   ⇒ 跑过自检的检出**必然变脏** ⇒ 这正是 §7.5.1「脏树清单」的**脏源**（与 E21 同源，P2/Option）。
+- ★ 顺带发现并登记 **E30**：`%TEMP%` 残留 **4 个**临时目录；**构造性证明**「`kill -TERM` ⇒ `finally` 不执行」
+  （SIGINT 对照则正常清理）⇒ **强杀路径必然泄漏**（仪器动辄 8–10 min，外部强杀是常态）；
+  处方 = 仪器入口装信号 handler ＋ **启动时自愈清扫**。§0.3.3 已登记。
 - ★ **E21 已量化到字段级**：干净树连续两次 `release`，247 个字段仅 **3** 个不同
   （自指 head ×2 + `created` ×1），其余 **244 个逐字节相同** ⇒ `manifest.git_head_at_build`
   ≠ 产出它的提交**是设计使然**。
