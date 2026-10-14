@@ -76,11 +76,20 @@
  },
  "code": {
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
-  "dirty_sample": [],
+  "dirty_sample": [
+   "M 06_PoC/release/make_manifest.py",
+   " M ENV_README.txt",
+   " M PROJECT_DEVELOPMENT_GUIDE.md",
+   " M requirements.lock",
+   " M requirements.txt",
+   " M sttp.sh",
+   "?? .env.example",
+   "?? 06_PoC/tests/phase45_install_selfcheck.py"
+  ],
   "git_branch": "main",
-  "git_head_at_build": "0fc4e460c82383244aeae4ddbe4e65e1f4929712",
-  "git_head_at_build_short": "0fc4e46",
-  "working_tree_dirty_at_build": false
+  "git_head_at_build": "d2103317ed2119d196f47256b360d9a304057b3b",
+  "git_head_at_build_short": "d210331",
+  "working_tree_dirty_at_build": true
  },
  "counterexamples": {
   "cases": 108,
@@ -120,6 +129,12 @@
    "sympy": "1.14.0",
    "torch": "2.14.0+cpu"
   },
+  "interpreter": {
+   "constraint": ">=3.11,<3.12",
+   "constraint_source": "pyproject.toml:project.requires-python",
+   "note": "约束的权威在 pyproject.toml 的 requires-python（**不在** requirements.lock）；求值由 `bash sttp.sh install`（A05-3）负责，本清单只如实转录。",
+   "running": "3.11.9"
+  },
   "lock_file": "requirements.lock",
   "target": {
    "matplotlib": "3.11.2",
@@ -128,7 +143,6 @@
    "numpy": "2.3.2",
    "pandas": "2.3.1",
    "pint": "0.25.3",
-   "python": "3.11.9",
    "rdflib": "7.6.0",
    "rdkit": "2026.09.1",
    "requests": "2.33.1",
@@ -657,7 +671,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-14T13:55:39+08:00",
+  "created": "2026-10-14T14:27:57+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
