@@ -8,6 +8,13 @@
 # **clone 出来的文件校验和就对不上** —— 「可复现发布」当场失效。
 # 故对 JSON / lock 一律禁止行尾转换（-text），保证「仓库里的字节 == 检出后的字节」。
 
+# ★ 总纲（Phase 44 · D14）：**默认全部文本按 LF 归一化**，例外用下方规则逐条覆盖。
+#   为什么必须兜底：逐路径白名单永远会漏（实测漏过 .gitignore / LICENSE / NOTICE /
+#   .env.example / *.cjs / *.ps1 / env.ps1 / 06_PoC/vendor/*.js / 09_科研扩展/*.bak）——
+#   这些文件在 clone 上被写成 CRLF，而 blob 是 LF ⇒ 铁律 #61「字节可复现」不成立。
+#   `text=auto` 让 git 自行判定二进制（.png 等不会被转换）；对本项目亲测零 blob 改写。
+* text=auto eol=lf
+
 *.json  -text
 *.lock  -text
 
@@ -18,6 +25,17 @@
 # 故被登记为 locator 的文本源码必须与 JSON 同样逐字节稳定：显式锁为 LF。
 # 守卫见 `11_真实数据/source_registry.py:check_locator_stability()`（门禁自检项）。
 11_真实数据/*.py  text eol=lf
+
+# 背景（Phase 44 · D1 continuation）：**行尾锁必须是全覆盖，而不是逐路径白名单**。
+# 实测（本机 core.autocrlf=true）：未被白名单覆盖的源码在**干净 clone** 里会被写成 CRLF，
+# 而仓库 blob 是 LF ⇒ `sha256(clone 文件) ≠ sha256(仓库 blob)` —— 铁律 #61「字节可复现」
+# 在这些文件上不成立。已由顶部 `* text=auto eol=lf` 兜底解决（只读预演：445 个入库文件里
+# 仅 .gitattributes 自身变化，其余 444 个零改写）。
+# ★ 教训：`git add --renormalize .` 在本仓库**不安全** —— 实测它改写了 51 个 `-text` 的
+#   JSON blob 与工作区文件（`-text` 并未阻止 renormalize）。核对请用只读的
+#   `git hash-object --path=<f> -- <f>` 与 `git rev-parse HEAD:<f>` 比对。
+
+# 归档原件目录（07_交付物/外部评审/**）的 -text 规则见下方，按「后匹配者胜」仍覆盖顶部兜底。
 
 # 背景（2026-10-13 归档）：`07_交付物/外部评审/codex评测/` 存放**外部评审原件**
 # （第三方日志 / JSON 证据 / 探针脚本）。归档原则是「**原件只读、可溯源**」⇒
