@@ -117,12 +117,19 @@
   （`.gitignore`、`LICENSE`、`NOTICE`、`env.ps1`、`*.env.example`×2、`*.cjs`、`06_PoC/vendor/*.js`×4、`*.bak`，以及
   `03_知识层/queries.py`、`06_PoC/viz_server.py`、`06_PoC/tests/phase43_*.py`×2、`sttp.sh`）。
   **已修**：置顶兜底 `* text=auto eol=lf`，例外（`*.json -text`、`*.lock -text`、`07_交付物/外部评审/** -text`）按
-  「后匹配者胜」继续覆盖。**只读预演**（`git hash-object --path=<f>` vs `git rev-parse HEAD:<f>`，445 个入库文件）：
+  「后匹配者胜」继续覆盖。**只读预演**（445 个入库文件）：
   **仅 `.gitattributes` 自身变化，其余 444 个零改写**。本机工作区 83 个遗留 CRLF 文件已按 HEAD blob 归一化 ⇒
-  **实测 445/445 入库文件「工作区字节 == 仓库 blob」**，且干净 clone 与本机**逐字节一致**。
+  **实测 445/445 入库文件「工作区字节 == 仓库 blob」**（终测 HEAD `f173eae` 复测 **446/446**，多出的 1 个是本轮新增的报告自身），
+  且干净 clone 与本机**逐字节一致**。
   ★★ **教训（勿重犯）**：`git add --renormalize .` 在本仓库**不安全** —— 实测它改写了 **51 个 `-text` 的 JSON blob 与工作区文件**
-  （`-text` 并未阻止 renormalize）。已全部按 HEAD 逐字节还原（51/51 校验一致）。核对一律用**只读**的
-  `git hash-object --path` 预演，**不要**用 `--renormalize`。
+  （`-text` 并未阻止 renormalize）。已全部按 HEAD 逐字节还原（51/51 校验一致）。核对一律用**只读** `hash-object` 预演，
+  **不要**用 `--renormalize`。
+  ★★ **两个命令回答两个不同问题，且不能同时用**：
+  - 「**工作区原始字节** == 仓库 blob?」 ⇒ `git hash-object --no-filters <f>` vs `git rev-parse HEAD:<f>`。**D1/D26 要的是这个。**
+  - 「**`git add` 会存成什么** == 仓库 blob?」 ⇒ `git hash-object --path=<f> <f>`（过滤后）。
+  - ★ **`--path` 与 `--no-filters` 互斥**：同时传会直接 `error: Can't use --path with --no-filters` 且 **stdout 为空**
+    ⇒ 脚本若不查退出码就会拿到**空哈希**，把**全部文件**判成「不一致」（本轮实测：446/446 全红 → 修正后 446/446 全绿）。
+    这是铁律 #38「PASS ≠ 无红」的**镜像**：**全红也可能是测量器坏了**，先自证测量器能给出「一个已知一致的样本」。
   **残余**：`*.json`/`*.lock` 仍 `-text`（26 个 JSON 的 blob 本身含 CRLF，按「产物逐字节冻结」有意不改写）；归档目录内 12 个文件同此。
 - ★ **9 个命令在裸 clone 里抛裸 traceback（D25，已修）**：`stats`/`gatecheck`/`t7`/`scopeaudit`/`eval`/`gnneval`/`dimaudit`/`lineage`/`noise`
   的断言以**不入库**的权威输入为前提却无前置守卫 ⇒ 裸 clone 里 **RC=1 + 裸 `FileNotFoundError`**，易被误读成「代码坏了」，
@@ -146,9 +153,10 @@
   若要"契约也可从 clone 验证"需入库小基线图 + 样例口径断言子集（**未做，有意取舍**）。
   ④ **`.gitattributes` 现为「兜底 + 例外」**（2026-10-14 起）：置顶 `* text=auto eol=lf`，例外为
   `*.json -text`、`*.lock -text`、`07_交付物/外部评审/** -text`（归档原件逐字节冻结）。
-  ⇒ **实测干净 clone 与本机工作区 445/445 个入库文件逐字节一致**（见 D26）。
+  ⇒ **实测干净 clone 与本机工作区 445/445 个入库文件逐字节一致**（见 D26）；**终测 HEAD `f173eae` 复测 446/446**。
   残余：26 个 `-text` 的 JSON 其 blob 本身含 CRLF（**有意**不改写，稳定且可复现）；归档目录内 12 个文件同此。
-  ★★ **不要**用 `git add --renormalize` 核对（会改写 `-text` blob，实测 51 个）；改用只读的 `hash-object --path` 预演。
+  ★★ **不要**用 `git add --renormalize` 核对（会改写 `-text` blob，实测 51 个）；改用只读的
+  `git hash-object --no-filters <f>` 预演（★ 它**不能**与 `--path` 同时传 —— 见上文 D26 的两条命令之别）。
   ⑤ **`env.sh` 依赖不入库的 `.env`** ⇒ 裸 clone 里 `$STTP_PYTHON` 为空，请**直接指定解释器**。
   ⑥ **裸 clone 命令可用性矩阵（2026-10-14 复测）**：✅ 可运行 = `check` / `frontend`（**PASS 56 / FAIL 0 / SKIP 4**，
   `X1`·`H6` 降级 SKIP 而**不假通过**）/ `verify` / `verify_release.py --release`（**28/0/0 RC=0**）；
@@ -1141,8 +1149,9 @@ git merge origin/main
   `bash sttp.sh frontend` **64/0/2**（新增 X8/X9）；`node frontend_core_check.mjs` **66/0**（新增 F28/F29）；
   `source_registry --check` **14/14**（新增 ⑬⑭）。
 - 顺带修 **D26 行尾策略覆盖不全**（原白名单漏 17 个文件 ⇒ clone 字节 ≠ blob）：置顶 `* text=auto eol=lf` + 例外，
-  只读预演零改写；实测 **445/445 入库文件「工作区 == 仓库 blob」**、clone 逐字节一致。
-  ★ 登记教训：`git add --renormalize` 在本仓库会改写 `-text` blob（实测 51 个，已全部还原）。
+  只读预演零改写；实测 **445/445 入库文件「工作区 == 仓库 blob」**（终测 HEAD `f173eae` 复测 **446/446**）、clone 逐字节一致。
+  ★ 登记教训：`git add --renormalize` 在本仓库会改写 `-text` blob（实测 51 个，已全部还原）；
+  ★★ 并登记**测量口径陷阱**：`--path` 与 `--no-filters` **互斥**（同传 ⇒ 报错 + 空 stdout ⇒ 会把全部文件误判成不一致）。
 - §0.3.1 更新 D1 为**已修根因**并登记 E1–E5 残余；`contracts/subgraph.schema.json` 的 `evidence.src_hash`
   放宽为 `["string","null"]`。)*
 *前次更新：2026-10-14（Phase 43 步骤 B · 第 35 轮：前端「局部图谱查询浏览」落地 —— `06_PoC/js/` 9 个原生
