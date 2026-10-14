@@ -17,6 +17,10 @@ elementkg_synthetic_corpus_40w/
 # 单个提交的 pack 增量必须 ≲ 100 KB，否则 `git push` 一律 HTTP 408。
 # 故**大体积派生 delta 不入库**（与上方 `*_aura_delta.json` 同类处理）。
 06_PoC/etl/neo4j/phase41_lineage_delta.json
+# Phase 44 D1 修复：760 条边的 src_hash 由「工作区字节」改记为「仓库 blob 字节」，
+# 该 delta（451 KB）记录逐边新旧值，同样超过 ≲100 KB 的 pack 上限 ⇒ 不入库。
+# 可由 `python 11_真实数据/phase41_lineage_delta.py` 在库内确定性重算，无需随包发布。
+06_PoC/etl/neo4j/phase44_d1_src_hash_delta.json
 # 摄入前的自动备份 raw（每个约 16 MB，仅本地回溯用）与临时探索脚本
 11_真实数据/*.before_*.json
 11_真实数据/_*
