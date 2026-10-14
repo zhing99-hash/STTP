@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 57524194,
+    "bytes": 67726677,
     "edges": 48712,
     "nodes": 9657,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "282717073b1f1664966fdc1bfd140291d92edaa11aa95caa9e7641330deaa102",
+    "sha256": "7d4f66bca0dc6e6b8c489d678839566a586d1433d102cb4d0d791e6dd2ff7d4b",
     "subjects": {
      "化学": 4108,
      "数学": 277,
@@ -28,20 +28,20 @@
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 341783,
+    "bytes": 373440,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "97de8f96a51ac05e31e6b6fc8a9f2a5ba46e0069874ecf289a0d1499fec6fe1c",
+    "sha256": "0737f15518a93e5dfefb5226339fdd104f663254dc859ecf0449daec59b990d7",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 378457,
+    "bytes": 411097,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "26f809376c45a88cf0c46729846b49b0e964bd0ee5ec7909d3bac1e76943fed4",
+    "sha256": "c9d07ce25b999ecb36e6659a6be646ad53a996e679022f48d0d014d6aedff4bb",
     "subjects": {
      "化学": 49,
      "数学": 18,
@@ -76,11 +76,20 @@
  },
  "code": {
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
-  "dirty_sample": [],
+  "dirty_sample": [
+   "M .gitignore",
+   " M \"03_\\347\\237\\245\\350\\257\\206\\345\\261\\202/queries.py\"",
+   " M 06_PoC/js/evidence.js",
+   " M 06_PoC/js/panels.js",
+   " M 06_PoC/js/style.js",
+   " M 06_PoC/js/viz.js",
+   " M 06_PoC/release/sample/sample_graph.json",
+   " M 06_PoC/release/sample/sample_normalized.json"
+  ],
   "git_branch": "main",
-  "git_head_at_build": "3fc7b5dce476c3132c177eb11d97294f2cd9b51a",
-  "git_head_at_build_short": "3fc7b5d",
-  "working_tree_dirty_at_build": false
+  "git_head_at_build": "012d0a2b864b33af16e3397f45c66b98561972fe",
+  "git_head_at_build_short": "012d0a2",
+  "working_tree_dirty_at_build": true
  },
  "counterexamples": {
   "cases": 108,
@@ -657,7 +666,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-14T11:21:58+08:00",
+  "created": "2026-10-14T13:48:33+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
