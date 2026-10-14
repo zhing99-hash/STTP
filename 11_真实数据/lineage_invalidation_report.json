@@ -50,6 +50,26 @@
     "recorded": "33526591fdfd"
    }
   },
+  "deps": {
+   "changed_dep_versions": [],
+   "changed_reference_ids": [],
+   "changed_verifier_ids": [],
+   "enabled": true,
+   "n_evidence_with_deps": 35669,
+   "n_evidence_without_deps": 13903,
+   "n_no_dep": 0,
+   "n_ref_bound": 35669,
+   "n_stale_edges": 0,
+   "n_stale_evidence": 0,
+   "n_verifier_bound": 32609,
+   "reason_counts": {
+    "unverifiable_source": 34569
+   },
+   "status_counts": {
+    "needs_review": 34569,
+    "valid": 1100
+   }
+  },
   "lineage_gap_sources": [
    "LLM-review",
    "Phase13.GNN.typed",
@@ -59,6 +79,7 @@
    "llm_inferred_gnn",
    "unregistered"
   ],
+  "n_affected_by_input": 0,
   "n_affected_edges": 0,
   "n_claims_on_lineage_gap": 116,
   "n_claims_on_not_reproducible": 47055,
@@ -85,5 +106,5 @@
    "not_in_repo": 12
   }
  },
- "schema": "sttp-lineage-invalidation/v2"
+ "schema": "sttp-lineage-invalidation/v3"
 }

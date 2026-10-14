@@ -150,8 +150,9 @@
   `require_authority <命令> <路径…>`（9 处挂载；明确原因 + 恢复方式 + 替代验证 + **RC=2**）；防回退断言 **G1–G4**（含可红性自证）。
   ★ 这条是「干净检出实测」本身才暴露出来的 —— 铁律 #53 的价值实证。
 - **未覆盖且不计通过**：**真实浏览器渲染（D14）**、**V8c 浏览器计算样式**、**Neo4j（N1）**；
-  **Phase 44 余项**（A04 验证依赖绑定 + `valid/stale/needs_review/rejected` 生命周期，★ **字节忠实性口径已由本轮就位**，
-  A04 须与之对齐；见 Phase 44 报告 §7）、**Phase 45**（A05 `pyproject.toml` 可安装入口）**未开工**。
+  **Phase 45 A05**（`pyproject.toml` 可安装入口）**未开工**；A04 验证依赖绑定 + `valid/stale/needs_review/rejected`
+  生命周期**已于 2026-10-14 完成**（见 §0.3.2 的 E10–E17：记录级绑定、`code_import` 过近似、`needs_review` 不可重验消除、
+  **A04 `stale` 通道无自然正例**等边界）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -179,6 +180,65 @@
   ★ **本轮修正的指引错误**：`bash sttp.sh release` 会先**重建**样例、需权威图 ⇒ 裸 clone 下**必定失败**，
   **不能**当作「干净检出可用的下游校验路径」；正确命令是 `python 06_PoC/release/verify_release.py --release`。
   该指引已同步修正在 `phase43_subgraph_selfcheck.py` 的「三种可用做法」第 ③ 条。
+
+#### 0.3.2 Phase 45（A04 验证依赖绑定）已承认的边界 —— 更新于 2026-10-14
+
+- 全文见 `07_交付物/Phase45_A04验证依赖绑定_20261014.md`（**E10–E21** + §9 未覆盖项）。
+- ★ **两层判据，不可互相替代**（这是本轮最重要的口径）：
+  - `edge.fidelity`（Phase 44）= **边级字节忠实度**：来源那一个字节文件变了吗；
+  - `edge.evidence_status`（Phase 45）= **证据级验证依赖状态**（`valid/stale/needs_review/rejected` | `null`）：
+    它依赖的**参考表 / 验证器 / 依赖版本**变了吗、命题是否被否决、哈希来路是否明。
+  - 二者**并列披露**；`exclude_stale` 的**唯一**判据是 `queries.edge_is_stale()`（两层并集）。
+    **无 A04 记录时完全回落到字节层** ⇒ A04 未落图的图（发布样例 / 干净 clone 中期图）行为与 Phase 44 **逐位一致**。
+- **落盘实测分列（边级）**：`valid 1038 ｜ stale 0 ｜ needs_review 34145 ｜ rejected 0 ｜ no_record 13529`（Σ = 48712）；
+  四分类不变 `{verified 1536, changed 0, unverifiable_no_source 121, unverifiable_not_in_repo 47055}`。
+  `no_record 13529` 是**信息性**的（这些边的证据本就不依赖参考表/验证器，原因码 `no_reference_declared`），
+  **不是缺陷**，但**单列**（缺记录 ≠ 已验证）。
+- ★★ **A04 的 `stale` 通道目前没有真实数据触发的正例**（最诚实的薄弱点）：仓库内**无**已登记来源与记录哈希不符
+  （D1 修复的直接结果）⇒ `stale = 0`。其正确性由**构造性断言**（把字节层 `verified` 的边标成 A04 `stale` ⇒ 立即被排除，V19h/V19i）
+  与**受控小图重验流程**（自检 ⑧a–⑧e）保证。**这是"该图上无可触发样本"，不是"已验证"**。
+- **记录级依赖绑定（`record_level`）尚未实现（E13）**：`input_refs[].binding` 契约已预留枚举，
+  落库**恒为 `input_source`** ⇒ "某条记录被改、只有读它的证据失效"**做不到**，只能退化为整源失效。
+- **`code_import` 是保守过近似（E14，幅度已量化）**：`impl_declared` **3127** vs `code_import` **65151**。
+  `verification_model.py` 代码级 import 了 `dimension_table` / `element_reference` ⇒ **每一条** `verification_model.*`
+  证据都被判依赖这两张表，即使该函数运行时并不读它们。这是任务单明确允许的「**先按整文件保守失效**」；
+  两档在 `--report`、接口 `ref_bindings` 与前端 tooltip 里**分列报出**，**不把过近似说成精确**。
+- **`needs_review` 的 34145 条边不可通过重验消除（E15）**：`--reverify` 默认 `only_stale=True`，
+  **有意不重验** `needs_review` —— 它缺的是**数据本身**（来源未入库 / 无 locator），重验解决不了；
+  强行重验会把 4 万余条证据无意义改造一遍，属**假动作**（铁律 #30）。
+- **`FIDELITY_OF_STATUS` 是粗粒度映射（E16）**：`needs_review → unverifiable_no_source`，**不再区分**
+  `no_locator` / `not_in_repo`；**对外披露仍以边级四分类 `edge_fidelity` 为准**，本映射只用于快速对照。
+- **改写入库文件的"搬运"必须完整（E10，已修 · 静默错位）**：本轮实测两处 —— `dependencies_for()` **硬编码 `base=ROOT`**
+  （临时仓库里算出的参考表哈希其实取自主仓库）、`recorded_deps()` **漏透传 `_src_hash_rewritten`**
+  （记号在图上、却在裁决里消失 ⇒「原地改哈希即复活」的假象重现）。两者都是「取值口径一致、但**搬运**漏了一格」。
+- ★★ **【E11 · 本轮踩到 · 已修】同一把不可重入锁的自死锁（铁律候选 #79）**：
+  `viz_server.stale_registry()` 在 `with _STALE_LOCK:`（`threading.Lock`）里调用 `evidence_status_registry()`，
+  后者又要拿**同一把**锁 ⇒ **自死锁**。**症状：CPU ≈ 0、无子进程、永久挂起**（实测挂 10 分钟无任何输出、无异常）
+  —— 极易被误判为"图太大 / 磁盘慢 / 网络不通"。**处方**：① 计算移出锁外（锁只保护缓存读写）；
+  ② 改 `threading.RLock()` 作双保险。**诊断口诀**：**CPU 时间与子进程数都低 ⇒ 是锁/等待，不是计算**。
+- **【E12 · 已修】契约校验器曾**静默跳过** `additionalProperties`**：A04 契约用它约束 `evidence[].refs` 的**动态键**
+  （`{ref_id: 哈希}`，无法用 `properties` 表达），而自检内置子集校验器**不实现**该关键字 ⇒ 该约束**根本没被检查**。
+  ★ 自检 **C5b 确实报了红** —— 说明这条防线**有效**（它正是为防这类问题而写）。
+  **已修**：补齐实现 + 反例/正例各一条（C5b2/C5b3）证其**真的被执行**（不只加进"支持集"）。
+  ⇒ **D12 的"未实现关键字"这一项由"已知边界"转为"已修"**；其余子集限制仍存在。
+- ★ **【E20 · 本轮踩到 · 测量污染，非代码缺陷】后台回归与前台编辑并发 ⇒ 伪语法错误 / RC=2**：
+  全量回归里 `bash sttp.sh lineage` 报 `sttp.sh: line 397/398`，**而该文件当时／现在都只有 397 行**（line 398 不存在，
+  `bash -n` RC=0、无控制字符）；**顺序重跑 RC=0、八段全过**。根因是**时间线竞态**：`13:31:11` 回归启动读取 396 行的
+  `sttp.sh` ⇒ `13:31:36` 我在前台把注释改了一行（文件**变长 1 行**）⇒ bash 执行完 `lineage` 分支后**继续读剩余字节**，
+  读到新版多出的尾部 ⇒ **行错位**。**判据（铁律候选 #80）**：**报错行号 > 文件行数 ⇒ 文件在读取期间被替换（并发写竞态），
+  不是语法缺陷**。**纪律**：后台回归运行期间**不得修改被其读取的任何文件**；改了就该轮**整轮重跑**。
+- ★ **【E21 · 本轮发现 · 真缺陷 · P1 · 未修】发布清单 `dirty_sample` 依赖不可信的 `git status` ⇒ 脏工作区下清单非幂等**：
+  `make_manifest.py:304–305,327` 用 `git status --porcelain` 的**前 8 条**作 `dirty_sample`，而该命令在本仓**不可信**
+  （**铁律 #72**：索引 stat 缓存）。实测**连续两次** `release`（工作区未变）产出**不同**的 `manifest.json`
+  （md5 `6caa01cf…` → `7b2357fc…`），**而两个样例图逐字节不变** ⇒ 变化只在清单。
+  **危害**：① 脏工作区下清单不可复现（**干净检出下** `porcelain` 为空 ⇒ 幂等，宣称仍成立）；
+  ② `working_tree_dirty_at_build` 同源 ⇒ 理论上可能**假阴性**。
+  **处方（Option）**：① 推荐把"必须干净工作区"写成 `make_manifest.py` **前置断言**（非空即 RC≠0）；
+  ② 脏检测改确定性口径（`git diff --name-only` ∪ `--cached`，**排序**后取样）；③ 至少标注该字段非确定。
+  ★ **边界声明**：本条**不**否定可复现性 —— `artifacts[*].sha256` 与样例图是**确定性**的（本轮两次运行逐字节相同）。
+- **仪器总账（本轮）**：`evdeps --check` **七段**｜`lineage` **八段**（⑥ 33238/33238、⑦ 2431 中 0 误牵连）｜
+  `subgraph` **89 / 0 / 3**（V1–V19）｜`frontend` + **X10–X15**｜`node` **85 / 0**（+F30/F31 共 19 条）｜
+  delta 幂等（复跑 **0 改动**）｜临时目录残留 **0**。
 
 ---
 
@@ -1152,7 +1212,37 @@ git merge origin/main
 ---
 
 *本文件由 QClaw 生成于 2026-10-08，建议在每次 Phase 完成后更新「当前运行状态」和「已知问题」两节。*
-*最近更新：2026-10-14（**Phase 44 · 第 36 轮：D1 根因修复 —— 证据字节忠实度以「仓库 blob」为准**。
+*最近更新：2026-10-14（**Phase 45 · 第 37 轮：A04 验证依赖绑定 —— 从「来源绑定」升级到「验证依赖绑定」**。
+- 两条指摘坐实并修复：**A04a**（`impl_ver` 全库**单值** `100148c147cb`（49572/49572），且旧失效器**从不比对**它 ⇒
+  新增 `verifier{verifier_id, code_hash, dependency_versions}`，失效器**同时比对** `vch` + `dvs`）；
+  **A04b**（旧失效器变异 `dimension_table` 只能定位 **28** 条边 ⇒ 依赖感知失效 **33238**，自检 ⑥ 期望/命中差 **0**）。
+- ★ **两层判据并列、不可互相替代**：`edge.fidelity`（Phase 44，**边级字节**）与 `edge.evidence_status`
+  （Phase 45，**证据级依赖**：`valid/stale/needs_review/rejected`）；`exclude_stale` 的**唯一**判据是
+  `queries.edge_is_stale()`（两层并集），**无 A04 记录时完全回落到字节层** ⇒ 发布样例 / 裸 clone 中期图行为与 Phase 44 **逐位一致**。
+- 落盘实测（边级）：`valid 1038 ｜ stale 0 ｜ needs_review 34145 ｜ rejected 0 ｜ no_record 13529`（Σ = 48 712）；
+  `needs_review` **不**计入 `exclude_stale`（不可判定 ≠ 已变更，铁律 #70）但**始终披露**；
+  `no_record 13529` 是信息性的（该证据本就不依赖参考表，原因码 `no_reference_declared`）。
+- **「单纯重写哈希不能恢复 valid」做成两级程序化保证**：图级 `detect_inplace_rewrites()` 抓「绕过重验流程」这个**动作**
+  + 记录级 `_src_hash_rewritten` 让**单看一份图**也能自证异常（自检 ⑧c 三例证明堵口**不依赖**「值不符」这一信号）。
+- 新增/改：`contracts/evidence.schema.json`（证据 v2）、`11_真实数据/evidence_deps.py`、`phase45_evidence_deps_delta.py`、
+  `reference_registry.json`；`lineage_invalidation.py` 升级为**依赖感知失效器**（`--reverify` **MUST** 给 `--old`，否则 **RC=2**）；
+  `queries.py` / `viz_server.py` / `js/{style,evidence,panels,viz}.js` 接入披露；`sttp.sh evdeps`。
+- 自检：`evdeps --check` **七段**｜`lineage` **八段**（⑥ 33238/33238、⑦ 2431 中 0 误牵连）｜`subgraph` **89/0/3**（V1–V19）｜
+  `frontend` **70/0/2**（+X10–X15）｜`node` **85/0**（+F30/F31 共 19 条）｜delta 幂等（复跑 **0 改动**）｜临时目录残留 **0**。
+- **全量回归（9 条命令）**：`evdeps --check / check / gatecheck / eval / dimaudit / noise / release / release-full` **RC=0**
+  （`release` **28/0/0**、`release-full` **31/0/0** 含 H1b 规范图 sha256 `7d4f66bca0dc6e6b`、H2 北极星 99.65 == manifest）；
+  `lineage` 首轮 RC=2 系**并发编辑竞态**（**E20**），**顺序重跑 RC=0**。
+- **入库文件字节对账**（铁律 #72 口径）：`TOTAL=450 DIFF=18`，18 个 DIFF **精确等于**本轮改动集
+  （15 手工 + 3 个 release 副产物）⇒ 其余 **432 个文件零行尾漂移**。
+- ★ **顺带修三项**：**D12 的 `additionalProperties` 静默跳过**（C5b 报红 ⇒ 补齐实现 + 反例/正例 C5b2/C5b3）；
+  **E11 同一把不可重入锁的自死锁**（`stale_registry()` 持锁调 `evidence_status_registry()` ⇒ **CPU ≈ 0、无子进程、永久挂起**；
+  改「计算移出锁外 + `RLock`」⇒ **铁律候选 #79：持锁时不得调用可能持同一把锁的函数**）；
+  **E18 仪器自身崩溃与断言失败在退出码上不可区分**（新增断言必须先自跑一次）。
+- §0.3.2 新增 Phase 45 已知边界 **E10–E21**；★ 最诚实的一条：**A04 的 `stale` 通道目前无真实数据触发的正例**
+  （仓库内无「已登记来源与记录哈希不符」），其正确性由**构造性断言**（V19h/V19i）与受控小图重验（⑧a–⑧e）保证。
+  另两条：**E20 并发编辑竞态**（**铁律候选 #80：报错行号 > 文件行数 ⇒ 并发写竞态，非语法缺陷**；
+  后台回归期间不得改被其读取的文件）与 **E21 发布清单 `dirty_sample` 非幂等**（P1，未修，含三条 Option 处方）。)*
+*前次更新：2026-10-14（**Phase 44 · 第 36 轮：D1 根因修复 —— 证据字节忠实度以「仓库 blob」为准**。
 - 权威字节源 `git cat-file blob HEAD:<rel>`（与检出/行尾无关）；`git` 不可用 ⇒ `None`（fail-closed 而非空字节）。
 - 四分类 `verified / changed / unverifiable_no_source / unverifiable_not_in_repo` **取代二态**、**可加总回 48 712**；
   `stale` 口径**不变**（= changed + unverifiable_no_source = **121**）；`unverifiable_not_in_repo` 47 055 条
