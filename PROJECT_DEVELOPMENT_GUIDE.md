@@ -1369,6 +1369,14 @@ git merge origin/main
 - ★ **全量回归 13/13 全绿**（逐条记 RC，不抽样）：`install` 25/0/0 ｜ `release` 28/0/0 ｜ `release-full` 108/0/0 ｜
   `subgraph` 89/0/3 ｜ `frontend` 70/0/2 ｜ `node` 85/0 ｜ `evdeps/lineage/check/gatecheck/eval/dimaudit/noise` 全 RC=0。
   顺带**再实证 E21**：同一份清单在**脏树**非幂等（`working_tree_dirty_at_build: true`）、干净树幂等（`dirty_sample: []`）。
+- ★ **清单幂等性已被量化到字段级**（247 个字段，干净树连续两次 `release`）：差异仅 **3** 个
+  —— `code.git_head_at_build(_short)`（**自指，天然滞后一个提交**）与 `release.created`（生成时刻）；
+  其余 **244 个字段逐字节相同**（含全部 `artifacts[*].sha256`）。⇒ `manifest.json` 的
+  `git_head_at_build` **不等于产出它的提交**是**设计使然**（`authority_note` 已声明），**不是漏更新**。
+- ★ **入库字节对账**（铁律 #72 口径，`hash-object --no-filters` vs `rev-parse HEAD:<f>`）：
+  **458 / 458「工作区字节 == 仓库 blob」**、DIFF 0（核对时唯一 DIFF 是本报告自身，提交后归零）。
+  ★ `pyproject.toml` / `phase45_install_selfcheck.py` 全程 `\r` 计数 **0**（`tr` 口径）；
+  反例注入脚本一律 `newline=''`（铁律 #77）。
 - 报告：`07_交付物/Phase45_A05第三人可安装入口_20261014.md`。)*
 *前次更新：2026-10-14（**Phase 44 · 第 36 轮：D1 根因修复 —— 证据字节忠实度以「仓库 blob」为准**。
 - 权威字节源 `git cat-file blob HEAD:<rel>`（与检出/行尾无关）；`git` 不可用 ⇒ `None`（fail-closed 而非空字节）。
