@@ -130,6 +130,10 @@
   - ★ **`--path` 与 `--no-filters` 互斥**：同时传会直接 `error: Can't use --path with --no-filters` 且 **stdout 为空**
     ⇒ 脚本若不查退出码就会拿到**空哈希**，把**全部文件**判成「不一致」（本轮实测：446/446 全红 → 修正后 446/446 全绿）。
     这是铁律 #38「PASS ≠ 无红」的**镜像**：**全红也可能是测量器坏了**，先自证测量器能给出「一个已知一致的样本」。
+  - ★★ **改写入库文件必须显式锁行尾（本轮实测踩到）**：在本机（Windows + `core.autocrlf=true`）用
+    **Python 文本模式**写文件（`open(p,"w",encoding="utf-8")`）会把 `\n` 翻译成 `\r\n` ⇒ 工作区 CRLF ≠ blob LF，
+    **正是 D26 的病**（实测一次改写把 460 处变 CRLF）。处方：`open(p,"w",encoding="utf-8",newline="")`
+    或**二进制写**（`open(p,"wb")`）；`Edit` 工具与 `cat >>` heredoc 不会引入。**提交前跑字节对账**（见上一条命令）。
   **残余**：`*.json`/`*.lock` 仍 `-text`（26 个 JSON 的 blob 本身含 CRLF，按「产物逐字节冻结」有意不改写）；归档目录内 12 个文件同此。
 - ★ **9 个命令在裸 clone 里抛裸 traceback（D25，已修）**：`stats`/`gatecheck`/`t7`/`scopeaudit`/`eval`/`gnneval`/`dimaudit`/`lineage`/`noise`
   的断言以**不入库**的权威输入为前提却无前置守卫 ⇒ 裸 clone 里 **RC=1 + 裸 `FileNotFoundError`**，易被误读成「代码坏了」，
