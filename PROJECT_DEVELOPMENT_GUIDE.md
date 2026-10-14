@@ -54,13 +54,23 @@
 
 - 后端（步骤 A）详见 `07_交付物/Phase43_局部图谱查询与后端_20261013.md` §6（**D1–D13**）
 - 前端（步骤 B）详见 `07_交付物/Phase43_局部图谱查询与前端_20261014.md` §5（**D14–D25**）
+- **Phase 44（D1 根因修复）详见 `07_交付物/Phase44_D1证据字节忠实度根因修复_20261014.md`（**D1 已修 + 新增 E1–E7**）
 
-- ★★ **证据哈希依赖的字节在干净检出下不可复现（根因未修）**：`stale` 判据依赖「worktree 字节 == 仓库 blob」，
-  实测 **7/21** 个已入库登记 `locator` 不成立（CRLF vs LF，含 `06_PoC/sample_mathxiv.json`、`10_种子数据/seed_*.json` ×5、
-  `11_真实数据/seed_papers_openalex.json`），另有 **13/34** 个 `locator` **未入库**（`.gitignore`）。
-  ⇒ 干净检出下 `stale` 会**假阳**。已加探针 `locator_byte_fidelity()`（随响应暴露于 `stats.stale_registry`）+ 自检 V16f 独立重算；
-  **因假阳风险，`exclude_stale` 默认仍为 `false`（有意为之，非遗漏）**，且前端 UI 上**写明该理由**（禁止无提示剔除）。
-  修法与 Phase 44 的对齐要求见后端报告 §6-D1。
+- ✅ **【D1 根因已修 · 2026-10-14】** 证据哈希依赖的字节在干净检出下不可复现 → **权威字节源改为仓库 blob**。
+  - 原状：`stale` 判据依赖「worktree 字节 == 仓库 blob」，实测 **7/21** 个已入库 `locator` 不成立（CRLF vs LF），
+    另有 **13/34** 个 `locator` **未入库**（`.gitignore`）⇒ 干净检出下 `stale` **假阳**（实测牵连 4 个来源）。
+  - **修法**：`stale` 的当前哈希一律取 `git cat-file blob HEAD:<rel>`（与检出/行尾**无关**）；`git` 不可用时
+    **返回 `None`（fail-closed）而不是空字节**；缓存键从「`mtime/size`」改为「`(HEAD sha, 每源 lineage_recorded)`」。
+  - **实测**：`changed 760 → 0`；干净 clone 与主工作区**逐值相同**（四分类 {verified 1536, changed 0,
+    unverifiable_no_source 121, unverifiable_not_in_repo 47055}，Σ = 48 712 = 边总数）。
+  - **★ 四分类（`FIDELITY_CLASSES`）取代原来的二态**：`verified / changed / unverifiable_no_source /
+    unverifiable_not_in_repo`，**可直接加总回边总数**；`stale` = `changed + unverifiable_no_source`（**口径与 Phase 43 完全一致**，
+    仍为 121 条）。`unverifiable_not_in_repo` **不计入 `stale`** —— 那 12 个来源**并未变更**，是「大体积派生对象不入库」的
+    **已知边界**；若并入会把 47 055 条正常边淹没掉真信号，使 `exclude_stale` 退化为「什么都别显示」。
+  - `exclude_stale` **默认仍为 `false`**（保持 Phase 43 对外行为），但四分类**始终**随 `/api/stats`、`/api/subgraph`
+    与边属性 `fidelity`/`fidelity_reasons` 暴露，前端状态行与证据卡**强制显示**（自检 V18 / X8 / X9 / F28 / F29 断死）。
+  - **残余（如实登记 · E1–E5，详见 Phase 44 报告 §6）**：`unverifiable_not_in_repo` 47 055 条 / 96.6% 的边**仍不可从仓库复算**
+    （须上游原始数据）；`no_locator` 的 9 个模型/规则来源其 `src_hash` 为 `null`（**契约已放宽为 `["string","null"]`**）。
 - **默认 `trust=verified` 隐藏 28.6% 的边**（13 932 / 48 712，V14 实测；两档差 11 = `by_construction`）：
   `has_symbol` 这类未定级边被整体排除（例：`MX:def:manifold hops=1` 由 9 条边降到 3 条）。**已回显 `hidden_by_trust` 且可加总回全量**；
   ✅ **前端已落地**：可信范围两档单选 + 状态行「已隐藏 N 条」提示（`F27` 断言）。
@@ -83,7 +93,7 @@
 
 - ★★ **真实浏览器渲染未实测（D14，前端报告 §5）**：本项目**零第三方依赖**（§0.1 拒构建链）⇒ 未装 Playwright / jsdom，
   因此**布局、像素、真实交互链路、浏览器计算样式**均**未实测**，`bash sttp.sh frontend` 内记 **SKIP 且不计通过**。
-  替代证据链 = **纯逻辑 `node` 断言 53 条**（含五态三重编码的**运行时渲染**与请求序列） + 静态结构 + **跨层一致性** + HTTP MIME
+  替代证据链 = **纯逻辑 `node` 断言 66 条**（含五态三重编码的**运行时渲染**与请求序列） + 静态结构 + **跨层一致性** + HTTP MIME
   + **真实响应字段对照**。★ 要补强须引入**测试用**无头浏览器（属**新依赖**，须另起裁决）。
 - **V8 的口径**：五态 = **颜色 + 图标 + 文字**三重编码（颜色只是三通道之一），五态色对深色底实测 **≥4.5:1**（5.52–7.33）。
   ★ `timeout` 用**橙红**、`error` 用真红，使二者在色觉上也可分。
@@ -99,16 +109,29 @@
 - **前端静态资源的行尾可复现性（D24，已修 + 已实证）**：本机 `core.autocrlf=true` 且前端原**无** `.gitattributes` 规则 ⇒
   `git checkout`（含 clone）会把 `06_PoC/js/*.js` 与 `graph_view.html` 的 LF 改写成 CRLF（实测 `git checkout -- 06_PoC/js`
   写入 **2446 处 CRLF**）⇒「本机验过的字节 ≠ 检出字节」。**已加** `06_PoC/js/*.js` / `graph_view.html` 的 `text eol=lf`。
-  ★ **两件事分开陈述**：① **自检本身对行尾鲁棒**——把 9 个 js 全转 CRLF 后 `frontend` 仍 **59/0/2**、`node` 仍 **53/0**（实测）；
-  ② 加锁是**字节可复现**口径的统一，**不是**修一个会导致自检失败的行尾缺陷（与 D1 同源但性质不同：D1 是**证据哈希**依赖字节、**根因未修**）。
+  ★ **两件事分开陈述**：① **自检本身对行尾鲁棒**——把 9 个 js 全转 CRLF 后 `frontend` 仍 **PASS / FAIL 0**、`node` 仍全过（实测）；
+  ② 加锁是**字节可复现**口径的统一，**不是**修一个会导致自检失败的行尾缺陷。
+- ✅ **【D26 行尾策略覆盖不全 · 2026-10-14 已修】**（原为「逐路径白名单」的必然漏网）
+  白名单只锁了 `*.json`/`11_真实数据/*.py`/`06_PoC/js/*.js`/`graph_view.html` ⇒ 干净 clone 里**其余文本被写成 CRLF**，
+  而仓库 blob 是 LF ⇒ `sha256(clone) ≠ sha256(blob)`（铁律 #61 在这些文件上不成立）。实测漏网 **17 个文件**
+  （`.gitignore`、`LICENSE`、`NOTICE`、`env.ps1`、`*.env.example`×2、`*.cjs`、`06_PoC/vendor/*.js`×4、`*.bak`，以及
+  `03_知识层/queries.py`、`06_PoC/viz_server.py`、`06_PoC/tests/phase43_*.py`×2、`sttp.sh`）。
+  **已修**：置顶兜底 `* text=auto eol=lf`，例外（`*.json -text`、`*.lock -text`、`07_交付物/外部评审/** -text`）按
+  「后匹配者胜」继续覆盖。**只读预演**（`git hash-object --path=<f>` vs `git rev-parse HEAD:<f>`，445 个入库文件）：
+  **仅 `.gitattributes` 自身变化，其余 444 个零改写**。本机工作区 83 个遗留 CRLF 文件已按 HEAD blob 归一化 ⇒
+  **实测 445/445 入库文件「工作区字节 == 仓库 blob」**，且干净 clone 与本机**逐字节一致**。
+  ★★ **教训（勿重犯）**：`git add --renormalize .` 在本仓库**不安全** —— 实测它改写了 **51 个 `-text` 的 JSON blob 与工作区文件**
+  （`-text` 并未阻止 renormalize）。已全部按 HEAD 逐字节还原（51/51 校验一致）。核对一律用**只读**的
+  `git hash-object --path` 预演，**不要**用 `--renormalize`。
+  **残余**：`*.json`/`*.lock` 仍 `-text`（26 个 JSON 的 blob 本身含 CRLF，按「产物逐字节冻结」有意不改写）；归档目录内 12 个文件同此。
 - ★ **9 个命令在裸 clone 里抛裸 traceback（D25，已修）**：`stats`/`gatecheck`/`t7`/`scopeaudit`/`eval`/`gnneval`/`dimaudit`/`lineage`/`noise`
   的断言以**不入库**的权威输入为前提却无前置守卫 ⇒ 裸 clone 里 **RC=1 + 裸 `FileNotFoundError`**，易被误读成「代码坏了」，
   且与已做对的 `subgraph`/`make_sample`（明确原因 + RC=2）**口径不一致**。**已修**：`sttp.sh` 新增
   `require_authority <命令> <路径…>`（9 处挂载；明确原因 + 恢复方式 + 替代验证 + **RC=2**）；防回退断言 **G1–G4**（含可红性自证）。
   ★ 这条是「干净检出实测」本身才暴露出来的 —— 铁律 #53 的价值实证。
 - **未覆盖且不计通过**：**真实浏览器渲染（D14）**、**V8c 浏览器计算样式**、**Neo4j（N1）**；
-  **Phase 44**（A04 验证依赖绑定 + `valid/stale/needs_review/rejected` 生命周期，★ 须与上述字节忠实性口径对齐）、
-  **Phase 45**（A05 `pyproject.toml` 可安装入口）**未开工**。
+  **Phase 44 余项**（A04 验证依赖绑定 + `valid/stale/needs_review/rejected` 生命周期，★ **字节忠实性口径已由本轮就位**，
+  A04 须与之对齐；见 Phase 44 报告 §7）、**Phase 45**（A05 `pyproject.toml` 可安装入口）**未开工**。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -121,16 +144,20 @@
   ③ ★ **`bash sttp.sh subgraph` 在裸 clone 不能运行**（`06_PoC/etl/normalized.json` 不入库）——
   已改为**明确原因 + RC=2**（修复前是 `KeyError` 崩溃）；**契约目前只能在下游产物层被 clone 验证**，
   若要"契约也可从 clone 验证"需入库小基线图 + 样例口径断言子集（**未做，有意取舍**）。
-  ④ **`.gitattributes` 锁 `*.json -text`、`11_真实数据/*.py text eol=lf`，以及（2026-10-14 新增）
-  `06_PoC/js/*.js` 与 `06_PoC/graph_view.html` 的 `text eol=lf`**：`*.md` 与其余 `*.py`/`*.mjs` 在 `autocrlf=true` 检出里仍变 CRLF
-  ⇒ 与工作区**仅行尾不同**（归一化后 sha256 相等，已逐项核过；对文档/脚本无害；
-  **对被哈希为证据的文件即是 D1 成因**，**根因未修**；前端资产则见 D24）。
+  ④ **`.gitattributes` 现为「兜底 + 例外」**（2026-10-14 起）：置顶 `* text=auto eol=lf`，例外为
+  `*.json -text`、`*.lock -text`、`07_交付物/外部评审/** -text`（归档原件逐字节冻结）。
+  ⇒ **实测干净 clone 与本机工作区 445/445 个入库文件逐字节一致**（见 D26）。
+  残余：26 个 `-text` 的 JSON 其 blob 本身含 CRLF（**有意**不改写，稳定且可复现）；归档目录内 12 个文件同此。
+  ★★ **不要**用 `git add --renormalize` 核对（会改写 `-text` blob，实测 51 个）；改用只读的 `hash-object --path` 预演。
   ⑤ **`env.sh` 依赖不入库的 `.env`** ⇒ 裸 clone 里 `$STTP_PYTHON` 为空，请**直接指定解释器**。
-  ⑥ **裸 clone 命令可用性矩阵（2026-10-14 实测）**：✅ 可运行 = `check` / `frontend`（**PASS 51/0/4**，
-  `X1`·`H6` 降级 SKIP 而**不假通过**）/ `verify` / `verify_release.py --release`；
+  ⑥ **裸 clone 命令可用性矩阵（2026-10-14 复测）**：✅ 可运行 = `check` / `frontend`（**PASS 56 / FAIL 0 / SKIP 4**，
+  `X1`·`H6` 降级 SKIP 而**不假通过**）/ `verify` / `verify_release.py --release`（**28/0/0 RC=0**）；
   ⛔ **结构性不可用但给明确原因 + RC=2** = `subgraph` / `release` / `stats` / `gatecheck` / `t7` / `scopeaudit` /
-  `eval` / `gnneval` / `dimaudit` / `lineage` / `noise`（后 9 个为 **D25** 本轮修复项，原为 RC=1 裸 traceback）；
+  `eval` / `gnneval` / `dimaudit` / `lineage` / `noise`（后 9 个为 **D25** 修复项，原为 RC=1 裸 traceback）；
   ⛔ `release-full` = RC=1（fail-closed FAIL 3，带逐条 ❌ 原因）。
+  ★ **本轮修正的指引错误**：`bash sttp.sh release` 会先**重建**样例、需权威图 ⇒ 裸 clone 下**必定失败**，
+  **不能**当作「干净检出可用的下游校验路径」；正确命令是 `python 06_PoC/release/verify_release.py --release`。
+  该指引已同步修正在 `phase43_subgraph_selfcheck.py` 的「三种可用做法」第 ③ 条。
 
 ---
 
@@ -472,7 +499,7 @@ API 端点：
 | `js/subgraph.js` | `class SubgraphStore`：`run/expand/back/reset/jsonSnapshot` | `core.js`,`api.js` |
 | `js/viz.js` | Cytoscape 封装：样式数组、增量 `add`、**只对新元素跑布局**、导出 PNG/SVG | vendor cy |
 | `js/panels.js` | 查询表单 / 状态行 / 横幅（★ 边**语义关系 `type`** 与**来源管线 `kind`** **两组分列**）；`bindSearch` 防抖 + 过期响应丢弃 | `core.js`,`style.js` |
-| `js/evidence.js` | 节点/边证据卡（MathJax + 复制 LaTeX；证据 `src`/`impl` 分列、`src_hash[:12]`、stale 横幅） | `style.js` |
+| `js/evidence.js` | 节点/边证据卡（MathJax + 复制 LaTeX；证据 `src`/`impl` 分列、`src_hash[:12]`、**四档忠实度横幅** `fidelity`、`src_hash=null` ⇒「无 locator · 不可复算」徽标） | `style.js` |
 | `js/main.js` | 编排：`applyStatusVars` 把 `STATUS_STYLE` 写入 CSS 变量（单一来源）、五个入口、布局切换、键盘可访问 | 全部 |
 
 **自检（两条，互不替代）**：
@@ -1104,7 +1131,21 @@ git merge origin/main
 ---
 
 *本文件由 QClaw 生成于 2026-10-08，建议在每次 Phase 完成后更新「当前运行状态」和「已知问题」两节。*
-*最近更新：2026-10-14（Phase 43 步骤 B · 第 35 轮：前端「局部图谱查询浏览」落地 —— `06_PoC/js/` 9 个原生
+*最近更新：2026-10-14（**Phase 44 · 第 36 轮：D1 根因修复 —— 证据字节忠实度以「仓库 blob」为准**。
+- 权威字节源 `git cat-file blob HEAD:<rel>`（与检出/行尾无关）；`git` 不可用 ⇒ `None`（fail-closed 而非空字节）。
+- 四分类 `verified / changed / unverifiable_no_source / unverifiable_not_in_repo` **取代二态**、**可加总回 48 712**；
+  `stale` 口径**不变**（= changed + unverifiable_no_source = **121**）；`unverifiable_not_in_repo` 47 055 条
+  **不计入 stale**（那些来源并未变更，属「大体积派生对象不入库」的已知边界），但**始终随响应与 UI 显示**。
+- 实测 `changed 760 → 0`；干净 clone 与主工作区**逐值相同**。
+- 自检：`bash sttp.sh subgraph` **69/0/3**（新增 V18 十六条 + V16 改写为「D1 性质 + 构造性非真空」）；
+  `bash sttp.sh frontend` **64/0/2**（新增 X8/X9）；`node frontend_core_check.mjs` **66/0**（新增 F28/F29）；
+  `source_registry --check` **14/14**（新增 ⑬⑭）。
+- 顺带修 **D26 行尾策略覆盖不全**（原白名单漏 17 个文件 ⇒ clone 字节 ≠ blob）：置顶 `* text=auto eol=lf` + 例外，
+  只读预演零改写；实测 **445/445 入库文件「工作区 == 仓库 blob」**、clone 逐字节一致。
+  ★ 登记教训：`git add --renormalize` 在本仓库会改写 `-text` blob（实测 51 个，已全部还原）。
+- §0.3.1 更新 D1 为**已修根因**并登记 E1–E5 残余；`contracts/subgraph.schema.json` 的 `evidence.src_hash`
+  放宽为 `["string","null"]`。)*
+*前次更新：2026-10-14（Phase 43 步骤 B · 第 35 轮：前端「局部图谱查询浏览」落地 —— `06_PoC/js/` 9 个原生
 ES Module（零构建）、`graph_view.html` 整页重写、`viz_server.py` 新增 `/js/` 路由、双自检
 `bash sttp.sh frontend`（59/0/2）+ `node frontend_core_check.mjs`（53/0）；§0.3.1 增列前端已知边界 D14–D25；
 §5.2.1 新增前端模块表）。*
