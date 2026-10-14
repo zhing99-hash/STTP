@@ -317,7 +317,7 @@ def selfcheck():
                  len(got_ids - expect_ids) + len(expect_ids - got_ids)))
         ok &= eq2
     finally:
-        shutil.rmtree(tmp, ignore_errors=True)
+        sr.rmtree_force(tmp)          # ★ E9：Windows 只读 git object 会让 ignore_errors 静默失败
 
     # ---------- ② 纯血缘传递（文件不共享） ----------
     #    选两个 locator 无交集的来源 X(上游) / Y(下游)，临时给 Y 加 upstream=[X]
@@ -351,7 +351,7 @@ def selfcheck():
             ok &= (y_flagged and y_files_unchanged)
         finally:
             sr.REGISTRY[y]["upstream"] = saved
-            shutil.rmtree(tmp, ignore_errors=True)
+            sr.rmtree_force(tmp)      # ★ E9：同上，显式清只读位后重试，失败即抛
     else:
         print("  ② 纯血缘：未找到可用的无交集来源对（跳过）")
         ok &= False
@@ -382,7 +382,7 @@ def selfcheck():
     try:
         probe_ok = bool(pr.get("differ")) and bool(pr.get("restored_equal"))
     finally:
-        _sh.rmtree(pr.get("tmp"), ignore_errors=True)
+        sr.rmtree_force(pr.get("tmp"))   # ★ E9：同口径
     if probe_ok:
         print("  ⑤ 两口径确实不同        : PASS —— 构造对照 differ=True / 还原后相等=True"
               + ("；另：本机工作区口径多报 %d 个「已变更」%s" % (len(extra), extra[:3])

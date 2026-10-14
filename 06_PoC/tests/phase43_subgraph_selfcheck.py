@@ -706,7 +706,7 @@ def main(argv=None) -> int:
         probe_ok = bool(pr.get("differ")) and bool(pr.get("restored_equal"))
     finally:
         import shutil as _sh
-        _sh.rmtree(pr.get("tmp"), ignore_errors=True)
+        SR.rmtree_force(pr.get("tmp"))   # ★ E9：Windows 只读 git object ⇒ ignore_errors 会静默失败
     rep.add(probe_ok,
             "V16g 两口径可构造差异（blob=LF / 工作区=CRLF ⇒ 哈希必不同；还原后必相等）",
             "differ=%s / restored_equal=%s %s"

@@ -50,8 +50,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 POC = os.path.dirname(HERE)
 ROOT = os.path.dirname(POC)
 sys.path.insert(0, POC)
+sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))   # ★ E9：复用 source_registry.rmtree_force
 
 import graph_export as gx                                                       # noqa: E402
+import source_registry as sr                                                     # noqa: E402
 
 MANIFEST = os.path.join(HERE, "manifest.json")
 SAMPLE_DIR = os.path.join(HERE, "sample")
@@ -259,20 +261,26 @@ def main(argv=None) -> int:
     if snap and not a.no_stats:
         import tempfile
         tmp = tempfile.mkdtemp(prefix="sttp_manifest_")
-        ta = run_tool_file([py, os.path.join(POC, "task_trust_audit.py"),
-                            "--graph", norm if os.path.exists(norm) else snap],
-                           os.path.join(tmp, "astro.json"))
-        fg = run_tool_stdout([py, os.path.join(POC, "frozen_gate.py"), "--json"])
-        ca = run_tool_file([py, os.path.join(POC, "connectivity_audit.py"), "--strict"],
-                           os.path.join(tmp, "conn.json"))
-        exp["full_snapshot"] = {
-            "recomputable": "full_snapshot（不入库；`bash sttp.sh release-full` 现算校验）",
-            "nodes": artifacts["full"]["snapshot"]["nodes"],
-            "edges": artifacts["full"]["snapshot"]["edges"],
-            "task_trust": ta,
-            "frozen_gate": ({"tally": fg.get("tally")} if isinstance(fg, dict) else None),
-            "connectivity": (ca if isinstance(ca, dict) else None),
-        }
+        # ★ E9：本脚本原先**从不清理**该临时目录（实测泄漏 33 个 `sttp_manifest_*`）。
+        #   用 `sr.rmtree_force` 先清只读位再删（Windows 的 git loose object 是只读的），
+        #   删不掉即抛（fail-closed，铁律 #62），不再静默。
+        try:
+            ta = run_tool_file([py, os.path.join(POC, "task_trust_audit.py"),
+                                "--graph", norm if os.path.exists(norm) else snap],
+                               os.path.join(tmp, "astro.json"))
+            fg = run_tool_stdout([py, os.path.join(POC, "frozen_gate.py"), "--json"])
+            ca = run_tool_file([py, os.path.join(POC, "connectivity_audit.py"), "--strict"],
+                               os.path.join(tmp, "conn.json"))
+            exp["full_snapshot"] = {
+                "recomputable": "full_snapshot（不入库；`bash sttp.sh release-full` 现算校验）",
+                "nodes": artifacts["full"]["snapshot"]["nodes"],
+                "edges": artifacts["full"]["snapshot"]["edges"],
+                "task_trust": ta,
+                "frozen_gate": ({"tally": fg.get("tally")} if isinstance(fg, dict) else None),
+                "connectivity": (ca if isinstance(ca, dict) else None),
+            }
+        finally:
+            sr.rmtree_force(tmp)          # ★ 失败即抛，由调用方决定是否致命
 
     # ---------------- pack ----------------
     packed = None

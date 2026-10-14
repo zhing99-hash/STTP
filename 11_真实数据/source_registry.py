@@ -584,6 +584,31 @@ def byte_source_divergence(base=ROOT) -> list:
     return out
 
 
+def rmtree_force(path) -> None:
+    """删除临时目录：**先清只读位再删，删不掉就报错**（不静默吞异常）。
+
+    ★ 为什么需要（Phase 44 · 收尾发现的 E9，已实测坐实）：Windows 上 **git 的 loose object 是只读文件**，
+      于是 `shutil.rmtree(path, ignore_errors=True)` 会抛 `PermissionError [WinError 5]`
+      并被 `ignore_errors` **静默吞掉** ⇒ 清理形同虚设。本项目实测泄漏
+      **91 个临时目录**（`sttp_lineage_sc1_*` 34 ／ `sttp_manifest_*` 33 ／ `sttp_verify_*` 24）。
+      这与铁律 #62（fail-closed、逐项传退出码）同一取向：**删不掉必须报错**，不能假装成功。
+
+    注：POSIX 下删除只读**文件**不受限（只要目录可写），故该缺陷为 Windows 特有；本函数两平台都安全。
+    """
+    import shutil
+    import stat as _stat
+    if not path or not os.path.isdir(path):
+        return
+    for root, dirs, files in os.walk(path, topdown=False):
+        for name in list(files) + list(dirs):
+            p = os.path.join(root, name)
+            try:
+                os.chmod(p, _stat.S_IWRITE | _stat.S_IREAD)
+            except OSError:
+                pass
+    shutil.rmtree(path)          # ★ 不传 ignore_errors：失败即抛，由调用方决定是否致命
+
+
 def divergence_probe() -> dict:
     """**构造性**证明：两种字节源在「字节真的不同」时给出不同哈希。
 
@@ -861,11 +886,42 @@ def selfcheck() -> int:
     try:
         probe_ok = bool(pr.get("differ")) and bool(pr.get("restored_equal"))
     finally:
-        _sh.rmtree(pr.get("tmp"), ignore_errors=True)
+        rmtree_force(pr.get("tmp"))
     print("  ⑭ 两口径可构造差异   : %s（differ=%s / 还原后相等=%s）"
           % ("PASS" if probe_ok else "FAIL %s" % pr.get("error", ""),
              pr.get("differ"), pr.get("restored_equal")))
     ok &= probe_ok
+
+    # ⑮ 【E9 非真空】构造一个「含只读文件的目录」：
+    #    朴素删法（ignore_errors=True）在 Windows 上必须**失败**（证明缺陷真实存在，非纸上推演）；
+    #    力删（rmtree_force）必须**成功**。POSIX 下只读文件不阻止删除 ⇒ 该分支如实记 SKIP。
+    import tempfile as _tf
+    _d = _tf.mkdtemp(prefix="sttp-readonly-probe-")
+    try:
+        _ro = os.path.join(_d, "ro.bin")
+        with open(_ro, "wb") as _f:
+            _f.write(b"readonly\n")
+        os.chmod(_ro, 0o444)
+        _sh.rmtree(_d, ignore_errors=True)
+        naive_left = os.path.isdir(_d)                       # True = 朴素删法失败（缺陷坐实）
+        rmtree_force(_d)
+        force_ok = not os.path.exists(_d)
+        if naive_left:
+            print("  ⑮ 只读文件目录可力删 : %s（朴素删法**失败** ⇒ 缺陷坐实；力删成功=%s）"
+                  % ("PASS" if force_ok else "FAIL", force_ok))
+            ok &= force_ok
+        else:
+            print("  ⑮ 只读文件目录可力删 : SKIP（本平台只读文件不阻止删除 ⇒ E9 为 Windows 特有；"
+                  "力删成功=%s）" % force_ok)
+            ok &= force_ok
+    except Exception as _e:                                        # noqa: BLE001
+        print("  ⑮ 只读文件目录可力删 : FAIL %s" % _e)
+        ok = False
+    finally:
+        try:
+            rmtree_force(_d)
+        except OSError:
+            pass
     return 0 if ok else 1
 
 

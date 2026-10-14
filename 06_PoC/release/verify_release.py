@@ -354,19 +354,28 @@ def check_full(rep, manifest, release=False):
     exp = ((manifest.get("expected_stats") or {}).get("full_snapshot")) or {}
     import tempfile
     tmp = tempfile.mkdtemp(prefix="sttp_verify_")
-    ap = os.path.join(tmp, "astro.json")
-    subprocess.run([sys.executable, os.path.join(POC, "task_trust_audit.py"),
-                    "--graph", os.path.join(POC, "etl", "normalized.json"), "--json", ap],
-                   cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
-                   errors="replace", timeout=1800)
-    if os.path.exists(ap):
-        now = json.load(open(ap, encoding="utf-8"))
-        old = exp.get("task_trust") or {}
-        rep.add(now.get("north_star_pct") == old.get("north_star_pct"),
-                "H2 北极星现算 == manifest",
-                "现算 %s / manifest %s" % (now.get("north_star_pct"), old.get("north_star_pct")))
-    else:
-        rep.add(False, "H2 北极星现算", "仪器未产出结果（规范图缺失？）", warn_only=not release)
+    # ★ E9：本脚本原先**从不清理**该临时目录（实测泄漏 24 个 `sttp_verify_*`）。
+    #   `sr.rmtree_force` 先清只读位再删（Windows 的 git loose object 是只读的），失败即抛 ——
+    #   与铁律 #62 fail-closed 一致，不再靠 `ignore_errors=True` 假装清理成功。
+    try:
+        ap = os.path.join(tmp, "astro.json")
+        subprocess.run([sys.executable, os.path.join(POC, "task_trust_audit.py"),
+                        "--graph", os.path.join(POC, "etl", "normalized.json"), "--json", ap],
+                       cwd=ROOT, capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", timeout=1800)
+        if os.path.exists(ap):
+            now = json.load(open(ap, encoding="utf-8"))
+            old = exp.get("task_trust") or {}
+            rep.add(now.get("north_star_pct") == old.get("north_star_pct"),
+                    "H2 北极星现算 == manifest",
+                    "现算 %s / manifest %s" % (now.get("north_star_pct"), old.get("north_star_pct")))
+        else:
+            rep.add(False, "H2 北极星现算", "仪器未产出结果（规范图缺失？）", warn_only=not release)
+    finally:
+        try:
+            sr.rmtree_force(tmp)
+        except OSError as _e:                                              # noqa: BLE001
+            rep.add(False, "H2 临时目录清理", "清理失败（不静默）：%s" % _e)
 
 
 def main(argv=None) -> int:

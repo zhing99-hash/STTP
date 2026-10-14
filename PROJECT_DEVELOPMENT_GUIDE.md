@@ -135,6 +135,15 @@
     **正是 D26 的病**（实测一次改写把 460 处变 CRLF）。处方：`open(p,"w",encoding="utf-8",newline="")`
     或**二进制写**（`open(p,"wb")`）；`Edit` 工具与 `cat >>` heredoc 不会引入。**提交前跑字节对账**（见上一条命令）。
   **残余**：`*.json`/`*.lock` 仍 `-text`（26 个 JSON 的 blob 本身含 CRLF，按「产物逐字节冻结」有意不改写）；归档目录内 12 个文件同此。
+- ✅ **【E9 临时目录静默泄漏 · 2026-10-14 已修】**：本机临时目录里实测残留 **91 个**
+  `sttp_*` 目录（`lineage_sc1_*` 34 ／ `manifest_*` 33 ／ `verify_*` 24）。**根因**：Windows 上
+  **git 的 loose object 是只读文件** ⇒ `shutil.rmtree(p, ignore_errors=True)` 抛
+  `PermissionError [WinError 5]` 并被**静默吞掉**（实测样本 42/42 文件全只读）；
+  另有两处（`make_manifest.py` / `verify_release.py`）**根本没有清理代码**。
+  **已修**：`source_registry.rmtree_force()` —— 先清只读位再删、**删不掉就抛**（fail-closed，铁律 #62），
+  接入 5 处 + 两处补 `try/finally`；新增自检 **⑮（构造性）**：造「只读文件目录」⇒
+  **朴素删法必须失败**（缺陷坐实）且**力删必须成功**（POSIX 下该分支如实记 SKIP，不假装通过）。
+  实测：`source_registry --check` **15/15**；连跑 6 个套件后临时目录**新增 0 个**。
 - ★ **9 个命令在裸 clone 里抛裸 traceback（D25，已修）**：`stats`/`gatecheck`/`t7`/`scopeaudit`/`eval`/`gnneval`/`dimaudit`/`lineage`/`noise`
   的断言以**不入库**的权威输入为前提却无前置守卫 ⇒ 裸 clone 里 **RC=1 + 裸 `FileNotFoundError`**，易被误读成「代码坏了」，
   且与已做对的 `subgraph`/`make_sample`（明确原因 + RC=2）**口径不一致**。**已修**：`sttp.sh` 新增
@@ -1151,13 +1160,18 @@ git merge origin/main
 - 实测 `changed 760 → 0`；干净 clone 与主工作区**逐值相同**。
 - 自检：`bash sttp.sh subgraph` **69/0/3**（新增 V18 十六条 + V16 改写为「D1 性质 + 构造性非真空」）；
   `bash sttp.sh frontend` **64/0/2**（新增 X8/X9）；`node frontend_core_check.mjs` **66/0**（新增 F28/F29）；
-  `source_registry --check` **14/14**（新增 ⑬⑭）。
+  `source_registry --check` **15/15**（新增 ⑬⑭⑮）。
 - 顺带修 **D26 行尾策略覆盖不全**（原白名单漏 17 个文件 ⇒ clone 字节 ≠ blob）：置顶 `* text=auto eol=lf` + 例外，
   只读预演零改写；实测 **445/445 入库文件「工作区 == 仓库 blob」**（终测 HEAD `f173eae` 复测 **446/446**）、clone 逐字节一致。
   ★ 登记教训：`git add --renormalize` 在本仓库会改写 `-text` blob（实测 51 个，已全部还原）；
   ★★ 并登记**测量口径陷阱**：`--path` 与 `--no-filters` **互斥**（同传 ⇒ 报错 + 空 stdout ⇒ 会把全部文件误判成不一致）。
-- §0.3.1 更新 D1 为**已修根因**并登记 E1–E5 残余；`contracts/subgraph.schema.json` 的 `evidence.src_hash`
-  放宽为 `["string","null"]`。)*
+- §0.3.1 更新 D1 为**已修根因**并登记 E1–E9 残余；`contracts/subgraph.schema.json` 的 `evidence.src_hash`
+  放宽为 `["string","null"]`。
+- **干净检出实测（公开仓库级）**：从 GitHub 整仓克隆 ⇒ 克隆内 **446/446「字节 == blob」**、
+  本机 ↔ 克隆 sha256 **逐字节 446/446 一致**、克隆内 `subgraph` **69/0/3**（四分类断言与本机**逐行 diff 为空**）、
+  `frontend` **56/0/4（裸）→ 64/0/2（补入权威图后，与主工作区完全相同）**、`verify_release.py --release` **28/0/0 RC=0**。
+- 顺带修 **E9 临时目录静默泄漏**（Windows 只读 git object 让 `ignore_errors=True` 吞掉删除失败，实测泄漏 91 个目录）
+  ⇒ `source_registry.rmtree_force()`（先清只读位、删不掉即抛）+ 5 处接入 + 2 处补 `try/finally` + 自检 ⑮（构造性）。)*
 *前次更新：2026-10-14（Phase 43 步骤 B · 第 35 轮：前端「局部图谱查询浏览」落地 —— `06_PoC/js/` 9 个原生
 ES Module（零构建）、`graph_view.html` 整页重写、`viz_server.py` 新增 `/js/` 路由、双自检
 `bash sttp.sh frontend`（59/0/2）+ `node frontend_core_check.mjs`（53/0）；§0.3.1 增列前端已知边界 D14–D25；
