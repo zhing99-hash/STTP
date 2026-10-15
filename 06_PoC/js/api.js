@@ -27,6 +27,7 @@
 
 import {
   ENDPOINTS, BUNDLE_MAX_BYTES, buildParams, toQueryString, statusStyle,
+  clientBudgetMs, CLIENT_MARGIN_MS, BUDGET,
 } from "./core.js";
 
 export class ApiError extends Error {
@@ -98,9 +99,16 @@ export class Api {
   constructor(opts = {}) {
     this.base = opts.base == null ? "." : String(opts.base).replace(/\/$/, "");
     this.deadlineMs = opts.deadlineMs || 3000;
+    /**
+     * 当请求自带 `deadline_ms` 时，客户端预算 = `deadline_ms + marginMs`
+     * （★ Phase 51 / D53：**不得**比服务端先放弃；见 `core.clientBudgetMs`）。
+     */
+    this.marginMs = opts.marginMs == null ? CLIENT_MARGIN_MS : opts.marginMs;
     this.fetchImpl = opts.fetchImpl || (typeof fetch === "function" ? fetch.bind(globalThis) : null);
     /** 最近一次请求的元信息（供状态行显示耗时与 URL，便于复现） */
     this.last = null;
+    /** 最近一次 `/api/subgraph` 的**客户端等待预算**（供真浏览器验收断言 B4k） */
+    this.lastBudgetMs = null;
   }
 
   _url(path, params) {
@@ -291,7 +299,18 @@ export class Api {
   /** GET /api/subgraph —— 三模式（ego / path / filter） */
   subgraph(opts = {}) {
     const p = buildParams(opts);
-    return this._get(ENDPOINTS.subgraph, p, { deadlineMs: opts.deadlineMs || this.deadlineMs });
+    // ★ Phase 51（D53）：预算由**请求自己的 `deadline_ms`** 派生，不再用固定 3 s。
+    //   固定 3 s 会让客户端比服务端（默认 10 s）**早 7 s 放弃** —— 空闲时看不出来、
+    //   机器一忙就必现，后端本来会给出的答案被当成"失败"。
+    const budget = clientBudgetMs(opts, {
+      // 请求没带 `deadline_ms` 时，服务端会用**它自己的默认**
+      // （`queries.DEFAULT_DEADLINE_MS` == 前端 `BUDGET.deadline_ms`，由跨层断言 X4a 钉住）
+      // ⇒ 客户端兜底也必须按这个量级给，不能沿用通用的 3 s。
+      fallbackMs: BUDGET.deadline_ms + this.marginMs,
+      marginMs: this.marginMs,
+    });
+    this.lastBudgetMs = budget;      // 供真浏览器验收断言（B4k）
+    return this._get(ENDPOINTS.subgraph, p, { deadlineMs: budget });
   }
 
   /** GET /api/overview */

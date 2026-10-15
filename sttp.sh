@@ -42,6 +42,8 @@
 #   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V19 正/反例（Phase 43/45）
 #   bash sttp.sh install                            第三人可安装入口自检：元数据/解释器约束分离/依赖声明覆盖/无原机路径/入口/两级可复现/离线 wheel（Phase 45 A05）
 #   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
+#   bash sttp.sh taskflow [--url U] [--headed]      任务式首屏**真浏览器**端到端验收：问题→候选→确认实体→生成图→改查询（Phase 51；需 viz 在跑 + 可选 Playwright）
+#   bash sttp.sh names <旧文件> <新文件> [--pair 旧:新]  断言**名字集合**比对（铁律 #87：只看总数会漏掉"加 2 删 1"）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -399,10 +401,33 @@ EOF
     # Phase 43 步骤 B：前端「局部图谱查询浏览」自检。
     # 静态结构 + 无障碍 + 模块图完整性 + **跨层一致性**（前端常量 ↔ 后端契约）
     # + Node 纯逻辑断言（缺 node ⇒ SKIP，不计通过）+ HTTP MIME 层。
-    # ★ 真实浏览器渲染**未实测**（零第三方依赖）⇒ 脚本内如实记 SKIP。
+    # ★ 静态面**不覆盖行为面**：真实浏览器里的点击/键入/竞态由 `taskflow` 负责（Phase 51）。
     shift
     set -e
     "$PY" 06_PoC/tests/phase43_frontend_selfcheck.py "$@"
+    ;;
+  taskflow)
+    # Phase 51：任务式首屏**真浏览器**端到端验收（B1–B5）。
+    # 覆盖：首屏结构 / 点卡出候选 / 真实键盘键入 / 确认实体 / 生成图 / **返回改查询**。
+    # 前置：① 本地 viz 服务在跑（`bash sttp.sh viz`，前台长驻）
+    #      ② 可选的 Playwright + Chromium（**不在零安装路径上**）
+    # 缺任一 ⇒ 全段记 SKIP 并说明原因，**不计通过**（铁律 #20：缺依赖不得假通过）。
+    # ★ 它抓的是静态自检抓不到的那类缺陷：文件都"写对了"、页面却点不动。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/phase51_task_flow_e2e.py "$@"
+    ;;
+  names)
+    # 铁律 #87：改断言文件后必须核对**断言名字集合**，而不是总数。
+    #   理由：「加 2 条 + 删 1 条」会让总数净增，只看总数就会把那次删除漏掉；
+    #         而"过期断言被悄悄删掉"正是最容易被当成"重构"放过的一类退化（#74）。
+    # 用法（取旧版本必须用仓库 blob，别用工作区文件 —— 行尾会让比对失真，#69）：
+    #   git cat-file blob HEAD:06_PoC/tests/xxx.py > /tmp/old_xxx.py
+    #   bash sttp.sh names /tmp/old_xxx.py 06_PoC/tests/xxx.py
+    # 退出码：0 = 无删除；1 = **有删除**（须逐条说明理由）；2 = 用法错误。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/assert_name_diff.py "$@"
     ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"

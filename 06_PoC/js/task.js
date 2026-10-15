@@ -98,8 +98,25 @@ export class TaskEntry {
       scope: { ...TASK_SCOPE_DEFAULT },
       lastMain: null, lastSecond: null,
     };
-    this._timer = null;
-    this._seq = 0;
+    // ★ Phase 51（D47）：去抖计时器与请求序号**必须按槽独立**。
+    //   本组件有**两个逻辑槽**：`main`（起点/唯一实体）与 `second`（终点）。
+    //   旧实现两个槽共用**一个** `_timer` 与**一个** `_seq`，两个后果都是「静默丢结果」：
+    //
+    //   ① 序号串台（**阻断**）：`applyCard()` 与 `open()` 都会并发调用
+    //      `_run("main")` + `_run("second")`。second 先占走序号 ⇒ main 的响应回来时
+    //      `mine !== _seq` ⇒ 被当成「过期响应」丢掉。实测（真浏览器）：
+    //        点 relation 卡 ⇒ `lastMain = null`、`#task-cands` 里**没有** main 槽、
+    //        `state.seed = null`、`#task-run` **永远 disabled**。
+    //      ⇒ 四张示例卡里的**第一张**（也是唯一的 path 卡）直接卡死，用户无法前进。
+    //      对照实验（同一查询词 `gibbs`）：与 second 并发 ⇒ `lastMain=null`；
+    //      单独调用 ⇒ `lastMain` 有值。唯一变量就是"是否并发"。
+    //
+    //   ② 计时器串台：两个槽共用一个计时器 ⇒ 在一个框里打字会**取消**另一个框待发的搜索。
+    //
+    //   同一族：与 Phase 50 的 **D45**（一个共享计数器被当成两个不同口径的集合大小）
+    //   同源 —— 「**共享的可变去抖状态被当成两条独立通道用**」。
+    this._timer = { main: null, second: null };
+    this._seq = { main: 0, second: 0 };
   }
 
   get isOpen() { return !!(this.root && !this.root.hidden); }
@@ -250,6 +267,10 @@ export class TaskEntry {
     this.state.second = card.end || "";
     this.state.seed = null; this.state.seedLabel = "";
     this.state.seed2 = null; this.state.seed2Label = "";
+    // ★ Phase 51（D49）：卡片若自带推荐范围（如 path 卡承诺的 8 节点/11 边需要 3 跳），
+    //   在此应用。**不静默** —— 紧接着的 `_fillForm()` 会把钳制结果写回输入框，
+    //   用户看得见、也改得动（铁律 #84：判别依据缺字段/过宽时不得静默回落）。
+    if (card.scope) this.state.scope = normalizeScope({ ...this.state.scope, ...card.scope });
     this._fillForm();
     this._applyCardVisibility();
     this._setStatus(`已载入示例卡：${card.question}　${card.note}`);
@@ -269,8 +290,9 @@ export class TaskEntry {
   }
 
   _debounced(which) {
-    if (this._timer) clearTimeout(this._timer);
-    this._timer = setTimeout(() => this._run(which), this.debounceMs);
+    // ★ 按槽独立（D47②）：一个槽的输入不得取消另一个槽待发的搜索
+    if (this._timer[which]) clearTimeout(this._timer[which]);
+    this._timer[which] = setTimeout(() => this._run(which), this.debounceMs);
   }
 
   async _run(which) {
@@ -295,10 +317,12 @@ export class TaskEntry {
       return;
     }
     if (!this.api) { this._setStatus("查询客户端未就绪"); return; }
-    const mine = ++this._seq;
+    const mine = ++this._seq[which];
     this._setStatus(`正在查「${s}」的候选…`);
     const env = await this.api.search(s, { limit: CANDIDATE_LIMIT * 4 });
-    if (mine !== this._seq) return;                 // 过期响应丢弃（防竞态覆盖）
+    // ★ 过期响应丢弃**按槽判定**（D47①）：只丢"本槽自己"的旧响应，
+    //   不得因为另一个槽发起了新请求就把本槽的结果误判为过期。
+    if (mine !== this._seq[which]) return;
     const list = takeCandidates(env, CANDIDATE_LIMIT);
     this._setCandidates(which, list);
     this._setStatus(list.status === "error"

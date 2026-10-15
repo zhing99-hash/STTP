@@ -1261,6 +1261,104 @@ check("F39e 已确认的候选带 `sel` 与 aria-pressed=true（无障碍 + 可�
 
 
 // ---------------------------------------------------------------------------
+// F40 链路闭合：**发送侧产物必须能通过校验侧**（D48）
+//   为什么单列一段：F38h 已经断言 `taskRequest` 产出 `seeds='a,b'`，
+//   也断言了它会序列化成什么 —— 但**没有任何断言**把产物喂给
+//   `SubgraphStore.run()` 前置的 `validateParams()`。
+//   于是 Phase 49 改了发送侧（src/dst → seeds）、忘了校验侧，
+//   两个断言各自全绿，真浏览器里点一下「生成子图」却是空画布 + 「错误」。
+//   ⇒ 「两侧各自正确 ≠ 两者对得上」。凡是"一个组件产出、另一个组件消费"的字段，
+//     都要有一条**把产物真的喂过去**的断言（同 D31 双向求差的动机）。
+// ---------------------------------------------------------------------------
+const pathReqV = C.taskRequest(pathCard, { seed: "CE:pq:gibbs_energy", second: "PB:pq:entropy" });
+check("F40a 【链路闭合】taskRequest 的 path 产物能通过 validateParams",
+      !!pathReqV && C.validateParams(pathReqV).ok === true,
+      JSON.stringify(C.validateParams(pathReqV)));
+
+check("F40b 【链路闭合】ego 产物同样能通过（同一不变量，不只覆盖 path）",
+      C.validateParams(C.taskRequest(egoCard, { seed: "PQ:energy" })).ok === true,
+      JSON.stringify(C.validateParams(C.taskRequest(egoCard, { seed: "PQ:energy" }))));
+
+check("F40c 【负对照】legacy 形状与端点数不对的 path 请求必须被拒",
+      C.validateParams({ mode: "path", src: "A", dst: "B" }).ok === false
+      && C.validateParams({ mode: "path" }).ok === false
+      && C.validateParams({ mode: "path", seeds: "A" }).ok === false
+      && C.validateParams({ mode: "path", seeds: "A,B,C" }).ok === false
+      && C.validateParams({ mode: "path", seeds: "A, ,B" }).ok === true,
+      "src/dst、零端、单端、三端 全拒；`A, ,B`（空段被忽略）⇒ 两端 ⇒ 放行");
+
+check("F40d path 被拒时的原因**可操作**（说清缺几个端点）",
+      (() => {
+        const m1 = C.validateParams({ mode: "path", seeds: "A" }).message || "";
+        const m2 = C.validateParams({ mode: "path", seeds: "A,B,C" }).message || "";
+        return /两个/.test(m1) && /1 个/.test(m1) && /只接受两个/.test(m2) && /3 个/.test(m2);
+      })(),
+      (C.validateParams({ mode: "path", seeds: "A" }).message || "").slice(0, 46));
+
+check("F40e 未知 mode 仍被拒（改造 path 分支不得顺手放宽 mode 白名单）",
+      C.validateParams({ mode: "nope" }).ok === false
+      && C.validateParams({ mode: "path", seeds: "A,B" }).ok === true,
+      JSON.stringify(C.validateParams({ mode: "nope" })));
+
+
+// ---------------------------------------------------------------------------
+// F41 客户端等待预算**不得**比服务端更早放弃（D53）
+//   现场：`Api` 固定 `deadlineMs = 3000`，而服务端 `deadline_ms` 默认 **10000**
+//   ⇒ 客户端 3 s 就 abort、服务端还在算 ⇒ 用户看到"失败"，而后端本来会给答案。
+//   表现酷似"偶发"：空闲时路径查询 0.36 s（100% 通过），
+//   本轮在 `release-full` + `eval` 之后跑同一查询就超 3 s ⇒ **必现**。
+//   ★「目标随机」的失败最容易被当成 flaky 放过，所以这里把它钉成**结构性断言**：
+//     对任意服务端 deadline，客户端预算必须**严格大于**它。
+// ---------------------------------------------------------------------------
+check("F41a 显式 `deadlineMs` 优先且不被改写（探活等调用点的既有口径不变）",
+      C.clientBudgetMs({ deadlineMs: 5000, deadline_ms: 999 }) === 5000,
+      String(C.clientBudgetMs({ deadlineMs: 5000, deadline_ms: 999 })));
+
+const _dls = [1, 50, 1000, 5000, 10000, C.HARD.deadline_ms];
+check("F41b ★【不变量】自带 `deadline_ms` 时，客户端预算**严格大于**服务端预算",
+      _dls.every((d) => C.clientBudgetMs({ deadline_ms: d }) > d),
+      _dls.map((d) => `${d}→${C.clientBudgetMs({ deadline_ms: d })}`).join("  "));
+
+check("F41c 无任何 deadline ⇒ 回落 fallbackMs（不允许 0 / NaN / Infinity）",
+      C.clientBudgetMs({}, { fallbackMs: 3000 }) === 3000
+      && Number.isFinite(C.clientBudgetMs({})) && C.clientBudgetMs({}) > 0,
+      String(C.clientBudgetMs({}, { fallbackMs: 3000 })));
+
+check("F41d 非法 deadline（0/负/NaN/字符串/null）⇒ 全部回落，不得变成 NaN 或 0",
+      [0, -1, NaN, "abc", null, undefined, Infinity].every((v) => {
+        const b = C.clientBudgetMs({ deadline_ms: v, deadlineMs: v }, { fallbackMs: 3000 });
+        return Number.isFinite(b) && b > 0;
+      }),
+      "★ `NaN + 4000` 会让 `setTimeout(…, NaN)` 等价于立即 abort —— 比固定 3 s 更糟");
+
+check("F41e 余量可配置，且不会把预算算错（margin=0 ⇒ 等于 deadline_ms，仍不 < 它）",
+      C.clientBudgetMs({ deadline_ms: 10000 }, { marginMs: 0 }) === 10000
+      && C.clientBudgetMs({ deadline_ms: 10000 }, { marginMs: 1500 }) === 11500,
+      "0 → 10000 ／ 1500 → 11500");
+
+check("F41f `Api.subgraph` 真的按请求自己的 deadline_ms 派生预算（不是只导出个函数）",
+      (() => {
+        const seen = [];
+        const api = new Api({
+          deadlineMs: 3000, marginMs: C.CLIENT_MARGIN_MS,
+          fetchImpl: (_u) => { seen.push(_u); return Promise.resolve({
+            ok: true, status: 200, text: () => Promise.resolve('{"status":"ok","nodes":[],"edges":[]}'),
+          }); },
+        });
+        const p = api.subgraph({ mode: "path", seeds: "A,B", deadline_ms: 10000 });
+        if (p && typeof p.catch === "function") p.catch(() => {});
+        return api.lastBudgetMs > 10000 && seen.length === 1;
+      })(),
+      (() => {
+        const api = new Api({ deadlineMs: 3000, fetchImpl: () => Promise.resolve({
+          ok: true, status: 200, text: () => Promise.resolve('{"status":"ok"}') }) });
+        const p = api.subgraph({ mode: "path", seeds: "A,B", deadline_ms: 10000 });
+        if (p && typeof p.catch === "function") p.catch(() => {});
+        return `lastBudgetMs=${api.lastBudgetMs}（deadline_ms=10000）`;
+      })());
+
+
+// ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）
 // ---------------------------------------------------------------------------
 check("META 注入的必然失败项（应被记为 FAIL）", false, "（注入反例）");

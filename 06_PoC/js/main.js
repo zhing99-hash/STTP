@@ -210,22 +210,60 @@ async function runTask({ params, card }) {
   maybeShowReopenTask();
   const label = card && card.mode === "path" ? `关系路径 ${card.question}` : `任务 ${params.seeds}`;
   const env = await runSubgraph(params, { label });
-  if (!env) return;
-  if (params.mode === "path") {
+  // ★ Phase 51（D50b）：**失败态的结论也必须写出来**。
+  //   `runSubgraph` 在 `no_result` / 空载荷 `timeout` 时返回 `null`
+  //   （`store.run` 的 `!hasPayload` 分支），信封只留在 `store.lastEnvelope` 里。
+  //   旧实现于是 `return` 掉 —— `#path-status` 会**保留上一次查询的结论**。
+  //   那比空白更糟：用户以为这是本次的结果（「上次说有 5 条路径，这次还是 5 条？」）。
+  //   故以 store 里的信封兜底，把本次的五态如实写出来。
+  const settled = env || (state.store && state.store.lastEnvelope) || null;
+  if (params.mode === "path" && settled) {
     // 路径模式：把「有哪几条路径」也画出来（后端 Phase 49 起透传 `paths`）
-    state.pathList = Array.isArray(env.paths) ? env.paths : [];
+    state.pathList = Array.isArray(settled.paths) ? settled.paths : [];
     if (state.pathList.length) {
       state.viz.clearPathHighlight();
       state.viz.highlightPath(state.pathList[0]);
       renderPathList(state.pathList);
     }
     const el = $("path-status");
-    if (el) {
-      el.textContent = `任务卡路径查询：${env.statusInfo ? env.statusInfo.label : env.status}`
-        + (state.pathList.length ? `，共 ${state.pathList.length} 条路径` : "")
-        + (env.reason ? ` —— ${env.reason}` : "");
-    }
+    // ★ 文案与底部路径栏**同源**（`pathOutcomeText`），见该函数的说明。
+    if (el) el.textContent = "任务卡路径查询：" + pathOutcomeText(settled, state.pathList);
   }
+}
+
+/**
+ * 路径查询结论 → **唯一**文案源（`runPath` 与任务卡共用）。
+ *
+ * ★ 为什么必须收敛到一处：这条文案承担的是**认识论责任** ——
+ *   "有没有路径"这个结论**对可信档与跳数都敏感**。实测（2026-10-15）：
+ *     · `MX:chem:co2 → MX:chem:combustion`：verified ⇒ no_result；all ⇒ 找到 3 条（随后 timeout）
+ *     · `CE:pq:gibbs_energy → PB:pq:entropy`：2 跳 ⇒ no_result（两档都是）；
+ *       3 跳 ⇒ truncated 8 节点/11 边
+ *   ⇒ 只说"确实没有路径"，会把「被可信度档隐藏」或「跳数不够」**报告成「不存在」**
+ *     （铁律 #52：验证的命题须＝被发布的命题；#67：五态须分列且说清边界）。
+ *   两处各写一套，就等于把这条责任复制两份、迟早只修一份。
+ */
+function pathOutcomeText(env, paths) {
+  const n = (paths || []).length;
+  if (env.status === "ok") return `找到 ${n} 条路径`;
+  if (env.status === "truncated") {
+    return `找到 ${n} 条路径（已达 max_paths，属**截断**而非全部）`;
+  }
+  if (env.status === "no_result") {
+    const hid = Number(env.hidden_by_trust || 0);
+    return hid > 0
+      ? `在当前**可信度档（verified）**与预算内没有路径 —— 本次已隐藏 ${hid} 条低可信度边`
+        + `（按边 id 去重、已探索范围内）；通路可能正被它们连接。`
+        + `可把「可信度」切到 all 再试；**若切档后仍无结果，更可能是跳数不够**，可增大跳数。`
+        + `（no_result ≠ 失败）`
+      : "在当前可信度档与跳数内没有路径（no_result，不是失败）—— 可增大跳数或放宽关系类型。";
+  }
+  if (env.status === "timeout") {
+    return "路径查询超时（非失败）：可降低跳数或提高超时"
+      + (n ? `（已找到 ${n} 条，属**截断**而非全部）` : "");
+  }
+  return `路径查询：${env.statusInfo ? env.statusInfo.label : env.status}`
+    + (env.reason ? " — " + env.reason : "");
 }
 
 function maybeShowReopenTask() {
@@ -273,40 +311,22 @@ async function runPath() {
   //   旧 shape（裸 id 数组）⇒ 两种来源都不会整条渲染不出来而不报错。
   const paths = Array.isArray(env.paths) ? env.paths : [];
   state.pathList = paths;
-  if (env.status === "ok" || (env.status === "truncated" && paths.length)) {
-    st.textContent = `找到 ${paths.length} 条路径`
-      + (env.status === "truncated" ? "（已达 max_paths，属**截断**而非全部）" : "");
+  // ★ Phase 51（D50）：文案取自**唯一来源** `pathOutcomeText()`（与任务卡共用）。
+  //   旧实现此处内联一大段、任务卡那边又另写一段 ⇒ 同一个结论两种解释，
+  //   且改动只可能落在其中一处（D48 的教训：两条代码路径口径必须收敛）。
+  st.textContent = pathOutcomeText(env, paths);
+  const drew = (env.status === "ok" || env.status === "truncated") && paths.length > 0;
+  if (drew) {
     state.viz.add(env.nodes, env.edges);
     state.viz.layout((env.nodes || []).map((n) => n.id));
     state.viz.clearPathHighlight();
     state.viz.highlightPath(pathNodeIds(paths[0]));
     renderPathList(paths);
     refreshLegend();
-  } else {
-    // ★ Phase 49：`no_result` 的文案必须**可操作**，不能只说"确实没有路径"。
-    //   实测（`MX:chem:co2 → MX:chem:combustion`，max_hops=5）：
-    //     `trust=verified`（**本栏默认**）⇒ **no_result**（10.7 s）
-    //     `trust=all`                    ⇒ **timeout**，但已找到 3 条路径
-    //   ⇒ "没有路径"这个结论**对 trust 档敏感**：默认档会隐藏低可信度边，
-    //     而跨域通路常常正是靠这些边连起来的。只写"确实没有路径"会把
-    //     **"被过滤掉了"** 说成 **"不存在"** —— 正是本项目最反对的那类结论
-    //     （铁律 #52：验证的命题须＝被发布的命题；#67：五态须分列且说清边界）。
-    //   故：如实报出被隐藏的边数，并给出下一步动作。
-    if (env.status === "no_result") {
-      const hid = Number(env.hidden_by_trust || 0);
-      st.textContent = hid > 0
-        ? `在当前**可信度档（verified）**与预算内没有路径 —— 本次已隐藏 ${hid} 条低可信度边`
-          + `（按边 id 去重、已探索范围内）；通路可能正被它们连接。`
-          + `可把左侧「可信度」切到 all 再试。（no_result ≠ 失败）`
-        : "在当前可信度档与预算内没有路径（no_result，不是失败）—— 可增大跳数或放宽关系类型。";
-    } else if (env.status === "timeout") {
-      st.textContent = "路径查询超时（非失败）：可降低跳数或提高超时"
-        + (paths.length ? `（已找到 ${paths.length} 条，属**截断**而非全部）` : "");
-    } else {
-      st.textContent = `路径查询：${env.statusInfo ? env.statusInfo.label : env.status}`
-        + (env.reason ? " — " + env.reason : "");
-    }
-    if (paths.length) { state.viz.add(env.nodes, env.edges); renderPathList(paths); }
+  } else if (paths.length) {
+    // timeout 也可能带部分结果 ⇒ 有就画，但状态仍如实显示（铁律 #67）
+    state.viz.add(env.nodes, env.edges);
+    renderPathList(paths);
   }
   afterDataChange();
 }

@@ -381,6 +381,8 @@ export function paramsSignature(params) {
  */
 const CARD_SEED = (c) => Object.freeze({
   ...c, types: Object.freeze(c.types || []),
+  // 卡片自带的**推荐范围**（Phase 51/D49）；冻结以防被就地改写
+  scope: c.scope ? Object.freeze({ ...c.scope }) : null,
 });
 
 export const TASK_CARDS = Object.freeze([
@@ -391,9 +393,22 @@ export const TASK_CARDS = Object.freeze([
     start: "gibbs",              // 预填搜索词 → 用户从中确认起点实体
     end: "entropy",
     types: [],                   // 路径查询不加类型过滤（否则容易人为切断通路）
+    // ★ Phase 51（D49）：卡片自带的**推荐范围**。
+    //   动机：本卡注释承诺「可连通（8 节点/11 边）」，但那份数据是 **3 跳**下测的，
+    //   而任务入口的全局默认跳数是 **2**（`BUDGET.hops`，为 ego 卡的邻域浏览而定）。
+    //   两者不一致 ⇒ 用户点了第一张卡、确认两端、点「生成子图」，得到的是 `no_result`
+    //   —— **发布了一个自己默认参数达不到的承诺**（铁律 #52 家族）。
+    //   实测（`CE:pq:gibbs_energy,PB:pq:entropy`，verified）：
+    //     hops=2 ⇒ no_result（hidden=12）｜hops=3/4/5 ⇒ **truncated 8 节点 / 11 边 / 5 条路径**
+    //   故：卡片显式预填它承诺的那个跳数（会**回写进输入框**，用户看得见、改得动，
+    //   不是静默修正 —— 铁律 #84：不得静默回落）。
+    //   全局默认仍是 2：**不给所有卡统一加跳数**（那会把 ego 卡的邻域也撑大）。
+    scope: { hops: 3 },
     note: "先确认两端实体，再看它们之间的**有限条**路径。"
-      + "★ 同名实体来自不同来源时结论会不同：本快照下 `Gibbs free energy ↔ entropy(PB)` 可连通"
-      + "（8 节点/11 边），而 `↔ entropy(TH)` 在 5 跳内**确实没有路径** —— 这正是「先确认实体」的意义。",
+      + "★ 同名实体来自不同来源时结论会不同：本快照下 `Gibbs free energy ↔ entropy(PB)`"
+      + "在 **3 跳起**可连通（8 节点 / 11 边 / 5 条路径，本卡已把跳数预填为 3），"
+      + "而 `↔ entropy(TH)` 在 5 跳内**确实没有路径** —— 这正是「先确认实体」的意义。"
+      + "（把跳数调回 2，PB 那一支也会如实变成 no_result：通路长度是真的。）",
   }),
   CARD_SEED({
     id: "dimension",
@@ -636,6 +651,47 @@ export const MODE_BADGE = Object.freeze({
 });
 
 // ---------------------------------------------------------------------------
+// 客户端等待预算（★ **不得**比服务端更早放弃）
+// ---------------------------------------------------------------------------
+
+/** 客户端等待预算相对服务端 `deadline_ms` 的默认余量（毫秒）。 */
+export const CLIENT_MARGIN_MS = 4000;
+
+/**
+ * 由请求自身的参数推出**客户端**的等待预算。
+ *
+ * ★ 为什么必须这样算（Phase 51 / D53 的现场）：
+ *   旧实现给 `Api` 一个**固定** `deadlineMs = 3000`，而服务端允许的
+ *   `deadline_ms` 默认就是 **10000**（`queries.DEFAULT_DEADLINE_MS`）。
+ *   ⇒ 客户端在 3 s 就 `abort`，而**服务端还在算** ⇒ 用户看到"失败"，
+ *     而后端**本来会给出答案**。
+ *   现场表现酷似"偶发"：空闲时 100% 通过（实测路径查询 0.36 s），
+ *   一旦机器忙（本轮在 `release-full` + `eval` 之后跑）同一查询就超 3 s ⇒ 必现。
+ *   ★「目标随机」的失败最容易被当成 flaky 放过 —— 但它是**真缺陷**。
+ *
+ * 判据顺序（**显式覆盖 > 由查询参数派生 > 兜底**）：
+ *   1. `opts.deadlineMs` —— 调用点显式指定（如 healthz 探活 5 s），原样采用，不改写；
+ *   2. `opts.deadline_ms` —— 查询自己的服务端超时 ⇒ **`deadline_ms + marginMs`**
+ *      （★ 必须 **严格大于** `deadline_ms`：客户端先放弃 = 白等）；
+ *   3. 都没有 ⇒ `fallbackMs`（**不允许**回落到 0 / NaN / Infinity）。
+ *
+ * 非法输入（0 / 负数 / NaN / 字符串 / null）一律走兜底 —— 否则一个 `NaN + 4000`
+ * 会让预算变成 `NaN`，`setTimeout(…, NaN)` 等价于**立即 abort**（比固定 3 s 更糟）。
+ *
+ * @param {{deadlineMs?:number, deadline_ms?:number}} opts
+ * @param {{fallbackMs?:number, marginMs?:number}} [defaults]
+ * @returns {number} 正整数毫秒
+ */
+export function clientBudgetMs(opts = {}, defaults = {}) {
+  const fallbackMs = defaults.fallbackMs == null ? 3000 : Number(defaults.fallbackMs);
+  const marginMs = defaults.marginMs == null ? CLIENT_MARGIN_MS : Number(defaults.marginMs);
+  const ok = (v) => typeof v === "number" && Number.isFinite(v) && v > 0;
+  if (ok(opts.deadlineMs)) return opts.deadlineMs;
+  if (ok(opts.deadline_ms)) return opts.deadline_ms + (ok(marginMs) ? marginMs : 0);
+  return ok(fallbackMs) ? fallbackMs : 3000;
+}
+
+// ---------------------------------------------------------------------------
 // 提交前校验（**先在前端拦住必然 400 的请求**，并给出可读原因）
 // ---------------------------------------------------------------------------
 
@@ -658,8 +714,29 @@ export function validateParams(o = {}) {
     return { ok: true };
   }
   if (mode === "path") {
-    if (!nonEmpty(o.src) || !nonEmpty(o.dst)) {
-      return { ok: false, field: "src", message: "请给出起点与终点（可点「取选中」）" };
+    // ★ Phase 51 修（D48）：本端点（`/api/subgraph`）的 path 模式读的是 **`seeds`（2 个）**，
+    //   不是 `src`/`dst`。Phase 49 已把**发送侧**（`taskRequest` / `main.runPath`）从
+    //   `src`/`dst` 改成 `seeds`，但这里的**校验侧**漏改 ⇒ 任务卡的路径查询在本地就被判
+    //   「请给出起点与终点」拒掉、请求**根本发不出去**。真浏览器实测：点第一张卡
+    //   （`relation`）→ 确认两端 → 点「生成子图」⇒ `/api/subgraph` 请求数 **0**、
+    //   状态栏「错误」、`store.depth = 0`、画布空 —— 而**没有任何 JS 异常**。
+    //
+    //   为什么此前没被发现：底部路径栏 `runPath()` 是**直接调 api**、不经本函数 ⇒
+    //   它一直好用；只有任务卡这条新链路会撞上。**同一个功能有两条代码路径、
+    //   只有一条经过校验** —— 与 E35「改了发送侧漏了校验侧」同族。
+    //
+    //   `src`/`dst` 属 legacy `/api/path`（D43：该端点甚至不做 trust 过滤），
+    //   本函数服务于 `/api/subgraph` ⇒ **不得**把它判为合法，否则等于放出一个
+    //   后端必然回 no_result 的请求（把「参数形状错了」伪装成「知识上不存在」）。
+    const n = String(o.seeds == null ? "" : o.seeds)
+      .split(",").map((x) => x.trim()).filter(Boolean).length;
+    if (n !== 2) {
+      return {
+        ok: false, field: "seeds",
+        message: n < 2
+          ? `本查询需要**两个**实体（起点 / 终点），当前只给了 ${n} 个 —— 请确认两端`
+          : `本查询只接受两个实体（起点 / 终点），当前给了 ${n} 个`,
+      };
     }
     return { ok: true };
   }
