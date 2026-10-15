@@ -31,8 +31,9 @@ import { renderStatusLine, renderBanner, bindSearch } from "../js/panels.js";
 import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUSES, STALE_EVIDENCE_STATUSES, EVIDENCE_STATUS_RANK,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
-         evidenceStatusBadge } from "../js/style.js";
+         evidenceStatusBadge, EDGE_TYPE_COLOR } from "../js/style.js";
 import { renderEdgeDetail } from "../js/evidence.js";
+import { renderCardsHTML, renderCandidatesHTML, CANDIDATE_LIMIT } from "../js/task.js";
 
 let pass = 0, fail = 0;
 const rows = [];
@@ -273,14 +274,26 @@ check("F21 hexToRgb 非法返回 null、合法解析正确",
 // ---------------------------------------------------------------------------
 // F22–F24 模式探测的**请求序列**（验收 V1：首屏不得请求全图）
 // ---------------------------------------------------------------------------
+// ★ Phase 49（修外部评审 P0-2）：探活改为 **`/api/healthz` 优先**。
+//   实测：权威图 67.7 MB ⇒ 冷进程首次 `/api/stats` = 4.91 s，而探活预算 2 s
+//   ⇒ abort ⇒ 判「后端不可用」⇒ 退 bundle ⇒ **首次打开就像坏了**。
+//   `/api/healthz` 不触碰图谱数据 ⇒ 毫秒级回答。故这里的请求序列断言
+//   从「stats 起手」改成「healthz 起手，且**不得**触碰 /api/stats」（后者只作老服务端回退）。
 function jsonRes(status, body) {
   return { ok: status >= 200 && status < 300, status, json: async () => body };
 }
 
-async function probeWith({ statsOk, bundleOk, forced }) {
+async function probeWith({ healthzOk = null, statsOk, bundleOk, forced, warming = false }) {
   const calls = [];
+  // `healthzOk === null` ⇒ 模拟**老服务端**（没有 /api/healthz，回 404）
   const impl = async (url, opts = {}) => {
     calls.push(`${(opts.method || "GET")} ${url}`);
+    if (url.includes("/api/healthz")) {
+      return healthzOk
+        ? jsonRes(200, { status: "ok", backend: warming ? "warming" : "ready",
+                         graph_ready: !warming, snapshot_id: warming ? null : "sha256:aaaa" })
+        : jsonRes(404, {});
+    }
     if (url.includes("/api/stats")) {
       return statsOk ? jsonRes(200, { status: "ok", nodes: 1, edges: 1 }) : jsonRes(503, {});
     }
@@ -294,27 +307,52 @@ async function probeWith({ statsOk, bundleOk, forced }) {
   return { det, calls };
 }
 
-const live = await probeWith({ statsOk: true, bundleOk: true });
-check("F22 后端可用 ⇒ live，且请求序列**不含** /graph_data.json（验收 V1）",
-      live.det.mode === "live" && !live.calls.some((u) => u.includes("graph_data.json")),
+const live = await probeWith({ healthzOk: true, statsOk: true, bundleOk: true });
+check("F22 后端可用 ⇒ live，序列仅 healthz，**不含** /api/stats 与 /graph_data.json（验收 V1）",
+      live.det.mode === "live"
+      && !live.calls.some((u) => u.includes("graph_data.json"))
+      && !live.calls.some((u) => u.includes("/api/stats")),
       live.det.mode + " ｜ " + live.calls.join(" ; "));
 
-const bun = await probeWith({ statsOk: false, bundleOk: true });
-check("F23 后端不可用但样例在 ⇒ bundle，且请求序列为 stats → HEAD graph_data.json",
-      bun.det.mode === "bundle" && bun.calls.length === 2
-      && bun.calls[0].includes("/api/stats") && /^HEAD /.test(bun.calls[1])
-      && bun.calls[1].includes("graph_data.json"),
+// ★★ P0-2 的**构造性反证**：healthz 通、而 stats 恰好超时/失败（=冷启动的真实情形）
+//    ⇒ 仍必须判 live。旧实现（探活=/api/stats，2 s 预算）在这里会落到 bundle/offline，
+//    也就是"首次打开就像坏了"。本条是这次修复的核心断言。
+const cold = await probeWith({ healthzOk: true, statsOk: false, bundleOk: true });
+check("F22b 【P0-2 负对照】healthz 通、stats 恰好失败（冷启动）⇒ 仍 live（不得退 bundle）",
+      cold.det.mode === "live" && !cold.calls.some((u) => u.includes("/api/stats")),
+      cold.det.mode + " ｜ " + cold.calls.join(" ; "));
+
+// 预热中（backend=warming）是**独立状态**，不是失败（铁律 #84）
+const warm = await probeWith({ healthzOk: true, statsOk: false, bundleOk: true, warming: true });
+check("F22c backend=warming（图谱仍在预热）⇒ 仍判 live，且 warm=false 供 UI 显示「启动中」",
+      warm.det.mode === "live" && warm.det.apiOk === true,
+      warm.det.mode + " ｜ apiOk=" + warm.det.apiOk + " ｜ " + warm.calls.join(" ; "));
+
+// 老服务端（无 healthz）⇒ 回退 /api/stats，**且回退成功必须判可用**
+// （不得因为"较新的判据失败"就把整体回落成失败 —— 铁律 #84 的反面）
+const legacyOk = await probeWith({ healthzOk: null, statsOk: true, bundleOk: true });
+check("F22d 老服务端无 /api/healthz ⇒ 回退 /api/stats 成功仍判 live（回退不得反噬成功）",
+      legacyOk.det.mode === "live"
+      && legacyOk.calls.some((u) => u.includes("/api/healthz"))
+      && legacyOk.calls.some((u) => u.includes("/api/stats")),
+      legacyOk.det.mode + " ｜ " + legacyOk.calls.join(" ; "));
+
+const bun = await probeWith({ healthzOk: false, statsOk: false, bundleOk: true });
+check("F23 后端不可用但样例在 ⇒ bundle，且请求序列为 healthz → stats → HEAD graph_data.json",
+      bun.det.mode === "bundle" && bun.calls.length === 3
+      && bun.calls[0].includes("/api/healthz") && bun.calls[1].includes("/api/stats")
+      && /^HEAD /.test(bun.calls[2]) && bun.calls[2].includes("graph_data.json"),
       bun.det.mode + " ｜ " + bun.calls.join(" ; "));
 
-const off = await probeWith({ statsOk: false, bundleOk: false });
+const off = await probeWith({ healthzOk: false, statsOk: false, bundleOk: false });
 check("F24 两者皆不可用 ⇒ offline（★ 不假装 live / bundle）",
       off.det.mode === "offline", off.det.mode + " ｜ " + off.calls.join(" ; "));
 
-const fb = await probeWith({ statsOk: true, bundleOk: true, forced: "bundle" });
+const fb = await probeWith({ healthzOk: true, statsOk: true, bundleOk: true, forced: "bundle" });
 check("F24b 显式 ?mode=bundle ⇒ 走样例全量（即使后端可用）",
       fb.det.mode === "bundle", fb.det.mode + " ｜ " + fb.calls.join(" ; "));
 
-const fl = await probeWith({ statsOk: true, bundleOk: false, forced: "bundle" });
+const fl = await probeWith({ healthzOk: true, statsOk: true, bundleOk: false, forced: "bundle" });
 check("F24c ?mode=bundle 但样例缺失、后端可用 ⇒ 回落 live（不白屏）",
       fl.det.mode === "live", fl.det.mode + " ｜ " + fl.calls.join(" ; "));
 
@@ -991,6 +1029,235 @@ function probeImpl({ statsBody, statsStatus = 200, bundleBytes, bundleStatus = 2
         /显示前 20 条/.test(list6.innerHTML) && /共 81 条/.test(list6.innerHTML),
         (list6.innerHTML.match(/<div class="sr-head">[^<]*/) || ["(无 sr-head)"])[0]);
 }
+
+
+// ---------------------------------------------------------------------------
+// F37 端点契约 ↔ buildParams **双向求差**（D31）
+// ---------------------------------------------------------------------------
+// 为什么必须双向：单侧检查永远抓不到本类缺陷。P48 修了 `q`；P49 又实测出三例同族
+//   —— `hops`（没发）、`subject`（后端读 `subjects`）、`exclude_inferred`
+//   （后端读 `exclude_model_inferred`）。三者都"不报错"，只让参数静默丢失。
+// 处方：把「后端读的参数」与「前端能发的键」钉在同一张契约上，两侧都求差。
+const CONTRACT_EP_PATH = new URL("../../contracts/endpoints.schema.json", import.meta.url);
+const CORE_JS_PATH = new URL("../js/core.js", import.meta.url);
+let epContract = null, coreSrc = null;
+try { epContract = JSON.parse(readFileSync(CONTRACT_EP_PATH, "utf-8")); } catch (e) { epContract = null; }
+try { coreSrc = readFileSync(CORE_JS_PATH, "utf-8"); } catch (e) { coreSrc = null; }
+
+check("F37a 读到端点契约与 core.js 源码（双向求差的前提）",
+      !!(epContract && epContract.endpoints && coreSrc), epContract ? "ok" : "读取失败");
+
+const EMITTED = coreSrc ? Array.from(new Set(
+  Array.from(coreSrc.matchAll(/put\(\s*"([a-z_0-9]+)"/g)).map((m) => m[1]),
+)).sort() : [];
+const DECLARED = [];
+if (epContract) {
+  Object.keys(epContract.endpoints).forEach((ep) => {
+    Object.keys(epContract.endpoints[ep].params || {}).forEach((k) => DECLARED.push(k));
+  });
+}
+const DECLARED_UNIQ = Array.from(new Set(DECLARED)).sort();
+const NOT_EMITTED = Object.keys((epContract && epContract.backend_params_not_emitted) || {});
+
+// 方向 A：后端每个参数，要么前端能发，要么**显式**声明"前端有意不发（附理由）"
+const aMissing = DECLARED_UNIQ.filter((k) => EMITTED.indexOf(k) < 0 && NOT_EMITTED.indexOf(k) < 0);
+check("F37b 【方向A】后端读的每个参数，前端都要能发（或显式声明不发+理由）",
+      aMissing.length === 0,
+      aMissing.length ? "静默丢失风险: " + aMissing.join(",") : `${DECLARED_UNIQ.length} 个后端参数全部可达`);
+
+// ★ 构造性反证：把 `hops` 从"前端能发"里去掉，方向 A 必须报出来（否则检测器恒真）
+const aMissingNeg = DECLARED_UNIQ.filter(
+  (k) => EMITTED.filter((e) => e !== "hops").indexOf(k) < 0 && NOT_EMITTED.indexOf(k) < 0);
+check("F37b-NEG 【负对照】从可发集合中移除 `hops` ⇒ 方向A 必须报出它（证明检测非恒真）",
+      aMissingNeg.indexOf("hops") >= 0 && aMissingNeg.length === aMissing.length + 1,
+      "报出: " + aMissingNeg.join(","));
+
+// 方向 B：前端每个 put() 键，都必须被某个端点读取（否则是死噪声，还会污染 query_hash）
+const bOrphan = EMITTED.filter((k) => DECLARED_UNIQ.indexOf(k) < 0);
+check("F37c 【方向B】buildParams 的每个 put() 键都被某个端点读取（无死参数）",
+      bOrphan.length === 0,
+      bOrphan.length ? "无人读取: " + bOrphan.join(",") : `${EMITTED.length} 个键全部有归属`);
+
+// 契约自洽：`frontend_must_not_send` 里的键**不得**同时出现在该端点的 params 里
+let incoherent = [];
+if (epContract) {
+  Object.keys(epContract.endpoints).forEach((ep) => {
+    const e = epContract.endpoints[ep];
+    (e.frontend_must_not_send || []).forEach((k) => {
+      if (Object.prototype.hasOwnProperty.call(e.params || {}, k)) incoherent.push(`${ep}:${k}`);
+    });
+  });
+}
+check("F37d 契约自洽：must_not_send 的键不得同时出现在该端点 params 里",
+      incoherent.length === 0, incoherent.join(",") || "ok");
+
+// P49 修掉的三例必须**长期钉住**（缺任何一个即回归）
+const sub = (epContract && epContract.endpoints["/api/subgraph"]) || { params: {} };
+const pinned = ["hops", "subjects", "exclude_model_inferred"];
+const unpinned = pinned.filter((k) => !(k in sub.params) || EMITTED.indexOf(k) < 0);
+check("F37e `hops`/`subjects`/`exclude_model_inferred` 三者同时在契约与 buildParams 中（P49 回归护栏）",
+      unpinned.length === 0, unpinned.length ? "缺: " + unpinned.join(",") : pinned.join(" + "));
+
+// P0-4 的契约化：`/api/subgraph` 明确**不得**收 src/dst（path 只认 seeds）
+const mustNot = sub.frontend_must_not_send || [];
+check("F37f `/api/subgraph` 契约显式声明 must_not_send ⊇ {src,dst,subject,q}（P0-4 契约化）",
+      ["src", "dst", "subject", "q"].every((k) => mustNot.indexOf(k) >= 0),
+      mustNot.join(",") || "(空)");
+
+check("F37g `backend_params_not_emitted` 每项都写了理由（不得只列名字）",
+      NOT_EMITTED.length > 0
+      && NOT_EMITTED.every((k) => {
+        const v = epContract.backend_params_not_emitted[k];
+        return typeof v === "string" && v.trim().length >= 8;
+      }),
+      NOT_EMITTED.join(","));
+
+// ---------------------------------------------------------------------------
+// F38 任务式入口的纯逻辑（卡片 / 范围 / 请求构造 / 候选）
+// ---------------------------------------------------------------------------
+const CARDS = C.TASK_CARDS;
+check("F38a 示例卡 = 4 张，id 唯一，字段齐备（question/mode/note）",
+      CARDS.length === 4
+      && new Set(CARDS.map((c) => c.id)).size === 4
+      && CARDS.every((c) => c.question && c.mode && c.note && c.note.length > 10),
+      CARDS.map((c) => c.id).join("/"));
+
+const EDGE_TYPES = Object.keys(EDGE_TYPE_COLOR);
+const badTypes = CARDS.flatMap((c) => (c.types || []).filter((t) => EDGE_TYPES.indexOf(t) < 0))
+  .map((t) => t);
+check("F38b 每张卡的关系类型都属真实的 24 类（卡片不得引用不存在的成语 —— 铁律 #39）",
+      badTypes.length === 0,
+      badTypes.length ? "不存在: " + badTypes.join(",") : `${CARDS.reduce((n, c) => n + c.types.length, 0)} 个类型引用全部有效`);
+
+const pathCard = CARDS.filter((c) => c.mode === "path")[0];
+const egoCard = CARDS.filter((c) => c.mode === "ego")[0];
+check("F38c 恰好 1 张路径卡 + 3 张 ego 卡（覆盖「两点关系」与三类单点关系）",
+      CARDS.filter((c) => c.mode === "path").length === 1
+      && CARDS.filter((c) => c.mode === "ego").length === 3,
+      CARDS.map((c) => `${c.id}:${c.mode}`).join(" "));
+
+// 范围默认值必须与 BUDGET **同源**（不得各写一套默认）
+check("F38d TASK_SCOPE_DEFAULT 从 BUDGET 派生（hops/nodes/edges/deadline 全等）",
+      C.TASK_SCOPE_DEFAULT.hops === C.BUDGET.hops
+      && C.TASK_SCOPE_DEFAULT.max_nodes === C.BUDGET.nodes
+      && C.TASK_SCOPE_DEFAULT.max_edges === C.BUDGET.edges
+      && C.TASK_SCOPE_DEFAULT.deadline_ms === C.BUDGET.deadline_ms
+      && C.TASK_SCOPE_DEFAULT.trust === "verified",
+      JSON.stringify(C.TASK_SCOPE_DEFAULT));
+
+check("F38e 默认预算已收敛为 40/70/2/10000/5（外部评审 §4/§6.1）",
+      C.BUDGET.nodes === 40 && C.BUDGET.edges === 70 && C.BUDGET.hops === 2
+      && C.BUDGET.deadline_ms === 10000 && C.BUDGET.paths === 5,
+      JSON.stringify(C.BUDGET));
+
+const sc = C.normalizeScope({ hops: 99, max_nodes: 0, max_edges: -3, deadline_ms: 1e9, trust: "bogus" });
+check("F38f normalizeScope 钳到 HARD 内，且未知 trust **往严处**回落 verified",
+      sc.hops === C.HARD.hops && sc.max_nodes === 1 && sc.max_edges === 1
+      && sc.deadline_ms === C.HARD.deadline_ms && sc.trust === "verified",
+      JSON.stringify(sc));
+
+const egoReq = C.taskRequest(egoCard, { seed: "PQ:energy" });
+check("F38g ego 请求：mode=ego / seeds / **含 hops** / types 透传 / 不带 path 专用键",
+      egoReq && egoReq.mode === "ego" && egoReq.seeds === "PQ:energy"
+      && egoReq.hops === C.TASK_SCOPE_DEFAULT.hops
+      && Array.isArray(egoReq.types) && egoReq.types.length === egoCard.types.length
+      && !("max_hops" in egoReq) && !("max_paths" in egoReq),
+      JSON.stringify(egoReq));
+
+check("F38h path 请求：两端齐全 ⇒ seeds='a,b' + max_hops；**不发** `hops`（该模式不读它）",
+      (() => {
+        const r = C.taskRequest(pathCard, { seed: "CE:pq:gibbs_energy", second: "PB:pq:entropy" });
+        return r && r.mode === "path" && r.seeds === "CE:pq:gibbs_energy,PB:pq:entropy"
+          && r.max_hops === C.TASK_SCOPE_DEFAULT.hops && !("hops" in r);
+      })(),
+      JSON.stringify(C.taskRequest(pathCard, { seed: "A", second: "B" })));
+
+check("F38i 【fail-closed】path 缺一端 ⇒ taskRequest 返回 null（不发必然被拒的请求）",
+      C.taskRequest(pathCard, { seed: "A" }) === null
+      && C.taskRequest(pathCard, { second: "B" }) === null
+      && C.taskRequest(pathCard, {}) === null
+      && C.taskRequest(egoCard, {}) === null,
+      "四条缺参路径均为 null");
+
+check("F38j taskBlockedReason 给出**可操作**原因（不做「点了没反应」）",
+      C.taskBlockedReason(egoCard, { seed: "X" }) === null
+      && /确认一个候选实体/.test(C.taskBlockedReason(egoCard, {}) || "")
+      && /第二个/.test(C.taskBlockedReason(pathCard, { seed: "X" }) || ""),
+      (C.taskBlockedReason(pathCard, { seed: "X" }) || "").slice(0, 40));
+
+// 纯逻辑层串起来：任务请求 ⇒ buildParams ⇒ 查询串（含刚修好的 hops）
+const qsEgo = C.toQueryString(C.buildParams(egoReq));
+check("F38k 任务请求序列化后**真的带 `hops=`**（P49 修的第 1 例；同时带 types=）",
+      /(^|&)hops=2(&|$)/.test(qsEgo) && /(^|&)types=/.test(qsEgo)
+      && /(^|&)trust=verified(&|$)/.test(qsEgo),
+      qsEgo);
+
+const qsSubj = C.toQueryString(C.buildParams({ mode: "filter", subjects: ["物理", "化学"] }));
+check("F38l 学科筛选序列化为**复数** `subjects=`（后端只认这个；`subject=` 会被完全忽略）",
+      /(^|&)subjects=%E7%89%A9%E7%90%86%2C%E5%8C%96%E5%AD%A6(&|$)/.test(qsSubj),
+      qsSubj);
+
+const qsEx = C.toQueryString(C.buildParams({ mode: "filter", exclude_model_inferred: true }));
+check("F38m 「排除推断边」序列化为 `exclude_model_inferred=1`（`exclude_inferred` 实测无效）",
+      /(^|&)exclude_model_inferred=1(&|$)/.test(qsEx) && !/exclude_inferred=1/.test(qsEx),
+      qsEx);
+
+const cand = C.takeCandidates({
+  status: "ok", total_matches: 81, truncated: true,
+  hits: Array.from({ length: 20 }, (_, i) => ({ id: `X:${i}`, label: `L ${i}` })),
+}, CANDIDATE_LIMIT);
+check("F38n takeCandidates 只取前 5 条，并如实给出 total/truncated（不重排、不隐瞒）",
+      cand.items.length === 5 && cand.shown === 5 && cand.total === 81 && cand.truncated === true,
+      `${cand.items.length}/${cand.total} truncated=${cand.truncated}`);
+check("F38o CANDIDATE_LIMIT = 5（外部评审 §7-C「最多 5 个候选」）", CANDIDATE_LIMIT === 5, String(CANDIDATE_LIMIT));
+
+check("F38p pathNodeIds 同时兼容统一信封 `{nodes}` 与 legacy 裸数组（不静默渲染成空）",
+      JSON.stringify(C.pathNodeIds({ nodes: ["a", "b"], edges: ["e1"] })) === JSON.stringify(["a", "b"])
+      && JSON.stringify(C.pathNodeIds(["a", "b"])) === JSON.stringify(["a", "b"])
+      && JSON.stringify(C.pathNodeIds(null)) === JSON.stringify([]),
+      JSON.stringify(C.pathNodeIds({ nodes: ["a", "b"] })));
+check("F38q pathEdgeIds：legacy 裸数组**没有**边信息 ⇒ 返回空数组（不臆造）",
+      JSON.stringify(C.pathEdgeIds(["a", "b"])) === JSON.stringify([])
+      && JSON.stringify(C.pathEdgeIds({ nodes: ["a"], edges: ["e1"] })) === JSON.stringify(["e1"]),
+      "ok");
+
+// ---------------------------------------------------------------------------
+// F39 任务入口的渲染层（纯函数返回 HTML，无 DOM）
+// ---------------------------------------------------------------------------
+const cardsHtml = renderCardsHTML();
+check("F39a 渲染出 4 张卡，且每张都带 data-card 与问句原文",
+      (cardsHtml.match(/data-card="/g) || []).length === 4
+      && CARDS.every((c) => cardsHtml.indexOf(c.question) >= 0),
+      CARDS.map((c) => c.id).join("/"));
+
+const evil = [Object.assign({}, egoCard, { question: '<img src=x onerror=alert(1)>' })];
+const evilHtml = renderCardsHTML(evil);
+check("F39b 卡片问句被转义（<img> 不得原样进入 DOM）",
+      evilHtml.indexOf("<img") < 0 && evilHtml.indexOf("&lt;img") >= 0,
+      evilHtml.slice(0, 80));
+
+const errHtml = renderCandidatesHTML({ items: [], shown: 0, total: 0, truncated: false,
+                                       status: "error", error_code: "BAD_REQUEST", reason: "缺少参数 q" }, "main");
+const emptyHtml = renderCandidatesHTML({ items: [], shown: 0, total: 0, truncated: false,
+                                         status: "no_result", error_code: null, reason: "" }, "main");
+check("F39c 【#67】候选区把「失败」与「空」分列（失败显示 error_code+原因，空显示放宽建议）",
+      /查询失败/.test(errHtml) && /BAD_REQUEST/.test(errHtml)
+      && !/查询失败/.test(emptyHtml) && /没有匹配/.test(emptyHtml),
+      "err/empty 分离");
+
+const trHtml = renderCandidatesHTML({ items: [{ id: "A:1", label: "a", type: "T", subject: "S", score: 90 }],
+                                      shown: 1, total: 81, truncated: true,
+                                      status: "ok", error_code: null, reason: "" }, "main");
+check("F39d 候选被截断 ⇒ 显式写「显示前 N 条 / 共 M 条（已截断）」",
+      /显示前 1 条/.test(trHtml) && /共 81 条/.test(trHtml) && /已截断/.test(trHtml),
+      (trHtml.match(/候选实体 · [^<]*/) || ["(无)"])[0]);
+
+const selHtml = renderCandidatesHTML({ items: [{ id: "A:1", label: "a", type: "T", subject: "S", score: 90 }],
+                                       shown: 1, total: 1, truncated: false,
+                                       status: "ok", error_code: null, reason: "" }, "main", "A:1");
+check("F39e 已确认的候选带 `sel` 与 aria-pressed=true（无障碍 + 可视双重标识）",
+      /class="cand-item sel"/.test(selHtml) && /aria-pressed="true"/.test(selHtml),
+      (selHtml.match(/cand-item[^"]*"/) || ["(无)"])[0]);
 
 
 // ---------------------------------------------------------------------------

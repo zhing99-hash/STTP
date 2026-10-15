@@ -67,7 +67,14 @@ REQUIRED_IDS = [
     "btn-path", "btn-path-clear", "path-status", "path-list",
 ]
 
-MODULES = ["core", "style", "api", "modes", "subgraph", "viz", "panels", "evidence", "main"]
+# ★ 2026-10-15（Phase 49）改为**从磁盘派生**，不再手写白名单。
+#   起因（实测）：新增 `js/task.js` 后只给 `main.js` 加了 import，忘了把它写进这份
+#   手写列表 ⇒ H4 仍报「9/9 个模块均可 HTTP 取到」，而页面实际需要 **10** 个
+#   —— 典型的**白名单永远漏**（#71）叠加**仪器自指**（#82：扫描范围 ⊂ 被测范围 ⇒ 假绿）。
+#   现在：① 列表派生自 `js/*.js`（新增文件**自动**纳入，不再需要人记得改这里）；
+#        ② 配一条**反向**断言 S15：磁盘上每个模块都必须在 `main.js` 的 import 闭包内
+#          （防另一种漏法："文件加了、但没接进页面"）。两个方向都堵上。
+MODULES = sorted(p.stem for p in pathlib.Path(JS_DIR).glob("*.js"))
 
 
 class Rep:
@@ -211,6 +218,23 @@ def main(argv=None):
     rep.add(not miss_var, "S13 五态 CSS 变量齐备", "缺: " + ",".join(miss_var) if miss_var else "5/5")
     rep.add("data-state" in html, "S14 状态行根元素带 data-state（供 DOM 断言）", "")
 
+    # S15 ★ 反向：磁盘上每个模块都必须**被引用**（"文件加了但没接进页面"）
+    #   与 H4 的正向（页面能取到）配成一对：正向查"缺文件"，反向查"死文件"。
+    #   闭包从 `main.js` 出发，静态 `from "./x.js"` 与动态 `import("./x.js")` 都算。
+    _dep_re = re.compile(r'''["']\./([A-Za-z0-9_\-]+)\.js["']''')
+    _seen, _stack = set(), ["main"]
+    while _stack:
+        _n = _stack.pop()
+        if _n in _seen:
+            continue
+        _seen.add(_n)
+        _stack.extend(_dep_re.findall(js_src.get(_n, "")))
+    _orphans = [m for m in MODULES if m not in _seen]
+    rep.add(not _orphans,
+            f"S15 全部 {len(MODULES)} 个模块都在 main.js 的 import 闭包内（无死文件、无漏接）",
+            "未被引用：" + "、".join(_orphans) if _orphans
+            else f"{len(_seen)}/{len(MODULES)} 可达")
+
     # ---------------------------------------------------------------- M 段
     rep.section("[M] 模块图完整性（防 404 静默失效）")
     import_re = re.compile(r'^\s*import\s+(?:[\s\S]*?)\s+from\s+["\']([^"\']+)["\']', re.M)
@@ -326,14 +350,26 @@ def main(argv=None):
         rep.add(bool(b_budget) and bool(b_hard), "X4 解析到前端 BUDGET / HARD 两个块",
                 f"BUDGET {len(b_budget)} 字符 / HARD {len(b_hard)} 字符")
 
-        pairs = [("nodes", "DEFAULT_NODES"), ("edges", "DEFAULT_EDGES"), ("hops", "DEFAULT_HOPS"),
-                 ("deadline_ms", "DEFAULT_DEADLINE_MS"), ("paths", "DEFAULT_MAX_PATHS")]
+        # ★ 2026-10-14（Phase 49）改造：原来 5 项"全等"的朴素断言会红，原因**不是**回归，
+        #   而是我们**有意**把前端 `paths` 从 20 收到 5（任务卡一次只展示 3–5 条路径）。
+        #   于是这里改成：**对称 4 项**（nodes/edges/hops/deadline_ms）+ **非对称 1 项**
+        #   （`BUDGET.paths ≤ DEFAULT_MAX_PATHS`，前端是库默认的**收窄**，不得放宽）。
+        #   这正是铁律 #15「改源头后必须改下游」：改的是断言，不是把红刷绿。
+        pairs = [("nodes", "DEFAULT_NODES"), ("edges", "DEFAULT_EDGES"),
+                 ("hops", "DEFAULT_HOPS"), ("deadline_ms", "DEFAULT_DEADLINE_MS")]
         bad = []
         for k, attr in pairs:
             fv, bv = js_num(b_budget, k), getattr(Q, attr, None)
             if fv != bv:
                 bad.append(f"{k}: 前端 {fv} ≠ {bv}")
-        rep.add(not bad, "X4a 默认预算：前端 BUDGET == queries.DEFAULT_*", "；".join(bad) if bad else "5/5")
+        rep.add(not bad, "X4a 默认预算：前端 BUDGET == queries.DEFAULT_*（nodes/edges/hops/deadline 4 项对称）",
+                "；".join(bad) if bad else "4/4")
+
+        # X4a-path：`paths` 是**唯一**允许非对称的项（前端只收窄、绝不放宽）
+        fp, bp = js_num(b_budget, "paths"), getattr(Q, "DEFAULT_MAX_PATHS", None)
+        path_rel_ok = (fp is not None and bp is not None and 0 < fp <= bp)
+        rep.add(path_rel_ok, "X4a-path 前端 BUDGET.paths ≤ 库级 DEFAULT_MAX_PATHS（只收窄不放宽）",
+                f"前端 {fp} · 库 {bp}" + ("" if path_rel_ok else " ⇒ 前端值必须为正且不得超过库默认"))
 
         hard = getattr(Q, "HARD", {}) or {}
         bad = []
@@ -342,6 +378,37 @@ def main(argv=None):
             if fv != bv:
                 bad.append(f"{k}: 前端 {fv} ≠ {bv}")
         rep.add(not bad, "X4b 硬上限：前端 HARD == queries.HARD", "；".join(bad) if bad else "5/5")
+
+        # X4c ★ 第三处重复（Phase 49 消掉）：`viz_server._api_subgraph` 的**默认值**必须
+        #   引用 `q.DEFAULT_*`，不得再写死字面量。断言方式是**源码层**（不是数值比对）：
+        #   数值比对只能证明"这次恰好相等"，源码断言才能防住"下次各写一套"。
+        #   ★ 作用域**必须**收窄到 `_api_subgraph` 处理体：第一版对全文件做正则，把
+        #     legacy `/api/path` 的 `"max_paths","20"` / `"max_hops","5"` /
+        #     `"deadline_ms","3000"` 一并报成"硬编码" —— 那是**误报**（legacy 端点
+        #     **有意**冻结自己的默认值，改动会静默改变外部脚本行为）。收窄后又暴露
+        #     真问题：这组分叉原先**没人声明**。⇒ 见契约 `legacy_defaults` + X16f。
+        try:
+            import viz_server as V  # type: ignore
+            vs_src_x4 = read(os.path.join(POC, "viz_server.py"))
+            m_sub = re.search(r"\n[ \t]*def _api_subgraph\(self, qs\)", vs_src_x4)
+            body_sub = ""
+            if m_sub:
+                nxt = re.search(r"\n[ \t]*def ", vs_src_x4[m_sub.end():])
+                body_sub = vs_src_x4[m_sub.end(): m_sub.end() + nxt.start()] if nxt else ""
+            need_refs = ["str(q.DEFAULT_NODES)", "str(q.DEFAULT_EDGES)", "str(q.DEFAULT_HOPS)",
+                         "str(q.DEFAULT_DEADLINE_MS)", "str(q.DEFAULT_MAX_PATHS)"]
+            miss_refs = [r for r in need_refs if r not in body_sub]
+            # 负向：本处理体内不得出现**硬编码数字**当作这些参数的默认
+            hardcoded = re.findall(r'"max_(?:nodes|edges|hops|paths)"\s*,\s*"(\d+)"', body_sub)
+            hardcoded += re.findall(r'"deadline_ms"\s*,\s*"(\d+)"', body_sub)
+            x4c_ok = bool(body_sub) and (not miss_refs) and (not hardcoded)
+            rep.add(x4c_ok, "X4c `_api_subgraph` 默认预算引用 q.DEFAULT_*（作用域=处理体，不硬编码）",
+                    ("未解析到处理体" if not body_sub else "")
+                    + ("缺引用：" + "、".join(miss_refs) if miss_refs else "")
+                    + ("；发现硬编码默认：" + "、".join(hardcoded) if hardcoded else "")
+                    or "5/5 引用 · 0 字面量")
+        except Exception as e:  # noqa: BLE001
+            rep.skip("X4c viz_server 默认预算同源", f"import viz_server 失败：{e}")
 
         se_block = js_block("SESSION_LIMIT")
         fsn, fse = js_num(se_block, "nodes"), js_num(se_block, "edges")
@@ -570,6 +637,129 @@ def main(argv=None):
                 "X15 A04 严重度表：前端 EVIDENCE_STATUS_RANK == queries（聚合取最坏的口径一致）",
                 f"前端={fe_rank} / 后端={be_rank}")
 
+    # ------------------------------------------------- X16 端点契约双向求差（D31）
+    # ★ 与 Node 侧 F37 的分工：F37 求差「契约 ↔ 前端序列化」；X16 求差「契约 ↔ **后端源码**」。
+    #   两者缺一不可 —— 只查前端，会把"契约本身写错（登记了后端不读的参数）"放过去；
+    #   只查后端，会把"前端改名"放过去。这正是 P48/P49 连续命中 4 例（q / hops /
+    #   subject / exclude_inferred）的根因：**参数名漂移不报错，只静默丢失**。
+    rep.section("[X16] 端点契约 ↔ 后端源码双向求差（`contracts/endpoints.schema.json`）")
+    try:
+        ep_contract = json.loads(read(os.path.join(ROOT, "contracts", "endpoints.schema.json")))
+        vsx = read(os.path.join(POC, "viz_server.py"))
+    except Exception as e:  # noqa: BLE001
+        rep.skip("X16 端点契约双向求差", f"读取契约/后端源码失败：{e}")
+        ep_contract, vsx = None, None
+
+    if ep_contract:
+        eps = ep_contract.get("endpoints", {})
+
+        def _handler_body(src, name):
+            """按**缩进**切出 `def name(self, qs)` 的函数体（下一个同缩进 def 之前）。"""
+            m = re.search(r"\n([ \t]*)def " + re.escape(name) + r"\(self, qs\)", src)
+            if not m:
+                return None
+            start, indent = m.end(), m.group(1)
+            nxt = re.search(r"\n" + re.escape(indent) + r"def ", src[start:])
+            return src[start: start + nxt.start()] if nxt else src[start:]
+
+        def _reads(body):
+            """后端**真实读取**的参数名：`self._p(qs,"X")` + `qs.get("X")`。"""
+            if body is None:
+                return None
+            got = set(re.findall(r'self\._p\(qs,\s*"([a-z_0-9]+)"', body))
+            got |= set(re.findall(r'qs\.get\(\s*"([a-z_0-9]+)"', body))
+            return got
+
+        # 端点 → 处理函数（内联在 do_GET 的两个端点无参数，跳过）
+        HANDLER = {ep: e.get("handler", "") for ep, e in eps.items()
+                   if str(e.get("handler", "")).startswith("_api_")}
+        declared_by_ep, reads_by_ep, body_by_ep = {}, {}, {}
+        for ep, hn in HANDLER.items():
+            declared_by_ep[ep] = set(eps[ep].get("params", {}) or {})
+            body_by_ep[ep] = _handler_body(vsx, hn)
+            reads_by_ep[ep] = _reads(body_by_ep[ep])
+
+        rep.add(bool(HANDLER) and all(b is not None for b in body_by_ep.values()),
+                "X16a 解析到端点契约与全部 `_api_*` 处理函数体（求差前提）",
+                f"{len(HANDLER)} 个端点"
+                + ("；解析失败：" + "、".join(k for k, v in body_by_ep.items() if v is None)
+                   if any(v is None for v in body_by_ep.values()) else ""))
+
+        # ---- 方向 A：契约 params ⊇ 后端**实读**集合（后端读了却没登记的 ⇒ 契约漏项）
+        a_gap = {ep: sorted(reads_by_ep[ep] - declared_by_ep[ep]) for ep in HANDLER}
+        a_gap = {k: v for k, v in a_gap.items() if v}
+        rep.add(not a_gap, "X16b 【方向A】契约 params ⊇ 后端实读参数（无漏登记）",
+                "；".join(f"{k} 缺 {v}" for k, v in a_gap.items()) if a_gap
+                else f"{len(HANDLER)} 端点无漏登记")
+
+        # ★ 构造性反证：从契约副本里挖掉 `/api/subgraph` 的 `hops` ⇒ 方向 A **必须**报出它
+        sub_ep = "/api/subgraph"
+        if sub_ep in reads_by_ep and reads_by_ep[sub_ep] is not None:
+            fake = declared_by_ep[sub_ep] - {"hops"}
+            neg_gap = sorted(reads_by_ep[sub_ep] - fake)
+            rep.add("hops" in neg_gap,
+                    "X16b-NEG 【负对照】契约副本删掉 `hops` ⇒ 方向A 必须报出（检测非恒真）",
+                    "报出：" + "、".join(neg_gap) if neg_gap else "未报出 ⇒ 检测器恒真")
+        else:
+            rep.skip("X16b-NEG 负对照", "`/api/subgraph` 处理体未解析到")
+
+        # ---- 方向 B：契约 params ⊆ 后端**源码字面量**（凭空登记的"幽灵参数" ⇒ 契约假条目）
+        phantom = {}
+        for ep in HANDLER:
+            miss = [k for k in sorted(declared_by_ep[ep]) if f'"{k}"' not in vsx]
+            if miss:
+                phantom[ep] = miss
+        rep.add(not phantom, "X16c 【方向B】契约登记的每个参数都在后端源码中真实出现（无幽灵条目）",
+                "；".join(f"{k} 幽灵 {v}" for k, v in phantom.items()) if phantom
+                else f"{sum(len(v) for v in declared_by_ep.values())} 个登记项全部落地")
+
+        # ---- X16d：`frontend_must_not_send` 必须与**后端行为**一致（P0-4 的后端侧证据）
+        #     契约说"这些键发到本端点等于没发" ⇒ 该端点源码里就**不得**真去读它们。
+        mn_viol = {}
+        for ep in HANDLER:
+            mn = set(eps[ep].get("frontend_must_not_send", []) or [])
+            hit = sorted(mn & (reads_by_ep[ep] or set()))
+            if hit:
+                mn_viol[ep] = hit
+        rep.add(not mn_viol,
+                "X16d must_not_send 与后端行为一致（声明「发了没用」的键，后端确不读取）",
+                "；".join(f"{k} 实际被读 {v}" for k, v in mn_viol.items()) if mn_viol
+                else "4/4 端点一致")
+
+        # ---- X16e：结构完整性 + `backend_params_not_emitted` 每项必须**带理由**（不得只列名字）
+        struct_bad = []
+        for ep, e in eps.items():
+            for key in ("handler", "params", "frontend_uses"):
+                if key not in e:
+                    struct_bad.append(f"{ep}.{key}")
+        nem = ep_contract.get("backend_params_not_emitted", {}) or {}
+        thin = [k for k, v in nem.items() if not (isinstance(v, str) and len(v.strip()) >= 8)]
+        rep.add(not struct_bad and not thin and bool(nem),
+                "X16e 契约结构完整（handler/params/frontend_uses）+ 不发参数均写明理由",
+                ("缺字段：" + "、".join(struct_bad) if struct_bad else "")
+                + ("；理由过短：" + "、".join(thin) if thin else "")
+                or f"{len(eps)} 端点结构齐备 · {len(nem)} 项不发参数均有理由")
+
+        # ---- X16f：legacy 端点的**冻结默认值**必须与契约声明逐值相等 ----
+        #   为什么需要：legacy `/api/path` 有意不跟随 `queries.DEFAULT_*`（deadline 3000≠10000、
+        #   max_hops 5≠DEFAULT_HOPS 2）。这是**合理**的（改它会静默改变外部脚本行为），
+        #   但"与库默认不一致"若**无人声明**，下一个人就会当成 bug 顺手"修齐"。
+        #   断言把分歧钉成契约：源码字面量 == 契约 `legacy_defaults`（逐值）。
+        p_ep = eps.get("/api/path", {})
+        ld = p_ep.get("legacy_defaults")
+        body_p = body_by_ep.get("/api/path")
+        if isinstance(ld, dict) and body_p:
+            real = {}
+            for k in ld:
+                mm = re.search(r'"' + re.escape(k) + r'"\s*,\s*"(\d+)"', body_p)
+                real[k] = int(mm.group(1)) if mm else None
+            diff = {k: (real.get(k), ld[k]) for k in ld if real.get(k) != ld[k]}
+            rep.add(not diff, "X16f legacy `/api/path` 冻结默认值 == 契约 legacy_defaults（分歧须被声明）",
+                    "；".join(f"{k}: 源码 {v[0]} ≠ 契约 {v[1]}" for k, v in diff.items()) if diff
+                    else "、".join(f"{k}={ld[k]}" for k in ld))
+        else:
+            rep.skip("X16f legacy 默认值声明", "契约缺 legacy_defaults 或未解析到 `_api_path` 处理体")
+
     # ---------------------------------------------------------------- N 段
     rep.section("[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）")
     node = find_node()
@@ -754,6 +944,279 @@ def main(argv=None):
     except Exception as e:  # noqa: BLE001
         rep.skip("H1–H5 HTTP 层", f"起服务失败：{e}")
 
+    # ---------------------------------------------------------------- H8 段
+    # ★ 为什么必须**独立子进程**：同进程里后端一旦被 H6 摸过就已是**热态**，
+    #   「冷启动误判离线」（P0-2）这个缺陷会**测不出来**。测量环境必须包含被测条件
+    #   —— 这与「仪器自指」（#82）同族：在热态里断言冷态行为 = 假绿。
+    rep.section("[H8] 冷启动与参数生效（独立子进程 ⇒ 真·冷态；P0-2/P0-4 的端到端证据）")
+    vs_py = os.path.join(POC, "viz_server.py")
+    if not os.path.isfile(vs_py):
+        rep.skip("H8 冷启动端到端", "未找到 viz_server.py")
+    else:
+        import socket
+        import tempfile
+        import time as _time
+
+        sk = socket.socket()
+        sk.bind(("127.0.0.1", 0))
+        hport = sk.getsockname()[1]
+        sk.close()
+        # ★ 代理绕过：本机代理会把 127.0.0.1 也当外部流量（实测直连需绕开）
+        _opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+        _logf = tempfile.NamedTemporaryFile(prefix="sttp_viz_", suffix=".log", delete=False)
+        env8 = dict(os.environ)
+        env8["PYTHONUNBUFFERED"] = "1"   # 否则日志块缓冲 8 KB ⇒ 诊断拿不到实时证据
+        proc = None
+        try:
+            proc = subprocess.Popen([sys.executable or "python", vs_py,
+                                     "--host", "127.0.0.1", "--port", str(hport)],
+                                    cwd=POC, env=env8,
+                                    stdout=_logf, stderr=subprocess.STDOUT)
+
+            def _hz(timeout=5.0):
+                with _opener.open(f"http://127.0.0.1:{hport}/api/healthz", timeout=timeout) as r:
+                    return r.status, json.loads(r.read())
+
+            def _hz_raw(timeout=5.0):
+                with _opener.open(f"http://127.0.0.1:{hport}/api/healthz", timeout=timeout) as r:
+                    return r.status, r.read()
+
+            def _get(path, timeout=90.0):
+                with _opener.open(f"http://127.0.0.1:{hport}{path}", timeout=timeout) as r:
+                    return r.status, json.loads(r.read())
+
+            # ---- H8a：**先等端口 listen**（TCP 可连），再量 healthz ----
+            #   ★ 第一版把「spawn → 首个 healthz」当成探活延迟来断言，实测 3292 ms 判定失败。
+            #     拆开看：其中 ~2.7 s 是 `main()` 在 bind **之前**同步加载 67.7 MB 图
+            #     （进程还没监听，任何 HTTP 都无从谈起）。这是**真问题**（页面首次可访问
+            #     被无谓推迟、`warming` 三态成为死代码），但**不是**探活延迟。
+            #     ⇒ ① 修 `main()`（先 bind 再预热，见 F1）；② 断言拆成两段各自可测：
+            #        H8a = 「listen → healthz」必须毫秒级；H8b = 「spawn → listen」不得再含图加载。
+            t0 = _time.perf_counter()
+            t_listen = None
+            while _time.perf_counter() - t0 < 60.0:
+                _sk = socket.socket()
+                _sk.settimeout(0.2)
+                okc = _sk.connect_ex(("127.0.0.1", hport)) == 0
+                _sk.close()
+                if okc:
+                    t_listen = _time.perf_counter() - t0
+                    break
+                _time.sleep(0.02)
+
+            hz_first_ms = None
+            if t_listen is None:
+                rep.add(False, "H8a 端口 listen 后 /api/healthz 毫秒级应答（探活不再误判离线）",
+                        f"60 s 内端口未可用（日志：{open(_logf.name, encoding='utf-8', errors='replace').read()[-300:]!r}）")
+            else:
+                t1 = _time.perf_counter()
+                first = None
+                while _time.perf_counter() - t1 < 30.0:
+                    try:
+                        st, body = _hz()
+                        first = (_time.perf_counter() - t1, st, body)
+                        break
+                    except Exception:  # noqa: BLE001
+                        _time.sleep(0.02)
+                if first is None:
+                    rep.add(False, "H8a 端口 listen 后 /api/healthz 毫秒级应答（探活不再误判离线）",
+                            "listen 后 30 s 内 healthz 仍无响应")
+                else:
+                    hz_first_ms, st0, b0 = first
+                    rep.add(st0 == 200 and hz_first_ms < 0.5,
+                            "H8a 端口 listen 后 /api/healthz 毫秒级应答（探活不再误判离线）",
+                            f"listen→首个 healthz {hz_first_ms*1000:.0f} ms · HTTP {st0}"
+                            + "（对照：同刻 /api/stats 冷态 4.9 s、前端旧预算 2 s ⇒ 必然 abort）")
+
+            # ---- H8b：`spawn → listen` 已**不含**图加载（F1 回归护栏）----
+            #   旧实现（bind 前同步 get_backend）= 2774 ms；新实现（bind 后异步预热）应 < 1 s。
+            #   阈值取 2000 ms 留足余量（本机实测 ~400 ms），仍能拦住"把 get_backend 放回 bind 前"。
+            if t_listen is not None:
+                rep.add(t_listen < 2.0,
+                        "H8b `spawn → listen` 不含图加载（先 bind 再预热，页面不再被 67.7 MB 阻塞）",
+                        f"{t_listen*1000:.0f} ms < 2000 ms"
+                        + ("" if t_listen < 2.0 else " ⇒ 疑似把 get_backend() 放回 bind 之前"))
+
+            # ---- H8c：冷启动期**如实**报告状态（warming 不得编造 snapshot_id）----
+            saw_warming = False
+            if first is not None:
+                st0, b0 = first[1], first[2]
+                bk = b0.get("backend")
+                saw_warming = (bk == "warming")
+                ok_b = (b0.get("status") == "ok" and bk in ("warming", "ready", "failed")
+                        and isinstance(b0.get("graph_ready"), bool))
+                # warming 期间 snapshot_id **必须**为 null（未就绪就不知道快照）
+                honest = (bk != "warming") or (b0.get("snapshot_id") is None)
+                rep.add(ok_b and honest,
+                        "H8c 冷启动期如实报告 backend/graph_ready（warming 不得编造 snapshot_id）",
+                        f"backend={bk} · graph_ready={b0.get('graph_ready')} · "
+                        f"snapshot_id={b0.get('snapshot_id')!r}")
+
+                # ---- H8d：`warming` 期**页面即可用**（先 bind 的收益；不是"等图装完才开门"）----
+                try:
+                    _sk2 = _opener.open(f"http://127.0.0.1:{hport}/", timeout=10)
+                    raw_h = _sk2.read()
+                    ct_h = _sk2.headers.get("Content-Type", "")
+                    _sk2.close()
+                    page_ok = (len(raw_h) > 2000 and "html" in ct_h)
+                except Exception as e:  # noqa: BLE001
+                    page_ok, raw_h = False, b""
+                    rep.add(False, "H8d `warming` 期页面即可 200（先 bind 再预热的收益）", str(e)[:120])
+                else:
+                    rep.add(page_ok,
+                            "H8d `warming` 期页面即可 200（先 bind 再预热的收益）",
+                            f"{len(raw_h)} 字节 · {ct_h} · 当时 backend={bk}")
+
+                # ---- H8c2：`warming` 状态**确实可达**（否则本轮加的预热机制又是死代码）----
+                #   不能硬性要求"必然看到 warming"（机器快时可能瞬间 ready ⇒ 假红）。
+                #   故断言：**要么**看到了 warming，**要么** listen 后 200 ms 内就已 ready
+                #   （后者说明预热可忽略，本机制无存在必要，也不构成缺陷）。
+                if first is not None:
+                    rep.add(saw_warming or (hz_first_ms is not None and hz_first_ms < 0.2),
+                            "H8c2 `warming` 状态可达（预热机制非死代码；或预热快到无需它）",
+                            f"首个 healthz backend={b0.get('backend')} · "
+                            f"listen→healthz {hz_first_ms*1000:.0f} ms")
+
+                # ---- H8e：healthz 是**轻量**端点（不触碰图谱：无 nodes/edges 且体积极小）----
+                st_l, raw_l = _hz_raw()
+                light = (st_l == 200 and len(raw_l) < 2048
+                         and b'"nodes"' not in raw_l and b'"edges"' not in raw_l)
+                rep.add(light, "H8e /api/healthz 不触碰图谱（无 nodes/edges，响应 < 2 KB）",
+                        f"{len(raw_l)} 字节 · HTTP {st_l}")
+
+            # ---- H8f：两个**并发冷** `/api/stats` ⇒ 单飞（不重复 4.3 s 冷算）----
+            #   为什么需要（2026-10-15 实测发现）：三份派生缓存原先都是「锁内查、**锁外算**」
+            #   ⇒ 并发调用各算一遍。未加单飞时，后台预热与一个立刻到达的 `/api/stats`
+            #   会同时跑 `fidelity_counts_global()`（4.27 s），该请求由 4.9 s **恶化到 8.5 s**。
+            #   断言用**可观测计数**（`healthz.cache_builds`），不靠测时间 ——
+            #   测时间在快机器假绿、慢机器假红；计数是 O(1) 的因果本身。
+            cold = {}
+
+            def _one(i):
+                _tt = _time.perf_counter()
+                try:
+                    with _opener.open(f"http://127.0.0.1:{hport}/api/stats", timeout=180) as r:
+                        cold[i] = ((_time.perf_counter() - _tt) * 1000, r.status,
+                                   json.loads(r.read()))
+                except Exception as e:  # noqa: BLE001
+                    cold[i] = ((_time.perf_counter() - _tt) * 1000, None, {"err": str(e)[:90]})
+
+            _ths = [threading.Thread(target=_one, args=(i,)) for i in range(2)]
+            _tc = _time.perf_counter()
+            for _th in _ths:
+                _th.start()
+            for _th in _ths:
+                _th.join()
+            cold_wall = (_time.perf_counter() - _tc) * 1000
+            cold_lat = [cold[i][0] for i in sorted(cold)]
+            same_payload = (cold.get(0, (0, None, None))[2] == cold.get(1, (0, None, None))[2])
+            rep.add(len(cold) == 2 and all(v[1] == 200 for v in cold.values()) and same_payload,
+                    "H8f 两个并发冷 `/api/stats` 均成功且**载荷逐字节一致**",
+                    f"各自 {cold_lat[0]:.0f}/{cold_lat[1]:.0f} ms · 墙钟 {cold_wall:.0f} ms"
+                    + ("" if same_payload else " ⇒ 两份载荷不一致"))
+
+            # ---- 等后端就绪（首查已 kick_warmup），再验参数真正生效 ----
+            warm_ok, waited = False, _time.perf_counter()
+            snap_ready, cb_ready = None, {}
+            t_warm0 = _time.perf_counter()
+            while _time.perf_counter() - t_warm0 < 90.0:
+                try:
+                    st, bw = _hz(timeout=10)
+                    if bw.get("backend") == "ready":
+                        warm_ok, snap_ready = True, bw.get("snapshot_id")
+                        cb_ready = bw.get("cache_builds") or {}
+                        break
+                    if bw.get("backend") == "failed":
+                        break
+                except Exception:  # noqa: BLE001
+                    pass
+                _time.sleep(0.2)
+            warm_ms = (_time.perf_counter() - t_warm0) * 1000
+            rep.add(warm_ok, "H8g 后台预热最终到 ready（healthz 触发的预热线程真的完成）",
+                    f"ready · snapshot_id={snap_ready} · 等待 {warm_ms:.0f} ms"
+                    if warm_ok else "90 s 内未 ready")
+
+            # ---- H8g2 ★ `ready` 必须**等价于**「整条读路径已热」，不得只因"图装好了" ----
+            #   第一版 `_healthz` 在 `backend_ready()`（只看图）为真时就改写 `backend="ready"`，
+            #   于是后台还在算 `graph_stats()`（≈4.8 s）时就已经宣称就绪 ⇒ 前端照旧要等。
+            #   本断言把「ready ⇒ 派生缓存已建」钉住（用可观测计数，不靠测时间）。
+            rep.add(warm_ok and all((cb_ready.get(k) or 0) > 0
+                                    for k in ("stale", "fidelity", "estatus")),
+                    "H8g2 `backend=ready` ⇒ 派生缓存已建（就绪＝读路径已热，非「图装好就算」）",
+                    f"ready 时 cache_builds={cb_ready}")
+
+            # ---- H8h：单飞可观测 —— 预热 + 2 个并发冷请求 ⇒ 每份缓存**只算一次** ----
+            cb = (_hz()[1] or {}).get("cache_builds") or {}
+            rep.add(bool(cb) and all(cb.get(k) == 1 for k in ("stale", "fidelity", "estatus")),
+                    "H8h 单飞：预热 + 并发请求共享同一份冷算（`cache_builds` 各 == 1）",
+                    f"cache_builds={cb}（应有 3 个潜在构建者：预热线程 + 2 个并发请求）")
+
+            # ---- H8i：预热把 `/api/stats` 的**冷算**也建好了（F2 的收益，可量化）----
+            #   对照：本机冷态首次 `/api/stats` ≈ 4.9 s（其中 `fidelity_counts_global()` 4.27 s）。
+            #   阈值 2000 ms：既约束住"必须预热 stats"，又不至于因机器差异假红。
+            t_s = _time.perf_counter()
+            ss, stt = _get("/api/stats", timeout=60)
+            stats_ms = (_time.perf_counter() - t_s) * 1000
+            rep.add(ss == 200 and stats_ms < 2000,
+                    "H8i 预热后 `/api/stats` 远离冷算（对照冷态 ≈ 4.9 s ⇒ 收益可量化）",
+                    f"{stats_ms:.0f} ms · HTTP {ss} · 忠实度分列="
+                    f"{'有' if (stt.get('evidence_fidelity') or stt.get('evidence_status')) else '无'}")
+
+            # ---- H8j：`hops` 真的改变结果（`put("hops")` 修复的端到端证据）----
+            q1 = ("/api/subgraph?mode=ego&seeds=CE:pq:gibbs_energy&hops=1&max_hops=1"
+                  "&trust=all&max_nodes=200&max_edges=400&deadline_ms=20000")
+            q3 = ("/api/subgraph?mode=ego&seeds=CE:pq:gibbs_energy&hops=3&max_hops=3"
+                  "&trust=all&max_nodes=200&max_edges=400&deadline_ms=20000")
+            s1, d1 = _get(q1)
+            s3, d3 = _get(q3)
+            n1 = {x.get("id") for x in (d1.get("nodes") or [])}
+            n3 = {x.get("id") for x in (d3.get("nodes") or [])}
+            rep.add(s1 == 200 and s3 == 200 and n1 != n3 and len(n3) > len(n1),
+                    "H8j `hops=1` 与 `hops=3` 结果**不同**（跳数真的被后端采用，不再是静默丢弃）",
+                    f"1 跳 {len(n1)} 节点 / 3 跳 {len(n3)} 节点 · 新增 {len(n3 - n1)}")
+
+            # ---- H8k：`subjects` 生效、`subject`（单数）在本端点**不生效**（负对照）----
+            base = ("/api/subgraph?mode=ego&seeds=CE:pq:gibbs_energy&hops=2&max_hops=2"
+                    "&trust=all&max_nodes=200&max_edges=400&deadline_ms=20000")
+            _, dp = _get(base + "&subjects=%E5%8C%96%E5%AD%A6")
+            _, ds = _get(base + "&subject=%E5%8C%96%E5%AD%A6")
+            np_, ns_ = len(dp.get("nodes") or []), len(ds.get("nodes") or [])
+            rep.add(np_ > 0 and np_ < ns_,
+                    "H8k `/api/subgraph` 认 `subjects`（复数）、不认 `subject`（单数）⇒ 学科筛选真的生效",
+                    f"subjects ⇒ {np_} 节点 · subject ⇒ {ns_} 节点（等同未过滤）")
+
+            # ---- H8l：`paths` 真的回来（统一信封里的 `paths` 非空）----
+            sp, dpth = _get("/api/subgraph?mode=path&seeds=CE:pq:gibbs_energy,PB:pq:entropy"
+                            "&max_hops=5&max_paths=5&trust=all&deadline_ms=20000")
+            lst = dpth.get("paths") or []
+            rep.add(sp == 200 and len(lst) > 0 and isinstance(lst[0], dict),
+                    "H8l `mode=path` 的 `paths` 真的随统一信封回传（非空、元素为对象）",
+                    f"HTTP {sp} · {len(lst)} 条路径")
+
+            # ---- H8m：P0-4 负对照 —— 把 `src`/`dst` 发到 /api/subgraph **必然 no_result** ----
+            sn, dn = _get("/api/subgraph?mode=path&src=CE:pq:gibbs_energy&dst=PB:pq:entropy"
+                          "&max_hops=5&max_paths=5&trust=all&deadline_ms=20000")
+            rep.add(sn == 200 and dn.get("status") == "no_result" and not (dn.get("paths") or []),
+                    "H8m 【负对照】`src`/`dst` 发到 /api/subgraph ⇒ no_result（坐实 P0-4 不是玄学）",
+                    f"HTTP {sn} · status={dn.get('status')} · {(dn.get('reason') or '')[:60]}")
+        except Exception as e:  # noqa: BLE001
+            rep.skip("H8 冷启动端到端", f"子进程起服务失败：{e}")
+        finally:
+            if proc is not None:
+                try:
+                    proc.terminate()
+                    proc.wait(timeout=10)
+                except Exception:  # noqa: BLE001
+                    try:
+                        proc.kill()
+                    except Exception:  # noqa: BLE001
+                        pass
+            try:
+                _logf.close()
+                os.unlink(_logf.name)
+            except Exception:  # noqa: BLE001
+                pass
+
     # ---------------------------------------------------------------- V 段
     rep.section("[V] 验收映射（V8 / V9 / V1 的**前端侧**证据）")
     rep.add("st-ok" in html and "st-truncated" in html and "st-timeout" in html
@@ -771,6 +1234,20 @@ def main(argv=None):
     rep.add(True,
             "V9b 发布样例链路由 `bash sttp.sh release`（28 条）/`release-full` 覆盖 —— "
             "本脚本**不替代**", "见回归")
+
+    # V11 ★ 路径 `no_result` 的文案**不得**把「被可信度档过滤掉了」说成「不存在」。
+    #   实测（2026-10-15，`MX:chem:co2 → MX:chem:combustion`，max_hops=5）：
+    #     `trust=verified`（路径栏默认）⇒ **no_result**；`trust=all` ⇒ 找到 **3** 条路径（随后 timeout）。
+    #   ⇒ "有没有路径"这个结论**对 trust 档敏感**；只说"确实没有路径"会把「被隐藏」
+    #     报告成「不存在」—— 正是本项目最反对的那类结论。
+    #   处方：`no_result` 分支须报出 `hidden_by_trust` 并提示可切档（静态断言，因 `main.js`
+    #   依赖真实 DOM/画布，mjs 不加载它；行为证据见报告 §1.5 与 F 段）。
+    _main_src = js_src.get("main", "")
+    _v11 = ("no_result" in _main_src and "hidden_by_trust" in _main_src
+            and "可信度" in _main_src)
+    rep.add(_v11,
+            "V11 路径 `no_result` 文案报出被隐藏边数并提示切可信度档（不得把「被过滤」说成「不存在」）",
+            "已覆盖" if _v11 else "缺：no_result 分支未提及 hidden_by_trust/可信度档")
 
     # ---------------------------------------------------------------- G 段
     # D25（步骤 B 干净检出实测发现并修复）：部分命令的断言以**不入库**的权威图

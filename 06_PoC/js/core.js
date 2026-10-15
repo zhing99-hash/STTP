@@ -33,6 +33,15 @@ export const ENDPOINTS = Object.freeze({
   subgraph: "/api/subgraph",
   overview: "/api/overview",
   stats: "/api/stats",
+  /**
+   * ★ Phase 49 新增。**探活专用**：不触碰图谱数据 ⇒ 毫秒级回答。
+   *
+   * 为什么不能用 `/api/stats` 探活（外部评审 P0-2，Phase 49 实测坐实）：
+   *   权威图 67.7 MB ⇒ 冷进程首次 `/api/stats` = **4.91 s**，而前端探活预算
+   *   **2 s** ⇒ 浏览器 abort ⇒ 判「后端不可用」⇒ 退 bundle ⇒ 首次打开就像坏了。
+   *   `/api/healthz` 只读进程内计数器 ⇒ 冷启动期间也能立即作答。
+   */
+  healthz: "/api/healthz",
   /** 仅在 mode=bundle（离线样例/小图）下读取；live 模式**永不**请求它（验收 V1）。 */
   bundleGraph: "/graph_data.json",
 });
@@ -220,8 +229,21 @@ export function statusStyle(raw) {
 /** 这些键**不参与** `query_hash`（与后端 `viz_server._qhash` 的剔除口径一致）。 */
 export const HASH_EXCLUDED_KEYS = Object.freeze(["session_id", "reset", "expand_token"]);
 
+/**
+ * ★ 默认预算（Phase 49 收敛）：**40 节点 / 70 边 / 2 跳 / 10 s / 5 条路径**。
+ *
+ * 为什么不再是 500/2000/3 s（Phase 43 旧默认）——三条**实测**理由：
+ *   ① `has_symbol` 占 **24 341/48 712** 条边（全图 50%），500 节点的 ego 子图
+ *      必然是一团「毛线团」，首屏不可读（外部评审 §6.1）；
+ *   ② 权威图 67.7 MB ⇒ 后端冷启动首查 **4.91 s**（Phase 49 实测），
+ *      3 s 预算**必然 timeout** ⇒ 首次体验直接看到失败态；
+ *   ③ 外部评审实测「50 节点 / 100 边 / 10 s ⇒ 约 63 ms 返回」，故 40/70/10 s 留有余量。
+ *
+ * ★ 这**只是默认值**，用户可在范围区或左侧面板提高（硬上限见 `HARD`）。
+ * ★ `TASK_SCOPE_DEFAULT` 从本常量派生 ⇒ 两处默认**同源**，不会各写一套。
+ */
 export const BUDGET = Object.freeze({
-  nodes: 500, edges: 2000, hops: 3, deadline_ms: 3000, paths: 20,
+  nodes: 40, edges: 70, hops: 2, deadline_ms: 10000, paths: 5,
 });
 export const HARD = Object.freeze({
   nodes: 5000, edges: 20000, hops: 5, deadline_ms: 30000, paths: 200,
@@ -273,12 +295,24 @@ export function buildParams(opts = {}) {
   // 未传（undefined）⇒ 与后端一致地默认 `ego`（`/api/subgraph` 用）。
   if (o.mode !== null) put("mode", o.mode || "ego");
   put("seeds", o.seeds);
+  // ★ `hops` 与 `max_hops` 是**两个不同的后端参数**：
+  //   `hops`     = 本次要走的跳数（`/api/subgraph` 读它；未给时 ego 默认 1、path 默认 DEFAULT_PATH_HOPS）
+  //   `max_hops` = 上限钳制（`hops` 会被 `min(hops, max_hops)` 截断）
+  //   本函数**曾经漏掉 `hops`** ⇒ 前端传的跳数被静默丢弃 ⇒ ego 永远 1 跳。
+  //   与 `q` 同族（铁律候选 #85：**序列化漏字段不会自己报错**，只会让对端用默认值）。
+  //   断言：X7 系列（`/api/subgraph` 真的认 `hops`）+ H8e（跳数改变结果规模）。
+  put("hops", o.hops);
   put("src", o.src);
   put("dst", o.dst);
   put("types", o.types);            // 维度一：语义关系（24 种）
   put("kinds", o.kinds);            // 维度二：来源/管线（115 种）★ 与 types 不混用
   put("node_types", o.node_types);
-  put("subject", o.subject);
+  // ★ 学科：`/api/subgraph` 读的是**复数** `subjects`，`/api/search` 读的是**单数** `subject`
+  //   —— 这是后端既有的命名不一致（实测：`subjects=化学` 生效 400→20 节点，
+  //   `subject=化学` 被**完全忽略**）。前端两个都发，各自送到认得它的端点，
+  //   并把这一不对称**写成断言**（X7b/X7c）而不是假装统一。
+  put("subject", o.subject);        // /api/search 用（单数）
+  put("subjects", o.subjects);      // /api/subgraph 用（复数）
   put("trust", o.trust);
   put("min_confidence", o.min_confidence);
   put("max_nodes", o.max_nodes);
@@ -287,7 +321,11 @@ export function buildParams(opts = {}) {
   put("deadline_ms", o.deadline_ms);
   put("max_paths", o.max_paths);
   put("limit", o.limit);
-  if (o.exclude_inferred) put("exclude_inferred", "1");
+  // ★ 后端读的是 `exclude_model_inferred`（不是 `exclude_inferred`）。
+  //   本函数**曾经**发 `exclude_inferred` ⇒ 「排除推断边」勾选框**完全无效**
+  //   （实测：`exclude_inferred=1` 仍返回 5 条含 inferred 的边；
+  //    `exclude_model_inferred=1` 才生效）。同族第 3 例，见铁律候选 #85。
+  if (o.exclude_model_inferred) put("exclude_model_inferred", "1");
   if (o.exclude_stale) put("exclude_stale", "1");
   if (o.session_id) put("session_id", o.session_id);
   if (o.reset) put("reset", "1");
@@ -311,6 +349,183 @@ export function paramsSignature(params) {
   const p = { ...params };
   HASH_EXCLUDED_KEYS.forEach((k) => { delete p[k]; });
   return Object.keys(p).sort().map((k) => `${k}=${p[k]}`).join("&");
+}
+
+// ---------------------------------------------------------------------------
+// 任务式入口（Phase 49）—— 示例卡 / 范围 / 请求构造（**纯数据 + 纯函数**）
+// ---------------------------------------------------------------------------
+//
+// 背景（外部评审 §7 阶段 B/C 与《标准用户使用与演示流程》§3）：
+//   现有前端以「图浏览器」为中心 —— 打开就是筛选面板 + 空画布，用户不知道该输入什么。
+//   新的**首屏**是任务式入口：一个输入框 + 四张示例卡 ⇒ 先返回候选实体 ⇒
+//   **用户确认实体后**才发查询（避免自然语言歧义直接污染结果）⇒ 生成局部图 ⇒
+//   不满意可「修改查询」回到入口（保留上次输入与已确认实体）。
+//
+// ★ 为什么这些数据/函数放在 `core.js`（而不是 `task.js`）：
+//   `task.js` 要碰 DOM，无法用裸 node 断言。而「卡片是否指向真实存在的实体」
+//   「请求参数是否与后端契约一致」是**可被判定的真值**，必须能被断言（铁律 #26/#39）。
+//   ⇒ 纯逻辑留在这里，`task.js` 只做「渲染 + 收事件」。
+
+/**
+ * 四张示例卡 —— **文案来自《标准用户使用与演示流程》§3 的推荐首页**。
+ *
+ * ★ 每张卡必须绑定**本快照下真实存在**的实体与关系类型（铁律 #39「命名缺口架空验证器」：
+ *   卡片写了但查不到的成语，等于把「演示失败」伪装成「图谱没有数据」）。
+ *   实测值（trust=verified，40 节点/70 边/10 s 预算，Phase 49 探针）：
+ *     card1 `CE:pq:gibbs_energy, PB:pq:entropy` → **truncated 8 节点 / 11 边**（hidden 31）
+ *     card2 `PQ:energy` + dim/has_unit     → **ok 15 / 29**
+ *     card3 `PQ:energy` + unit/dim/…       → **ok 15 / 29**（hidden 30）
+ *     card4 `OM:mo:ethanol` + 组成关系      → **ok 4 / 3**（元素 H/C/O）
+ *   ★ `note` 字段是**如实披露**：卡片问的是自然语言问题，系统实际执行的是图中确实存在的
+ *     那一类查询。**不把「做不到的解析」写进卡片**（铁律 #30「不可判定≠放过」）。
+ */
+const CARD_SEED = (c) => Object.freeze({
+  ...c, types: Object.freeze(c.types || []),
+});
+
+export const TASK_CARDS = Object.freeze([
+  CARD_SEED({
+    id: "relation",
+    question: "吉布斯自由能与熵之间有什么关系？",
+    mode: "path",
+    start: "gibbs",              // 预填搜索词 → 用户从中确认起点实体
+    end: "entropy",
+    types: [],                   // 路径查询不加类型过滤（否则容易人为切断通路）
+    note: "先确认两端实体，再看它们之间的**有限条**路径。"
+      + "★ 同名实体来自不同来源时结论会不同：本快照下 `Gibbs free energy ↔ entropy(PB)` 可连通"
+      + "（8 节点/11 边），而 `↔ entropy(TH)` 在 5 跳内**确实没有路径** —— 这正是「先确认实体」的意义。",
+  }),
+  CARD_SEED({
+    id: "dimension",
+    question: "这个公式的量纲是否一致？",
+    mode: "ego",
+    start: "energy",
+    end: null,
+    types: ["dimensionally_consistent", "has_unit"],
+    note: "★ 已知边界：本图中量纲关系挂在**物理量**之间"
+      + "（`dimensionally_consistent` 共 47 条，全部是「量↔量」），**公式节点没有量纲边**。"
+      + "故本卡实际执行的是「与所选量**量纲一致**的量有哪些、它的单位是什么」，"
+      + "**不是**公式符号级的量纲演算。",
+  }),
+  CARD_SEED({
+    id: "units",
+    question: "某个物理量有哪些单位与相关公式？",
+    mode: "ego",
+    start: "energy",
+    end: null,
+    types: ["has_unit", "dimensionally_consistent", "derived_from", "same_as", "defines"],
+    note: "「单位」取 `has_unit`；「相关公式/量」取量纲一致、派生来源、同义与定义关系。"
+      + "★ 有意**不含** `has_symbol`（全图 24 341 条，占一半）—— 带上它必然截断成一团毛线。",
+  }),
+  CARD_SEED({
+    id: "composition",
+    question: "某个分子由哪些元素或官能团组成？",
+    mode: "ego",
+    start: "ethanol",
+    end: null,
+    types: ["composed_of", "has_functionalgroup", "has_element", "related_to"],
+    note: "`composed_of` ⇒ 组成元素，`has_functionalgroup` ⇒ 官能团。"
+      + "1 跳即答案（本快照下 ethanol ⇒ H / C / O 三个元素）。",
+  }),
+]);
+
+/** 任务入口的**默认范围**（从 `BUDGET` 派生 ⇒ 两处默认同源）。 */
+export const TASK_SCOPE_DEFAULT = Object.freeze({
+  hops: BUDGET.hops,
+  max_nodes: BUDGET.nodes,
+  max_edges: BUDGET.edges,
+  deadline_ms: BUDGET.deadline_ms,
+  trust: "verified",
+});
+
+/** 可信度档位（与后端 `queries.TRUST_LEVELS` 同名，X 段交叉断言）。 */
+export const TRUST_LEVELS = Object.freeze(["verified", "verified_strict", "all"]);
+
+/** 归一化范围：数字钳到 `HARD` 内、trust 白名单化（**未知档 ⇒ 往严处回落 `verified`**）。 */
+export function normalizeScope(scope = {}) {
+  const s = { ...TASK_SCOPE_DEFAULT, ...(scope || {}) };
+  const trust = TRUST_LEVELS.indexOf(s.trust) >= 0 ? s.trust : TASK_SCOPE_DEFAULT.trust;
+  return {
+    hops: clampInt(s.hops, 1, HARD.hops, TASK_SCOPE_DEFAULT.hops),
+    max_nodes: clampInt(s.max_nodes, 1, HARD.nodes, TASK_SCOPE_DEFAULT.max_nodes),
+    max_edges: clampInt(s.max_edges, 1, HARD.edges, TASK_SCOPE_DEFAULT.max_edges),
+    deadline_ms: clampInt(s.deadline_ms, 1, HARD.deadline_ms, TASK_SCOPE_DEFAULT.deadline_ms),
+    trust,
+  };
+}
+
+/**
+ * 任务 → `/api/subgraph` 请求参数。
+ *
+ * ★ **失败必须显式**（铁律 #34「负结果优先」/ #62「fail-closed」）：
+ *   `mode=path` 需要 **2 个**存在的种子，后端缺一个就回 `no_result`
+ *   （「path 模式需要 2 个存在的种子（起点/终点）」）。
+ *   与其发出一个**明知会被拒**的请求再把它渲染成「没有结果」，
+ *   不如返回 `null` 让 UI 说清「还缺哪一端」。
+ *
+ * @returns {object|null} 可直接交给 `Api.subgraph()` 的参数；缺必要条件时 `null`
+ */
+export function taskRequest(card, { seed = null, second = null, scope = {} } = {}) {
+  const sc = normalizeScope(scope);
+  const has = (v) => v != null && String(v).trim() !== "";
+  const types = (card && Array.isArray(card.types) && card.types.length) ? card.types.slice() : null;
+  const common = {
+    trust: sc.trust, max_nodes: sc.max_nodes, max_edges: sc.max_edges,
+    deadline_ms: sc.deadline_ms, types,
+  };
+  const isPath = !!(card && card.mode === "path");
+  if (isPath) {
+    if (!has(seed) || !has(second)) return null;      // 明确「还缺一端」，不伪装成 no_result
+    return {
+      mode: "path", seeds: `${String(seed).trim()},${String(second).trim()}`,
+      max_hops: sc.hops, max_paths: BUDGET.paths, ...common,
+      // path 模式下后端的 `hops` 无意义（它用 `max_hops` 作为搜索深度）⇒ 不发送无意义参数
+    };
+  }
+  if (!has(seed)) return null;
+  return { mode: "ego", seeds: String(seed).trim(), hops: sc.hops, ...common };
+}
+
+/** 任务是否可执行（用于按钮 `disabled` 与**禁用原因**文案，铁律 #63「拒绝分支显式」）。 */
+export function taskBlockedReason(card, { seed = null, second = null } = {}) {
+  const has = (v) => v != null && String(v).trim() !== "";
+  if (!has(seed)) return "请先输入关键词并**确认一个候选实体**（点候选行即可）";
+  if (card && card.mode === "path" && !has(second)) return "本卡查「两点之间的路径」，还需要确认**第二个**实体";
+  return null;
+}
+
+/** 候选实体取前 N（后端已按分数排序；前端**不重排**，只截断并如实披露总数）。 */
+export function takeCandidates(env, n = 5) {
+  const hits = (env && Array.isArray(env.hits)) ? env.hits : [];
+  return {
+    items: hits.slice(0, Math.max(0, n)),
+    shown: Math.min(hits.length, Math.max(0, n)),
+    total: (env && typeof env.total_matches === "number") ? env.total_matches : hits.length,
+    truncated: !!(env && (env.truncated === true
+      || (typeof env.total_matches === "number" && env.total_matches > hits.length))),
+    status: (env && env.status) || "error",
+    error_code: (env && env.error_code) || null,
+    reason: (env && env.reason) || "",
+  };
+}
+
+/**
+ * 路径项 → **节点 id 序列**。同时兼容两种形状：
+ *   · 统一信封（Phase 49 起）：`{nodes: [id…], edges: [eid…]}`
+ *   · legacy `/api/path`：裸数组 `[id…]`
+ * ★ 归一化放在这里（而不是在每个消费点各写一次 branch）：旧实现按裸数组解码，
+ *   统一信封一到手就整条路径渲染不出来 —— 而**没有任何地方报错**。
+ */
+export function pathNodeIds(p) {
+  if (Array.isArray(p)) return p.map(String);
+  if (p && Array.isArray(p.nodes)) return p.nodes.map(String);
+  return [];
+}
+
+/** 路径项 → 边 id 序列（legacy 裸数组没有边信息 ⇒ 返回空数组，不臆造）。 */
+export function pathEdgeIds(p) {
+  if (p && Array.isArray(p.edges)) return p.edges.map(String);
+  return [];
 }
 
 // ---------------------------------------------------------------------------

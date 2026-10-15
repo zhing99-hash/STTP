@@ -63,6 +63,13 @@ export function normalizeEnvelope(raw) {
     edges: Array.isArray(r.edges) ? r.edges : [],
     expandable: Array.isArray(r.expandable) ? r.expandable : [],
     hits: Array.isArray(r.hits) ? r.hits : [],
+    /**
+     * ★ Phase 49：`mode=path` 的**路径链**。后端在 `nodes`/`edges` 之外另给
+     *   `paths: [{nodes:[id…], edges:[id…]}, …]`。此前归一化只搬 `nodes`/`edges`，
+     *   前端 `runPath()` 去读 `env.meta.paths`（不存在）⇒ **路径条数永远显示不出来**
+     *   （子图能画出来，但"3 条路径"的清单是空的 —— 又一处"后端给了、UI 回吞"）。
+     */
+    paths: Array.isArray(r.paths) ? r.paths : [],
     meta: r.meta && typeof r.meta === "object" ? r.meta : null,
     stats: r.stats && typeof r.stats === "object" ? r.stats : {},
     raw: r,
@@ -78,7 +85,7 @@ export function localErrorEnvelope({ status = "error", errorCode = "TOOL_EXECUTI
     status: st.status, statusInfo: st, unknownStatus: st.unknown,
     reason, error_code: errorCode, snapshot_id: null, query_hash: null, seed: null,
     query: null, hidden_by_trust: null, nodes: [], edges: [], expandable: [],
-    hits: [], meta: null, stats: {}, raw: null, client_aborted: clientAborted,
+    hits: [], paths: [], meta: null, stats: {}, raw: null, client_aborted: clientAborted,
     total_matches: null, truncated: null,
   };
 }
@@ -210,23 +217,63 @@ export class Api {
    *   （`probe_note`），不静默吞掉。
    *   注意：这**不放松**其他端点的五态判据 —— 只作用于「探活」这一个用途。
    */
+  /**
+   * 探活：**只用 `/api/healthz`**（毫秒级，不碰图谱数据）。
+   *
+   * ★ 为什么不用 `/api/stats`（Phase 49 实测坐实的外部评审 P0-2）：
+   *   冷进程首次 `/api/stats` = **4.91 s**（拆开看：忠实度四分类冷算 4.27 s
+   *   + A04 状态计数 0.57 s + 逐边迭代 0.31 s —— **不只是**加载 67.7 MB 权威图）；
+   *   探活预算 2 s ⇒ abort ⇒ `detectMode` 判「后端不可用」⇒ 退 bundle ⇒
+   *   **首次打开就像坏了**（用户第一印象）。
+   *   `/api/healthz` 由服务端在**不加载图谱**的前提下回答，冷启动期间也是毫秒级
+   *   （实测 listen→首个 healthz 16 ms）。
+   *
+   * ★ `backend: "warming"` 是**独立状态**，不是失败（铁律 #84：判别依据不足 ⇒ 不得回落成失败态）：
+   *   探到它说明「后端进程活着、正在预热**整条读路径**（图谱 + 统计缓存）」，
+   *   前端应显示「启动中」并允许用户继续输入，而不是宣布离线。
+   * ★ 服务端的 `ready` 当且仅当**整条预热完成**（不只是"图装好"）—— 否则这里会误报就绪、
+   *   用户第一次看统计仍要等 4.8 s（Phase 49 · F4，服务端自检 H8g2 钉住）。
+   */
   async probe() {
-    const env = await this._get(ENDPOINTS.stats, null, { deadlineMs: 2000 });
+    const env = await this._get(ENDPOINTS.healthz, null, { deadlineMs: 5000 });
     const httpOk = env.http_status === 200 || env.http === 200;
     const bodyUsable = !!(env.raw && typeof env.raw === "object"
       && Object.keys(env.raw).length > 0);
-    if (httpOk && bodyUsable && env.status !== "ok") {
+    if (httpOk && bodyUsable) {
+      const warm = env.raw.backend === "ready";
       return {
         ...env,
         status: "ok",
         statusInfo: statusStyle("ok"),
         unknownStatus: null,
-        probe_note: `HTTP ${env.http_status || env.http} 且响应体可解析；`
-          + `响应体未带合法 status${env.unknownStatus ? `（原值「${env.unknownStatus}」）` : ""}`
-          + " —— 探活按「后端可用」处理（不据此判定 offline）",
+        warm,
+        probe_note: warm
+          ? "后端已就绪（/api/healthz）"
+          : "后端进程在跑、**读路径仍在预热**（/api/healthz 回答 backend="
+            + `${env.raw.backend}）—— 首次查询会比之后慢，不是故障`,
       };
     }
-    return env;
+    // 老服务端（无 /api/healthz）⇒ **才**回退到 /api/stats（旧行为，仍可能被冷启动拖过预算）
+    const legacy = await this._get(ENDPOINTS.stats, null, { deadlineMs: 2000 });
+    const lhttpOk = legacy.http_status === 200 || legacy.http === 200;
+    const lbodyUsable = !!(legacy.raw && typeof legacy.raw === "object"
+      && Object.keys(legacy.raw).length > 0);
+    if (lhttpOk && lbodyUsable) {
+      // ★ 回退成功 ⇒ 必须是**可用**结论。绝不能因为 healthz 失败就把这里的成功丢掉
+      //   （那是"较新的判据失败 ⇒ 整个判定回落成失败"，正是铁律 #84 的反面）。
+      return {
+        ...legacy,
+        status: "ok",
+        statusInfo: statusStyle("ok"),
+        unknownStatus: null,
+        warm: true,
+        probe_note: `回退探活：/api/healthz 不可用，但 /api/stats HTTP `
+          + `${legacy.http_status || legacy.http} 且响应体可解析 ⇒ 判「后端可用」`,
+      };
+    }
+    // ★ 两条路都不通 ⇒ 返回 **healthz 的失败**：它才是「连不上」的原始证据
+    //   （1 次请求、无图谱依赖，语义最干净）。stats 的失败原因仅是补充。
+    return env.status === "error" ? env : legacy;
   }
 
   /**

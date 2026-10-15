@@ -144,6 +144,11 @@ if KNOWLEDGE_DIR not in sys.path:
 # ---------------------------------------------------------------------------
 _QUERIES = None          # 模块对象 / False（导入失败）
 _BACKEND = None          # 后端实例 / False（初始化失败）
+# ★ Phase 49：进程是 ThreadingHTTPServer（每请求一线程）⇒ 后端初始化必须**只发生一次**，
+#   否则「前台请求 + 后台预热」会并发各加载一遍 67.7 MB 权威图。
+_BACKEND_LOCK = threading.Lock()
+_WARM_LOCK = threading.Lock()
+_WARM = {"started": False, "done": False, "error": None, "t0": None, "ms": None}
 
 
 def _load_queries():
@@ -181,27 +186,106 @@ def _graph_path():
 
 
 def get_backend():
-    """获取 NetworkX 后端（失败返回 None，不抛异常）。"""
+    """获取 NetworkX 后端（失败返回 None，不抛异常）。
+
+    ★ 双检锁：首次初始化在**锁内**完成。否则 ThreadingHTTPServer 下
+      「/api/stats 前台上报 + /api/healthz 触发后台预热」会并发跑两遍
+      `q.get_backend("nx", …)` —— 两遍 67.7 MB 解析、两份内存图。
+      ★ 锁**只包住初始化**，不包住调用方对后端的读（铁律 #79：持锁时不得调用
+      可能再取同一把锁的函数）。
+    """
     global _BACKEND
     if _BACKEND is None:
-        q = _load_queries()
-        if not q:
-            _BACKEND = False
-            return None
-        path = _graph_path()
-        try:
-            # 走 queries.py 的官方工厂：强制 networkx 后端，指向 with_inferred
-            _BACKEND = q.get_backend("nx", input_path=path)
-            # ★ 预热索引（一次性的 48712 边建索引 ~0.7 s）：
-            #   `deadline_ms` 只应度量**查询本身**，不应把冷启动建索引算进用户预算。
-            _BACKEND.node_count
-            print(f"[OK] NetworkX 后端就绪：{_BACKEND.node_count} 节点 / "
-                  f"{_BACKEND.edge_count} 边（源：{os.path.basename(path)}）")
-        except BaseException as e:  # noqa: BLE001  # 含 SystemExit（queries 缺源会 sys.exit）
-            _BACKEND = False
-            print(f"[WARN] NetworkX 后端初始化失败（{type(e).__name__}: {e}），"
-                  f"API 将降级；/graph_data.json 不受影响。")
+        with _BACKEND_LOCK:
+            if _BACKEND is None:                      # 双检：可能已被另一线程建好
+                q = _load_queries()
+                if not q:
+                    _BACKEND = False
+                    return None
+                path = _graph_path()
+                try:
+                    # 走 queries.py 的官方工厂：强制 networkx 后端，指向 with_inferred
+                    _BACKEND = q.get_backend("nx", input_path=path)
+                    # ★ 预热索引（一次性的 48712 边建索引 ~0.7 s）：
+                    #   `deadline_ms` 只应度量**查询本身**，不应把冷启动建索引算进用户预算。
+                    _BACKEND.node_count
+                    print(f"[OK] NetworkX 后端就绪：{_BACKEND.node_count} 节点 / "
+                          f"{_BACKEND.edge_count} 边（源：{os.path.basename(path)}）")
+                except BaseException as e:  # noqa: BLE001  # 含 SystemExit（queries 缺源会 sys.exit）
+                    _BACKEND = False
+                    print(f"[WARN] NetworkX 后端初始化失败（{type(e).__name__}: {e}），"
+                          f"API 将降级；/graph_data.json 不受影响。")
     return _BACKEND or None
+
+
+# ---------------------------------------------------------------------------
+# Phase 49 · 后台预热 + 轻量探活（修外部评审 P0-2：冷启动被误判离线）
+# ---------------------------------------------------------------------------
+# 实测：权威图 67.7 MB ⇒ 冷进程首次 `/api/stats` = **4.91 s**，而前端探活预算 **2 s**
+# ⇒ 浏览器 abort ⇒ `detectMode` 判「后端不可用」⇒ 退 bundle ⇒ 首次打开就像坏了。
+# ★ 2026-10-15 把 4.91 s **拆开**（单函数计时，见 `_warm_worker` 文档串）：
+#     4.91 s 的主体**不是**「图没装进来」，而是 `fidelity_counts_global()` 冷算（4.27 s）
+#     —— 即便图早已加载，首次 `/api/stats` 仍要 ~4.9 s。所以「只预热图」是不够的。
+# 处方：① `/api/healthz` **不触碰图谱数据**，冷启动期间也毫秒级回答（实测 191 ms）；
+#       ② 首次被探活时**异步预热**，把「加载权威图」**与「stats 冷算缓存」**一并建好，
+#          与「用户读题、输入、确认实体」重叠；
+#       ③ `main()` **先 bind 再预热**（见 main 内 F1 注释）：端口立刻可用、页面秒开。
+# （锁与状态容器在文件头部声明，见 `_BACKEND_LOCK` / `_WARM_LOCK` / `_WARM`。）
+
+
+def _warm_worker():
+    """后台预热：把 67.7 MB 权威图的加载与索引建好，避免它落在用户第一次查询上。
+
+    ★ Phase 49 修（F2，2026-10-15 实测）：**必须连 `/api/stats` 的冷算一起预热**。
+      实测分段（本机 Python 3.11）：
+        `get_backend()`                    = 2319 ms（加载 67.7 MB 权威图）
+        `fidelity_counts_global()`         = **4270 ms** ← 单项最大
+        `evidence_status_counts_global()`  = 567 ms
+        `a04_registry_summary()`           = 111 ms
+        `graph_stats()` 自身迭代（不可缓存）= ~308 ms
+      ⇒ `/api/stats` **首次 ≈ 4.9 s**、其后 ≈ 0.31 s。
+      这就是 P0-2 的**真正根因**：前端拿 `/api/stats` 当探活、预算 2 s ⇒ 必然 abort。
+      `/api/healthz` 解决「探活不准」；本处预热解决「首次 stats 仍然慢」——两者缺一不可。
+      预热后 `ready` 才真正代表「整条读路径已热」，而不只是「图装进来了」。
+    """
+    t0 = time.time()
+    try:
+        b = get_backend()
+        if b is None:
+            raise RuntimeError("查询层不可用（queries.py 或权威图缺失）")
+        _ = b.node_count          # ★ 与 /api/stats 同口径地触发索引预热
+        graph_stats()             # ★ F2：把忠实度/A04 分列计数（一次性 ~4.8 s）也建好
+        _WARM["ms"] = int((time.time() - t0) * 1000)
+        _WARM["done"] = True
+        print(f"[OK] 预热完成：{b.node_count} 节点 / {b.edge_count} 边"
+              f"（{_WARM['ms']} ms，后台线程；含 `/api/stats` 冷算缓存）")
+    except BaseException as e:  # noqa: BLE001
+        _WARM["error"] = f"{type(e).__name__}: {e}"
+        print(f"[WARN] 预热失败：{_WARM['error']}")
+
+
+def kick_warmup():
+    """幂等启动预热线程（daemon：进程退出不阻塞）。"""
+    with _WARM_LOCK:
+        if _WARM["started"]:
+            return False
+        _WARM["started"] = True
+        _WARM["t0"] = time.time()
+    threading.Thread(target=_warm_worker, name="sttp-warmup", daemon=True).start()
+    return True
+
+
+def warm_state():
+    """预热状态：`ready` / `warming` / `failed`（**三态分列**，不把 warming 混进 failed）。"""
+    if _WARM["error"] is not None:
+        return "failed"
+    if _WARM["done"]:
+        return "ready"
+    return "warming"
+
+
+def backend_ready() -> bool:
+    return _BACKEND is not None and _BACKEND is not False
 
 
 # ---------------------------------------------------------------------------
@@ -227,6 +311,30 @@ _STALE_CACHE = {"key": None, "val": None}
 _STALE_LOCK = threading.RLock()
 _FIDELITY_CACHE = {"key": None, "val": None}
 _EVIDENCE_STATUS_CACHE = {"key": None, "val": None}
+
+# ★ Phase 49 · 单飞（single-flight）构建锁（2026-10-15 实测新增）。
+#   上面三个 `*_CACHE` 的既有实现都是「锁内查缓存、**锁外**算、锁内写回」——
+#   后果：**并发调用会各算一遍**（同一次冷算 4.3 s 被算两遍，CPU 互相抢占）。
+#   实测证据：`main()` 的后台预热线程在跑 `graph_stats()` 的同时，一个立刻到达的
+#   `/api/stats` 请求也在跑同一份 `fidelity_counts_global()` ⇒ 该请求由 4.9 s
+#   **恶化到 8.5 s**。ThreadingHTTPServer 每请求一线程，两个标签页即可触发。
+#   处方：给每份「贵且幂等」的派生缓存各配一把**构建锁**，把「双检 + 计算 + 回写」
+#   整体串行化 —— 与 `get_backend()` 的双检锁同一模式。
+#   锁序恒为 BUILD → CACHE（无反向嵌套）⇒ 不会成环（铁律 #79）。
+_STALE_BUILD_LOCK = threading.Lock()
+_FIDELITY_BUILD_LOCK = threading.Lock()
+_ESTATUS_BUILD_LOCK = threading.Lock()
+# ★ 为什么把「实际算了几次」也暴露出来：单飞的正确性若只靠**测时间**来断言，
+#   就会在快机器上假绿、在慢机器上假红。计数器让 O(1) 的因果可被直接观测：
+#   两个并发冷请求 ⇒ `fidelity` 计数必须是 **1**（不是 2）。见 H8l。
+#   （与「北极星须仪器」「断言须可构造」同一取向：把性质变成可读的数字。）
+_BUILD_STATS = {"stale": 0, "fidelity": 0, "estatus": 0}
+
+
+def build_stats() -> dict:
+    """快照当前构建计数（healthz 暴露；只读、O(1)、不触发任何计算）。"""
+    with _STALE_LOCK:
+        return dict(_BUILD_STATS)
 #: 环境开关：A04 状态映射（默认开）。设 `STTP_EVIDENCE_STATUS=0` 可关闭
 #  —— 供「A04 未落图 / 想复现 Phase 44 行为」的对照实验，而**不是**为了静默退化。
 _EVIDENCE_STATUS_ENABLED = os.environ.get("STTP_EVIDENCE_STATUS", "1").strip().lower() \
@@ -427,23 +535,32 @@ def stale_registry():
     with _STALE_LOCK:
         if _STALE_CACHE["key"] == key and _STALE_CACHE["val"] is not None:
             return _STALE_CACHE["val"]
-    # ★ 计算在**锁外**做：`evidence_status_registry()` 自己要拿 `_STALE_LOCK`，
-    #   在持锁时调它会自死锁（Phase 45 · E11，实测）。锁只保护缓存读写。
-    hm = sr.hash_map(base=base)
-    rsm = sr.repo_status_map(base=base)
-    # ★ Phase 45 · A04：把**证据级验证依赖状态**注入同一份登记快照，
-    #   使 `queries.edge_is_stale()` 成为「字节忠实度 ∪ 依赖状态」的**唯一**排除口径。
-    #   映射不可用（模块缺失 / 关闭开关 / 图上无 A04 记录）⇒ 传 `{}` ⇒
-    #   行为与 Phase 44 逐位一致（**回落**，而非改判）。
-    smap = None
-    if _EVIDENCE_STATUS_ENABLED:
-        b = get_backend()
-        if b is not None:
-            smap = evidence_status_registry(b.all_edges(), src_hashes=hm)
-    val = q.build_stale_registry(sr.ids(), hm, rsm, status_by_edge=(smap or {}))
-    with _STALE_LOCK:
-        _STALE_CACHE["key"], _STALE_CACHE["val"] = key, val
-        return _STALE_CACHE["val"]
+    # ★ Phase 49：整体放进 `_STALE_BUILD_LOCK`（单飞）—— 见文件头单飞锁说明。
+    #   注意 `_STALE_LOCK` 自身仍是 **RLock**（E11 的历史原因保留），但计算在构建锁内、
+    #   缓存锁外，行为与原先一致，只是**并发不再各算一遍**。
+    with _STALE_BUILD_LOCK:
+        with _STALE_LOCK:                      # 双检：等锁期间可能已被别人建好
+            if _STALE_CACHE["key"] == key and _STALE_CACHE["val"] is not None:
+                return _STALE_CACHE["val"]
+        # ★ 计算在 `_STALE_LOCK` **锁外**做：`evidence_status_registry()` 自己也要拿
+        #   `_STALE_LOCK`，在持锁时调它会自死锁（Phase 45 · E11，实测）。
+        with _STALE_LOCK:
+            _BUILD_STATS["stale"] += 1
+        hm = sr.hash_map(base=base)
+        rsm = sr.repo_status_map(base=base)
+        # ★ Phase 45 · A04：把**证据级验证依赖状态**注入同一份登记快照，
+        #   使 `queries.edge_is_stale()` 成为「字节忠实度 ∪ 依赖状态」的**唯一**排除口径。
+        #   映射不可用（模块缺失 / 关闭开关 / 图上无 A04 记录）⇒ 传 `{}` ⇒
+        #   行为与 Phase 44 逐位一致（**回落**，而非改判）。
+        smap = None
+        if _EVIDENCE_STATUS_ENABLED:
+            b = get_backend()
+            if b is not None:
+                smap = evidence_status_registry(b.all_edges(), src_hashes=hm)
+        val = q.build_stale_registry(sr.ids(), hm, rsm, status_by_edge=(smap or {}))
+        with _STALE_LOCK:
+            _STALE_CACHE["key"], _STALE_CACHE["val"] = key, val
+            return _STALE_CACHE["val"]
 
 
 _FIDELITY_COUNTS_CACHE = {"key": None, "val": None}
@@ -464,18 +581,21 @@ def fidelity_counts_global():
     base = ROOT
     try:
         key = _head_sha(base)
-        with _STALE_LOCK:
-            if _FIDELITY_COUNTS_CACHE["key"] == key and _FIDELITY_COUNTS_CACHE["val"]:
-                return _FIDELITY_COUNTS_CACHE["val"]
-        reg = stale_registry()
-        if reg is None:
-            return None
-        out = q.fidelity_counts(b.all_edges(), reg)
-        out["n_edges_total"] = b.edge_count
-        with _STALE_LOCK:
-            _FIDELITY_COUNTS_CACHE["key"] = key
-            _FIDELITY_COUNTS_CACHE["val"] = out
-        return out
+        with _FIDELITY_BUILD_LOCK:             # ★ 单飞：并发只算一遍（见文件头说明）
+            with _STALE_LOCK:
+                if _FIDELITY_COUNTS_CACHE["key"] == key and _FIDELITY_COUNTS_CACHE["val"]:
+                    return _FIDELITY_COUNTS_CACHE["val"]
+            reg = stale_registry()
+            if reg is None:
+                return None
+            with _STALE_LOCK:
+                _BUILD_STATS["fidelity"] += 1
+            out = q.fidelity_counts(b.all_edges(), reg)
+            out["n_edges_total"] = b.edge_count
+            with _STALE_LOCK:
+                _FIDELITY_COUNTS_CACHE["key"] = key
+                _FIDELITY_COUNTS_CACHE["val"] = out
+            return out
     except Exception as e:  # noqa: BLE001
         print(f"[WARN] 忠实度分列计数不可用（{type(e).__name__}: {e}）")
         return None
@@ -499,20 +619,23 @@ def evidence_status_counts_global():
     base = ROOT
     try:
         key = _head_sha(base)
-        with _STALE_LOCK:
-            if (_EVIDENCE_STATUS_COUNTS_CACHE["key"] == key
-                    and _EVIDENCE_STATUS_COUNTS_CACHE["val"]):
-                return _EVIDENCE_STATUS_COUNTS_CACHE["val"]
-        reg = stale_registry()
-        if reg is None:
-            return None
-        out = q.evidence_status_counts(b.all_edges(), reg)
-        if out is None:
-            return None
-        with _STALE_LOCK:
-            _EVIDENCE_STATUS_COUNTS_CACHE["key"] = key
-            _EVIDENCE_STATUS_COUNTS_CACHE["val"] = out
-        return out
+        with _ESTATUS_BUILD_LOCK:               # ★ 单飞：并发只算一遍（见文件头说明）
+            with _STALE_LOCK:
+                if (_EVIDENCE_STATUS_COUNTS_CACHE["key"] == key
+                        and _EVIDENCE_STATUS_COUNTS_CACHE["val"]):
+                    return _EVIDENCE_STATUS_COUNTS_CACHE["val"]
+            reg = stale_registry()
+            if reg is None:
+                return None
+            with _STALE_LOCK:
+                _BUILD_STATS["estatus"] += 1
+            out = q.evidence_status_counts(b.all_edges(), reg)
+            if out is None:
+                return None
+            with _STALE_LOCK:
+                _EVIDENCE_STATUS_COUNTS_CACHE["key"] = key
+                _EVIDENCE_STATUS_COUNTS_CACHE["val"] = out
+            return out
     except Exception as e:  # noqa: BLE001
         print(f"[WARN] A04 状态计数不可用（{type(e).__name__}: {e}）")
         return None
@@ -864,6 +987,10 @@ class VizHandler(BaseHTTPRequestHandler):
                 _st["snapshot_id"] = self._snapshot_id()
                 return self._json(200, _st)
 
+            # ★ Phase 49：轻量探活（毫秒级，**不触碰图谱数据**）—— 修 P0-2
+            if route == "/api/healthz":
+                return self._healthz()
+
             if route == "/api/neighbors":
                 return self._api_neighbors(qs)
 
@@ -896,6 +1023,59 @@ class VizHandler(BaseHTTPRequestHandler):
                                     "reason": "%s: %s" % (type(e).__name__, e),
                                     "error_code": "TOOL_EXECUTION_ERROR",
                                     "snapshot_id": self._snapshot_id()})
+
+    # ---- Phase 49：/api/healthz（轻量探活；**绝不触发图谱加载**）----
+    def _healthz(self):
+        """毫秒级探活：只读进程内状态，**不触碰图谱数据**。
+
+        ★ 为什么必须存在：`/api/stats` 冷启动要 4.91 s（其中忠实度四分类冷算 4.27 s，
+          **不只是**加载 67.7 MB 权威图），前端探活预算只有 2 s ⇒ 首次打开必被误判离线（P0-2）。
+        ★ 三态分列（不把「预热中」混进「失败」，铁律 #84）：
+          `backend=ready` 已就绪 / `warming` 进程在跑、图谱在建 / `failed` 初始化真失败。
+        ★ `snapshot_id` 在未就绪时**为 null**（拿它要加载图谱 ⇒ 与"轻量"自相矛盾）。
+        ★ 首次被探活即**异步预热**，让加载与用户输入重叠。
+        ★ 实测：本端点 191 ms（listen→首个 healthz），且**不含**图谱数组 ⇒ 与图谱规模无关。
+        ★ 2026-10-15 修正（F4，自测发现）：`backend` 必须反映**整条预热**是否完成，
+          **不能**在"图已装好"时就报 `ready`。第一版写成
+          `ready = backend_ready(); if ready: body["backend"] = "ready"` ——
+          而 `backend_ready()` 只看**图**；于是后台预热还在算 `graph_stats()`（约 4.8 s）时，
+          healthz 已经宣称 `ready`，前端据此发 `/api/stats` ⇒ **仍然要等那 4.8 s**
+          （F2 的收益被这句覆盖悄悄抵消，`warm_ms` 也为 null）。
+          ⇒ 现在：`backend = warm_state()`（`ready` 当且仅当 `_WARM["done"]`），
+            `graph_ready` 单独反映图是否已装好。两者**分列**，各自含义明确。
+        ★ 并且**无条件**调用 `kick_warmup()`（幂等）：否则「图先被普通请求装好、
+          healthz 才被首次探到」这条路径下预热永不启动 ⇒ `_WARM["done"]` 永远为假 ⇒
+          `backend` 永远停在 `warming`（前端永远等不到就绪）。
+        """
+        kick_warmup()                     # 幂等：确保预热一定在跑
+        ready = backend_ready()           # 仅表示"图已装好"
+        done = bool(_WARM["done"])        # 整条预热（图 + `/api/stats` 冷算）是否完成
+        src = _graph_path()
+        body = {
+            "status": "ok",                       # 进程可达（与"图谱是否就绪"分列）
+            # ★ 三态：`warm_state()` 的 ready 当且仅当 `_WARM["done"]`。
+            #   不得因为"图已装好"就改写成 ready —— 见本函数文档串的 F4 说明。
+            "backend": warm_state(),
+            "graph_ready": ready,                 # 图已装好（预热的第一阶段）
+            "pid": os.getpid(),
+            "source": os.path.basename(src),
+            "source_present": os.path.exists(src),
+            "snapshot_id": None,
+            "warm_ms": _WARM.get("ms"),
+            "warm_error": _WARM.get("error"),
+            # ★ 派生缓存的**实际构建次数**（O(1) 只读）：单飞是否真的单飞、可被直接观测
+            #   （否则只能靠测时间推断 ⇒ 快机器假绿 / 慢机器假红）。见 H8h。
+            "cache_builds": build_stats(),
+            "endpoints": ["/api/healthz", "/api/stats", "/api/search",
+                          "/api/subgraph", "/api/overview", "/api/path"],
+        }
+        if done:
+            # 仅预热完成后才取快照（此时 `snapshot_id()` 是纯内存计算）
+            try:
+                body["snapshot_id"] = self._snapshot_id()
+            except Exception:  # noqa: BLE001
+                body["snapshot_id"] = None
+        return self._json(200, body)
 
     def _snapshot_id(self) -> str:
         b = get_backend()
@@ -949,7 +1129,9 @@ class VizHandler(BaseHTTPRequestHandler):
         base = {"status": "error", "reason": "", "error_code": None,
                 "snapshot_id": self._snapshot_id(), "query": {}, "query_hash": "",
                 "seed": None, "hidden_by_trust": 0, "nodes": [], "edges": [],
-                "expandable": [], "stats": {}}
+                # ★ Phase 49：`paths` **恒存在**（非 path 模式为空数组）⇒
+                #   前端可以无条件读 `env.paths`，不必按模式分支（少一处静默错位）。
+                "paths": [], "expandable": [], "stats": {}}
         base.update(kw)
         return base
 
@@ -967,6 +1149,10 @@ class VizHandler(BaseHTTPRequestHandler):
         session_id = self._p(qs, "session_id")
         snapshot_req = self._p(qs, "snapshot_id")
         cur_snap = self._snapshot_id()
+        # ★ Phase 49：默认预算**直接引用 queries 常量**，不再各自硬编码
+        #   （原先这里写死 "500"/"2000"/"3"/"3000"/"20"，与 `queries.DEFAULT_*` 各写一套；
+        #    Phase 49 把默认值收敛到 40/70/2/10000，三处不同步就会让"省略参数"的请求
+        #    拿到与文档不一致的图。X4a/X4c 断言三处同源。）
         params = {
             "mode": mode, "seeds": seeds, "query": query_txt,
             "hops": self._p(qs, "hops"), "node_types": self._p(qs, "node_types"),
@@ -976,11 +1162,11 @@ class VizHandler(BaseHTTPRequestHandler):
             "exclude_model_inferred": self._p(qs, "exclude_model_inferred", "false"),
             "exclude_stale": self._p(qs, "exclude_stale", "false"),
             "subjects": self._p(qs, "subjects"),
-            "max_nodes": self._p(qs, "max_nodes", "500"),
-            "max_edges": self._p(qs, "max_edges", "2000"),
-            "max_hops": self._p(qs, "max_hops", "3"),
-            "deadline_ms": self._p(qs, "deadline_ms", "3000"),
-            "max_paths": self._p(qs, "max_paths", "20"),
+            "max_nodes": self._p(qs, "max_nodes", str(q.DEFAULT_NODES)),
+            "max_edges": self._p(qs, "max_edges", str(q.DEFAULT_EDGES)),
+            "max_hops": self._p(qs, "max_hops", str(q.DEFAULT_HOPS)),
+            "deadline_ms": self._p(qs, "deadline_ms", str(q.DEFAULT_DEADLINE_MS)),
+            "max_paths": self._p(qs, "max_paths", str(q.DEFAULT_MAX_PATHS)),
         }
         qh = _qhash(params)
 
@@ -1164,6 +1350,10 @@ class VizHandler(BaseHTTPRequestHandler):
             status=r["status"], reason=r["reason"], error_code=r["error_code"],
             query=params, query_hash=qh, seed=seed_info,
             hidden_by_trust=r["stats"].get("hidden_by_trust", 0),
+            # ★ Phase 49：透传路径链（仅 mode=path 非空；其余恒为 []）。
+            #   以前这里不透传 ⇒ 前端 `env.meta.paths` / `env.raw.paths` 都取不到
+            #   ⇒ 子图能画、路径清单永远为空（"后端给了、UI 回吞"同族）。
+            paths=r.get("paths") or [],
             nodes=nodes_out, edges=edges_out, expandable=expandable, stats=stats))
 
     @staticmethod
@@ -1241,8 +1431,16 @@ def main(argv=None) -> int:
     print(f"  项目根   : {ROOT}")
     print(f"  查询层   : {KNOWLEDGE_DIR}")
     print(f"  数据源   : {os.path.basename(_graph_path())}")
-    # 预热查询层（顺便打印规模），失败也不致命
-    get_backend()
+    # ★ Phase 49 修（F1，2026-10-15 实测）：**先 bind 再预热**。
+    #   原实现在这里同步调用 `get_backend()`（"预热查询层（顺便打印规模）"），
+    #   而它位于 `ThreadingHTTPServer(...)` **之前** ⇒ 后果有二：
+    #     ① 端口要等 67.7 MB 权威图加载完才开始 listen（实测 spawn→listen **2774 ms**，
+    #        其中 import 仅 237 ms，其余全是图加载）⇒ 页面首次可访问被无谓推迟；
+    #     ② `warming` 三态在产品路径（`bash sttp.sh viz`）**永不出现** ⇒ 本轮新加的
+    #        「后台预热」在该路径下是**死代码**（无人防守 = 迟早腐坏，铁律 #74 家族）。
+    #   改法：bind 之后 `kick_warmup()` 异步预热。于是：端口立刻可用 → 页面秒开 →
+    #   `/api/healthz` 如实报 `warming` → 预热与「用户读题 / 输入 / 确认实体」重叠。
+    kick_warmup()
     print("-" * 68)
     print(f"  访问地址 : {url}")
     print(f"  端点     : /  ·  /js/<module>.js  ·  /vendor/<lib>  ·  /graph_data.json")

@@ -273,6 +273,68 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
   .pn-mid { border-color: #ffd166; color: #ffe6a8; }
   .ph { font-size: 10px; color: var(--muted); }
 
+  /* ---------- Phase 49 · 任务式首屏（问题 → 候选 → 确认实体 → 生成） ---------- */
+  #task-entry[hidden] { display: none; }
+  #task-entry {
+    position: fixed; inset: 0; z-index: 80; display: grid; place-items: center;
+    padding: 22px; overflow: auto;
+  }
+  .tp-scrim { position: absolute; inset: 0; background: rgba(11, 15, 21, .88); }
+  .tp-panel {
+    position: relative; width: min(960px, 100%); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px 18px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, .62);
+  }
+  .tp-head h2 {
+    font-size: 19px; margin: 0 0 7px; font-weight: 650; letter-spacing: .2px;
+    border-left: 3px solid var(--accent); padding-left: 10px;
+  }
+  .tp-sub { margin: 0 0 16px 13px; font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+  .tp-q { margin-bottom: 4px; }
+  .tp-q .note { margin-left: 6px; }
+  .tp-row { display: flex; gap: 8px; align-items: stretch; }
+  #task-q { flex: 1; font-size: 14px; padding: 9px 11px; }
+  #task-q2 { font-size: 13px; padding: 7px 10px; }
+  .tp-q2 { margin-top: 12px; }
+  .tp-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin: 14px 0 2px; }
+  .tcard {
+    text-align: left; background: var(--panel-2); border: 1px solid var(--line);
+    color: var(--text); border-radius: var(--radius); padding: 10px 11px; cursor: pointer;
+    transition: background .18s ease, border-color .18s ease;
+  }
+  .tcard:hover { background: var(--hover); border-color: #3d6ba8; }
+  .tcard-q { display: block; font-size: 12.5px; line-height: 1.45; }
+  .tcard-h { display: block; font-size: 10.5px; color: var(--muted); margin-top: 7px; }
+  .tp-cands { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .tp-cands[hidden] { display: none; }
+  .cand-head {
+    font-size: 11px; color: var(--muted); margin: 10px 0 7px;
+    text-transform: uppercase; letter-spacing: .5px; line-height: 1.6;
+  }
+  .cand-head .note { text-transform: none; letter-spacing: 0; }
+  .cand-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 6px; }
+  .cand-item {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 7px 10px;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--panel-2); cursor: pointer; font-size: 12.5px;
+  }
+  .cand-item:hover, .cand-item:focus { background: var(--hover); }
+  .cand-item.sel { border-color: #58a6ff; box-shadow: 0 0 0 1px #58a6ff inset; }
+  .cand-item .cand-label { font-weight: 600; }
+  .cand-empty { padding: 9px 10px; font-size: 12px; color: var(--muted); }
+  .cand-empty.err { color: #ff9d97; }
+  .tp-scope { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+  .tp-scope h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--muted); margin: 0 0 9px; font-weight: 600;
+  }
+  .tp-scope h3 .note { text-transform: none; letter-spacing: 0; margin-left: 6px; }
+  .tp-scope-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .tp-run { margin-top: 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #task-run { padding: 8px 18px; font-size: 13px; }
+  #task-status { margin-top: 9px; line-height: 1.6; }
+  body.task-open #canvas, body.task-open #bottom { filter: saturate(.7); }
+
   /* ---------- 响应式（375 / 768 / 1024 / 1440） ---------- */
   @media (max-width: 1439px) {
     :root { --left-w: 268px; --right-w: 320px; }
@@ -289,6 +351,8 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
     #right { display: none; }
     #search-wrap { width: 200px; }
     #ds-status { max-width: 30vw; }
+    .tp-cards { grid-template-columns: repeat(2, 1fr); }
+    .tp-scope-grid { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 767px) {
     header { gap: 6px; padding: 0 8px; flex-wrap: wrap; }
@@ -296,6 +360,11 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
     #search-wrap { width: 150px; }
     #bottom input[type=text] { width: 100%; }
     .grid2 { grid-template-columns: 1fr; }
+    #task-entry { padding: 10px; }
+    .tp-panel { padding: 15px 14px 13px; }
+    .tp-cards { grid-template-columns: 1fr; }
+    .tp-scope-grid { grid-template-columns: repeat(2, 1fr); }
+    .cand-list { grid-template-columns: 1fr; }
   }
   @media (max-width: 375px) {
     header h1 { font-size: 12px; }
@@ -306,6 +375,13 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
 </head>
 <body>
 
+<!-- ============================================================
+     Phase 49 · 任务式首屏（默认可见；生成子图后由 JS 隐藏）
+     结构由 js/task.js 的 TaskEntry.mount() 填充 —— 这里只留挂载点，
+     避免"DOM 结构写两遍"（一处改了另一处没改 ⇒ 静默错位）。
+     ============================================================ -->
+<div id="task-entry"></div>
+
 <header>
   <h1>公式知识图谱 · 局部查询</h1>
   <div id="search-wrap">
@@ -314,6 +390,8 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
   </div>
   <span class="badge mode-badge" id="mode-badge" data-mode="live">实时查询</span>
   <div class="spacer"></div>
+  <!-- ★ 生成图之后想改查询 ⇒ 回到首屏（保留上次输入与已确认实体） -->
+  <button class="toolbtn" id="btn-reopen-task" hidden title="回到任务入口，修改问题 / 实体 / 范围">← 修改查询</button>
   <button class="toolbtn" id="btn-overview" title="聚合元图（学科 × 类型），替代「全图浏览」">概览</button>
   <button class="toolbtn" id="btn-export-png" title="导出当前子图 PNG（含快照水印）">PNG</button>
   <button class="toolbtn" id="btn-export-svg" title="导出当前子图 SVG">SVG</button>

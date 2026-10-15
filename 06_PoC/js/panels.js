@@ -83,7 +83,7 @@ export function renderStatusLine(el, env, extra = {}) {
       pills.push(`<span class="pill">本次 ${esc(stats.n_nodes == null ? "?" : stats.n_nodes)} 节点 / ${esc(stats.n_edges == null ? "?" : stats.n_edges)} 边</span>`);
     }
     const hid = (env.hidden_by_trust != null) ? env.hidden_by_trust : stats.hidden_by_trust;
-    if (hid) pills.push(`<span class="pill warn" title="因可信范围被排除的边数">已隐藏 ${esc(hid)} 条</span>`);
+    if (hid) pills.push(`<span class="pill warn" title="本次查询中被可信范围排除的**不同**边数（按边 id 去重；不是遍历判定次数）">已隐藏 ${esc(hid)} 条</span>`);
     // ★ 证据字节忠实度**分列**（Phase 44 · D1）：必须在状态行可见 ——
     //   否则「stale 很小」会被误读成「证据都能字节复算」。全图口径优先（那是真规模）。
     const fidAll = stats.evidence_fidelity_global || stats.evidence_fidelity;
@@ -320,7 +320,10 @@ export class QueryPanel {
       types: vals("ftype"),
       kinds,
       node_types: vals("fntype"),
-      subject: vals("fsubject"),
+      // ★ `/api/subgraph` 读的是**复数** `subjects`（`/api/search` 才用单数 `subject`）。
+      //   旧实现返回单数 `subject` ⇒ 学科复选框实测**完全不生效**
+      //   （`subject=化学` 被忽略：400 节点；`subjects=化学` 才生效：20 节点）。
+      subjects: vals("fsubject"),
       trust: trustEl ? trustEl.value : "verified",
       min_confidence: (() => {
         const c = r.querySelector("#f-conf");
@@ -331,7 +334,10 @@ export class QueryPanel {
       max_edges: num("f-maxedges", BUDGET.edges),
       max_hops: num("f-hops", BUDGET.hops),
       deadline_ms: num("f-deadline", BUDGET.deadline_ms),
-      exclude_inferred: !!(r.querySelector("#f-exclude-inferred") || {}).checked,
+      // ★ 键名必须是后端认的 `exclude_model_inferred`（DOM id 保留 `f-exclude-inferred`）。
+      //   旧实现返回 `exclude_inferred` ⇒ 与 `buildParams` 的旧键名"对上了"，
+      //   但**两端都错**：后端读的是 `exclude_model_inferred` ⇒ 勾选框实测无效。
+      exclude_model_inferred: !!(r.querySelector("#f-exclude-inferred") || {}).checked,
       exclude_stale: !!(r.querySelector("#f-exclude-stale") || {}).checked,
     };
   }

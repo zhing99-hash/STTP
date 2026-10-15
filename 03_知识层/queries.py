@@ -125,15 +125,31 @@ WHY_SHOWN_VALUES = (WHY_USED, WHY_EVIDENCE, WHY_USER, WHY_TASK, WHY_CONTEXT, WHY
 # ----------------------------------------------------------------------------
 # 预算（默认值 / 硬上限）
 #   ★ 默认入口不得是「加载全量」（铁律 #66）；超出即 truncated，绝不静默截断。
+#   ★ Phase 49 收敛（外部评审 §4/§6.1「默认筛选预算从 500 节点 / 2 000 边降到
+#     40 / 70，超时提高到 5—10 秒」）：
+#     ① `has_symbol` 占 24 341/48 712 条边 ⇒ 500 节点的 ego 子图必然是不可读的毛线团；
+#     ② 权威图 67.7 MB，冷启动首查 4.91 s ⇒ 3 000 ms 预算**必然超时**；
+#     ③ 实测「50 节点/100 边/10 s ⇒ 约 63 ms 返回」⇒ 40/70/10 s 留有余量。
+#   ★ 前端 `js/core.js` 的 `BUDGET` 与之相等（跨层断言 **X4a**：nodes/edges/hops/deadline
+#     四项**对称**；`paths` 例外 ⇒ **X4a-path** 断言"前端 5 ≤ 库 20"的**非对称**关系）。
+#   ★ 注意 `DEFAULT_HOPS` 同时是 `subgraph()` 的 `max_hops` **默认夹紧上限**，故 3 → 2
+#     会让"只传 `hops=3`、不传 `max_hops`"的请求实走 2 跳。这**不是静默丢弃**：
+#     响应会给出 `status=truncated`、`truncated_by="hops"`、`hops=2`/`requested_hops=3`
+#     与 reason「请求跳数被夹紧至 max_hops=2」⇒ 由后端自检 **V7c** 断言（2026-10-15 新增，
+#     起因：V7a 隐式依赖该默认值 = 3 而变红，见该处注释）。
 # ----------------------------------------------------------------------------
-DEFAULT_NODES = 500
-DEFAULT_EDGES = 2000
-DEFAULT_HOPS = 3
+DEFAULT_NODES = 40
+DEFAULT_EDGES = 70
+DEFAULT_HOPS = 2
 # ★ 文本搜索的最短查询长度（**单一真值源**）：前端 `core.js` 的 `MIN_QUERY_LEN`
 #   必须与之相等（跨层断言 X5b）；前端据此**不发**明知会被 400 拒绝的请求
 #   （否则"第一次按键"就制造一次 BAD_REQUEST，并把 400 显示成"没有匹配"）。
 MIN_QUERY_LEN = 2
-DEFAULT_DEADLINE_MS = 3000
+DEFAULT_DEADLINE_MS = 10000
+# ★ 保持 20：这是**库级**上限（`paths_between()` 兼容层与 `/api/path` 的默认均取它，
+#   发布验证 `verify_release.py` 也依赖它）。前端 `BUDGET.paths = 5` 是**UI 请求值**
+#   （便于逐条解释路径），属"请求 ≤ 库默认"的**非对称**关系，由 X4a 显式断言，
+#   不是两处各写一套默认。
 DEFAULT_MAX_PATHS = 20
 DEFAULT_PATH_HOPS = 5
 DEFAULT_SESSION_NODES = 120
@@ -713,8 +729,12 @@ class Backend:
                     counter: Optional[dict] = None) -> dict:
         """确定性 **BFS**（先短后长）收集至多 `max_paths` 条简单路径。
 
-        返回 `{paths, truncated, timed_out, pending, hidden_by_trust}`；
+        返回 `{paths, truncated, timed_out, pending, missing, elapsed_ms}`；
         每条 path = `{"nodes": [id...], "edges": [edge dict...]}`。
+
+        ★ 本函数**不**返回 `hidden_by_trust`：它只是 BFS，`edge_ok` 会被**每条部分路径**
+          重复调用（实测同一被拒边最多 601 次）⇒ 在 BFS 内计数就是把"判定次数"当成
+          "不同边数"。去重计数由调用方（`subgraph`）持有集合完成（D45）。
         """
         t0 = t0 if t0 is not None else time.monotonic()
         idx = self._index()
@@ -862,7 +882,16 @@ class Backend:
 
         why_nodes: Dict[str, str] = {}
         why_edges: Dict[str, str] = {}
-        hidden_by_trust = 0
+        # ★ Phase 49：仅 `mode=path` 非空。每项 = 路径上**按序**的节点 id 与边 id，
+        #   与 legacy `/api/path` 的 `paths` 形状一致（都是 `{"nodes":[…], "edges":[…]}`）。
+        path_chains: List[dict] = []
+        # ★ Phase 50（D45）：`hidden_by_trust` ＝ **被可信档位排除的边的「不同」边数**，
+        #   故必须用 **set** 去重，不能让遍历过程的判定次数充数。
+        #   实测教训：`mode=path` 是"路径 BFS"，同一个被拒边会在**每条部分路径**上被
+        #   重复检查（单条边最多 601 次）⇒ 用计数器会把 11,660 条边报成 62,640 条，
+        #   甚至**超过全图边总数 48,712**，且随 deadline 波动（同一查询两次不同值）。
+        #   ⇒ 对外计数必须等于"被排除对象集合"的基数（铁律 #12：计数≠内容）。
+        hidden_edges: set = set()
         truncated_by = None
         pre_truncation = None
         pending = 0
@@ -871,9 +900,9 @@ class Backend:
         missing_seeds = [s for s in seed_list if s not in nodes_by_id]
         present_seeds = [s for s in seed_list if s in nodes_by_id]
 
-        def _count_hidden(e) -> int:
-            nonlocal hidden_by_trust
-            hidden_by_trust += 1
+        def _mark_hidden(e) -> int:
+            """记下**被可信档位排除**的边（按边 id 去重）；返回值恒 0 以适配 `edge_ok` 协议。"""
+            hidden_edges.add(e["id"])
             return 0
 
         if mode == "path":
@@ -893,7 +922,7 @@ class Backend:
                 if not self._edge_ok(e, f):
                     return False
                 if not self._trust_ok(e, trust):
-                    _count_hidden(e)
+                    _mark_hidden(e)
                     return False
                 return True
 
@@ -912,13 +941,17 @@ class Backend:
                                       "在 %d 跳内没有满足过滤条件的路径（a=%s, b=%s）" % (hops, a, b),
                                       {}, {}, query={"mode": mode, "seeds": seed_list},
                                       stats={"missing_seeds": missing_seeds, "hops": hops,
-                                             "hidden_by_trust": hidden_by_trust,
+                                             "hidden_by_trust": len(hidden_edges),
                                              "elapsed_ms": _ms(t0)})
             for p in pr["paths"]:
                 for nid in p["nodes"]:
                     why_nodes[nid] = WHY_EVIDENCE
                 for e in p["edges"]:
                     why_edges[e["id"]] = WHY_EVIDENCE
+            # ★ Phase 49：把路径链原样带出（只取 id，不复制整条边字典 ⇒ 响应不被放大）。
+            path_chains = [{"nodes": list(p["nodes"]),
+                            "edges": [e["id"] for e in p["edges"]]}
+                           for p in pr["paths"]]
             if pr["truncated"]:
                 truncated_by = truncated_by or "paths"
                 reasons.append("已达 max_paths=%d" % max_paths)
@@ -940,7 +973,7 @@ class Backend:
                 if not self._edge_ok(e, f):
                     continue
                 if not self._trust_ok(e, trust):
-                    hidden_by_trust += 1
+                    hidden_edges.add(e["id"])
                     continue
                 if not (node_ok(e["source"]) and node_ok(e["target"])):
                     continue
@@ -960,13 +993,13 @@ class Backend:
                         "全量扫描超过 deadline_ms=%d，未取到任何结果（冷启动索引构建也计入超时）"
                         % deadline_ms,
                         {}, {}, query={"mode": mode},
-                        stats={"hidden_by_trust": hidden_by_trust, "truncated_by": "deadline",
+                        stats={"hidden_by_trust": len(hidden_edges), "truncated_by": "deadline",
                                "pre_truncation": None, "elapsed_ms": _ms(t0)})
                 return self._envelope(NO_RESULT,
                                       "过滤后没有边（已扫描 %d 条，hidden_by_trust=%d）"
-                                      % (i + 1, hidden_by_trust),
+                                      % (i + 1, len(hidden_edges)),
                                       {}, {}, query={"mode": mode}, stats={
-                                          "hidden_by_trust": hidden_by_trust,
+                                          "hidden_by_trust": len(hidden_edges),
                                           "pre_truncation": pre_truncation,
                                           "truncated_by": None,
                                           "elapsed_ms": _ms(t0)})
@@ -1023,7 +1056,7 @@ class Backend:
                     if not self._edge_ok(e, f):
                         continue
                     if not self._trust_ok(e, trust):
-                        hidden_by_trust += 1
+                        hidden_edges.add(e["id"])
                         continue
                     if not node_ok(other):
                         continue
@@ -1061,7 +1094,7 @@ class Backend:
             "truncated_by": truncated_by, "pre_truncation": pre_truncation,
             "pending_frontier": pending,
             "pending_frontier_note": "下界：中断时已知但未展开的节点数（ego 模式无法给出全量实有）",
-            "hidden_by_trust": hidden_by_trust,
+            "hidden_by_trust": len(hidden_edges),
             "missing_seeds": missing_seeds,
             "hops": hops, "requested_hops": req_hops,
             "clamped": {k: v for k, v in clamp.items() if v},
@@ -1080,6 +1113,10 @@ class Backend:
                 "no_record = 该图上无 A04 记录（缺记录 ≠ 已验证）。")
         return self._envelope(status, "；".join(reasons), why_nodes, why_edges,
                               nodes=nodes_out, edges=edges_out, expandable=expandable,
+                              # ★ Phase 49：`mode=path` 时把**路径链**一并给出。
+                              #   以前只给 nodes/edges 的并集，前端拿不到「有哪几条路径」⇒
+                              #   子图画得出来、路径清单却是空的（"后端给了、UI 回吞"同族）。
+                              paths=path_chains,
                               query={"mode": mode, "seeds": seed_list, "trust": trust,
                                      "types": sorted(f["types"]) if f["types"] else None,
                                      "kinds": sorted(f["kinds"]) if f["kinds"] else None,
@@ -1116,8 +1153,13 @@ class Backend:
 
     @staticmethod
     def _envelope(status, reason, why_nodes, why_edges, nodes=None, edges=None,
-                  expandable=None, query=None, stats=None, error_code=None) -> dict:
-        """统一信封。`error_code` 与五态**共存**：五态管"结果类别"，error_code 管"原因"。"""
+                  expandable=None, query=None, stats=None, error_code=None,
+                  paths=None) -> dict:
+        """统一信封。`error_code` 与五态**共存**：五态管"结果类别"，error_code 管"原因"。
+
+        `paths`：仅 `mode=path` 非空（Phase 49）；其余模式恒为 `[]` ⇒
+        前端可无条件读 `env.paths.length`，不需要按模式分支（少一个静默错位点）。
+        """
         if error_code is None:
             error_code = {TRUNCATED: "SUBGRAPH_LIMIT_REACHED",
                           TIMEOUT: "GRAPH_QUERY_TIMEOUT"}.get(status)
@@ -1127,6 +1169,7 @@ class Backend:
             "error_code": error_code,
             "nodes": nodes or [],
             "edges": edges or [],
+            "paths": paths or [],
             "why_nodes": why_nodes or {},
             "why_edges": why_edges or {},
             "expandable": expandable or [],

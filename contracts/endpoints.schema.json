@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sttp-endpoints/v1",
+  "title": "STTP 端点请求参数契约（GET /api/*）",
+  "description": "★ 本文件是「前端参数序列化」与「后端参数读取」之间的**唯一对照表**。任一侧改名而另一侧没跟上，都会让参数被**静默丢弃** —— 请求照发、HTTP 照 200/400，但结果悄悄变成默认值。2026-10-14/15 实测已命中 4 例：`q`（搜索词，26/26 全 400）、`hops`（跳数被丢弃 ⇒ ego 永远 1 跳）、`subject`（后端读 `subjects` ⇒ 学科筛选完全不生效）、`exclude_inferred`（后端读 `exclude_model_inferred` ⇒ 勾选框无效）。故本表配**双向求差断言**：`phase43_frontend_selfcheck.py` 的 X16a–X16e（契约 ↔ **后端源码**）与 `frontend_core_check.mjs` 的 F37a–F37g（契约 ↔ **前端序列化**）。两侧都要查 —— 只查一侧会把「契约本身写错」或「前端改名」放过去。",
+  "derivation": {
+    "backend": "06_PoC/viz_server.py 各 _api_* 方法内的 self._p(qs, \"NAME\") 与 qs.get(\"NAME\")",
+    "frontend": "06_PoC/js/core.js buildParams() 内的 put(\"NAME\", …)",
+    "assertions": "06_PoC/tests/phase43_frontend_selfcheck.py（X16a–X16e）+ 06_PoC/tests/frontend_core_check.mjs（F37a–F37g）"
+  },
+  "endpoints": {
+    "/api/search": {
+      "handler": "_api_search",
+      "response_schema": "contracts/search.schema.json",
+      "required": ["q"],
+      "params": {
+        "q": "str",
+        "types": "csv(node_types)",
+        "subject": "csv(单数!)",
+        "limit": "int"
+      },
+      "frontend_uses": ["q", "types", "subject", "limit"],
+      "frontend_must_not_send": ["mode", "seeds", "hops", "src", "dst", "subjects"],
+      "note": "★ 本端点的学科参数是**单数** `subject`，且 `types` 被当作 node_types 使用（历史命名，实测确认）。"
+    },
+    "/api/subgraph": {
+      "handler": "_api_subgraph",
+      "response_schema": "contracts/subgraph.schema.json",
+      "required": [],
+      "params": {
+        "mode": "ego|path|expand",
+        "seeds": "csv(node_id)",
+        "query": "str（一步直达：先搜首个命中作 seed）",
+        "hops": "int（本次走的跳数；/api/search 不认）",
+        "max_hops": "int（上限钳制 hops）",
+        "types": "csv（语义关系，24 种）",
+        "kinds": "csv（来源管线，115 种）",
+        "node_types": "csv",
+        "subjects": "csv（复数!）",
+        "trust": "verified|verified_strict|all",
+        "min_confidence": "float",
+        "exclude_model_inferred": "bool(1/true)",
+        "exclude_stale": "bool(1/true)",
+        "max_nodes": "int",
+        "max_edges": "int",
+        "deadline_ms": "int",
+        "max_paths": "int",
+        "session_id": "str",
+        "reset": "bool(1)",
+        "snapshot_id": "str（不符即 SNAPSHOT_MISMATCH）",
+        "expand_token": "str（mode=expand 必需）"
+      },
+      "frontend_uses": [
+        "mode", "seeds", "hops", "max_hops", "types", "kinds", "node_types", "subjects",
+        "trust", "min_confidence", "exclude_model_inferred", "exclude_stale",
+        "max_nodes", "max_edges", "deadline_ms", "max_paths", "session_id", "reset", "expand_token"
+      ],
+      "frontend_must_not_send": ["q", "src", "dst", "subject"],
+      "note": "★ `mode=path` 只认 `seeds`（需 2 个）。把 `src`/`dst` 发到本端点＝**端点读不到**（旧前端 bug，P0-4）：实测返回 no_result「path 模式需要 2 个存在的种子」。`/api/path` 才是读 src/dst 的 legacy 端点。"
+    },
+    "/api/overview": {
+      "handler": "_api_overview",
+      "response_schema": "contracts/overview.schema.json",
+      "required": [],
+      "params": {
+        "mode": "aggregate",
+        "k": "int"
+      },
+      "frontend_uses": ["mode"],
+      "frontend_must_not_send": []
+    },
+    "/api/path": {
+      "handler": "_api_path",
+      "response_schema": "contracts/error.schema.json（扁平 legacy 信封，仅顶层 error_code）",
+      "required": ["src", "dst"],
+      "params": {
+        "src": "node_id",
+        "dst": "node_id",
+        "max_paths": "int",
+        "max_hops": "int",
+        "deadline_ms": "int"
+      },
+      "frontend_uses": [],
+      "frontend_must_not_send": [],
+      "legacy": true,
+      "legacy_defaults": {
+        "max_paths": 20,
+        "max_hops": 5,
+        "deadline_ms": 3000
+      },
+      "note": "legacy 扁平信封（返回顶层 `paths` 数组）。新前端**不使用**它，一律走 `/api/subgraph?mode=path`（统一信封）。保留是为了不破坏外部脚本。★ `legacy_defaults` 是**有意冻结**的一组值：它们**不随** `queries.DEFAULT_*` 漂移（`deadline_ms` 3000≠10000、`max_hops` 5≠DEFAULT_HOPS 2），因为改它会静默改变外部脚本行为。断言 X16f 要求源码里的字面量与这里**逐值相等** —— 把「与库默认不一致」从**偶然分歧**变成**已声明契约**。"
+    },
+    "/api/neighbors": {
+      "handler": "_api_neighbors",
+      "required": ["node"],
+      "params": {
+        "node": "node_id"
+      },
+      "frontend_uses": [],
+      "frontend_must_not_send": [],
+      "legacy": true,
+      "note": "读的是 `qs.get(\"node\")`（不经 `self._p`），且返回**非统一信封**。已被 `/api/subgraph?mode=ego` 取代。"
+    },
+    "/api/stats": {
+      "handler": "do_GET 内联",
+      "required": [],
+      "params": {},
+      "frontend_uses": [],
+      "frontend_must_not_send": [],
+      "note": "★ 冷启动需加载权威图（67.7 MB，实测 4.91 s）⇒ **不得用作探活**（前端探活见 /api/healthz）。"
+    },
+    "/api/healthz": {
+      "handler": "do_GET 内联",
+      "required": [],
+      "params": {},
+      "frontend_uses": [],
+      "frontend_must_not_send": [],
+      "note": "Phase 49 新增。轻量探活：**不触碰图谱数据**，毫秒级返回进程/快照/后端预热状态。冷启动期间也能立即回答，前端据此把「后端启动中」与「后端不可达」分开。"
+    }
+  },
+  "backend_params_not_emitted": {
+    "query": "一步直达参数（`query=` 先搜首个命中当 seed）。前端**有意不用**：首屏设计要求「先返回候选、用户确认实体后再查」，用它等于让自然语言歧义直接决定查询对象。",
+    "snapshot_id": "复现校验用（不符即 SNAPSHOT_MISMATCH）。前端当前未发 —— 列为**待补**（Phase 50 候选），不是静默丢失。",
+    "node": "仅 legacy `/api/neighbors` 读取，前端已改用 `/api/subgraph`。",
+    "k": "`/api/overview` 的聚合上限，前端使用默认值 300。"
+  }
+}

@@ -8,7 +8,7 @@
 #     http://www.apache.org/licenses/LICENSE-2.0
 
 """
-Phase 43 · 局部图谱查询 **非真空自检**（V1–V19）
+Phase 43 · 局部图谱查询 **非真空自检**（V1–V20）
 ==================================================================
 
 目的
@@ -247,7 +247,7 @@ def snap_via_subprocess(path: str) -> str:
 # 主流程
 # ---------------------------------------------------------------------------
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Phase 43 局部图谱查询自检（V1–V19）")
+    ap = argparse.ArgumentParser(description="Phase 43 局部图谱查询自检（V1–V20）")
     ap.add_argument("--json", default=None, help="把报告写成 JSON（审计留痕）")
     ap.add_argument("--keep-going", action="store_true")
     args = ap.parse_args(argv)
@@ -264,7 +264,7 @@ def main(argv=None) -> int:
     rep = Rep()
     t_all = time.time()
     print("=" * 78)
-    print("  Phase 43 · 局部图谱查询自检（V1–V19）")
+    print("  Phase 43 · 局部图谱查询自检（V1–V20）")
     print("=" * 78)
 
     # ★ 前置：本自检需要**权威图**（不入库）。缺源时给**明确原因 + RC=2**，
@@ -471,12 +471,21 @@ def main(argv=None) -> int:
                 "（必须报错）")
 
     # ---------- V7 exclude_stale ----------
+    # ★ 2026-10-15 修正（Phase 49）：原实现**隐式依赖 `max_hops` 的默认值 = 3**
+    #   —— 它只传 `hops=3`，指望子图够大、足以包含 stale 边。Phase 49 把
+    #   `queries.DEFAULT_HOPS` 由 3 收敛为 2（它是 `max_hops` 的默认**夹紧上限**）
+    #   ⇒ `hops=3` 被夹紧到 2、子图由 25 边降到 9 边、其中 stale 边为 0 ⇒ V7a 变红。
+    #   处置：**把前置条件写显式**（`max_hops=3`），而不是把库默认值改回去 ——
+    #   本断言要的是「`exclude_stale` 真的移除 stale 边」，与某个默认值无关；
+    #   测试应当**构造**自己需要的前置条件，而不是依赖"当前恰好如此"的默认
+    #   （同族：#75 负对照须可构造、#74 断言过期须重写而非删除）。
+    #   另：该夹紧**不是静默的**（见新增 V7c），所以这不是 #85 家族缺陷。
     print("\n[V7] exclude_stale=true 时 stale 边不出现")
     c, a = http_get(port, "/api/subgraph" + q(seeds="MX:def:manifold", mode="ego",
-                                              hops=3, max_nodes=500,
+                                              hops=3, max_hops=3, max_nodes=500,
                                               exclude_stale="false"))
     c, b2 = http_get(port, "/api/subgraph" + q(seeds="MX:def:manifold", mode="ego",
-                                               hops=3, max_nodes=500,
+                                               hops=3, max_hops=3, max_nodes=500,
                                                exclude_stale="true"))
     n_stale = sum(1 for e in a["edges"] if e.get("stale"))
     rep.add(n_stale > 0, "V7a 基线（exclude_stale=false）确实含 stale 边",
@@ -484,6 +493,20 @@ def main(argv=None) -> int:
     rep.add(all(not e.get("stale") for e in b2["edges"]) and b2["stats"]["n_edges"] < a["stats"]["n_edges"],
             "V7b exclude_stale=true ⇒ 无 stale 边且边数下降",
             "%d → %d" % (a["stats"]["n_edges"], b2["stats"]["n_edges"]))
+    # V7c ★ 新增：`hops` 超出 `max_hops` 默认值时**必须披露**（不得静默丢弃 —— #85 家族）
+    #   对照（2026-10-15 实测）：`hops=3` 且不传 `max_hops` ⇒ `status=truncated`、
+    #   `reason="请求跳数被夹紧至 max_hops=2"`、`stats.truncated_by="hops"`、
+    #   `stats.hops=2` / `stats.requested_hops=3`。即"请求 3 跳、实得 2 跳"这件事
+    #   在响应里是**可读的**，不是悄悄少给一跳。
+    _, c3 = http_get(port, "/api/subgraph" + q(seeds="MX:def:manifold", mode="ego",
+                                               hops=3, max_nodes=500))
+    s3 = c3.get("stats") or {}
+    rep.add(s3.get("truncated_by") == "hops" and s3.get("requested_hops") == 3
+            and s3.get("hops") == 2 and "夹紧" in (c3.get("reason") or ""),
+            "V7c 请求跳数被 `max_hops` 夹紧时**必须披露**（truncated_by=hops + requested/actual）",
+            "truncated_by=%s · requested=%s → 实走=%s · reason=%s"
+            % (s3.get("truncated_by"), s3.get("requested_hops"), s3.get("hops"),
+               (c3.get("reason") or "")[:40]))
 
     # ---------- V8 / V9 属步骤 B ----------
     print("\n[V8][V9] 前端侧验收（步骤 B / 回归）")
@@ -1109,6 +1132,66 @@ def main(argv=None) -> int:
             "V19n /api/stats 披露 A04 参考表登记（可用 + 字节源=repo）",
             "available=%s n_refs=%s byte_source=%s"
             % (a04.get("available"), a04.get("n_references"), a04.get("byte_source")))
+
+    # ---------- V20 hidden_by_trust 必须是「不同边数」（Phase 50 · D45） ----------
+    print("\n[V20] hidden_by_trust ＝ 被可信档位**排除的不同边数**（不是遍历判定次数）")
+    # 背景（实测）：`mode=path` 是"路径 BFS"，同一个被拒边会在**每条部分路径**上被重复
+    #   检查（`MX:chem:co2→MX:chem:combustion` 实测单条边最多 601 次、总判定 ~1.9e6 次）。
+    #   旧实现用计数器 ⇒ 把 11,660 条边报成 62,640 条，**超过全图边总数 48,712**，
+    #   且随 deadline 波动（同一查询两次不同值）。⇒ 改为 set 去重（#12：计数≠内容）。
+    bk = V.get_backend()
+    n_edges_total = len(bk._index()["edges"])
+    _orig_fp = bk._find_paths
+    _probe = {}
+
+    def _spy_find_paths(a, b_, mp, mh, dl, edge_ok=None, t0=None, counter=None):
+        """截获真实 `edge_ok`：既数"判定次数"，也数"被拒的不同边"。"""
+        seen, calls = set(), [0]
+        real = edge_ok
+
+        def _w(e):
+            calls[0] += 1
+            ok = real(e)
+            if not ok and not bk._trust_ok(e, "verified"):
+                seen.add(e["id"])
+            return ok
+
+        out = _orig_fp(a, b_, mp, mh, dl,
+                       edge_ok=_w if edge_ok is not None else None, t0=t0, counter=counter)
+        _probe["last"] = {"calls": calls[0], "distinct": seen}
+        return out
+
+    bk._find_paths = _spy_find_paths
+    try:
+        r20 = bk.subgraph(seeds=["MX:chem:co2", "MX:chem:combustion"], mode="path",
+                          trust="verified", max_paths=5, max_hops=5, deadline_ms=10000)
+    finally:
+        bk._find_paths = _orig_fp          # ★ 必须还原（共享后端实例，服务端也用它）
+    got20 = r20["stats"]["hidden_by_trust"]
+    dist20 = len(_probe["last"]["distinct"])
+    calls20 = _probe["last"]["calls"]
+    rep.add(got20 == dist20,
+            "V20a hidden_by_trust == 同一次遍历里被拒边的**不同**边数",
+            "报告=%d / 独立去重=%d" % (got20, dist20))
+    rep.add(0 < got20 <= n_edges_total,
+            "V20b 0 < hidden_by_trust ≤ 全图边数（旧实现的 62,640 > 48,712 会在此变红）",
+            "%d ≤ %d" % (got20, n_edges_total))
+    rep.add(calls20 > dist20,
+            "V20c 负对照：探针有效（判定次数 ≫ 不同边数 ⇒ 计数器必然虚高）",
+            "判定 %d 次 / 不同 %d 条 = %.1fx" % (calls20, dist20, calls20 / max(1, dist20)))
+    _, eg20 = http_get(port, "/api/subgraph" + q(seeds="TH:fo:ideal_gas", mode="ego",
+                                                trust="verified"))
+    h20 = eg20["stats"]["hidden_by_trust"]
+    rep.add(0 < h20 <= n_edges_total,
+            "V20d ego 模式同样 ≤ 全图边数（两种模式共用同一套去重口径）",
+            "ideal_gas hidden=%d ≤ %d" % (h20, n_edges_total))
+    _, hp20 = http_get(port, "/api/subgraph"
+                       + q(mode="path", trust="verified", max_paths=5, max_hops=5,
+                           deadline_ms=10000, seeds="MX:chem:co2,MX:chem:combustion"))
+    hh20 = hp20["stats"]["hidden_by_trust"]
+    rep.add(0 < hh20 <= n_edges_total,
+            "V20e HTTP 信封透传且仍 ≤ 全图边数（跨层口径一致，前端文案据此可成立）",
+            "http=%d ≤ %d" % (hh20, n_edges_total))
 
     # ---------- Neo4j 契约（本环境不可达 ⇒ SKIP，不计通过） ----------
     print("\n[Neo4j] 双后端同契约（本环境不可达 ⇒ SKIP）")

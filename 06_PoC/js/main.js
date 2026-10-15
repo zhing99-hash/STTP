@@ -22,7 +22,7 @@
  */
 
 import {
-  MODE_BADGE, BUDGET, HARD, sessionText, statusStyle, STATUS_STYLE,
+  MODE_BADGE, BUDGET, HARD, sessionText, statusStyle, STATUS_STYLE, pathNodeIds,
 } from "./core.js";
 import { Api } from "./api.js";
 import { detectMode, modeFromLocation } from "./modes.js";
@@ -30,6 +30,7 @@ import { createViz, buildLegend, shortId } from "./viz.js";
 import { SubgraphStore } from "./subgraph.js";
 import { QueryPanel, renderStatusLine, renderBanner, bindSearch, esc } from "./panels.js";
 import { renderNodeDetail, renderEdgeDetail, renderOverviewDetail } from "./evidence.js";
+import { TaskEntry } from "./task.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -39,6 +40,8 @@ const state = {
   store: null,
   viz: null,
   panel: null,
+  task: null,            // ★ Phase 49：任务式首屏
+  taskUsed: false,       // 是否已用它生成过图（决定「← 修改查询」是否出现）
   selNode: null,
   selEdge: null,
   pathSrc: null,
@@ -167,39 +170,85 @@ function onEnvError(env) {
 
 async function runEgo(seed, { label } = {}) {
   if (!seed) return;
+  // ★ Phase 49：走统一的「执行参数」入口 —— 默认预算/档位来自 core.BUDGET（已收敛为
+  //   40/70/2/10 s），不再是硬编码的 500/2000/trust=verified。
+  return runSubgraph({
+    mode: "ego", seeds: seed, hops: BUDGET.hops,
+    max_nodes: BUDGET.nodes, max_edges: BUDGET.edges, deadline_ms: BUDGET.deadline_ms,
+    trust: "verified",
+  }, { label: label || `找点 ${seed}` });
+}
+
+/**
+ * 执行一次 `/api/subgraph` 并并入画布（ego / path / filter 共用一条路径）。
+ *
+ * ★ 单点：**所有**子图请求都必须经这里 ⇒ 「成功必须清掉上一个错误横幅」（外部评审 §6.2）
+ *   只需修一处；也不会再出现"某条入口忘了清 banner"。
+ */
+async function runSubgraph(params, { label } = {}) {
   state.overview = false;
-  const params = { mode: "ego", seeds: seed, hops: 1, max_nodes: BUDGET.nodes, max_edges: BUDGET.edges, trust: "verified" };
-  const r = await state.store.run(params, { label: label || `找点 ${seed}` });
-  if (!r.ok) { onEnvError(r.env || { status: "error", statusInfo: { status: "error", cls: "st-error", color: "#f85149", label: "错误", icon: [], hint: "" }, reason: r.error || "无结果", stats: {} }); return; }
+  const r = await state.store.run(params, { label: label || params.mode });
+  if (!r.ok) {
+    onEnvError(r.env || {
+      status: "error", statusInfo: statusStyle("error"), cls: "st-error",
+      reason: r.error || "无结果", stats: {},
+    });
+    return null;
+  }
   state.viz.add(r.env.nodes, r.env.edges);
-  state.viz.layout(state.viz.cy.nodes().map((n) => n.id()));
+  state.viz.layout((r.env.nodes || []).map((n) => n.id));
   state.lastEnv = r.env;
-  refreshStatus(r.env);
+  refreshStatus(r.env);                 // ★ 成功 ⇒ renderBanner 内部清空旧错误横幅
   refreshLegend();
   afterDataChange();
+  return r.env;
+}
+
+/** ★ Phase 49：任务式首屏的「生成子图」回调。 */
+async function runTask({ params, card }) {
+  state.taskUsed = true;
+  maybeShowReopenTask();
+  const label = card && card.mode === "path" ? `关系路径 ${card.question}` : `任务 ${params.seeds}`;
+  const env = await runSubgraph(params, { label });
+  if (!env) return;
+  if (params.mode === "path") {
+    // 路径模式：把「有哪几条路径」也画出来（后端 Phase 49 起透传 `paths`）
+    state.pathList = Array.isArray(env.paths) ? env.paths : [];
+    if (state.pathList.length) {
+      state.viz.clearPathHighlight();
+      state.viz.highlightPath(state.pathList[0]);
+      renderPathList(state.pathList);
+    }
+    const el = $("path-status");
+    if (el) {
+      el.textContent = `任务卡路径查询：${env.statusInfo ? env.statusInfo.label : env.status}`
+        + (state.pathList.length ? `，共 ${state.pathList.length} 条路径` : "")
+        + (env.reason ? ` —— ${env.reason}` : "");
+    }
+  }
+}
+
+function maybeShowReopenTask() {
+  const b = $("btn-reopen-task");
+  if (!b) return;
+  // 只有 live 模式才有任务入口可回；且必须**已经生成过图**才显示（否则首屏本来就在）
+  const hasGraph = !!(state.store && (state.taskUsed || state.store.depth > 0));
+  b.hidden = !(state.task && state.mode === "live" && hasGraph);
 }
 
 async function runFilter() {
   const p = state.panel.collect();
-  state.overview = false;
-  const r = await state.store.run(p, { label: "筛选" });
-  if (!r.ok) { onEnvError(r.env); return; }
-  state.viz.add(r.env.nodes, r.env.edges);
-  state.viz.layout(r.env.nodes.map((n) => n.id));
-  state.lastEnv = r.env;
-  refreshStatus(r.env);
-  refreshLegend();
-  afterDataChange();
+  return runSubgraph(p, { label: "筛选" });
 }
 
 async function expandSelected() {
   if (!state.selNode) return;
   const r = await state.store.expand(state.selNode.id, { hops: 1 });
-  if (!r.ok) { onEnvError(r.env || { status: "error", reason: r.error, stats: {} }); return; }
+  if (!r.ok) { onEnvError(r.env || { status: "error", statusInfo: statusStyle("error"), reason: r.error, stats: {} }); return; }
   state.viz.add(r.env.nodes, r.env.edges);
-  state.viz.layout(r.env.nodes.map((n) => n.id));
+  state.viz.layout((r.env.nodes || []).map((n) => n.id));
   state.lastEnv = r.env;
-  refreshStatus(r.env);
+  refreshStatus(r.env);                 // 成功 ⇒ 清掉旧错误横幅
   refreshLegend();
   afterDataChange();
 }
@@ -208,27 +257,55 @@ async function runPath() {
   const src = state.pathSrc, dst = state.pathDst;
   if (!src || !dst) { $("path-status").textContent = "请先设置起点与终点（可点「取选中」）"; return; }
   state.overview = false;
-  // ★ 新前端一律走统一信封端点（/api/path 仍是 legacy 扁平信封，见报告 §6-D9）
+  // ★ Phase 49 修 P0-4（外部评审 §5-P0-4）：
+  //   `mode=path` 在后端**只读 `seeds``**（需 2 个：起点/终点）。
+  //   旧实现发的是 `src=`/`dst=` ⇒ 该端点根本不读 ⇒ **必然** no_result
+  //   「path 模式需要 2 个存在的种子（起点/终点）」—— 路径栏从来没有真正工作过。
+  //   （`/api/path` 才是读 src/dst 的 legacy 端点；新前端统一走 `/api/subgraph`。）
   const env = await state.api.subgraph({
-    mode: "path", src, dst, max_paths: 20, max_hops: 5, deadline_ms: 3000,
+    mode: "path", seeds: `${src},${dst}`,
+    max_paths: BUDGET.paths, max_hops: HARD.hops, deadline_ms: BUDGET.deadline_ms,
   });
   state.lastEnv = env;
   refreshStatus(env);
   const st = $("path-status");
-  const paths = env.meta && Array.isArray(env.meta.paths) ? env.meta.paths : (Array.isArray(env.raw && env.raw.paths) ? env.raw.paths : []);
+  // ★ 统一信封自 Phase 49 起透传 `paths`（`{nodes, edges}`）；`pathNodeIds` 同时兼容
+  //   旧 shape（裸 id 数组）⇒ 两种来源都不会整条渲染不出来而不报错。
+  const paths = Array.isArray(env.paths) ? env.paths : [];
   state.pathList = paths;
-  if (env.status === "ok" && paths.length) {
-    st.textContent = `找到 ${paths.length} 条路径`;
+  if (env.status === "ok" || (env.status === "truncated" && paths.length)) {
+    st.textContent = `找到 ${paths.length} 条路径`
+      + (env.status === "truncated" ? "（已达 max_paths，属**截断**而非全部）" : "");
     state.viz.add(env.nodes, env.edges);
-    state.viz.layout(env.nodes.map((n) => n.id));
+    state.viz.layout((env.nodes || []).map((n) => n.id));
     state.viz.clearPathHighlight();
-    state.viz.highlightPath(paths[0]);
+    state.viz.highlightPath(pathNodeIds(paths[0]));
     renderPathList(paths);
     refreshLegend();
   } else {
-    st.textContent = env.status === "no_result" ? "两点之间确实没有路径（no_result，不是失败）"
-      : env.status === "timeout" ? "路径查询超时（非失败）：可降低跳数或提高超时"
-      : `路径查询：${env.statusInfo ? env.statusInfo.label : env.status}${env.reason ? " — " + env.reason : ""}`;
+    // ★ Phase 49：`no_result` 的文案必须**可操作**，不能只说"确实没有路径"。
+    //   实测（`MX:chem:co2 → MX:chem:combustion`，max_hops=5）：
+    //     `trust=verified`（**本栏默认**）⇒ **no_result**（10.7 s）
+    //     `trust=all`                    ⇒ **timeout**，但已找到 3 条路径
+    //   ⇒ "没有路径"这个结论**对 trust 档敏感**：默认档会隐藏低可信度边，
+    //     而跨域通路常常正是靠这些边连起来的。只写"确实没有路径"会把
+    //     **"被过滤掉了"** 说成 **"不存在"** —— 正是本项目最反对的那类结论
+    //     （铁律 #52：验证的命题须＝被发布的命题；#67：五态须分列且说清边界）。
+    //   故：如实报出被隐藏的边数，并给出下一步动作。
+    if (env.status === "no_result") {
+      const hid = Number(env.hidden_by_trust || 0);
+      st.textContent = hid > 0
+        ? `在当前**可信度档（verified）**与预算内没有路径 —— 本次已隐藏 ${hid} 条低可信度边`
+          + `（按边 id 去重、已探索范围内）；通路可能正被它们连接。`
+          + `可把左侧「可信度」切到 all 再试。（no_result ≠ 失败）`
+        : "在当前可信度档与预算内没有路径（no_result，不是失败）—— 可增大跳数或放宽关系类型。";
+    } else if (env.status === "timeout") {
+      st.textContent = "路径查询超时（非失败）：可降低跳数或提高超时"
+        + (paths.length ? `（已找到 ${paths.length} 条，属**截断**而非全部）` : "");
+    } else {
+      st.textContent = `路径查询：${env.statusInfo ? env.statusInfo.label : env.status}`
+        + (env.reason ? " — " + env.reason : "");
+    }
     if (paths.length) { state.viz.add(env.nodes, env.edges); renderPathList(paths); }
   }
   afterDataChange();
@@ -237,18 +314,20 @@ async function runPath() {
 function renderPathList(paths) {
   const el = $("path-list");
   if (!el) return;
-  el.innerHTML = paths.slice(0, 8).map((p, i) =>
-    `<div class="pathcard ${i === 0 ? "active" : ""}" data-idx="${i}">
-       <div class="phead">路径 ${i + 1}（${p.length} 跳）</div>
-       <div class="chain">${p.map((id, j) => `<span class="pn ${j === 0 ? "pn-src" : j === p.length - 1 ? "pn-dst" : "pn-mid"}">${esc(shortId(id))}</span>`).join('<span class="ph">→</span>')}</div>
-     </div>`).join("");
+  el.innerHTML = paths.slice(0, 8).map((p, i) => {
+    const ids = pathNodeIds(p);
+    return `<div class="pathcard ${i === 0 ? "active" : ""}" data-idx="${i}">
+       <div class="phead">路径 ${i + 1}（${Math.max(0, ids.length - 1)} 跳）</div>
+       <div class="chain">${ids.map((id, j) => `<span class="pn ${j === 0 ? "pn-src" : j === ids.length - 1 ? "pn-dst" : "pn-mid"}">${esc(shortId(id))}</span>`).join('<span class="ph">→</span>')}</div>
+     </div>`;
+  }).join("");
   el.querySelectorAll(".pathcard").forEach((c) => {
     c.addEventListener("click", () => {
       el.querySelectorAll(".pathcard").forEach((x) => x.classList.remove("active"));
       c.classList.add("active");
       const p = state.pathList[parseInt(c.getAttribute("data-idx"), 10)];
       state.viz.clearPathHighlight();
-      state.viz.highlightPath(p);
+      state.viz.highlightPath(pathNodeIds(p));
     });
   });
 }
@@ -285,6 +364,7 @@ async function showOverview() {
 function afterDataChange() {
   const fb = $("fallback"); if (fb) fb.style.display = "none";
   syncSubstack();
+  maybeShowReopenTask();     // ★ 只要有图，「← 修改查询」就该在
 }
 
 // ---------------------------------------------------------------------------
@@ -373,6 +453,26 @@ async function boot() {
     }).mount();
     renderNodeDetail($("detail"), null);
     refreshStatus(null);
+
+    // ★ Phase 49：**首屏 = 任务入口**（问题 → 候选 → 确认实体 → 生成局部图）。
+    //   只有 live 模式才挂：bundle/offline 下没有 /api/search，挂上去也查不出候选
+    //   （宁可不出入口，也不给一个点了没反应的框）。
+    state.task = new TaskEntry($("task-entry"), {
+      api: state.api,
+      onRun: (payload) => runTask(payload),
+    }).mount();
+    state.task.open();
+  }
+
+  function openTaskEntry() {
+    if (!state.task) return;
+    state.task.open({
+      query: state.task.state.query, second: state.task.state.second,
+      seed: state.task.state.seed, seedLabel: state.task.state.seedLabel,
+      seed2: state.task.state.seed2, seed2Label: state.task.state.seed2Label,
+      cardId: state.task.state.card ? state.task.state.card.id : null,
+      scope: state.task.state.scope,
+    });
   }
 
   bindSearch($("search-input"), $("search-results"), state.api, (id) => runEgo(id));
@@ -396,6 +496,12 @@ async function boot() {
   });
   $("btn-fit") && $("btn-fit").addEventListener("click", () => state.viz.fit());
   $("btn-overview") && $("btn-overview").addEventListener("click", showOverview);
+  // ★ Phase 49：「← 修改查询」—— 回到任务入口，保留上次输入与已确认实体
+  $("btn-reopen-task") && $("btn-reopen-task").addEventListener("click", openTaskEntry);
+  // 键盘直达（Esc 关闭入口；不隐藏数据，只是回到画布）
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && state.task && state.task.isOpen && state.taskUsed) state.task.close();
+  });
   $("btn-toggle-panel") && $("btn-toggle-panel").addEventListener("click", () => {
     const p = $("left"); const on = p.classList.contains("collapsed");
     focusPanel(on);
