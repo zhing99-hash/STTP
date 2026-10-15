@@ -78,8 +78,8 @@
   "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "3c4669a929a499194fc5ead56867667112f09bc6",
-  "git_head_at_build_short": "3c4669a",
+  "git_head_at_build": "7196ab5401047304f8d4a373791efcc80ad62f80",
+  "git_head_at_build_short": "7196ab5",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -662,7 +662,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-15T15:25:13+08:00",
+  "created": "2026-10-15T15:33:15+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
