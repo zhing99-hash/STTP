@@ -1,0 +1,55 @@
+============================================================================================
+来源登记表 source_registry —— Phase 41（R10：证据血缘/版本/失效）
+============================================================================================
+source_id                        kind         lineage  redistribution   repo_status   content_hash
+ChEBI                            database     ok       redistributable  not_in_repo   -
+ElementKG2.0                     database     ok       internal_only    not_in_repo   -
+LLM-review                       model        GAP      internal_only    no_locator    -
+NIST Chemistry WebBook           database     ok       redistributable  not_in_repo   -
+Phase13.GNN.typed                model        GAP      internal_only    no_locator    -
+Phase13.Gate.B1                  derived      ok       internal_only    not_in_repo   -
+Phase13.Gate.B2                  derived      ok       redistributable  in_repo       87182c9a72b4
+Phase13.Gate.B3                  derived      ok       redistributable  not_in_repo   -
+Phase13.Gate.B4                  derived      ok       internal_only    not_in_repo   -
+Phase13.Gate.B5                  derived      ok       internal_only    in_repo       87182c9a72b4
+Phase9.GNN                       model        GAP      internal_only    no_locator    -
+Phase9.GNN+LLM                   model        GAP      internal_only    no_locator    -
+PhysicsBabel                     database     ok       internal_only    not_in_repo   -
+PubChem                          database     ok       internal_only    not_in_repo   -
+Rhea                             database     ok       redistributable  not_in_repo   -
+chembl_api                       database     ok       internal_only    not_in_repo   -
+cross_source_alignment           constructed  ok       redistributable  in_repo       ca629f7bb4ff
+curated_seed                     curated      ok       redistributable  in_repo       781f47f53333
+curated_seed/energy_combustion   curated      ok       redistributable  in_repo       037992e4417b
+dimension_table                  constructed  ok       redistributable  not_in_repo   -
+element_reference                constructed  ok       redistributable  in_repo       87182c9a72b4
+heuristic                        model        GAP      internal_only    no_locator    -
+llm_inferred_gnn                 model        GAP      internal_only    no_locator    -
+mathxiv                          database     ok       internal_only    in_repo       ca629f7bb4ff
+nist_codata_2022                 database     ok       redistributable  not_in_repo   -
+openalex                         database     ok       redistributable  not_in_repo   -
+openalex-topic-align             derived      ok       redistributable  in_repo       33526591fdfd
+rhea_chebi                       derived      ok       redistributable  not_in_repo   -
+schema-axiom                     constructed  ok       redistributable  no_locator    -
+unregistered                     unregistered GAP      forbidden        no_locator    -
+wikidata                         database     ok       redistributable  no_locator    -
+----------------------------------------------------------------------------------------------------------------------
+共 31 个来源 ｜ 血缘缺口 7 ｜ 无内容哈希 23（无 locator）｜ **可再分发（血缘闭包）16**
+★ 仓库字节源：in_repo 8 ｜ not_in_repo 14（不可从仓库复算，需上游原始数据）｜ no_locator 9
+【自检】
+  ① 血缘无环          : PASS
+  ② 上游 id 均已登记   : PASS
+  ③ kind ∈ 受控词表    : PASS
+  ④ 有 locator ⇒ 可复算或显式不可复算: PASS（其中不可复算 14 个，属已知边界）
+  ⑤ 模型源无上游⇒标记缺口: PASS
+  ⑥ locator 行尾已锁   : PASS
+  ⑦ .gitattributes 已声明: PASS
+  ⑧ 再分发三态全覆盖   : PASS
+  ⑨ 派生 ≤ 上游严格度  : PASS
+  ⑩ 许可文本 ↔ 三态   : PASS
+  ⑪ repo_status 取值合法: PASS
+  ⑫ 仓库字节源可用     : PASS（已入库来源 8 个）
+  ⑬ 仓库口径≠工作区口径: 5 个来源 （★ 旧口径会漂移，本改动即为此而做）
+  ⑭ 两口径可构造差异   : PASS（differ=True / 还原后相等=True）
+  ⑮ 只读文件目录可力删 : PASS（朴素删法**失败** ⇒ 缺陷坐实；力删成功=True）
+  ⇒ 全过

@@ -1,0 +1,74 @@
+✅ P0-1-dim-energy-mass           [dim_table] equal=False
+✅ P0-1-dim-angular-energy        [dim_table] equal=False
+✅ P0-1-dim-voltage-efield        [dim_table] equal=False
+✅ P0-1-dim-positive-control      [dim_table] equal=True
+✅ P0-1-main-dc-no-mismatch       [graph_scan] 违规 0：[]
+✅ P0-2-latex-not-same-as         [graph_scan] 命中 0：[]
+✅ P0-3-chem-implicit-H           [gate_chem] verdict=REJECTED codes=['R-CHEM-01']
+✅ P0-3-chem-charge               [gate_chem] verdict=REJECTED codes=['R-CHEM-03']
+✅ P0-3-chem-positive-control     [gate_chem] verdict=VERIFIED codes=[]
+✅ P0-3-math-domain-sqrt          [gate_math] verdict=REJECTED codes=['R-MATH-01']
+✅ P0-3-math-positive-control     [gate_math] verdict=VERIFIED codes=[]
+✅ P0-4-skeleton-bridge-absent    [graph_scan] 剩余 0 条
+✅ P0-5-level-model-not-rule      [level_check] level=model_inferred scope=model_link_prediction
+✅ P0-5-level-dim-table-positive  [level_check] level=rule_checked scope=dimensional_strict_equal
+✅ P0-5-level-dim-mismatch        [level_check] level=unverified scope=dimensional_mismatch
+✅ P0-5-level-has-symbol-ok       [level_check] level=rule_checked scope=formula_participation_membership
+✅ P0-5-level-has-symbol-stale    [level_check] level=unverified scope=formula_participation_not_found
+✅ P0-5-level-composed-self-only  [level_check] level=rule_checked scope=formula_count_independent_recheck
+✅ P0-5-level-composed-cross-positive [level_check] level=cross_source scope=formula_count_cross_source
+✅ P0-5-level-latex-not-verified  [level_check] level=model_inferred scope=model_link_prediction
+✅ P0-6-attrib-has-symbol-phy-bogus [attrib_check] gate=R-PHY scope=formula_participation_membership matched=False（期望 NOT_MATCH）
+✅ P0-6-attrib-r-phy-positive     [attrib_check] gate=R-PHY scope=dimensional_strict_equal matched=True（期望 MATCH）
+✅ P0-6-attrib-r-chem-positive    [attrib_check] gate=R-CHEM scope=formula_count_independent_recheck matched=True（期望 MATCH）
+✅ P0-5-main-has-symbol-no-phy-gate [graph_scan] 命中 0：[]
+✅ P0-5-main-gate-attrib-consistent [graph_scan] 已归因 2619 条，归因-范围不符 0 条：[]
+✅ P0-5-main-level-consistent     [graph_scan] 已分层 48712 条，布尔-分层不符 0 条：[]
+✅ P1-bridge-no-contradictory     [graph_scan] 已标注类 718 条，自相矛盾 0 条：[]
+✅ P1-bridge-molar-mass-evidenced [graph_scan] PB:pq:molar_mass：共 698 条（需≥600），低于 rule_checked 的 0 条 []
+✅ P1-level-molar-mass-positive-control [level_check] level=rule_checked scope=molar_mass_independent_recompute
+✅ P1-level-molar-mass-cross-source-control [level_check] level=cross_source scope=molar_mass_cross_source
+✅ P1-level-contradictory-bridge-rejected [level_check] level=unverified scope=rationale_target_mismatch
+✅ P1-level-consistent-class-not-flagged [level_check] level=model_inferred scope=model_link_prediction
+✅ P1-level-numeric-mass-on-molar-mass-ok [level_check] level=rule_checked scope=molar_mass_independent_recompute
+✅ P1-level-numeric-mass-on-energy-rejected [level_check] level=unverified scope=rationale_target_mismatch
+✅ P1-level-webbook-unit-ok       [level_check] level=rule_checked scope=webbook_unit_dimension_recompute
+✅ P1-level-webbook-multi-ref     [level_check] level=cross_source scope=webbook_multi_reference_agreement
+✅ P1-level-webbook-unit-mismatch [level_check] level=unverified scope=webbook_unit_dimension_mismatch
+✅ P1-main-level-matches-recompute [graph_scan] 已重算 48712 条，落库≠复算 0 条：[]
+✅ P1-bridge-source-traceable     [graph_scan] webbook_thermochemistry：共 157 条（需 n_references≥1），不可追溯 0 条 []
+✅ P1-level-webbook-disagreement-not-cross [level_check] level=rule_checked scope=webbook_unit_dimension_recompute
+✅ P1-level-unit-dim-ok           [level_check] level=rule_checked scope=unit_dimension_recompute
+✅ P1-level-unit-dim-mismatch     [level_check] level=unverified scope=unit_dimension_mismatch
+✅ P1-level-unit-force-kg-rejected [level_check] level=unverified scope=unit_dimension_mismatch
+✅ P1-level-math-bridge-log-ok    [level_check] level=source_asserted scope=manual_curation
+✅ P1-level-math-bridge-no-op-rejected [level_check] level=unverified scope=unclassified
+✅ P1-level-math-bridge-wrong-target-rejected [level_check] level=by_construction scope=symbol_scan_from_text
+✅ P1-level-model-defines-absent-symbol-rejected [level_check] level=unverified scope=semantic_target_absent
+✅ P1-den-main-unit-dim-consistent [graph_scan] 可判定 40 条 / 不可判定 8 条，量纲不符 0 条：[]
+✅ P1-den-main-unit-unique        [graph_scan] 多单位量的 48 个，量纲互斥 0 个：[]
+✅ P1-den-main-semantic-target-present [graph_scan] 可判定 4 条，符号缺失 0 条：[]
+✅ P1-den-main-math-bridge-evidenced [graph_scan] 数学桥 13 条（需≥13），无证据/低于 rule_checked 的 0 条：[]
+✅ P1-level-unit-molar-mass-not-flagged [level_check] level=rule_checked scope=unit_dimension_recompute
+✅ P1-den-main-island-freeze      [graph_scan] 分量 6 个（上限 6）；冻结岛 5 个 / 29 节点；实际孤岛 5 个 / 29 节点
+✅ P1-level-symbol-expr-recompute-ok [level_check] level=rule_checked scope=symbol_expr_recompute
+✅ P1-level-symbol-expr-absent-not-upgraded [level_check] level=source_asserted scope=manual_curation
+✅ P1-level-model-semantic-target-absent-rejected [level_check] level=unverified scope=semantic_target_absent
+✅ P1-level-model-semantic-target-present-not-upgraded [level_check] level=model_inferred scope=model_link_prediction
+✅ P1-dim-alias-speed-of-light-eq-light-speed [dim_table] equal=True
+✅ P1-dim-alias-electric-charge-eq-charge [dim_table] equal=True
+✅ P1-dim-alias-electromotive-force-eq-voltage [dim_table] equal=True
+✅ P1-dim-alias-focal-length-eq-length [dim_table] equal=True
+✅ P1-dim-alias-gibbs-free-energy-eq-energy [dim_table] equal=True
+✅ P1-dim-alias-reduced-planck-eq-planck [dim_table] equal=True
+✅ P1-dim-not-efield-eq-voltage   [dim_table] equal=False
+✅ P1-den-main-symbol-expr-evidenced [graph_scan] symbol_expr_recompute 206 条（需≥196），无证据 0 条
+✅ P1-den-main-model-semantic-target-present [graph_scan] 可判定 8 条，目标缺席 0 条：[]
+✅ P1-den-main-dim-consistent-recompute [graph_scan] 可判定 38 条，量纲互斥 0 条：[]
+✅ P1-den-main-evidence-traceable [graph_scan] level>=rule_checked 34769 条；带证据链 34769 条（100.0%）；缺独立证据 0 条
+✅ P1-den-main-evidence-wellformed [graph_scan] 证据对象覆盖 48712 / 48712（100.0%）；不良构 0 条
+✅ P1-den-main-no-repr-residue    [graph_scan] 扫描 784804 个属性值，repr 残留 0 条：[]
+✅ P1-den-main-level-scope-reproducible [graph_scan] 重算覆盖 48712 条，落库≠重算 0 条：[]
+✅ P1-den-main-residual-accounted [graph_scan] T4 残差 5312 条，未归类 0 条：[]  {'same_source_curated': 71, 'same_source_elementkg': 707, 'shared_dictionary_rhea_chebi': 3002, 'naming_variant_no_second_source': 1070, 'placeholder_complex': 370, 'polymer_residue': 38, 'generic_class': 54}
+✅ P1-den-main-independence-accounted [graph_scan] T1–T8 达标边 40451 条；独立 34758；**非独立 5693 条**，未归类 0 条：[]  {'source_text_only': 7, 'same_source_curated': 85, 'same_source_elementkg': 707, 'no_independent_citation_index': 176, 'no_second_subject_index': 178, 'unit_name_not_in_reference': 6, 'shared_dictionary_rhea_chebi': 3002, 'naming_variant_no_second_source': 1070, 'placeholder_complex': 370, 'polymer_residue': 38, 'generic_class': 54}
+✅ P1-den-main-scope-accounted    [graph_scan] 全图 48712 边；分母内 40589；**分母外 8123（16.7%）**；占位实体边 4266；未归类 0 条：[]  {'symbol_binding': 114, 'task_family': 40589, 'identity_not_in_task_set': 74, 'structure_not_in_task_set': 12, 'gnn_link_prediction': 55, 'ekg_relation_not_in_task_set': 4266, 'descriptor_assertion_not_in_task_set': 3601, 'operator_usage_not_in_task_set': 1}

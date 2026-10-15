@@ -1,0 +1,419 @@
+{
+  "schema": "sttp-phase43-frontend-selfcheck/v1",
+  "generated_by": "06_PoC/tests/phase43_frontend_selfcheck.py",
+  "n_pass": 72,
+  "n_fail": 0,
+  "n_skip": 2,
+  "rows": [
+    {
+      "kind": "--",
+      "name": "[S] 静态结构与无障碍（方案 §6.1.1 / §10 步骤 B-7）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "S1 页面用**原生 ES Module**加载入口（零构建）",
+      "detail": "js/main.js"
+    },
+    {
+      "kind": "PASS",
+      "name": "S2 渲染/布局/公式三个 vendor 依赖均本地优先加载",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "S2b CDN 仅作回退（离线优先 + 在线兜底）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "S3 必需 DOM id 齐备（37 个）",
+      "detail": "37/37"
+    },
+    {
+      "kind": "PASS",
+      "name": "S4 页面含 SPDX 许可头",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "S5 **不用 emoji 当图标**（内联 SVG）",
+      "detail": "0 处"
+    },
+    {
+      "kind": "PASS",
+      "name": "S6 无内联 onclick 等事件属性（用 addEventListener，可键盘操作）",
+      "detail": "0 处"
+    },
+    {
+      "kind": "PASS",
+      "name": "S7 响应式断点 375/768/1024/1440 齐备（含区间上界写法）",
+      "detail": "375/768/1024/1440"
+    },
+    {
+      "kind": "PASS",
+      "name": "S8 可点击元素有 cursor:pointer",
+      "detail": "5 处"
+    },
+    {
+      "kind": "PASS",
+      "name": "S9 键盘焦点可见（:focus-visible）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "S10 尊重 prefers-reduced-motion",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "S11 关键控件有 aria 标注",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "S12 五态 CSS 类齐备（供 V8 的 DOM 断言）",
+      "detail": "5/5"
+    },
+    {
+      "kind": "PASS",
+      "name": "S13 五态 CSS 变量齐备",
+      "detail": "5/5"
+    },
+    {
+      "kind": "PASS",
+      "name": "S14 状态行根元素带 data-state（供 DOM 断言）",
+      "detail": ""
+    },
+    {
+      "kind": "--",
+      "name": "[M] 模块图完整性（防 404 静默失效）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/core.js 的 import 均为显式相对路径",
+      "detail": "0 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/style.js 的 import 均为显式相对路径",
+      "detail": "0 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/api.js 的 import 均为显式相对路径",
+      "detail": "1 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/modes.js 的 import 均为显式相对路径",
+      "detail": "1 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/subgraph.js 的 import 均为显式相对路径",
+      "detail": "1 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/viz.js 的 import 均为显式相对路径",
+      "detail": "1 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/panels.js 的 import 均为显式相对路径",
+      "detail": "2 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/evidence.js 的 import 均为显式相对路径",
+      "detail": "2 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M1 js/main.js 的 import 均为显式相对路径",
+      "detail": "7 条"
+    },
+    {
+      "kind": "PASS",
+      "name": "M2 所有 import 都指向**存在**的文件",
+      "detail": "0 个悬空"
+    },
+    {
+      "kind": "PASS",
+      "name": "M3 全部前端模块含 SPDX 许可头",
+      "detail": "9/9"
+    },
+    {
+      "kind": "PASS",
+      "name": "M4 页面入口脚本存在",
+      "detail": "js/main.js"
+    },
+    {
+      "kind": "--",
+      "name": "[X] 跨层一致性（前端常量 ↔ 后端契约，漂移即变红）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "X1 前端边类型配色 == 规范图实测 type 集合（24 种）",
+      "detail": "24 == 24（旧页面此处已漂移，本轮校正）"
+    },
+    {
+      "kind": "PASS",
+      "name": "X2 五态色：页面 CSS 默认值 == core.js（单一来源）",
+      "detail": "5/5 一致"
+    },
+    {
+      "kind": "PASS",
+      "name": "X3 why_shown 枚举：前端 == queries.WHY_SHOWN_VALUES",
+      "detail": "6 个一致"
+    },
+    {
+      "kind": "PASS",
+      "name": "X4 解析到前端 BUDGET / HARD 两个块",
+      "detail": "BUDGET 67 字符 / HARD 71 字符"
+    },
+    {
+      "kind": "PASS",
+      "name": "X4a 默认预算：前端 BUDGET == queries.DEFAULT_*",
+      "detail": "5/5"
+    },
+    {
+      "kind": "PASS",
+      "name": "X4b 硬上限：前端 HARD == queries.HARD",
+      "detail": "5/5"
+    },
+    {
+      "kind": "PASS",
+      "name": "X5 会话预算三处一致（viz_server == queries == 前端 SESSION_LIMIT）",
+      "detail": "server 120/200 · queries 120/200 · 前端 120/200"
+    },
+    {
+      "kind": "PASS",
+      "name": "X6 error_code 文案表覆盖后端实际产生的全部错误码",
+      "detail": "6 个全覆盖"
+    },
+    {
+      "kind": "PASS",
+      "name": "X7 验证档徽标 == queries._RANK（7 档，键集合 + rank 数值）",
+      "detail": "7 档逐值一致"
+    },
+    {
+      "kind": "PASS",
+      "name": "X8a 忠实度四分类：前端 == queries.FIDELITY_CLASSES（4 档，逐值 + 顺序）",
+      "detail": "verified；changed；unverifiable_no_source；unverifiable_not_in_repo"
+    },
+    {
+      "kind": "PASS",
+      "name": "X8b 忠实度徽标键集合 == 四分类（4 档齐全，各带 color/label/short/note）",
+      "detail": "4 档字段齐全"
+    },
+    {
+      "kind": "PASS",
+      "name": "X8c FIDELITY_UNKNOWN 不占用任何已定义档位键（不参与加总）",
+      "detail": "FIDELITY_UNKNOWN 是独立兜底对象"
+    },
+    {
+      "kind": "PASS",
+      "name": "X8d STALE_FIDELITIES ⊆ FIDELITY_CLASSES（stale 仍是四分类的子集）",
+      "detail": "['changed', 'unverifiable_no_source'] ⊆ 4 档"
+    },
+    {
+      "kind": "PASS",
+      "name": "X9 契约 src_hash 可空 ⇔ 前端显式「无 locator · 不可复算」徽标（两侧同步）",
+      "detail": "schema.type=['string', 'null']｜required=True｜前端徽标=有"
+    },
+    {
+      "kind": "PASS",
+      "name": "X10 A04 五态：前端 EVIDENCE_STATUSES == queries.EVIDENCE_STATUSES（4 态，逐值 + 顺序）",
+      "detail": "前端=['valid', 'stale', 'needs_review', 'rejected'] / 后端=['valid', 'stale', 'needs_review', 'rejected']"
+    },
+    {
+      "kind": "PASS",
+      "name": "X11 排除集：前端 STALE_EVIDENCE_STATUSES == 后端（needs_review 不在其中）",
+      "detail": "前端=['stale', 'rejected'] / 后端=['stale', 'rejected']"
+    },
+    {
+      "kind": "PASS",
+      "name": "X12 A04 徽标键集合 == 五态（4 档齐全，各带 color/label/short/note）",
+      "detail": "4 档字段齐全"
+    },
+    {
+      "kind": "PASS",
+      "name": "X13 契约 $defs.evidence_status.enum == 五态 + null（不漏不多）",
+      "detail": "contract=[None, 'valid', 'stale', 'needs_review', 'rejected'] / queries=['valid', 'stale', 'needs_review', 'rejected']+null"
+    },
+    {
+      "kind": "PASS",
+      "name": "X14 缺记录独立兜底：EVIDENCE_STATUS_ABSENT + 「无 A04 记录」文案在 style/evidence 两侧",
+      "detail": "已覆盖"
+    },
+    {
+      "kind": "PASS",
+      "name": "X15 A04 严重度表：前端 EVIDENCE_STATUS_RANK == queries（聚合取最坏的口径一致）",
+      "detail": "前端={'valid': 0, 'needs_review': 1, 'stale': 2, 'rejected': 3} / 后端={'valid': 0, 'needs_review': 1, 'stale': 2, 'rejected': 3}"
+    },
+    {
+      "kind": "--",
+      "name": "[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "N1 前端纯逻辑断言全过（node.EXE）",
+      "detail": "frontend_core_check: PASS 90 / FAIL 0（共 90）"
+    },
+    {
+      "kind": "--",
+      "name": "[H] HTTP 层（MIME 正确性决定 ES Module 能否加载）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "H1 /js/main.js 返回 200 且 MIME 为 javascript",
+      "detail": "200 application/javascript; charset=utf-8"
+    },
+    {
+      "kind": "PASS",
+      "name": "H2 目录穿越被拒（403）",
+      "detail": "403"
+    },
+    {
+      "kind": "PASS",
+      "name": "H3 / 返回页面（text/html）",
+      "detail": "200 text/html; charset=utf-8 19386 字节"
+    },
+    {
+      "kind": "PASS",
+      "name": "H4 页面引用的 9 个模块均可 HTTP 取到",
+      "detail": "9/9"
+    },
+    {
+      "kind": "PASS",
+      "name": "H5 不存在的模块 ⇒ 404（不是静默 200）",
+      "detail": "404"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6a 统一信封顶层字段齐备（前端状态行读这些）",
+      "detail": "10/10"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6a2 /api/stats 带合法 status（探活判据；缺它 ⇒ 误判 offline ⇒ 拉全图卡死）",
+      "detail": "HTTP 200 · status=ok"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6a3 /api/stats 的 snapshot_id 与 /api/subgraph 一致（同源同快照）",
+      "detail": "stats=sha256:7d4f66bca0dc · subgraph=sha256:7d4f66bca0dc"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6b stats 字段齐备（截断/会话/下界提示读这些）",
+      "detail": "10/10"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6c stats.session 字段齐备（会话角标读这些）",
+      "detail": "5/5"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6d 节点字段齐备（渲染 + why_shown 固定行读这些）",
+      "detail": "5/5"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6e 边字段齐备（视觉编码 + **证据卡片**读这些）",
+      "detail": "12/12"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6f 证据字段齐备（铁律 #59：src 与 impl 必须分列可读）",
+      "detail": "5/5"
+    },
+    {
+      "kind": "PASS",
+      "name": "H6g expandable 字段齐备（展开用 node_id + token）",
+      "detail": "2/2"
+    },
+    {
+      "kind": "--",
+      "name": "[V] 验收映射（V8 / V9 / V1 的**前端侧**证据）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "V8a 五态在页面 CSS 上各自成类（不只靠颜色）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "V8b 五态渲染含内联 SVG 图标 + 文字标签（三重编码）—— 颜色只是三通道之一",
+      "detail": "由 js/panels.js 的 renderStatusLine 生成"
+    },
+    {
+      "kind": "PASS",
+      "name": "V1a main.js 只经 api.bundle() 读整图（不直接拼 graph_data.json 字面量）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "V1b 整图加载被 `mode === \"bundle\"` 分支包裹（live 模式走不到）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "V9a 页面保留 mode=bundle 分支（离线样例链路）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "V9b 发布样例链路由 `bash sttp.sh release`（28 条）/`release-full` 覆盖 —— 本脚本**不替代**",
+      "detail": "见回归"
+    },
+    {
+      "kind": "--",
+      "name": "[G] 干净检出可用性守卫（D25 防回退；铁律 #53/#63）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "G1 sttp.sh 定义 require_authority 前置守卫（缺权威图 ⇒ 明确原因而非裸 traceback）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "G2 9 个「需权威图」命令均已挂守卫（漏一个 ⇒ 该命令在裸 clone 退回裸 traceback）",
+      "detail": "9/9"
+    },
+    {
+      "kind": "PASS",
+      "name": "G3 守卫以**明确原因 + RC=2** 退出（不冒充成功、不冒充代码缺陷）",
+      "detail": ""
+    },
+    {
+      "kind": "PASS",
+      "name": "G4 本段**可红**：抹掉守卫后 G1/G2 必须变红（断言非常真）",
+      "detail": ""
+    },
+    {
+      "kind": "--",
+      "name": "[未实测 · 如实登记，不计通过]",
+      "detail": ""
+    },
+    {
+      "kind": "SKIP",
+      "name": "D14 真实浏览器渲染（布局/像素/交互链路）",
+      "detail": "本项目零第三方依赖、无 Playwright/jsdom ⇒ 本轮未实测；已覆盖：纯逻辑（node）+ 静态结构 + 跨层一致性 + HTTP MIME"
+    },
+    {
+      "kind": "SKIP",
+      "name": "V8c 五态在**浏览器计算样式**下的实际颜色",
+      "detail": "已由 X2 保证 CSS↔JS 同源；「浏览器里看起来是否真的可区分」未跑真实渲染"
+    }
+  ]
+}

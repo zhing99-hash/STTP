@@ -1,0 +1,449 @@
+{
+  "status": "truncated",
+  "reason": "已达 max_paths=3，还有更多路径",
+  "error_code": null,
+  "paths": [
+    [
+      "CE:fo:gibbs_standard",
+      "TH:pq:entropy"
+    ],
+    [
+      "CE:fo:gibbs_standard",
+      "MA:fo:log_product",
+      "SM:fo:boltzmann",
+      "SM:pq:stat_entropy",
+      "TH:pq:entropy"
+    ],
+    [
+      "CE:fo:gibbs_standard",
+      "CE:pq:gibbs_std",
+      "TH:un:joule",
+      "UN:j",
+      "TH:un:j_per_k",
+      "TH:pq:entropy"
+    ]
+  ],
+  "path_edges": [
+    [
+      {
+        "id": "derived_from|CE:fo:gibbs_standard|TH:pq:entropy",
+        "source": "CE:fo:gibbs_standard",
+        "target": "TH:pq:entropy",
+        "type": "derived_from",
+        "kind": "gibbs_from_entropy",
+        "props": {
+          "confidence": 1.0,
+          "explicit_or_inferred": "explicit",
+          "kind": "gibbs_from_entropy",
+          "source": "curated_seed",
+          "created_at": "2026-10-09T08:54:02.662433",
+          "note": "G=H−TS：吉布斯自由能源于熵/焓",
+          "verification_level": "source_asserted",
+          "verification_scope": "manual_curation",
+          "verifier": "curated_seed",
+          "verified": false,
+          "claim": "「Standard Gibbs energy and equilibrium constant」派生自「Entropy」",
+          "verification_evidence": [
+            {
+              "kind": "source_assertion",
+              "impl": "curated_seed",
+              "detail": "仓库内策划种子（curated_seed）直接断言；未做独立复核",
+              "indep": false,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:eca1df4534b6bb29"
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      }
+    ],
+    [
+      {
+        "id": "uses_operator|CE:fo:gibbs_standard|MA:fo:log_product",
+        "source": "CE:fo:gibbs_standard",
+        "target": "MA:fo:log_product",
+        "type": "uses_operator",
+        "kind": "math_operator_bridge",
+        "props": {
+          "verification_level": "rule_checked",
+          "verification_scope": "log_rule_usage",
+          "verifier": "verification_model.math_operator_presence",
+          "verified": true,
+          "verification_note": "Phase36 验证语义校正：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product（原 None/None）",
+          "claim": "「Standard Gibbs energy and equilibrium constant」使用了数学对象「Logarithm of a product」所辖的算子",
+          "verification_evidence": [
+            {
+              "kind": "recompute",
+              "impl": "verification_model.math_operator_presence",
+              "detail": "源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product",
+              "indep": true,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:ac252020fd30c77c",
+              "refs": {
+                "dimension_table": "ab9c5bcde8932ae5",
+                "element_reference": "3a4e6d035f109462"
+              },
+              "vfr": "verification_model",
+              "vch": "100148c147cb",
+              "dvs": {
+                "11_真实数据/dimension_table.py": "08a5fd5d6444",
+                "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+              },
+              "status": "stale",
+              "status_reasons": [
+                "src_changed:curated_seed",
+                "unverifiable_reference:dimension_table",
+                "ref_changed:element_reference",
+                "unverifiable_verifier:verification_model",
+                "unverifiable_verifier:11_真实数据/dimension_table.py",
+                "dep_version_changed:11_真实数据/element_reference.py"
+              ],
+              "ref_bindings": {
+                "dimension_table": "code_import",
+                "element_reference": "code_import"
+              }
+            }
+          ],
+          "evidence_at": "2026-10-12T09:32:55+08:00",
+          "source": "curated_seed",
+          "source_inferred_from": "Phase 41 R10：原 props.source 缺失，按 (type,verifier) 确定性归因"
+        }
+      },
+      {
+        "id": "uses_operator|SM:fo:boltzmann|MA:fo:log_product",
+        "source": "SM:fo:boltzmann",
+        "target": "MA:fo:log_product",
+        "type": "uses_operator",
+        "kind": "math_operator_bridge",
+        "props": {
+          "verification_level": "rule_checked",
+          "verification_scope": "log_rule_usage",
+          "verifier": "verification_model.math_operator_presence",
+          "verified": true,
+          "verification_note": "Phase36 验证语义校正：源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product（原 None/None）",
+          "claim": "「Boltzmann entropy」使用了数学对象「Logarithm of a product」所辖的算子",
+          "verification_evidence": [
+            {
+              "kind": "recompute",
+              "impl": "verification_model.math_operator_presence",
+              "detail": "源表达式含 log_rule_usage 所辖算子 → 目标 MA:fo:log_product",
+              "indep": true,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:8d966d1393c593c8",
+              "refs": {
+                "dimension_table": "ab9c5bcde8932ae5",
+                "element_reference": "3a4e6d035f109462"
+              },
+              "vfr": "verification_model",
+              "vch": "100148c147cb",
+              "dvs": {
+                "11_真实数据/dimension_table.py": "08a5fd5d6444",
+                "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+              },
+              "status": "stale",
+              "status_reasons": [
+                "src_changed:curated_seed",
+                "unverifiable_reference:dimension_table",
+                "ref_changed:element_reference",
+                "unverifiable_verifier:verification_model",
+                "unverifiable_verifier:11_真实数据/dimension_table.py",
+                "dep_version_changed:11_真实数据/element_reference.py"
+              ],
+              "ref_bindings": {
+                "dimension_table": "code_import",
+                "element_reference": "code_import"
+              }
+            }
+          ],
+          "evidence_at": "2026-10-12T09:32:55+08:00",
+          "source": "curated_seed",
+          "source_inferred_from": "Phase 41 R10：原 props.source 缺失，按 (type,verifier) 确定性归因"
+        }
+      },
+      {
+        "id": "defines|SM:fo:boltzmann|SM:pq:stat_entropy",
+        "source": "SM:fo:boltzmann",
+        "target": "SM:pq:stat_entropy",
+        "type": "defines",
+        "kind": "formula_quantity",
+        "props": {
+          "explicit_or_inferred": "explicit",
+          "kind": "formula_quantity",
+          "confidence": 1.0,
+          "created_at": "2026-09-30T08:35:01.450035",
+          "source": "curated_seed",
+          "verification_level": "source_asserted",
+          "verification_scope": "manual_curation",
+          "verifier": "curated_seed",
+          "verified": false,
+          "claim": "「Boltzmann entropy」定义「Statistical entropy」",
+          "verification_evidence": [
+            {
+              "kind": "source_assertion",
+              "impl": "curated_seed",
+              "detail": "仓库内策划种子（curated_seed）直接断言；未做独立复核",
+              "indep": false,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:0221e87e49d90ccf"
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      },
+      {
+        "id": "same_as|SM:pq:stat_entropy|TH:pq:entropy",
+        "source": "SM:pq:stat_entropy",
+        "target": "TH:pq:entropy",
+        "type": "same_as",
+        "kind": "seed_to_existing",
+        "props": {
+          "explicit_or_inferred": "explicit",
+          "kind": "seed_to_existing",
+          "confidence": 1.0,
+          "created_at": "2026-09-30T08:35:01.450035",
+          "source": "curated_seed",
+          "alignment": "manual_curation",
+          "verification_level": "source_asserted",
+          "verification_scope": "manual_curation",
+          "verifier": "curated_seed",
+          "verified": false,
+          "claim": "「Statistical entropy」与「Entropy」同义/等价",
+          "verification_evidence": [
+            {
+              "kind": "source_assertion",
+              "impl": "curated_seed",
+              "detail": "仓库内策划种子（curated_seed）直接断言；未做独立复核",
+              "indep": false,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:2a2d7d428d9dce29"
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      }
+    ],
+    [
+      {
+        "id": "defines|CE:fo:gibbs_standard|CE:pq:gibbs_std",
+        "source": "CE:fo:gibbs_standard",
+        "target": "CE:pq:gibbs_std",
+        "type": "defines",
+        "kind": "formula_quantity",
+        "props": {
+          "confidence": 1.0,
+          "explicit_or_inferred": "explicit",
+          "kind": "formula_quantity",
+          "source": "curated_seed",
+          "created_at": "2026-10-09T08:54:02.662433",
+          "verification_level": "source_asserted",
+          "verification_scope": "manual_curation",
+          "verifier": "curated_seed",
+          "verified": false,
+          "claim": "「Standard Gibbs energy and equilibrium constant」定义「Standard Gibbs free energy change」",
+          "verification_evidence": [
+            {
+              "kind": "source_assertion",
+              "impl": "curated_seed",
+              "detail": "仓库内策划种子（curated_seed）直接断言；未做独立复核",
+              "indep": false,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:3ae1eff6b479f956"
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      },
+      {
+        "id": "has_unit|CE:pq:gibbs_std|TH:un:joule",
+        "source": "CE:pq:gibbs_std",
+        "target": "TH:un:joule",
+        "type": "has_unit",
+        "kind": "quantity_unit",
+        "props": {
+          "confidence": 1.0,
+          "explicit_or_inferred": "explicit",
+          "kind": "quantity_unit",
+          "source": "curated_seed",
+          "created_at": "2026-10-09T08:54:02.662433",
+          "verification_level": "source_asserted",
+          "verification_scope": "manual_curation",
+          "verifier": "curated_seed",
+          "verified": false,
+          "claim": "物理量「Standard Gibbs free energy change」的单位是「joule」",
+          "verification_evidence": [
+            {
+              "kind": "source_assertion",
+              "impl": "curated_seed",
+              "detail": "仓库内策划种子（curated_seed）直接断言；未做独立复核",
+              "indep": false,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:befe9b8351807bc1"
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      },
+      {
+        "id": "same_as|TH:un:joule|UN:j",
+        "source": "TH:un:joule",
+        "target": "UN:j",
+        "type": "same_as",
+        "kind": "seed_to_existing",
+        "props": {
+          "explicit_or_inferred": "explicit",
+          "kind": "seed_to_existing",
+          "confidence": 1.0,
+          "created_at": "2026-09-29T16:35:28.083336",
+          "source": "curated_seed",
+          "alignment": "manual_curation",
+          "verification_level": "source_asserted",
+          "verification_scope": "manual_curation",
+          "verifier": "curated_seed",
+          "verified": false,
+          "claim": "「joule」与「joule」同义/等价",
+          "verification_evidence": [
+            {
+              "kind": "source_assertion",
+              "impl": "curated_seed",
+              "detail": "仓库内策划种子（curated_seed）直接断言；未做独立复核",
+              "indep": false,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:5f95f9edbaeee58b"
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      },
+      {
+        "id": "same_as|TH:un:j_per_k|UN:j",
+        "source": "TH:un:j_per_k",
+        "target": "UN:j",
+        "type": "same_as",
+        "kind": "gnn_typed_inferred",
+        "props": {
+          "confidence": 0.7,
+          "explicit_or_inferred": "inferred",
+          "verified": false,
+          "verification_gate": "NONE",
+          "status": "NEEDS_REVIEW",
+          "source": "Phase13.GNN.typed",
+          "rationale": "GNN 类型预测 p=1.000；跨域关联，待符号校验",
+          "gnn_type_prob": 1.0,
+          "gnn_type_probs": [
+            {
+              "type": "same_as",
+              "p": 1.0
+            },
+            {
+              "type": "composed_of",
+              "p": 0.0
+            },
+            {
+              "type": "defines",
+              "p": 0.0
+            }
+          ],
+          "domain": "cross_domain",
+          "kind": "gnn_typed_inferred",
+          "verification_level": "model_inferred",
+          "verification_scope": "model_link_prediction",
+          "verifier": "Phase13.GNN.typed",
+          "verification_note": "GNN/LLM 预测，非验证",
+          "claim": "「joule per kelvin」与「joule」同义/等价",
+          "verification_evidence": [
+            {
+              "kind": "model_prediction",
+              "impl": "Phase13.GNN.typed",
+              "detail": "模型预测产物（kind=gnn_typed_inferred / source=Phase13.GNN.typed）；**不构成验证**",
+              "indep": false,
+              "src": "Phase13.GNN.typed",
+              "src_ver": "Phase13 带类型 GNN（typed 推理）",
+              "src_hash": null,
+              "impl_ver": "100148c147cb",
+              "evd": "evd:dfc0c5c9b4610f56"
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      },
+      {
+        "id": "has_unit|TH:pq:entropy|TH:un:j_per_k",
+        "source": "TH:pq:entropy",
+        "target": "TH:un:j_per_k",
+        "type": "has_unit",
+        "kind": "quantity_unit",
+        "props": {
+          "explicit_or_inferred": "explicit",
+          "kind": "quantity_unit",
+          "confidence": 1.0,
+          "created_at": "2026-09-29T16:35:28.083336",
+          "source": "curated_seed",
+          "verification_level": "rule_checked",
+          "verification_scope": "unit_dimension_recompute",
+          "verifier": "dimension_table(量纲) × 单位符号解析",
+          "verified": true,
+          "claim": "物理量「Entropy」的单位是「joule per kelvin」",
+          "verification_evidence": [
+            {
+              "kind": "recompute",
+              "impl": "dimension_table(量纲) × 单位符号解析",
+              "detail": "量纲复算一致：Entropy={'L': 2.0, 'M': 1.0, 'Th': -1.0, 'T': -2.0} vs J/K={'M': 1.0, 'L': 2.0, 'T': -2.0, 'Th': -1.0}",
+              "indep": true,
+              "src": "curated_seed",
+              "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+              "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+              "impl_ver": "100148c147cb",
+              "evd": "evd:a331f29b35c82373",
+              "refs": {
+                "dimension_table": "ab9c5bcde8932ae5"
+              },
+              "status": "stale",
+              "status_reasons": [
+                "src_changed:curated_seed",
+                "unverifiable_reference:dimension_table"
+              ],
+              "ref_bindings": {
+                "dimension_table": "impl_declared"
+              }
+            }
+          ],
+          "evidence_at": "2026-10-10T13:57:00+08:00"
+        }
+      }
+    ]
+  ],
+  "truncated": true,
+  "pending": 2809,
+  "max_paths": 3,
+  "max_hops": 5,
+  "elapsed_ms": 15,
+  "src": "CE:fo:gibbs_standard",
+  "dst": "TH:pq:entropy",
+  "count": 3,
+  "snapshot_id": "sha256:7d4f66bca0dc",
+  "query_hash": "235aa46ae181846f"
+}

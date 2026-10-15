@@ -1,0 +1,119 @@
+{
+  "backend": "networkx",
+  "source": "normalized.json",
+  "nodes": 9657,
+  "edges": 48712,
+  "node_types": {
+    "Definition": 4,
+    "Lemma": 2,
+    "Theorem": 2,
+    "Symbol": 113,
+    "Molecule": 2133,
+    "PhysicalQuantity": 145,
+    "MathConcept": 13,
+    "WikidataEntity": 24,
+    "Formula": 5082,
+    "Unit": 33,
+    "Reaction": 1708,
+    "Constant": 23,
+    "Element": 118,
+    "FunctionalGroup": 76,
+    "Paper": 181
+  },
+  "edge_types": {
+    "defines": 115,
+    "has_symbol": 24341,
+    "same_as": 101,
+    "derived_from": 80,
+    "chemical_reaction": 2,
+    "composed_of": 7756,
+    "product_of": 2559,
+    "reactant_of": 2753,
+    "has_quantity": 4478,
+    "dimensionally_consistent": 47,
+    "proves": 2,
+    "has_unit": 48,
+    "related_to": 53,
+    "releases": 1,
+    "uses_operator": 11,
+    "same_period": 1360,
+    "same_family": 374,
+    "same_formula_as": 6,
+    "has_functionalgroup": 2350,
+    "reagent_of": 1807,
+    "has_element": 109,
+    "part_of": 5,
+    "discusses": 178,
+    "cites": 176
+  },
+  "explicit_or_inferred": {
+    "explicit": 43247,
+    "inferred": 5447,
+    "": 18
+  },
+  "verified_edges": 34780,
+  "evidence_fidelity": {
+    "verified": 234,
+    "changed": 1274,
+    "unverifiable_no_source": 121,
+    "unverifiable_not_in_repo": 47083,
+    "n_edges_total": 48712
+  },
+  "evidence_status": {
+    "valid": 0,
+    "stale": 35018,
+    "needs_review": 165,
+    "rejected": 0,
+    "no_record": 13529,
+    "n_edges_total": 48712,
+    "n_excluded_by_status": 35018
+  },
+  "a04": {
+    "available": true,
+    "schema": "sttp-reference-registry/v1",
+    "byte_source": "repo",
+    "n_references": 5,
+    "references": {
+      "dimension_table": {
+        "kind": "python_module",
+        "version": "反解量纲表（PhysicsBabel 方程消元产物）",
+        "content_hash": "ab9c5bcde8932ae5"
+      },
+      "dimension_table.json": {
+        "kind": "data_table",
+        "version": "反解量纲表快照（JSON 形态）",
+        "content_hash": "2942f2fc75da1b86"
+      },
+      "si_base_table": {
+        "kind": "python_module",
+        "version": "独立 SI/ISO 80000 基表",
+        "content_hash": "968bb5931f664210"
+      },
+      "element_reference": {
+        "kind": "python_module",
+        "version": "IUPAC 2021 元素参考表（周期表 1–118）",
+        "content_hash": "3a4e6d035f109462"
+      },
+      "verification_model": {
+        "kind": "python_module",
+        "version": "判级模型（验证器代码）",
+        "content_hash": "43845b11d643880c"
+      }
+    },
+    "verifiers": {
+      "verification_model": {
+        "code_hash": "100148c147cb",
+        "n_dependency_versions": 2
+      }
+    },
+    "status_enabled": true
+  },
+  "source_repo_status": {
+    "no_locator": 9,
+    "not_in_repo": 14,
+    "in_repo": 8
+  },
+  "evidence_byte_source": "repo（git cat-file blob HEAD:<path>）",
+  "status": "ok",
+  "snapshot_id": "sha256:7d4f66bca0dc"
+}

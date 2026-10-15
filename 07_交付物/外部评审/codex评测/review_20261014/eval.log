@@ -1,0 +1,63 @@
+✅ 任务集校验通过：40 题（{'data_verification': 10, 'unit_state': 8, 'numeric': 8, 'method_selection': 6, 'refusal': 8}）
+✅ DV-01  [data_verification/test] got=8.31446 exp=8.314462618
+✅ DV-02  [data_verification/dev] got=8.31446 exp=8.314462618
+✅ DV-03  [data_verification/dev] got=96485.3 exp=96485.33212
+✅ DV-04  [data_verification/dev] got=107.868 exp=107.8682
+✅ DV-05  [data_verification/test] got=6.02214e+23 exp=6.02214076e+23
+✅ DV-06  [data_verification/test] got=1.38065e-23 exp=1.380649e-23
+✅ DV-07  [data_verification/dev] got=1.60218e-19 exp=1.602176634e-19
+✅ DV-08  [data_verification/dev] got=6.62607e-34 exp=6.62607015e-34
+✅ DV-09  [data_verification/test] 全字段匹配
+✅ DV-10  [data_verification/dev] got=12.011 exp=12.011
+✅ MS-01  [method_selection/dev] got=reaction_quotient_Q exp=reaction_quotient_Q
+✅ MS-02  [method_selection/dev] got=dG_equals_dG0_plus_RT_lnQ exp=dG_equals_dG0_plus_RT_lnQ
+✅ MS-03  [method_selection/test] got=uses_operator exp=uses_operator
+✅ MS-04  [method_selection/test] got=MA:pq:euler_e exp=MA:pq:euler_e
+✅ MS-05  [method_selection/dev] got=False exp=False
+✅ MS-06  [method_selection/dev] got=uses_operator exp=uses_operator
+✅ NM-01  [numeric         /dev] got=9.99996 exp=10.0
+✅ NM-02  [numeric         /test] got=-28.54 exp=-28.54
+✅ NM-03  [numeric         /dev] got=4.74473 exp=4.74
+✅ NM-04  [numeric         /test] got=5.75 exp=5.75
+✅ NM-05  [numeric         /dev] 全字段匹配
+✅ NM-06  [numeric         /test] got=-33.2769 exp=-33.28
+✅ NM-07  [numeric         /test] got=K>1_and_forward_spontaneous exp=K>1_and_forward_spontaneous
+✅ NM-08  [numeric         /dev] got=-11.416 exp=-11.42
+✅ RF-01  [refusal         /dev] 拒答(missing_temperature)
+✅ RF-02  [refusal         /test] 拒答(phase_confusion)
+✅ RF-03  [refusal         /dev] 拒答(protonation_state)
+✅ RF-04  [refusal         /dev] 拒答(isomer)
+✅ RF-05  [refusal         /test] 拒答(log_domain)
+✅ RF-06  [refusal         /test] 拒答(same_dimension_diff_meaning)
+✅ RF-07  [refusal         /test] 拒答(missing_standard_state)
+✅ RF-08  [refusal         /dev] 拒答(missing_unit)
+✅ US-01  [unit_state      /dev] got=True exp=True
+✅ US-02  [unit_state      /dev] got=same_dimension_different_meaning exp=same_dimension_different_meaning
+✅ US-03  [unit_state      /dev] got=same_dimension_different_meaning exp=same_dimension_different_meaning
+✅ US-04  [unit_state      /dev] got=True exp=True
+✅ US-05  [unit_state      /test] got=True exp=True
+✅ US-06  [unit_state      /test] got=cannot_determine_from_dimension_alone exp=cannot_determine_from_dimension_alone
+✅ US-07  [unit_state      /test] got=True exp=True
+✅ US-08  [unit_state      /dev] got=different_dimension_by_amount exp=different_dimension_by_amount
+==============================================================================
+  总体：正确 40/40 = 100.0% ｜ 尝试率 80.0% ｜ 拒答率 20.0% ｜ 95%CI [91.2%, 100.0%]
+  假答（该拒却答）0 ｜ 误拒（该答却拒）0
+------------------------------------------------------------------------------
+  [data_verification] 10 题 正确 100%  尝试 100%  拒答 0%
+  [method_selection]  6 题 正确 100%  尝试 100%  拒答 0%
+  [numeric         ]  8 题 正确 100%  尝试 100%  拒答 0%
+  [refusal         ]  8 题 正确 100%  尝试 0%  拒答 100%
+  [unit_state      ]  8 题 正确 100%  尝试 100%  拒答 0%
+------------------------------------------------------------------------------
+  [split=dev ] 23 题 正确 100%  尝试 83%
+  [split=test] 17 题 正确 100%  尝试 76%
+------------------------------------------------------------------------------
+  [hard=isomer                        ] 1 题 正确 100%
+  [hard=log_domain                    ] 1 题 正确 100%
+  [hard=missing_temperature           ] 1 题 正确 100%
+  [hard=phase_confusion               ] 1 题 正确 100%
+  [hard=protonation_state             ] 1 题 正确 100%
+  [hard=same_dimension_diff_meaning   ] 4 题 正确 100%
+==============================================================================
+非真空自检（题库扰动）：40/40 题扰动后判为非通过 ⇒ 判分器有牙 ✅
+非真空自检（边界/域）：22/22 项通过 ⇒ 输入域守卫生效 ✅

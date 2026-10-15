@@ -1,0 +1,208 @@
+==============================================================================
+  Phase 43 · 局部图谱查询自检（V1–V19）
+==============================================================================
+  HTTP 服务: 127.0.0.1:51454（真响应体断言）
+  查询源   : 06_PoC\etl\normalized.json
+[OK] 已加载查询层：F:\codex\sttp\STTP-review\03_知识层\queries.py
+[OK] NetworkX 后端就绪：9657 节点 / 48712 边（源：normalized.json）
+  后端规模 : 9657 节点
+------------------------------------------------------------------------------
+
+[0] 契约 / 口径一致性
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=1 HTTP/1.1" 200 -
+  [PASS] C1 subgraph 响应通过 subgraph.schema.json                []
+  [HTTP] 127.0.0.1 "GET /api/search?q=manifold&limit=3 HTTP/1.1" 200 -
+  [PASS] C2 search 响应通过 search.schema.json                    
+  [HTTP] 127.0.0.1 "GET /api/overview HTTP/1.1" 200 -
+  [PASS] C3 overview 响应通过 overview.schema.json                
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=X&mode=bogus HTTP/1.1" 400 -
+  [PASS] C4 错误信封通过 error.schema.json                          
+  [PASS] C5 注入非法 error_code ⇒ 校验器变红                           （注入反例，必须报错）
+  [PASS] C5b 四份 schema 只用「已实现关键字」（无静默跳过）                      13 个关键字全部受支持
+  [PASS] C5b2 additionalProperties 生效：动态键值类型不符 ⇒ 校验器变红        （注入反例，必须报错）
+  [PASS] C5b3 additionalProperties 正例：动态键值合法 ⇒ 通过（断言非恒真）      
+  [PASS] C6 queries._RANK == graph_export.RANK_ORDER          一致
+  [PASS] C7 queries._RANK == verification_model.RANK          一致
+  [PASS] C8 VERIFIED_MIN/STRICT_MIN 两处一致                      
+
+[V1] 首屏不加载全图（后端侧代理：子图端点不得读全图投影）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego HTTP/1.1" 200 -
+  [PASS] V1a /api/subgraph 不读 graph_data.json                 load_graph_data 调用 0 次；返回 4 节点
+  [HTTP] 127.0.0.1 "GET /api/overview HTTP/1.1" 200 -
+  [PASS] V1b /api/overview 亦不读全图                              调用 0 次
+  [HTTP] 127.0.0.1 "GET /graph_data.json HTTP/1.1" 200 -
+  [PASS] V1 反例：/graph_data.json 确实读全图（证明探针有效）                 调用 1 次
+
+[V2] 超预算 ⇒ status=truncated（且 n_nodes ≤ max_nodes）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_quantity&max_nodes=50&max_edges=100 HTTP/1.1" 200 -
+  [PASS] V2a 正例：max_nodes=50 ⇒ truncated/nodes，reason 非空      truncated / pre={'n_nodes': 731, 'n_edges': 855} / got=72
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_quantity&max_nodes=5000&max_edges=20000 HTTP/1.1" 200 -
+  [PASS] V2 反例：预算放大 ⇒ status=ok（证明 truncated 不是恒真）            ok n_nodes=731
+
+[V3] 不存在的 seed ⇒ no_result（≠ ok）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=DOES%3ANOT%3AEXIST&mode=ego HTTP/1.1" 200 -
+  [PASS] V3a 正例：seeds=DOES:NOT:EXIST ⇒ no_result              no_result
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego HTTP/1.1" 200 -
+  [PASS] V3 反例：存在的 seed ⇒ ok（证明 no_result 不是恒真）               ok
+
+[V4] 超 deadline ⇒ status=timeout（elapsed_ms ≥ deadline_ms）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_symbol&deadline_ms=1 HTTP/1.1" 200 -
+  [PASS] V4a 正例：deadline_ms=1 ⇒ timeout/GRAPH_QUERY_TIMEOUT   timeout elapsed=16ms
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_quantity&max_nodes=100&max_edges=200&deadline_ms=30000 HTTP/1.1" 200 -
+  [PASS] V4 反例：预算充足 ⇒ 不超时（证明 timeout 不是恒真）                    truncated
+
+[V5] snapshot_id == 查询源 sha256[:12]；换图 ⇒ 变
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold HTTP/1.1" 200 -
+  [PASS] V5a snapshot_id == sha256(查询源)[:12]                  sha256:7d4f66bca0dc
+  [PASS] V5b 换一份图 ⇒ snapshot_id 变（且等于该图哈希）                    sha256:7d4f66bca0dc vs sha256:c9d07ce25b99
+
+[V6] 子图边证据含 src/src_ver/src_hash/impl_ver
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=2 HTTP/1.1" 200 -
+  [PASS] V6a 全部证据对象四项齐备                                       17 条证据 / 0 处缺失
+  [NOTE] V6 覆盖率（如实披露）：9/9 条边带证据
+  [PASS] V6 反例：抹掉 evidence[].src ⇒ 校验器变红                      （必须报错）
+
+[V7] exclude_stale=true 时 stale 边不出现
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3&max_nodes=500&exclude_stale=false HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3&max_nodes=500&exclude_stale=true HTTP/1.1" 200 -
+  [PASS] V7a 基线（exclude_stale=false）确实含 stale 边               23 / 25 条
+  [PASS] V7b exclude_stale=true ⇒ 无 stale 边且边数下降              25 → 1
+
+[V8][V9] 前端侧验收（步骤 B / 回归）
+  [SKIP] V8 五态在 UI 上颜色可区分                                     属步骤 B（前端 js/*.js）；本轮未覆盖
+  [SKIP] V9 mode=bundle 发布样例链路                                由回归 `bash sttp.sh release` 覆盖（本轮脚本不替代）
+
+[V10] 同参数两次 ⇒ query_hash 相同、nodes/edges 逐元素相同
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_quantity&max_nodes=60&max_edges=120 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_quantity&max_nodes=60&max_edges=120 HTTP/1.1" 200 -
+  [PASS] V10a 两次响应逐元素相同                                       hash=7e39f7b22ec00af6
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_symbol&max_nodes=60&max_edges=120 HTTP/1.1" 200 -
+  [PASS] V10 反例：换参数 ⇒ query_hash 变（证明 hash 不是常量）              7e39f7b22ec00af6 vs 75aa829a5c02faa5
+
+[V11] types（语义关系）与 kinds（来源管线）是两个维度
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&types=has_quantity&max_nodes=50&max_edges=80 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&kinds=has_quantity&max_nodes=50&max_edges=80 HTTP/1.1" 200 -
+  [PASS] V11a types=has_quantity 有结果                          truncated n_edges=67
+  [PASS] V11b kinds=has_quantity ⇒ 0 条（证明未混用）                 no_result
+
+[V12] 会话累计硬门（达上限即拒绝继续展开）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-1791974762&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-1791974762&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-1791974762&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-1791974762&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-1791974762&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-1791974762&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-1791974762&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [PASS] V12a 反复展开 ⇒ SUBGRAPH_LIMIT_REACHED                   第 6 次拒绝；session={'tracked': True, 'n_nodes': 120, 'n_edges': 114, 'limit_nodes': 120, 'limit_edges': 200, 'exhausted': True}
+  [PASS] V12b 会话计数不超限且标记 exhausted                            {'tracked': True, 'n_nodes': 120, 'n_edges': 114, 'limit_nodes': 120, 'limit_edges': 200, 'exhausted': True}
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=fresh-selfcheck-1791974762&mode=ego&seeds=MX%3Adef%3Amanifold&hops=1&max_nodes=20 HTTP/1.1" 200 -
+  [PASS] V12 反例：新会话可正常展开（证明硬门按会话记账）                           ok
+
+[V13] expand_token 服务端签发、不可伪造
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=1 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=expand&expand_token=eyJmaWx0IjoiYjk4NTVmNGUzZWExNTgwYSIsImhvcHMiOjEsInNlZWQiOiJNWDpzeW06bSIsInNuYXAiOiJzaGEyNTY6N2Q0ZjY2YmNhMGRjIiwidiI6MX0.944659b75b94bf89 HTTP/1.1" 200 -
+  [PASS] V13a 正例：合法 token ⇒ 可展开                               ok
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=expand&expand_token=eyJmaWx0IjoiYjk4NTVmNGUzZWExNTgwYSIsImhvcHMiOjk5LCJzZWVkIjoiTVg6c3ltOm0iLCJzbmFwIjoic2hhMjU2OjdkNGY2NmJjYTBkYyIsInYiOjF9.944659b75b94bf89 HTTP/1.1" 400 -
+  [PASS] V13b 反例：篡改 token 预算字段 ⇒ 400 BAD_REQUEST              400/BAD_REQUEST
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=expand&expand_token=aaa.bbb HTTP/1.1" 400 -
+  [PASS] V13c 反例：任意字符串 token ⇒ 400                            400/BAD_REQUEST
+
+[V14] trust 两档并显，隐藏量可加总回全量
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&trust=verified&max_edges=1 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=filter&trust=verified_strict&max_edges=1 HTTP/1.1" 200 -
+  [PASS] V14a hidden_by_trust 随档位变化（非零、非恒等）                   verified=13932 / strict=13943
+  [PASS] V14b visible(v)−visible(s) == hidden(s)−hidden(v)    11 == 11
+  [PASS] V14c visible+hidden 两档相等（可加总回全量）                     48712 == 48712
+  [NOTE] V14 实测：verified 可见 34780 / 隐藏 13932；verified_strict 可见 34769 / 隐藏 13943（差 11 条=by_construction）
+
+[V15] 每个节点/边都有 why_shown 且 ∈ 枚举
+  [PASS] V15a 覆盖完整且取值合法                                       缺失=0
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3 HTTP/1.1" 200 -
+  [PASS] V15b why_shown 取值分布非单一                               ['expansion', 'user_specified', 'verified_context']
+  [PASS] V15 反例：抹掉 why_shown ⇒ 校验器变红                          
+
+[V16] stale 判据：D1 后裁定与检出/行尾无关 + 判据仍非真空
+  [PASS] V16a 找到负对照目标文件（被登记 locator）                          06_PoC\sample_mathxiv.json
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3&max_nodes=500 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3&max_nodes=500 HTTP/1.1" 200 -
+  [PASS] V16b ★ D1：worktree 变异 ⇒ 服务端 stale **不变**（裁定与检出/行尾无关） 23 → 23
+  [PASS] V16e 负对照后逐字节还原（铁律 #61）                               57822ea11cb52475
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3&max_nodes=500 HTTP/1.1" 200 -
+  [PASS] V16e2 还原后服务端 stale 计数回到基线                            23
+  [FAIL] V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 相关边翻成 changed              stale 35424 → 1395（changed=1274，来源 Phase13.Gate.B5，引用 734 条）
+  [PASS] V16d 缓存键随 HEAD 变化（HEAD 变 ⇒ 键变 ⇒ 重算；不含 mtime/size）    HEAD=8a5c977f3ec3｜伪 HEAD 下键已变=True
+
+[V16f] 字节忠实性探针：worktree 字节 vs 仓库 blob
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3&max_nodes=500 HTTP/1.1" 200 -
+  [PASS] V16f 响应里的字节忠实性计数 == 独立重算                             响应 13 / 独立 13
+  [NOTE] ★ D1 已修根因（本轮）：13/19 个**已入库** locator 的 worktree 字节 ≠ 仓库 blob （本机 `core.autocrlf=true` 把 LF 检出成 CRLF）。**这不影响裁决** —— 权威字节源已是 `git cat-file blob HEAD:<path>`（见 V16b/V18d/V18e），此计数只作**诊断披露**（`affects_verdict: false`）。另有 13 个 locator 未入库（`*_raw.json`/`*_cache.json`，按「大体积派生对象不入库」有意排除）⇒ 占 47055 条边的 `unverifiable_not_in_repo`。完整论证见 `07_交付物/Phase44_D1_*.md`；**exclude_stale 默认仍为 false**。
+  [PASS] V16g 两口径可构造差异（blob=LF / 工作区=CRLF ⇒ 哈希必不同；还原后必相等）     differ=True / restored_equal=True 
+
+[V17] 会话记账语义：匿名不记账 / reset 清空 / 会话表有上限
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [PASS] V17a 无 session_id ⇒ tracked=False 且连续 3 次都不被硬门拒绝     status=['truncated', 'truncated', 'truncated'] tracked=[False, False, False]
+  [PASS] V17b 匿名调用不改写会话表（计数恒为 0）                              n_nodes=[0, 0, 0]
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-acc-1791974788&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-acc-1791974788&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20 HTTP/1.1" 200 -
+  [PASS] V17c 有 session_id ⇒ tracked=True 且展开次数递增             exp 1→2 / n 20→40
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=selfcheck-acc-1791974788&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=20&max_edges=20&reset=1 HTTP/1.1" 200 -
+  [PASS] V17d reset=1 ⇒ 该会话计数先清零再计本次                          n 40→20 / exp=1
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=cap-1791974790-0&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=10&max_edges=10 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=cap-1791974790-1&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=10&max_edges=10 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=cap-1791974791-2&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=10&max_edges=10 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=cap-1791974792-3&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=10&max_edges=10 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=cap-1791974792-4&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=10&max_edges=10 HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?session_id=cap-1791974793-5&mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=10&max_edges=10 HTTP/1.1" 200 -
+  [PASS] V17e 会话表超上限 ⇒ 按最久未写淘汰（内存不无界增长）                       V.SESSION_MAX=3 ⇒ 实存 3
+
+[V18] 证据字节忠实度四分类（D1：仓库字节为准 ⇒ changed 应为 0）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=3&max_nodes=800 HTTP/1.1" 200 -
+  [PASS] V18a 全图四分类齐备且求和 == 边总数（分列可加总）                        verified=234 changed=1274 unverifiable_no_source=121 unverifiable_not_in_repo=47083  Σ=48712 / 总=48712
+  [PASS] V18b 本次子图四分类求和 == 本次返回边数                             Σ=25 / 边=25
+  [PASS] V18c 本次子图各分类 ≤ 全图同类（无越界）                             verified 23≤234 changed 0≤1274 unverifiable_no_source 2≤121 unverifiable_not_in_repo 0≤47083
+  [FAIL] V18d 全图 changed == 0（D1 根因已修：裁决与检出/行尾无关）             changed=1274（若 >0 ⇒ 有已登记来源的真实字节与仓库 blob 不符，须查来源而非行尾）
+  [HTTP] 127.0.0.1 "GET /api/stats HTTP/1.1" 200 -
+  [PASS] V18e 证据字节源 == 仓库 blob（不是 worktree，D1 防回退）            repo（git cat-file blob HEAD:<path>）
+  [PASS] V18f 字节层 stale 计数 == changed + unverifiable_no_source（旧口径原样保留） 字节层 stale=1395 == 1274 + 121
+  [PASS] V18f2 【重写】全图 stale = 字节层 ∪ A04 层（两层并集，含于区间内）         stale=35424 ∈ [1395, 36413]（A04 层贡献 35018）
+  [PASS] V18g 独立重算四分类 == 响应 evidence_fidelity_global          全部一致
+  [FAIL] V18h unverifiable_not_in_repo 不计入 stale（已知边界：locator 未入库，并非变更） not_in_repo=47083（占 96.7%）｜stale=35424（不含它）
+  [PASS] V18i 来源 repo_status 三分类齐备（in_repo/not_in_repo/no_locator） no_locator=9 not_in_repo=14 in_repo=8
+  [PASS] V18i2 来源分列 == 独立重算 repo_status_map                   响应 {'no_locator': 9, 'not_in_repo': 14, 'in_repo': 8} / 独立 {'no_locator': 9, 'not_in_repo': 14, 'in_repo': 8}
+  [PASS] V18i3 /api/stats 与 /api/subgraph 的 evidence_fidelity_global 逐值一致 stats={'verified': 234, 'changed': 1274, 'unverifiable_no_source': 121, 'unverifiable_not_in_repo': 47083, 'n_edges_total': 48712}
+  [PASS] V18j 每条边 fidelity ∈ 四分类 ∪ {null}（无越界取值）              25 条合法
+  [PASS] V18k 【重写】边 stale ⇔ (fidelity ∈ STALE_FIDELITIES) ∪ (evidence_status ∈ {stale,rejected}) —— 两层合流于一处，不漂移 一致（25 条）
+  [PASS] V18l 含 fidelity/fidelity_reasons 的响应通过 subgraph.schema.json 
+  [PASS] V18m 反例：注入非法 fidelity ⇒ schema 必须变红（枚举非常真）           
+  [PASS] V18n 负对照：篡改边总数 ⇒ 求和恒等式必然不成立（断言非真空）                   Σ=48712 ≠ 篡改后总数=48713
+
+[V19] A04 验证依赖状态（五态 / 两层合流 / 缺记录不假装 / 构造性非真空）
+  [PASS] V19a queries.EVIDENCE_STATUSES == evidence_deps.STATUSES（跨模块防漂移） queries=('valid', 'stale', 'needs_review', 'rejected') / evidence_deps=('valid', 'stale', 'needs_review', 'rejected')
+  [PASS] V19a2 状态→四分类映射逐值一致（needs_review→unverifiable_no_source 等） {'valid': 'verified', 'stale': 'changed', 'needs_review': 'unverifiable_no_source', 'rejected': 'changed'}
+  [PASS] V19a3 计入排除的 A04 状态 == {stale, rejected}（needs_review 不排除） ('stale', 'rejected')
+  [PASS] V19b 全图 A04 分列齐备（五态 + no_record）且求和 == 边总数           valid=0 stale=35018 needs_review=165 rejected=0 no_record=13529  Σ=48712 / 总=48712
+  [PASS] V19c 本次子图 A04 分列求和 == 本次返回边数                         Σ=25 / 边=25
+  [PASS] V19d 独立重算 A04 分列 == 响应 evidence_status_global        全部一致
+  [PASS] V19e 每条边 evidence_status ∈ 五态 ∪ {null}（无越界取值）        25 条合法
+  [PASS] V19e2 缺记录 ⇒ status=null 且 source=absent（**不得**渲染成 valid） 自洽（25 条）
+  [PASS] V19f needs_review **不**导致 stale（缺数据本身 ≠ 已变更；否则排除开关自毁） 无（0 条 needs_review）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=2&max_nodes=4000&max_edges=8000&trust=all HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/subgraph?seeds=MX%3Adef%3Amanifold&mode=ego&hops=2&max_nodes=4000&max_edges=8000&trust=all&exclude_stale=1 HTTP/1.1" 200 -
+  [PASS] V19g exclude_stale：结果内无 stale、结果 ⊆ 基线、且所有 stale 边都被移出 基线 38 边（含 stale 26）→ 排除后 8 边
+  [PASS] V19h 构造性：字节层 verified 的边被标 A04 stale ⇒ 立即被排除且给出理由    key=defines|MX:def:manifold|MX:sym:m（标记前 stale=False，标记后 True）
+  [PASS] V19i 反向对照：同一条边标成 needs_review ⇒ **不**被排除             key=defines|MX:def:manifold|MX:sym:m result_stale=False
+  [PASS] V19j 负对照：篡改 valid 计数 ⇒ 五态求和必然不等于边总数（非真空）             Σ=48713 ≠ 总=48712
+  [PASS] V19k 含 evidence_status 的响应通过 subgraph.schema.json    
+  [PASS] V19l 反例：注入非法 evidence_status ⇒ schema 必须变红（枚举非常真）    
+  [PASS] V19m /api/stats 与 /api/subgraph 的 evidence_status_global 逐值一致 stats={'valid': 0, 'stale': 35018, 'needs_review': 165, 'rejected': 0, 'no_record': 13529, 'n_edges_total': 48712, 'n_excluded_by_status': 35018}
+  [PASS] V19n /api/stats 披露 A04 参考表登记（可用 + 字节源=repo）          available=True n_refs=5 byte_source=repo
+
+[Neo4j] 双后端同契约（本环境不可达 ⇒ SKIP）
+[WARN] Neo4j 不可用（No module named 'neo4j'），仍尝试 NetworkX 兜底。
+  [SKIP] N1 Neo4j 子图契约一致                                      回退到 NetworkX（未连上 Neo4j）
+------------------------------------------------------------------------------
+  合计 PASS 86 / FAIL 3 / SKIP 3   （耗时 81.0 s）
+==============================================================================
+  报告已写：07_交付物\外部评审\codex评测\review_20261014\subgraph.json

@@ -1,0 +1,28 @@
+============================================================================================
+lineage_invalidation 判据非真空自检（八段：①–⑤ 来源级 + ⑥–⑧ 依赖级）
+============================================================================================
+  ① 变异文件              : ['11_真实数据/elementkg10m_raw.json', '11_真实数据/elementkg_raw.json']
+  ① 镜像固有基线（非变异）: ['Phase13.Gate.B2', 'Phase13.Gate.B5', 'curated_seed', 'curated_seed/energy_combustion', 'openalex']
+  ① 独立期望直接变更      : ['ElementKG2.0']
+  ① 工具判定直接变更      : ['ElementKG2.0', 'Phase13.Gate.B2', 'Phase13.Gate.B5', 'curated_seed', 'curated_seed/energy_combustion', 'openalex']（新增 ['ElementKG2.0']）
+     新增直接变更集合相等  : PASS
+     受影响断言集合相等    : PASS（期望 6068 / 命中 6068，差 0）
+  ② 纯血缘：PhysicsBabel(变异) → chembl_api(临时 imports_from)
+Traceback (most recent call last):
+  File "F:\codex\sttp\STTP-review\11_真实数据\lineage_invalidation.py", line 1067, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "F:\codex\sttp\STTP-review\11_真实数据\lineage_invalidation.py", line 964, in main
+     chembl_api 文件未变但被传递标记 : PASS
+  ③ 未变异图无变更        : FAIL（受影响 35323）
+  ④ 未入库来源分列披露    : PASS（14 个来源 / 47083 条断言，**不计入 changed**）
+  ⑤ 两口径确实不同        : PASS —— 构造对照 differ=True / 还原后相等=True；另：本机工作区口径多报 1 个「已变更」['openalex']
+    rc = selfcheck()
+         ^^^^^^^^^^^
+  File "F:\codex\sttp\STTP-review\11_真实数据\lineage_invalidation.py", line 659, in selfcheck
+    ok &= _selfcheck_deps()
+          ^^^^^^^^^^^^^^^^^
+  File "F:\codex\sttp\STTP-review\11_真实数据\lineage_invalidation.py", line 699, in _selfcheck_deps
+    f.write(sr.repo_blob(rel, ROOT) + b"\n# MUTATION-FOR-SELFCHECK\n")
+            ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'bytes'

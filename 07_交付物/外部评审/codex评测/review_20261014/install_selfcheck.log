@@ -1,0 +1,48 @@
+<unknown>:60: SyntaxWarning: invalid escape sequence '\d'
+==============================================================================
+  Phase 45 · A05「第三人可安装入口」自检（A05-0 … A05-14）
+==============================================================================
+
+[A05-0] 仪器自证：版本比较器必须**既给正例也给反例**（铁律 #76 的镜像）
+  [PASS] A05-0 比较器 >=3.11,<3.12 vs 3.11.9               → True（期望 True，本项目锁定环境）
+  [PASS] A05-0 比较器 >=3.11,<3.12 vs 3.13.12              → False（期望 False，本机空环境（明确不在范围内））
+  [PASS] A05-0 比较器 >=3.11,<3.12 vs 3.10.0               → False（期望 False，过旧）
+  [PASS] A05-0 不支持的写法必须**显式拒绝**                         ~=3.11 → 抛错（fail-closed，铁律 #63）
+
+[A05-1..A05-5] pyproject.toml：可解析 / 元数据 / 解释器约束 / 依赖分组
+  [PASS] A05-1 pyproject.toml 可被 tomllib 解析             TOML 合法
+  [PASS] A05-2 [project] 必备元数据齐全                        sttp-kg 0.45.0
+  [PASS] A05-3 requires-python 覆盖 3.11 且**排除 3.13**     requires-python='>=3.11,<3.12' → 3.11.9 通过=True ／ 3.13.12 通过=False（期望 T/F）
+  [PASS] A05-4 核心依赖 ⊇ verify_release.REQUIRED_MODULES（L1 最小集） 核心 4 项 ['networkx', 'pint', 'rdkit', 'sympy']
+  [PASS] A05-5 可选分组齐全 且 `all` == 其余分组之并                 9 个分组：['all', 'analysis', 'etl_alt', 'fetch', 'kuzu', 'linker', 'llm', 'neo4j', 'torch']
+
+[A05-6] 解释器约束与 pip 依赖**分离**（复评 A05b）—— 含反例
+  [PASS] A05-6a 依赖清单内**无解释器伪包**                         requirements.lock/txt 均无 ['python', 'python3', 'python2', 'cpython']
+  [PASS] A05-6b 反例可注入（探针真能报红）                           注入 `python==3.11.9` → 命中 ['python']
+
+[A05-7] 声明必须覆盖全仓实际 import（复评 A05 的「可安装」前提）
+  [NOTE] 文件枚举：git ls-files 入库 106 + 未跟踪 68 = 174 个 .py（已排除 07_交付物/外部评审）—— ★ 含未跟踪项，避免「提交前绿、提交后红」（E28）。
+  [PASS] A05-7a 每个第三方 import 都已声明或已显式 ACK               扫描 20 个第三方 import，全部覆盖（核心 4 ／ 可选 14 ／ 构建 1；ACK 1 个：['playwright']）
+  [NOTE] ACK 未声明依赖 `playwright`：06_PoC/tests/a4_offline_render.py 的离线渲染试验；§0.1 / D14 明确「零第三方依赖 ⇒ 不装 Playwright / jsdom」⇒ **只登记不声明**，避免给第三人「受支持路径」的错觉。
+  [PASS] A05-7b 负对照（假包名判为未声明、已声明项不误报）                   假包名命中=True ／ networkx 未误报=True
+  [PASS] A05-7c 构建后端已在 [build-system].requires 中声明      requires=['setuptools'] ／ build-backend=setuptools.build_meta
+
+[A05-8..A05-10] 无机器绝对路径（复评 A05c）—— 含反例
+  [PASS] A05-8a 根 `.env.example` 无机器绝对路径                1501 字节，含 8 个键，无盘符/家目录路径
+  [PASS] A05-8b 反例可注入（探针真能报红）                           注入 Windows 盘符路径 → 命中 ['C:\\Users\\']
+  [PASS] A05-9 `.env` 被 git 忽略且未被跟踪                     .gitignore 含 `.env`=True ／ check-ignore=True ／ 已被跟踪=False
+  [PASS] A05-10a `sttp_cli/**.py` 无机器绝对路径               2 个文件，零命中
+  [PASS] A05-10b 反例可注入（探针真能报红）                          注入 POSIX 家目录路径 → 命中
+
+[A05-11..A05-14] 入口可用 / 薄封装自足 / 两级可复现 / 清单单点一致 / 离线构建
+  [PASS] A05-11 [project.scripts] 入口全部可调用               6 个入口：['sttp', 'sttp-release-verify', 'sttp-repro-level', 'sttp-sample-build', 'sttp-sample-serve', 'sttp-sample-verify']
+  [PASS] A05-12a `sttp_cli.cli` 不依赖仓库内模块（薄封装）           rc=0 out='SELFCONTAINED True'
+  [PASS] A05-12b L1 可用 且 L1/L2 的**前置条件被显式区分**           L1 ok=True(缺 []) ／ L2 ok=True(缺 []) ／ 需权威图 L1=False L2=True
+  [PASS] A05-12c 构造性：缺 manifest ⇒ L1 **判为不可用**          → ok=False 缺 ['06_PoC/release/manifest.json']
+  [NOTE] ★ L1 通过**不代表** L2 可复现：二者前置条件不同，报告见 `sttp-repro-level`。
+  [PASS] A05-14 清单的 interpreter.constraint == pyproject 的 requires-python 清单 '>=3.11,<3.12' ／ pyproject '>=3.11,<3.12' ｜ target 不含解释器伪包=True ｜ 运行 3.11.9
+  [FAIL] A05-13 离线构建 wheel 成功                           rc=1 tail=['Processing .\\src', '  Preparing metadata (pyproject.toml): started', "  Preparing metadata (pyproject.toml): finished with status 'done'", 'INFO: pip is looking at multiple versions of sttp-kg to determine which version is compatible with other requirements. This could take a while.', "ERROR: Package 'sttp-kg' requires a different Python: 3.12.14 not in '<3.12,>=3.11'"]
+------------------------------------------------------------------------------
+  合计 PASS 24 / FAIL 1 / SKIP 0   （耗时 14.8 s）
+------------------------------------------------------------------------------
+  留痕：07_交付物\外部评审\codex评测\review_20261014\install_selfcheck.json
