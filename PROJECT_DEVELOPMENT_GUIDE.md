@@ -161,7 +161,7 @@
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
-  以及（2026-10-14 起）**`06_PoC/js/*.js` ×9 与 `graph_view.html`** 均**逐字节一致**；发布样例三产物 sha256 与 manifest 一致；
+  以及（2026-10-14 起）**`06_PoC/js/*.js`（当前 **10** 个，2026-10-15 起含 `task.js`）与 `graph_view.html`** 均**逐字节一致**；发布样例三产物 sha256 与 manifest 一致；
   ② **`python 06_PoC/release/verify_release.py --release`（步骤 A 的"路径 A"）⇒ 28/0/0 RC=0**
   （`--full` ⇒ 31 条 FAIL 0 / **WARN 3**）；**`make_sample.py`（"路径 B"）缺权威图 ⇒ RC=2**（刻意）。
   ★ **不要把 ② 读成"整条 `sttp.sh release` 可在裸 clone 验证"** —— 实测 `bash sttp.sh release` = **RC=2**
@@ -172,7 +172,8 @@
   若要"契约也可从 clone 验证"需入库小基线图 + 样例口径断言子集（**未做，有意取舍**）。
   ④ **`.gitattributes` 现为「兜底 + 例外」**（2026-10-14 起）：置顶 `* text=auto eol=lf`，例外为
   `*.json -text`、`*.lock -text`、`07_交付物/外部评审/** -text`（归档原件逐字节冻结）。
-  ⇒ **实测干净 clone 与本机工作区 445/445 个入库文件逐字节一致**（见 D26）；**终测 HEAD `f173eae` 复测 446/446**。
+  ⇒ **实测干净 clone 与本机工作区 445/445 个入库文件逐字节一致**（见 D26）；**终测 HEAD `f173eae` 复测 446/446**；
+  **2026-10-15 再测 HEAD `1507ca3` ⇒ 483/483 逐字节一致（缺失 0 / 不一致 0）**（新增文件并入后仍成立）。
   残余：26 个 `-text` 的 JSON 其 blob 本身含 CRLF（**有意**不改写，稳定且可复现）；归档目录内 12 个文件同此。
   ★★ **不要**用 `git add --renormalize` 核对（会改写 `-text` blob，实测 51 个）；改用只读的
   `git hash-object --no-filters <f>` 预演（★ 它**不能**与 `--path` 同时传 —— 见上文 D26 的两条命令之别）。
@@ -986,7 +987,8 @@ API 端点：
 > ⚠️ 后端依赖 `06_PoC/etl/normalized.json`（Aura 原始格式）。该文件已被 `export_normalized.py` 维护，若缺失 viz 可正常启动但 API 降级。
 
 #### 5.2.1 前端（Phase 43 步骤 B）—— 原生 ES Module，**零构建链**
-`06_PoC/js/` 共 9 个模块，浏览器 `import` 原生加载，**无打包器 / 无 npm / 无转译**（§0.1）。
+`06_PoC/js/` 共 **10** 个模块（`api / core / evidence / main / modes / panels / style / subgraph / task / viz`），浏览器 `import` 原生加载，**无打包器 / 无 npm / 无转译**（§0.1）。
+★ 模块清单**不得手写**：`phase43_frontend_selfcheck.py` 的 `MODULES` 由 `js/*.js` **派生**，并配反向断言 `S15`（每个文件都必须在 `main.js` 的 import 闭包内）—— 见 **E34** 与 **铁律 #88**。
 `graph_view.html` 仅作壳：样式 + `<script type="module" src="js/main.js">` + 容器节点。
 
 | 模块 | 职责 | 依赖 |

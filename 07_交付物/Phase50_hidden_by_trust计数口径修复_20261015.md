@@ -261,6 +261,24 @@ def _mark_hidden(e) -> int:
 
 ---
 
+## 10. 干净检出复测（铁律 #53）
+
+本轮把新文件（`js/task.js`、`contracts/endpoints.schema.json`、三份报告、外部评审归档）入库后，
+重跑了一次**干净检出逐字节比对**（clone 到临时目录，对本机工作区的同名文件逐文件 sha256 比对）：
+
+```
+入库文件总数: 483
+工作区缺失:   0
+逐字节不一致: 0
+06_PoC/js/ 入库模块数: 10（api core evidence main modes panels style subgraph task viz）
+```
+
+⇒ 上轮的「445/445 一致」在并入新文件后仍成立（**483/483**）。同时据实订正了两处**陈旧口径**：
+指南里 `06_PoC/js/` 的模块数仍写着 **9**（`task.js` 是 Phase 49 新增，实为 **10**），
+以及 `js/*.js ×9` 的 clone 一致清单 → 已改为 ×10。
+
+---
+
 ## 附录 A · 复现命令
 
 ```bash
