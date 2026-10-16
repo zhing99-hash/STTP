@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 67726677,
+    "bytes": 68016205,
     "edges": 48712,
     "nodes": 9657,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "7d4f66bca0dc6e6b8c489d678839566a586d1433d102cb4d0d791e6dd2ff7d4b",
+    "sha256": "21f13596a4c818f74bcbbe16e324507abfa7964d813d3313f17e6e476727205f",
     "subjects": {
      "化学": 4108,
      "数学": 277,
@@ -16,32 +16,32 @@
     "tracked_in_git": false
    },
    "snapshot": {
-    "bytes": 48740769,
+    "bytes": 59232780,
     "edges": 48712,
     "nodes": 9657,
     "obtain": "原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
     "path": "06_PoC/graph_data_phase41.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "3a2a323fa285ffd400c554281cf44260852bc05aa5c270d6c2a42cb0d9d76c79",
+    "sha256": "21c38aaf877779c1c9f741594450c6b9cec841bd905d5955317e61a50d6cdb26",
     "tracked_in_git": false
    }
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 373440,
+    "bytes": 392062,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "0737f15518a93e5dfefb5226339fdd104f663254dc859ecf0449daec59b990d7",
+    "sha256": "4ba6a41eaf39982e6b48fdefd2168b08b26fed8f77ba2d94c9035eeea0a2b568",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 411097,
+    "bytes": 429719,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "c9d07ce25b999ecb36e6659a6be646ad53a996e679022f48d0d014d6aedff4bb",
+    "sha256": "61d715adb2a5eb33f4d8b695cffa7153e7d21606400d891ef3a923c2e6b95b4e",
     "subjects": {
      "化学": 49,
      "数学": 18,
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "691bdfdbb4bc3e431b1579d2a7a59aa50d5ee4e9",
-  "git_head_at_build_short": "691bdfd",
+  "git_head_at_build": "e5f807a4b4db99567210ac2029c0dc3ac6462e7c",
+  "git_head_at_build_short": "e5f807a",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -663,7 +663,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-16T13:18:11+08:00",
+  "created": "2026-10-16T14:31:58+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
