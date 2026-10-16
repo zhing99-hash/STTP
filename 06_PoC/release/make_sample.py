@@ -67,6 +67,9 @@ import graph_export as gx                                          # noqa: E402
 sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
 import source_registry as sr                                       # noqa: E402
 
+sys.path.insert(0, HERE)
+import pipeline_outputs as PO                                      # noqa: E402  ← 产物清单唯一事实源
+
 DEFAULT_SRC = os.path.join(POC, "etl", "normalized.json")
 SAMPLE_DIR = os.path.join(HERE, "sample")
 
@@ -200,12 +203,16 @@ def sha256_file(path: str) -> str:
     return h.hexdigest()
 
 
+_WRITTEN: list[str] = []                    # 本次运行**实际写出**的产物路径（反向断言用）
+
+
 def dump_json(path: str, obj) -> None:
     """确定性写出：sort_keys + 固定缩进 + 无尾随空白。"""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         json.dump(obj, f, ensure_ascii=False, indent=1, sort_keys=True)
         f.write("\n")
+    _WRITTEN.append(path)                   # ★ 只在这里登记 —— 绕不过去
 
 
 # ---------------------------------------------------------------------------
@@ -478,7 +485,10 @@ def main(argv=None) -> int:
     violations = audit_redistribution(nodes_out, edges_out) if a.profile == "public_demo" else []
 
     # ---- 规范格式（查询/门禁读）----
-    norm_path = os.path.join(a.out_dir, "sample_normalized.json")
+    # ★ Phase 55（D64）：三个产物名一律取自**唯一事实源**（`pipeline_outputs`，#88）——
+    #   此前这里有三处字面量、`make_manifest.py` 里另有一份元组，两份无人核对。
+    _NORM_FN, _VIEW_FN, _QUERIES_FN = PO.SAMPLE_FILENAMES
+    norm_path = os.path.join(a.out_dir, _NORM_FN)
     dump_json(norm_path, {
         "schema": "sttp-sample-normalized/v2",
         "meta": {
@@ -506,13 +516,27 @@ def main(argv=None) -> int:
 
     # ---- 前端投影格式（页面读）----
     view = gx.build_graph_data(norm_path)
-    view_path = os.path.join(a.out_dir, "sample_graph.json")
+    view_path = os.path.join(a.out_dir, _VIEW_FN)
     dump_json(view_path, view)
 
     # ---- 查询契约 ----
     queries = build_queries(nodes_out, edges_out)
-    q_path = os.path.join(a.out_dir, "sample_queries.json")
+    q_path = os.path.join(a.out_dir, _QUERIES_FN)
     dump_json(q_path, queries)
+
+    # ---- ★ 反向断言（#88）：**声明集 ≡ 本次实际写出集** ----
+    #   ★ 光有"唯一事实源"不够 —— 还要证明它**被用上了**。登记发生在 `dump_json()` 内部，
+    #     绕不过去：将来谁新写第 4 个产物（哪怕只在下面加一行 `dump_json(其他路径, …)`），
+    #     本断言立刻不等 ⇒ RC=3。若只在自己拼的元组上比对，多写一个文件是**看不见**的。
+    _declared = set(PO.SAMPLE_FILENAMES)
+    _actual = {os.path.basename(p) for p in _WRITTEN}
+    if _actual != _declared:
+        print("[ERROR] 产物**声明**与**实际写出**不一致 —— 发布链产物清单已失真（#88）：")
+        print("        声明：%s" % sorted(_declared))
+        print("        实写：%s" % sorted(_actual))
+        print("        处方：改 `06_PoC/release/pipeline_outputs.py::SAMPLE_FILENAMES`，"
+              "不要在生成器里另起名字。")
+        return 3
 
     # ---- 自检：两投影同版本 ----
     nid_norm = {n["id"] for n in nodes_out}

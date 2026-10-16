@@ -56,6 +56,7 @@ sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))   # ★ E9：复用 so
 
 import graph_export as gx                                                       # noqa: E402
 import source_registry as sr                                                     # noqa: E402
+import pipeline_outputs as PO                                                    # noqa: E402
 
 MANIFEST = os.path.join(HERE, "manifest.json")
 SAMPLE_DIR = os.path.join(HERE, "sample")
@@ -63,8 +64,10 @@ LOCK = os.path.join(ROOT, "requirements.lock")
 PYPROJECT = os.path.join(ROOT, "pyproject.toml")
 DIST = os.path.join(ROOT, "dist")
 
-# 需要登记为「发布产物」的文件
-SAMPLE_FILES = ("sample_normalized.json", "sample_graph.json", "sample_queries.json")
+# 需要登记为「发布产物」的文件 —— ★ 派生自**唯一事实源**（Phase 55 · D64 / #88）。
+#   原先这里是一份**手工副本**，与 `make_sample.py` 里三处字面量构成"两处各写一套、
+#   没人核对是否相同"的形态。谁生成产物谁声明产物；本文件只消费。
+SAMPLE_FILES = PO.SAMPLE_FILENAMES
 
 
 def sha256_file(path: str) -> str:
@@ -227,9 +230,107 @@ def print_dirty_refusal(porcelain):
     if len(porcelain) > 10:
         print("    …（其余 %d 项略）" % (len(porcelain) - 10))
     print("  正确次序：① 提交代码/文档 → ② 清空未跟踪项 → ③ bash sttp.sh release")
+    print("            ★ ③ 会**重建离线样例**；若它报了「产物尚未提交」，")
+    print("              按那里的指示提交 `06_PoC/release/sample/` 后**重跑 ③**")
     print("            → ④ 提交 release/manifest.json（此时清单才是「干净树口径」）")
     print("  若确要在脏树上生成（仅限本地排查），显式加 --allow-dirty（清单会记 dirty_sample）。")
     print("=" * 70)
+
+
+class _CheckRep:
+    """极简报告器 —— 形状**必须**是 `rep.add(cond, NAME, detail)`。
+
+    ★ 为什么不能写成 `rows.append((cond, name, detail))`（第一版就是这么写的，已订正）：
+      `06_PoC/tests/assert_name_diff.py` 的采集器认的是**调用形状**
+      （`func.attr ∈ {add, skip, check, ok}`）**+ 字面量断言名**。
+      换个写法，`M7/M8/M9` 在 `bash sttp.sh names` 里就**完全隐形** ——
+      将来被删掉也没人知道。这正是 Phase 52 在 `assert_name_diff --selfcheck` 上
+      踩过的坑（**铁律 #98：执法工具自身必须可被执法**）。
+    """
+
+    def __init__(self) -> None:
+        self.rows: list[tuple[bool, str, str]] = []
+
+    def add(self, cond, name, detail="") -> None:
+        self.rows.append((bool(cond), name, str(detail)))
+
+
+def check_regenerated(allow_dirty: bool) -> int:
+    """`--check-regenerated`：**本流水线产物是否已提交**（Phase 55 · D64，fail-closed）。
+
+    它解决的自锁（Phase 54 实测复现）
+    ---------------------------------
+    `bash sttp.sh release` 的次序是「**重建样例** → 生成清单（洁净度＝前置断言）」，
+    而样例是**被跟踪**文件 ⇒ 图谱一变，重建就必然让工作树变脏 ⇒ 清单被拒 RC=2。
+    更糟的是旧拒绝文案写的「正确次序 ③ `bash sttp.sh release`」**正是刚失败的那一步** ——
+    按字面执行必然死循环，而"先单独重建样例并提交"这一步**从来没人写下来过**。
+
+    本步位于**重建之后、生成清单之前**，职责只有一条：
+    把"该先提交样例"变成**机器判定的前置断言 + 可执行的下一步指令**。
+
+    ★ 为什么**不**改用"把样例从脏判定里排除"来图省事（一跑就过的写法）：
+      那样做的实质是**放宽 fail-closed** —— 清单将声称"工作树干净"而样例其实未提交，
+      而 `working_tree_dirty_at_build` 的真实含义（"这份清单描述的是已提交的树"）会被掏空。
+      保留两趟、把次序讲清楚，比悄悄弱化判据诚实（铁律 #20 的同族）。
+    ★ `--allow-dirty` / `STTP_ALLOW_DIRTY=1` 同样放行本步（它本就是"我知道树不干净"的口子）。
+
+    断言：`M7` 声明自证 ／ `M9` ★判据非真空（构造性）／ `M8` 产物已提交。
+    """
+    paths = PO.sample_paths(ROOT)
+    rep = _CheckRep()
+
+    under = [p for p in paths if p.startswith(PO.SAMPLE_DIR_REL + "/")]
+    missing = [p for p in paths if not os.path.exists(os.path.join(ROOT, p))]
+    ok_decl = bool(paths) and len(under) == len(paths) and not missing
+    rep.add(ok_decl, "M7 产物声明自证：非空 / 全在发布目录内 / 全部真实存在",
+            "%d 项声明；目录外 %d；缺文件 %s"
+            % (len(paths), len(paths) - len(under), missing or "无"))
+
+    # ★ M9 判据非真空（构造性）：合成输入 ⇒ "确实不同"必须被报出、"确实相同"必须不被报出。
+    #   没有它，「把判据换成恒真空」的退化与「真的没有差异」在输出上完全不可分
+    #   —— 这正是 `redprobe` 的 R11 注入的那个退化。
+    _same = {"a.json": b"X", "b.json": b"Y"}
+    _diff = {"a.json": b"X", "b.json": b"Z"}
+    got_diff = PO.regenerated(ROOT, ["a.json", "b.json"], blob_of=_same.get, read_of=_diff.get)
+    got_same = PO.regenerated(ROOT, ["a.json", "b.json"], blob_of=_same.get, read_of=_same.get)
+    ok_guard = (got_diff == ["b.json"]) and (got_same == [])
+    rep.add(ok_guard,
+            "M9 ★判据非真空：合成的「不同」必须被报出、「相同」必须不被报出",
+            "不同 ⇒ %s（期望 ['b.json']）｜相同 ⇒ %s（期望 []）" % (got_diff, got_same))
+
+    changed = PO.regenerated(ROOT, paths) if ok_decl else []
+    rep.add(not changed and ok_decl, "M8 发布链产物已提交：与 HEAD 逐字节一致（D64）",
+            "与 HEAD 不同 %d 项：%s" % (len(changed), changed or "无"))
+
+    print("=" * 74)
+    print("  发布链产物前置断言（D64）：本流水线重建的产物必须**已提交**后再出清单")
+    print("=" * 74)
+    for cond, name, detail in rep.rows:
+        print("  %s      %s" % ("✅" if cond else "❌", name))
+        if detail:
+            print("          %s" % detail)
+    print("-" * 74)
+
+    if not ok_decl:
+        print("  [RC=2] 产物**缺失**：先跑 `bash sttp.sh release`（它会重建），或检查图谱输入。")
+        return 2
+    if not ok_guard:
+        print("  [RC=3] **仪器自证失败**：差异判据不可信（M9 红） —— 先修仪器，别信 M8 的结论。")
+        return 3
+    if changed:
+        if allow_dirty:
+            print("  [放行] --allow-dirty/STTP_ALLOW_DIRTY=1 ⇒ 未提交的产物不作为阻塞"
+                  "（清单会记 `dirty_sample`，放行是**被声明**的）")
+            return 0
+        print("  [RC=2] 产物**已重建但与 HEAD 不同** ⇒ 发布清单**不出**（fail-closed）。")
+        print("         下一步（照抄即可）：")
+        print("           git add %s && git commit -m 'chore(release): 重建离线样例'" % PO.SAMPLE_DIR_REL)
+        print("           bash sttp.sh release        # ★ **重跑**：此时它会生成并提交清单")
+        print("         为什么必须分两趟：清单必须描述**已提交的树**；样例未提交就出清单，")
+        print("         `working_tree_dirty_at_build` 的语义会被掏空（本项目拒绝这种弱化）。")
+        return 2
+    print("  ✅ 产物与 HEAD 一致 ⇒ 可以生成清单。")
+    return 0
 
 
 def main(argv=None) -> int:
@@ -243,6 +344,10 @@ def main(argv=None) -> int:
     ap.add_argument("--check-dirty", action="store_true",
                     help="**只做**洁净度前置断言、不生成清单：干净 RC=0 / 脏 RC=2。"
                          "供 `sttp.sh release-full` 复用同一判定（E21 残余）。")
+    ap.add_argument("--check-regenerated", action="store_true",
+                    help="**只做**「本流水线产物是否已提交」的前置断言、不生成清单："
+                         "一致 RC=0 ／ 已重建但未提交 RC=2 ／ 仪器自证失败 RC=3（Phase 55 · D64）。"
+                         "供 `sttp.sh release` 在**重建样例之后、生成清单之前**调用。")
     ap.add_argument("--out", default=MANIFEST)
     a = ap.parse_args(argv)
 
@@ -260,6 +365,10 @@ def main(argv=None) -> int:
         else:
             print("[洁净度] 工作树干净（已排除 release/manifest.json 自身）")
         return 0
+
+    # ---- 产物已提交前置断言（唯一实现；Phase 55 · D64）----
+    if a.check_regenerated:
+        return check_regenerated(allow_dirty)
 
     py = sys.executable
     created = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
