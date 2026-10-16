@@ -90,8 +90,10 @@ bash sttp.sh export && bash sttp.sh release           # 许可自检 → 重建�
 | `bash sttp.sh sample` | 仅用离线样例起可视化（单命令、离线、同版本） |
 | `bash sttp.sh release-full` | 对完整快照跑全量校验（**洁净度前置断言** + 清单现算比对 + 主图 `--release` 门禁） |
 | `bash sttp.sh eval` | 科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检 |
-| `bash sttp.sh offline` | **断网渲染**端到端验证：拦截浏览器一切非本地请求，断言页面仍完整渲染（本地 vendor）；`--scenario cdn-fallback` 为反向对照 |
+| `bash sttp.sh offline` | **断网渲染**端到端验证：拦截浏览器一切非本地请求，断言页面仍完整渲染（本地 vendor）；`--scenario cdn-fallback` 为反向对照。★ **非自包含**：需另有进程在跑 `bash sttp.sh viz`；缺前置 ⇒ 记 SKIP 并 **RC=2**（不是 0） |
+| `bash sttp.sh taskflow` | 任务式首屏**真浏览器**端到端验收（问题→候选→确认实体→生成图→改查询）。★ **非自包含**：同样需 `bash sttp.sh viz` 在跑；缺前置 ⇒ 记 SKIP 并 **RC=2**（不是 0） |
 | `bash sttp.sh names` | 改断言文件后核对**断言名字集合**（有删除 ⇒ **RC=1**）；`--selfcheck` 是它自己的自检 |
+| `bash sttp.sh redprobe` | **构造性可红性**探针：对关键断言注入已知缺陷，断言**必须真的变红**（否则说明"名字还在、判据已被换掉"）。逐字节自还原、不依赖权威图；已挂进 `gatecheck`。★ 缺前置 ⇒ **RC=2**；还原失败 ⇒ **RC=3** |
 | `bash sttp.sh gnneval` | 推理增量评测协议 v2：P1 关系留出补全 / P2 实体对发现 + 4 类基线对照 |
 | `bash sttp.sh dimaudit` | 量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据非真空自检 |
 | `bash sttp.sh lineage` | 证据血缘审计：来源登记（版本/哈希/血缘）+ 来源变更定位受影响断言 + 判据非真空自检 |
