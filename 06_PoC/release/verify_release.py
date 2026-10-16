@@ -205,6 +205,26 @@ def check_license(rep, manifest, norm):
             "剔除 %s 边 / %s 节点（0 边 ⇒ 白名单形同虚设）" % (ex_e, ex_n))
 
 
+def interp_note():
+    """解释器自述（Phase 53 · D57）：`python 3.11.9 @ /path/to/python.exe`。
+
+    ★ 为什么必须自述：**「环境缺件」与「解释器选错」的外观完全相同** ——
+      两者都表现为 `缺失 ['networkx', 'sympy', 'pint', 'rdkit']`。
+      干净检出里 `STTP_PYTHON` 记在**被 gitignore 的 `.env`** 中 ⇒ `sttp.sh` 的
+      `PY="${STTP_PYTHON:-python}"` 回落到 PATH 上的 `python`（本机实测落到**无依赖**的
+      解释器）⇒ 依赖判定集体变红，而报错的长相指向**产品缺陷**（D57 原文；同族 #93）。
+      唯一能把两者分开的信息，就是"这些判定是在**哪个解释器**下做的"。
+    """
+    return "python %s @ %s" % (sys.version.split()[0], sys.executable)
+
+
+def dep_detail(missing):
+    """G1 的 detail —— **唯一实现**（G1 与 G3 同源，不得各写一份：#88/#92）。"""
+    if missing:
+        return "缺失 %s · 解释器 %s" % (missing, sys.executable)
+    return "%s；%s 全就绪" % (interp_note(), "/".join(REQUIRED_MODULES))
+
+
 def check_deps(rep, release):
     missing_mods, missing_local = [], []
     for m in REQUIRED_MODULES:
@@ -218,11 +238,18 @@ def check_deps(rep, release):
         except Exception:                                                        # noqa: BLE001
             missing_local.append(m)
     missing = missing_mods + missing_local
-    rep.add(not missing, "G1 必要依赖就绪",
-            "缺失 %s" % missing if missing else "python %s；%s 全就绪" % (
-                sys.version.split()[0], "/".join(REQUIRED_MODULES)))
+    rep.add(not missing, "G1 必要依赖就绪", dep_detail(missing))
     if missing and release:
-        rep.add(False, "G2 release 模式要求依赖齐全", "缺 %s" % missing)
+        rep.add(False, "G2 release 模式要求依赖齐全",
+                "缺 %s · %s" % (missing, interp_note()))
+    # ★ D57 的回归保护：缺依赖诊断**必须自述解释器**。
+    #   注意本断言用**合成缺失表**触发"缺件分支"—— 绿树下该分支永不执行，
+    #   所以它是这条纪律**唯一常驻**的守卫（G1 的 detail 只在真缺件时才被读到）。
+    #   其**可红性**（把解释器从 detail 里删掉 ⇒ 必须变红）由
+    #   `bash sttp.sh redprobe` 的 R4 探针构造性证明（铁律 #100）。
+    rep.add(sys.executable in dep_detail(["__probe_missing__"]),
+            "G3 缺依赖诊断自述解释器（D57）：合成缺件分支的 detail 须含 sys.executable",
+            interp_note())
     return missing
 
 

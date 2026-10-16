@@ -24,6 +24,11 @@ A4 · 断网渲染端到端测试（Playwright headless）
 
 退出码：0 全通过；1 有断言失败；**2 = 缺前置**（未装 Playwright / 目标页面不可达 ⇒ 明确 SKIP，
         **不计通过**，铁律 #20：缺依赖不得假通过，也不得崩成裸 ImportError 让评审者读成"代码坏了"）。
+
+★ 本仪器**不是自包含的**（D56）：`subgraph` / `frontend` 自起 `ThreadingHTTPServer`，
+  而"断网渲染"必须在**真端口上的真页面**上验证 ⇒ 它依赖外部已在跑的 `bash sttp.sh viz`。
+  前置缺失时**必须返回 2**（不是 0）—— 否则退出码上 SKIP 与 PASS 不可分（#101）。
+  该纪律由 `bash sttp.sh redprobe` 的 **R5** 构造性守住。
 """
 import argparse
 import io
@@ -71,7 +76,12 @@ class Rep:
 
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="A4 断网渲染端到端验证（CDN 全不可达时页面仍能完整渲染）",
+        epilog="★ 前置（**非自包含**，D56）：需外部已在跑的本地 viz 服务（默认 "
+               "http://127.0.0.1:8765/）。缺前置 ⇒ 明确记 SKIP 并返回 **2**"
+               "（2 = 前置缺失；1 = 真有断言失败；0 = 通过）。"
+               "启动方式：另开终端 `bash sttp.sh viz`（前台长驻）。")
     ap.add_argument("--url", default="http://127.0.0.1:8765/")
     ap.add_argument("--timeout", type=int, default=180, help="首屏加载超时（秒）")
     ap.add_argument("--headed", action="store_true")
@@ -96,6 +106,8 @@ def main():
         print("  原因：未安装 Playwright —— 它是**可选依赖**，本项目零安装路径刻意不装它。")
         print("  复现：pip install playwright && python -m playwright install chromium")
         print("  细节：%s: %s" % (type(e).__name__, e))
+        print("  ★ 退出码 2 = **前置缺失**（本仪器非自包含，需外部 viz 服务在跑）；")
+        print("    它既不是「通过」，也不代表「页面有问题」（D56）。")
         return 2
 
     external_blocked = []
@@ -137,6 +149,8 @@ def main():
             print("== A4 断网渲染测试：SKIP（缺前置）==")
             print("  原因：目标页面不可达（%s）：%s" % (args.url, type(e).__name__))
             print("  复现：另开一个终端运行 `bash sttp.sh viz`（前台长驻），再重跑本命令。")
+            print("  ★ 退出码 2 = **前置缺失**（本仪器非自包含，需外部 viz 服务在跑）；")
+            print("    它既不是「通过」，也不代表「页面有问题」（D56）。")
             return 2
 
         if args.scenario == "offline":

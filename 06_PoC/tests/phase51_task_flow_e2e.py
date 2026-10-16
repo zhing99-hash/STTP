@@ -54,7 +54,13 @@ Phase 51 · 任务式首屏「真浏览器」端到端验收（B1–B5）
     bash sttp.sh taskflow                 # 需先 `bash sttp.sh viz`
     python 06_PoC/tests/phase51_task_flow_e2e.py --url http://127.0.0.1:8765/ [--headed] [--json OUT]
 
-退出码：0 = 无 FAIL（含整体 SKIP）；1 = 有 FAIL。
+退出码：0 = 无 FAIL **且前置齐备**；1 = 有 FAIL；2 = **缺前置**。
+
+★ 本仪器**不是自包含的**（D56）：`subgraph` / `frontend` 会自起 `ThreadingHTTPServer`，
+  而真浏览器验收必须打**真端口上的真服务** ⇒ 它依赖外部已在跑的 `bash sttp.sh viz`。
+  此前前置缺失时返回 **0**（原文档写的正是「0 = 无 FAIL（含整体 SKIP）」）⇒ 读报告的人会把
+  「全段 SKIP」读成「通过」—— **退出码上 SKIP 与 PASS 不可分**（铁律 #20/#67 的退出码面，#101）。
+  现改为 **RC=2** 并打印前置自述块；该纪律由 `bash sttp.sh redprobe` 的 **R6** 构造性守住。
 
 ## ★ 已知边界（本仪器**不**覆盖什么）
 
@@ -340,7 +346,12 @@ def wait_search_settled(page, q, timeout_ms=30000):
 
 
 def main():
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Phase 51 任务式首屏真浏览器端到端验收（B1–B5）",
+        epilog="★ 前置（**非自包含**，D56）：需外部已在跑的本地 viz 服务（默认 "
+               "http://127.0.0.1:8765/）。缺前置 ⇒ 明确记 SKIP 并返回 **2**"
+               "（2 = 前置缺失；1 = 真的有 FAIL；0 = 通过）。"
+               "启动方式：另开终端 `bash sttp.sh viz`（前台长驻）。")
     ap.add_argument("--url", default="http://127.0.0.1:8765/")
     ap.add_argument("--headed", action="store_true", help="显示浏览器窗口（默认无头）")
     ap.add_argument("--timeout", type=int, default=120, help="单步等待上限（秒）")
@@ -366,9 +377,12 @@ def main():
                  "不得记通过（铁律 #20：缺依赖假通过）" % type(e).__name__)
         for s in SECTIONS:
             rep.skip(s, "上游依赖缺失（playwright）")
+        precond_banner("browser", "Playwright + Chromium（**可选**依赖，不在零安装路径上）",
+                       "import playwright.sync_api 失败：%s（%s）" % (type(e).__name__, e),
+                       "pip install playwright && python -m playwright install chromium")
         rep.dump()
         _write(args.json_out, result, rep)
-        return 0
+        return 2
 
     # ---- B0b 被测服务可达 ----
     try:
@@ -383,9 +397,12 @@ def main():
                  % (hz.get("error") or "无响应"))
         for s in SECTIONS:
             rep.skip(s, "上游依赖缺失（本地 viz 服务）")
+        precond_banner("external_viz", "本地 viz 服务（**外部**依赖，须另有进程在跑）",
+                       "healthz 不可达：%s（%s）" % (base, hz.get("error") or "无响应"),
+                       "另开一个终端运行 `bash sttp.sh viz`（前台长驻），再重跑本命令")
         rep.dump()
         _write(args.json_out, result, rep)
-        return 0
+        return 2
     rep.add(True, "B0b-server",
             "healthz 200，backend=%s graph_ready=%s warm_ms=%s"
             % (hz.get("backend"), hz.get("graph_ready"), hz.get("warm_ms")))
@@ -786,6 +803,23 @@ def main():
     rep.dump()
     _write(args.json_out, result, rep)
     return 1 if rep.n_fail else 0
+
+
+def precond_banner(which, name, detail, how_to_fix):
+    """打印**前置自述块**（D56）。
+
+    ★ 为什么必须存在：本仪器**非自包含**（见文件头）。前置缺失时：
+      ① 必须**显著打印**（含恢复命令），否则读者只看到一堆 SKIP；
+      ② 退出码必须**不是 0**（这里是 2）—— 否则退出码上 SKIP 与 PASS 不可分（#101）。
+      它既不是「通过」，也不代表「前端有问题」：说清这一点是本节的全部目的。
+    """
+    print("-" * 78)
+    print("  ⛔ 前置不满足：%s（%s）" % (name, which))
+    print("     观测：%s" % detail)
+    print("     恢复：%s" % how_to_fix)
+    print("     ★ 退出码 2 = **前置缺失**（本仪器非自包含，需要外部服务已在跑）；")
+    print("       它不是「通过」，也不代表「前端有问题」。")
+    print("-" * 78)
 
 
 def _write(path, result, rep):

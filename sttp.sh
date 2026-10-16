@@ -43,9 +43,10 @@
 #   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V19 正/反例（Phase 43/45）
 #   bash sttp.sh install                            第三人可安装入口自检：元数据/解释器约束分离/依赖声明覆盖/无原机路径/入口/两级可复现/离线 wheel（Phase 45 A05）
 #   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
-#   bash sttp.sh taskflow [--url U] [--headed]      任务式首屏**真浏览器**端到端验收：问题→候选→确认实体→生成图→改查询（Phase 51；需 viz 在跑 + 可选 Playwright）
-#   bash sttp.sh offline [--scenario cdn-fallback]  A4 **断网渲染**端到端验证：CDN 全不可达时页面仍能渲染（Phase 52 收口；需 viz 在跑 + 可选 Playwright）
+#   bash sttp.sh taskflow [--url U] [--headed]      任务式首屏**真浏览器**端到端验收：问题→候选→确认实体→生成图→改查询（Phase 51；★ 非自包含：需 viz 在跑 + 可选 Playwright；缺前置 ⇒ **RC=2**）
+#   bash sttp.sh offline [--scenario cdn-fallback]  A4 **断网渲染**端到端验证：CDN 全不可达时页面仍能渲染（Phase 52；★ 非自包含：需 viz 在跑 + 可选 Playwright；缺前置 ⇒ **RC=2**）
 #   bash sttp.sh names <旧文件> <新文件> [--pair 旧:新]  断言**名字集合**比对（铁律 #87：只看总数会漏掉"加 2 删 1"）
+#   bash sttp.sh redprobe [--only R1,R4]            **构造性可红性**探针：注入已知缺陷 ⇒ 关键断言**必须真的变红**（Phase 53 D55；铁律 #100）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -94,7 +95,7 @@ require_authority() {   # 用法: require_authority <命令名> <相对路径>..
     echo "  干净检出里**可运行**的替代验证："
     echo "        - bash sttp.sh frontend        （可运行；缺图处记 SKIP 而**不假通过**）"
     echo "        - bash sttp.sh check           （环境自检）"
-    echo "        - $PY 06_PoC/release/verify_release.py --release   （28/0/0，RC=0）"
+    echo "        - $PY 06_PoC/release/verify_release.py --release   （29/0/0，RC=0）"
     echo ""
   } >&2
   exit 2
@@ -265,10 +266,17 @@ EOF
     #   的执法工具，但它自身一直没有断言覆盖（"谁来核对核对器"）。
     #   ★ 它**不依赖权威图** ⇒ 刻意放在 require_authority **之前**：干净检出里也能跑，
     #     而不是被守卫一并挡成 RC=2（真实原因只有"缺图"，不该掩盖"自检从未执行"）。
-    echo "== [0/1] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
+    echo "== [0/2] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
     "$PY" 06_PoC/tests/assert_name_diff.py --selfcheck || exit $?
+    # ★ Phase 53（D55 收口）：把「构造性可红性探针」挂在这里，与上一步同理放在守卫**之前**
+    #   —— 它不依赖权威图 ⇒ 干净检出里也能跑。
+    #   动机：`names` 只能证明"没有断言被删"，**证明不了"还活着的断言仍在断言它声称的语义"**
+    #   （"名字还在、判据被换掉"）。本步对关键断言**注入已知缺陷**，断言必须真的变红。
+    #   ★ 它会**自己还原**被突变的事实源（逐字节 + sha256），还原失败即 RC=3 并显式告警。
+    echo "== [1/2] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
+    "$PY" 06_PoC/tests/red_probe.py || exit $?
     require_authority gatecheck "$NORM_GRAPH"
-    echo "== [1/1] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
+    echo "== [2/2] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
     "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
     ;;
   release)
@@ -455,6 +463,9 @@ EOF
     #      ② 可选的 Playwright + Chromium（**不在零安装路径上**）
     # 缺任一 ⇒ 全段记 SKIP 并说明原因，**不计通过**（铁律 #20：缺依赖不得假通过）。
     # ★ 它抓的是静态自检抓不到的那类缺陷：文件都"写对了"、页面却点不动。
+    # ★ Phase 53（D56）：本目标**不是自包含的**（`subgraph`/`frontend` 自起 `ThreadingHTTPServer`，
+    #   这里必须打**真端口上的真服务**）⇒ 前置缺失时**返回 2，不再返回 0**，
+    #   否则退出码上 SKIP 与 PASS 不可分（#101）。该纪律由 `redprobe` 的 R6 构造性守住。
     shift
     set -e
     "$PY" 06_PoC/tests/phase51_task_flow_e2e.py "$@"
@@ -467,6 +478,9 @@ EOF
     # 前置：① 本地 viz 服务在跑（`bash sttp.sh viz`，前台长驻）
     #      ② 可选的 Playwright + Chromium（**不在零安装路径上**，见 §0.1 / D14）
     # 缺任一 ⇒ 脚本明确 SKIP 且 RC=2，**不计通过**（铁律 #20：缺依赖不得假通过）。
+    # ★ Phase 53（D56）：本目标**不是自包含的**（"断网渲染"必须打真端口上的真页面）
+    #   ⇒ 前置缺失时 RC=2（不是 0）—— 否则退出码上 SKIP 与 PASS 不可分（#101）。
+    #   该纪律由 `redprobe` 的 R5 构造性守住。
     # ★ 产物写 `.runlog/`（不入库）：此前写 `06_PoC/etl/a4_offline_render.json`，
     #   那是一个**入库路径** ⇒ 每跑一次就把工作树弄脏（E29 家族）。
     shift
@@ -484,6 +498,20 @@ EOF
     shift
     set -e
     "$PY" 06_PoC/tests/assert_name_diff.py "$@"
+    ;;
+  redprobe)
+    # 铁律 #100 / D55：`names` 只能核对**名字集合**（防"删"），防不了"判据被换掉"
+    #   ——「名字还在、判据被改成恒真」在名字集合上是**完全不可见**的退化。
+    # 本目标对**关键断言**逐个注入"已知缺陷"，断言必须**真的变红** ⇒ 否则 FAIL。
+    #   ★ 安全：每条探针独立备份 + **逐字节**还原 + sha256 校验（铁律 #97：不许弄脏工作树）；
+    #     还原失败 ⇒ RC=3 并显式告警，不静默继续。
+    #   ★ 不依赖权威图 ⇒ 干净检出里也能跑（故可挂在 `gatecheck` 的守卫之前）。
+    # 用法：bash sttp.sh redprobe [--only R1,R4] [--list] [--json .runlog/redprobe.json]
+    # 退出码：0 全部按预期变红 ／ 1 有探针**没变红**（判据可能已被换掉）／
+    #         2 缺前置（node/playwright，记 SKIP **不计通过**）／ 3 还原失败（工作树可能已被污染）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/red_probe.py "$@"
     ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"
