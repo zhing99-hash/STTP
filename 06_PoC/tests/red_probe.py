@@ -122,8 +122,11 @@ PROBES = [
     {
         "id": "R4",
         "kind": "mutate",
-        "why": "G3（缺依赖诊断必须自述解释器 —— D57 的常驻守卫）",
-        "file": "06_PoC/release/verify_release.py",
+        "why": ("G3（缺依赖诊断必须自述解释器 —— D57 的常驻守卫）。"
+                "★ Phase 55（D58）：事实源已从 `verify_release.py` **上移到唯一实现** "
+                "`06_PoC/interp_note.py`（实现收在一处，#88）⇒ 探针必须**跟着事实源走**。"
+                "留在旧位置会变成『锚点命中 0 次』的空转 —— 那正是 `RS` 专门要抓的东西。"),
+        "file": "06_PoC/interp_note.py",
         "old": '        return "缺失 %s · 解释器 %s" % (missing, sys.executable)',
         "new": '        return "缺失 %s" % missing',
         "cmd": "PY 06_PoC/release/verify_release.py --release",
@@ -188,6 +191,36 @@ PROBES = [
         "requires": ["node"],
     },
     {
+        "id": "R10",
+        "kind": "mutate",
+        "why": ("G4（**门禁缺依赖 SKIP** 必须自述解释器 —— D58 的常驻守卫，Phase 55 新增）。"
+                "与 R4 是**同一纪律的两半**：R4 守「检查过哪些依赖」的自述，"
+                "R10 守「某一步**没有真正执行**」的自述（`skip_detail`）。"
+                "两半分开守，是因为它们**语义不同**、将来可能各自被改坏。"),
+        "file": "06_PoC/interp_note.py",
+        "old": '    s = "%s · 解释器 %s" % (reason, sys.executable)',
+        "new": '    s = "%s（解释器信息已移除）" % reason',
+        "cmd": "PY 06_PoC/release/verify_release.py --release",
+        "cwd": ROOT,
+        "expect_red": ["G4"],
+        "requires": [],
+    },
+    {
+        "id": "R11",
+        "kind": "mutate",
+        "why": ("D64（Phase 55 新登记）：`--check-regenerated` 是「本流水线产物是否已提交」的"
+                "前置断言。★ 注入的退化是**最阴的一种**：把差异判据换成**恒真空**"
+                "（`regenerated()` 永远返回 []）—— 它在输出上与「真的没有差异」"
+                "**完全不可分**，只有 `M9` 的构造性守卫能抓到它。"),
+        "file": "06_PoC/release/pipeline_outputs.py",
+        "old": "    return [p for p in paths if blob_or_none(p) != read_bytes_of(p)]",
+        "new": "    return []                      # redprobe: 恒真空（判据被换掉）",
+        "cmd": "PY 06_PoC/release/make_manifest.py --check-regenerated",
+        "cwd": ROOT,
+        "expect_red": ["M9"],
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -207,7 +240,7 @@ PROBES = [
 #   为什么两处都写死：`bash sttp.sh names` 的采集器取「第 2 个实参的**首个字符串常量**」
 #   （f-string 只在**开头是字面量**时可用）⇒ 断言名必须写成字面量才进得了名字集合。
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
-DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "RN")
+DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -447,6 +480,10 @@ def emit(rep, res):
     rep.add(res["R7"][0], "R7 core.js 分桶的 1900 边界改错 ⇒ F42a 必须变红", res["R7"][1])
     rep.add(res["R8"][0], "R8 详情面板对缺键也渲染 ⇒ F42f 必须变红", res["R8"][1])
     rep.add(res["R9"][0], "R9 图例年代区块去掉时间序 ⇒ F42j 必须变红", res["R9"][1])
+    rep.add(res["R10"][0], "R10 门禁缺依赖 SKIP（skip_detail）丢掉解释器 ⇒ G4 必须变红（D58）",
+            res["R10"][1])
+    rep.add(res["R11"][0], "R11 产物差异判据被换成恒真空（regenerated ⇒ []）⇒ M9 必须变红（D64）",
+            res["R11"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
