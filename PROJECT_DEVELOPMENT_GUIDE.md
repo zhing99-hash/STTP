@@ -181,6 +181,15 @@
   ★ **不要把 ② 读成"整条 `sttp.sh release` 可在裸 clone 验证"** —— 实测 `bash sttp.sh release` = **RC=2**
   （第 1 步 `make_sample` 即需不入库的权威图），`release-full` = **RC=1**（fail-closed FAIL 3）。裸 clone 里要跑发布链，
   **只能直接调 `verify_release.py`**。
+  ★★ **2026-10-16（Phase 52）复测补充 —— 一个会误导人的陷阱（**D57**）**：
+  上述数值**只有在 `$STTP_PYTHON` 指向带依赖的解释器时才成立**。`sttp.sh` 的 `PY="${STTP_PYTHON:-python}"`，
+  而 `STTP_PYTHON` 记在**被 gitignore 的 `.env`** 里 ⇒ 裸 clone 会回落到 PATH 上的 `python`
+  （本机实测落到**无依赖**的解释器）⇒ `release-full` 变成 **FAIL 9 / SKIP 11**，
+  报错长相**就是产品缺陷**（"缺 networkx/sympy/pint/rdkit"、"后端不可用"、"F1 SKIP 11"）。
+  ⇒ **凡在干净检出里读到"缺依赖/后端不可用"，第一件事是确认 `$STTP_PYTHON` 指向谁。**
+  同次复测的其余数值（`gatecheck` 守卫 RC=2、`install` 24/0/1 且**跑完仍干净**、
+  `verify_release.py --release` 28/0/0、`frontend` 89/6/5 且 **A/B 旧 HEAD 88/6/5 ⇒ 仅 +1**）
+  见 **§0.3.9**。
   ③ ★ **`bash sttp.sh subgraph` 在裸 clone 不能运行**（`06_PoC/etl/normalized.json` 不入库）——
   已改为**明确原因 + RC=2**（修复前是 `KeyError` 崩溃）；**契约目前只能在下游产物层被 clone 验证**，
   若要"契约也可从 clone 验证"需入库小基线图 + 样例口径断言子集（**未做，有意取舍**）。
@@ -907,6 +916,34 @@ RC=0 全绿**（31 条 + 108 条）—— `verify_release.py` **完全没有**�
 （像 X16g / S5 / G4 / `--selfcheck` 的 S5 那样自证会红）。
 **D56** `offline` 与 `taskflow` **都依赖外部已在跑的 viz 服务**（`127.0.0.1:8765`）⇒ 二者都不是
 自包含的（这是 **D52** 的推广：现在有**两台**仪器有这条前置，须在 `--help` 与报告里说清）。
+
+**★ 干净检出复测（新 HEAD `26ccf2d`，本地 clone；铁律 #53）**：
+clone 后工作树**完全干净**、487 个入库文件；抽检 4 个关键文件 sha256 与工作区**逐字节一致**。
+- `bash sttp.sh gatecheck` ⇒ **`[0/1]` 名字自检 S1–S6 全 PASS 先跑**，其后 `require_authority`
+  因缺 `normalized.json` ⇒ **RC=2**（已知边界，非代码缺陷）—— 这正是把自检放在守卫**之前**的理由。
+- ★★ **`bash sttp.sh install` ⇒ 24/0/1（SKIP = A05-13 离线 wheel，本环境无 setuptools）
+  且跑完后 `git status --porcelain` 仍为空** ⇒ **E29 修复在干净检出上成立**
+  （修复前该对账为 `OK 457 / DIFF 1`）。
+- `python 06_PoC/release/verify_release.py --release` ⇒ **28/0/0 RC=0**；
+  `bash sttp.sh release` ⇒ RC=2（缺规范图，刻意）；
+  `bash sttp.sh release-full` ⇒ **`[0/3]` 洁净度放行 → 31 条 FAIL 3**（H1/H1b/H2 = 缺不入库的完整快照，
+  均自带获取方式）⇒ RC=1，与既有基线一致。
+- `bash sttp.sh frontend` ⇒ **89/6/5**；★ **A/B 归因**：同条件对旧 HEAD `39174cd` 跑 = **88/6/5**
+  ⇒ 差异**仅 +1 通过（X16g）**，6 条 FAIL 逐条相同（全是需图谱的 HTTP 运行时断言，`HTTP 503`）
+  ⇒ **裸 clone 的这 6 条是既有环境边界，非本轮引入**。
+- `bash sttp.sh names` 在裸 clone **可用**（RC=0）。
+
+**★ 新登记 D57（干净检出复测时撞到的真陷阱）· `.env` 不在仓库里 ⇒ 解释器会静默换人**：
+`sttp.sh` 的 `PY="${STTP_PYTHON:-python}"`，而 `STTP_PYTHON` 记在**被 gitignore 的 `.env`** 里。
+⇒ 裸 clone 里 `$PY` 回落到 PATH 上的 `python`（本机实测落到**无依赖**的解释器）
+⇒ `release-full` 的 `G1/G2/E1/D1` 等**依赖判定**集体变红：**FAIL 3 → FAIL 9**。
+★★ **危险之处**：这 9 条里多条长得像**产品缺陷**（"缺 networkx/sympy/pint/rdkit"、"后端不可用"、
+"F1 样例反例回归 SKIP 11"），而真因只是**解释器选错了**。
+⇒ **凡在干净检出里读到"缺依赖/后端不可用"，第一件事是确认 `$STTP_PYTHON` 指向谁**
+（与 **#93**「环境不允许必须先被证伪」、以及 D54「把嫌疑指向产品」同族）。
+本轮据此把测量改用 `STTP_PYTHON` 显式指定后重做，数值立即回到既有基线（FAIL 3）。
+**未修**（只登记）：如何让裸 clone **自己发现**这件事（例如：`release-full` 在缺依赖时
+先打印 `sys.executable`，或把 `.env.example` 入库并让它成为默认）—— 下一轮候选。
 
 ---
 
@@ -1925,6 +1962,15 @@ git merge origin/main
   `release` **28/0/0**｜`release-full` **31 + 108/0/0**（脏树无开关 ⇒ **RC=2**）。
 - ★ **铁律候选 #96/#97/#98**：**#96** 发布链 fail-closed 必须覆盖链上**每一个**入口；
   **#97** 自检留痕**不得写入被跟踪路径**；**#98** **执法工具自身必须在被执法的集合里**。
+- ★ **干净检出复测（本地 clone，HEAD `26ccf2d`）**：working tree 干净、487 文件、抽检 sha256 逐字节一致；
+  `gatecheck` 的 `[0/1]` 名字自检**先跑**（S1–S6 全 PASS）随后守卫 ⇒ RC=2；
+  ★ **`install` ⇒ 24/0/1 且跑完后 `git status` 仍为空 ⇒ E29 在干净检出上成立**（原 `OK 457 / DIFF 1`）；
+  `verify_release.py --release` 28/0/0；`release-full` `[0/3]` 放行 → 31 条/FAIL 3（缺快照，自带解释）；
+  `frontend` 89/6/5，**A/B 旧 HEAD 88/6/5 ⇒ 仅 +1（X16g）** ⇒ 那 6 条 FAIL 是既有环境边界。
+- ★ **新登记 D57**（复测撞到的真陷阱）：`.env` 被 gitignore（`STTP_PYTHON` 在里面）⇒
+  裸 clone 里 `$PY` 回落到**无依赖**的解释器 ⇒ `release-full` **FAIL 3 → FAIL 9**，
+  而报错长相**就是产品缺陷**（"缺 networkx/sympy/pint/rdkit"/"后端不可用"）。
+  ⇒ 干净检出里读到"缺依赖"须**先确认 `$STTP_PYTHON`**（与 **#93** 同族）。**未修**，只登记。
 - ★ **新登记 D55/D56**：**D55** `names` 只能核对名字集合，**判断不了"判据是否被换掉"**
   ⇒ 下轮候选：给关键断言加**构造性可红性**；**D56** `offline` 与 `taskflow` **都依赖外部 viz 服务**
   （D52 的推广：两台仪器有这条前置）。)*
