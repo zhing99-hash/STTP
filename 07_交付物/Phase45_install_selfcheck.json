@@ -159,6 +159,7 @@
     }
   ],
   "notes": [
+    "【已冻结 · Phase52/E29】本文件为 **Phase 45 A05 当日** 的自检留痕（历史报告引用，**冻结**）。自 Phase 52（E29 收口）起 `bash sttp.sh install` **不再覆写本文件**，实时产物写入 `.runlog/install_selfcheck.json`（不入库）；理由：覆写被跟踪文件会让工作树变脏，从而掐死发布链（E21：脏 ⇒ `release` RC=2）。 实时产物：`.runlog/install_selfcheck.json`。",
     "文件枚举：git ls-files 入库 174 + 未跟踪 9 = 183 个 .py（已排除 07_交付物/外部评审）—— ★ 含未跟踪项，避免「提交前绿、提交后红」（E28）。",
     "ACK 未声明依赖 `playwright`：06_PoC/tests/a4_offline_render.py 的离线渲染试验；§0.1 / D14 明确「零第三方依赖 ⇒ 不装 Playwright / jsdom」⇒ **只登记不声明**，避免给第三人「受支持路径」的错觉。",
     "★ L1 通过**不代表** L2 可复现：二者前置条件不同，报告见 `sttp-repro-level`。"

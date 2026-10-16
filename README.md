@@ -86,10 +86,12 @@ bash sttp.sh export && bash sttp.sh release           # 许可自检 → 重建�
 
 | 命令 | 用途 |
 |---|---|
-| `bash sttp.sh release` | 构建离线样例 + 发布清单 + fail-closed 校验（**需完整图**；干净检出请直接复验 `verify_release.py --release`） |
+| `bash sttp.sh release` | 构建离线样例 + 发布清单 + fail-closed 校验（**需完整图**；干净检出请直接复验 `verify_release.py --release`）。★ 清单生成是**前置断言**：工作树脏 ⇒ **RC=2 且不出清单**（显式放行加 `--allow-dirty`） |
 | `bash sttp.sh sample` | 仅用离线样例起可视化（单命令、离线、同版本） |
-| `bash sttp.sh release-full` | 对完整快照跑全量校验（清单现算比对 + 主图 `--release` 门禁） |
+| `bash sttp.sh release-full` | 对完整快照跑全量校验（**洁净度前置断言** + 清单现算比对 + 主图 `--release` 门禁） |
 | `bash sttp.sh eval` | 科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检 |
+| `bash sttp.sh offline` | **断网渲染**端到端验证：拦截浏览器一切非本地请求，断言页面仍完整渲染（本地 vendor）；`--scenario cdn-fallback` 为反向对照 |
+| `bash sttp.sh names` | 改断言文件后核对**断言名字集合**（有删除 ⇒ **RC=1**）；`--selfcheck` 是它自己的自检 |
 | `bash sttp.sh gnneval` | 推理增量评测协议 v2：P1 关系留出补全 / P2 实体对发现 + 4 类基线对照 |
 | `bash sttp.sh dimaudit` | 量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据非真空自检 |
 | `bash sttp.sh lineage` | 证据血缘审计：来源登记（版本/哈希/血缘）+ 来源变更定位受影响断言 + 判据非真空自检 |

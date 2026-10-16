@@ -13,5 +13,8 @@
     "dom_alive": true
   },
   "blocked": [],
-  "external_refs": []
+  "external_refs": [],
+  "notes": [
+    "【已冻结 · Phase52/E29】本文件为**旧版**断网渲染脚本的留痕（历史报告引用，**冻结**），其 `nodes/edges` 取自前端 Phase 43 重构**之前**的快照口径，**已不代表现状**。自 Phase 52（D51/E29 收口）起`bash sttp.sh offline` 的实时产物写入 `.runlog/a4_offline_render.json`（不入库）。 实时产物：`.runlog/a4_offline_render.json`。"
+  ]
 }
