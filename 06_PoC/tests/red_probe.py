@@ -176,6 +176,18 @@ PROBES = [
         "requires": ["node"],
     },
     {
+        "id": "R9",
+        "kind": "mutate",
+        "why": "F42j（图例「发现年代」区块的**时间序**真的在工作）",
+        "file": "06_PoC/js/viz.js",
+        "old": "  const eraList = (eras || []).slice().sort((a, b) => eraSortKey(a) - eraSortKey(b));",
+        "new": "  const eraList = (eras || []).slice();",
+        "cmd": "NODE tests/frontend_core_check.mjs",
+        "cwd": POC,
+        "expect_red": ["F42j"],
+        "requires": ["node"],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -195,7 +207,7 @@ PROBES = [
 #   为什么两处都写死：`bash sttp.sh names` 的采集器取「第 2 个实参的**首个字符串常量**」
 #   （f-string 只在**开头是字面量**时可用）⇒ 断言名必须写成字面量才进得了名字集合。
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
-DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "RN")
+DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -434,6 +446,7 @@ def emit(rep, res):
     rep.add(res["R6"][0], "R6 viz 未跑 ⇒ taskflow 必须 RC=2 且自述前置（D56）", res["R6"][1])
     rep.add(res["R7"][0], "R7 core.js 分桶的 1900 边界改错 ⇒ F42a 必须变红", res["R7"][1])
     rep.add(res["R8"][0], "R8 详情面板对缺键也渲染 ⇒ F42f 必须变红", res["R8"][1])
+    rep.add(res["R9"][0], "R9 图例年代区块去掉时间序 ⇒ F42j 必须变红", res["R9"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

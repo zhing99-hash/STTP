@@ -343,8 +343,8 @@ export function createViz(opts = {}) {
   return api;
 }
 
-/** 图例：学科填充 / 类型形状 / 发现年代（分组标记）/ 边 type 颜色 / eoi 线型（只列**当前子图内出现**的，避免长列表） */
-export function buildLegend(el, { nodeTypes = [], edgeTypes = [], eras = [] } = {}) {
+/** 图例：学科填充 / 类型形状 / 发现年代（分组标记，含计数）/ 边 type 颜色 / eoi 线型（只列**当前子图内出现**的，避免长列表） */
+export function buildLegend(el, { nodeTypes = [], edgeTypes = [], eras = [], eraCounts = null } = {}) {
   if (!el) return;
   const shapeCss = (shape) => {
     // 只用 border-radius / clip-path 近似主要形状（图例是提示，不是精确渲染）
@@ -380,7 +380,8 @@ export function buildLegend(el, { nodeTypes = [], edgeTypes = [], eras = [] } = 
     parts.push('<div class="note">当前子图内没有带「发现年代」的节点。</div>');
   } else {
     eraList.forEach((e) => {
-      parts.push(`<div class="legend-item"><code>${esc(e)}</code></div>`);
+      const n = (eraCounts && Number.isFinite(eraCounts[e])) ? ` <span class="note">×${eraCounts[e]}</span>` : "";
+      parts.push(`<div class="legend-item"><code>${esc(e)}</code>${n}</div>`);
     });
   }
   parts.push('<div class="legend-item note">年代只作<b>分组标记</b>：不上色、不可点击、不参与筛选。'

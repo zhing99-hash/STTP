@@ -33,6 +33,7 @@ import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
          evidenceStatusBadge, EDGE_TYPE_COLOR } from "../js/style.js";
 import { renderEdgeDetail, renderNodeDetail } from "../js/evidence.js";
+import { buildLegend } from "../js/viz.js";
 import { renderCardsHTML, renderCandidatesHTML, CANDIDATE_LIMIT } from "../js/task.js";
 
 let pass = 0, fail = 0;
@@ -1460,6 +1461,17 @@ check("F42g 有值时四行齐全，且「发现时间」附带年代桶标签�
       && _n84.innerHTML.includes("使用描述"), "");
 check("F42h 元数据依据（meta_source）可见 —— 「有值必有据」必须摆在读者面前",
       _n84.innerHTML.includes("元数据依据") && _n84.innerHTML.includes("Principia"), "");
+
+// —— 图例区块：只读「分组标记」，且必须**按时间序 + 带计数** ——
+const _lg = fakeEl();
+buildLegend(_lg, { nodeTypes: ["Formula"], edgeTypes: [],
+  eras: ["暂无", "1900–1909", "17 世纪"],
+  eraCounts: { "17 世纪": 3, "1900–1909": 1, "暂无": 4 } });
+check("F42j 图例「发现年代」区块按时间序 + 带计数，并明说「不可点击、不参与筛选」",
+      _lg.innerHTML.indexOf("17 世纪") < _lg.innerHTML.indexOf("1900–1909")
+      && _lg.innerHTML.indexOf("1900–1909") < _lg.innerHTML.indexOf("暂无")
+      && _lg.innerHTML.includes("×3") && _lg.innerHTML.includes("不参与筛选"),
+      "乱序传入也须按时间序渲染（排序发生在 buildLegend 内部）");
 
 
 // ---------------------------------------------------------------------------

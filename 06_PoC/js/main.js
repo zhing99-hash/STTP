@@ -134,9 +134,14 @@ function refreshLegend() {
   const nodeTypes = Array.from(new Set(state.viz.cy.nodes().map((n) => n.data("type")))).sort();
   // ★ Phase 54：当前子图内**实际出现**的发现年代桶，按时间序（跨公元前后单调）。
   //   纯展示 —— 用户决策「不参与筛选」⇒ 这里既不生成控件，也不改变任何查询参数。
-  const eras = Array.from(new Set(state.viz.cy.nodes().map((n) => n.data("era")).filter(Boolean)))
-    .sort((a, b) => eraSortKey(a) - eraSortKey(b));
-  buildLegend($("legend"), { edgeTypes: types, nodeTypes, eras });
+  //   计数只统计**当前已在画布上**的节点（随增量子图自然刷新，不是全图统计）。
+  const eraCounts = {};
+  state.viz.cy.nodes().forEach((n) => {
+    const e = n.data("era");
+    if (e) eraCounts[e] = (eraCounts[e] || 0) + 1;
+  });
+  const eras = Object.keys(eraCounts).sort((a, b) => eraSortKey(a) - eraSortKey(b));
+  buildLegend($("legend"), { edgeTypes: types, nodeTypes, eras, eraCounts });
   if (state.panel) {
     const kinds = Array.from(new Set(state.viz.cy.edges().map((e) => e.data("kind")))).sort();
     state.panel.setKindHints(kinds);
