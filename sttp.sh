@@ -97,7 +97,9 @@ require_authority() {   # 用法: require_authority <命令名> <相对路径>..
     echo "  干净检出里**可运行**的替代验证："
     echo "        - bash sttp.sh frontend        （可运行；缺图处记 SKIP 而**不假通过**）"
     echo "        - bash sttp.sh check           （环境自检）"
-    echo "        - $PY 06_PoC/release/verify_release.py --release   （29/0/0，RC=0）"
+    # ★ 计数订正（2026-10-16）：Phase 55 新增 G4（门禁缺依赖 SKIP 须自述解释器）⇒ 29 → 30 条。
+    #   按 E43「上一轮记下的数字不得直接当现在用」，此处描述的是**当下的行为** ⇒ 必须跟着改。
+    echo "        - $PY 06_PoC/release/verify_release.py --release   （30/0/0，RC=0）"
     echo ""
   } >&2
   exit 2
