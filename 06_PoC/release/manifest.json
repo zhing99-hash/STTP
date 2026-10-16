@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "e5f807a4b4db99567210ac2029c0dc3ac6462e7c",
-  "git_head_at_build_short": "e5f807a",
+  "git_head_at_build": "91247b9a276a887cc460d9fa74af6225b22b5ec5",
+  "git_head_at_build_short": "91247b9",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -663,7 +663,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-16T14:31:58+08:00",
+  "created": "2026-10-16T15:24:22+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
