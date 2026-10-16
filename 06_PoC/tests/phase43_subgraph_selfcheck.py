@@ -443,6 +443,23 @@ def main(argv=None) -> int:
             "V5b 换一份图 ⇒ snapshot_id 变（且等于该图哈希）",
             "%s vs %s" % (got, s_other))
 
+    # V5c/V5d ★ Phase 52（D42）：让「复现校验」这条契约条款**真的被验证**。
+    #   背景：后端早就实现「请求的 snapshot_id ≠ 当前查询源 ⇒ SNAPSHOT_MISMATCH」，
+    #   但**前端从不发送**该参数 ⇒ 这条分支在任何真实链路里都走不到，
+    #   等于契约里写了一条没人用的条款（页面数据与查询源不是同一份时会静默按新图作答）。
+    #   本轮前端开始发送它（`core.buildParams` + `Api.subgraph`），故这里补上**两侧**：
+    #     ① 不符 ⇒ 必须**拒绝**（否则"校验"只是装饰）；
+    #     ② 相符 ⇒ 必须**放行**（否则"拒绝"可能只是恒拒，负对照缺失 —— 铁律 #75）。
+    c, r_bad = http_get(port, "/api/subgraph" + q(seeds="MX:def:manifold",
+                                                  snapshot_id="sha256:000000000000"))
+    rep.add(r_bad.get("status") == "error" and r_bad.get("error_code") == "SNAPSHOT_MISMATCH",
+            "V5c 请求带**不符**的 snapshot_id ⇒ SNAPSHOT_MISMATCH（校验真会拒）",
+            "%s / %s" % (r_bad.get("status"), r_bad.get("error_code")))
+    c, r_ok = http_get(port, "/api/subgraph" + q(seeds="MX:def:manifold", snapshot_id=got))
+    rep.add(r_ok.get("status") in ("ok", "truncated") and r_ok.get("error_code") is None,
+            "V5d 请求带**相符**的 snapshot_id ⇒ 正常放行（证明 V5c 不是恒拒）",
+            "%s" % r_ok.get("status"))
+
     # ---------- V6 证据来源身份齐全 ----------
     print("\n[V6] 子图边证据含 src/src_ver/src_hash/impl_ver")
     c, r = http_get(port, "/api/subgraph" + q(seeds="MX:def:manifold", mode="ego", hops=2))

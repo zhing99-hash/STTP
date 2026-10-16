@@ -1113,6 +1113,43 @@ check("F37g `backend_params_not_emitted` 每项都写了理由（不得只列名
       NOT_EMITTED.join(","));
 
 // ---------------------------------------------------------------------------
+// F38 端点契约 ↔ 序列化（Phase 52 新增两项：D42 `snapshot_id` / D54 端点预算）
+// ---------------------------------------------------------------------------
+// ★ 两条都是"契约里写了、前端却没用"的同族缺陷（铁律 #85）：条款存在但不被执行。
+//   `snapshot_id` 更极端 —— 后端那条 `SNAPSHOT_MISMATCH` 分支此前**在任何真实链路里
+//   都走不到**，因为前端从不发这个参数。
+
+// F37h：`snapshot_id` 必须真的被序列化（断言的是**真正会发出去的参数对象**）
+const f37hSent = C.buildParams({ mode: "ego", seeds: "MX:def:manifold",
+                                 snapshot_id: "sha256:0123456789ab" });
+check("F37h buildParams 输出 snapshot_id（D42：后端复现校验分支须真被执行）",
+      f37hSent.snapshot_id === "sha256:0123456789ab", JSON.stringify(f37hSent));
+
+// F37i：空值**不得**进入查询串（`snapshot_id=` 这种空键会污染 URL 与日志）
+check("F37i 空 snapshot_id 不进查询串（空值键必须缺席）",
+      C.buildParams({ mode: "ego", seeds: "x", snapshot_id: "" }).snapshot_id === undefined,
+      "ok");
+
+// F37j：`snapshot_id` 不进本地签名（与后端 `_qhash(params)` 的 params 不含它同口径）
+check("F37j HASH_EXCLUDED_KEYS 含 snapshot_id（与后端 query_hash 口径一致）",
+      C.HASH_EXCLUDED_KEYS.indexOf("snapshot_id") >= 0, C.HASH_EXCLUDED_KEYS.join(","));
+
+// F37k：端点客户端预算 == 契约 `client_budget_ms`（D54 残余：不再散落硬编码）
+const f37kGap = [];
+if (epContract && epContract.endpoints) {
+  Object.keys(C.ENDPOINT_CLIENT_BUDGET_MS).forEach((k) => {
+    const ep = epContract.endpoints["/api/" + k] || {};
+    if (ep.client_budget_ms !== C.ENDPOINT_CLIENT_BUDGET_MS[k]) {
+      f37kGap.push(`${k}: 前端 ${C.ENDPOINT_CLIENT_BUDGET_MS[k]} ≠ 契约 ${ep.client_budget_ms}`);
+    }
+  });
+} else {
+  f37kGap.push("端点契约未读到");
+}
+check("F37k 端点客户端预算 == 契约 client_budget_ms（D54：偶然相等 → 已声明契约）",
+      f37kGap.length === 0, f37kGap.join("；") || "search/overview 逐值相等");
+
+// ---------------------------------------------------------------------------
 // F38 任务式入口的纯逻辑（卡片 / 范围 / 请求构造 / 候选）
 // ---------------------------------------------------------------------------
 const CARDS = C.TASK_CARDS;

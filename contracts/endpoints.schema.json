@@ -21,7 +21,8 @@
       },
       "frontend_uses": ["q", "types", "subject", "limit"],
       "frontend_must_not_send": ["mode", "seeds", "hops", "src", "dst", "subjects"],
-      "note": "★ 本端点的学科参数是**单数** `subject`，且 `types` 被当作 node_types 使用（历史命名，实测确认）。"
+      "client_budget_ms": 3000,
+      "note": "★ 本端点的学科参数是**单数** `subject`，且 `types` 被当作 node_types 使用（历史命名，实测确认）。★ 本端点**不读** `deadline_ms`（它不做 deadline 预算）⇒ 前端的等待预算是**纯客户端**常量，登记在此（与 `06_PoC/js/core.js` 的 `ENDPOINT_CLIENT_BUDGET_MS.search` **逐值相等**，断言 X16g 钉住；此前它在 api.js 里硬编码，与契约毫无联系）。"
     },
     "/api/subgraph": {
       "handler": "_api_subgraph",
@@ -53,10 +54,11 @@
       "frontend_uses": [
         "mode", "seeds", "hops", "max_hops", "types", "kinds", "node_types", "subjects",
         "trust", "min_confidence", "exclude_model_inferred", "exclude_stale",
-        "max_nodes", "max_edges", "deadline_ms", "max_paths", "session_id", "reset", "expand_token"
+        "max_nodes", "max_edges", "deadline_ms", "max_paths", "session_id", "reset",
+        "snapshot_id", "expand_token"
       ],
       "frontend_must_not_send": ["q", "src", "dst", "subject"],
-      "note": "★ `mode=path` 只认 `seeds`（需 2 个）。把 `src`/`dst` 发到本端点＝**端点读不到**（旧前端 bug，P0-4）：实测返回 no_result「path 模式需要 2 个存在的种子」。`/api/path` 才是读 src/dst 的 legacy 端点。"
+      "note": "★ `mode=path` 只认 `seeds`（需 2 个）。把 `src`/`dst` 发到本端点＝**端点读不到**（旧前端 bug，P0-4）：实测返回 no_result「path 模式需要 2 个存在的种子」。`/api/path` 才是读 src/dst 的 legacy 端点。★ `snapshot_id` 自 Phase 52（D42）起由前端发送：前端从任一响应里**学到**快照 id，后续请求带上；不符即 `SNAPSHOT_MISMATCH`（此前前端从不发它 ⇒ 后端那条校验分支永远走不到，等于契约里写了没人用的条款）。"
     },
     "/api/overview": {
       "handler": "_api_overview",
@@ -67,7 +69,9 @@
         "k": "int"
       },
       "frontend_uses": ["mode"],
-      "frontend_must_not_send": []
+      "frontend_must_not_send": [],
+      "client_budget_ms": 5000,
+      "note": "★ 与 `/api/search` 同族：不接受 `deadline_ms` ⇒ 外层等待预算是**纯客户端**常量，登记在此（与前端 `ENDPOINT_CLIENT_BUDGET_MS.overview` 逐值相等，X16g 钉住）。"
     },
     "/api/path": {
       "handler": "_api_path",
@@ -120,7 +124,6 @@
   },
   "backend_params_not_emitted": {
     "query": "一步直达参数（`query=` 先搜首个命中当 seed）。前端**有意不用**：首屏设计要求「先返回候选、用户确认实体后再查」，用它等于让自然语言歧义直接决定查询对象。",
-    "snapshot_id": "复现校验用（不符即 SNAPSHOT_MISMATCH）。前端当前未发 —— 列为**待补**（Phase 50 候选），不是静默丢失。",
     "node": "仅 legacy `/api/neighbors` 读取，前端已改用 `/api/subgraph`。",
     "k": "`/api/overview` 的聚合上限，前端使用默认值 300。"
   }

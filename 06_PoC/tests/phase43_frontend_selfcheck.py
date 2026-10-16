@@ -767,6 +767,56 @@ def main(argv=None):
         else:
             rep.skip("X16f legacy 默认值声明", "契约缺 legacy_defaults 或未解析到 `_api_path` 处理体")
 
+        # ---- X16g：端点声明的**客户端等待预算** == 前端常量（Phase 52 · D54 残余收敛）----
+        #   `/api/search` 与 `/api/overview` **不接受** `deadline_ms`（不做 deadline 预算）
+        #   ⇒ 前端的等待预算只能是**纯客户端**常量。此前它们各自硬编码在 `api.js` 里
+        #   （search 3000 / overview 5000），与端点契约**毫无联系** —— 契约改了那边不知道，
+        #   改这边也没人知道。现在收敛为：契约声明 → 前端转录 → 此处逐值求差。
+        #   ★ 与 X4a/X4b 同族（都是"两处各写一套会静默漂移"），对象是**客户端**预算；
+        #     与 X16f 同法（把"偶然相等"变成"已声明契约"）。
+        try:
+            _core = read(os.path.join(POC, "js", "core.js"))
+            _m = re.search(r"export\s+const\s+ENDPOINT_CLIENT_BUDGET_MS\s*=\s*"
+                           r"Object\.freeze\(\{([\s\S]*?)\}\);", _core)
+            if not _m:
+                # 声明不存在 ⇒ 明确 SKIP，不得静默算过（铁律 #20：缺依赖不得假通过）
+                rep.skip("X16g 端点客户端预算同源",
+                         "core.js 未见 `ENDPOINT_CLIENT_BUDGET_MS` 冻结对象")
+            else:
+                _blk = _m.group(1)
+                # 前端常量块逐项（`key: 数字`）。★ 键为**短名**（search/overview），
+                #   而 `eps` 的键是**全路径**（/api/search）—— 上一版直接拿全路径
+                #   去匹配短名块，必然取不到 ⇒ 报「前端 None」。此处按约定派生短名。
+                _fe = {_g.group(1): int(_g.group(2))
+                       for _g in re.finditer(r"([A-Za-z_$][\w$]*)\s*:\s*([0-9]+)", _blk)}
+                # 端点路径 → 短名：从**事实源自身**按 `/api/<name>` 派生，
+                #   不硬编码映射表（铁律 #88：枚举须派生自事实源）
+                _want, _offname = {}, []
+                for _k, _v in eps.items():
+                    if not (isinstance(_v, dict) and "client_budget_ms" in _v):
+                        continue
+                    if not _k.startswith("/api/"):
+                        _offname.append(_k)
+                        continue
+                    _want[_k[len("/api/"):]] = _v.get("client_budget_ms")
+                _bad = []
+                for _k, _v in _want.items():
+                    _got = _fe.get(_k)
+                    if _got != _v:
+                        _bad.append(f"{_k}: 前端 {_got} ≠ 契约 {_v}")
+                # 反向断言（铁律 #88 配套）：前端不得留契约未声明的残余预算键
+                _extra = sorted(set(_fe) - set(_want))
+                if _extra:
+                    _bad.append("前端多出契约未声明的预算键：" + "、".join(_extra))
+                rep.add(bool(_want) and not _offname and not _bad,
+                        "X16g 端点客户端预算 == 契约 client_budget_ms（逐值 + 反向；D54 残余）",
+                        ("；".join(_bad) if _bad
+                         else (f"契约端点命名不符 `/api/<name>` 约定：{_offname}"
+                               if _offname else ""))
+                        or "、".join(f"{k}={v}" for k, v in sorted(_want.items())))
+        except Exception as e:  # noqa: BLE001
+            rep.skip("X16g 端点客户端预算同源", f"解析失败：{e}")
+
     # ---------------------------------------------------------------- N 段
     rep.section("[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）")
     node = find_node()

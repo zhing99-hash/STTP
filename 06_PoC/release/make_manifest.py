@@ -199,13 +199,67 @@ def run_tool_stdout(base_cmd, timeout=900):
         return None
 
 
+def dirty_report(allow_flag: bool):
+    """统一判定「构建时工作树是否干净」—— **唯一实现**（Phase 52 · E21 残余）。
+
+    ★ 为什么收敛到一处：`sttp.sh` 的 `release`（生成清单）与 `release-full`（校验发布链）
+      都需要这道判定。若两边各写一套「什么算脏」，就会重演铁律 #92 的形态 ——
+      **两处各自都对，合起来是缝**。故判定与「排除清单自身」这条口径只保留一份，
+      `release-full` 经 `--check-dirty` 复用（sttp.sh 只负责传播退出码，铁律 #62）。
+
+    返回 `(porcelain, allow_dirty, dirty)`。
+    脏检查**排除本清单自身**：否则「生成清单 → 工作区脏 → 再提交 → 又脏」形成循环，
+    每次生成的 `working_tree_dirty` 都恒为真。清单不参与「被描述的工作区」判定。
+    """
+    env_allow = str(os.environ.get("STTP_ALLOW_DIRTY", "")).strip().lower()
+    allow_dirty = bool(allow_flag) or env_allow in ("1", "true", "yes", "on")
+    porcelain = [ln for ln in git("status", "--porcelain").splitlines()
+                 if "06_PoC/release/manifest.json" not in ln]
+    return porcelain, allow_dirty, bool(porcelain)
+
+
+def print_dirty_refusal(porcelain):
+    print("=" * 70)
+    print("[拒绝] 构建时工作树不干净 —— 发布链按**前置断言**处理（E21，fail-closed）")
+    print("  `git status --porcelain` 报告 %d 项（已排除清单自身）：" % len(porcelain))
+    for ln in porcelain[:10]:
+        print("    %s" % ln)
+    if len(porcelain) > 10:
+        print("    …（其余 %d 项略）" % (len(porcelain) - 10))
+    print("  正确次序：① 提交代码/文档 → ② 清空未跟踪项 → ③ bash sttp.sh release")
+    print("            → ④ 提交 release/manifest.json（此时清单才是「干净树口径」）")
+    print("  若确要在脏树上生成（仅限本地排查），显式加 --allow-dirty（清单会记 dirty_sample）。")
+    print("=" * 70)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="STTP 发布清单生成器（Phase 37 R06）")
     ap.add_argument("--snapshot", default=None, help="完整快照路径（默认取 .env GRAPH_DATA_FILE）")
     ap.add_argument("--no-stats", action="store_true", help="跳过仪器现算（快照统计记 null）")
     ap.add_argument("--pack", action="store_true", help="把完整快照打包到 dist/ 并记录校验和")
+    ap.add_argument("--allow-dirty", action="store_true",
+                    help="显式放行「脏树」（默认 fail-closed：脏 ⇒ RC=2 且不写清单，E21）。"
+                         "也可用环境变量 STTP_ALLOW_DIRTY=1。")
+    ap.add_argument("--check-dirty", action="store_true",
+                    help="**只做**洁净度前置断言、不生成清单：干净 RC=0 / 脏 RC=2。"
+                         "供 `sttp.sh release-full` 复用同一判定（E21 残余）。")
     ap.add_argument("--out", default=MANIFEST)
     a = ap.parse_args(argv)
+
+    # ---- 洁净度前置断言（唯一实现；E21 残余）----
+    porcelain, allow_dirty, dirty = dirty_report(a.allow_dirty)
+    if a.check_dirty:
+        if dirty and not allow_dirty:
+            print_dirty_refusal(porcelain)
+            return 2
+        if dirty:
+            # ★ 放行也要**说清放行了什么**：不得打印「工作树干净」（那是不实陈述，
+            #   与「脏即拒绝」同属"如实"的一部分）
+            print("[洁净度] 工作树**不干净**（%d 项，已排除 release/manifest.json 自身）"
+                  "—— `--allow-dirty`/`STTP_ALLOW_DIRTY=1` 显式放行" % len(porcelain))
+        else:
+            print("[洁净度] 工作树干净（已排除 release/manifest.json 自身）")
+        return 0
 
     py = sys.executable
     created = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
@@ -337,11 +391,18 @@ def main(argv=None) -> int:
             f.write("%s  %s\n" % (packed["sha256"], name))
 
     # ---------------- assemble ----------------
-    # 脏检查**排除本清单自身**：否则「生成清单 → 工作区脏 → 再提交 → 又脏」形成循环，
-    # 每次生成的 working_tree_dirty 都恒为真。清单不参与「被描述的工作区」判定。
-    porcelain = [ln for ln in git("status", "--porcelain").splitlines()
-                 if "06_PoC/release/manifest.json" not in ln]
-    dirty = bool(porcelain)
+    # 工作树洁净度：**前置断言**（Phase 52 · E21）
+    # ★ 原实现把 `git status --porcelain` 的结果**如实记进** `dirty_sample`，
+    #   等于承认「构建时工作树可以是脏的」。但发布链的正确次序是
+    #   「先提交代码/文档 → 清空未跟踪项 → 再 release」（Phase 51 实测复现两次）；
+    #   若此时仍脏，那是**异常**，应当**拒绝出清单**，而不是把未跟踪项记成一句说明。
+    #   更深一层：`git status` 本身不是可信事实源（铁律 #72）⇒ 更不该把它当成"事实"入库。
+    # ⇒ 默认 fail-closed：脏 ⇒ RC=2 且**不写清单**；`--allow-dirty`（或 STTP_ALLOW_DIRTY=1）
+    #   显式放行时才记录，并把这次放行**声明**在清单里（不得静默）。
+    # ★ 判定本身已上移到 `dirty_report()`（唯一实现），此处只消费结果。
+    if dirty and not allow_dirty:
+        print_dirty_refusal(porcelain)
+        return 2
     manifest = {
         "schema": "sttp-release-manifest/v1",
         "release": {
@@ -360,8 +421,11 @@ def main(argv=None) -> int:
             "git_head_at_build_short": git("rev-parse", "--short", "HEAD"),
             "git_branch": git("rev-parse", "--abbrev-ref", "HEAD"),
             "working_tree_dirty_at_build": dirty,
+            "dirty_declared_by_flag": bool(dirty and allow_dirty),
             "authority_note": ("产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述"
-                               "清单生成时刻的仓库上下文（发布提交为其后继）。"),
+                               "清单生成时刻的仓库上下文（发布提交为其后继）。"
+                               "★ E21：工作树洁净度是**前置断言** —— 默认「脏即 RC=2、不出清单」；"
+                               "`dirty_declared_by_flag=true` 表示这次是显式 --allow-dirty 放行的。"),
             "dirty_sample": porcelain[:8],
         },
         "build": {

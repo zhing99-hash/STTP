@@ -226,8 +226,13 @@ export function statusStyle(raw) {
 // 参数规范化
 // ---------------------------------------------------------------------------
 
-/** 这些键**不参与** `query_hash`（与后端 `viz_server._qhash` 的剔除口径一致）。 */
-export const HASH_EXCLUDED_KEYS = Object.freeze(["session_id", "reset", "expand_token"]);
+/**
+ * 这些键**不参与** `query_hash`（与后端 `viz_server._qhash` 的剔除口径一致）。
+ * ★ `snapshot_id`（Phase 52 · D42）：后端 `_api_subgraph` 先把它单独取走做**复现校验**，
+ *   再对**不含它**的 `params` 求 `_qhash` ⇒ 前端本地签名也必须排除，否则
+ *   「同一份 UI 状态」在两侧算出不同签名（跨层口径漂移，铁律 #40）。
+ */
+export const HASH_EXCLUDED_KEYS = Object.freeze(["session_id", "reset", "expand_token", "snapshot_id"]);
 
 /**
  * ★ 默认预算（Phase 49 收敛）：**40 节点 / 70 边 / 2 跳 / 10 s / 5 条路径**。
@@ -330,6 +335,14 @@ export function buildParams(opts = {}) {
   if (o.session_id) put("session_id", o.session_id);
   if (o.reset) put("reset", "1");
   if (o.expand_token) put("expand_token", o.expand_token);
+  // ★ Phase 52（D42）：`snapshot_id` —— 后端 `/api/subgraph` 用它做**复现校验**
+  //   （不符即 `SNAPSHOT_MISMATCH`）。此前前端**从不发送**它 ⇒ 契约里登记的校验分支
+  //   永远走不到，等于「写了没人用的条款」：页面数据与查询源不是同一份时，
+  //   系统会**静默按新图回答**（把「两套数据混用」伪装成正常结果）。
+  //   ★ 只有 `/api/subgraph` 读它：`/api/search`、`/api/overview` **不读** ⇒
+  //     注入点只在 `Api.subgraph()`（不放别的端点），避免制造噪声参数（F37c 方向B）。
+  //     断言：F38a（序列化真的含它）＋ V5c/V5d（后端真的会因它拒绝 / 相符时放行）。
+  put("snapshot_id", o.snapshot_id);
 
   // 键排序 ⇒ 序列化确定（同一 UI 状态必得同一字符串）
   const sorted = {};
@@ -653,6 +666,24 @@ export const MODE_BADGE = Object.freeze({
 // ---------------------------------------------------------------------------
 // 客户端等待预算（★ **不得**比服务端更早放弃）
 // ---------------------------------------------------------------------------
+
+/**
+ * 各端点的**客户端等待预算**（毫秒）—— 与 `contracts/endpoints.schema.json` 的
+ * `client_budget_ms` **逐值相等**（断言 X16g 钉住）。
+ *
+ * ★ 为什么要有这张表（Phase 52 · D54 残余收敛）：`/api/search` 与 `/api/overview`
+ *   **不接受** `deadline_ms`（它们不做 deadline 预算）⇒ 前端的等待预算只能是
+ *   **纯客户端**常量。此前它们各自硬编码在 `api.js` 里（`search` 3000 / `overview` 5000），
+ *   与端点契约**毫无联系** —— 契约改了那边不知道，改这里也没人知道。
+ *   现在收敛为「契约声明 → 本表转录 → 断言逐值相等」，把「偶然相等」变成「已声明契约」。
+ * ★ `/api/subgraph` **不在**本表：它的预算由**请求自己的** `deadline_ms` 派生
+ *   （见 `clientBudgetMs`；D53：「不得比服务端更早放弃」）。
+ * ★ `/api/healthz` 的 5000 也不在此处 —— 探活语义不同，由 `Api.probe()` 就地给出。
+ */
+export const ENDPOINT_CLIENT_BUDGET_MS = Object.freeze({
+  search: 3000,
+  overview: 5000,
+});
 
 /** 客户端等待预算相对服务端 `deadline_ms` 的默认余量（毫秒）。 */
 export const CLIENT_MARGIN_MS = 4000;

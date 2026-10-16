@@ -27,7 +27,7 @@
 
 import {
   ENDPOINTS, BUNDLE_MAX_BYTES, buildParams, toQueryString, statusStyle,
-  clientBudgetMs, CLIENT_MARGIN_MS, BUDGET,
+  clientBudgetMs, CLIENT_MARGIN_MS, BUDGET, ENDPOINT_CLIENT_BUDGET_MS,
 } from "./core.js";
 
 export class ApiError extends Error {
@@ -109,6 +109,17 @@ export class Api {
     this.last = null;
     /** 最近一次 `/api/subgraph` 的**客户端等待预算**（供真浏览器验收断言 B4k） */
     this.lastBudgetMs = null;
+    /**
+     * 当前已知的**图快照 id**（Phase 52 · D42）—— 从任一响应的 `snapshot_id` 学到。
+     *
+     * ★ 为什么需要它：后端 `/api/subgraph` 早已支持「请求的 `snapshot_id` ≠ 当前查询源
+     *   ⇒ 返回 `SNAPSHOT_MISMATCH`」，但前端**从不发送** ⇒ 那条校验分支永远走不到。
+     *   后果不是"少一个功能"，而是**页面数据与查询源不是同一份时会静默按新图作答**
+     *   （把两套数据混用伪装成正常结果，铁律 #52：验证的命题须与被发布的命题一致）。
+     * ★ 学习而非硬编码：值随快照变化，只有后端知道当前值（`/api/healthz` 与 `/api/stats`
+     *   都在响应里带它）。
+     */
+    this.snapshotId = null;
   }
 
   _url(path, params) {
@@ -203,6 +214,9 @@ export class Api {
       const env = normalizeEnvelope(body || {});
       env.http = res.status;
       env.http_status = res.status;
+      // ★ D42：从响应里**学到**当前快照 id（`/api/healthz`、`/api/stats`、`/api/subgraph`
+      //   都会带）。只在非空时覆盖 —— 不清掉已知值，避免"某端点没返回它"把状态打回未知。
+      if (env.snapshot_id) this.snapshotId = env.snapshot_id;
       return env;
     } catch (e) {
       const ms = elapsed();
@@ -293,12 +307,19 @@ export class Api {
   search(q, opts = {}) {
     const p = buildParams({ q, types: opts.types, subject: opts.subject,
                             limit: opts.limit || 20, mode: null });
-    return this._get(ENDPOINTS.search, p, { deadlineMs: opts.deadlineMs || 3000 });
+    // ★ D54 残余收敛：预算取自 `ENDPOINT_CLIENT_BUDGET_MS.search`（= 契约 `client_budget_ms`，
+    //   由 X16g 逐值钉住），不再就地写 3000。
+    return this._get(ENDPOINTS.search, p,
+      { deadlineMs: opts.deadlineMs || ENDPOINT_CLIENT_BUDGET_MS.search });
   }
 
   /** GET /api/subgraph —— 三模式（ego / path / filter） */
   subgraph(opts = {}) {
-    const p = buildParams(opts);
+    // ★ D42：带上**已知快照 id**，让后端的复现校验真的被执行（不符即 SNAPSHOT_MISMATCH）。
+    //   显式传 `snapshot_id: null`（或空串）可抑制 —— `buildParams` 对空值不输出该键。
+    const withSnap = (this.snapshotId && opts.snapshot_id == null)
+      ? { ...opts, snapshot_id: this.snapshotId } : opts;
+    const p = buildParams(withSnap);
     // ★ Phase 51（D53）：预算由**请求自己的 `deadline_ms`** 派生，不再用固定 3 s。
     //   固定 3 s 会让客户端比服务端（默认 10 s）**早 7 s 放弃** —— 空闲时看不出来、
     //   机器一忙就必现，后端本来会给出的答案被当成"失败"。
@@ -316,7 +337,9 @@ export class Api {
   /** GET /api/overview */
   overview(opts = {}) {
     const p = buildParams(opts);
-    return this._get(ENDPOINTS.overview, p, { deadlineMs: opts.deadlineMs || 5000 });
+    // ★ 同 `search()`：预算取自契约（X16g 钉住），不再就地写 5000。
+    return this._get(ENDPOINTS.overview, p,
+      { deadlineMs: opts.deadlineMs || ENDPOINT_CLIENT_BUDGET_MS.overview });
   }
 
   /** GET /graph_data.json —— **仅** bundle 模式调用（验收 V1 断言的静态面） */

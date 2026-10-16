@@ -30,9 +30,10 @@
 #   bash sttp.sh mnxrecov                           MetaNetX 对 Rhea 反应覆盖率现算（Phase 35，只读）
 #   bash sttp.sh reach35                            第二源可达性穷举侦察（Phase 35，只读）
 #   bash sttp.sh rescope                            验证语义校正 delta（Phase 36，GPT6 复评 R03/R04/R05；默认 dry-run）
-#   bash sttp.sh release                            构建可复现发布包（样例 + 清单 + fail-closed 校验，Phase 37 R06）
+#   bash sttp.sh release [--allow-dirty]            构建可复现发布包（样例 + 清单 + fail-closed 校验，Phase 37 R06）
+#                                                   ★ E21：工作树脏 ⇒ RC=2 且**不出清单**（--allow-dirty 显式放行）
 #   bash sttp.sh sample [--port N]                  只用**离线样例**起可视化（页面与查询同版本，单命令）
-#   bash sttp.sh release-full                       对完整快照跑全量发布校验（--release 门禁 + manifest 现算比对）
+#   bash sttp.sh release-full [--allow-dirty]       对完整快照跑全量发布校验（洁净度前置断言 + --release 门禁 + manifest 现算比对）
 #   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
 #   bash sttp.sh gnneval [--gnn-seeds 1,2]           推理增量评测协议 v2：P1/P2 + 基线对照 + 种子方差（Phase 39 R11续）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
@@ -43,6 +44,7 @@
 #   bash sttp.sh install                            第三人可安装入口自检：元数据/解释器约束分离/依赖声明覆盖/无原机路径/入口/两级可复现/离线 wheel（Phase 45 A05）
 #   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
 #   bash sttp.sh taskflow [--url U] [--headed]      任务式首屏**真浏览器**端到端验收：问题→候选→确认实体→生成图→改查询（Phase 51；需 viz 在跑 + 可选 Playwright）
+#   bash sttp.sh offline [--scenario cdn-fallback]  A4 **断网渲染**端到端验证：CDN 全不可达时页面仍能渲染（Phase 52 收口；需 viz 在跑 + 可选 Playwright）
 #   bash sttp.sh names <旧文件> <新文件> [--pair 旧:新]  断言**名字集合**比对（铁律 #87：只看总数会漏掉"加 2 删 1"）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
@@ -258,20 +260,38 @@ EOF
   gatecheck)
     # 门禁「非真空」自检：注入已知假边，断言不变量真的会红（铁律 #14）
     shift
+    # ★ Phase 52 收口：把「断言名字集合核对工具」（`names`）的自检也挂在这里。
+    #   动机与 D51 同族 —— **没有目标就没有人会跑它**：`assert_name_diff.py` 是铁律 #87
+    #   的执法工具，但它自身一直没有断言覆盖（"谁来核对核对器"）。
+    #   ★ 它**不依赖权威图** ⇒ 刻意放在 require_authority **之前**：干净检出里也能跑，
+    #     而不是被守卫一并挡成 RC=2（真实原因只有"缺图"，不该掩盖"自检从未执行"）。
+    echo "== [0/1] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
+    "$PY" 06_PoC/tests/assert_name_diff.py --selfcheck || exit $?
     require_authority gatecheck "$NORM_GRAPH"
+    echo "== [1/1] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
     "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
     ;;
   release)
     # Phase 37（R06）：可复现发布包 = 离线样例 → 发布清单 → fail-closed 校验。
     # 全流程幂等；任一步失败即非零退出（验证样例可与页面/查询同版本独立运行）。
     # 额外参数（如 --node-cap N）原样透传给采样器。
+    # ★ Phase 52（E21）：工作树洁净度在清单生成器里是**前置断言** —— 默认「脏即 RC=2」。
+    #   `--allow-dirty` 只作用于清单生成器（其余参数仍透传给采样器），语义是"显式放行"。
     shift
     set -e
+    _ms_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--allow-dirty" ]; then
+        export STTP_ALLOW_DIRTY=1
+      else
+        _ms_args+=("$_a")
+      fi
+    done
     echo "== [0/4] 许可判据非真空自检（A03：合成图注入 ⇒ 白名单必须真剔除）=="
     "$PY" 06_PoC/release/make_sample.py --selfcheck
     echo "== [1/4] 构建离线样例（public_demo：只打包可再分发内容）=="
-    "$PY" 06_PoC/release/make_sample.py "$@"
-    echo "== [2/4] 生成发布清单 =="
+    "$PY" 06_PoC/release/make_sample.py ${_ms_args[@]+"${_ms_args[@]}"}
+    echo "== [2/4] 生成发布清单（洁净度＝前置断言 E21）=="
     "$PY" 06_PoC/release/make_manifest.py
     echo "== [3/4] 发布校验（fail-closed）=="
     "$PY" 06_PoC/release/verify_release.py --release
@@ -297,10 +317,26 @@ EOF
     # 对完整快照（不入库）跑全量校验：manifest 现算比对（含规范图哈希）+ 主图 fail-closed 门禁。
     # ★ 铁律 #62：发布链必须 fail-closed 且**逐项传递退出码**（任一步非零 ⇒ 整体非零）；
     #   不得让后一步的通过掩盖前一步的失败。
+    # ★ Phase 52（E21 残余）：洁净度前置断言**同样适用于校验侧**。
+    #   实测缺口：`release`（生成）脏 ⇒ RC=2 拒绝出清单，而 `release-full`（校验）脏 ⇒ **RC=0 全绿**
+    #   （31 条 + 108 条）—— 同一条发布链，一个 fail-closed、一个对同样的脏树完全放行。
+    #   这正是铁律 #92 的形态（两处各自都对、合起来是缝）：读 `release-full` 全绿的人会
+    #   得出「发布链验证通过」，而同一棵树上还有未提交、未声明的改动。
+    #   判定**复用 `make_manifest.py --check-dirty`**（唯一实现），本目标只传播退出码。
     shift
-    echo "== [1/2] 发布校验（--full --release；含规范图 sha256 与 manifest 现算比对）=="
-    "$PY" 06_PoC/release/verify_release.py --full --release "$@" || exit $?
-    echo "== [2/2] 主图 fail-closed 门禁 =="
+    _rf_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--allow-dirty" ]; then
+        export STTP_ALLOW_DIRTY=1
+      else
+        _rf_args+=("$_a")
+      fi
+    done
+    echo "== [0/3] 洁净度前置断言（E21：脏树 ⇒ RC=2；与 release 同一判定）=="
+    "$PY" 06_PoC/release/make_manifest.py --check-dirty || exit $?
+    echo "== [1/3] 发布校验（--full --release；含规范图 sha256 与 manifest 现算比对）=="
+    "$PY" 06_PoC/release/verify_release.py --full --release ${_rf_args[@]+"${_rf_args[@]}"} || exit $?
+    echo "== [2/3] 主图 fail-closed 门禁 =="
     "$PY" 06_PoC/frozen_gate.py --release || exit $?
     ;;
   eval)
@@ -379,9 +415,15 @@ EOF
     # 离线 wheel 构建（在临时目录做，不污染仓库）。
     # ★ 只依赖**已入库**文件 ⇒ 干净检出里同样可运行（**不需要**权威图）。
     # ★ 退出码：0 全过 ／ 1 有 FAIL ／ 2 缺前置 ／ **3 仪器自证失败**（≠1，铁律 #76）。
+    # ★ Phase 52（E29 收口）：留痕**改写入库外路径** `.runlog/`。
+    #   原写入 `07_交付物/Phase45_install_selfcheck.json`（**被跟踪**）⇒ 每跑一次 install
+    #   就把工作树弄脏，且直接掐死发布链（E21：脏 ⇒ `release` RC=2）——
+    #   `bash sttp.sh install` 与 `bash sttp.sh release` **互相拆台**。
+    #   入库的那份保留为**冻结快照**（历史报告引用它，不得删；但不再被覆写）。
     shift
+    mkdir -p .runlog
     "$PY" 06_PoC/tests/phase45_install_selfcheck.py \
-      --json 07_交付物/Phase45_install_selfcheck.json "$@" || exit $?
+      --json .runlog/install_selfcheck.json "$@" || exit $?
     echo "== 两级可复现等级（L1 随包样例重放 / L2 原始源重建；L1 通过≠L2 可复现）=="
     "$PY" -c "import sys; from sttp_cli import cli; raise SystemExit(cli.repro_level([]))" || exit $?
     ;;
@@ -416,6 +458,20 @@ EOF
     shift
     set -e
     "$PY" 06_PoC/tests/phase51_task_flow_e2e.py "$@"
+    ;;
+  offline)
+    # Phase 52（D51 收口）：A4 **断网渲染**端到端验证 —— 拦截浏览器一切非本地请求，
+    # 断言页面在 CDN 完全不可达时仍能完整渲染（Cytoscape / fcose / MathJax 全走本地 vendor）。
+    # ★ 为什么要有这个目标：脚本一直在仓库里、也能跑，但**没有入口** ⇒ 没人会跑它
+    #   （D51 原文：「没有目标就没有人会跑它」）。本目标把它拉进标准回归。
+    # 前置：① 本地 viz 服务在跑（`bash sttp.sh viz`，前台长驻）
+    #      ② 可选的 Playwright + Chromium（**不在零安装路径上**，见 §0.1 / D14）
+    # 缺任一 ⇒ 脚本明确 SKIP 且 RC=2，**不计通过**（铁律 #20：缺依赖不得假通过）。
+    # ★ 产物写 `.runlog/`（不入库）：此前写 `06_PoC/etl/a4_offline_render.json`，
+    #   那是一个**入库路径** ⇒ 每跑一次就把工作树弄脏（E29 家族）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/a4_offline_render.py "$@"
     ;;
   names)
     # 铁律 #87：改断言文件后必须核对**断言名字集合**，而不是总数。
