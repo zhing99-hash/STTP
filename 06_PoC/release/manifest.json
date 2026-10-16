@@ -75,11 +75,12 @@
   "python": "3.11.9"
  },
  "code": {
-  "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。",
+  "authority_note": "产物完整性以 artifacts[*].sha256 为权威；git_head_at_build 仅描述清单生成时刻的仓库上下文（发布提交为其后继）。★ E21：工作树洁净度是**前置断言** —— 默认「脏即 RC=2、不出清单」；`dirty_declared_by_flag=true` 表示这次是显式 --allow-dirty 放行的。",
+  "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "c049c486052b29c4681b07633752945f67737b26",
-  "git_head_at_build_short": "c049c48",
+  "git_head_at_build": "d4d26aa261fb2cd4355bb6faa650bb454dbb8ea7",
+  "git_head_at_build_short": "d4d26aa",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -662,7 +663,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-15T16:35:02+08:00",
+  "created": "2026-10-16T11:25:35+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
