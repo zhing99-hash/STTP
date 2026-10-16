@@ -1,0 +1,591 @@
+{
+  "_meta": {
+    "phase": "Phase54",
+    "title": "curated_seed 81 条公式的人工策展元数据",
+    "purpose": "为 81 条经典公式提供 discovery_time / discoverer / description / usage 四个属性的**唯一权威内容源**",
+    "authority": "本文件是这 4 个属性的权威源；由 11_真实数据/apply_formula_meta.py 按 id 施加到 06_PoC/etl/normalized.json。图谱里其余 5009 条公式（PhysicsBabel 5000 / mathxiv 8 / curated_seed 之外）一律 discovery_time=discoverer=\"暂无\"、不写 description/usage。",
+    "status": "**待用户审阅**（Phase54 第 1 步产物；未落盘到图谱）",
+    "schema": {
+      "discovery_time": "四位数字年份(1000-9999) | '公元 N'(N 为 1-3 位) | '公元前 N'(N 为 1-4 位) | '暂无'",
+      "discoverer": "人名（中文常用译名） | '暂无'",
+      "description": "一句话中文，说明这段式子在讲什么；**无值则不写该键**",
+      "usage": "一句话中文，说明怎么用它；**无值则不写该键**",
+      "meta_source": "依据（文献/出处）；当 discovery_time 或 discoverer 之一 ≠ '暂无' 时**必须存在**"
+    },
+    "disciplines": [
+      "① 有明确单一发现人/年份 ⇒ 写实；",
+      "② 多人渐进或归属有争议 ⇒ 写主要贡献者 + 最早年份，meta_source 里注明「渐进」；",
+      "③ 纯定义式/组合式（如 v=c/n、Q 的反应商式）或确无可考 ⇒ 标「暂无」，但 description 仍写清它在定义什么；",
+      "④ 古代结果只能定到世纪 ⇒ 取该世纪代表年份并在 meta_source 写「约」。"
+    ]
+  },
+  "entries": {
+    "BC:fo:atp_hydrolysis_eq": {
+      "discovery_time": "1929",
+      "discoverer": "卡尔·洛曼",
+      "description": "ATP 水解为 ADP 与无机磷酸的化学计量式，该反应释放约 30.5 kJ/mol 的自由能。",
+      "usage": "作为细胞内「能量货币」的结算式，用于估算代谢反应可动用的能量上限。",
+      "meta_source": "Lohmann, Über die Pyrophosphatfraktion im Muskel, Naturwissenschaften 17 (1929)"
+    },
+    "BC:fo:photosynthesis_eq": {
+      "discovery_time": "1779",
+      "discoverer": "扬·英根豪斯",
+      "description": "绿色植物以光能为驱动，把二氧化碳与水合成为葡萄糖并释放氧气的总化学计量式。",
+      "usage": "用于核算光合固碳量与产氧量，是生物质能与碳循环计算的起点。",
+      "meta_source": "Ingenhousz, Experiments upon Vegetables, discovering their great power of purifying the common air (1779)"
+    },
+    "CE:fo:arrhenius": {
+      "discovery_time": "1889",
+      "discoverer": "斯万特·阿伦尼乌斯",
+      "description": "反应速率常数随温度呈指数增长，指数项由活化能与温度之比决定。",
+      "usage": "由两个温度下的速率常数反推活化能，或外推高温下的反应速率。",
+      "meta_source": "Arrhenius, Über die Reaktionsgeschwindigkeit bei der Inversion von Rohrzucker durch Säuren, Z. Phys. Chem. 4 (1889)"
+    },
+    "CE:fo:gibbs_reaction": {
+      "discovery_time": "1876",
+      "discoverer": "约西亚·威拉德·吉布斯",
+      "description": "任意组成下的反应自由能 = 标准自由能 + 反应商的对数修正项。",
+      "usage": "由实际浓度组成判断反应能否自发进行（ΔG < 0 为自发）。",
+      "meta_source": "Gibbs, On the Equilibrium of Heterogeneous Substances, Trans. Connecticut Acad. (1876)"
+    },
+    "CE:fo:gibbs_standard": {
+      "discovery_time": "1876",
+      "discoverer": "约西亚·威拉德·吉布斯",
+      "description": "标准反应自由能与平衡常数之间的定量关系，把「能否自发」与「平衡位置」连起来。",
+      "usage": "由平衡常数求标准自由能变；或由热力学数据预测反应方向。",
+      "meta_source": "Gibbs (1876)；van 't Hoff, Études de dynamique chimique (1884) 补出 K 的温度依赖（渐进）"
+    },
+    "CE:fo:henderson": {
+      "discovery_time": "1908",
+      "discoverer": "劳伦斯·亨德森",
+      "description": "缓冲溶液的 pH 由弱酸的 pKa 与共轭碱/酸浓度之比决定。",
+      "usage": "配制指定 pH 的缓冲液，或估算加入酸碱后 pH 的漂移量。",
+      "meta_source": "Henderson, Concerning the relationship between the strength of acids and their capacity to preserve neutrality, Am. J. Physiol. (1908)；Hasselbalch (1916) 补对数形式（渐进）"
+    },
+    "CE:fo:ka": {
+      "discovery_time": "1887",
+      "discoverer": "威廉·奥斯特瓦尔德",
+      "description": "弱酸在水中解离的平衡常数，用于度量酸的强弱。",
+      "usage": "比较不同酸的强弱，或估算给定浓度下的解离度。",
+      "meta_source": "Ostwald, Über die Dissociation der in Wasser gelösten Stoffe, Z. Phys. Chem. 2 (1887)"
+    },
+    "CE:fo:ksp": {
+      "discovery_time": "暂无",
+      "discoverer": "暂无",
+      "description": "难溶电解质饱和溶液中各离子浓度以其化学计量数为幂次之积，是溶解平衡的平衡常数。",
+      "usage": "判断给定离子浓度下是否生成沉淀，或估算饱和溶解度。",
+      "meta_source": "纯定义式（溶解平衡常数的特例），无单一「发现」事件 ⇒ 标暂无"
+    },
+    "CE:fo:kw": {
+      "discovery_time": "1894",
+      "discoverer": "弗里德里希·科尔劳施",
+      "description": "纯水中氢离子与氢氧根离子浓度之积，常温下约为 1.0×10⁻¹⁴。",
+      "usage": "把 pH 与 pOH 关联起来，作为酸碱计算的基础常数。",
+      "meta_source": "Kohlrausch & Heydweiller, Über reines Wasser, Annalen der Physik 53 (1894)（首次精确测定纯水电导率并给出 Kw）"
+    },
+    "CE:fo:le_chatelier": {
+      "discovery_time": "1884",
+      "discoverer": "亨利·路易·勒夏特列",
+      "description": "平衡体系受外界扰动时会朝抵消该扰动的方向移动。",
+      "usage": "定性预测改变浓度、压力或温度后平衡移动的方向。",
+      "meta_source": "Le Chatelier, Sur un énoncé général des lois des équilibres chimiques, C. R. Acad. Sci. (1884)"
+    },
+    "CE:fo:mass_action": {
+      "discovery_time": "1864",
+      "discoverer": "卡托·古德贝格、彼得·瓦格",
+      "description": "平衡常数等于各生成物浓度幂次之积除以各反应物浓度幂次之积。",
+      "usage": "由平衡浓度计算 K，或由 K 预测给定初始浓度下的平衡组成。",
+      "meta_source": "Guldberg & Waage, Studier over Affiniteten, Forhandlinger i Videnskabs-Selskabet i Christiania (1864)"
+    },
+    "CE:fo:nernst": {
+      "discovery_time": "1889",
+      "discoverer": "瓦尔特·能斯特",
+      "description": "电极电势随离子浓度（活度）偏离标准态而变化的关系式。",
+      "usage": "由浓度计算原电池电动势，或由电位反推离子浓度（pH 电极的原理）。",
+      "meta_source": "Nernst, Die elektromotorische Wirksamkeit der Ionen, Z. Phys. Chem. 4 (1889)"
+    },
+    "CE:fo:ph": {
+      "discovery_time": "1909",
+      "discoverer": "瑟伦·索伦森",
+      "description": "pH 定义为氢离子活度（浓度）的负常用对数。",
+      "usage": "把跨十几个数量级的酸度压缩成便于比较的 0–14 标度。",
+      "meta_source": "Sørensen, Enzymstudien II: Über die Messung und die Bedeutung der Wasserstoffionenkonzentration, Biochem. Z. (1909)"
+    },
+    "CE:fo:poh": {
+      "discovery_time": "1909",
+      "discoverer": "瑟伦·索伦森",
+      "description": "pOH 定义为氢氧根离子浓度的负常用对数。",
+      "usage": "与 pH 联用（pH + pOH = 14）处理碱性溶液的浓度计算。",
+      "meta_source": "Sørensen (1909)，同一 pH 标度体系（依赖 CE:fo:kw 的 Kw 常数）"
+    },
+    "CE:fo:reaction_quotient": {
+      "discovery_time": "1864",
+      "discoverer": "卡托·古德贝格、彼得·瓦格",
+      "description": "任意时刻各产物浓度幂次之积与各反应物浓度幂次之积的比值。",
+      "usage": "与平衡常数 K 比较以判断反应方向：Q < K 正向，Q > K 逆向。",
+      "meta_source": "Guldberg & Waage (1864)；与 CE:fo:mass_action 同一来源（平衡时 Q = K）"
+    },
+    "CM:fo:centripetal": {
+      "discovery_time": "1673",
+      "discoverer": "克里斯蒂安·惠更斯",
+      "description": "物体作圆周运动所需指向圆心的力，与质量、速度平方成正比，与半径成反比。",
+      "usage": "估算卫星轨道、车辆转弯等圆周运动所需的向心受力。",
+      "meta_source": "Huygens, Horologium Oscillatorium (1673)"
+    },
+    "CM:fo:gravity": {
+      "discovery_time": "1687",
+      "discoverer": "艾萨克·牛顿",
+      "description": "两质点间的引力与两质量之积成正比、与距离平方成反比。",
+      "usage": "计算天体轨道、地表重力加速度与逃逸速度。",
+      "meta_source": "Newton, Philosophiæ Naturalis Principia Mathematica (1687), Book III"
+    },
+    "CM:fo:impulse": {
+      "discovery_time": "1687",
+      "discoverer": "艾萨克·牛顿",
+      "description": "合外力对时间的累积（冲量）等于动量的变化量。",
+      "usage": "由碰撞时间估算平均冲击力，或由冲量求速度变化。",
+      "meta_source": "Newton, Principia (1687)（第二定律对时间积分的形式）"
+    },
+    "CM:fo:momentum": {
+      "discovery_time": "1687",
+      "discoverer": "艾萨克·牛顿",
+      "description": "动量定义质量与速度之积，是描述运动「多少」的矢量。",
+      "usage": "分析碰撞与爆炸过程（动量守恒）；作为冲量-动量定理与相对论动量的变量。",
+      "meta_source": "Newton, Principia (1687), Definition II: quantity of motion；笛卡尔 1644 提出「运动的量」概念（渐进）"
+    },
+    "CM:fo:power": {
+      "discovery_time": "1782",
+      "discoverer": "詹姆斯·瓦特",
+      "description": "功率定义为单位时间内所做的功（或传递的能量）。",
+      "usage": "比较机器做功的快慢，或由功率与时间估算能耗。",
+      "meta_source": "Watt 在蒸汽机效率测量中定义「马力」以标定机器输出（约 1782）"
+    },
+    "CM:fo:work": {
+      "discovery_time": "1829",
+      "discoverer": "加斯帕尔-古斯塔夫·科里奥利",
+      "description": "恒力沿位移方向所做的功等于力与位移之积。",
+      "usage": "计算机械过程传递的能量；作为动能定理与功率公式的输入。",
+      "meta_source": "Coriolis, Du calcul de l'effet des machines (1829)（首次给出「功」(travail) 的现代定义）"
+    },
+    "EM:fo:biot_savart": {
+      "discovery_time": "1820",
+      "discoverer": "让-巴蒂斯特·毕奥、费利克斯·萨伐尔",
+      "description": "载流导线在周围空间产生的磁感应强度与电流成正比、与距离成反比。",
+      "usage": "由电流分布计算磁场（长直导线、圆环、螺线管）。",
+      "meta_source": "Biot & Savart, Note sur le magnétisme de la pile de Volta, Ann. Chim. Phys. (1820)"
+    },
+    "EM:fo:coulomb": {
+      "discovery_time": "1785",
+      "discoverer": "夏尔·奥古斯丁·德·库仑",
+      "description": "两静止点电荷间的作用力与电荷量之积成正比、与距离平方成反比。",
+      "usage": "计算静电力的方向与大小；电场与电势定义的基础。",
+      "meta_source": "Coulomb, Premier mémoire sur l'électricité et le magnétisme (1785)"
+    },
+    "EM:fo:faraday": {
+      "discovery_time": "1831",
+      "discoverer": "迈克尔·法拉第",
+      "description": "回路中的感应电动势等于磁通量变化率的负值。",
+      "usage": "计算发电机与变压器的感应电压；配合楞次定律判定电流方向。",
+      "meta_source": "Faraday, Experimental Researches in Electricity, Phil. Trans. R. Soc. (1831)"
+    },
+    "EM:fo:gauss": {
+      "discovery_time": "1813",
+      "discoverer": "卡尔·弗里德里希·高斯",
+      "description": "闭合曲面上的电通量等于其所包围的电荷量除以真空介电常数。",
+      "usage": "利用对称性快速求电场（球、柱、平面电荷分布）。",
+      "meta_source": "Gauss, Theoria attractionis corporum sphaeroidicorum ellipticorum homogeneorum (1813)"
+    },
+    "EM:fo:lorentz": {
+      "discovery_time": "1895",
+      "discoverer": "亨德里克·安东·洛伦兹",
+      "description": "带电粒子在电磁场中所受的力 = 电场力 + 速度叉乘磁场的力。",
+      "usage": "分析带电粒子在磁场中的运动（回旋半径、质谱仪、霍尔效应）。",
+      "meta_source": "Lorentz, Versuch einer Theorie der electrischen und optischen Erscheinungen in bewegten Körpern (1895)"
+    },
+    "EM:fo:ohm": {
+      "discovery_time": "1827",
+      "discoverer": "格奥尔格·西蒙·欧姆",
+      "description": "导体两端的电压与流过的电流成正比，比例常数为电阻。",
+      "usage": "电路计算的基础：由电压与电阻求电流，或做分压与限流设计。",
+      "meta_source": "Ohm, Die galvanische Kette, mathematisch bearbeitet (1827)"
+    },
+    "IC:fo:periodic": {
+      "discovery_time": "1869",
+      "discoverer": "德米特里·门捷列夫",
+      "description": "元素的性质随原子序数（当时为原子量）呈周期性变化。",
+      "usage": "预测未发现元素的性质，组织元素分类与周期性趋势判断。",
+      "meta_source": "Mendeleev, Über die Beziehungen der Eigenschaften zu den Atomgewichten der Elemente, Z. Chem. (1869)"
+    },
+    "IC:fo:ph": {
+      "discovery_time": "1909",
+      "discoverer": "瑟伦·索伦森",
+      "description": "pH 定义为氢离子浓度的负常用对数，用于统一表征酸碱性。",
+      "usage": "酸碱度标注与计算；与 CE:fo:ph 同一定义在不同学科下的实例。",
+      "meta_source": "Sørensen, Enzymstudien II (1909)"
+    },
+    "MA:fo:binomial": {
+      "discovery_time": "1654",
+      "discoverer": "布莱士·帕斯卡",
+      "description": "(a+b) 的 n 次幂可展开为 n+1 项之和，各项系数即二项式系数（杨辉三角）。",
+      "usage": "展开多项式幂、计算组合数，以及推导二项分布的概率。",
+      "meta_source": "Pascal, Traité du triangle arithmétique (1654)；同型系数表在中国杨辉《详解九章算法》(1261) 已载（渐进）"
+    },
+    "MA:fo:euler_identity": {
+      "discovery_time": "1748",
+      "discoverer": "莱昂哈德·欧拉",
+      "description": "把 e、i、π、1、0 五个基本常数联系成一个等式：e^{iπ} + 1 = 0。",
+      "usage": "复分析中指数与三角函数互化的特例；复数相位与旋转表示的常用形式。",
+      "meta_source": "Euler, Introductio in analysin infinitorum (1748)"
+    },
+    "MA:fo:log_product": {
+      "discovery_time": "1614",
+      "discoverer": "约翰·纳皮尔",
+      "description": "两数乘积的对数等于两数对数之和，把乘法运算化为加法。",
+      "usage": "化简含乘积的指数运算；在对数坐标下把乘积关系变为线性关系。",
+      "meta_source": "Napier, Mirifici Logarithmorum Canonis Descriptio (1614)"
+    },
+    "MA:fo:pythagoras": {
+      "discovery_time": "公元前 550",
+      "discoverer": "毕达哥拉斯",
+      "description": "直角三角形两直角边的平方和等于斜边的平方。",
+      "usage": "由两边求第三边；距离公式与向量长度的基础。",
+      "meta_source": "归于毕达哥拉斯学派（约公元前 550）；巴比伦泥板 Plimpton 322（约公元前 1800）与中国《周髀算经》更早有记载（渐进）"
+    },
+    "MA:fo:quadratic": {
+      "discovery_time": "公元 820",
+      "discoverer": "花拉子米",
+      "description": "一元二次方程的两根由系数经判别式开方给出。",
+      "usage": "直接解二次方程；由判别式符号判定实根的个数。",
+      "meta_source": "al-Khwārizmī, Al-Kitāb al-mukhtaṣar fī ḥisāb al-jabr wa'l-muqābala（《代数学》，约公元 820）"
+    },
+    "MC:fo:chain_rule": {
+      "discovery_time": "1676",
+      "discoverer": "戈特弗里德·威廉·莱布尼茨",
+      "description": "复合函数的导数等于外层导数乘以内层导数。",
+      "usage": "求复合函数与隐函数的导数；深度学习反向传播的数学基础。",
+      "meta_source": "Leibniz 手稿与 Acta Eruditorum 论文（约 1676 发现，1684 发表）"
+    },
+    "MC:fo:ftc": {
+      "discovery_time": "1675",
+      "discoverer": "戈特弗里德·威廉·莱布尼茨",
+      "description": "定积分等于原函数在两端点取值之差，把求积与求导互为逆运算。",
+      "usage": "用原函数直接计算定积分，替代求和取极限。",
+      "meta_source": "Leibniz（1675 的积分记法）；Barrow 1670 已给出几何形式（渐进）"
+    },
+    "MC:fo:limit_def": {
+      "discovery_time": "1684",
+      "discoverer": "戈特弗里德·威廉·莱布尼茨",
+      "description": "导数定义为函数增量与自变量增量之比在增量趋于零时的极限。",
+      "usage": "从定义出发求瞬时变化率；数值微分与自动微分的理论起点。",
+      "meta_source": "Leibniz, Nova methodus pro maximis et minimis, Acta Eruditorum (1684)；Newton 1665 流数法（渐进）"
+    },
+    "MC:fo:power_rule": {
+      "discovery_time": "1636",
+      "discoverer": "皮埃尔·德·费马",
+      "description": "幂函数 x 的 n 次幂的导数为 n 乘 x 的 n-1 次幂。",
+      "usage": "求多项式与幂函数导数的基本规则，微分计算的常用第一步。",
+      "meta_source": "Fermat, Methodus ad disquirendam maximam et minimam（1636，处理整数幂）；Newton 1669 推广到任意幂（渐进）"
+    },
+    "MC:fo:taylor": {
+      "discovery_time": "1715",
+      "discoverer": "布鲁克·泰勒",
+      "description": "光滑函数在某点附近可展开为由各阶导数构成的幂级数。",
+      "usage": "函数近似（线性化、小角近似）与数值方法的截断误差分析。",
+      "meta_source": "Taylor, Methodus Incrementorum Directa et Inversa (1715)"
+    },
+    "MG:fo:circle_area": {
+      "discovery_time": "公元前 250",
+      "discoverer": "阿基米德",
+      "description": "圆的面积等于 π 乘半径的平方。",
+      "usage": "几何与工程中的圆面积计算；穷竭法逼近 π 的经典载体。",
+      "meta_source": "Archimedes, Measurement of a Circle（《圆的度量》，约公元前 250）"
+    },
+    "MG:fo:euler_poly": {
+      "discovery_time": "1750",
+      "discoverer": "莱昂哈德·欧拉",
+      "description": "凸多面体的顶点数减棱数加面数恒等于 2。",
+      "usage": "多面体与平面图的拓扑分类；图论中平面图欧拉公式的原型。",
+      "meta_source": "Euler, Elementa doctrinae solidorum, Novi Comm. Acad. Sci. Petrop. (1750)"
+    },
+    "MG:fo:law_cosines": {
+      "discovery_time": "公元前 300",
+      "discoverer": "欧几里得",
+      "description": "三角形一边的平方等于另两边平方和减去两边与夹角余弦之积的两倍。",
+      "usage": "已知两边及夹角求第三边；解任意三角形（测绘、导航）。",
+      "meta_source": "Euclid, Elements II.12–13（《几何原本》，约公元前 300）"
+    },
+    "MG:fo:law_sines": {
+      "discovery_time": "1260",
+      "discoverer": "纳西尔丁·图西",
+      "description": "三角形各边与其对角正弦之比相等，且等于该三角形外接圆的直径。",
+      "usage": "已知两角一边、或两边与一对角时解三角形。",
+      "meta_source": "al-Ṭūsī, Kitāb al-Shakl al-qattāʿ（《论完全四边形》，约 1260，首次明确陈述平面与球面正弦定理）"
+    },
+    "MG:fo:sphere_vol": {
+      "discovery_time": "公元前 250",
+      "discoverer": "阿基米德",
+      "description": "球的体积等于三分之四乘 π 乘半径的立方。",
+      "usage": "球体体积计算；微积分出现之前穷竭法论证的范例。",
+      "meta_source": "Archimedes, On the Sphere and Cylinder（《论球与圆柱》，约公元前 250）"
+    },
+    "NT:fo:basel": {
+      "discovery_time": "1735",
+      "discoverer": "莱昂哈德·欧拉",
+      "description": "全体自然数平方倒数之和即无穷级数，其和恰为 π 的平方除以 6。",
+      "usage": "无穷级数求和的经典结论，也是 ζ 函数研究的起点。",
+      "meta_source": "Euler, De summatione innumerabilium progressionum (1735)"
+    },
+    "NT:fo:congruence": {
+      "discovery_time": "1801",
+      "discoverer": "卡尔·弗里德里希·高斯",
+      "description": "两整数同余当且仅当它们的差能被模数整除。",
+      "usage": "模运算与整除性推理的基础语言；密码学与哈希函数的前身。",
+      "meta_source": "Gauss, Disquisitiones Arithmeticae (1801)"
+    },
+    "NT:fo:crt": {
+      "discovery_time": "公元 400",
+      "discoverer": "暂无",
+      "description": "一组两两互素的模数下，同余方程组存在唯一的最小正解。",
+      "usage": "解同余方程组；大整数运算与密码学中的分解与重构。",
+      "meta_source": "《孙子算经》「物不知数」题（约公元 3–5 世纪，取 4 世纪代表年；作者不详）"
+    },
+    "NT:fo:euclid_algorithm": {
+      "discovery_time": "公元前 300",
+      "discoverer": "欧几里得",
+      "description": "两数的最大公约数等于较小数与两数相除所得余数的最大公约数，可迭代归约。",
+      "usage": "求最大公约数、判定互素；连分数与模逆元计算的基础。",
+      "meta_source": "Euclid, Elements VII.1–2（约公元前 300）"
+    },
+    "NT:fo:euler_theorem": {
+      "discovery_time": "1736",
+      "discoverer": "莱昂哈德·欧拉",
+      "description": "与模数互素的整数 a，其 φ(n) 次幂模 n 恒等于 1。",
+      "usage": "模幂化简；RSA 等公钥密码算法正确性的理论基础。",
+      "meta_source": "Euler, Theorematum quorundam ad numeros primos spectantium demonstratio (1736)"
+    },
+    "NT:fo:fermat_little": {
+      "discovery_time": "1640",
+      "discoverer": "皮埃尔·德·费马",
+      "description": "对素数 p，任意整数 a 的 p 次幂与 a 本身模 p 同余。",
+      "usage": "素性检验（费马检验）与模逆元计算（p 为素数时逆元为 a 的 p-2 次幂）。",
+      "meta_source": "Fermat 1640 年致 Frénicle de Bessy 的信；Euler 1736 给出证明（渐进）"
+    },
+    "NT:fo:fundamental_arithmetic": {
+      "discovery_time": "公元前 300",
+      "discoverer": "欧几里得",
+      "description": "每个大于 1 的整数都能唯一地分解为素数的乘积（不计顺序）。",
+      "usage": "整数分解唯一性的论证基础；数论与 RSA 安全性的基石。",
+      "meta_source": "Euclid, Elements IX.14（约公元前 300）；Gauss 1801 给出完整现代陈述与证明（渐进）"
+    },
+    "NT:fo:unit_group": {
+      "discovery_time": "1801",
+      "discoverer": "卡尔·弗里德里希·高斯",
+      "description": "模 n 的剩余类中与 n 互素者，对乘法构成一个群。",
+      "usage": "研究模运算的乘法结构与其群阶（欧拉 φ 函数）。",
+      "meta_source": "Gauss, Disquisitiones Arithmeticae (1801)"
+    },
+    "NT:fo:wilson": {
+      "discovery_time": "1770",
+      "discoverer": "约翰·威尔逊",
+      "description": "p 是素数当且仅当 (p-1) 的阶乘与 -1 模 p 同余。",
+      "usage": "素性判定的充要条件；组合数同余关系的推导工具。",
+      "meta_source": "Waring, Meditationes Algebraicae (1770) 首次公布 Wilson 的观察；Lagrange 1771 给出证明（渐进）"
+    },
+    "OM:fo:combustion": {
+      "discovery_time": "1777",
+      "discoverer": "安托万·拉瓦锡",
+      "description": "烃 CₓHᵧ 完全燃烧时生成 x 个二氧化碳与 y/2 个水分子。",
+      "usage": "配平燃烧反应、计算理论空气量与烟气组成。",
+      "meta_source": "Lavoisier, Mémoire sur la combustion en général (1777)（确立燃烧的氧化学说）"
+    },
+    "OP:fo:lens": {
+      "discovery_time": "1841",
+      "discoverer": "卡尔·弗里德里希·高斯",
+      "description": "薄透镜的物距与像距的倒数之和等于焦距的倒数。",
+      "usage": "光学系统设计；由物距与焦距求像距与放大率。",
+      "meta_source": "Gauss, Dioptrische Untersuchungen (1841)"
+    },
+    "OP:fo:mirror": {
+      "discovery_time": "1841",
+      "discoverer": "卡尔·弗里德里希·高斯",
+      "description": "球面镜的物距与像距倒数之和等于焦距倒数，与薄透镜方程同形。",
+      "usage": "凹面镜与凸面镜的成像计算（望远镜、后视镜）。",
+      "meta_source": "Gauss, Dioptrische Untersuchungen (1841)（近轴成像公式的统一处理；镜面为其特例）"
+    },
+    "OP:fo:refr_speed": {
+      "discovery_time": "暂无",
+      "discoverer": "暂无",
+      "description": "介质中的光速等于真空光速除以该介质的折射率。",
+      "usage": "由折射率求光在介质中的传播速度与波长。",
+      "meta_source": "纯定义式（折射率即由 c/v 定义），无单一「发现」事件 ⇒ 标暂无"
+    },
+    "OP:fo:snell": {
+      "discovery_time": "1621",
+      "discoverer": "维勒布罗德·斯涅利乌斯",
+      "description": "入射角与折射角的正弦之比由两介质折射率决定。",
+      "usage": "光线追迹、透镜与水面折射计算；求全反射临界角。",
+      "meta_source": "Snellius 1621 手稿（未发表）；Descartes, La Dioptrique (1637) 首次公开发表（渐进）"
+    },
+    "QM:fo:de_broglie": {
+      "discovery_time": "1924",
+      "discoverer": "路易·德布罗意",
+      "description": "粒子的物质波波长等于普朗克常数除以其动量。",
+      "usage": "估算电子与中子的衍射尺度（电子显微镜、晶体衍射）。",
+      "meta_source": "de Broglie, Recherches sur la théorie des quanta（博士论文，1924）"
+    },
+    "QM:fo:photoelectric": {
+      "discovery_time": "1905",
+      "discoverer": "阿尔伯特·爱因斯坦",
+      "description": "光电子的最大动能等于光子能量减去材料的逸出功。",
+      "usage": "由截止电压测定逸出功；太阳能电池与光电探测器的能级判据。",
+      "meta_source": "Einstein, Über einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt, Ann. Phys. (1905)"
+    },
+    "QM:fo:planck": {
+      "discovery_time": "1900",
+      "discoverer": "马克斯·普朗克",
+      "description": "光子的能量与其频率成正比，比例常数为普朗克常数。",
+      "usage": "光子能量计算（光谱、光电效应），量子化假设的基本关系式。",
+      "meta_source": "Planck, Zur Theorie des Gesetzes der Energieverteilung im Normalspectrum (1900)"
+    },
+    "QM:fo:schrodinger": {
+      "discovery_time": "1926",
+      "discoverer": "埃尔温·薛定谔",
+      "description": "定态波函数所满足的本征方程，本征值即体系允许的能级。",
+      "usage": "求解量子体系的能级与波函数（氢原子、势阱、谐振子）。",
+      "meta_source": "Schrödinger, Quantisierung als Eigenwertproblem, Ann. Phys. (1926)"
+    },
+    "QM:fo:uncertainty": {
+      "discovery_time": "1927",
+      "discoverer": "维尔纳·海森堡",
+      "description": "位置与动量的不确定度之积不小于约化普朗克常数的一半。",
+      "usage": "估算量子体系能达到的位置/动量精度；判定经典近似的适用范围。",
+      "meta_source": "Heisenberg, Über den anschaulichen Inhalt der quantentheoretischen Kinematik und Mechanik, Z. Phys. (1927)"
+    },
+    "RT:fo:length_contraction": {
+      "discovery_time": "1905",
+      "discoverer": "阿尔伯特·爱因斯坦",
+      "description": "相对观测者运动的物体，其运动方向上的长度按洛伦兹因子缩短。",
+      "usage": "高速参考系间的长度换算（粒子物理、GPS 时间修正的配套计算）。",
+      "meta_source": "Einstein, Zur Elektrodynamik bewegter Körper, Ann. Phys. (1905)；Lorentz 1892 提出收缩假设（渐进）"
+    },
+    "RT:fo:lorentz_factor": {
+      "discovery_time": "1905",
+      "discoverer": "阿尔伯特·爱因斯坦",
+      "description": "描述相对论中时间、长度与动量修正的比例因子，随速度趋近光速而发散。",
+      "usage": "统一计算时间膨胀、长度收缩与相对论动量的修正倍率。",
+      "meta_source": "Einstein (1905)；Lorentz 1899/1904 给出该因子的形式（渐进）"
+    },
+    "RT:fo:mass_energy": {
+      "discovery_time": "1905",
+      "discoverer": "阿尔伯特·爱因斯坦",
+      "description": "物体的静止质量与其蕴含的能量等价，换算系数为光速的平方。",
+      "usage": "核算核反应与湮灭过程的能量释放；粒子物理中的质量-能量换算。",
+      "meta_source": "Einstein, Ist die Trägheit eines Körpers von seinem Energieinhalt abhängig?, Ann. Phys. (1905)"
+    },
+    "RT:fo:rel_momentum": {
+      "discovery_time": "1905",
+      "discoverer": "阿尔伯特·爱因斯坦",
+      "description": "高速运动物体的动量等于洛伦兹因子乘质量乘速度。",
+      "usage": "粒子加速器中的动量-能量换算；高速碰撞的运动学计算。",
+      "meta_source": "Einstein (1905)（狭义相对论对动量的修正）"
+    },
+    "RT:fo:time_dilation": {
+      "discovery_time": "1905",
+      "discoverer": "阿尔伯特·爱因斯坦",
+      "description": "运动的时钟比静止的走得慢，减慢倍率为洛伦兹因子。",
+      "usage": "卫星时钟修正与 μ 子寿命等相对论效应计算。",
+      "meta_source": "Einstein (1905)"
+    },
+    "SM:fo:boltzmann": {
+      "discovery_time": "1877",
+      "discoverer": "路德维希·玻尔兹曼",
+      "description": "熵与微观状态数的对数成正比，比例常数为玻尔兹曼常数。",
+      "usage": "由微观组态数估算宏观熵；统计力学与信息熵之间的桥梁。",
+      "meta_source": "Boltzmann, Über die Beziehung zwischen dem zweiten Hauptsatze der mechanischen Wärmetheorie und der Wahrscheinlichkeitsrechnung (1877)；Planck 1900 写出 S = k ln W 形式（渐进）"
+    },
+    "SM:fo:ideal_gas_kin": {
+      "discovery_time": "1856",
+      "discoverer": "奥古斯特·克勒尼希",
+      "description": "理想气体的压强等于分子平均平动动能的三分之二与分子数密度的乘积。",
+      "usage": "由分子运动论解释宏观压强与温度；估算分子平均速率。",
+      "meta_source": "Krönig, Grundzüge einer Theorie der Gase, Ann. Phys. (1856)；Clausius 1857 完善（渐进）"
+    },
+    "SM:fo:maxwell": {
+      "discovery_time": "1860",
+      "discoverer": "詹姆斯·克拉克·麦克斯韦",
+      "description": "理想气体分子速率的分布函数，呈先升后降的非对称峰。",
+      "usage": "计算平均速率与最概然速率；反应速率与蒸发过程的统计基础。",
+      "meta_source": "Maxwell, Illustrations of the Dynamical Theory of Gases, Phil. Mag. (1860)"
+    },
+    "SM:fo:partition": {
+      "discovery_time": "1902",
+      "discoverer": "约西亚·威拉德·吉布斯",
+      "description": "对各能级按玻尔兹曼因子求和所得的总和，编码体系的全部统计信息。",
+      "usage": "由配分函数 Z 导出内能、熵、自由能等全部热力学量。",
+      "meta_source": "Gibbs, Elementary Principles in Statistical Mechanics (1902)；Boltzmann 1877 已使用同型求和（渐进）"
+    },
+    "TH:fo:boyle": {
+      "discovery_time": "1662",
+      "discoverer": "罗伯特·玻意耳",
+      "description": "恒温下理想气体的压强与体积成反比。",
+      "usage": "气体等温压缩与膨胀过程的计算。",
+      "meta_source": "Boyle, New Experiments Physico-Mechanical, Touching the Spring of the Air (1662)"
+    },
+    "TH:fo:carnot": {
+      "discovery_time": "1824",
+      "discoverer": "萨迪·卡诺",
+      "description": "工作在两个热源之间的热机，其效率上限由两热源的温度比决定。",
+      "usage": "评估热机与发电循环的理论效率上限。",
+      "meta_source": "Carnot, Réflexions sur la puissance motrice du feu (1824)"
+    },
+    "TH:fo:charles": {
+      "discovery_time": "1787",
+      "discoverer": "雅克·查理",
+      "description": "恒压下理想气体的体积与绝对温度成正比。",
+      "usage": "等压过程的体积-温度换算。",
+      "meta_source": "Charles 1787 的未发表实验；Gay-Lussac 1802 公开发表（渐进）"
+    },
+    "TH:fo:first_law": {
+      "discovery_time": "1843",
+      "discoverer": "詹姆斯·普雷斯科特·焦耳",
+      "description": "体系内能的变化等于吸收的热量减去对外所做的功，即能量守恒。",
+      "usage": "能量平衡核算；否定第一类永动机。",
+      "meta_source": "Joule, On the Mechanical Equivalent of Heat (1843)；Mayer 1842 先行提出（渐进）"
+    },
+    "TH:fo:gay_lussac": {
+      "discovery_time": "1802",
+      "discoverer": "约瑟夫·路易·盖-吕萨克",
+      "description": "恒容下理想气体的压强与绝对温度成正比。",
+      "usage": "等容过程的压强-温度换算。",
+      "meta_source": "Gay-Lussac, Recherches sur la dilatation des gaz et des vapeurs, Ann. Chim. (1802)"
+    },
+    "TH:fo:ideal_gas": {
+      "discovery_time": "1834",
+      "discoverer": "埃米尔·克拉珀龙",
+      "description": "理想气体的压强、体积与物质的量由气体常数联系成一个状态方程。",
+      "usage": "由三个状态量求第四个；化学计量与工程状态计算的基础。",
+      "meta_source": "Clapeyron, Mémoire sur la puissance motrice de la chaleur (1834)（综合玻意耳、查理、盖-吕萨克三定律）"
+    },
+    "FO:emc2": {
+      "discovery_time": "1905",
+      "discoverer": "阿尔伯特·爱因斯坦",
+      "description": "质量与能量等价，静止质量对应的能量为质量乘光速平方。",
+      "usage": "核反应与湮灭过程的能量核算；质量与能量的互换换算。",
+      "meta_source": "Einstein, Ist die Trägheit eines Körpers von seinem Energieinhalt abhängig?, Ann. Phys. (1905)（与 RT:fo:mass_energy 同一结果的重复条目）"
+    },
+    "FO:fma": {
+      "discovery_time": "1687",
+      "discoverer": "艾萨克·牛顿",
+      "description": "物体所受的合力等于其质量与加速度的乘积。",
+      "usage": "由受力求加速度（动力学计算）；建立运动微分方程。",
+      "meta_source": "Newton, Philosophiæ Naturalis Principia Mathematica (1687), Lex II"
+    },
+    "FO:ke": {
+      "discovery_time": "1829",
+      "discoverer": "加斯帕尔-古斯塔夫·科里奥利",
+      "description": "动能等于质量与速度平方乘积的一半。",
+      "usage": "动能定理与碰撞能量核算；能量守恒分析的常用量。",
+      "meta_source": "Coriolis, Du calcul de l'effet des machines (1829)（采用 ½mv² 形式）；Leibniz 1686 的 vis viva = mv²（渐进）"
+    }
+  }
+}

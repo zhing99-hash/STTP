@@ -26,6 +26,11 @@ elementkg_synthetic_corpus_40w/
 # 同样超 ≲100 KB 的 pack 上限，不入库。可由
 # `python 11_真实数据/phase45_evidence_deps_delta.py` 在库内确定性重算（幂等，复跑 0 改动）。
 06_PoC/etl/neo4j/phase45_evidence_deps_delta.json
+# Phase 54：给全部 5090 个 Formula 节点写 discovery_time/discoverer（81 条策展内容 +
+# 其余显式「暂无」），该 delta 是 5090 条**完整节点 upsert**，实测 3605 KB ⇒ 超 ≲100 KB
+# 的 pack 上限，不入库。可由
+# `python 11_真实数据/apply_formula_meta.py --apply` 在库内确定性重算（幂等，复跑 0 改动）。
+06_PoC/etl/neo4j/phase54_formula_meta_delta.json
 # 摄入前的自动备份 raw（每个约 16 MB，仅本地回溯用）与临时探索脚本
 11_真实数据/*.before_*.json
 11_真实数据/_*
