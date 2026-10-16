@@ -805,3 +805,66 @@ export function sessionText(b) {
   const used = `${b.nodes}/${b.limit.nodes} 节点 · ${b.edges}/${b.limit.edges} 边`;
   return b.full ? `会话预算已用尽（${used}）` : `会话累计 ${used}`;
 }
+
+// ---------------------------------------------------------------------------
+// 发现年代分桶（Phase 54）—— ★ **唯一分桶实现**（铁律 #88：同一判据只许一份）
+// ---------------------------------------------------------------------------
+// 输入是节点属性 `discovery_time`（由 `11_真实数据/apply_formula_meta.py` 落盘，
+// 内容源 `10_种子数据/formula_meta.json`）。后端**不参与**（本轮不做筛选）⇒
+// 前端就是唯一实现；`06_PoC/tests/frontend_core_check.mjs` 用**边界表**逐值断言它。
+//
+// ★ 与 Python 侧 `apply_formula_meta.py` 的 `RE_INT4 / RE_AD / RE_BC` **逐条对应**：
+//   `^\d{4}$` / `^公元 \d{1,3}$` / `^公元前 \d{1,4}$`，外加哨兵 `暂无`。
+
+/** 哨兵值：确不可考。**不得**被当成年份参与排序/分析（它在 sortKey 里是 +∞）。 */
+export const ERA_NONE = "暂无";
+
+/**
+ * `discovery_time` → 年代桶标签。
+ *
+ *   `"1687"`      → `"17 世纪"`
+ *   `"公元 820"`  → `"9 世纪"`        （公元 1–999 年；不加「公元」前缀，避免出现同义桶）
+ *   `"公元前 300"` → `"公元前 3 世纪"`
+ *   `"1909"`      → `"1900–1909"`
+ *   `"暂无"` / 键缺席 / **任何非法值** → `"暂无"`
+ *
+ * ★ 粒度（用户决策）：**1900 年前按世纪 · 1900 年起按 10 年**。
+ * ★ 边界（自检逐值断言）：`1899 ⇒ "19 世纪"`；`1900 ⇒ "1900–1909"`（跨过 1900 即切十年桶）。
+ * ★ 非法值**不猜测**：一律回落 `ERA_NONE` —— 不得当成「年份 0」或当成可排序字符串。
+ */
+export function deriveEra(discoveryTime) {
+  if (discoveryTime == null) return ERA_NONE;
+  const s = String(discoveryTime).trim();
+  if (!s) return ERA_NONE;
+  let m = /^公元前 (\d{1,4})$/.exec(s);
+  if (m) return `公元前 ${Math.ceil(Number(m[1]) / 100)} 世纪`;
+  m = /^公元 (\d{1,3})$/.exec(s);
+  if (m) return `${Math.ceil(Number(m[1]) / 100)} 世纪`;
+  m = /^\d{4}$/.exec(s);
+  if (m) {
+    const y = Number(s);
+    if (y < 1900) return `${Math.ceil(y / 100)} 世纪`;
+    const base = Math.floor(y / 10) * 10;
+    return `${base}–${base + 9}`;
+  }
+  return ERA_NONE;
+}
+
+/**
+ * 年代桶的**排序键**（越小越早）—— 唯一实现，供图例按时间序排列。
+ *
+ * 只承诺**单调**，不承诺精度：`公元前 C 世纪` = −C×100；`N 世纪` = (N−1)×100+1；
+ * `a–b` = a；`暂无` = +∞（永远排最后）。这样「公元前 6 世纪 < 公元前 3 世纪 <
+ * 17 世纪 < 19 世纪 < 1900–1909 < 暂无」在**跨公元前后**也成立。
+ */
+export function eraSortKey(era) {
+  if (era == null || era === ERA_NONE) return Number.POSITIVE_INFINITY;
+  let m = /^公元前 (\d+) 世纪$/.exec(era);
+  if (m) return -Number(m[1]) * 100;
+  m = /^(\d{1,4}) 世纪$/.exec(era);
+  if (m) return (Number(m[1]) - 1) * 100 + 1;
+  m = /^(\d{4})–\d{4}$/.exec(era);
+  if (m) return Number(m[1]);
+  return Number.POSITIVE_INFINITY;
+}
+

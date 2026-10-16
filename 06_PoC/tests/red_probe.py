@@ -152,6 +152,30 @@ PROBES = [
         "requires": ["playwright"],
     },
     {
+        "id": "R7",
+        "kind": "mutate",
+        "why": "F42a（Phase 54 年代分桶的 **1900 边界**：世纪桶 ↔ 十年桶的切换点）",
+        "file": "06_PoC/js/core.js",
+        "old": "    if (y < 1900) return `${Math.ceil(y / 100)} 世纪`;",
+        "new": "    if (y < 1910) return `${Math.ceil(y / 100)} 世纪`;",
+        "cmd": "NODE tests/frontend_core_check.mjs",
+        "cwd": POC,
+        "expect_red": ["F42a"],
+        "requires": ["node"],
+    },
+    {
+        "id": "R8",
+        "kind": "mutate",
+        "why": "F42f（「哨兵 vs 缺键」必须可分辨：`description` 缺键时**不得**渲染该行）",
+        "file": "06_PoC/js/evidence.js",
+        "old": '  if (attrs.description) parts.push(kv("公式介绍", esc(attrs.description)));',
+        "new": '  parts.push(kv("公式介绍", esc(attrs.description || "")));',
+        "cmd": "NODE tests/frontend_core_check.mjs",
+        "cwd": POC,
+        "expect_red": ["F42f"],
+        "requires": ["node"],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -171,7 +195,7 @@ PROBES = [
 #   为什么两处都写死：`bash sttp.sh names` 的采集器取「第 2 个实参的**首个字符串常量**」
 #   （f-string 只在**开头是字面量**时可用）⇒ 断言名必须写成字面量才进得了名字集合。
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
-DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "RN")
+DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -408,6 +432,8 @@ def emit(rep, res):
     rep.add(res["R4"][0], "R4 缺依赖诊断丢掉解释器 ⇒ G3 必须变红", res["R4"][1])
     rep.add(res["R5"][0], "R5 页面不可达 ⇒ offline 必须 RC=2 且自述前置（D56）", res["R5"][1])
     rep.add(res["R6"][0], "R6 viz 未跑 ⇒ taskflow 必须 RC=2 且自述前置（D56）", res["R6"][1])
+    rep.add(res["R7"][0], "R7 core.js 分桶的 1900 边界改错 ⇒ F42a 必须变红", res["R7"][1])
+    rep.add(res["R8"][0], "R8 详情面板对缺键也渲染 ⇒ F42f 必须变红", res["R8"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

@@ -32,7 +32,7 @@ import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUSES, STALE_EVIDENCE_STATUSES, EVIDENCE_STATUS_RANK,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
          evidenceStatusBadge, EDGE_TYPE_COLOR } from "../js/style.js";
-import { renderEdgeDetail } from "../js/evidence.js";
+import { renderEdgeDetail, renderNodeDetail } from "../js/evidence.js";
 import { renderCardsHTML, renderCandidatesHTML, CANDIDATE_LIMIT } from "../js/task.js";
 
 let pass = 0, fail = 0;
@@ -1393,6 +1393,73 @@ check("F41f `Api.subgraph` 真的按请求自己的 deadline_ms 派生预算（�
         if (p && typeof p.catch === "function") p.catch(() => {});
         return `lastBudgetMs=${api.lastBudgetMs}（deadline_ms=10000）`;
       })());
+
+
+// ---------------------------------------------------------------------------
+// F42 发现年代分桶（Phase 54）—— 边界表逐值断言 + **「哨兵 vs 缺键」渲染规则**
+//   分桶的唯一实现在 `core.js::deriveEra`（铁律 #88）。这里钉两件最容易错的事：
+//     ① **边界**：1899/1900 是「世纪 ↔ 十年桶」的切换点，差一位就整桶错位；
+//     ② **语义**：「暂无」是数据层**显式写入的真实内容**（必须渲染出来），
+//        而 `description`/`usage` 无值时**根本不写键**（不得渲染该行）——
+//        两者在 UI 上**必须长得不一样**，否则「没查证过」与「查证过但无此项」被混为一谈。
+// ---------------------------------------------------------------------------
+const _eraCases = [
+  ["1687", "17 世纪"], ["1899", "19 世纪"], ["1900", "1900–1909"], ["1909", "1900–1909"],
+  ["1910", "1910–1919"], ["1926", "1920–1929"], ["公元前 300", "公元前 3 世纪"],
+  ["公元前 550", "公元前 6 世纪"], ["公元 820", "9 世纪"], ["公元 400", "4 世纪"],
+  ["暂无", "暂无"],
+];
+const _eraBad = _eraCases.filter(([i, w]) => C.deriveEra(i) !== w)
+  .map(([i, w]) => `${i} ⇒ ${C.deriveEra(i)}（期望 ${w}）`);
+check("F42a deriveEra 边界表逐值相等（含 1899↔1900 世纪/十年桶切换点）",
+      _eraBad.length === 0, _eraBad.join("；"));
+
+const _eraNaughty = [null, undefined, "", "   ", "0", "18999", "1899.5", "about 1687",
+                     "公元", "公元前", "暂无（不可考）", {}, []];
+const _eraLeak = _eraNaughty.filter((v) => C.deriveEra(v) !== C.ERA_NONE);
+check("F42b 非法/不可解析输入一律回落「暂无」（不得猜成年份、不得抛异常）",
+      _eraLeak.length === 0,
+      _eraLeak.map((v) => `${JSON.stringify(v)} ⇒ ${C.deriveEra(v)}`).join("；"));
+
+// ★ 数字形态单独一条：`1687`(number) 与 `"1687"` 应同桶 —— 这**不是**"猜测"，
+//   而是同一个年份值；真正的"猜测"是把 `18999` / `about 1687` 硬塞进某个桶（上一条已挡）。
+check("F42i 数字形态与字符串形态同桶（宽松但不变形；不因此放宽 F42b 的拒绝面）",
+      C.deriveEra(1687) === C.deriveEra("1687") && C.deriveEra(1687) === "17 世纪",
+      `${C.deriveEra(1687)} == ${C.deriveEra("1687")}`);
+
+check("F42c 「暂无」不落任何真实年代桶，且排序键恒为 +∞（永远排最后）",
+      C.deriveEra("暂无") === C.ERA_NONE
+      && C.eraSortKey("暂无") === Number.POSITIVE_INFINITY
+      && C.eraSortKey(null) === Number.POSITIVE_INFINITY, "");
+
+const _eraSeq = ["公元前 6 世纪", "公元前 3 世纪", "4 世纪", "9 世纪", "17 世纪",
+                 "18 世纪", "19 世纪", "1900–1909", "1920–1929", "暂无"];
+const _eraSk = _eraSeq.map((e) => C.eraSortKey(e));
+check("F42d eraSortKey 跨公元前后**严格单调**（图例按时间序排列才正确）",
+      _eraSk.every((v, i) => i === 0 || v > _eraSk[i - 1]), _eraSk.join(" < "));
+
+// —— 渲染规则：键缺席 ≠ 哨兵 ——
+const _n83 = fakeEl();
+renderNodeDetail(_n83, { id: "PB:fo:1", label: "x", type: "Formula",
+                         attrs: { discovery_time: "暂无", discoverer: "暂无" } });
+check("F42e 哨兵「暂无」必须**渲染出来**（弱化 + 「不可考」标签），不得静默留空",
+      _n83.innerHTML.includes("发现时间") && _n83.innerHTML.includes("发现人")
+      && _n83.innerHTML.includes("暂无") && _n83.innerHTML.includes("不可考"), "");
+
+check("F42f `description`/`usage` 键**缺席** ⇒ 该行**不渲染**（不是渲染成空行）",
+      !_n83.innerHTML.includes("公式介绍") && !_n83.innerHTML.includes("使用描述"), "");
+
+const _n84 = fakeEl();
+renderNodeDetail(_n84, { id: "CM:fo:gravity", label: "Newton's law of gravitation",
+  type: "Formula", attrs: { discovery_time: "1687", discoverer: "艾萨克·牛顿",
+    description: "两质点间的引力……", usage: "计算天体轨道。",
+    meta_source: "Newton, Principia (1687)" } });
+check("F42g 有值时四行齐全，且「发现时间」附带年代桶标签（唯一分桶实现真的被调用）",
+      _n84.innerHTML.includes("发现时间") && _n84.innerHTML.includes("17 世纪")
+      && _n84.innerHTML.includes("艾萨克·牛顿") && _n84.innerHTML.includes("公式介绍")
+      && _n84.innerHTML.includes("使用描述"), "");
+check("F42h 元数据依据（meta_source）可见 —— 「有值必有据」必须摆在读者面前",
+      _n84.innerHTML.includes("元数据依据") && _n84.innerHTML.includes("Principia"), "");
 
 
 // ---------------------------------------------------------------------------

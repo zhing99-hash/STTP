@@ -22,7 +22,7 @@
  */
 
 import {
-  MODE_BADGE, BUDGET, HARD, sessionText, statusStyle, STATUS_STYLE, pathNodeIds,
+  MODE_BADGE, BUDGET, HARD, sessionText, statusStyle, STATUS_STYLE, pathNodeIds, eraSortKey,
 } from "./core.js";
 import { Api } from "./api.js";
 import { detectMode, modeFromLocation } from "./modes.js";
@@ -132,7 +132,11 @@ function refreshLegend() {
   if (!state.viz) return;
   const types = Array.from(new Set(state.viz.cy.edges().map((e) => e.data("type")))).sort();
   const nodeTypes = Array.from(new Set(state.viz.cy.nodes().map((n) => n.data("type")))).sort();
-  buildLegend($("legend"), { edgeTypes: types, nodeTypes });
+  // ★ Phase 54：当前子图内**实际出现**的发现年代桶，按时间序（跨公元前后单调）。
+  //   纯展示 —— 用户决策「不参与筛选」⇒ 这里既不生成控件，也不改变任何查询参数。
+  const eras = Array.from(new Set(state.viz.cy.nodes().map((n) => n.data("era")).filter(Boolean)))
+    .sort((a, b) => eraSortKey(a) - eraSortKey(b));
+  buildLegend($("legend"), { edgeTypes: types, nodeTypes, eras });
   if (state.panel) {
     const kinds = Array.from(new Set(state.viz.cy.edges().map((e) => e.data("kind")))).sort();
     state.panel.setKindHints(kinds);

@@ -20,7 +20,7 @@
  * ★ `why_shown` 在每个节点/边抽屉**顶部固定一行**（方案 §6.2-6）。
  */
 
-import { WHY_SHOWN_LABEL } from "./core.js";
+import { WHY_SHOWN_LABEL, deriveEra, ERA_NONE } from "./core.js";
 import { verificationBadge, EVIDENCE_FIELDS, edgeTypeColor, eoiStyle,
          fidelityBadge, evidenceStatusBadge } from "./style.js";
 
@@ -79,6 +79,31 @@ export function renderNodeDetail(el, node, opts = {}) {
       `<div id="mj" class="latex">\\[${esc(n.formula || attrs.latex)}\\]</div>`
       + `<button class="toolbtn" id="btn-copy-latex" data-tex="${esc(n.formula || attrs.latex)}">复制 LaTeX</button>`));
   }
+  // ★ Phase 54：公式元数据 4 行（发现时间 / 发现人 / 公式介绍 / 使用描述）。
+  //   渲染规则（用户确认）：
+  //     · `discovery_time` / `discoverer` 在**数据层显式写入**「暂无」⇒ 必须**渲染出来**
+  //       （弱化灰 + 「不可考」小标签），不得留空、不得静默吞掉；
+  //     · `description` / `usage` 无值时**根本不写键** ⇒ **不渲染该行**（不是渲染成空）。
+  //   「发现时间」行附带年代桶标签 —— 分桶的**唯一实现**在 `core.js::deriveEra`。
+  //   末行「元数据依据」是 Phase 54 主动加的：项目纪律是「有值必有据」，
+  //   把依据摆到用户面前才可核验（若不想显示，删掉下面 `meta_source` 那一行即可）。
+  const NO_DATA = '<span class="pill">不可考</span>';
+  const dim = (s) => `<span style="color:#8f9bb3">${esc(s)}</span>`;
+  const dt = attrs.discovery_time;
+  if (dt != null && dt !== "") {
+    const era = deriveEra(dt);
+    parts.push(kv("发现时间",
+      (dt === ERA_NONE ? dim(dt) + " " + NO_DATA
+                       : esc(dt) + (era !== ERA_NONE ? ` <span class="pill">${esc(era)}</span>` : ""))));
+  }
+  const dc = attrs.discoverer;
+  if (dc != null && dc !== "") {
+    parts.push(kv("发现人", dc === ERA_NONE ? dim(dc) + " " + NO_DATA : esc(dc)));
+  }
+  if (attrs.description) parts.push(kv("公式介绍", esc(attrs.description)));
+  if (attrs.usage) parts.push(kv("使用描述", esc(attrs.usage)));
+  if (attrs.meta_source) parts.push(kv("元数据依据", `<span class="note">${esc(attrs.meta_source)}</span>`));
+
   if (attrs.informal) parts.push(kv("说明", esc(attrs.informal)));
   if (attrs.source) parts.push(kv("来源（节点属性）", `<code>${esc(attrs.source)}</code>`));
 

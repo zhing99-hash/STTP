@@ -28,6 +28,9 @@ import {
   SUBJECT_COLOR, SUBJECT_ORDER, NODE_TYPE_STYLE, NODE_TYPE_ORDER,
   EDGE_TYPE_COLOR, EOI_STYLE, fidelityBadge, evidenceStatusBadge,
 } from "./style.js";
+// ★ Phase 54：年代分桶的**唯一实现**在 `core.js`（铁律 #88），这里只调用。
+//   `core.js` 是零依赖纯逻辑层，不反向依赖本文件 ⇒ 无循环依赖。
+import { deriveEra, eraSortKey } from "./core.js";
 
 function cyLib() {
   const cy = (typeof window !== "undefined") ? window.cytoscape : null;
@@ -66,6 +69,12 @@ export function toCyNode(n) {
       _border: ts.color,
       _shape: ts.shape,
       formula: n.formula || null,
+      // ★ Phase 54：发现年代桶（`"17 世纪"` / `"1900–1909"` / `"暂无"`）。
+      //   **只存数据、不参与任何 style** —— 用户决策：「发现年份不放控件、不参与筛选，
+      //   只是显示分组标记」。故 `style` 数组里**没有**一行读 `era`：节点填充色仍是学科、
+      //   描边色与形状仍是类型。它只被 `buildLegend()`（图例分组区块）与
+      //   `evidence.js`（详情面板）消费。
+      era: deriveEra((n.attrs || {}).discovery_time),
       raw: n,
     },
   };
@@ -334,8 +343,8 @@ export function createViz(opts = {}) {
   return api;
 }
 
-/** 图例：学科填充 / 类型形状 / 边 type 颜色（只列**当前子图内出现**的，避免长列表）/ eoi 线型 */
-export function buildLegend(el, { nodeTypes = [], edgeTypes = [] } = {}) {
+/** 图例：学科填充 / 类型形状 / 发现年代（分组标记）/ 边 type 颜色 / eoi 线型（只列**当前子图内出现**的，避免长列表） */
+export function buildLegend(el, { nodeTypes = [], edgeTypes = [], eras = [] } = {}) {
   if (!el) return;
   const shapeCss = (shape) => {
     // 只用 border-radius / clip-path 近似主要形状（图例是提示，不是精确渲染）
@@ -361,6 +370,22 @@ export function buildLegend(el, { nodeTypes = [], edgeTypes = [] } = {}) {
     const st = NODE_TYPE_STYLE[t] || NODE_TYPE_STYLE.Unknown;
     parts.push(`<div class="legend-item"><span class="shape-chip" style="border-color:${st.color};${shapeCss(st.shape)}"></span>${esc(t)}</div>`);
   });
+
+  // ★ Phase 54：发现年代 —— **分组标记**，不是筛选器（用户决策）。
+  //   这里只**列现状**：当前子图内实际出现的桶，按时间序（跨公元前后也单调）。
+  //   纯文本、不可点击、不触发任何查询；节点填充色仍是学科 ⇒ **年代不占用任何视觉通道**。
+  parts.push('<h3 style="margin-top:12px">发现年代（分组标记）</h3>');
+  const eraList = (eras || []).slice().sort((a, b) => eraSortKey(a) - eraSortKey(b));
+  if (!eraList.length) {
+    parts.push('<div class="note">当前子图内没有带「发现年代」的节点。</div>');
+  } else {
+    eraList.forEach((e) => {
+      parts.push(`<div class="legend-item"><code>${esc(e)}</code></div>`);
+    });
+  }
+  parts.push('<div class="legend-item note">年代只作<b>分组标记</b>：不上色、不可点击、不参与筛选。'
+    + '全量 5090 个公式中仅 <b>81</b> 条有人工策展的年代，其余为「暂无」；'
+    + '点选节点可在右栏看到它的发现时间与发现人。</div>');
 
   parts.push('<h3 style="margin-top:12px">语义关系（边颜色）</h3>');
   const ets = edgeTypes || [];
