@@ -58,6 +58,7 @@ sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
 
 import graph_export as gx                                                        # noqa: E402
 import source_registry as sr                                                     # noqa: E402
+import interp_note as IN                                                          # noqa: E402
 
 MANIFEST = os.path.join(HERE, "manifest.json")
 SAMPLE_DIR = os.path.join(HERE, "sample")
@@ -205,24 +206,13 @@ def check_license(rep, manifest, norm):
             "剔除 %s 边 / %s 节点（0 边 ⇒ 白名单形同虚设）" % (ex_e, ex_n))
 
 
-def interp_note():
-    """解释器自述（Phase 53 · D57）：`python 3.11.9 @ /path/to/python.exe`。
-
-    ★ 为什么必须自述：**「环境缺件」与「解释器选错」的外观完全相同** ——
-      两者都表现为 `缺失 ['networkx', 'sympy', 'pint', 'rdkit']`。
-      干净检出里 `STTP_PYTHON` 记在**被 gitignore 的 `.env`** 中 ⇒ `sttp.sh` 的
-      `PY="${STTP_PYTHON:-python}"` 回落到 PATH 上的 `python`（本机实测落到**无依赖**的
-      解释器）⇒ 依赖判定集体变红，而报错的长相指向**产品缺陷**（D57 原文；同族 #93）。
-      唯一能把两者分开的信息，就是"这些判定是在**哪个解释器**下做的"。
-    """
-    return "python %s @ %s" % (sys.version.split()[0], sys.executable)
-
-
-def dep_detail(missing):
-    """G1 的 detail —— **唯一实现**（G1 与 G3 同源，不得各写一份：#88/#92）。"""
-    if missing:
-        return "缺失 %s · 解释器 %s" % (missing, sys.executable)
-    return "%s；%s 全就绪" % (interp_note(), "/".join(REQUIRED_MODULES))
+# ★ Phase 55（D58）：`interp_note()` / `dep_detail()` 的**实现已上移到
+#   `06_PoC/interp_note.py`**（唯一实现，#88/#92）。Phase 53 把实现留在本文件、
+#   把 `frozen_gate` 登记为「同族未改」⇒ 链上出现**两份**同类实现，而没有任何东西
+#   会提醒"第 6 个入口又漏了"。现在全链只有一份实现 + 一份入口声明（`ENTRY_POINTS`），
+#   由 `bash sttp.sh interpcheck` 静态核对。本文件只**消费**，不另写实现。
+interp_note = IN.note                    # 保留本地名 ⇒ 调用点与断言名一字不改（铁律 #74）
+dep_detail = IN.dep_detail
 
 
 def check_deps(rep, release):
@@ -250,6 +240,15 @@ def check_deps(rep, release):
     rep.add(sys.executable in dep_detail(["__probe_missing__"]),
             "G3 缺依赖诊断自述解释器（D57）：合成缺件分支的 detail 须含 sys.executable",
             interp_note())
+    # ★ Phase 55（D58 收口）：同一条纪律的另一半 —— `skip_detail()`（"某一步**没有真正
+    #   执行**，原因是缺依赖/前置"）也必须自述解释器。它服务的是 `frozen_gate` 的
+    #   「门禁依赖缺失」SKIP：Phase 53 只修 G1/G2，那一处当时被登记为「同族未改」（D58）。
+    #   ★ 这里**刻意不抽成 `guard_interp(rep, NAME)` 这种包装**（第一版就是那么写的，已被
+    #     本轮的碰撞/采集检测抓出来）：采集器认的是**调用形状** `rep.add(cond, 字面量名, …)`,
+    #     包一层之后 G4 在 `bash sttp.sh names` 里**完全隐形**（铁律 #98 的第二次踩坑）。
+    _ok4, _detail4 = IN.guard()
+    rep.add(_ok4, "G4 门禁缺依赖 SKIP 自述解释器（D58）：合成缺件分支的 skip_detail 须含 sys.executable",
+            _detail4)
     return missing
 
 

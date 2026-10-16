@@ -81,6 +81,15 @@ import urllib.request
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+# ★ Phase 55（D58）：**缺件/前置诊断必须自述解释器**（铁律 #93 / #92）。
+#   实现只在 `06_PoC/interp_note.py` 一处（#88）。本仪器**非自包含**
+#   （需外部 viz 服务在跑 + 可选依赖 Playwright/Chromium）⇒ 前置不满足时
+#   读者最容易把「环境缺件」读成「前端有问题」，故这两处出口都必须自述解释器。
+HERE = os.path.dirname(os.path.abspath(__file__))
+POC = os.path.dirname(HERE)
+sys.path.insert(0, POC)
+import interp_note as IN                                        # noqa: E402
+
 # 供顶层异常兜底使用：仪器自身崩了也要把**已通过的部分结果**交出来。
 #   （教训来源：本夹具第一版在 B2 抛 TimeoutError，整份报告连同已通过的 B1 全丢了，
 #    排查时只能靠另写探针重跑一遍。审计器出问题必须**仍然可读**。）
@@ -812,11 +821,16 @@ def precond_banner(which, name, detail, how_to_fix):
       ① 必须**显著打印**（含恢复命令），否则读者只看到一堆 SKIP；
       ② 退出码必须**不是 0**（这里是 2）—— 否则退出码上 SKIP 与 PASS 不可分（#101）。
       它既不是「通过」，也不代表「前端有问题」：说清这一点是本节的全部目的。
+    ★ Phase 55（D58）：**必须自述解释器**。理由同 D57 ——「环境缺件」与
+      「解释器选错」的外观完全相同（`STTP_PYTHON` 记在被 gitignore 的 `.env` 里，
+      裸 clone 下会回落到 PATH 上那个**无依赖**的 `python`）。读者看到"Playwright
+      导入失败"会去查依赖，而真因可能是解释器。唯一能把两者分开的信息就是这一行。
     """
     print("-" * 78)
     print("  ⛔ 前置不满足：%s（%s）" % (name, which))
     print("     观测：%s" % detail)
     print("     恢复：%s" % how_to_fix)
+    print("     解释器：%s" % IN.note())
     print("     ★ 退出码 2 = **前置缺失**（本仪器非自包含，需要外部服务已在跑）；")
     print("       它不是「通过」，也不代表「前端有问题」。")
     print("-" * 78)

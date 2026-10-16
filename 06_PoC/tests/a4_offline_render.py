@@ -38,6 +38,15 @@ import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+# ★ Phase 55（D58）：**缺件/前置诊断必须自述解释器**（铁律 #93 / #92）。
+#   实现只在 `06_PoC/interp_note.py` 一处（#88）。本仪器**非自包含**（需外部 viz 服务
+#   在跑 + 可选依赖 Playwright）⇒ 它的"前置不满足"出口正是最容易把
+#   「环境缺件」读成「页面有问题」的地方（D54/D56 家族的教训）。
+HERE = os.path.dirname(os.path.abspath(__file__))
+POC = os.path.dirname(HERE)
+sys.path.insert(0, POC)
+import interp_note as IN                                        # noqa: E402
+
 LOCAL_HOSTS = ("127.0.0.1", "localhost", "::1")
 
 # ★ 产物**不入库**（Phase 52 · D51 收口）：本脚本原先把结果写进
@@ -103,7 +112,7 @@ def main():
         from playwright.sync_api import sync_playwright
     except Exception as e:  # noqa: BLE001
         print("== A4 断网渲染测试：SKIP（缺前置）==")
-        print("  原因：未安装 Playwright —— 它是**可选依赖**，本项目零安装路径刻意不装它。")
+        print("  原因：%s" % IN.skip_detail("未安装 Playwright —— 它是**可选依赖**，本项目零安装路径刻意不装它"))
         print("  复现：pip install playwright && python -m playwright install chromium")
         print("  细节：%s: %s" % (type(e).__name__, e))
         print("  ★ 退出码 2 = **前置缺失**（本仪器非自包含，需外部 viz 服务在跑）；")
@@ -147,7 +156,8 @@ def main():
         except Exception as e:  # noqa: BLE001
             browser.close()
             print("== A4 断网渲染测试：SKIP（缺前置）==")
-            print("  原因：目标页面不可达（%s）：%s" % (args.url, type(e).__name__))
+            print("  原因：%s" % IN.skip_detail("目标页面不可达（%s）：%s"
+                                              % (args.url, type(e).__name__)))
             print("  复现：另开一个终端运行 `bash sttp.sh viz`（前台长驻），再重跑本命令。")
             print("  ★ 退出码 2 = **前置缺失**（本仪器非自包含，需外部 viz 服务在跑）；")
             print("    它既不是「通过」，也不代表「页面有问题」（D56）。")

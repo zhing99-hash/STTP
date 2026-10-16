@@ -32,6 +32,7 @@
 #   bash sttp.sh rescope                            验证语义校正 delta（Phase 36，GPT6 复评 R03/R04/R05；默认 dry-run）
 #   bash sttp.sh release [--allow-dirty]            构建可复现发布包（样例 + 清单 + fail-closed 校验，Phase 37 R06）
 #                                                   ★ E21：工作树脏 ⇒ RC=2 且**不出清单**（--allow-dirty 显式放行）
+#                                                   ★ D64：③ 会重建样例；样例变了 ⇒ [2/4] 明确要求**先提交样例再重跑**
 #   bash sttp.sh sample [--port N]                  只用**离线样例**起可视化（页面与查询同版本，单命令）
 #   bash sttp.sh release-full [--allow-dirty]       对完整快照跑全量发布校验（洁净度前置断言 + --release 门禁 + manifest 现算比对）
 #   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
@@ -47,6 +48,7 @@
 #   bash sttp.sh offline [--scenario cdn-fallback]  A4 **断网渲染**端到端验证：CDN 全不可达时页面仍能渲染（Phase 52；★ 非自包含：需 viz 在跑 + 可选 Playwright；缺前置 ⇒ **RC=2**）
 #   bash sttp.sh names <旧文件> <新文件> [--pair 旧:新]  断言**名字集合**比对（铁律 #87：只看总数会漏掉"加 2 删 1"）
 #   bash sttp.sh redprobe [--only R1,R4]            **构造性可红性**探针：注入已知缺陷 ⇒ 关键断言**必须真的变红**（Phase 53 D55；铁律 #100）
+#   bash sttp.sh interpcheck [--selfcheck]          「非通过」判据自述解释器的**全链防漏网**扫描（Phase 55 D58；铁律 #92）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -266,17 +268,23 @@ EOF
     #   的执法工具，但它自身一直没有断言覆盖（"谁来核对核对器"）。
     #   ★ 它**不依赖权威图** ⇒ 刻意放在 require_authority **之前**：干净检出里也能跑，
     #     而不是被守卫一并挡成 RC=2（真实原因只有"缺图"，不该掩盖"自检从未执行"）。
-    echo "== [0/2] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
+    echo "== [0/3] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
     "$PY" 06_PoC/tests/assert_name_diff.py --selfcheck || exit $?
     # ★ Phase 53（D55 收口）：把「构造性可红性探针」挂在这里，与上一步同理放在守卫**之前**
     #   —— 它不依赖权威图 ⇒ 干净检出里也能跑。
     #   动机：`names` 只能证明"没有断言被删"，**证明不了"还活着的断言仍在断言它声称的语义"**
     #   （"名字还在、判据被换掉"）。本步对关键断言**注入已知缺陷**，断言必须真的变红。
     #   ★ 它会**自己还原**被突变的事实源（逐字节 + sha256），还原失败即 RC=3 并显式告警。
-    echo "== [1/2] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
+    echo "== [1/3] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
     "$PY" 06_PoC/tests/red_probe.py || exit $?
+    # ★ Phase 55（D58 收口）：同上 —— 不依赖权威图，故也放在守卫**之前**
+    #   （干净检出里"自检从未执行"不得被"缺图"一并掩盖）。
+    #   它是 `interp_note.py` 的**执行工具**：那条纪律的实现收在一处只保证"不分叉"，
+    #   本步负责"不漏接"（#92）。
+    echo "== [2/3] 「非通过」判据自述解释器 —— 全链防漏网（铁律 #92；D58）=="
+    "$PY" 06_PoC/tests/interp_selfreport_check.py || exit $?
     require_authority gatecheck "$NORM_GRAPH"
-    echo "== [2/2] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
+    echo "== [3/3] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
     "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
     ;;
   release)
@@ -296,13 +304,21 @@ EOF
       fi
     done
     echo "== [0/4] 许可判据非真空自检（A03：合成图注入 ⇒ 白名单必须真剔除）=="
-    "$PY" 06_PoC/release/make_sample.py --selfcheck
+    "$PY" 06_PoC/release/make_sample.py --selfcheck || exit $?
     echo "== [1/4] 构建离线样例（public_demo：只打包可再分发内容）=="
-    "$PY" 06_PoC/release/make_sample.py ${_ms_args[@]+"${_ms_args[@]}"}
-    echo "== [2/4] 生成发布清单（洁净度＝前置断言 E21）=="
-    "$PY" 06_PoC/release/make_manifest.py
-    echo "== [3/4] 发布校验（fail-closed）=="
-    "$PY" 06_PoC/release/verify_release.py --release
+    "$PY" 06_PoC/release/make_sample.py ${_ms_args[@]+"${_ms_args[@]}"} || exit $?
+    # ★ Phase 55（D64）：**本步是必需的**，不是锦上添花。
+    #   上面的 [1/4] 会**重建被跟踪的样例** ⇒ 图谱一变，工作树立刻变脏 ⇒
+    #   下面的 [3/4] 洁净度前置断言**必然拒绝**（E21 是 fail-closed）。
+    #   没有这一步，使用者看到的只有一句「工作树不干净」，而它给出的次序里
+    #   「③ bash sttp.sh release」**正是刚失败的那一步** —— 按字面执行必然死循环
+    #   （Phase 54 实测复现）。本步把"该先提交样例"讲清楚并给出**可照抄的**下一步。
+    echo "== [2/4] 发布链产物前置断言（本流水线重建的产物必须已提交；D64）=="
+    "$PY" 06_PoC/release/make_manifest.py --check-regenerated || exit $?
+    echo "== [3/4] 生成发布清单（洁净度＝前置断言 E21）=="
+    "$PY" 06_PoC/release/make_manifest.py || exit $?
+    echo "== [4/4] 发布校验（fail-closed）=="
+    "$PY" 06_PoC/release/verify_release.py --release || exit $?
     ;;
   sample)
     # 只用**入库的离线样例**起可视化：页面(GRAPH_DATA_FILE) 与查询(GRAPH_SOURCE_FILE)
@@ -512,6 +528,21 @@ EOF
     shift
     set -e
     "$PY" 06_PoC/tests/red_probe.py "$@"
+    ;;
+  interpcheck)
+    # 铁律 #92 / #88 / #90 / #98：把「缺依赖 / 前置不满足 ⇒ 非通过」的诊断**自述解释器**
+    #   这条纪律**推到链上每个入口**，并**防新增入口漏网**。
+    #   动机（D58）：Phase 53 只修了 `verify_release` 一处，把 `frozen_gate` 登记为
+    #   「同族未改」—— 危险的不是那几行没改，而是**将来新增第 6 个入口时没有任何东西
+    #   会提醒你**。`06_PoC/interp_note.py` 只能保证"实现不分叉"，保证不了"入口不漏接"；
+    #   本目标就是那个提醒：声明侧（ENTRY_POINTS 必须真实存在且真的引用共享实现）
+    #   + 事实侧（扫全仓字面量，命中措辞者必须已登记或已豁免）+ 非真空（命中 0 ⇒ 判红）。
+    #   ★ 不依赖权威图 ⇒ 干净检出里也能跑（故可挂在 `gatecheck` 的守卫之前）。
+    # 用法：bash sttp.sh interpcheck [--selfcheck] [--json .runlog/interpcheck.json]
+    # 退出码：0 全过 ／ 1 有 FAIL ／ 2 找不到仓库根 ／ 3 仪器自证失败。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/interp_selfreport_check.py "$@"
     ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"

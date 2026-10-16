@@ -97,6 +97,13 @@ except Exception as e:                                   # noqa: BLE001
     gx = None
     print("[WARN] graph_export 不可用：%s" % e)
 
+# ★ Phase 55（D58）：**缺件/前置诊断必须自述解释器**（铁律 #93 / #92）。
+#   实现只在 `06_PoC/interp_note.py` 一处（#88），本文件只消费。
+#   ★ 刻意**不套 try/except**：本模块**零第三方依赖**，导入失败只可能是仓库被破坏。
+#     若把它也降级成 `IN = None`，那"缺依赖"与"文件丢失"就又会混成同一种外观 ——
+#     正是本条纪律要消灭的东西（fail-closed）。
+import interp_note as IN                                  # noqa: E402
+
 
 # --------------------------------------------------------------- helpers
 def qname(nid):
@@ -147,7 +154,14 @@ def run_case(case, graph):
         # ⚠ 铁律 #13「语句跑完 ≠ 事情做成」：门禁因**缺依赖**而降级为 NEEDS_REVIEW 时，
         # 反例"未被判 VERIFIED"是**假通过**（根本没验），必须记为 SKIP 而非 PASS。
         if codes and any(str(c).endswith("-00") for c in codes):
-            return "SKIP", "门禁依赖缺失（%s）——未真正验证：%s" % (codes, evidence[:60])
+            # ★ Phase 55（D58 本体）：这一处正是 Phase 53 登记的「同族未改」。
+            #   它把"门禁因**缺依赖**而降级"如实记为 SKIP（铁律 #13），但**没有自述解释器**
+            #   ⇒ 读者看到「门禁依赖缺失」会去查依赖，而真因可能是**解释器选错**
+            #   （`STTP_PYTHON` 记在被 gitignore 的 `.env` 里 —— D57 的场景）。
+            #   守卫：`verify_release` 的 **G4**（常驻，合成缺件分支）；
+            #   静态防漏网：`bash sttp.sh interpcheck`。可红性：`redprobe` 的 **R4**。
+            return "SKIP", IN.skip_detail("门禁依赖缺失（%s）——未真正验证" % codes,
+                                          evidence[:60])
         ok = (verdict == "VERIFIED") if exp == "VERIFIED" else (verdict != "VERIFIED")
         return ("PASS" if ok else "FAIL"), "verdict=%s codes=%s" % (verdict, codes)
 

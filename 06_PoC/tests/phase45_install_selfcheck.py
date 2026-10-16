@@ -75,6 +75,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))           # 06_PoC/tests
 POC = os.path.dirname(HERE)                                 # 06_PoC
 ROOT = os.path.dirname(POC)                                 # STTP
 
+# ★ Phase 55（D58）：**缺件诊断必须自述解释器**（铁律 #93 / #92）。
+#   实现只在 `06_PoC/interp_note.py` 一处（#88）；该文件**已入库**，
+#   不破坏本自检"只依赖已入库文件、第三人 clone 后即可复核"的性质（铁律 #53）。
+sys.path.insert(0, POC)
+import interp_note as IN                                        # noqa: E402
+
 PYPROJECT = os.path.join(ROOT, "pyproject.toml")
 REQ_LOCK = os.path.join(ROOT, "requirements.lock")
 REQ_TXT = os.path.join(ROOT, "requirements.txt")
@@ -328,14 +334,21 @@ def wheel_probe(rep: Rep, tmp: str) -> tuple[str, dict]:
     try:
         import setuptools  # noqa: F401
     except ImportError as e:  # noqa: BLE001
-        return "SKIP", {"reason": "本环境无 setuptools ⇒ 无法离线构建（%s）" % e}
+        # ★ Phase 55（D58）：SKIP 也必须自述解释器 —— "本环境无 setuptools" 与
+        #   "解释器选错（跑到了另一个 python）" 的外观完全相同（D57 原文场景）。
+        #   ★ 注意此处**不是** `IN.dep_detail`（那描述"检查过哪些依赖"），
+        #   而是 `skip_detail`（描述"这一步**没有真正执行**、原因是环境缺件"）。
+        #   ★ 措辞刻意以「缺前置」开头：这既是给读者的**归因**（环境前置，不是产品缺陷），
+        #     也让本入口能被 `bash sttp.sh interpcheck` 的措辞扫描**看见**（Q6 反向断言：
+        #     入口表不得虚列）。改掉这几个字会让 Q6 变红 —— 那正是它存在的意义。
+        return "SKIP", {"reason": IN.skip_detail("缺前置：本环境无 setuptools ⇒ 无法离线构建（%s）" % e)}
 
     cmd = [sys.executable, "-m", "pip", "wheel", "--no-deps", "--no-build-isolation",
            "-w", out, src]
     try:
         r = subprocess.run(cmd, cwd=tmp, capture_output=True, timeout=600, check=False)
     except (OSError, subprocess.TimeoutExpired) as e:  # noqa: BLE001
-        return "SKIP", {"reason": "wheel 构建未能执行：%s" % e}
+        return "SKIP", {"reason": IN.skip_detail("缺前置：wheel 构建未能执行：%s" % e)}
     log = (r.stdout or b"").decode("utf-8", "replace") + (r.stderr or b"").decode("utf-8", "replace")
     whls = [f for f in os.listdir(out) if f.endswith(".whl")]
     if r.returncode != 0 or not whls:
