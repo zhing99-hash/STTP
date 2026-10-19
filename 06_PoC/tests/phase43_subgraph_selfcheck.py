@@ -918,11 +918,21 @@ def main(argv=None) -> int:
                                                     for k in diffs})
 
     # V18h ★ `unverifiable_not_in_repo` 明确**不**计入 stale（已知边界，不是缺陷信号）
+    #   ★ D72（Phase 57）旧判据 `ind_stale == changed + no_source` 有**两个**毛病：
+    #     ① `ind_stale` 走 `edge_is_stale()`（含 A04 层），右边是纯字节层 ⇒ 口径混用；
+    #        当 A04 层贡献为 0 时两边恒等 ⇒ 判据**恒真**，什么都不守；
+    #        A04 一旦判出 stale/rejected 立刻假红（与 V18f2 已修的旧断言同族）。
+    #     ② 它想守的性质（not_in_repo 不算 stale）用**总数比总数**验证，测不到具体边。
+    #   ⇒ 改为**构造性**：拿真实的 not_in_repo 边逐条验证 `edge_is_stale()` 为 False。
+    #     `bool(nir)` 保证判据非真空 —— 样本为空时**红**，不是空过。
     notinrepo = gcounts.get("unverifiable_not_in_repo") or 0
-    rep.add(ind_stale == gcounts.get("changed", 0) + gcounts.get("unverifiable_no_source", 0),
-            "V18h unverifiable_not_in_repo 不计入 stale（已知边界：locator 未入库，并非变更）",
-            "not_in_repo=%d（占 %.1f%%）｜stale=%d（不含它）"
-            % (notinrepo, 100.0 * notinrepo / max(1, gcounts.get("n_edges_total") or 1), ind_stale))
+    nir = [e for e in b_all if Q.edge_fidelity(e, reg) == "unverifiable_not_in_repo"]
+    nir_stale = sum(1 for e in nir if Q.edge_is_stale(e, reg))
+    rep.add(bool(nir) and nir_stale == 0,
+            "V18h [构造性] unverifiable_not_in_repo 的边不被判 stale（未入库 ≠ 变更）",
+            "样本 %d 条中判 stale %d 条｜not_in_repo=%d（占 %.1f%%）"
+            % (len(nir), nir_stale, notinrepo,
+               100.0 * notinrepo / max(1, gcounts.get("n_edges_total") or 1)))
 
     # V18i 来源侧三分类：in_repo + not_in_repo + no_locator == 来源总数
     rsrc = stats_r.get("source_repo_status") if isinstance(stats_r.get("source_repo_status"), dict) else {}

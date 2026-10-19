@@ -191,6 +191,11 @@
   停止堆编号改打 tag；**`B1` 路径栏「指引指向代码做不到的动作」与 `B2` 谱系 `None + bytes` 关闭**；
   新增探针 `R12`/`R13` ⇒ **`redprobe` 17/0/0**；`frontend` **111/0/2**（node 173/0））。
   ★ 本轮先**比对**再动手：评审测的是 2026-10-09 的旧副本（422 项脏），其 P0-1/P0-2/P0-3 **在本仓库不成立**。
+  **Phase 57（`D72` 判据恒真）已于 2026-10-19 完成**
+  （见 **§0.3.14**：`V18h` 左侧含 A04 层、右侧纯字节层，A04 层为 0 时**恒等** ⇒ 换成
+  「逐条验真实 `not_in_repo` 边」的构造性判据；新增探针 `R14` ⇒ **`redprobe` 18/0/0**）。
+  ★ 同期产出下一阶段规划：`00_项目管理/下一阶段规划_数据扩展与前端优化_20261019.md`
+  （数据可判断性优先 / 页面先做 HTML 原型 / 小模型训练暂缓）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -1314,6 +1319,51 @@ R13 用新增的 `--selfcheck-guard` 单跑 ⑨（**0.4 s**）而不是整套 `-
 **改在干净检出里重测（#53，HEAD `bc83602`，532 文件，树 0）**：`gatecheck` 前 3 步全绿后
 `[3/3]` **RC=2**（缺权威图，刻意）｜`release-full` `[0/3]` 通过 → `[1/3]` **33 条 / FAIL 3**
 （H1/H1b/H2 = 不入库快照，与既有基线一致），其中 `F1 样例反例回归` **78/0/0** ｜收尾树 0 项。
+
+#### 0.3.14 Phase 57（**D72：`V18h` 判据恒真 + 第二批材料评估**）—— 更新于 2026-10-19
+
+> 来源：评审日志 `review_20261017/subgraph.log` 把 `V18h` 的失败归为「基线问题」。
+> 拿回本仓库复核后发现，它在本仓库**不是红的，是恒真的** —— 比红更糟。
+> 评估文档：`00_项目管理/外部评审20261017_RC1清单与FDM规划评估_20261019.md`。
+
+**D72（真缺陷 → 关闭）· `V18h` 两侧口径不同，A04 层为 0 时恒等**
+
+`06_PoC/tests/phase43_subgraph_selfcheck.py` 旧判据：
+
+```python
+ind_stale = sum(1 for e in b_all if Q.edge_is_stale(e, reg))          # 含 A04 层
+rep.add(ind_stale == gcounts["changed"] + gcounts["unverifiable_no_source"], ...)  # 纯字节层
+```
+
+左侧**含** A04 层（`edge_is_stale` 是两层合流的单点，铁律 #40），右侧是纯字节层。
+本仓库 `ind_a04_stale == 0` ⇒ `ind_stale == base_stale` ⇒ **两边恒等，判据什么都不守**；
+一旦 A04 判出任何 `stale`/`rejected`，左侧立刻大于右侧 ⇒ **假红**。
+同函数上方的 `V18f` / `V18f2` 在 Phase 45 已经把口径**正确拆成两条**（精确等式 + 区间），
+**`V18h` 漏改** —— 这正是 Phase 45 注释里写的「旧断言在 A04 判出 stale 时会假红」的残留。
+★ 它想守的性质（`unverifiable_not_in_repo` 不算 stale）**已由 `V18f` 守住**
+（`not_in_repo` 是第五类，不进 `changed + no_source`）⇒ 旧 `V18h` 既重复又危险。
+
+**修法（构造性，不是换个式子）**
+
+```python
+nir = [e for e in b_all if Q.edge_fidelity(e, reg) == "unverifiable_not_in_repo"]
+nir_stale = sum(1 for e in nir if Q.edge_is_stale(e, reg))
+rep.add(bool(nir) and nir_stale == 0, "V18h [构造性] ...", ...)
+```
+
+① 拿**真实边**逐条验，不再「总数比总数」——测的是具体判定，不是两个聚合数凑巧相等；
+② `bool(nir)` 保证**判据非真空**：样本为空时**红**，不是空过；
+③ 不再与 A04 层耦合 ⇒ 不会因为 A04 落了任何记录而假红。
+实测：样本 **47,055 条中判 stale 0 条**，`not_in_repo=47055`（96.6%）。
+
+**配套探针 `R14`（必要性：旧判据下这条红线测不出来）**
+把 `queries.edge_is_stale()` 的 `STALE_FIDELITIES` 扩上 `unverifiable_not_in_repo`
+⇒ 新 `V18h` 必红。**旧判据在这个变异下仍然是绿的**（因为两边一起变），
+所以 `R14` 同时也是「为什么必须改成构造性」的证据。
+★ 首版 `R14` 插在负对照 `RN` **之后**，被 `R0`（ID 序列须与声明一致）当场抓住 ⇒ 调到 `RN` 之前。
+
+**回归**：`redprobe` **18/0/0**（+R14，原 17）｜`subgraph` **97/0/3**｜`gatecheck` **RC=0**
+｜`R0/RS/RR` 全过（锚点唯一、还原逐字节一致）｜`names` 名字变更 1 条（`V18h` 描述改写，同 ID）。
 
 ---
 

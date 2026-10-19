@@ -257,6 +257,22 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R14",
+        "kind": "mutate",
+        "why": ("V18h（D72）：`unverifiable_not_in_repo` 的边**不得**被判 stale（未入库 ≠ 变更）。"
+                "★ 旧判据是「总数比总数」：`ind_stale == changed + no_source` 两边在 A04 层贡献 0 时"
+                "**恒等** ⇒ 什么都不守；改成构造性判据（逐条验真实 not_in_repo 边）后，"
+                "本探针才测得出「口径真的在守这条边界」。"),
+        "file": "03_知识层/queries.py",
+        "old": "    if edge_fidelity(e, stale_registry) in STALE_FIDELITIES:\n        return True",
+        "new": ('    if edge_fidelity(e, stale_registry) in STALE_FIDELITIES + ("unverifiable_not_in_repo",):\n'
+                "        return True      # redprobe: 把 not_in_repo 也算 stale（D72）"),
+        "cmd": "PY 06_PoC/tests/phase43_subgraph_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["V18h"],
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -277,7 +293,7 @@ PROBES = [
 #   （f-string 只在**开头是字面量**时可用）⇒ 断言名必须写成字面量才进得了名字集合。
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
-                      "R10", "R11", "R12", "R13", "RN")
+                      "R10", "R11", "R12", "R13", "R14", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -525,6 +541,8 @@ def emit(rep, res):
             res["R12"][1])
     rep.add(res["R13"][0], "R13 谱系自检去掉 None 守卫 ⇒ ⑨ 必须变红且不得抛 traceback（B2）",
             res["R13"][1])
+    rep.add(res["R14"][0], "R14 把 not_in_repo 也算 stale ⇒ V18h 必须变红（D72 构造性判据）",
+            res["R14"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
