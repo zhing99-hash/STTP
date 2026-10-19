@@ -663,6 +663,9 @@ def selfcheck():
 
     # ---------- ⑧ 重验：可追溯 + 重写哈希不恢复 valid（构造性） ----------
     ok &= _selfcheck_reverify()
+
+    # ---------- ⑨ 未入库依赖：给判定，不抛 traceback（Phase 56 / B2 防回退） ----------
+    ok &= _selfcheck_none_guard()
     return 0 if ok else 1
 
 
@@ -675,6 +678,61 @@ def _evidence_with_ref(edges, rid):
             if isinstance(ev, dict) and (ev.get("refs") or {}).get(rid):
                 out.add((cid, i))
     return out
+
+
+_MUTATE_TAIL = b"\n# MUTATION-FOR-SELFCHECK\n"
+
+
+def _write_mutated(ap, rel):
+    """把 HEAD 中 `rel` 的字节 + 变异标记写入 `ap`；返回 `(ok, reason)`。
+
+    ★ 为什么返回值而不是直接写：`repo_blob()` 的契约是「不在仓库 ⇒ None」
+      （`source_registry.py:496-499`）。旧实现在两处自检里直接 `repo_blob(...) + b"…"`，
+      一旦依赖**未入库**就抛 `TypeError: unsupported operand type(s) for +: 'NoneType' and 'bytes'`
+      —— 现场只有 traceback，**没有一句可读的判定**。
+      外部评审 2026-10-17 正是在一个未收敛的工作目录上撞到这一点（P0-4），
+      全量冻结门禁因此 107/108，而报告只能写"崩溃"。
+      铁律 #62（fail-closed 且给判定）/#20（SKIP≠PASS）：
+      跑不了要说清"哪一步、为什么、怎么补"，不能拿栈回溯充当结论。
+    """
+    body = sr.repo_blob(rel, ROOT)
+    if body is None:
+        return False, ("dependency_not_in_repo: %s 不在 HEAD 中 ⇒ 无法基于**仓库字节**"
+                       "构造变异（先提交该参考表，再跑本自检）" % rel)
+    os.makedirs(os.path.dirname(ap), exist_ok=True)
+    with open(ap, "wb") as f:
+        f.write(body + _MUTATE_TAIL)
+    return True, ""
+
+
+def _selfcheck_none_guard():
+    """⑨ 依赖未入库时：`_write_mutated` 必须**返回结构化失败**，不得抛 `None + bytes`。
+
+    ★ 为什么必须单列一条（而不是靠 ⑥⑦ 顺带覆盖）：
+      ⑥⑦ 只有当场存在「未入库的参考表」时才会走到坏分支；正常仓库上永远走不到
+      ⇒ 拿真实数据测它等于**永远测不到**（#90 的镜像错误：全绿可能是测量器没测）。
+      故这里**构造**那个输入——一个确定不在 HEAD 里的相对路径——断言返回值的**形状与原因**，
+      而不是靠"跑一遍没崩"来证明（#100：须有"注入已知缺陷必红"的构造性证据）。
+    """
+    probe_rel = "11_真实数据/__phase56_not_in_repo_probe__.py"
+    tmp = tempfile.mkdtemp(prefix="sttp_lineage_sc9_")
+    try:
+        try:
+            wok, why = _write_mutated(os.path.join(tmp, probe_rel), probe_rel)
+        except Exception as e:                 # noqa: BLE001 —— 本断言就是要把任何异常抓成 FAIL
+            print("  [FAIL] ⑨ 未入库依赖给判定 —— 抛了 %s: %s（应返回结构化失败，不得 traceback）"
+                  % (type(e).__name__, e))
+            return False
+        wrote = os.path.exists(os.path.join(tmp, probe_rel))
+        good = (wok is False and "dependency_not_in_repo" in (why or "") and not wrote)
+        # ★ 打印成 `[PASS]/[FAIL]` 而非 `: PASS`：构造性探针（`red_probe.py`）只认
+        #   `[FAIL] NAME` 这一种行形状。第一版写成 `: FAIL` ⇒ R13 报"注入缺陷后不变红"，
+        #   而实际上它**变了**（RC=1）——**判据被看见了，但探针看不见它**（#83 的镜像）。
+        print("  %s ⑨ 未入库依赖给判定 —— ok=%s｜落盘=%s｜原因 %s"
+              % ("[PASS]" if good else "[FAIL]", wok, wrote, (why or "")[:70] or "（空）"))
+        return good
+    finally:
+        sr.rmtree_force(tmp)
 
 
 def _selfcheck_deps():
@@ -694,9 +752,10 @@ def _selfcheck_deps():
         # 变异量纲表
         rel = "11_真实数据/dimension_table.py"
         ap = os.path.join(tmp, rel)
-        os.makedirs(os.path.dirname(ap), exist_ok=True)
-        with open(ap, "wb") as f:
-            f.write(sr.repo_blob(rel, ROOT) + b"\n# MUTATION-FOR-SELFCHECK\n")
+        _w_ok, _w_why = _write_mutated(ap, rel)
+        if not _w_ok:
+            print("  ⑥ 依赖感知失效          : FAIL —— %s" % _w_why)
+            return False
         _git_commit_all(tmp, "mutate-reference")
         _c1, _a1, d1 = analyze(base=tmp, edges=edges)
         got_new = _stale_keys(edges, tmp, d1) - base_stale
@@ -728,9 +787,10 @@ def _selfcheck_unaffected():
         _git_init_commit(tmp)
         rel = "11_真实数据/dimension_table.py"
         ap = os.path.join(tmp, rel)
-        os.makedirs(os.path.dirname(ap), exist_ok=True)
-        with open(ap, "wb") as f:
-            f.write(sr.repo_blob(rel, ROOT) + b"\n# MUTATION-FOR-SELFCHECK\n")
+        _w_ok, _w_why = _write_mutated(ap, rel)
+        if not _w_ok:
+            print("  ⑦ 未受影响项保持原状    : FAIL —— %s" % _w_why)
+            return False
         _git_commit_all(tmp, "mutate-reference")
         _c, _a, d1 = analyze(base=tmp, edges=edges)
         stale = _stale_keys(edges, tmp, d1)
@@ -951,15 +1011,23 @@ def main():
                     help="把重验账本落盘到 11_真实数据/reverify_ledger.json（默认 dry-run）")
     ap.add_argument("--with-levels", action="store_true", help="顺带跑判级模型报档位变化")
     ap.add_argument("--selfcheck", action="store_true")
+    # ★ Phase 56（B2）：⑨ 是**纯函数级**守卫（构造一个确定不在 HEAD 的路径 ⇒ 断返回值形状），
+    #   不需要加载 68 MB 规范图。单开一个入口是为了让构造性探针能在秒级跑它——
+    #   否则每验一次「注入已知缺陷必须变红」都要 3 分钟，等于实际上没人会去验。
+    ap.add_argument("--selfcheck-guard", action="store_true",
+                    help="只跑 ⑨「未入库依赖给判定」守卫（快；供构造性探针调用）")
     ap.add_argument("--out", default=OUT)
     ap.add_argument("--byte-source", choices=("repo", "worktree"), default="repo",
                     help="当前哈希的字节源：repo（默认·权威·与检出无关）"
                          "｜worktree（显式 opt-in·非权威·结论随环境漂移，仅供人工复核）")
     a = ap.parse_args()
 
+    if a.selfcheck_guard:
+        return 0 if _selfcheck_none_guard() else 1
+
     if a.selfcheck:
         print("=" * 92)
-        print("lineage_invalidation 判据非真空自检（八段：①–⑤ 来源级 + ⑥–⑧ 依赖级）")
+        print("lineage_invalidation 判据非真空自检（九段：①–⑤ 来源级 + ⑥–⑧ 依赖级 + ⑨ 守卫级）")
         print("=" * 92)
         rc = selfcheck()
         print("  ⇒ %s" % ("全过" if rc == 0 else "未通过"))

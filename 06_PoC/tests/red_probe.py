@@ -221,6 +221,42 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R12",
+        "kind": "mutate",
+        "why": ("V13（Phase 56 / B1）：底部路径栏**自组请求参数** ⇒ 不读左侧 trust/跳数。"
+                "外部评审 2026-10-17 实测：切到 `all` 后再查，请求里**仍没有** `trust`，"
+                "而后端默认 `verified`；可它紧邻的文案正写着「可把可信度切到 all 再试」。"
+                "★ 注入的是**原缺陷的形状**（写死 `trust:\"verified\"` + 不用 `taskRequest`），"
+                "而不是随便改坏一行 —— 探针要能代表「这个 bug 回来了」。"),
+        "file": "06_PoC/js/main.js",
+        "old": '  const req = taskRequest({ mode: "path" }, {',
+        "new": ('  const req = { mode: "path", trust: "verified", '
+                'seeds: src + "," + dst };   /* redprobe: 回到自组参数的老写法 */'),
+        "cmd": "PY 06_PoC/tests/phase43_frontend_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["V13"],
+        "requires": [],
+    },
+    {
+        "id": "R13",
+        "kind": "mutate",
+        "why": ("⑨（Phase 56 / B2）：`repo_blob()` 契约是「不在仓库 ⇒ None」，"
+                "旧自检直接 `None + bytes` ⇒ TypeError。评审那次全量冻结门禁 107/108，"
+                "现场只有 traceback、没有一句可读判定。"
+                "★ 用 `--selfcheck-guard` 单跑 ⑨（0.4 s）而不是整套 `--selfcheck`（3 min）："
+                "**一条没人愿意跑的构造性证据等于没有**。"),
+        "file": "11_真实数据/lineage_invalidation.py",
+        "old": ('    body = sr.repo_blob(rel, ROOT)\n'
+                '    if body is None:\n'
+                '        return False, ("dependency_not_in_repo: %s 不在 HEAD 中 ⇒ 无法基于**仓库字节**"\n'
+                '                       "构造变异（先提交该参考表，再跑本自检）" % rel)'),
+        "new": "    body = sr.repo_blob(rel, ROOT)      # redprobe: 去掉 None 守卫（回到旧写法）",
+        "cmd": "PY 11_真实数据/lineage_invalidation.py --selfcheck-guard",
+        "cwd": ROOT,
+        "expect_red": ["⑨"],
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -240,7 +276,8 @@ PROBES = [
 #   为什么两处都写死：`bash sttp.sh names` 的采集器取「第 2 个实参的**首个字符串常量**」
 #   （f-string 只在**开头是字面量**时可用）⇒ 断言名必须写成字面量才进得了名字集合。
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
-DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "RN")
+DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
+                      "R10", "R11", "R12", "R13", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -484,6 +521,10 @@ def emit(rep, res):
             res["R10"][1])
     rep.add(res["R11"][0], "R11 产物差异判据被换成恒真空（regenerated ⇒ []）⇒ M9 必须变红（D64）",
             res["R11"][1])
+    rep.add(res["R12"][0], "R12 路径栏回到自组参数（trust 写死）⇒ V13 必须变红（B1）",
+            res["R12"][1])
+    rep.add(res["R13"][0], "R13 谱系自检去掉 None 守卫 ⇒ ⑨ 必须变红且不得抛 traceback（B2）",
+            res["R13"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

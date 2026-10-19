@@ -23,6 +23,7 @@
 
 import {
   MODE_BADGE, BUDGET, HARD, sessionText, statusStyle, STATUS_STYLE, pathNodeIds, eraSortKey,
+  taskRequest,
 } from "./core.js";
 import { Api } from "./api.js";
 import { detectMode, modeFromLocation } from "./modes.js";
@@ -236,7 +237,9 @@ async function runTask({ params, card }) {
     }
     const el = $("path-status");
     // ★ 文案与底部路径栏**同源**（`pathOutcomeText`），见该函数的说明。
-    if (el) el.textContent = "任务卡路径查询：" + pathOutcomeText(settled, state.pathList);
+    if (el) el.textContent = "任务卡路径查询："
+      + pathOutcomeText(settled, state.pathList,
+                        (state.task && state.task.state) ? state.task.state.scope : null);
   }
 }
 
@@ -252,27 +255,35 @@ async function runTask({ params, card }) {
  *     （铁律 #52：验证的命题须＝被发布的命题；#67：五态须分列且说清边界）。
  *   两处各写一套，就等于把这条责任复制两份、迟早只修一份。
  */
-function pathOutcomeText(env, paths) {
+function pathOutcomeText(env, paths, ctx) {
   const n = (paths || []).length;
-  if (env.status === "ok") return `找到 ${n} 条路径`;
+  // ★ Phase 56（B1）：把**本次实际用的**可信档与跳数写进结论。
+  //   起因：本函数的注释早就写明"这个结论对可信档与跳数都敏感"，但**从不报出这两个值**——
+  //   于是"没路径"到底是"真没有"还是"档/跳数不够"，用户只能猜。
+  //   路径栏改走界面参数后，默认跳数从写死的 5 变成面板的 2：
+  //   若不报出实际值，这个变化就是**静默的**（用户会以为"图退化"了）。
+  const used = (ctx && ctx.hops != null)
+    ? `（本次参数：可信档 ${ctx.trust || "verified"} ｜ ${ctx.hops} 跳）` : "";
+  if (env.status === "ok") return `找到 ${n} 条路径${used}`;
   if (env.status === "truncated") {
-    return `找到 ${n} 条路径（已达 max_paths，属**截断**而非全部）`;
+    return `找到 ${n} 条路径（已达 max_paths，属**截断**而非全部）${used}`;
   }
   if (env.status === "no_result") {
     const hid = Number(env.hidden_by_trust || 0);
-    return hid > 0
+    return (hid > 0
       ? `在当前**可信度档（verified）**与预算内没有路径 —— 本次已隐藏 ${hid} 条低可信度边`
         + `（按边 id 去重、已探索范围内）；通路可能正被它们连接。`
         + `可把「可信度」切到 all 再试；**若切档后仍无结果，更可能是跳数不够**，可增大跳数。`
         + `（no_result ≠ 失败）`
-      : "在当前可信度档与跳数内没有路径（no_result，不是失败）—— 可增大跳数或放宽关系类型。";
+      : "在当前可信度档与跳数内没有路径（no_result，不是失败）—— 可增大跳数或放宽关系类型。")
+      + used;
   }
   if (env.status === "timeout") {
     return "路径查询超时（非失败）：可降低跳数或提高超时"
-      + (n ? `（已找到 ${n} 条，属**截断**而非全部）` : "");
+      + (n ? `（已找到 ${n} 条，属**截断**而非全部）` : "") + used;
   }
   return `路径查询：${env.statusInfo ? env.statusInfo.label : env.status}`
-    + (env.reason ? " — " + env.reason : "");
+    + (env.reason ? " — " + env.reason : "") + used;
 }
 
 function maybeShowReopenTask() {
@@ -309,10 +320,33 @@ async function runPath() {
   //   旧实现发的是 `src=`/`dst=` ⇒ 该端点根本不读 ⇒ **必然** no_result
   //   「path 模式需要 2 个存在的种子（起点/终点）」—— 路径栏从来没有真正工作过。
   //   （`/api/path` 才是读 src/dst 的 legacy 端点；新前端统一走 `/api/subgraph`。）
-  const env = await state.api.subgraph({
-    mode: "path", seeds: `${src},${dst}`,
-    max_paths: BUDGET.paths, max_hops: HARD.hops, deadline_ms: BUDGET.deadline_ms,
+  // ★ Phase 56（B1，外部评审 2026-10-17 §5「新发现问题」）：
+  //   本函数曾**自组请求参数**，只发 `mode/seeds/max_paths/max_hops/deadline_ms`：
+  //     · 不读左侧「可信度」⇒ 后端 `viz_server.py` 用默认 `trust="verified"`；
+  //     · `max_hops` 写死 `HARD.hops`（=5）⇒ 不读左侧跳数设置。
+  //   后果**不是"少一个参数"**：紧邻的 `pathOutcomeText()` 在 `no_result` 分支里
+  //   明确教用户「可把可信度切到 all 再试」「若仍无结果…可增大跳数」——
+  //   而这两件事**路径栏都做不到**，请求一个字节都不会变。
+  //   用户照做、结果照旧 ⇒ 会把「被可信度档隐藏」报告成「图里确实没有路径」。
+  //   与 Phase 55 D64 同族：**指引指向代码无法兑现的动作**。
+  //   处方：统一走 `taskRequest()`（与任务卡**同一个构造器**，D48/D50 的教训是
+  //   "两条代码路径各写一套 ⇒ 迟早只修一份"），scope 取左侧面板当前值。
+  const _pf = (state.panel && typeof state.panel.collect === "function")
+    ? state.panel.collect() : {};
+  const req = taskRequest({ mode: "path" }, {
+    seed: src, second: dst,
+    scope: {
+      trust: _pf.trust, hops: _pf.max_hops, max_nodes: _pf.max_nodes,
+      max_edges: _pf.max_edges, deadline_ms: _pf.deadline_ms,
+    },
   });
+  // `taskRequest` 对缺端点返回 null（fail-closed）。此处两端已在上方校验过，
+  // 但**不假设**它不会为 null：宁可显式说清，也不发一个明知被拒的请求。
+  if (!req) {
+    $("path-status").textContent = "请先设置起点与终点（两端都要有）";
+    return;
+  }
+  const env = await state.api.subgraph(req);
   state.lastEnv = env;
   refreshStatus(env);
   const st = $("path-status");
@@ -323,7 +357,9 @@ async function runPath() {
   // ★ Phase 51（D50）：文案取自**唯一来源** `pathOutcomeText()`（与任务卡共用）。
   //   旧实现此处内联一大段、任务卡那边又另写一段 ⇒ 同一个结论两种解释，
   //   且改动只可能落在其中一处（D48 的教训：两条代码路径口径必须收敛）。
-  st.textContent = pathOutcomeText(env, paths);
+  // ★ 传 `{trust, hops}` 而非直接传 `req`：path 模式下请求键是 `max_hops`
+  //   （后端该模式不读 `hops`），而文案想说的是"几跳"，两者不能混用键名。
+  st.textContent = pathOutcomeText(env, paths, { trust: req.trust, hops: req.max_hops });
   const drew = (env.status === "ok" || env.status === "truncated") && paths.length > 0;
   if (drew) {
     state.viz.add(env.nodes, env.edges);

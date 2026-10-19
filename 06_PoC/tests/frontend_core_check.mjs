@@ -1223,6 +1223,24 @@ check("F38j taskBlockedReason 给出**可操作**原因（不做「点了没反�
       && /第二个/.test(C.taskBlockedReason(pathCard, { seed: "X" }) || ""),
       (C.taskBlockedReason(pathCard, { seed: "X" }) || "").slice(0, 40));
 
+// ★ Phase 56（B1，外部评审 2026-10-17 §5）：底部路径栏漏传 `trust`（且跳数写死 `HARD.hops`），
+//   而后端默认 `trust="verified"`，其 `no_result` 文案却教用户「切到 all 再试」「增大跳数」。
+//   ⇒ 指引指向**代码无法兑现**的动作，用户照做结果不变，会把「被隐藏」读成「不存在」。
+//   修复：路径栏改走 `taskRequest()`，scope 取左侧面板。
+//   本节守的是**构造器确实透传**；「调用方确实用了它」由 phase43 的 V13 守卫（静态）。
+//   ★ 判据刻意**比较两个不同输入**（all vs 默认）——若有人把 trust/hops 写死，
+//     两值就会相等 ⇒ 本断言变红。只断言\"等于 all\"则写死成 all 也能过（#90）。
+const _rAll = C.taskRequest(pathCard, {
+  seed: "A", second: "B", scope: { trust: "all", hops: 3 },
+});
+const _rDef = C.taskRequest(pathCard, { seed: "A", second: "B" });
+check("F38l 【B1】scope 真的透传：trust/hops 随 scope 变化（写死 ⇒ 两值相等 ⇒ 必红）",
+      _rAll && _rDef
+      && _rAll.trust === "all" && _rAll.max_hops === 3
+      && _rDef.trust === "verified" && _rDef.max_hops !== _rAll.max_hops,
+      JSON.stringify({ all: { trust: _rAll && _rAll.trust, hops: _rAll && _rAll.max_hops },
+                       def: { trust: _rDef && _rDef.trust, hops: _rDef && _rDef.max_hops } }));
+
 // 纯逻辑层串起来：任务请求 ⇒ buildParams ⇒ 查询串（含刚修好的 hops）
 const qsEgo = C.toQueryString(C.buildParams(egoReq));
 check("F38k 任务请求序列化后**真的带 `hops=`**（P49 修的第 1 例；同时带 types=）",

@@ -1322,6 +1322,47 @@ def main(argv=None):
             "pathOutcomeText 定义 1 处 / 引用 %d 处 / 「低可信度边」字面量 %d 处"
             % (_n_calls, _n_lit))
 
+    # V13 ★ 路径栏**不得自组请求参数**（Phase 56 / B1；外部评审 2026-10-17 §5）。
+    #   实况：`runPath()` 只发 mode/seeds/max_paths/max_hops/deadline_ms，其中
+    #     · 不读左侧「可信度」⇒ 后端 `viz_server.py` 用默认 trust="verified"；
+    #     · `max_hops` 写死 `HARD.hops`（=5）⇒ 不读左侧跳数。
+    #   而它紧邻的 `pathOutcomeText()` 明写「可把可信度切到 all 再试」「可增大跳数」
+    #   ⇒ **文案指导用户做一件代码做不到的事**（与 Phase 55 D64 同族）。
+    #   V12 守的是\"文案只有一份\"，恰好**帮不到**这里 —— 文案单份、且单份地骗人。
+    #   故本断言改守**调用形状**：runPath 必须用 `taskRequest(`，
+    #   且体内不得出现内联对象字面量形式的 `.subgraph({…})`（那就是自组参数的形状）。
+    _rp_start = _main_src.find("async function runPath(")
+    _rp_next = _main_src.find("\nasync function ", _rp_start + 1) if _rp_start >= 0 else -1
+    _rp = _main_src[_rp_start:_rp_next if _rp_next > 0 else len(_main_src)] if _rp_start >= 0 else ""
+    # ★ 必须匹配**调用形状** `= taskRequest(`，不能只找字面量 `taskRequest(`：
+    #   本函数体里就有一句注释写着「统一走 `taskRequest()`」——
+    #   第一版判据被这句**注释**满足了，注入"回到自组参数"的缺陷后仍然 PASS（R12 当场抓出）。
+    #   这就是"名字出现过 ≠ 真的调用了"（#83/#100）。
+    _rp_call = re.search(r"=\s*taskRequest\(", _rp) is not None
+    _v13 = (bool(_rp) and _rp_call
+            and re.search(r"\.subgraph\(\s*\{", _rp) is None
+            and "trust" in _rp)
+    rep.add(_v13,
+            "V13 路径栏复用 `taskRequest()` 构造参数，不自组 subgraph 参数（B1：文案说的切档/加跳数必须真能生效）",
+            "runPath 体 %d 字符｜调用形状 `= taskRequest(`=%s｜内联 .subgraph({…})=%s｜含 trust=%s"
+            % (len(_rp), "有" if _rp_call else "无",
+               "有（错）" if re.search(r"\.subgraph\(\s*\{", _rp) else "无",
+               "是" if "trust" in _rp else "否"))
+
+    # V14 ★ 路径结论须报出**本次实际用的**参数（Phase 56 / B1 的配套）。
+    #   本函数的注释早就写着"这个结论对可信档与跳数都敏感"，却从不报出这两个值
+    #   ⇒ "没路径"到底是"真没有"还是"档/跳数不够"，用户只能猜。
+    #   且路径栏改走界面参数后，默认跳数由写死的 5 变成面板的 2 ——
+    #   **不报出实际值，这个变化就是静默的**（会被读成"图退化了"）。
+    _v14 = ("function pathOutcomeText(env, paths, ctx)" in _main_src
+            and "本次参数：可信档" in _main_src
+            and _main_src.count("pathOutcomeText(env, paths, {") >= 1)
+    rep.add(_v14,
+            "V14 路径结论报出本次实际参数（可信档/跳数），不让人靠猜判断 no_result 的成因",
+            "签名带 ctx=%s｜文案含「本次参数：可信档」=%s"
+            % ("是" if "ctx)" in _main_src else "否",
+               "是" if "本次参数：可信档" in _main_src else "否"))
+
     # ---------------------------------------------------------------- G 段
     # D25（步骤 B 干净检出实测发现并修复）：部分命令的断言以**不入库**的权威图
     # （`06_PoC/etl/normalized.json` / `physicsbabel_circuits.parquet`）为前提，
