@@ -71,16 +71,19 @@ llm = ["openai"]
 # 实体链接（09_科研扩展/5C_entity_linker；未安装 ⇒ 裸名）
 # ★ A05 顺带登记：`sklearn` / `rapidfuzz` 此前在**任何**依赖清单里都没有声明。
 linker = ["scikit-learn", "rapidfuzz"]
-# 一次装全（含全部可选能力；★ 不含 playwright —— 见下方说明与 ACK 白名单）
+# 一次装全（含全部可选能力；★ 不含 playwright —— 见下方说明与 ALL_EXCLUDED）
 all = [
   "numpy>=1.26", "pandas>=2.0", "scipy>=1.11", "matplotlib>=3.8", "rdflib>=7.0",
   "duckdb", "polars", "kuzu", "neo4j>=5.20", "torch>=2.2", "requests>=2.31",
   "openai", "scikit-learn", "rapidfuzz",
 ]
-# ★ **刻意不声明** `playwright`：`06_PoC/tests/a4_offline_render.py` 会 import 它，
-#   但 §0.1 / D14 明确「不安装 Playwright / jsdom」（零第三方依赖 ⇒ 真实浏览器渲染未实测）。
-#   声明它会给第三人「这是受支持路径」的错觉。故改为在安装自检的**显式 ACK 白名单**
-#   里登记并写明原因（A05-7 对未列项一律 FAIL ⇒ 白名单是 fail-closed 的，不是静默漏网）。
+# 浏览器验收（可选，**不进 CI**；2026-10-19 由「维持不声明」修订为「显式可选组」）
+# ★ 只服务 `a4_offline_render.py` / `phase51_task_flow_e2e.py` 的**本地**验收；
+#   CI 与 `.[all]` 都不装它 ⇒ 缺它是常态，相关断言记 SKIP 而非 FAIL。
+#   `all` **刻意不含**本组：`all` 的语义是「装完全部非浏览器能力」，把浏览器塞进去
+#   等于宣称真实渲染是受支持路径（D14 的原始顾虑）。
+#   本机**未安装** ⇒ 按上方版本规则给**裸名**。
+browser-test = ["playwright"]
 
 [project.urls]
 Homepage = "https://github.com/zhing99-hash/STTP"

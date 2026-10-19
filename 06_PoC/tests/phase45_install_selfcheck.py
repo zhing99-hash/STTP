@@ -155,10 +155,18 @@ DIST_TO_IMPORT = {"scikit-learn": "sklearn", "pillow": "PIL", "pyyaml": "yaml"}
 INTERPRETER_PSEUDO = ("python", "python3", "python2", "cpython")
 
 # 第三方 import 的**显式 ACK 白名单**（必须写原因；★ fail-closed：未列即 FAIL）
-ACK_UNDECLARED = {
-    "playwright": "06_PoC/tests/a4_offline_render.py 的离线渲染试验；§0.1 / D14 明确"
-                  "「零第三方依赖 ⇒ 不装 Playwright / jsdom」⇒ **只登记不声明**，"
-                  "避免给第三人「受支持路径」的错觉。",
+# ★ 2026-10-19 清空：`playwright` 已改为 `[browser-test]` 可选组**显式声明**
+#   （见 pyproject 与 ALL_EXCLUDED），不再是「import 了但未声明」。
+#   留空是**有意**的：ACK 只该装「确实无法声明」的项；已声明却仍留在这里
+#   会被 A05-7a 判为「陈旧 ACK」。
+ACK_UNDECLARED = {}
+
+# `all` 的**显式排除组**（必须写原因；★ fail-closed：组名不存在 ⇒ FAIL，不静默）
+ALL_EXCLUDED = {
+    "browser-test": "`playwright` 只服务本地浏览器验收（`a4_offline_render.py` /"
+                    "`phase51_task_flow_e2e.py`），**不进 CI**；`all` 的语义是"
+                    "「装完全部非浏览器能力」，把它并进去等于宣称真实渲染是受支持路径"
+                    "（D14 的原始顾虑）。2026-10-19 由「刻意不声明」修订为「显式可选组」。",
 }
 
 
@@ -475,7 +483,7 @@ def main(argv=None) -> int:
 
     extras = proj.get("optional-dependencies") or {}
     want_extras = {"analysis", "etl_alt", "kuzu", "neo4j", "torch", "fetch", "llm",
-                   "linker", "all"}
+                   "linker", "all", "browser-test"}
     lack_e = sorted(want_extras - set(extras))
     allvals = {(_req_name(d) or "") for d in (extras.get("all") or [])}
     union = set()
@@ -485,11 +493,20 @@ def main(argv=None) -> int:
         union |= {(_req_name(d) or "") for d in v}
     union.discard("")
     allvals.discard("")
-    rep.add(not lack_e and allvals == union,
-            "A05-5 可选分组齐全 且 `all` == 其余分组之并",
-            "缺分组 %s；all 与并集差 %s"
-            % (lack_e, sorted(allvals ^ union)) if (lack_e or allvals != union)
-            else "%d 个分组：%s" % (len(extras), sorted(extras)))
+    # `all` == 并集 **减去** 显式排除组（`ALL_EXCLUDED`）的依赖
+    excluded = set()
+    for g in ALL_EXCLUDED:
+        for d in (extras.get(g) or []):
+            excluded.add(_req_name(d) or "")
+    excluded.discard("")
+    stale_excl = sorted(g for g in ALL_EXCLUDED if not (extras.get(g) or []))
+    rep.add(not lack_e and not stale_excl and allvals == (union - excluded),
+            "A05-5 可选分组齐全、`all` == 其余分组之并（减显式排除组）",
+            ("缺分组 %s；陈旧排除组 %s；all 与并集差 %s"
+             % (lack_e or "无", stale_excl or "无", sorted(allvals ^ (union - excluded))))
+            if (lack_e or stale_excl or allvals != (union - excluded))
+            else "%d 个分组：%s ／ `all` 排除 %s"
+                 % (len(extras), sorted(extras), sorted(excluded)))
 
     # =====================================================================
     print("\n[A05-6] 解释器约束与 pip 依赖**分离**（复评 A05b）—— 含反例")
