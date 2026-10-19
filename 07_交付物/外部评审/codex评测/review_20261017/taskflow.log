@@ -1,0 +1,20 @@
+== Phase 51 任务式首屏 E2E -> http://127.0.0.1:8765/ ==
+------------------------------------------------------------------------------
+  ⛔ 前置不满足：Playwright + Chromium（**可选**依赖，不在零安装路径上）（browser）
+     观测：import playwright.sync_api 失败：ModuleNotFoundError（No module named 'playwright'）
+     恢复：pip install playwright && python -m playwright install chromium
+     解释器：python 3.12.14 @ C:\Users\zhing\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+     ★ 退出码 2 = **前置缺失**（本仪器非自包含，需要外部服务已在跑）；
+       它不是「通过」，也不代表「前端有问题」。
+------------------------------------------------------------------------------
+
+Phase 51 · 任务式首屏真浏览器端到端验收（B1–B5）
+  [SKIP] B0a-browser-deps  —— playwright 不可用（ModuleNotFoundError）—— 浏览器验收属**可选**依赖，缺它只能记「不可判定」，不得记通过（铁律 #20：缺依赖假通过）
+  [SKIP] B1 首屏结构  —— 上游依赖缺失（playwright）
+  [SKIP] B2 卡片 → 候选  —— 上游依赖缺失（playwright）
+  [SKIP] B3 真实键入  —— 上游依赖缺失（playwright）
+  [SKIP] B4 确认实体 → 生成图  —— 上游依赖缺失（playwright）
+  [SKIP] B5 返回改查询（老板指定的收尾链路）  —— 上游依赖缺失（playwright）
+
+  phase51_task_flow_e2e: PASS 0 / FAIL 0 / SKIP 6
+  （结构化结果已写入 07_交付物\外部评审\codex评测\review_20261017\taskflow.json）

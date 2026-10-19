@@ -1,0 +1,162 @@
+==============================================================================
+  Phase 43 · 步骤 B（前端「局部图谱查询浏览」）自检
+==============================================================================
+  页面 : 06_PoC\graph_view.html
+  模块 : 06_PoC\js/
+==============================================================================
+  [HTTP] 127.0.0.1 "GET /js/main.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/../viz_server.py HTTP/1.1" 403 -
+  [HTTP] 127.0.0.1 "GET / HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/api.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/core.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/evidence.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/main.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/modes.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/panels.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/style.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/subgraph.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/task.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/viz.js HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /js/does-not-exist.js HTTP/1.1" 404 -
+[OK] 已加载查询层：F:\codex\sttp\STTP-review\03_知识层\queries.py
+[OK] NetworkX 后端就绪：9657 节点 / 48712 边（源：normalized.json）
+  [HTTP] 127.0.0.1 "GET /api/subgraph?mode=ego&seeds=PQ%3Amass&hops=1&max_nodes=40&max_edges=30&trust=all HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/stats HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/search?limit=3&q=F%3Dma HTTP/1.1" 200 -
+  [HTTP] 127.0.0.1 "GET /api/search?limit=3&mode=ego HTTP/1.1" 400 -
+  [HTTP] 127.0.0.1 "GET /api/search?q=F&limit=3 HTTP/1.1" 400 -
+------------------------------------------------------------------------------
+
+[S] 静态结构与无障碍（方案 §6.1.1 / §10 步骤 B-7）
+  [PASS] S1 页面用**原生 ES Module**加载入口（零构建）  —— js/main.js
+  [PASS] S2 渲染/布局/公式三个 vendor 依赖均本地优先加载
+  [PASS] S2b CDN 仅作回退（离线优先 + 在线兜底）
+  [PASS] S3 必需 DOM id 齐备（37 个）  —— 37/37
+  [PASS] S4 页面含 SPDX 许可头
+  [PASS] S5 **不用 emoji 当图标**（内联 SVG）  —— 0 处
+  [PASS] S6 无内联 onclick 等事件属性（用 addEventListener，可键盘操作）  —— 0 处
+  [PASS] S7 响应式断点 375/768/1024/1440 齐备（含区间上界写法）  —— 375/768/1024/1440
+  [PASS] S8 可点击元素有 cursor:pointer  —— 7 处
+  [PASS] S9 键盘焦点可见（:focus-visible）
+  [PASS] S10 尊重 prefers-reduced-motion
+  [PASS] S11 关键控件有 aria 标注
+  [PASS] S12 五态 CSS 类齐备（供 V8 的 DOM 断言）  —— 5/5
+  [PASS] S13 五态 CSS 变量齐备  —— 5/5
+  [PASS] S14 状态行根元素带 data-state（供 DOM 断言）
+  [PASS] S15 全部 10 个模块都在 main.js 的 import 闭包内（无死文件、无漏接）  —— 10/10 可达
+
+[M] 模块图完整性（防 404 静默失效）
+  [PASS] M1 js/api.js 的 import 均为显式相对路径  —— 1 条
+  [PASS] M1 js/core.js 的 import 均为显式相对路径  —— 0 条
+  [PASS] M1 js/evidence.js 的 import 均为显式相对路径  —— 2 条
+  [PASS] M1 js/main.js 的 import 均为显式相对路径  —— 8 条
+  [PASS] M1 js/modes.js 的 import 均为显式相对路径  —— 1 条
+  [PASS] M1 js/panels.js 的 import 均为显式相对路径  —— 2 条
+  [PASS] M1 js/style.js 的 import 均为显式相对路径  —— 0 条
+  [PASS] M1 js/subgraph.js 的 import 均为显式相对路径  —— 1 条
+  [PASS] M1 js/task.js 的 import 均为显式相对路径  —— 2 条
+  [PASS] M1 js/viz.js 的 import 均为显式相对路径  —— 2 条
+  [PASS] M2 所有 import 都指向**存在**的文件  —— 0 个悬空
+  [PASS] M3 全部前端模块含 SPDX 许可头  —— 10/10
+  [PASS] M4 页面入口脚本存在  —— js/main.js
+
+[X] 跨层一致性（前端常量 ↔ 后端契约，漂移即变红）
+  [PASS] X1 前端边类型配色 == 规范图实测 type 集合（24 种）  —— 24 == 24（旧页面此处已漂移，本轮校正）
+  [PASS] X2 五态色：页面 CSS 默认值 == core.js（单一来源）  —— 5/5 一致
+  [PASS] X3 why_shown 枚举：前端 == queries.WHY_SHOWN_VALUES  —— 6 个一致
+  [PASS] X4 解析到前端 BUDGET / HARD 两个块  —— BUDGET 64 字符 / HARD 71 字符
+  [PASS] X4a 默认预算：前端 BUDGET == queries.DEFAULT_*（nodes/edges/hops/deadline 4 项对称）  —— 4/4
+  [PASS] X4a-path 前端 BUDGET.paths ≤ 库级 DEFAULT_MAX_PATHS（只收窄不放宽）  —— 前端 5 · 库 20
+  [PASS] X4b 硬上限：前端 HARD == queries.HARD  —— 5/5
+  [PASS] X4c `_api_subgraph` 默认预算引用 q.DEFAULT_*（作用域=处理体，不硬编码）  —— 5/5 引用 · 0 字面量
+  [PASS] X5 会话预算三处一致（viz_server == queries == 前端 SESSION_LIMIT）  —— server 120/200 · queries 120/200 · 前端 120/200
+  [PASS] X6 error_code 文案表覆盖**契约 enum 全景**（派生比对，不硬编码）  —— 契约 9 个全覆盖
+  [PASS] X6a 文案表同时覆盖后端**实际产生**的全部错误码  —— 6 个全覆盖
+  [PASS] X6b 传输层码 BACKEND_UNREACHABLE **只由前端合成**（后端源码不得出现）  —— 后端 0 处引用
+  [PASS] X6c ERROR_CODE_SEVERITY 对契约每个码显式归类（防静默默认）  —— 9 个已归类
+  [PASS] X5b 最短查询长度同源（前端 MIN_QUERY_LEN == queries.MIN_QUERY_LEN ≥ 2）  —— 前端 2 · 后端 2
+  [PASS] X7 验证档徽标 == queries._RANK（7 档，键集合 + rank 数值）  —— 7 档逐值一致
+  [PASS] X8a 忠实度四分类：前端 == queries.FIDELITY_CLASSES（4 档，逐值 + 顺序）  —— verified；changed；unverifiable_no_source；unverifiable_not_in_repo
+  [PASS] X8b 忠实度徽标键集合 == 四分类（4 档齐全，各带 color/label/short/note）  —— 4 档字段齐全
+  [PASS] X8c FIDELITY_UNKNOWN 不占用任何已定义档位键（不参与加总）  —— FIDELITY_UNKNOWN 是独立兜底对象
+  [PASS] X8d STALE_FIDELITIES ⊆ FIDELITY_CLASSES（stale 仍是四分类的子集）  —— ['changed', 'unverifiable_no_source'] ⊆ 4 档
+  [PASS] X9 契约 src_hash 可空 ⇔ 前端显式「无 locator · 不可复算」徽标（两侧同步）  —— schema.type=['string', 'null']｜required=True｜前端徽标=有
+  [PASS] X10 A04 五态：前端 EVIDENCE_STATUSES == queries.EVIDENCE_STATUSES（4 态，逐值 + 顺序）  —— 前端=['valid', 'stale', 'needs_review', 'rejected'] / 后端=['valid', 'stale', 'needs_review', 'rejected']
+  [PASS] X11 排除集：前端 STALE_EVIDENCE_STATUSES == 后端（needs_review 不在其中）  —— 前端=['stale', 'rejected'] / 后端=['stale', 'rejected']
+  [PASS] X12 A04 徽标键集合 == 五态（4 档齐全，各带 color/label/short/note）  —— 4 档字段齐全
+  [PASS] X13 契约 $defs.evidence_status.enum == 五态 + null（不漏不多）  —— contract=[None, 'valid', 'stale', 'needs_review', 'rejected'] / queries=['valid', 'stale', 'needs_review', 'rejected']+null
+  [PASS] X14 缺记录独立兜底：EVIDENCE_STATUS_ABSENT + 「无 A04 记录」文案在 style/evidence 两侧  —— 已覆盖
+  [PASS] X15 A04 严重度表：前端 EVIDENCE_STATUS_RANK == queries（聚合取最坏的口径一致）  —— 前端={'valid': 0, 'needs_review': 1, 'stale': 2, 'rejected': 3} / 后端={'valid': 0, 'needs_review': 1, 'stale': 2, 'rejected': 3}
+
+[X16] 端点契约 ↔ 后端源码双向求差（`contracts/endpoints.schema.json`）
+  [PASS] X16a 解析到端点契约与全部 `_api_*` 处理函数体（求差前提）  —— 5 个端点
+  [PASS] X16b 【方向A】契约 params ⊇ 后端实读参数（无漏登记）  —— 5 端点无漏登记
+  [PASS] X16b-NEG 【负对照】契约副本删掉 `hops` ⇒ 方向A 必须报出（检测非恒真）  —— 报出：hops
+  [PASS] X16c 【方向B】契约登记的每个参数都在后端源码中真实出现（无幽灵条目）  —— 33 个登记项全部落地
+  [PASS] X16d must_not_send 与后端行为一致（声明「发了没用」的键，后端确不读取）  —— 4/4 端点一致
+  [PASS] X16e 契约结构完整（handler/params/frontend_uses）+ 不发参数均写明理由  —— 7 端点结构齐备 · 3 项不发参数均有理由
+  [PASS] X16f legacy `/api/path` 冻结默认值 == 契约 legacy_defaults（分歧须被声明）  —— max_paths=20、max_hops=5、deadline_ms=3000
+  [PASS] X16g 端点客户端预算 == 契约 client_budget_ms（逐值 + 反向；D54 残余）  —— overview=5000、search=3000
+
+[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）
+  [PASS] N1 前端纯逻辑断言全过（node.EXE）  —— frontend_core_check: PASS 172 / FAIL 0（共 172）
+
+[H] HTTP 层（MIME 正确性决定 ES Module 能否加载）
+  [PASS] H1 /js/main.js 返回 200 且 MIME 为 javascript  —— 200 application/javascript; charset=utf-8
+  [PASS] H2 目录穿越被拒（403）  —— 403
+  [PASS] H3 / 返回页面（text/html）  —— 200 text/html; charset=utf-8 23766 字节
+  [PASS] H4 页面引用的 10 个模块均可 HTTP 取到  —— 10/10
+  [PASS] H5 不存在的模块 ⇒ 404（不是静默 200）  —— 404
+  [PASS] H6a 统一信封顶层字段齐备（前端状态行读这些）  —— 10/10
+  [PASS] H6a2 /api/stats 带合法 status（探活判据；缺它 ⇒ 误判 offline ⇒ 拉全图卡死）  —— HTTP 200 · status=ok
+  [PASS] H6a3 /api/stats 的 snapshot_id 与 /api/subgraph 一致（同源同快照）  —— stats=sha256:21f13596a4c8 · subgraph=sha256:21f13596a4c8
+  [PASS] H6b stats 字段齐备（截断/会话/下界提示读这些）  —— 10/10
+  [PASS] H6c stats.session 字段齐备（会话角标读这些）  —— 5/5
+  [PASS] H6d 节点字段齐备（渲染 + why_shown 固定行读这些）  —— 5/5
+  [PASS] H6e 边字段齐备（视觉编码 + **证据卡片**读这些）  —— 12/12
+  [PASS] H6f 证据字段齐备（铁律 #59：src 与 impl 必须分列可读）  —— 5/5
+  [PASS] H6g expandable 字段齐备（展开用 node_id + token）  —— 2/2
+  [PASS] H7a 前端 Api.search 的查询串 ⇒ 真实后端 200（含 q=，不再是 400）  —— HTTP 200 · /api/search?limit=3&q=F%3Dma
+  [PASS] H7b 该查询真的命中（F=ma ⇒ MX:phy:newton2）——「能通」升级为「能查到」  —— hits=2 首条=MX:phy:newton2
+  [PASS] H7c 负对照：旧行为（无 q 的查询串）确被后端 400 拒绝 ⇒ H7a 非空转  —— HTTP 400 · 缺少参数 q
+  [PASS] H7d 单字符查询确被后端拒绝（400）⇒ 前端 MIN_QUERY_LEN 有真实依据（非装饰常量）  —— HTTP 400 · 参数 q 至少 2 个字符
+
+[H8] 冷启动与参数生效（独立子进程 ⇒ 真·冷态；P0-2/P0-4 的端到端证据）
+  [PASS] H8a 端口 listen 后 /api/healthz 毫秒级应答（探活不再误判离线）  —— listen→首个 healthz 4 ms · HTTP 200（对照：同刻 /api/stats 冷态 4.9 s、前端旧预算 2 s ⇒ 必然 abort）
+  [PASS] H8b `spawn → listen` 不含图加载（先 bind 再预热，页面不再被 67.7 MB 阻塞）  —— 459 ms < 2000 ms
+  [PASS] H8c 冷启动期如实报告 backend/graph_ready（warming 不得编造 snapshot_id）  —— backend=warming · graph_ready=False · snapshot_id=None
+  [PASS] H8d `warming` 期页面即可 200（先 bind 再预热的收益）  —— 23766 字节 · text/html; charset=utf-8 · 当时 backend=warming
+  [PASS] H8c2 `warming` 状态可达（预热机制非死代码；或预热快到无需它）  —— 首个 healthz backend=warming · listen→healthz 4 ms
+  [PASS] H8e /api/healthz 不触碰图谱（无 nodes/edges，响应 < 2 KB）  —— 419 字节 · HTTP 200
+  [PASS] H8f 两个并发冷 `/api/stats` 均成功且**载荷逐字节一致**  —— 各自 15714/15820 ms · 墙钟 15822 ms
+  [PASS] H8g 后台预热最终到 ready（healthz 触发的预热线程真的完成）  —— ready · snapshot_id=sha256:21f13596a4c8 · 等待 3 ms
+  [PASS] H8g2 `backend=ready` ⇒ 派生缓存已建（就绪＝读路径已热，非「图装好就算」）  —— ready 时 cache_builds={'stale': 1, 'fidelity': 1, 'estatus': 1}
+  [PASS] H8h 单飞：预热 + 并发请求共享同一份冷算（`cache_builds` 各 == 1）  —— cache_builds={'stale': 1, 'fidelity': 1, 'estatus': 1}（应有 3 个潜在构建者：预热线程 + 2 个并发请求）
+  [PASS] H8i 预热后 `/api/stats` 远离冷算（对照冷态 ≈ 4.9 s ⇒ 收益可量化）  —— 685 ms · HTTP 200 · 忠实度分列=有
+  [PASS] H8j `hops=1` 与 `hops=3` 结果**不同**（跳数真的被后端采用，不再是静默丢弃）  —— 1 跳 5 节点 / 3 跳 200 节点 · 新增 195
+  [PASS] H8k `/api/subgraph` 认 `subjects`（复数）、不认 `subject`（单数）⇒ 学科筛选真的生效  —— subjects ⇒ 5 节点 · subject ⇒ 200 节点（等同未过滤）
+  [PASS] H8l `mode=path` 的 `paths` 真的随统一信封回传（非空、元素为对象）  —— HTTP 200 · 5 条路径
+  [PASS] H8m 【负对照】`src`/`dst` 发到 /api/subgraph ⇒ no_result（坐实 P0-4 不是玄学）  —— HTTP 200 · status=no_result · path 模式需要 2 个存在的种子（起点/终点），收到 0 个存在 / 0 个缺失
+
+[V] 验收映射（V8 / V9 / V1 的**前端侧**证据）
+  [PASS] V8a 五态在页面 CSS 上各自成类（不只靠颜色）
+  [PASS] V8b 五态渲染含内联 SVG 图标 + 文字标签（三重编码）—— 颜色只是三通道之一  —— 由 js/panels.js 的 renderStatusLine 生成
+  [PASS] V1a main.js 只经 api.bundle() 读整图（不直接拼 graph_data.json 字面量）
+  [PASS] V1b 整图加载被 `mode === "bundle"` 分支包裹（live 模式走不到）
+  [PASS] V9a 页面保留 mode=bundle 分支（离线样例链路）
+  [PASS] V9b 发布样例链路由 `bash sttp.sh release`（28 条）/`release-full` 覆盖 —— 本脚本**不替代**  —— 见回归
+  [PASS] V11 路径 `no_result` 文案报出被隐藏边数并提示切可信度档（不得把「被过滤」说成「不存在」）  —— 已覆盖
+  [PASS] V12 路径结论文案单一来源（两处调用同一 helper；`no_result` 文案字面量只许有 1 份）  —— pathOutcomeText 定义 1 处 / 引用 4 处 / 「低可信度边」字面量 1 处
+
+[G] 干净检出可用性守卫（D25 防回退；铁律 #53/#63）
+  [PASS] G1 sttp.sh 定义 require_authority 前置守卫（缺权威图 ⇒ 明确原因而非裸 traceback）
+  [PASS] G2 9 个「需权威图」命令均已挂守卫（漏一个 ⇒ 该命令在裸 clone 退回裸 traceback）  —— 9/9
+  [PASS] G3 守卫以**明确原因 + RC=2** 退出（不冒充成功、不冒充代码缺陷）
+  [PASS] G4 本段**可红**：抹掉守卫后 G1/G2 必须变红（断言非常真）
+
+[本静态仪器未覆盖 · 已由别的仪器接管或如实登记]
+  [SKIP] D14 布局 / 像素级断言（元素位置、视觉重叠、响应式断点）  —— 交互链路已由 `bash sttp.sh taskflow` 真浏览器覆盖；但**像素/布局**仍无断言 —— 需要截图比对基线，本轮未做
+  [SKIP] V8c 五态在**浏览器计算样式**下的实际颜色  —— 已由 X2 保证 CSS↔JS 同源；「浏览器里看起来是否真的可区分」未做像素级验证
+
+  phase43_frontend_selfcheck: PASS 109 / FAIL 0 / SKIP 2
+  （留痕已写入 07_交付物\外部评审\codex评测\review_20261017\frontend_elevated.json）

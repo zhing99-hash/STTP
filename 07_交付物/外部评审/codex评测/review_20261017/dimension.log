@@ -1,0 +1,8 @@
+反解表条目 61 / 可对照 61
+  agree                 : 60
+  convention_difference : 1  ['angle']
+  conflict              : 0  []
+  only_in_reverse       : 0  []
+  only_in_si            : 3  ['illuminance', 'luminance', 'luminous_flux']
+  agree_rate(checked)   : 0.9836
+SELFCHECK PASS {"n_equations": 3, "homogeneous": 1, "contradiction": 1, "undetermined": 1}

@@ -1,0 +1,17 @@
+============================================================================================
+evidence_deps 判据自检（七段 · 构造性非真空）
+============================================================================================
+  ① 参考表登记自洽        : FAIL ['哈希不可算 dimension_table', '哈希不可算 dimension_table.json', '哈希不可算 si_base_table', '哈希不可算 verification_model']
+  ② AST 代码级依赖可复现  : PASS（命中 ['dimension_table.py', 'element_reference.py']；全部命中 2 个）
+  ③ impl token 提取       : PASS（7 例，误命中 0）
+  ④ 状态机五态           : PASS（5 例）
+  ⑤ 不可复算 ≠ 已变更     : PASS（status=needs_review，**非** stale）
+  ⑥ 重写哈希不恢复 valid  : PASS（无账本=needs_review｜账本不完全=needs_review｜账本完整=valid）
+  ⑦ 五类变异逐一可定位    : PASS
+       ✅ 变异 _probe_input.json                  ⇒ status=stale  命中 src_changed  PASS
+       ✅ 变异 dimension_table.py                 ⇒ status=stale  命中 ref_changed  PASS
+       ✅ 变异 element_reference.py               ⇒ status=stale  命中 ref_changed  PASS
+       ✅ 变异 verification_model.py              ⇒ status=stale  命中 verifier_changed  PASS
+       ✅ 变异 element_reference.py               ⇒ status=stale  命中 dep_version_changed  PASS
+       ✅ 未受影响项保持原状（基线 valid；量纲表变异后 仅依赖元素表者 仍 valid）
+  ⇒ 未通过

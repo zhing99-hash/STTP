@@ -1,0 +1,137 @@
+{
+  "status": "no_result",
+  "reason": "在 5 跳内没有满足过滤条件的路径（a=CE:fo:gibbs_standard, b=PB:pq:entropy）",
+  "error_code": null,
+  "snapshot_id": "sha256:21f13596a4c8",
+  "query": {
+    "mode": "path",
+    "seeds": "CE:fo:gibbs_standard,PB:pq:entropy",
+    "query": null,
+    "hops": null,
+    "node_types": null,
+    "types": null,
+    "kinds": null,
+    "trust": "verified",
+    "min_confidence": "0",
+    "exclude_model_inferred": "false",
+    "exclude_stale": "false",
+    "subjects": null,
+    "max_nodes": "40",
+    "max_edges": "70",
+    "max_hops": "5",
+    "deadline_ms": "10000",
+    "max_paths": "5"
+  },
+  "query_hash": "d288ee240b275679",
+  "seed": {
+    "id": "CE:fo:gibbs_standard",
+    "type": null,
+    "subject": null
+  },
+  "hidden_by_trust": 69,
+  "nodes": [],
+  "edges": [],
+  "paths": [],
+  "expandable": [],
+  "stats": {
+    "missing_seeds": [],
+    "hops": 5,
+    "hidden_by_trust": 69,
+    "elapsed_ms": 0,
+    "expansions": 0,
+    "session": {
+      "tracked": false,
+      "n_nodes": 0,
+      "n_edges": 0,
+      "limit_nodes": 120,
+      "limit_edges": 200,
+      "exhausted": false
+    },
+    "stale_registry": {
+      "faithful": false,
+      "checked": 19,
+      "n_unfaithful": 13,
+      "unfaithful": [
+        "11_真实数据/element_reference.py",
+        "10_种子数据/seed_chem_equilibrium.json",
+        "10_种子数据/seed_classical_mechanics.json",
+        "10_种子数据/seed_electromagnetism.json",
+        "10_种子数据/seed_energy_combustion.json",
+        "10_种子数据/seed_math_algebra.json",
+        "10_种子数据/seed_math_calculus.json",
+        "10_种子数据/seed_math_geometry.json",
+        "10_种子数据/seed_optics.json",
+        "10_种子数据/seed_quantum.json",
+        "10_种子数据/seed_relativity.json",
+        "10_种子数据/seed_stat_mech.json",
+        "10_种子数据/seed_thermo.json"
+      ],
+      "n_untracked": 15,
+      "note": "worktree 字节 vs 仓库 blob：13/19 个已入库 locator 不一致（11_真实数据/element_reference.py, 10_种子数据/seed_chem_equilibrium.json, 10_种子数据/seed_classical_mechanics.json）；15 个 locator 未入库（不可从仓库复算）。★ 权威口径已改为**仓库字节** ⇒ 本探针**不影响** stale/fidelity 裁决，仅用于判断 opt-in 的 worktree 复核是否可靠。",
+      "canonical_byte_source": "git cat-file blob HEAD:<path>",
+      "affects_verdict": false
+    },
+    "evidence_fidelity": {
+      "verified": 0,
+      "changed": 0,
+      "unverifiable_no_source": 0,
+      "unverifiable_not_in_repo": 0
+    },
+    "evidence_fidelity_global": {
+      "verified": 234,
+      "changed": 1274,
+      "unverifiable_no_source": 121,
+      "unverifiable_not_in_repo": 47083,
+      "n_edges_total": 48712
+    },
+    "evidence_status_global": {
+      "valid": 0,
+      "stale": 35018,
+      "needs_review": 165,
+      "rejected": 0,
+      "no_record": 13529,
+      "n_edges_total": 48712,
+      "n_excluded_by_status": 35018
+    },
+    "a04": {
+      "available": true,
+      "schema": "sttp-reference-registry/v1",
+      "byte_source": "repo",
+      "n_references": 5,
+      "references": {
+        "dimension_table": {
+          "kind": "python_module",
+          "version": "反解量纲表（PhysicsBabel 方程消元产物）",
+          "content_hash": "ab9c5bcde8932ae5"
+        },
+        "dimension_table.json": {
+          "kind": "data_table",
+          "version": "反解量纲表快照（JSON 形态）",
+          "content_hash": "2942f2fc75da1b86"
+        },
+        "si_base_table": {
+          "kind": "python_module",
+          "version": "独立 SI/ISO 80000 基表",
+          "content_hash": "968bb5931f664210"
+        },
+        "element_reference": {
+          "kind": "python_module",
+          "version": "IUPAC 2021 元素参考表（周期表 1–118）",
+          "content_hash": "3a4e6d035f109462"
+        },
+        "verification_model": {
+          "kind": "python_module",
+          "version": "判级模型（验证器代码）",
+          "content_hash": "43845b11d643880c"
+        }
+      },
+      "verifiers": {
+        "verification_model": {
+          "code_hash": "100148c147cb",
+          "n_dependency_versions": 2
+        }
+      },
+      "status_enabled": true
+    }
+  }
+}

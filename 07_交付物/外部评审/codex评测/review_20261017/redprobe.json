@@ -1,0 +1,102 @@
+{
+  "schema": "sttp-red-probe/v1",
+  "generated_by": "06_PoC/tests/red_probe.py",
+  "interpreter": "C:\\Users\\zhing\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+  "node": "C:\\Users\\zhing\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.EXE",
+  "selected": [
+    "R1",
+    "R10",
+    "R11",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9",
+    "RN"
+  ],
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "skip": 2
+  },
+  "rows": [
+    {
+      "kind": "PASS",
+      "name": "R1 core.js 端点预算改错（search 3000→9999）⇒ F37k 必须变红",
+      "detail": "RC=1；目标断言均已变红：F37k"
+    },
+    {
+      "kind": "PASS",
+      "name": "R2 core.js 去掉 snapshot_id 序列化 ⇒ F37h 必须变红",
+      "detail": "RC=1；目标断言均已变红：F37h"
+    },
+    {
+      "kind": "PASS",
+      "name": "R3 名字核对工具判据被换掉（removed 恒空）⇒ S2 必须变红",
+      "detail": "RC=1；目标断言均已变红：S2"
+    },
+    {
+      "kind": "PASS",
+      "name": "R4 缺依赖诊断丢掉解释器 ⇒ G3 必须变红",
+      "detail": "RC=1；目标断言均已变红：G3"
+    },
+    {
+      "kind": "SKIP",
+      "name": "R5 页面不可达 ⇒ offline 必须 RC=2 且自述前置（D56）",
+      "detail": "缺前置：playwright"
+    },
+    {
+      "kind": "SKIP",
+      "name": "R6 viz 未跑 ⇒ taskflow 必须 RC=2 且自述前置（D56）",
+      "detail": "缺前置：playwright"
+    },
+    {
+      "kind": "PASS",
+      "name": "R7 core.js 分桶的 1900 边界改错 ⇒ F42a 必须变红",
+      "detail": "RC=1；目标断言均已变红：F42a"
+    },
+    {
+      "kind": "PASS",
+      "name": "R8 详情面板对缺键也渲染 ⇒ F42f 必须变红",
+      "detail": "RC=1；目标断言均已变红：F42f"
+    },
+    {
+      "kind": "PASS",
+      "name": "R9 图例年代区块去掉时间序 ⇒ F42j 必须变红",
+      "detail": "RC=1；目标断言均已变红：F42j"
+    },
+    {
+      "kind": "PASS",
+      "name": "R10 门禁缺依赖 SKIP（skip_detail）丢掉解释器 ⇒ G4 必须变红（D58）",
+      "detail": "RC=1；目标断言均已变红：G4"
+    },
+    {
+      "kind": "PASS",
+      "name": "R11 产物差异判据被换成恒真空（regenerated ⇒ []）⇒ M9 必须变红（D64）",
+      "detail": "RC=3；目标断言均已变红：M9"
+    },
+    {
+      "kind": "PASS",
+      "name": "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）",
+      "detail": "负对照：RC=0（期望 0）、FAIL 行 0 条（须 0）"
+    },
+    {
+      "kind": "PASS",
+      "name": "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
+      "detail": "注册表 12 条；锚点全部恰好命中一次"
+    },
+    {
+      "kind": "PASS",
+      "name": "RR 还原自检：被碰过的文件逐字节等于初始内容（#97 不得弄脏工作树）",
+      "detail": "被碰过 6 个文件；全部逐字节一致"
+    },
+    {
+      "kind": "PASS",
+      "name": "R0 注册表自检：ID 序列/唯一性/字段齐备与声明一致",
+      "detail": "ID 与声明一致、字段齐备"
+    }
+  ]
+}

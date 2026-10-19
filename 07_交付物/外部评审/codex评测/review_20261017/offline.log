@@ -1,0 +1,6 @@
+== A4 断网渲染测试：SKIP（缺前置）==
+  原因：未安装 Playwright —— 它是**可选依赖**，本项目零安装路径刻意不装它 · 解释器 C:\Users\zhing\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+  复现：pip install playwright && python -m playwright install chromium
+  细节：ModuleNotFoundError: No module named 'playwright'
+  ★ 退出码 2 = **前置缺失**（本仪器非自包含，需外部 viz 服务在跑）；
+    它既不是「通过」，也不代表「页面有问题」（D56）。

@@ -1,0 +1,123 @@
+✅ P0-1-dim-energy-mass           [dim_table] equal=False
+✅ P0-1-dim-angular-energy        [dim_table] equal=False
+✅ P0-1-dim-voltage-efield        [dim_table] equal=False
+✅ P0-1-dim-positive-control      [dim_table] equal=True
+✅ P0-1-main-dc-no-mismatch       [graph_scan] 违规 0：[]
+✅ P0-2-latex-not-same-as         [graph_scan] 命中 0：[]
+✅ P0-3-chem-implicit-H           [gate_chem] verdict=REJECTED codes=['R-CHEM-01']
+✅ P0-3-chem-charge               [gate_chem] verdict=REJECTED codes=['R-CHEM-03']
+✅ P0-3-chem-positive-control     [gate_chem] verdict=VERIFIED codes=[]
+✅ P0-3-math-domain-sqrt          [gate_math] verdict=REJECTED codes=['R-MATH-01']
+✅ P0-3-math-positive-control     [gate_math] verdict=VERIFIED codes=[]
+✅ P0-4-skeleton-bridge-absent    [graph_scan] 剩余 0 条
+✅ P0-5-level-model-not-rule      [level_check] level=model_inferred scope=model_link_prediction
+✅ P0-5-level-dim-table-positive  [level_check] level=rule_checked scope=dimensional_strict_equal
+✅ P0-5-level-dim-mismatch        [level_check] level=unverified scope=dimensional_mismatch
+✅ P0-5-level-has-symbol-ok       [level_check] level=rule_checked scope=formula_participation_membership
+✅ P0-5-level-has-symbol-stale    [level_check] level=unverified scope=formula_participation_not_found
+✅ P0-5-level-composed-self-only  [level_check] level=rule_checked scope=formula_count_independent_recheck
+✅ P0-5-level-composed-cross-positive [level_check] level=cross_source scope=formula_count_cross_source
+✅ P0-5-level-latex-not-verified  [level_check] level=model_inferred scope=model_link_prediction
+✅ P0-6-attrib-has-symbol-phy-bogus [attrib_check] gate=R-PHY scope=formula_participation_membership matched=False（期望 NOT_MATCH）
+✅ P0-6-attrib-r-phy-positive     [attrib_check] gate=R-PHY scope=dimensional_strict_equal matched=True（期望 MATCH）
+✅ P0-6-attrib-r-chem-positive    [attrib_check] gate=R-CHEM scope=formula_count_independent_recheck matched=True（期望 MATCH）
+✅ P0-5-main-has-symbol-no-phy-gate [graph_scan] 命中 0：[]
+✅ P0-5-main-gate-attrib-consistent [graph_scan] 已归因 2619 条，归因-范围不符 0 条：[]
+✅ P0-5-main-level-consistent     [graph_scan] 已分层 48712 条，布尔-分层不符 0 条：[]
+✅ P1-bridge-no-contradictory     [graph_scan] 已标注类 718 条，自相矛盾 0 条：[]
+✅ P1-bridge-molar-mass-evidenced [graph_scan] PB:pq:molar_mass：共 698 条（需≥600），低于 rule_checked 的 0 条 []
+✅ P1-level-molar-mass-positive-control [level_check] level=rule_checked scope=molar_mass_independent_recompute
+✅ P1-level-molar-mass-cross-source-control [level_check] level=cross_source scope=molar_mass_cross_source
+✅ P1-level-contradictory-bridge-rejected [level_check] level=unverified scope=rationale_target_mismatch
+✅ P1-level-consistent-class-not-flagged [level_check] level=model_inferred scope=model_link_prediction
+✅ P1-level-numeric-mass-on-molar-mass-ok [level_check] level=rule_checked scope=molar_mass_independent_recompute
+✅ P1-level-numeric-mass-on-energy-rejected [level_check] level=unverified scope=rationale_target_mismatch
+✅ P1-level-webbook-unit-ok       [level_check] level=rule_checked scope=webbook_unit_dimension_recompute
+✅ P1-level-webbook-multi-ref     [level_check] level=cross_source scope=webbook_multi_reference_agreement
+✅ P1-level-webbook-unit-mismatch [level_check] level=unverified scope=webbook_unit_dimension_mismatch
+✅ P1-main-level-matches-recompute [graph_scan] 已重算 48712 条，落库≠复算 0 条：[]
+✅ P1-bridge-source-traceable     [graph_scan] webbook_thermochemistry：共 157 条（需 n_references≥1），不可追溯 0 条 []
+✅ P1-level-webbook-disagreement-not-cross [level_check] level=rule_checked scope=webbook_unit_dimension_recompute
+✅ P1-level-unit-dim-ok           [level_check] level=rule_checked scope=unit_dimension_recompute
+✅ P1-level-unit-dim-mismatch     [level_check] level=unverified scope=unit_dimension_mismatch
+✅ P1-level-unit-force-kg-rejected [level_check] level=unverified scope=unit_dimension_mismatch
+✅ P1-level-math-bridge-log-ok    [level_check] level=source_asserted scope=manual_curation
+✅ P1-level-math-bridge-no-op-rejected [level_check] level=unverified scope=unclassified
+✅ P1-level-math-bridge-wrong-target-rejected [level_check] level=by_construction scope=symbol_scan_from_text
+✅ P1-level-model-defines-absent-symbol-rejected [level_check] level=unverified scope=semantic_target_absent
+✅ P1-den-main-unit-dim-consistent [graph_scan] 可判定 40 条 / 不可判定 8 条，量纲不符 0 条：[]
+✅ P1-den-main-unit-unique        [graph_scan] 多单位量的 48 个，量纲互斥 0 个：[]
+✅ P1-den-main-semantic-target-present [graph_scan] 可判定 4 条，符号缺失 0 条：[]
+✅ P1-den-main-math-bridge-evidenced [graph_scan] 数学桥 13 条（需≥13），无证据/低于 rule_checked 的 0 条：[]
+✅ P1-level-unit-molar-mass-not-flagged [level_check] level=rule_checked scope=unit_dimension_recompute
+✅ P1-den-main-island-freeze      [graph_scan] 分量 6 个（上限 6）；冻结岛 5 个 / 29 节点；实际孤岛 5 个 / 29 节点
+✅ P1-level-symbol-expr-recompute-ok [level_check] level=rule_checked scope=symbol_expr_recompute
+✅ P1-level-symbol-expr-absent-not-upgraded [level_check] level=source_asserted scope=manual_curation
+✅ P1-level-model-semantic-target-absent-rejected [level_check] level=unverified scope=semantic_target_absent
+✅ P1-level-model-semantic-target-present-not-upgraded [level_check] level=model_inferred scope=model_link_prediction
+✅ P1-dim-alias-speed-of-light-eq-light-speed [dim_table] equal=True
+✅ P1-dim-alias-electric-charge-eq-charge [dim_table] equal=True
+✅ P1-dim-alias-electromotive-force-eq-voltage [dim_table] equal=True
+✅ P1-dim-alias-focal-length-eq-length [dim_table] equal=True
+✅ P1-dim-alias-gibbs-free-energy-eq-energy [dim_table] equal=True
+✅ P1-dim-alias-reduced-planck-eq-planck [dim_table] equal=True
+✅ P1-dim-not-efield-eq-voltage   [dim_table] equal=False
+✅ P1-den-main-symbol-expr-evidenced [graph_scan] symbol_expr_recompute 206 条（需≥196），无证据 0 条
+✅ P1-den-main-model-semantic-target-present [graph_scan] 可判定 8 条，目标缺席 0 条：[]
+✅ P1-den-main-dim-consistent-recompute [graph_scan] 可判定 38 条，量纲互斥 0 条：[]
+✅ P1-den-main-evidence-traceable [graph_scan] level>=rule_checked 34769 条；带证据链 34769 条（100.0%）；缺独立证据 0 条
+✅ P1-den-main-evidence-wellformed [graph_scan] 证据对象覆盖 48712 / 48712（100.0%）；不良构 0 条
+✅ P1-den-main-no-repr-residue    [graph_scan] 扫描 795227 个属性值，repr 残留 0 条：[]
+✅ P1-den-main-level-scope-reproducible [graph_scan] 重算覆盖 48712 条，落库≠重算 0 条：[]
+✅ P1-den-main-residual-accounted [graph_scan] T4 残差 5312 条，未归类 0 条：[]  {'same_source_curated': 71, 'same_source_elementkg': 707, 'shared_dictionary_rhea_chebi': 3002, 'naming_variant_no_second_source': 1070, 'placeholder_complex': 370, 'polymer_residue': 38, 'generic_class': 54}
+✅ P1-den-main-independence-accounted [graph_scan] T1–T8 达标边 40451 条；独立 34758；**非独立 5693 条**，未归类 0 条：[]  {'source_text_only': 7, 'same_source_curated': 85, 'same_source_elementkg': 707, 'no_independent_citation_index': 176, 'no_second_subject_index': 178, 'unit_name_not_in_reference': 6, 'shared_dictionary_rhea_chebi': 3002, 'naming_variant_no_second_source': 1070, 'placeholder_complex': 370, 'polymer_residue': 38, 'generic_class': 54}
+✅ P1-den-main-scope-accounted    [graph_scan] 全图 48712 边；分母内 40589；**分母外 8123（16.7%）**；占位实体边 4266；未归类 0 条：[]  {'symbol_binding': 114, 'task_family': 40589, 'identity_not_in_task_set': 74, 'structure_not_in_task_set': 12, 'gnn_link_prediction': 55, 'ekg_relation_not_in_task_set': 4266, 'descriptor_assertion_not_in_task_set': 3601, 'operator_usage_not_in_task_set': 1}
+  ① 变异文件              : ['11_真实数据/elementkg10m_raw.json', '11_真实数据/elementkg_raw.json']
+  ① 镜像固有基线（非变异）: ['Phase13.Gate.B2', 'Phase13.Gate.B5', 'curated_seed', 'curated_seed/energy_combustion', 'openalex']
+  ① 独立期望直接变更      : ['ElementKG2.0']
+  ① 工具判定直接变更      : ['ElementKG2.0', 'Phase13.Gate.B2', 'Phase13.Gate.B5', 'curated_seed', 'curated_seed/energy_combustion', 'openalex']（新增 ['ElementKG2.0']）
+     新增直接变更集合相等  : PASS
+     受影响断言集合相等    : PASS（期望 6068 / 命中 6068，差 0）
+  ② 纯血缘：PhysicsBabel(变异) → chembl_api(临时 imports_from)
+     chembl_api 文件未变但被传递标记 : PASS
+  ③ 未变异图无变更        : FAIL（受影响 35323）
+  ④ 未入库来源分列披露    : PASS（14 个来源 / 47083 条断言，**不计入 changed**）
+  ⑤ 两口径确实不同        : PASS —— 构造对照 differ=True / 还原后相等=True；另：本机工作区口径多报 1 个「已变更」['openalex']
+✅ P1-r02-molar-mass-energy       [pq_quantity_gate] is_molar_mass_quantity('energy')=False（期望 NOT_MOLAR_MASS）
+✅ P1-r02-molar-mass-kinetic      [pq_quantity_gate] is_molar_mass_quantity('kinetic_energy')=False（期望 NOT_MOLAR_MASS）
+✅ P1-r02-molar-mass-massenergy   [pq_quantity_gate] is_molar_mass_quantity('mass_energy')=False（期望 NOT_MOLAR_MASS）
+✅ P1-r02-molar-mass-bare-mass    [pq_quantity_gate] is_molar_mass_quantity('mass')=False（期望 NOT_MOLAR_MASS）
+✅ P1-r02-molar-mass-bare-weight  [pq_quantity_gate] is_molar_mass_quantity('weight')=False（期望 NOT_MOLAR_MASS）
+✅ P1-r02-molar-mass-positive     [pq_quantity_gate] is_molar_mass_quantity('molar_mass')=True（期望 MOLAR_MASS）
+✅ P1-r02-molar-mass-molweight    [pq_quantity_gate] is_molar_mass_quantity('molecular weight')=True（期望 MOLAR_MASS）
+✅ P1-r02-molar-mass-zh           [pq_quantity_gate] is_molar_mass_quantity('摩尔质量')=True（期望 MOLAR_MASS）
+✅ P1-r01-chem-balanced-methanol  [gate_chem] verdict=VERIFIED codes=[]
+✅ P1-r01-chem-balanced-ethene    [gate_chem] verdict=VERIFIED codes=[]
+✅ P1-r01-chem-explicit-H-same    [gate_chem] verdict=VERIFIED codes=[]
+✅ P1-r01-chem-smarts-never-verified [gate_chem] verdict=REJECTED codes=['R-CHEM-01']
+✅ P1-r01-chem-smarts-undetermined [gate_chem] verdict=NEEDS_REVIEW codes=['R-CHEM-05']
+✅ P1-r01-chem-field-conflict     [gate_chem] verdict=NEEDS_REVIEW codes=['R-CHEM-04']
+✅ P1-r05-webbook-multi-ref-no-detail [level_check] level=rule_checked scope=webbook_unit_dimension_recompute
+✅ P1-r04-uses-operator-log-ok    [level_check] level=rule_checked scope=log_rule_usage
+✅ R09-01-pb-separated            [dim_field_semantics] props=['dimension_vector', 'exponent_in_term'] → SEPARATED（期望 SEPARATED）
+✅ R09-02-legacy-collision        [dim_field_semantics] props=['dimension'] → COLLISION（期望 COLLISION）
+✅ R09-03-unit-symbol-in-dim      [dim_field_semantics] props=['dimension_vector'] → UNIT_SYMBOL_IN_DIM（期望 UNIT_SYMBOL_IN_DIM）
+✅ R09-04-seed-clean              [dim_field_semantics] props=['dimension_vector'] → SEPARATED（期望 SEPARATED）
+✅ R09-05-dimensionless           [dim_field_semantics] props=['dimension_vector'] → SEPARATED（期望 SEPARATED）
+✅ R09-06-force-ma-homogeneous    [dim_consistency] keys=['force', 'mass', 'acceleration'] → HOMOGENEOUS（期望 HOMOGENEOUS）
+✅ R09-07-contradiction           [dim_consistency] keys=['force', 'mass'] → CONTRADICTION（期望 CONTRADICTION）
+✅ R09-08-undetermined            [dim_consistency] keys=['force', 'mystery_quantity'] → UNDETERMINED（期望 UNDETERMINED）
+✅ R09-09-work-energy-homogeneous [dim_consistency] keys=['energy', 'work'] → HOMOGENEOUS（期望 HOMOGENEOUS）
+✅ R09-10-graph-no-legacy-dimension [graph_scan] 命中节点 0：[]
+✅ R09-11-graph-dim-vector-normalized [graph_scan] 含 dimension_vector 148 条，未规范化 0 条：[]
+✅ R10-01-lineage-acyclic         [lineage_acyclic] 血缘环 0 个 []（期望 ACYCLIC）
+✅ R10-02-src-registered-database [src_registered] source_registry[PhysicsBabel] kind=database → REGISTERED（期望 REGISTERED）
+✅ R10-03-src-sentinel-unregistered [src_registered] source_registry[unregistered] kind=unregistered → NOT_REGISTERED（期望 NOT_REGISTERED）
+✅ R10-04-src-unknown             [src_registered] source_registry[NoSuchSource] kind=unregistered → NOT_REGISTERED（期望 NOT_REGISTERED）
+❌ R10-05-lineage-selfcheck       [lineage_selfcheck] selfcheck 异常：unsupported operand type(s) for +: 'NoneType' and 'bytes'
+✅ R10-06-graph-evidence-source-bound [graph_scan] 证据 49572 条，未绑定 0，未登记 0，绑定率 100.0%
+✅ R10-07-graph-edge-source-present [graph_scan] props.source 缺失 0 条：[]
+------------------------------------------------------------------------------
+被检图：F:\codex\sttp\STTP-review\06_PoC\etl\normalized.json
+汇总：PASS 107 / FAIL 1 / SKIP 0
+★ 冻结反例集回归：1 条已坐实的错误模式重新出现

@@ -1,0 +1,43 @@
+==============================================================================
+  构造性可红性探针（D55 / 铁律 #87 · #100）—— 注入已知缺陷，断言必须真会红
+==============================================================================
+  解释器 : python 3.12.14 @ C:\Users\zhing\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+  node   : C:\Users\zhing\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.EXE
+  注册表 : 12 条（11 条真探针 + 1 条负对照）｜本轮选中 12 条
+==============================================================================
+
+  [PASS] R1 core.js 端点预算改错（search 3000→9999）⇒ F37k 必须变红
+         RC=1；目标断言均已变红：F37k
+  [PASS] R2 core.js 去掉 snapshot_id 序列化 ⇒ F37h 必须变红
+         RC=1；目标断言均已变红：F37h
+  [PASS] R3 名字核对工具判据被换掉（removed 恒空）⇒ S2 必须变红
+         RC=1；目标断言均已变红：S2
+  [PASS] R4 缺依赖诊断丢掉解释器 ⇒ G3 必须变红
+         RC=1；目标断言均已变红：G3
+  [SKIP] R5 页面不可达 ⇒ offline 必须 RC=2 且自述前置（D56）
+         缺前置：playwright
+  [SKIP] R6 viz 未跑 ⇒ taskflow 必须 RC=2 且自述前置（D56）
+         缺前置：playwright
+  [PASS] R7 core.js 分桶的 1900 边界改错 ⇒ F42a 必须变红
+         RC=1；目标断言均已变红：F42a
+  [PASS] R8 详情面板对缺键也渲染 ⇒ F42f 必须变红
+         RC=1；目标断言均已变红：F42f
+  [PASS] R9 图例年代区块去掉时间序 ⇒ F42j 必须变红
+         RC=1；目标断言均已变红：F42j
+  [PASS] R10 门禁缺依赖 SKIP（skip_detail）丢掉解释器 ⇒ G4 必须变红（D58）
+         RC=1；目标断言均已变红：G4
+  [PASS] R11 产物差异判据被换成恒真空（regenerated ⇒ []）⇒ M9 必须变红（D64）
+         RC=3；目标断言均已变红：M9
+  [PASS] RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）
+         负对照：RC=0（期望 0）、FAIL 行 0 条（须 0）
+  [PASS] RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次
+         注册表 12 条；锚点全部恰好命中一次
+  [PASS] RR 还原自检：被碰过的文件逐字节等于初始内容（#97 不得弄脏工作树）
+         被碰过 6 个文件；全部逐字节一致
+  [PASS] R0 注册表自检：ID 序列/唯一性/字段齐备与声明一致
+         ID 与声明一致、字段齐备
+
+  red_probe: PASS 13 / FAIL 0 / SKIP 2
+  （留痕已写入 07_交付物\外部评审\codex评测\review_20261017\redprobe.json）
+
+  结论：选中探针均按预期变红，但有 2 条**因缺前置未运行** ⇒ 不构成「通过」。

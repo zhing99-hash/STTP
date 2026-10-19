@@ -1,0 +1,517 @@
+{
+ "schema": "sttp-phase43-selfcheck/v1",
+ "counts": {
+  "PASS": 94,
+  "FAIL": 3,
+  "SKIP": 3
+ },
+ "query_source": "06_PoC\\etl\\normalized.json",
+ "rows": [
+  {
+   "status": "PASS",
+   "name": "C1 subgraph 响应通过 subgraph.schema.json",
+   "detail": "[]"
+  },
+  {
+   "status": "PASS",
+   "name": "C2 search 响应通过 search.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "C3 overview 响应通过 overview.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "C4 错误信封通过 error.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "C5 注入非法 error_code ⇒ 校验器变红",
+   "detail": "（注入反例，必须报错）"
+  },
+  {
+   "status": "PASS",
+   "name": "C5b 四份 schema 只用「已实现关键字」（无静默跳过）",
+   "detail": "13 个关键字全部受支持"
+  },
+  {
+   "status": "PASS",
+   "name": "C5b2 additionalProperties 生效：动态键值类型不符 ⇒ 校验器变红",
+   "detail": "（注入反例，必须报错）"
+  },
+  {
+   "status": "PASS",
+   "name": "C5b3 additionalProperties 正例：动态键值合法 ⇒ 通过（断言非恒真）",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "C6 queries._RANK == graph_export.RANK_ORDER",
+   "detail": "一致"
+  },
+  {
+   "status": "PASS",
+   "name": "C7 queries._RANK == verification_model.RANK",
+   "detail": "一致"
+  },
+  {
+   "status": "PASS",
+   "name": "C8 VERIFIED_MIN/STRICT_MIN 两处一致",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V1a /api/subgraph 不读 graph_data.json",
+   "detail": "load_graph_data 调用 0 次；返回 4 节点"
+  },
+  {
+   "status": "PASS",
+   "name": "V1b /api/overview 亦不读全图",
+   "detail": "调用 0 次"
+  },
+  {
+   "status": "PASS",
+   "name": "V1 反例：/graph_data.json 确实读全图（证明探针有效）",
+   "detail": "调用 1 次"
+  },
+  {
+   "status": "PASS",
+   "name": "V2a 正例：max_nodes=50 ⇒ truncated/nodes，reason 非空",
+   "detail": "truncated / pre={'n_nodes': 731, 'n_edges': 855} / got=72"
+  },
+  {
+   "status": "PASS",
+   "name": "V2 反例：预算放大 ⇒ status=ok（证明 truncated 不是恒真）",
+   "detail": "ok n_nodes=731"
+  },
+  {
+   "status": "PASS",
+   "name": "V3a 正例：seeds=DOES:NOT:EXIST ⇒ no_result",
+   "detail": "no_result"
+  },
+  {
+   "status": "PASS",
+   "name": "V3 反例：存在的 seed ⇒ ok（证明 no_result 不是恒真）",
+   "detail": "ok"
+  },
+  {
+   "status": "PASS",
+   "name": "V4a 正例：deadline_ms=1 ⇒ timeout/GRAPH_QUERY_TIMEOUT",
+   "detail": "timeout elapsed=16ms"
+  },
+  {
+   "status": "PASS",
+   "name": "V4 反例：预算充足 ⇒ 不超时（证明 timeout 不是恒真）",
+   "detail": "truncated"
+  },
+  {
+   "status": "PASS",
+   "name": "V5a snapshot_id == sha256(查询源)[:12]",
+   "detail": "sha256:21f13596a4c8"
+  },
+  {
+   "status": "PASS",
+   "name": "V5b 换一份图 ⇒ snapshot_id 变（且等于该图哈希）",
+   "detail": "sha256:21f13596a4c8 vs sha256:61d715adb2a5"
+  },
+  {
+   "status": "PASS",
+   "name": "V5c 请求带**不符**的 snapshot_id ⇒ SNAPSHOT_MISMATCH（校验真会拒）",
+   "detail": "error / SNAPSHOT_MISMATCH"
+  },
+  {
+   "status": "PASS",
+   "name": "V5d 请求带**相符**的 snapshot_id ⇒ 正常放行（证明 V5c 不是恒拒）",
+   "detail": "ok"
+  },
+  {
+   "status": "PASS",
+   "name": "V6a 全部证据对象四项齐备",
+   "detail": "17 条证据 / 0 处缺失"
+  },
+  {
+   "status": "PASS",
+   "name": "V6 反例：抹掉 evidence[].src ⇒ 校验器变红",
+   "detail": "（必须报错）"
+  },
+  {
+   "status": "PASS",
+   "name": "V7a 基线（exclude_stale=false）确实含 stale 边",
+   "detail": "23 / 25 条"
+  },
+  {
+   "status": "PASS",
+   "name": "V7b exclude_stale=true ⇒ 无 stale 边且边数下降",
+   "detail": "25 → 1"
+  },
+  {
+   "status": "PASS",
+   "name": "V7c 请求跳数被 `max_hops` 夹紧时**必须披露**（truncated_by=hops + requested/actual）",
+   "detail": "truncated_by=hops · requested=3 → 实走=2 · reason=请求跳数被夹紧至 max_hops=2"
+  },
+  {
+   "status": "SKIP",
+   "name": "V8 五态在 UI 上颜色可区分",
+   "detail": "属步骤 B（前端 js/*.js）；本轮未覆盖"
+  },
+  {
+   "status": "SKIP",
+   "name": "V9 mode=bundle 发布样例链路",
+   "detail": "由回归 `bash sttp.sh release` 覆盖（本轮脚本不替代）"
+  },
+  {
+   "status": "PASS",
+   "name": "V10a 两次响应逐元素相同",
+   "detail": "hash=127aec36d2e87ea6"
+  },
+  {
+   "status": "PASS",
+   "name": "V10 反例：换参数 ⇒ query_hash 变（证明 hash 不是常量）",
+   "detail": "127aec36d2e87ea6 vs 9da971b3c08bf57d"
+  },
+  {
+   "status": "PASS",
+   "name": "V11a types=has_quantity 有结果",
+   "detail": "truncated n_edges=67"
+  },
+  {
+   "status": "PASS",
+   "name": "V11b kinds=has_quantity ⇒ 0 条（证明未混用）",
+   "detail": "no_result"
+  },
+  {
+   "status": "PASS",
+   "name": "V12a 反复展开 ⇒ SUBGRAPH_LIMIT_REACHED",
+   "detail": "第 6 次拒绝；session={'tracked': True, 'n_nodes': 120, 'n_edges': 114, 'limit_nodes': 120, 'limit_edges': 200, 'exhausted': True}"
+  },
+  {
+   "status": "PASS",
+   "name": "V12b 会话计数不超限且标记 exhausted",
+   "detail": "{'tracked': True, 'n_nodes': 120, 'n_edges': 114, 'limit_nodes': 120, 'limit_edges': 200, 'exhausted': True}"
+  },
+  {
+   "status": "PASS",
+   "name": "V12 反例：新会话可正常展开（证明硬门按会话记账）",
+   "detail": "ok"
+  },
+  {
+   "status": "PASS",
+   "name": "V13a 正例：合法 token ⇒ 可展开",
+   "detail": "ok"
+  },
+  {
+   "status": "PASS",
+   "name": "V13b 反例：篡改 token 预算字段 ⇒ 400 BAD_REQUEST",
+   "detail": "400/BAD_REQUEST"
+  },
+  {
+   "status": "PASS",
+   "name": "V13c 反例：任意字符串 token ⇒ 400",
+   "detail": "400/BAD_REQUEST"
+  },
+  {
+   "status": "PASS",
+   "name": "V14a hidden_by_trust 随档位变化（非零、非恒等）",
+   "detail": "verified=13932 / strict=13943"
+  },
+  {
+   "status": "PASS",
+   "name": "V14b visible(v)−visible(s) == hidden(s)−hidden(v)",
+   "detail": "11 == 11"
+  },
+  {
+   "status": "PASS",
+   "name": "V14c visible+hidden 两档相等（可加总回全量）",
+   "detail": "48712 == 48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V15a 覆盖完整且取值合法",
+   "detail": "缺失=0"
+  },
+  {
+   "status": "PASS",
+   "name": "V15b why_shown 取值分布非单一",
+   "detail": "['expansion', 'user_specified', 'verified_context']"
+  },
+  {
+   "status": "PASS",
+   "name": "V15 反例：抹掉 why_shown ⇒ 校验器变红",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V16a 找到负对照目标文件（被登记 locator）",
+   "detail": "06_PoC\\sample_mathxiv.json"
+  },
+  {
+   "status": "PASS",
+   "name": "V16b ★ D1：worktree 变异 ⇒ 服务端 stale **不变**（裁定与检出/行尾无关）",
+   "detail": "8 → 8"
+  },
+  {
+   "status": "PASS",
+   "name": "V16e 负对照后逐字节还原（铁律 #61）",
+   "detail": "57822ea11cb52475"
+  },
+  {
+   "status": "PASS",
+   "name": "V16e2 还原后服务端 stale 计数回到基线",
+   "detail": "8"
+  },
+  {
+   "status": "FAIL",
+   "name": "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 相关边翻成 changed",
+   "detail": "stale 35424 → 1395（changed=1274，来源 Phase13.Gate.B5，引用 734 条）"
+  },
+  {
+   "status": "PASS",
+   "name": "V16d 缓存键随 HEAD 变化（HEAD 变 ⇒ 键变 ⇒ 重算；不含 mtime/size）",
+   "detail": "HEAD=8a5c977f3ec3｜伪 HEAD 下键已变=True"
+  },
+  {
+   "status": "PASS",
+   "name": "V16f 响应里的字节忠实性计数 == 独立重算",
+   "detail": "响应 13 / 独立 13"
+  },
+  {
+   "status": "PASS",
+   "name": "V16g 两口径可构造差异（blob=LF / 工作区=CRLF ⇒ 哈希必不同；还原后必相等）",
+   "detail": "differ=True / restored_equal=True "
+  },
+  {
+   "status": "PASS",
+   "name": "V17a 无 session_id ⇒ tracked=False 且连续 3 次都不被硬门拒绝",
+   "detail": "status=['truncated', 'truncated', 'truncated'] tracked=[False, False, False]"
+  },
+  {
+   "status": "PASS",
+   "name": "V17b 匿名调用不改写会话表（计数恒为 0）",
+   "detail": "n_nodes=[0, 0, 0]"
+  },
+  {
+   "status": "PASS",
+   "name": "V17c 有 session_id ⇒ tracked=True 且展开次数递增",
+   "detail": "exp 1→2 / n 20→40"
+  },
+  {
+   "status": "PASS",
+   "name": "V17d reset=1 ⇒ 该会话计数先清零再计本次",
+   "detail": "n 40→20 / exp=1"
+  },
+  {
+   "status": "PASS",
+   "name": "V17e 会话表超上限 ⇒ 按最久未写淘汰（内存不无界增长）",
+   "detail": "V.SESSION_MAX=3 ⇒ 实存 3"
+  },
+  {
+   "status": "PASS",
+   "name": "V18a 全图四分类齐备且求和 == 边总数（分列可加总）",
+   "detail": "verified=234 changed=1274 unverifiable_no_source=121 unverifiable_not_in_repo=47083  Σ=48712 / 总=48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V18b 本次子图四分类求和 == 本次返回边数",
+   "detail": "Σ=9 / 边=9"
+  },
+  {
+   "status": "PASS",
+   "name": "V18c 本次子图各分类 ≤ 全图同类（无越界）",
+   "detail": "verified 9≤234 changed 0≤1274 unverifiable_no_source 0≤121 unverifiable_not_in_repo 0≤47083"
+  },
+  {
+   "status": "FAIL",
+   "name": "V18d 全图 changed == 0（D1 根因已修：裁决与检出/行尾无关）",
+   "detail": "changed=1274（若 >0 ⇒ 有已登记来源的真实字节与仓库 blob 不符，须查来源而非行尾）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18e 证据字节源 == 仓库 blob（不是 worktree，D1 防回退）",
+   "detail": "repo（git cat-file blob HEAD:<path>）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18f 字节层 stale 计数 == changed + unverifiable_no_source（旧口径原样保留）",
+   "detail": "字节层 stale=1395 == 1274 + 121"
+  },
+  {
+   "status": "PASS",
+   "name": "V18f2 【重写】全图 stale = 字节层 ∪ A04 层（两层并集，含于区间内）",
+   "detail": "stale=35424 ∈ [1395, 36413]（A04 层贡献 35018）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18g 独立重算四分类 == 响应 evidence_fidelity_global",
+   "detail": "全部一致"
+  },
+  {
+   "status": "FAIL",
+   "name": "V18h unverifiable_not_in_repo 不计入 stale（已知边界：locator 未入库，并非变更）",
+   "detail": "not_in_repo=47083（占 96.7%）｜stale=35424（不含它）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18i 来源 repo_status 三分类齐备（in_repo/not_in_repo/no_locator）",
+   "detail": "no_locator=9 not_in_repo=14 in_repo=8"
+  },
+  {
+   "status": "PASS",
+   "name": "V18i2 来源分列 == 独立重算 repo_status_map",
+   "detail": "响应 {'no_locator': 9, 'not_in_repo': 14, 'in_repo': 8} / 独立 {'no_locator': 9, 'not_in_repo': 14, 'in_repo': 8}"
+  },
+  {
+   "status": "PASS",
+   "name": "V18i3 /api/stats 与 /api/subgraph 的 evidence_fidelity_global 逐值一致",
+   "detail": "stats={'verified': 234, 'changed': 1274, 'unverifiable_no_source': 121, 'unverifiable_not_in_repo': 47083, 'n_edges_total': 48712}"
+  },
+  {
+   "status": "PASS",
+   "name": "V18j 每条边 fidelity ∈ 四分类 ∪ {null}（无越界取值）",
+   "detail": "9 条合法"
+  },
+  {
+   "status": "PASS",
+   "name": "V18k 【重写】边 stale ⇔ (fidelity ∈ STALE_FIDELITIES) ∪ (evidence_status ∈ {stale,rejected}) —— 两层合流于一处，不漂移",
+   "detail": "一致（9 条）"
+  },
+  {
+   "status": "PASS",
+   "name": "V18l 含 fidelity/fidelity_reasons 的响应通过 subgraph.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V18m 反例：注入非法 fidelity ⇒ schema 必须变红（枚举非常真）",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V18n 负对照：篡改边总数 ⇒ 求和恒等式必然不成立（断言非真空）",
+   "detail": "Σ=48712 ≠ 篡改后总数=48713"
+  },
+  {
+   "status": "PASS",
+   "name": "V19a queries.EVIDENCE_STATUSES == evidence_deps.STATUSES（跨模块防漂移）",
+   "detail": "queries=('valid', 'stale', 'needs_review', 'rejected') / evidence_deps=('valid', 'stale', 'needs_review', 'rejected')"
+  },
+  {
+   "status": "PASS",
+   "name": "V19a2 状态→四分类映射逐值一致（needs_review→unverifiable_no_source 等）",
+   "detail": "{'valid': 'verified', 'stale': 'changed', 'needs_review': 'unverifiable_no_source', 'rejected': 'changed'}"
+  },
+  {
+   "status": "PASS",
+   "name": "V19a3 计入排除的 A04 状态 == {stale, rejected}（needs_review 不排除）",
+   "detail": "('stale', 'rejected')"
+  },
+  {
+   "status": "PASS",
+   "name": "V19b 全图 A04 分列齐备（五态 + no_record）且求和 == 边总数",
+   "detail": "valid=0 stale=35018 needs_review=165 rejected=0 no_record=13529  Σ=48712 / 总=48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V19c 本次子图 A04 分列求和 == 本次返回边数",
+   "detail": "Σ=9 / 边=9"
+  },
+  {
+   "status": "PASS",
+   "name": "V19d 独立重算 A04 分列 == 响应 evidence_status_global",
+   "detail": "全部一致"
+  },
+  {
+   "status": "PASS",
+   "name": "V19e 每条边 evidence_status ∈ 五态 ∪ {null}（无越界取值）",
+   "detail": "9 条合法"
+  },
+  {
+   "status": "PASS",
+   "name": "V19e2 缺记录 ⇒ status=null 且 source=absent（**不得**渲染成 valid）",
+   "detail": "自洽（9 条）"
+  },
+  {
+   "status": "PASS",
+   "name": "V19f needs_review **不**导致 stale（缺数据本身 ≠ 已变更；否则排除开关自毁）",
+   "detail": "无（0 条 needs_review）"
+  },
+  {
+   "status": "PASS",
+   "name": "V19g exclude_stale：结果内无 stale、结果 ⊆ 基线、且所有 stale 边都被移出",
+   "detail": "基线 38 边（含 stale 26）→ 排除后 8 边"
+  },
+  {
+   "status": "PASS",
+   "name": "V19h 构造性：字节层 verified 的边被标 A04 stale ⇒ 立即被排除且给出理由",
+   "detail": "key=defines|MX:def:manifold|MX:sym:m（标记前 stale=False，标记后 True）"
+  },
+  {
+   "status": "PASS",
+   "name": "V19i 反向对照：同一条边标成 needs_review ⇒ **不**被排除",
+   "detail": "key=defines|MX:def:manifold|MX:sym:m result_stale=False"
+  },
+  {
+   "status": "PASS",
+   "name": "V19j 负对照：篡改 valid 计数 ⇒ 五态求和必然不等于边总数（非真空）",
+   "detail": "Σ=48713 ≠ 总=48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V19k 含 evidence_status 的响应通过 subgraph.schema.json",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V19l 反例：注入非法 evidence_status ⇒ schema 必须变红（枚举非常真）",
+   "detail": ""
+  },
+  {
+   "status": "PASS",
+   "name": "V19m /api/stats 与 /api/subgraph 的 evidence_status_global 逐值一致",
+   "detail": "stats={'valid': 0, 'stale': 35018, 'needs_review': 165, 'rejected': 0, 'no_record': 13529, 'n_edges_total': 48712, 'n_excluded_by_status': 35018}"
+  },
+  {
+   "status": "PASS",
+   "name": "V19n /api/stats 披露 A04 参考表登记（可用 + 字节源=repo）",
+   "detail": "available=True n_refs=5 byte_source=repo"
+  },
+  {
+   "status": "PASS",
+   "name": "V20a hidden_by_trust == 同一次遍历里被拒边的**不同**边数",
+   "detail": "报告=11635 / 独立去重=11635"
+  },
+  {
+   "status": "PASS",
+   "name": "V20b 0 < hidden_by_trust ≤ 全图边数（旧实现的 62,640 > 48,712 会在此变红）",
+   "detail": "11635 ≤ 48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V20c 负对照：探针有效（判定次数 ≫ 不同边数 ⇒ 计数器必然虚高）",
+   "detail": "判定 876395 次 / 不同 11635 条 = 75.3x"
+  },
+  {
+   "status": "PASS",
+   "name": "V20d ego 模式同样 ≤ 全图边数（两种模式共用同一套去重口径）",
+   "detail": "ideal_gas hidden=9 ≤ 48712"
+  },
+  {
+   "status": "PASS",
+   "name": "V20e HTTP 信封透传且仍 ≤ 全图边数（跨层口径一致，前端文案据此可成立）",
+   "detail": "http=11647 ≤ 48712"
+  },
+  {
+   "status": "SKIP",
+   "name": "N1 Neo4j 子图契约一致",
+   "detail": "回退到 NetworkX（未连上 Neo4j）"
+  }
+ ],
+ "notes": [
+  "V6 覆盖率（如实披露）：9/9 条边带证据",
+  "V14 实测：verified 可见 34780 / 隐藏 13932；verified_strict 可见 34769 / 隐藏 13943（差 11 条=by_construction）",
+  "★ D1 已修根因（本轮）：13/19 个**已入库** locator 的 worktree 字节 ≠ 仓库 blob （本机 `core.autocrlf=true` 把 LF 检出成 CRLF）。**这不影响裁决** —— 权威字节源已是 `git cat-file blob HEAD:<path>`（见 V16b/V18d/V18e），此计数只作**诊断披露**（`affects_verdict: false`）。另有 13 个 locator 未入库（`*_raw.json`/`*_cache.json`，按「大体积派生对象不入库」有意排除）⇒ 占 47055 条边的 `unverifiable_not_in_repo`。完整论证见 `07_交付物/Phase44_D1_*.md`；**exclude_stale 默认仍为 false**。"
+ ],
+ "elapsed_s": 148.96
+}

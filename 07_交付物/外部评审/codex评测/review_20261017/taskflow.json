@@ -1,0 +1,50 @@
+{
+  "url": "http://127.0.0.1:8765/",
+  "assertions": [],
+  "requests": [],
+  "blocked": [],
+  "console_errors": [],
+  "page_errors": [],
+  "summary": {
+    "pass": 0,
+    "fail": 0,
+    "skip": 6
+  },
+  "rows": [
+    {
+      "kind": "--",
+      "name": "Phase 51 · 任务式首屏真浏览器端到端验收（B1–B5）",
+      "detail": ""
+    },
+    {
+      "kind": "SKIP",
+      "name": "B0a-browser-deps",
+      "detail": "playwright 不可用（ModuleNotFoundError）—— 浏览器验收属**可选**依赖，缺它只能记「不可判定」，不得记通过（铁律 #20：缺依赖假通过）"
+    },
+    {
+      "kind": "SKIP",
+      "name": "B1 首屏结构",
+      "detail": "上游依赖缺失（playwright）"
+    },
+    {
+      "kind": "SKIP",
+      "name": "B2 卡片 → 候选",
+      "detail": "上游依赖缺失（playwright）"
+    },
+    {
+      "kind": "SKIP",
+      "name": "B3 真实键入",
+      "detail": "上游依赖缺失（playwright）"
+    },
+    {
+      "kind": "SKIP",
+      "name": "B4 确认实体 → 生成图",
+      "detail": "上游依赖缺失（playwright）"
+    },
+    {
+      "kind": "SKIP",
+      "name": "B5 返回改查询（老板指定的收尾链路）",
+      "detail": "上游依赖缺失（playwright）"
+    }
+  ]
+}

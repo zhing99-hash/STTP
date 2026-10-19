@@ -1,0 +1,34 @@
+{
+  "status": "ok",
+  "reason": "",
+  "query": {
+    "q": "manifold",
+    "node_types": null,
+    "subjects": null,
+    "limit": 5
+  },
+  "hits": [
+    {
+      "id": "wd:Q_manifold",
+      "type": "WikidataEntity",
+      "subject": "跨学科",
+      "label": "wd:Q_manifold",
+      "formula": "",
+      "score": 55
+    },
+    {
+      "id": "MX:def:manifold",
+      "type": "Definition",
+      "subject": "数学",
+      "label": "definition",
+      "formula": "M",
+      "score": 45
+    }
+  ],
+  "count": 2,
+  "total_matches": 2,
+  "truncated": false,
+  "elapsed_ms": 63,
+  "snapshot_id": "sha256:21f13596a4c8",
+  "query_hash": "6d9d5da7d124e6e1"
+}

@@ -1,0 +1,36 @@
+==============================================================================
+  STTP 发布校验（Phase 37 · R06/R07 · fail-closed）
+==============================================================================
+✅ A0 manifest 含样例产物                  样例条目 3 个
+✅ A1 产物存在 sample_graph.json          382.9 KB
+✅ A2 sha256 sample_graph.json        4ba6a41eaf39982e
+✅ A1 产物存在 sample_normalized.json     419.6 KB
+✅ A2 sha256 sample_normalized.json   61d715adb2a5eb33
+✅ A1 产物存在 sample_queries.json        1.4 KB
+✅ A2 sha256 sample_queries.json      3d75c3b5c3ebe18d
+✅ A3 节点计数                            170（manifest 170）
+✅ A3 边计数                             255（manifest 255）
+✅ A3 投影计数                            节点 170 / 边 255
+✅ B1 页面↔查询 节点 id 集合相等                正常 170 / 投影 170 / 差 0
+✅ B1 页面↔查询 边 id 集合相等                 正常 255 / 投影 255 / 差 0
+✅ C1 无重复节点 id                        重复 0
+✅ C1 无重复边 id                         重复 0
+✅ C2 无悬空端点                           悬空 0
+✅ C2 无自环                             自环 0
+✅ C2 投影无悬空端点                         悬空 0
+✅ A4 许可 profile                      manifest profile=public_demo（发布样例必须 public_demo）
+✅ A5 许可合规（独立重算）                      样例 170 节点 / 255 边 ｜ 违规 0（来源闭包全 = redistributable）
+✅ A6 许可剔除已登记且非真空                     剔除 43295 边 / 6820 节点（0 边 ⇒ 白名单形同虚设）
+✅ G1 必要依赖就绪                          python 3.12.14 @ C:\Users\zhing\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe；全就绪
+✅ G3 缺依赖诊断自述解释器（D57）：合成缺件分支的 detail 须含 sys.executable python 3.12.14 @ C:\Users\zhing\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+✅ G4 门禁缺依赖 SKIP 自述解释器（D58）：合成缺件分支的 skip_detail 须含 sys.executable python 3.12.14 @ C:\Users\zhing\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe ｜ 三处 detail 均含解释器 = True
+✅ E1 查询后端就绪且计数一致                     节点 170 / 边 255
+✅ D1 查询 Q1-stats                     170/255
+✅ D1 查询 Q2-cross-domain              跨学科边 36（期望 ≥36 且 ==36）
+✅ D1 查询 Q3-neighbors                 PQ:energy 邻居 14（期望 ≥14）
+✅ D1 查询 Q4-path                      CE:fo:gibbs_standard→TH:pq:entropy 路径 6（期望 ≥1）
+✅ D1 查询 Q5-evidence                  level=rule_checked 证据 1 条
+✅ F1 样例反例回归（自包含子集）                   PASS 78 / FAIL 0 / SKIP 0
+------------------------------------------------------------------------------
+  ✅ 发布校验通过 ｜ 断言 30 条 ｜ FAIL 0 ｜ WARN 0
+==============================================================================
