@@ -8511,6 +8511,10 @@
     "discoverer": "卡尔·洛曼",
     "discovery_time": "1929",
     "domain": "chem.energy",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.energy"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "BC:fo:atp_hydrolysis_eq",
     "latex": "ATP+H_2O\\rightarrow ADP+P_i",
@@ -8568,6 +8572,10 @@
     "discoverer": "扬·英根豪斯",
     "discovery_time": "1779",
     "domain": "chem.stoich",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.stoich"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "BC:fo:photosynthesis_eq",
     "latex": "6CO_2+6H_2O\\rightarrow C_6H_{12}O_6+6O_2",
@@ -8801,6 +8809,10 @@
     "discoverer": "斯万特·阿伦尼乌斯",
     "discovery_time": "1889",
     "domain": "chem.kinetics",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.kinetics"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CE:fo:arrhenius",
     "informal": "速率常数随温度呈指数增长（化学↔数学指数↔热力学）。",
@@ -8867,6 +8879,10 @@
     "discoverer": "约西亚·威拉德·吉布斯",
     "discovery_time": "1876",
     "domain": "chem.equilibrium",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.equilibrium"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CE:fo:gibbs_reaction",
     "informal": "任意组成下的反应吉布斯自由能；ΔG<0 自发正向。",
@@ -8927,6 +8943,10 @@
     "discoverer": "约西亚·威拉德·吉布斯",
     "discovery_time": "1876",
     "domain": "chem.equilibrium",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.equilibrium"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CE:fo:gibbs_standard",
     "informal": "标准吉布斯自由能变与平衡常数的定量关系（热力学与化学的桥梁）。",
@@ -8981,6 +9001,10 @@
     "discoverer": "劳伦斯·亨德森",
     "discovery_time": "1908",
     "domain": "chem.acidbase",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.acidbase"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CE:fo:henderson",
     "informal": "缓冲溶液 pH 计算式，同样建立在对数之上。",
@@ -9031,6 +9055,10 @@
     "discoverer": "瓦尔特·能斯特",
     "discovery_time": "1889",
     "domain": "chem.electrochem",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.electrochem"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CE:fo:nernst",
     "informal": "电池电动势与浓度/分压的定量关系（化学↔电化学↔热力学）。",
@@ -9085,6 +9113,10 @@
     "discoverer": "瑟伦·索伦森",
     "discovery_time": "1909",
     "domain": "chem.acidbase",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.acidbase"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CE:fo:ph",
     "informal": "pH 为氢离子浓度的负常用对数。",
@@ -9137,6 +9169,10 @@
     "discoverer": "瑟伦·索伦森",
     "discovery_time": "1909",
     "domain": "chem.acidbase",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.acidbase"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CE:fo:poh",
     "informal": "pOH 为氢氧根浓度的负常用对数。",
@@ -9452,6 +9488,10 @@
     "discoverer": "艾萨克·牛顿",
     "discovery_time": "1687",
     "domain": "physics.mechanics",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.mechanics"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CM:fo:impulse",
     "informal": "Impulse equals change in momentum.",
@@ -9500,6 +9540,10 @@
     "discoverer": "艾萨克·牛顿",
     "discovery_time": "1687",
     "domain": "physics.mechanics",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.mechanics"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CM:fo:momentum",
     "informal": "Momentum equals mass times velocity.",
@@ -9554,6 +9598,10 @@
     "discoverer": "加斯帕尔-古斯塔夫·科里奥利",
     "discovery_time": "1829",
     "domain": "physics.mechanics",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.mechanics"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "CM:fo:work",
     "informal": "Work done by a constant force over a displacement.",
@@ -10143,6 +10191,10 @@
     "discoverer": "让-巴蒂斯特·毕奥、费利克斯·萨伐尔",
     "discovery_time": "1820",
     "domain": "physics.em",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.em"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "EM:fo:biot_savart",
     "latex": "B=\\frac{\\mu_0 I}{2\\pi r}",
@@ -10202,6 +10254,10 @@
     "discoverer": "夏尔·奥古斯丁·德·库仑",
     "discovery_time": "1785",
     "domain": "physics.em",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.em"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "EM:fo:coulomb",
     "informal": "Force between two point charges.",
@@ -10252,6 +10308,10 @@
     "discoverer": "迈克尔·法拉第",
     "discovery_time": "1831",
     "domain": "physics.em",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.em"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "EM:fo:faraday",
     "informal": "Induced emf equals minus rate of flux change.",
@@ -10302,6 +10362,10 @@
     "discoverer": "卡尔·弗里德里希·高斯",
     "discovery_time": "1813",
     "domain": "physics.em",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.em"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "EM:fo:gauss",
     "latex": "\\nabla\\cdot\\vec{E}=\\frac{\\rho}{\\varepsilon_0}",
@@ -10349,6 +10413,10 @@
     "discoverer": "亨德里克·安东·洛伦兹",
     "discovery_time": "1895",
     "domain": "physics.em",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.em"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "EM:fo:lorentz",
     "informal": "Force on a charge in EM fields.",
@@ -10417,6 +10485,10 @@
     "discoverer": "格奥尔格·西蒙·欧姆",
     "discovery_time": "1827",
     "domain": "physics.em",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.em"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "EM:fo:ohm",
     "informal": "Voltage equals current times resistance.",
@@ -10919,6 +10991,10 @@
     "discoverer": "阿尔伯特·爱因斯坦",
     "discovery_time": "1905",
     "domain": "physics.relativity",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.relativity"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "FO:emc2",
     "informal": "Energy equals mass times the speed of light squared.",
@@ -10973,6 +11049,10 @@
     "discoverer": "艾萨克·牛顿",
     "discovery_time": "1687",
     "domain": "physics.mechanics",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.mechanics"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "FO:fma",
     "informal": "Force equals mass times acceleration.",
@@ -11027,6 +11107,10 @@
     "discoverer": "加斯帕尔-古斯塔夫·科里奥利",
     "discovery_time": "1829",
     "domain": "physics.mechanics",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.mechanics"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "FO:ke",
     "informal": "Kinetic energy of a mass m moving at velocity v.",
@@ -11081,6 +11165,10 @@
     "discoverer": "德米特里·门捷列夫",
     "discovery_time": "1869",
     "domain": "chem.periodic",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.periodic"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "IC:fo:periodic",
     "informal": "Properties are periodic functions of atomic number.",
@@ -11116,6 +11204,10 @@
     "discoverer": "瑟伦·索伦森",
     "discovery_time": "1909",
     "domain": "chem.acidbase",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.acidbase"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "IC:fo:ph",
     "informal": "pH is minus log of hydrogen ion concentration.",
@@ -11382,6 +11474,10 @@
     "discoverer": "莱昂哈德·欧拉",
     "discovery_time": "1748",
     "domain": "math.analysis",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.analysis"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "MA:fo:euler_identity",
     "informal": "Links e, i, and pi.",
@@ -11436,6 +11532,10 @@
     "discoverer": "约翰·纳皮尔",
     "discovery_time": "1614",
     "domain": "math.algebra",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.algebra"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "MA:fo:log_product",
     "latex": "\\log(xy)=\\log x+\\log y",
@@ -11652,6 +11752,10 @@
     "discoverer": "卡尔·弗里德里希·高斯",
     "discovery_time": "1801",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:congruence",
     "informal": "同余式定义：a、b 之差被 n 整除。",
@@ -11718,6 +11822,10 @@
     "discoverer": "暂无",
     "discovery_time": "公元 400",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:crt",
     "informal": "两两互质的模下，同余方程组有唯一解。",
@@ -11772,6 +11880,10 @@
     "discoverer": "欧几里得",
     "discovery_time": "公元前 300",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:euclid_algorithm",
     "informal": "辗转相除求最大公因数。",
@@ -11826,6 +11938,10 @@
     "discoverer": "莱昂哈德·欧拉",
     "discovery_time": "1736",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:euler_theorem",
     "informal": "若 a 与 n 互质，则 a 的 φ(n) 次幂模 n 余 1。",
@@ -11898,6 +12014,10 @@
     "discoverer": "皮埃尔·德·费马",
     "discovery_time": "1640",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:fermat_little",
     "informal": "欧拉定理在 n 为素数时的特例（φ(p)=p−1）。",
@@ -11958,6 +12078,10 @@
     "discoverer": "欧几里得",
     "discovery_time": "公元前 300",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:fundamental_arithmetic",
     "informal": "任一大于 1 的整数可唯一分解为素数幂之积。",
@@ -12006,6 +12130,10 @@
     "discoverer": "卡尔·弗里德里希·高斯",
     "discovery_time": "1801",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:unit_group",
     "informal": "模 n 的单位构成的乘法群，阶为 φ(n)，是欧拉定理的群论表述。",
@@ -12060,6 +12188,10 @@
     "discoverer": "约翰·威尔逊",
     "discovery_time": "1770",
     "domain": "math.numbertheory",
+    "domain_source": "curated",
+    "domain_tags": [
+     "math.numbertheory"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "NT:fo:wilson",
     "informal": "p 为素数的充要条件：(p−1)! ≡ −1 (mod p)。",
@@ -12228,6 +12360,10 @@
     "discoverer": "安托万·拉瓦锡",
     "discovery_time": "1777",
     "domain": "chem.thermo",
+    "domain_source": "curated",
+    "domain_tags": [
+     "chem.thermo"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "OM:fo:combustion",
     "informal": "General combustion of a hydrocarbon.",
@@ -12583,6 +12719,10 @@
     "discoverer": "路易·德布罗意",
     "discovery_time": "1924",
     "domain": "physics.qm",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.qm"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "QM:fo:de_broglie",
     "informal": "Matter waves: wavelength inversely proportional to momentum.",
@@ -12631,6 +12771,10 @@
     "discoverer": "阿尔伯特·爱因斯坦",
     "discovery_time": "1905",
     "domain": "physics.qm",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.qm"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "QM:fo:photoelectric",
     "latex": "E_{ph}=h\\nu-\\phi",
@@ -12684,6 +12828,10 @@
     "discoverer": "马克斯·普朗克",
     "discovery_time": "1900",
     "domain": "physics.qm",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.qm"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "QM:fo:planck",
     "informal": "Photon energy equals Planck constant times frequency.",
@@ -12732,6 +12880,10 @@
     "discoverer": "埃尔温·薛定谔",
     "discovery_time": "1926",
     "domain": "physics.qm",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.qm"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "QM:fo:schrodinger",
     "latex": "-\\frac{\\hbar^2}{2m}\\nabla^2\\psi + V\\psi = E\\psi",
@@ -12785,6 +12937,10 @@
     "discoverer": "维尔纳·海森堡",
     "discovery_time": "1927",
     "domain": "physics.qm",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.qm"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "QM:fo:uncertainty",
     "latex": "\\Delta x\\,\\Delta p \\geq \\frac{\\hbar}{2}",
@@ -13021,6 +13177,10 @@
     "discoverer": "阿尔伯特·爱因斯坦",
     "discovery_time": "1905",
     "domain": "physics.relativity",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.relativity"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "RT:fo:mass_energy",
     "informal": "Energy equals mass times speed of light squared.",
@@ -13069,6 +13229,10 @@
     "discoverer": "阿尔伯特·爱因斯坦",
     "discovery_time": "1905",
     "domain": "physics.relativity",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.relativity"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "RT:fo:rel_momentum",
     "latex": "p=\\gamma m v",
@@ -13182,6 +13346,10 @@
     "discoverer": "路德维希·玻尔兹曼",
     "discovery_time": "1877",
     "domain": "physics.statmech",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.statmech"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "SM:fo:boltzmann",
     "informal": "Entropy equals Boltzmann constant times log of microstates.",
@@ -13236,6 +13404,10 @@
     "discoverer": "詹姆斯·克拉克·麦克斯韦",
     "discovery_time": "1860",
     "domain": "physics.statmech",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.statmech"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "SM:fo:maxwell",
     "latex": "f(v)\\propto v^2 e^{-mv^2/(2k_B T)}",
@@ -13295,6 +13467,10 @@
     "discoverer": "约西亚·威拉德·吉布斯",
     "discovery_time": "1902",
     "domain": "physics.statmech",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.statmech"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "SM:fo:partition",
     "latex": "Z=\\sum_i e^{-E_i/(k_B T)}",
@@ -13499,6 +13675,10 @@
     "discoverer": "罗伯特·玻意耳",
     "discovery_time": "1662",
     "domain": "physics.thermo",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.thermo"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "TH:fo:boyle",
     "latex": "P_1 V_1 = P_2 V_2",
@@ -13546,6 +13726,10 @@
     "discoverer": "萨迪·卡诺",
     "discovery_time": "1824",
     "domain": "physics.thermo",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.thermo"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "TH:fo:carnot",
     "informal": "Maximum possible efficiency of a heat engine.",
@@ -13594,6 +13778,10 @@
     "discoverer": "雅克·查理",
     "discovery_time": "1787",
     "domain": "physics.thermo",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.thermo"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "TH:fo:charles",
     "latex": "\\frac{V_1}{T_1}=\\frac{V_2}{T_2}",
@@ -13641,6 +13829,10 @@
     "discoverer": "约瑟夫·路易·盖-吕萨克",
     "discovery_time": "1802",
     "domain": "physics.thermo",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.thermo"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "TH:fo:gay_lussac",
     "latex": "\\frac{P_1}{T_1}=\\frac{P_2}{T_2}",
@@ -13688,6 +13880,10 @@
     "discoverer": "埃米尔·克拉珀龙",
     "discovery_time": "1834",
     "domain": "physics.thermo",
+    "domain_source": "curated",
+    "domain_tags": [
+     "physics.thermo"
+    ],
     "explicit_or_inferred": "explicit",
     "id": "TH:fo:ideal_gas",
     "informal": "Pressure times volume equals moles times gas constant times temperature.",
