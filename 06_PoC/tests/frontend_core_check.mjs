@@ -32,7 +32,8 @@ import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUSES, STALE_EVIDENCE_STATUSES, EVIDENCE_STATUS_RANK,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
          evidenceStatusBadge, EDGE_TYPE_COLOR } from "../js/style.js";
-import { renderEdgeDetail, renderNodeDetail } from "../js/evidence.js";
+import { renderEdgeDetail, renderNodeDetail, SYMBOL_SRC_LABEL,
+         APPLICABILITY_STATE } from "../js/evidence.js";
 import { buildLegend, toCyEdge } from "../js/viz.js";
 import { GRADE_STYLE, GRADE_UNKNOWN, gradeStyle, gradeToWidth, gradeToOpacity } from "../js/style.js";
 import { renderCardsHTML, renderCandidatesHTML, CANDIDATE_LIMIT } from "../js/task.js";
@@ -1546,6 +1547,123 @@ check("F43c toCyEdge：五档产生**互异**的 (width, opacity)（区分度—
           try { buildLegend(el, {}); } catch (e) { return -1; } return el.innerHTML.length; })());
 }
 
+
+// ---------------------------------------------------------------------------
+// F44 Phase 64 · M3：变量表（G1）与适用条件三态（G3）在详情卡里**真的渲染出来**
+//
+//   ★ 这一组守的是**语义区分**，不是「有没有这段 HTML」：
+//     · 「源声明」与「沿边反推」不可混为一谈 —— G1 的整条纪律就在这个区分上；
+//     · 三种「没有适用条件」的原因**不可合并成一句** —— G3 的核心结论是
+//       「抽不到」与「无从谈起」对用户是两件事。若合并，用户会把 5,001 条
+//       本来就无从谈起的公式当成我们的欠债。
+// ---------------------------------------------------------------------------
+function renderNode(attrs) {
+  const el = fakeEl();
+  renderNodeDetail(el, { id: "T:1", label: "t", type: "Formula", attrs: attrs || {} });
+  return el.innerHTML;
+}
+
+const htmlSym = renderNode({
+  latex: "F=ma",
+  symbols: ["F", "m", "a"],
+  symbol_table: [
+    { sym: "F", quantity: "F (force)", quantity_id: "SY:F", src: "pb_symbols_column" },
+    { sym: "m", quantity: "Mass", quantity_id: "SY:m", src: "pb_symbols_column" },
+    { sym: "a", quantity: "a (acceleration)", quantity_id: "SY:a", src: "edge_target" },
+  ],
+});
+check("F44a 变量表渲染出符号与量名（`sym (name)` 与「纯量名」两种 quantity 形态都要能拆）",
+      htmlSym.includes("变量表") && htmlSym.includes("force")
+      && htmlSym.includes("Mass") && htmlSym.includes("acceleration")
+      && /<code class="sym">F<\/code>/.test(htmlSym), "");
+
+// ★ 逐行抓「来源标记」，且**必须切到行尾 `</div>`**。
+//   两版教训都在这条断言上：
+//     ① 初版只查 `源声明 2` / `沿边反推 1` 两个**计数字符串** —— 计数是另一处硬编码，
+//        与 `SYMBOL_SRC_LABEL` 无关 ⇒ 改映射表时断言**不变红**；
+//     ② 二版按 `<div class="symrow">` 切行，但最后一行把区块尾注也包含进来，
+//        而尾注里本来就写着「沿边反推」四个字 ⇒ 断言**恒真**。
+//   判据的匹配范围一旦过宽，它会永远说 PASS（与 D80 同族）。
+const _symRows = [...htmlSym.matchAll(/<div class="symrow">([\s\S]*?)<\/div>/g)].map((m) => m[1]);
+const _rowOf = (sym) => _symRows.find((r) => r.includes(`<code class="sym">${sym}</code>`)) || "";
+check("F44b 「沿边反推」必须标在**该条目自己那一行**上，源声明行不得误标 —— 二者不可混为一谈",
+      _rowOf("a").includes("沿边反推")
+      && !_rowOf("F").includes("沿边反推") && !_rowOf("m").includes("沿边反推")
+      && /源声明 2/.test(htmlSym) && /沿边反推 1/.test(htmlSym),
+      "a 行：" + _rowOf("a").replace(/<[^>]+>/g, " ").trim().slice(0, 60));
+
+check("F44b2 来源标签表本身：两种来源**必须有不同的标签**（防将来被改成同一句）",
+      SYMBOL_SRC_LABEL.pb_symbols_column.label !== SYMBOL_SRC_LABEL.edge_target.label
+      && SYMBOL_SRC_LABEL.pb_symbols_column.label && SYMBOL_SRC_LABEL.edge_target.label,
+      `${SYMBOL_SRC_LABEL.pb_symbols_column.label} / ${SYMBOL_SRC_LABEL.edge_target.label}`);
+
+const htmlBlank = renderNode({ symbol_table: [{ sym: null, quantity: "Q (charge)", src: "edge_target" }] });
+check("F44c `sym` 为空时从 quantity 括号前取符号（实测有 20 条这种条目 ⇒ 不得渲染出空白符号）",
+      /<code class="sym">Q<\/code>/.test(htmlBlank)
+      && !/<code class="sym"><\/code>/.test(htmlBlank), "");
+
+const htmlNoSym = renderNode({ latex: "x=1" });
+check("F44d 无 `symbol_table` ⇒ 整行不渲染（不是渲染成空行）",
+      !htmlNoSym.includes("变量表"), "");
+
+const htmlEx = renderNode({
+  applicability_status: "extracted",
+  applicability: ["质点"],
+  applicability_evidence: [{ term: "质点", field: "description", snippet: "两质点间的引力…" }],
+});
+check("F44e extracted ⇒ 条件与**出处片段**都要显示（「有值必有据」要摆在读者面前）",
+      htmlEx.includes("适用条件") && htmlEx.includes("质点")
+      && htmlEx.includes("description") && htmlEx.includes("两质点间的引力"), "");
+
+const htmlNr = renderNode({ applicability_status: "no_referent" });
+check("F44f no_referent ⇒ 说清「谈不上」，且**不得**混入「未抽出 / 待办」的措辞",
+      htmlNr.includes("无指称") && htmlNr.includes("谈不上")
+      && !htmlNr.includes("未抽出") && !htmlNr.includes("待办"), "");
+
+const htmlNe = renderNode({ applicability_status: "not_extracted" });
+check("F44g not_extracted ⇒ 说清「待办」，且**不得**混入「无从谈起」的措辞（三态不可合并）",
+      htmlNe.includes("未抽出") && htmlNe.includes("待办")
+      && !htmlNe.includes("无从谈起") && !htmlNe.includes("谈不上"), "");
+
+const htmlUnk = renderNode({ applicability_status: "brand_new_state" });
+check("F44h 未识别的状态值 ⇒ **显式暴露原值**（不静默当空，与 whyRow 同一条纪律）",
+      htmlUnk.includes("未知状态") && htmlUnk.includes("brand_new_state"), "");
+
+const htmlNoApp = renderNode({ latex: "x=1" });
+check("F44i 无 `applicability_status` ⇒ 整行不渲染（非公式节点 / 老数据）",
+      !htmlNoApp.includes("适用条件"), "");
+
+const htmlTag = renderNode({ latex: "x", domain: "physics.em",
+                             domain_tags: ["physics.em", "physics.mechanics"] });
+const tagTxt = (htmlTag.match(/跨域 \d+：([^<]+)</) || [])[1] || "";
+check("F44j 跨域标签**剔除主标签**后再计数（`domain_tags` 含主标签，直接数会把主标签算成跨域）",
+      /跨域 1：/.test(htmlTag) && tagTxt.includes("physics.mechanics")
+      && !tagTxt.includes("physics.em"), "跨域标签原文：" + tagTxt);
+
+// 投影层若漏把 domain 提到顶层，只要 attrs 里还在，就不该整行消失（防静默丢字段）
+const htmlTagAttrOnly = renderNode({ latex: "x", domain: "physics.em", domain_tags: ["physics.em"] });
+check("F44k `domain` 只写在 attrs 里也要显示（投影层漏提字段时不得静默消失）",
+      htmlTagAttrOnly.includes("physics.em"), "");
+
+// —— 以下三条都来自**真实数据冒烟**抓到的缺陷，不是想出来的 ——
+const htmlNoTbl = renderNode({ symbols_unresolved: "no_has_symbol_edge" });
+check("F44l 无变量表但数据侧给了原因 ⇒ 显示「未生成」+ 原因（不得整行消失，否则用户以为我们漏了）",
+      htmlNoTbl.includes("变量表") && htmlNoTbl.includes("未生成")
+      && htmlNoTbl.includes("has_symbol"), "");
+
+const htmlAllEdge = renderNode({ symbol_table: [
+  { sym: "a", quantity: "a (acceleration)", src: "edge_target" },
+  { sym: "b", quantity: "b (x)", src: "edge_target" },
+] });
+check("F44m 全部沿边反推时要说「全部」；混合时**不得**这么说（否则用户以为一个都没源声明）",
+      htmlAllEdge.includes("全部") && !htmlSym.includes("全部"), "");
+
+// ★ 真实冒烟抓到的：`note` 里写 `**有**`，详情卡是 HTML 不跑 Markdown ⇒ 界面上出现星号
+const _allRendered = [htmlSym, htmlBlank, htmlNoSym, htmlEx, htmlNr, htmlNe, htmlUnk,
+                      htmlTag, htmlNoTbl, htmlAllEdge].join("");
+check("F44n 渲染结果里**不得出现 Markdown 星号**（`**` 会原样显示成星号，抓自真实冒烟）",
+      !/\*\*/.test(_allRendered),
+      (_allRendered.match(/.{0,12}\*\*.{0,12}/) || [""])[0]);
 
 // ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）

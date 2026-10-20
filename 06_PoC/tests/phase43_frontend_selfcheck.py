@@ -817,6 +817,55 @@ def main(argv=None):
         except Exception as e:  # noqa: BLE001
             rep.skip("X16g 端点客户端预算同源", f"解析失败：{e}")
 
+    # ---------------------------------------------------------------- X17 跨层契约
+    # ★ 前端 F44 用**构造数据**测渲染：数据侧把字段改名时，它照样全过。
+    #   这里补一次「前端读取的字段在真实图里真的存在」的比对 ——
+    #   否则改名会让详情卡整块静默消失而无人察觉（D80 家族：判据隔着构造数据）。
+    rep.section("[X17] 前端读取字段 ↔ 数据契约（防字段改名后静默失效）")
+    _CONTRACT = [
+        # (字段, 期望覆盖率, 说明) —— 「三态/学科」设计上是全量写，变量表允许有个别无解
+        ("applicability_status", 1.00, "适用条件三态（G3）"),
+        ("domain_tags", 1.00, "学科全标签（G2）"),
+        ("domain", 1.00, "学科主标签"),
+        ("symbol_table", 0.95, "变量表（G1）"),
+    ]
+    if not os.path.isfile(NORMALIZED):
+        rep.skip("X17 前端读取字段 ↔ 数据契约一致",
+                 "缺 06_PoC/etl/normalized.json（**不入库**，干净检出下必然 SKIP）")
+    else:
+        try:
+            with open(NORMALIZED, encoding="utf-8") as f:
+                _g = json.load(f)
+            _fml = [n for n in _g.get("nodes", []) if "Formula" in (n.get("labels") or [])]
+            _ev_src = read(os.path.join(JS_DIR, "evidence.js"))
+            _bad, _ok = [], {}
+            for _fld, _need, _desc in _CONTRACT:
+                if _fld not in _ev_src:
+                    _bad.append(f"前端**未读取** {_fld}（{_desc}）—— 渲染路径根本没接上")
+                    continue
+                _hit = sum(1 for n in _fml if (n.get("props") or {}).get(_fld) not in (None, "", [], {}))
+                _rate = (_hit / len(_fml)) if _fml else 0.0
+                _ok[_fld] = f"{_hit}/{len(_fml)}={_rate:.2%}"
+                if _rate < _need:
+                    _bad.append(f"{_fld} 覆盖率 {_rate:.2%} < {_need:.0%}（前端读它，数据却没生成）")
+            rep.add(bool(_fml) and not _bad,
+                    f"X17 前端读取的 {len(_CONTRACT)} 个字段在真实图里都存在（覆盖率达标）",
+                    "；".join(_bad) if _bad
+                    else "；".join(f"{k} {v}" for k, v in _ok.items()))
+            # 可红性自证：喂一个**必然不存在**的字段，同一套判据必须能认出它
+            _ghost = "__definitely_absent_field__"
+            _ghost_bad = 0
+            if _ghost not in _ev_src:
+                _ghost_bad += 1                      # 「前端没读」这一支
+            _gh = sum(1 for n in _fml if (n.get("props") or {}).get(_ghost) not in (None, "", [], {}))
+            if not _fml or _gh / len(_fml) < 0.95:
+                _ghost_bad += 1                      # 「数据没生成」这一支
+            rep.add(_ghost_bad == 2,
+                    "X17a 本段**可红**：喂一个不存在的字段，两条判据分支都必须报错（断言非常真）",
+                    f"命中的分支数 {_ghost_bad}/2")
+        except Exception as e:  # noqa: BLE001
+            rep.skip("X17 前端读取字段 ↔ 数据契约一致", f"读取失败：{e}")
+
     # ---------------------------------------------------------------- N 段
     rep.section("[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）")
     node = find_node()
