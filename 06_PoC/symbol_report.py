@@ -28,13 +28,17 @@
 
 判据（Y 系列，与 G/R/V/F 族不撞号）
 ----------------------------------
-  Y1 覆盖率 ≥ 90%（F1 的验收线）
-  Y2 守恒：`symbols` **恰好等于**表内非空字形去重后的有序序列（不多不少、不重不乱）
+  Y1 覆盖率 ≥ 90%：`symbols` 与 `symbol_table` **两条都要**（前者给机器读，后者给用户看）
+  Y2 守恒：`symbols` **恰好等于**表内「源声明」字形（`src=pb_symbols_column`）的集合，不重复
+  Y2b 次序：`symbols` 的顺序必须是**原文出现次序**（能在原文定位的字形位置单调不减）
   Y3 字形可查：每个写进 `symbols` 的字形都必须出现在该节点的原文里
   Y4 归属清晰：每个公式节点要么**由规则管理**（带 rule version + 表），
      要么**保留人工值**（无 rule version、无表）—— 不允许「写了一半」的中间态
   Y5 非真空：全局必须同时存在「同一量两种写法」与「字形未确认」两类条目，
      否则 Y3/Y4 的通过可能只是那些分支根本没走到
+  Y6 反循环：`symbols` **不得**含「只由边反推」（`src=edge_target`）的字形 ——
+     判级模型 A10/A4 会读 `props.symbols`，把推出来的值写进去就是**用边证明边**
+     （实测会假升 2 条 `has_symbol`，门禁 `P1-main-level-matches-recompute` 当场抓住）
 
 退出码：`0` 全过 ／ `1` 有 FAIL ／ `2` 缺权威图 ／ `3` 仪器自证失败
 
@@ -57,7 +61,7 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 NORM = os.path.join(ROOT, "06_PoC", "etl", "normalized.json")
 FORMULA_LABELS = ("Formula", "Definition", "Lemma", "Theorem", "Law")
-RULE_VERSION = "s1"
+RULE_VERSION = "s2"   # s1 = 起草版（派生字形也写进 symbols，已被门禁打回）；s2 = 只写源声明
 COVER_MIN = 90.0
 
 
@@ -93,7 +97,7 @@ def audit_formula_nodes(nodes):
 
     `problems` 是 rule → [node_id…]，调用方决定是报红还是自证。
     """
-    stats = {"formula": 0, "with_symbols": 0, "managed": 0, "human": 0,
+    stats = {"formula": 0, "with_symbols": 0, "with_table": 0, "managed": 0, "human": 0,
              "entries": 0, "glyphs": 0, "curated_diff": 0, "unresolved_entries": 0}
     problems = collections.defaultdict(list)
     for n in nodes:
@@ -111,6 +115,8 @@ def audit_formula_nodes(nodes):
         if syms:
             stats["with_symbols"] += 1
             stats["glyphs"] += len(syms)
+        if isinstance(table, list) and table:
+            stats["with_table"] += 1
 
         # Y4 归属清晰：带规则版本就必须带表；不带规则版本就**不许**带表（写了一半）
         if managed and not isinstance(table, list):
@@ -125,15 +131,18 @@ def audit_formula_nodes(nodes):
                 stats["unresolved_entries"] += 1
             if ent.get("sym_curated"):
                 stats["curated_diff"] += 1
-        # Y2 守恒：列 == 表内非空字形（集合相等、且列内不重复）
-        seen, uniq = set(), []
-        for ent in table:
-            s = ent.get("sym")
-            if s and s not in seen:
-                seen.add(s)
-                uniq.append(s)
-        if sorted(syms or []) != sorted(uniq) or len(syms or []) != len(set(syms or [])):
+        # Y2 守恒：列 == 表内**源声明**字形（集合相等、列内不重复）
+        #   ★ 「源声明」= 表里 `src == "pb_symbols_column"` 的条目；沿边反推的（`edge_target`）
+        #     不许进 `symbols`（否则 A10 判级会拿它证明这条边 —— 用边证明边）。
+        declared = {e.get("sym") for e in table
+                    if e.get("sym") and e.get("src") == "pb_symbols_column"}
+        if sorted(syms or []) != sorted(declared) or len(syms or []) != len(set(syms or [])):
             problems["Y2"].append(n["id"])
+        # Y6 反循环：`symbols` 里**不得**出现「只由边反推」的字形
+        edge_only = {e.get("sym") for e in table
+                     if e.get("sym") and e.get("src") not in ("pb_symbols_column",)}
+        if edge_only & set(syms or []):
+            problems["Y6"].append(n["id"])
         # Y3 字形可查
         hay = hay_of(n)
         bad = [s for s in (syms or []) if s and s not in hay]
@@ -172,7 +181,7 @@ def selfcheck():
       本自检就脱离了 R21 的看护（#98 自指的失败）。
     """
     ent = lambda s, q="mass", **kw: dict({"sym": s, "quantity": q, "quantity_id": "PQ:x",
-                                          "src": "edge_target"}, **kw)
+                                          "src": "pb_symbols_column"}, **kw)
     cases = {
         # 正常：字形 x 在 latex 里，表与列一致
         "Y0ok": _syn("Y0:ok", ["x", "y"], [ent("x"), ent("y", "length")], RULE_VERSION),
@@ -186,15 +195,18 @@ def selfcheck():
         "Y4a": _syn("Y4a:bad", ["x"], None, RULE_VERSION),
         # Y4b：没有规则版本却带表（人工值上覆了派生表）
         "Y4b": _syn("Y4b:bad", ["x"], [ent("x")], None),
+        # Y6：把「只由边反推」的字形写进了 symbols（用边证明边）
+        "Y6": _syn("Y6:bad", ["x", "y"],
+                   [ent("x"), ent("y", "length", src="edge_target")], RULE_VERSION),
     }
     nodes = list(cases.values())
     stats, problems = audit_formula_nodes(nodes)
     rep = Rep()
     # 正常样本**不得**报问题：否则判据只会乱叫，同样是坏判据
-    bad_ok = [r for r in ("Y2", "Y2b", "Y3", "Y4") if "Y0:ok" in problems.get(r, [])]
+    bad_ok = [r for r in ("Y2", "Y2b", "Y3", "Y4", "Y6") if "Y0:ok" in problems.get(r, [])]
     rep.add(not bad_ok, "Y0 自证·正常样本不报错", "误报：%s" % bad_ok)
     for rule, nid in (("Y2", "Y2:bad"), ("Y2b", "Y2b:bad"), ("Y3", "Y3:bad"),
-                      ("Y4a", "Y4a:bad"), ("Y4b", "Y4b:bad")):
+                      ("Y4a", "Y4a:bad"), ("Y4b", "Y4b:bad"), ("Y6", "Y6:bad")):
         r = "Y4" if rule.startswith("Y4") else rule
         rep.add(nid in problems.get(r, []), "%s 能被踩红（合成节点）" % nid,
                 "构造的违规节点必须进 problems[%s]" % r)
@@ -245,8 +257,10 @@ def main():
         print("[FATAL] 一个公式节点都没读到 ⇒ 不得报通过（铁律 #20 同族）")
         return 3
     cov = coverage_pct(stats)
-    print("\n【覆盖率】公式/定义类节点 %d：有 symbols %d = %.2f%%"
-          % (stats["formula"], stats["with_symbols"], cov))
+    cov_tbl = 100.0 * stats["with_table"] / max(1, stats["formula"])
+    print("\n【覆盖率】公式/定义类节点 %d：`symbols`（源声明）%d = %.2f%% "
+          "｜ `symbol_table`（变量表）%d = %.2f%%"
+          % (stats["formula"], stats["with_symbols"], cov, stats["with_table"], cov_tbl))
     by_prefix = collections.Counter()
     tot_prefix = collections.Counter()
     for n in nodes:
@@ -270,8 +284,10 @@ def main():
     print("对账断言 Y1–Y5")
     print("=" * 92)
     rep = Rep()
-    rep.add(cov >= COVER_MIN, "Y1 覆盖率 ≥ %.0f%%" % COVER_MIN, "实测 %.2f%%" % cov)
-    rep.add(not problems["Y2"], "Y2 列 == 表内字形（守恒）",
+    rep.add(cov >= COVER_MIN and cov_tbl >= COVER_MIN,
+            "Y1 覆盖率 ≥ %.0f%%（`symbols` 与 `symbol_table` 两条都要）" % COVER_MIN,
+            "symbols %.2f%% / symbol_table %.2f%%" % (cov, cov_tbl))
+    rep.add(not problems["Y2"], "Y2 列 == 表内「源声明」字形（守恒）",
             "不一致节点 %d 个%s" % (len(problems["Y2"]),
                                 ("（如 %s）" % problems["Y2"][:3]) if problems["Y2"] else ""))
     rep.add(not problems["Y2b"], "Y2b 次序 == 原文出现次序",
@@ -283,6 +299,9 @@ def main():
     rep.add(not problems["Y4"], "Y4 归属清晰（规则管理 或 人工保留）",
             "中间态节点 %d 个%s" % (len(problems["Y4"]),
                                 ("（如 %s）" % problems["Y4"][:3]) if problems["Y4"] else ""))
+    rep.add(not problems["Y6"], "Y6 反循环：`symbols` 不得含「只由边反推」的字形",
+            "违规节点 %d 个%s" % (len(problems["Y6"]),
+                              ("（如 %s）" % problems["Y6"][:3]) if problems["Y6"] else ""))
     rep.add(stats["curated_diff"] > 0 and stats["unresolved_entries"] > 0,
             "Y5 非真空（两条分支都真的走到过）",
             "「同一量两种写法」%d 条、「字形未确认」%d 条" % (stats["curated_diff"],
