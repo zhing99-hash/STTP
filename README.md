@@ -2,6 +2,11 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
+[![Version](https://img.shields.io/badge/version-v0.65.0--rc1-orange.svg)](VERSION)
+
+> **当前版本**：`v0.65.0-rc1` —— 版本号的唯一事实源是仓库根的 [`VERSION`](VERSION)，
+> 发布清单（`06_PoC/release/manifest.json`）由它派生并由 `verify_release.py` 交叉校验。
+> 能力边界与全部可复跑证据见 [`07_交付物/RC1_整体状态评估_20261020.md`](07_交付物/RC1_整体状态评估_20261020.md)。
 
 > **S**cience **T**opology **T**hrough **P**hysics — 把数学公式、物理规律、化学物质与物理世界（元素 / 分子 / 反应 / 单位 / 物理量）连成**一张可推理的知识图谱**。
 
