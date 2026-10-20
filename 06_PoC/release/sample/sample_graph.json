@@ -8518,6 +8518,35 @@
     "name": "ATP hydrolysis",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "C (carbon)",
+      "quantity_id": "BC:sy:C",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "C"
+     },
+     {
+      "quantity": "N (nitrogen)",
+      "quantity_id": "BC:sy:N",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "N"
+     },
+     {
+      "quantity": "P (phosphorus)",
+      "quantity_id": "BC:sy:P",
+      "src": "edge_target",
+      "sym": "P"
+     }
+    ],
+    "symbols": [
+     "P"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "作为细胞内「能量货币」的结算式，用于估算代谢反应可动用的能量上限。"
    },
    "confidence": 1.0,
@@ -8547,6 +8576,11 @@
     "name": "Photosynthesis stoichiometry",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [],
+    "symbols": [],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
+    "symbols_unresolved": "no_has_symbol_edge",
     "usage": "用于核算光合固碳量与产氧量，是生物质能与碳循环计算的起点。"
    },
    "confidence": 1.0,
@@ -8776,6 +8810,46 @@
     "name": "Arrhenius equation",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "E_a (activation energy)",
+      "quantity_id": "CE:sy:Ea",
+      "src": "edge_target",
+      "sym": "E_a"
+     },
+     {
+      "quantity": "k (rate constant)",
+      "quantity_id": "CE:sy:k",
+      "src": "edge_target",
+      "sym": "k"
+     },
+     {
+      "quantity": "Euler's number",
+      "quantity_id": "MA:pq:euler_e",
+      "src": "edge_target",
+      "sym": "e"
+     },
+     {
+      "quantity": "e (Euler's number)",
+      "quantity_id": "MA:sy:e",
+      "src": "edge_target",
+      "sym": "e"
+     },
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     }
+    ],
+    "symbols": [
+     "k",
+     "e",
+     "E_a",
+     "T"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由两个温度下的速率常数反推活化能，或外推高温下的反应速率。"
    },
    "confidence": 1.0,
@@ -8806,6 +8880,40 @@
     "name": "Gibbs energy at arbitrary composition",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "G (Gibbs energy)",
+      "quantity_id": "CE:sy:G",
+      "src": "edge_target",
+      "sym": "G"
+     },
+     {
+      "quantity": "Q (reaction quotient)",
+      "quantity_id": "CE:sy:Q",
+      "src": "edge_target",
+      "sym": "Q"
+     },
+     {
+      "quantity": "R (gas constant)",
+      "quantity_id": "TH:sy:R",
+      "src": "edge_target",
+      "sym": "R"
+     },
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     }
+    ],
+    "symbols": [
+     "G",
+     "R",
+     "T",
+     "Q"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由实际浓度组成判断反应能否自发进行（ΔG < 0 为自发）。"
    },
    "confidence": 1.0,
@@ -8836,6 +8944,33 @@
     "name": "Standard Gibbs energy and equilibrium constant",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "G (Gibbs energy)",
+      "quantity_id": "CE:sy:G",
+      "src": "edge_target",
+      "sym": "G"
+     },
+     {
+      "quantity": "R (gas constant)",
+      "quantity_id": "TH:sy:R",
+      "src": "edge_target",
+      "sym": "R"
+     },
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     }
+    ],
+    "symbols": [
+     "G",
+     "R",
+     "T"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由平衡常数求标准自由能变；或由热力学数据预测反应方向。"
    },
    "confidence": 1.0,
@@ -8866,6 +9001,27 @@
     "name": "Henderson–Hasselbalch equation",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "K_a (acid constant)",
+      "quantity_id": "CE:sy:Ka",
+      "src": "edge_target",
+      "sym": "K_a"
+     },
+     {
+      "quantity": "pH",
+      "quantity_id": "CE:sy:pH",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "\\mathrm{pH}"
+     }
+    ],
+    "symbols": [
+     "K_a"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "配制指定 pH 的缓冲液，或估算加入酸碱后 pH 的漂移量。"
    },
    "confidence": 1.0,
@@ -8896,6 +9052,33 @@
     "name": "Nernst equation",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "F (Faraday constant)",
+      "quantity_id": "CE:sy:F",
+      "src": "edge_target",
+      "sym": "F"
+     },
+     {
+      "quantity": "R (gas constant)",
+      "quantity_id": "TH:sy:R",
+      "src": "edge_target",
+      "sym": "R"
+     },
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     }
+    ],
+    "symbols": [
+     "R",
+     "T",
+     "F"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由浓度计算原电池电动势，或由电位反推离子浓度（pH 电极的原理）。"
    },
    "confidence": 1.0,
@@ -8926,6 +9109,28 @@
     "name": "pH definition",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "[ ] (molarity bracket)",
+      "quantity_id": "CE:sy:conc",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "[\\,]"
+     },
+     {
+      "quantity": "pH",
+      "quantity_id": "CE:sy:pH",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "\\mathrm{pH}"
+     }
+    ],
+    "symbols": [],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
+    "symbols_unresolved": "targets_carry_no_glyph",
     "usage": "把跨十几个数量级的酸度压缩成便于比较的 0–14 标度。"
    },
    "confidence": 1.0,
@@ -8956,6 +9161,28 @@
     "name": "pOH definition",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "[ ] (molarity bracket)",
+      "quantity_id": "CE:sy:conc",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "[\\,]"
+     },
+     {
+      "quantity": "pH",
+      "quantity_id": "CE:sy:pH",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "\\mathrm{pH}"
+     }
+    ],
+    "symbols": [],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
+    "symbols_unresolved": "targets_carry_no_glyph",
     "usage": "与 pH 联用（pH + pOH = 14）处理碱性溶液的浓度计算。"
    },
    "confidence": 1.0,
@@ -9249,6 +9476,26 @@
     "name": "Impulse-momentum",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "J (impulse)",
+      "quantity_id": "CM:sy:J",
+      "src": "edge_target",
+      "sym": "J"
+     },
+     {
+      "quantity": "F (force)",
+      "quantity_id": "SY:f",
+      "src": "edge_target",
+      "sym": "F"
+     }
+    ],
+    "symbols": [
+     "J",
+     "F"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由碰撞时间估算平均冲击力，或由冲量求速度变化。"
    },
    "confidence": 1.0,
@@ -9279,6 +9526,33 @@
     "name": "Momentum",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "p (momentum)",
+      "quantity_id": "CM:sy:p",
+      "src": "edge_target",
+      "sym": "p"
+     },
+     {
+      "quantity": "m (mass)",
+      "quantity_id": "SY:m",
+      "src": "edge_target",
+      "sym": "m"
+     },
+     {
+      "quantity": "v (velocity)",
+      "quantity_id": "SY:v",
+      "src": "edge_target",
+      "sym": "v"
+     }
+    ],
+    "symbols": [
+     "p",
+     "m",
+     "v"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "分析碰撞与爆炸过程（动量守恒）；作为冲量-动量定理与相对论动量的变量。"
    },
    "confidence": 1.0,
@@ -9309,6 +9583,26 @@
     "name": "Work",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "W (work)",
+      "quantity_id": "CM:sy:W",
+      "src": "edge_target",
+      "sym": "W"
+     },
+     {
+      "quantity": "F (force)",
+      "quantity_id": "SY:f",
+      "src": "edge_target",
+      "sym": "F"
+     }
+    ],
+    "symbols": [
+     "W",
+     "F"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "计算机械过程传递的能量；作为动能定理与功率公式的输入。"
    },
    "confidence": 1.0,
@@ -9879,6 +10173,40 @@
     "name": "Magnetic field of a wire",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "B (magnetic field)",
+      "quantity_id": "EM:sy:B",
+      "src": "edge_target",
+      "sym": "B"
+     },
+     {
+      "quantity": "I (current)",
+      "quantity_id": "EM:sy:I",
+      "src": "edge_target",
+      "sym": "I"
+     },
+     {
+      "quantity": "μ₀ (permeability)",
+      "quantity_id": "EM:sy:mu0",
+      "src": "edge_target",
+      "sym": "\\mu_0"
+     },
+     {
+      "quantity": "π (pi)",
+      "quantity_id": "MA:sy:pi",
+      "src": "edge_target",
+      "sym": "\\pi"
+     }
+    ],
+    "symbols": [
+     "B",
+     "\\mu_0",
+     "I",
+     "\\pi"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由电流分布计算磁场（长直导线、圆环、螺线管）。"
    },
    "confidence": 1.0,
@@ -9909,6 +10237,27 @@
     "name": "Coulomb's law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "Q (charge)",
+      "quantity_id": "EM:sy:Q",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "Q"
+     },
+     {
+      "quantity": "k (Coulomb constant)",
+      "quantity_id": "EM:sy:k",
+      "src": "edge_target",
+      "sym": "k"
+     }
+    ],
+    "symbols": [
+     "k"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "计算静电力的方向与大小；电场与电势定义的基础。"
    },
    "confidence": 1.0,
@@ -9939,6 +10288,27 @@
     "name": "Faraday's law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "Φ (flux)",
+      "quantity_id": "EM:sy:Phi",
+      "src": "edge_target",
+      "sym": "\\Phi"
+     },
+     {
+      "quantity": "ε (emf)",
+      "quantity_id": "EM:sy:eps",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "\\varepsilon"
+     }
+    ],
+    "symbols": [
+     "\\Phi"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "计算发电机与变压器的感应电压；配合楞次定律判定电流方向。"
    },
    "confidence": 1.0,
@@ -9968,6 +10338,26 @@
     "name": "Gauss's law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "E (electric field)",
+      "quantity_id": "EM:sy:E",
+      "src": "edge_target",
+      "sym": "E"
+     },
+     {
+      "quantity": "ε₀ (permittivity)",
+      "quantity_id": "EM:sy:eps0",
+      "src": "edge_target",
+      "sym": "\\varepsilon_0"
+     }
+    ],
+    "symbols": [
+     "E",
+     "\\varepsilon_0"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "利用对称性快速求电场（球、柱、平面电荷分布）。"
    },
    "confidence": 1.0,
@@ -9998,6 +10388,48 @@
     "name": "Lorentz force",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "B (magnetic field)",
+      "quantity_id": "EM:sy:B",
+      "src": "edge_target",
+      "sym": "B"
+     },
+     {
+      "quantity": "E (electric field)",
+      "quantity_id": "EM:sy:E",
+      "src": "edge_target",
+      "sym": "E"
+     },
+     {
+      "quantity": "Q (charge)",
+      "quantity_id": "EM:sy:Q",
+      "reason": "glyph_not_in_formula",
+      "src": "edge_target",
+      "sym": null,
+      "sym_candidate": "Q"
+     },
+     {
+      "quantity": "F (force)",
+      "quantity_id": "SY:f",
+      "src": "edge_target",
+      "sym": "F"
+     },
+     {
+      "quantity": "v (velocity)",
+      "quantity_id": "SY:v",
+      "src": "edge_target",
+      "sym": "v"
+     }
+    ],
+    "symbols": [
+     "v",
+     "F",
+     "E",
+     "B"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "分析带电粒子在磁场中的运动（回旋半径、质谱仪、霍尔效应）。"
    },
    "confidence": 1.0,
@@ -10028,6 +10460,33 @@
     "name": "Ohm's law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "I (current)",
+      "quantity_id": "EM:sy:I",
+      "src": "edge_target",
+      "sym": "I"
+     },
+     {
+      "quantity": "R (resistance)",
+      "quantity_id": "EM:sy:R",
+      "src": "edge_target",
+      "sym": "R"
+     },
+     {
+      "quantity": "V (voltage)",
+      "quantity_id": "EM:sy:V",
+      "src": "edge_target",
+      "sym": "V"
+     }
+    ],
+    "symbols": [
+     "V",
+     "I",
+     "R"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "电路计算的基础：由电压与电阻求电流，或做分压与限流设计。"
    },
    "confidence": 1.0,
@@ -10506,6 +10965,33 @@
     "name": "Mass-energy equivalence",
     "ntype": "formula",
     "source": "curated_seed/energy_combustion",
+    "symbol_table": [
+     {
+      "quantity": "c (speed of light)",
+      "quantity_id": "SY:c",
+      "src": "edge_target",
+      "sym": "c"
+     },
+     {
+      "quantity": "E (energy)",
+      "quantity_id": "SY:e",
+      "src": "edge_target",
+      "sym": "E"
+     },
+     {
+      "quantity": "m (mass)",
+      "quantity_id": "SY:m",
+      "src": "edge_target",
+      "sym": "m"
+     }
+    ],
+    "symbols": [
+     "E",
+     "m",
+     "c"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "核反应与湮灭过程的能量核算；质量与能量的互换换算。"
    },
    "confidence": 1.0,
@@ -10536,6 +11022,33 @@
     "name": "Newton's second law",
     "ntype": "formula",
     "source": "curated_seed/energy_combustion",
+    "symbol_table": [
+     {
+      "quantity": "a (acceleration)",
+      "quantity_id": "SY:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "F (force)",
+      "quantity_id": "SY:f",
+      "src": "edge_target",
+      "sym": "F"
+     },
+     {
+      "quantity": "m (mass)",
+      "quantity_id": "SY:m",
+      "src": "edge_target",
+      "sym": "m"
+     }
+    ],
+    "symbols": [
+     "F",
+     "m",
+     "a"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由受力求加速度（动力学计算）；建立运动微分方程。"
    },
    "confidence": 1.0,
@@ -10566,6 +11079,33 @@
     "name": "Kinetic energy",
     "ntype": "formula",
     "source": "curated_seed/energy_combustion",
+    "symbol_table": [
+     {
+      "quantity": "KE (kinetic energy)",
+      "quantity_id": "SY:ke",
+      "src": "edge_target",
+      "sym": "KE"
+     },
+     {
+      "quantity": "m (mass)",
+      "quantity_id": "SY:m",
+      "src": "edge_target",
+      "sym": "m"
+     },
+     {
+      "quantity": "v (velocity)",
+      "quantity_id": "SY:v",
+      "src": "edge_target",
+      "sym": "v"
+     }
+    ],
+    "symbols": [
+     "KE",
+     "m",
+     "v"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "动能定理与碰撞能量核算；能量守恒分析的常用量。"
    },
    "confidence": 1.0,
@@ -10596,6 +11136,11 @@
     "name": "Periodic law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [],
+    "symbols": [],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
+    "symbols_unresolved": "no_has_symbol_edge",
     "usage": "预测未发现元素的性质，组织元素分类与周期性趋势判断。"
    },
    "confidence": 1.0,
@@ -10626,6 +11171,19 @@
     "name": "pH definition",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "H (hydrogen)",
+      "quantity_id": "IC:sy:H",
+      "src": "edge_target",
+      "sym": "H"
+     }
+    ],
+    "symbols": [
+     "H"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "酸碱度标注与计算；与 CE:fo:ph 同一定义在不同学科下的实例。"
    },
    "confidence": 1.0,
@@ -10880,6 +11438,33 @@
     "name": "Euler's identity",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "e (Euler's number)",
+      "quantity_id": "MA:sy:e",
+      "src": "edge_target",
+      "sym": "e"
+     },
+     {
+      "quantity": "i (imaginary unit)",
+      "quantity_id": "MA:sy:i",
+      "src": "edge_target",
+      "sym": "i"
+     },
+     {
+      "quantity": "π (pi)",
+      "quantity_id": "MA:sy:pi",
+      "src": "edge_target",
+      "sym": "\\pi"
+     }
+    ],
+    "symbols": [
+     "e",
+     "i",
+     "\\pi"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "复分析中指数与三角函数互化的特例；复数相位与旋转表示的常用形式。"
    },
    "confidence": 1.0,
@@ -10909,6 +11494,19 @@
     "name": "Logarithm of a product",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "x (variable)",
+      "quantity_id": "MA:sy:x",
+      "src": "edge_target",
+      "sym": "x"
+     }
+    ],
+    "symbols": [
+     "x"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "化简含乘积的指数运算；在对数坐标下把乘积关系变为线性关系。"
    },
    "confidence": 1.0,
@@ -11114,6 +11712,45 @@
     "name": "Congruence modulo n",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "a (coefficient)",
+      "quantity_id": "MA:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "n (integer)",
+      "quantity_id": "MA:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     },
+     {
+      "quantity": "a (integer)",
+      "quantity_id": "NT:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "≡ (congruence)",
+      "quantity_id": "NT:sy:cong",
+      "src": "edge_target",
+      "sym": "\\equiv"
+     },
+     {
+      "quantity": "n (modulus)",
+      "quantity_id": "NT:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     }
+    ],
+    "symbols": [
+     "a",
+     "\\equiv",
+     "n"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "模运算与整除性推理的基础语言；密码学与哈希函数的前身。"
    },
    "confidence": 1.0,
@@ -11144,6 +11781,32 @@
     "name": "Chinese remainder theorem",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "n (integer)",
+      "quantity_id": "MA:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     },
+     {
+      "quantity": "≡ (congruence)",
+      "quantity_id": "NT:sy:cong",
+      "src": "edge_target",
+      "sym": "\\equiv"
+     },
+     {
+      "quantity": "n (modulus)",
+      "quantity_id": "NT:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     }
+    ],
+    "symbols": [
+     "\\equiv",
+     "n"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "解同余方程组；大整数运算与密码学中的分解与重构。"
    },
    "confidence": 1.0,
@@ -11174,6 +11837,33 @@
     "name": "Euclidean algorithm",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "b (coefficient)",
+      "quantity_id": "MA:sy:b",
+      "src": "edge_target",
+      "sym": "b"
+     },
+     {
+      "quantity": "a (integer)",
+      "quantity_id": "NT:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "n (modulus)",
+      "quantity_id": "NT:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     }
+    ],
+    "symbols": [
+     "a",
+     "b",
+     "n"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "求最大公约数、判定互素；连分数与模逆元计算的基础。"
    },
    "confidence": 1.0,
@@ -11204,6 +11894,52 @@
     "name": "Euler's theorem",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "a (coefficient)",
+      "quantity_id": "MA:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "n (integer)",
+      "quantity_id": "MA:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     },
+     {
+      "quantity": "a (integer)",
+      "quantity_id": "NT:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "≡ (congruence)",
+      "quantity_id": "NT:sy:cong",
+      "src": "edge_target",
+      "sym": "\\equiv"
+     },
+     {
+      "quantity": "n (modulus)",
+      "quantity_id": "NT:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     },
+     {
+      "quantity": "φ(n) (totient)",
+      "quantity_id": "NT:sy:phi",
+      "src": "edge_target",
+      "sym": "\\varphi(n)"
+     }
+    ],
+    "symbols": [
+     "a",
+     "\\varphi(n)",
+     "n",
+     "\\equiv"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "模幂化简；RSA 等公钥密码算法正确性的理论基础。"
    },
    "confidence": 1.0,
@@ -11234,6 +11970,39 @@
     "name": "Fermat's little theorem",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "a (coefficient)",
+      "quantity_id": "MA:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "a (integer)",
+      "quantity_id": "NT:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "≡ (congruence)",
+      "quantity_id": "NT:sy:cong",
+      "src": "edge_target",
+      "sym": "\\equiv"
+     },
+     {
+      "quantity": "p (prime)",
+      "quantity_id": "NT:sy:p",
+      "src": "edge_target",
+      "sym": "p"
+     }
+    ],
+    "symbols": [
+     "a",
+     "p",
+     "\\equiv"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "素性检验（费马检验）与模逆元计算（p 为素数时逆元为 a 的 p-2 次幂）。"
    },
    "confidence": 1.0,
@@ -11264,6 +12033,26 @@
     "name": "Fundamental theorem of arithmetic",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "n (modulus)",
+      "quantity_id": "NT:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     },
+     {
+      "quantity": "p (prime)",
+      "quantity_id": "NT:sy:p",
+      "src": "edge_target",
+      "sym": "p"
+     }
+    ],
+    "symbols": [
+     "n",
+     "p"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "整数分解唯一性的论证基础；数论与 RSA 安全性的基石。"
    },
    "confidence": 1.0,
@@ -11294,6 +12083,33 @@
     "name": "Multiplicative group of integers modulo n",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "ℤ (integers)",
+      "quantity_id": "NT:sy:Z",
+      "src": "edge_target",
+      "sym": "\\mathbb{Z}"
+     },
+     {
+      "quantity": "a (integer)",
+      "quantity_id": "NT:sy:a",
+      "src": "edge_target",
+      "sym": "a"
+     },
+     {
+      "quantity": "n (modulus)",
+      "quantity_id": "NT:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     }
+    ],
+    "symbols": [
+     "\\mathbb{Z}",
+     "a",
+     "n"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "研究模运算的乘法结构与其群阶（欧拉 φ 函数）。"
    },
    "confidence": 1.0,
@@ -11324,6 +12140,26 @@
     "name": "Wilson's theorem",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "≡ (congruence)",
+      "quantity_id": "NT:sy:cong",
+      "src": "edge_target",
+      "sym": "\\equiv"
+     },
+     {
+      "quantity": "p (prime)",
+      "quantity_id": "NT:sy:p",
+      "src": "edge_target",
+      "sym": "p"
+     }
+    ],
+    "symbols": [
+     "p",
+     "\\equiv"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "素性判定的充要条件；组合数同余关系的推导工具。"
    },
    "confidence": 1.0,
@@ -11474,6 +12310,33 @@
     "name": "Hydrocarbon combustion",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "C (carbon)",
+      "quantity_id": "OM:sy:C",
+      "src": "edge_target",
+      "sym": "C"
+     },
+     {
+      "quantity": "H (hydrogen)",
+      "quantity_id": "OM:sy:H",
+      "src": "edge_target",
+      "sym": "H"
+     },
+     {
+      "quantity": "O (oxygen)",
+      "quantity_id": "OM:sy:O",
+      "src": "edge_target",
+      "sym": "O"
+     }
+    ],
+    "symbols": [
+     "C",
+     "H",
+     "O"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "配平燃烧反应、计算理论空气量与烟气组成。"
    },
    "confidence": 1.0,
@@ -11805,6 +12668,26 @@
     "name": "de Broglie wavelength",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "h (Planck)",
+      "quantity_id": "QM:sy:h",
+      "src": "edge_target",
+      "sym": "h"
+     },
+     {
+      "quantity": "λ (wavelength)",
+      "quantity_id": "QM:sy:lambda",
+      "src": "edge_target",
+      "sym": "\\lambda"
+     }
+    ],
+    "symbols": [
+     "\\lambda",
+     "h"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "估算电子与中子的衍射尺度（电子显微镜、晶体衍射）。"
    },
    "confidence": 1.0,
@@ -11834,6 +12717,33 @@
     "name": "Photoelectric effect",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "h (Planck)",
+      "quantity_id": "QM:sy:h",
+      "src": "edge_target",
+      "sym": "h"
+     },
+     {
+      "quantity": "ν (frequency)",
+      "quantity_id": "QM:sy:nu",
+      "src": "edge_target",
+      "sym": "\\nu"
+     },
+     {
+      "quantity": "φ (work function)",
+      "quantity_id": "QM:sy:phi",
+      "src": "edge_target",
+      "sym": "\\phi"
+     }
+    ],
+    "symbols": [
+     "h",
+     "\\nu",
+     "\\phi"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由截止电压测定逸出功；太阳能电池与光电探测器的能级判据。"
    },
    "confidence": 1.0,
@@ -11864,6 +12774,26 @@
     "name": "Planck relation",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "h (Planck)",
+      "quantity_id": "QM:sy:h",
+      "src": "edge_target",
+      "sym": "h"
+     },
+     {
+      "quantity": "ν (frequency)",
+      "quantity_id": "QM:sy:nu",
+      "src": "edge_target",
+      "sym": "\\nu"
+     }
+    ],
+    "symbols": [
+     "h",
+     "\\nu"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "光子能量计算（光谱、光电效应），量子化假设的基本关系式。"
    },
    "confidence": 1.0,
@@ -11893,6 +12823,33 @@
     "name": "Schrödinger equation (time-independent)",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "ħ (reduced Planck)",
+      "quantity_id": "QM:sy:hbar",
+      "src": "edge_target",
+      "sym": "\\hbar"
+     },
+     {
+      "quantity": "ψ (wavefunction)",
+      "quantity_id": "QM:sy:psi",
+      "src": "edge_target",
+      "sym": "\\psi"
+     },
+     {
+      "quantity": "m (mass)",
+      "quantity_id": "SY:m",
+      "src": "edge_target",
+      "sym": "m"
+     }
+    ],
+    "symbols": [
+     "\\hbar",
+     "m",
+     "\\psi"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "求解量子体系的能级与波函数（氢原子、势阱、谐振子）。"
    },
    "confidence": 1.0,
@@ -11922,6 +12879,19 @@
     "name": "Heisenberg uncertainty",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "ħ (reduced Planck)",
+      "quantity_id": "QM:sy:hbar",
+      "src": "edge_target",
+      "sym": "\\hbar"
+     }
+    ],
+    "symbols": [
+     "\\hbar"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "估算量子体系能达到的位置/动量精度；判定经典近似的适用范围。"
    },
    "confidence": 1.0,
@@ -12147,6 +13117,26 @@
     "name": "Mass-energy equivalence",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "c (speed of light)",
+      "quantity_id": "RT:sy:c",
+      "src": "edge_target",
+      "sym": "c"
+     },
+     {
+      "quantity": "m (mass)",
+      "quantity_id": "SY:m",
+      "src": "edge_target",
+      "sym": "m"
+     }
+    ],
+    "symbols": [
+     "m",
+     "c"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "核算核反应与湮灭过程的能量释放；粒子物理中的质量-能量换算。"
    },
    "confidence": 1.0,
@@ -12176,6 +13166,33 @@
     "name": "Relativistic momentum",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "γ (Lorentz factor)",
+      "quantity_id": "RT:sy:gamma",
+      "src": "edge_target",
+      "sym": "\\gamma"
+     },
+     {
+      "quantity": "m (mass)",
+      "quantity_id": "SY:m",
+      "src": "edge_target",
+      "sym": "m"
+     },
+     {
+      "quantity": "v (velocity)",
+      "quantity_id": "SY:v",
+      "src": "edge_target",
+      "sym": "v"
+     }
+    ],
+    "symbols": [
+     "\\gamma",
+     "m",
+     "v"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "粒子加速器中的动量-能量换算；高速碰撞的运动学计算。"
    },
    "confidence": 1.0,
@@ -12266,6 +13283,33 @@
     "name": "Boltzmann entropy",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "S (entropy)",
+      "quantity_id": "SM:sy:S",
+      "src": "edge_target",
+      "sym": "S"
+     },
+     {
+      "quantity": "W (microstates)",
+      "quantity_id": "SM:sy:W",
+      "src": "edge_target",
+      "sym": "W"
+     },
+     {
+      "quantity": "k_B (Boltzmann constant)",
+      "quantity_id": "SM:sy:k_B",
+      "src": "edge_target",
+      "sym": "k_B"
+     }
+    ],
+    "symbols": [
+     "S",
+     "k_B",
+     "W"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由微观组态数估算宏观熵；统计力学与信息熵之间的桥梁。"
    },
    "confidence": 1.0,
@@ -12295,6 +13339,39 @@
     "name": "Maxwell-Boltzmann distribution",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "Euler's number",
+      "quantity_id": "MA:pq:euler_e",
+      "src": "edge_target",
+      "sym": "e"
+     },
+     {
+      "quantity": "e (Euler's number)",
+      "quantity_id": "MA:sy:e",
+      "src": "edge_target",
+      "sym": "e"
+     },
+     {
+      "quantity": "k_B (Boltzmann constant)",
+      "quantity_id": "SM:sy:k_B",
+      "src": "edge_target",
+      "sym": "k_B"
+     },
+     {
+      "quantity": "v (velocity)",
+      "quantity_id": "SY:v",
+      "src": "edge_target",
+      "sym": "v"
+     }
+    ],
+    "symbols": [
+     "v",
+     "e",
+     "k_B"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "计算平均速率与最概然速率；反应速率与蒸发过程的统计基础。"
    },
    "confidence": 1.0,
@@ -12324,6 +13401,46 @@
     "name": "Partition function",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "Euler's number",
+      "quantity_id": "MA:pq:euler_e",
+      "src": "edge_target",
+      "sym": "e"
+     },
+     {
+      "quantity": "e (Euler's number)",
+      "quantity_id": "MA:sy:e",
+      "src": "edge_target",
+      "sym": "e"
+     },
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "SM:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     },
+     {
+      "quantity": "Z (partition)",
+      "quantity_id": "SM:sy:Z",
+      "src": "edge_target",
+      "sym": "Z"
+     },
+     {
+      "quantity": "k_B (Boltzmann constant)",
+      "quantity_id": "SM:sy:k_B",
+      "src": "edge_target",
+      "sym": "k_B"
+     }
+    ],
+    "symbols": [
+     "Z",
+     "e",
+     "k_B",
+     "T"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由配分函数 Z 导出内能、熵、自由能等全部热力学量。"
    },
    "confidence": 1.0,
@@ -12492,6 +13609,26 @@
     "name": "Boyle's law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "P (pressure)",
+      "quantity_id": "TH:sy:P",
+      "src": "edge_target",
+      "sym": "P"
+     },
+     {
+      "quantity": "V (volume)",
+      "quantity_id": "TH:sy:V",
+      "src": "edge_target",
+      "sym": "V"
+     }
+    ],
+    "symbols": [
+     "P",
+     "V"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "气体等温压缩与膨胀过程的计算。"
    },
    "confidence": 1.0,
@@ -12522,6 +13659,26 @@
     "name": "Carnot efficiency",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     },
+     {
+      "quantity": "η (efficiency)",
+      "quantity_id": "TH:sy:eta",
+      "src": "edge_target",
+      "sym": "\\eta"
+     }
+    ],
+    "symbols": [
+     "\\eta",
+     "T"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "评估热机与发电循环的理论效率上限。"
    },
    "confidence": 1.0,
@@ -12551,6 +13708,26 @@
     "name": "Charles's law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     },
+     {
+      "quantity": "V (volume)",
+      "quantity_id": "TH:sy:V",
+      "src": "edge_target",
+      "sym": "V"
+     }
+    ],
+    "symbols": [
+     "V",
+     "T"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "等压过程的体积-温度换算。"
    },
    "confidence": 1.0,
@@ -12580,6 +13757,26 @@
     "name": "Gay-Lussac's law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "P (pressure)",
+      "quantity_id": "TH:sy:P",
+      "src": "edge_target",
+      "sym": "P"
+     },
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     }
+    ],
+    "symbols": [
+     "P",
+     "T"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "等容过程的压强-温度换算。"
    },
    "confidence": 1.0,
@@ -12610,6 +13807,47 @@
     "name": "Ideal gas law",
     "ntype": "formula",
     "source": "curated_seed",
+    "symbol_table": [
+     {
+      "quantity": "P (pressure)",
+      "quantity_id": "TH:sy:P",
+      "src": "edge_target",
+      "sym": "P"
+     },
+     {
+      "quantity": "R (gas constant)",
+      "quantity_id": "TH:sy:R",
+      "src": "edge_target",
+      "sym": "R"
+     },
+     {
+      "quantity": "T (temperature)",
+      "quantity_id": "TH:sy:T",
+      "src": "edge_target",
+      "sym": "T"
+     },
+     {
+      "quantity": "V (volume)",
+      "quantity_id": "TH:sy:V",
+      "src": "edge_target",
+      "sym": "V"
+     },
+     {
+      "quantity": "n (amount)",
+      "quantity_id": "TH:sy:n",
+      "src": "edge_target",
+      "sym": "n"
+     }
+    ],
+    "symbols": [
+     "P",
+     "V",
+     "n",
+     "R",
+     "T"
+    ],
+    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
+    "symbols_rule_version": "s1",
     "usage": "由三个状态量求第四个；化学计量与工程状态计算的基础。"
    },
    "confidence": 1.0,
