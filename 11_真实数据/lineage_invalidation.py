@@ -77,6 +77,58 @@ OUT = os.path.join(HERE, "lineage_invalidation_report.json")
 LEDGER = os.path.join(HERE, "reverify_ledger.json")
 
 
+class _Rep:
+    """断言登记器 —— 与 `06_PoC/tests/assert_name_diff.py::_SelfRep` **同形**。
+
+    ★ 为什么必须换成 `rep.add(cond, NAME, detail)`（D71：既有缺陷，本轮修）：
+      本文件的 ①–⑨ 原本**全部走裸 `print("  … : PASS/FAIL")`**。而铁律 #87 的执法工具
+      `bash sttp.sh names` 认的是**调用形状**（`ast` 里 `.add`/`.skip` 的实参），
+      **不是**输出文本 ⇒ 对本文采集到 **0 条目** ⇒ 「①–⑨ 里任何一条被悄悄删掉」
+      在名字集合差分上**完全不可见**。#87 对这九个断言**曾经完全无效**
+      （当时只有构造性探针 `R13` 守 ⑨ 一条，其余八条无人看守）。
+    ★ 打印仍必须是 `[PASS]/[FAIL] NAME` 行：构造性探针 `red_probe.py` 只认
+      `[FAIL]` / `❌` 开头的行（D80 教训：自检换了打印形状 ⇒ 探针**看不见**判据变红，
+      而判据其实红了 —— 那会把「已修好」误判成「没修」）。
+    ★ `skip` 与 `add(False, …)` 严格分列（铁律 #20：SKIP ≠ PASS，也 ≠ FAIL）：
+      ⑥⑦ 在图上尚无 A04 记录时**测不到**，那是「没测」不是「测坏」。
+    ★ `add(None, …)` 就是 SKIP（与 `06_PoC/tests/red_probe.py::Rep.add` **同口径**）：
+      把"不可判定"编码进**同一个调用**里，断言名在源码里只写**一处**
+      ⇒ `names` 不会把它报成「同 ID 家族 / 字面重复」。若另开 `rep.skip("<同名>")`，
+      同一批名字要在源码里写两遍、两处必然漂移（#88），而且 16 条断言会长出 11 组
+      「字面重复」告警 —— 噪音一多，真告警就没人看了（D62 立的规矩）。
+    """
+
+    def __init__(self):
+        self.items = []                     # [(name, status, detail)] status ∈ pass/fail/skip
+
+    def add(self, cond, name, detail=""):
+        """**三态**：`True` ⇒ PASS；`False` ⇒ FAIL；`None` ⇒ SKIP（不可判定）。"""
+        if cond is None:
+            self.items.append((name, "skip", detail))
+            return False
+        self.items.append((name, "pass" if cond else "fail", detail))
+        return bool(cond)
+
+    def skip(self, name, detail=""):
+        """显式 SKIP（等价于 `add(None, …)`；保留此方法供既有调用点使用）。"""
+        return self.add(None, name, detail)
+
+    @property
+    def ok(self):
+        return all(st != "fail" for _n, st, _d in self.items)
+
+    def counts(self):
+        c = collections.Counter(st for _n, st, _d in self.items)
+        return {"pass": c.get("pass", 0), "fail": c.get("fail", 0), "skip": c.get("skip", 0)}
+
+    def report(self):
+        tag = {"pass": "[PASS]", "fail": "[FAIL]", "skip": "[SKIP]"}
+        for name, st, detail in self.items:
+            print("  %s %s" % (tag[st], name))
+            if detail:
+                print("         %s" % detail)
+
+
 def load_graph():
     d = json.load(open(NORM, encoding="utf-8"))
     return d["nodes"], d["edges"]
@@ -534,8 +586,11 @@ def selfcheck():
     ③ 未变异图无变更。
     ④ 不可从仓库复算的来源必须**分列披露**且不计入「已变更」（D1）。
     ⑤ 两口径（仓库 vs 工作区）确实不同 —— **构造性**证明（临时仓库里造 LF/CRLF 差异），
-       故干净 clone / 已归一化环境也**不会退化成 SKIP**。"""
-    ok = True
+       故干净 clone / 已归一化环境也**不会退化成 SKIP**。
+
+    ⑩ 自指（D71）：本自检的断言**必须能被 `names`（#87 的执法工具）采集到**
+       —— 否则「①–⑨ 里某条被悄悄删掉」在名字集合差分上完全不可见。"""
+    rep = _Rep()
     _n, edges = load_graph()
     all_files = set()
     for s in sr.load():
@@ -563,19 +618,15 @@ def selfcheck():
         changed, affected, diag = analyze(base=tmp, edges=edges)
         got_ids = {e.get("id") for e in affected} - base_ids
         delta_srcs = set(changed) - set(base_changed)
-        print("  ① 变异文件              : %s" % locs)
-        print("  ① 镜像固有基线（非变异）: %s" % sorted(base_changed))
-        print("  ① 独立期望直接变更      : %s" % sorted(direct))
-        print("  ① 工具判定直接变更      : %s（新增 %s）"
-              % (sorted(changed), sorted(delta_srcs)))
         eq1 = delta_srcs == direct
-        print("     新增直接变更集合相等  : %s" % ("PASS" if eq1 else "FAIL"))
-        ok &= eq1
+        rep.add(eq1, "LIN1 ① 变异检测：新增直接变更集合 == 独立期望（无假阳性）",
+                "变异 %s ｜ 镜像固有基线 %s ｜ 独立期望 %s ｜ 工具新增 %s"
+                % (locs, sorted(base_changed), sorted(direct), sorted(delta_srcs)))
         eq2 = got_ids == expect_ids
-        print("     受影响断言集合相等    : %s（期望 %d / 命中 %d，差 %d）"
-              % ("PASS" if eq2 else "FAIL", len(expect_ids), len(got_ids),
-                 len(got_ids - expect_ids) + len(expect_ids - got_ids)))
-        ok &= eq2
+        rep.add(eq2, "LIN2 ① 受影响断言集合相等（差分口径）",
+                "期望 %d / 命中 %d / 差 %d"
+                % (len(expect_ids), len(got_ids),
+                   len(got_ids - expect_ids) + len(expect_ids - got_ids)))
     finally:
         sr.rmtree_force(tmp)          # ★ E9：Windows 只读 git object 会让 ignore_errors 静默失败
 
@@ -588,6 +639,10 @@ def selfcheck():
             and x not in sr.upstream_closure(y)]
     x, y = (("PhysicsBabel", "chembl_api") if ("PhysicsBabel", "chembl_api") in cand
             else (cand[0] if cand else (None, None)))
+    # ★ 只保留**一处** `rep.add` 字面量（if/else 各写一遍会让 ② 长成「同 ID 家族」，
+    #   而 `names` 的告警一多就没人看了 —— 这正是 D62 要防的"把噪音当信号"）。
+    #   找不到来源对时**不得**当作通过：那会让这一段变成恒真（铁律 #20）。
+    _l3_ok, _l3_det = False, "候选为空 ⇒ 本段无法验证，按 FAIL 处理（SKIP 不等于 PASS）"
     if x and y:
         saved = list(sr.REGISTRY[y].get("upstream") or [])
         sr.REGISTRY[y]["upstream"] = saved + [x]
@@ -606,29 +661,26 @@ def selfcheck():
             changed, affected, diag = analyze(base=tmp, edges=edges)
             y_flagged = y in diag["changed_with_lineage"]
             y_files_unchanged = y not in changed
-            print("  ② 纯血缘：%s(变异) → %s(临时 imports_from)" % (x, y))
-            print("     %s 文件未变但被传递标记 : %s" % (y, "PASS" if (y_flagged and y_files_unchanged) else "FAIL"))
-            ok &= (y_flagged and y_files_unchanged)
+            _l3_ok = bool(y_flagged and y_files_unchanged)
+            _l3_det = ("%s(变异) → %s(临时 imports_from) ｜ 被传递标记=%s ｜ 自身文件未变=%s"
+                       % (x, y, y_flagged, y_files_unchanged))
         finally:
             sr.REGISTRY[y]["upstream"] = saved
             sr.rmtree_force(tmp)      # ★ E9：同上，显式清只读位后重试，失败即抛
-    else:
-        print("  ② 纯血缘：未找到可用的无交集来源对（跳过）")
-        ok &= False
+    rep.add(_l3_ok, "LIN3 ② 纯血缘传递：上游变异 ⇒ 下游文件未变但被标记", _l3_det)
 
     # ---------- ③ 真实图无变更 ----------
     _c0, a0, d0 = analyze(base=ROOT, edges=edges)
     clean = (len(a0) == 0 and not d0["changed_direct"])
-    print("  ③ 未变异图无变更        : %s（受影响 %d）" % ("PASS" if clean else "FAIL", len(a0)))
-    ok &= clean
+    rep.add(clean, "LIN4 ③ 未变异图无变更（无假阳性基线）",
+            "受影响 %d ｜ 直接变更 %s" % (len(a0), d0["changed_direct"]))
     # ---------- ④ 不可从仓库复算的来源：必须**分列披露**（D1） ----------
     nir_srcs = d0["not_reproducible_sources"]
     nir_claims = d0["n_claims_on_not_reproducible"]
     disc_ok = (bool(nir_srcs) and nir_claims > 0
                and not (set(nir_srcs) & set(d0["changed_direct"])))
-    print("  ④ 未入库来源分列披露    : %s（%d 个来源 / %d 条断言，**不计入 changed**）"
-          % ("PASS" if disc_ok else "FAIL", len(nir_srcs), nir_claims))
-    ok &= disc_ok
+    rep.add(disc_ok, "LIN5 ④ 未入库来源分列披露：不计入 changed（D1）",
+            "%d 个来源 / %d 条断言" % (len(nir_srcs), nir_claims))
 
     # ---------- ⑤ 两口径确实不同（**构造性**非真空；不依赖本机行尾状态） ----------
     #   ★ 不能靠「本机恰好有 CRLF 差异」证明 —— 干净 clone / 已归一化环境里那个差异是 0，
@@ -637,36 +689,40 @@ def selfcheck():
     #     给出不同哈希，还原后必须重新相等。这才是「口径选择有意义」的消融对照（铁律 #65）。
     cw, _aw, _dw = analyze(base=ROOT, edges=edges, byte_source="worktree")
     extra = sorted(set(cw) - set(d0["changed_direct"]))
-    import shutil as _sh
     pr = sr.divergence_probe()
     try:
         probe_ok = bool(pr.get("differ")) and bool(pr.get("restored_equal"))
     finally:
         sr.rmtree_force(pr.get("tmp"))   # ★ E9：同口径
-    if probe_ok:
-        print("  ⑤ 两口径确实不同        : PASS —— 构造对照 differ=True / 还原后相等=True"
-              + ("；另：本机工作区口径多报 %d 个「已变更」%s" % (len(extra), extra[:3])
-                 if extra else "（本机工作区与仓库字节一致）"))
-    else:
-        print("  ⑤ 两口径确实不同        : FAIL —— 构造对照 differ=%s / 还原后相等=%s（%s）"
-              % (pr.get("differ"), pr.get("restored_equal"), pr.get("error", "")))
-    ok &= probe_ok
+    rep.add(probe_ok, "LIN6 ⑤ 两口径确实不同（构造性对照：differ 且还原后相等）",
+            "differ=%s / restored_equal=%s%s"
+            % (pr.get("differ"), pr.get("restored_equal"),
+               ("；另：工作区口径多报 %d 个「已变更」%s" % (len(extra), extra[:3]))
+               if extra else "（本机工作区与仓库字节一致）"))
 
     # ---------- ⑥ 依赖感知失效（端到端 · 真实图的**记录依赖**） ----------
     #   ★ A04 的核心验收：变异**参考表** ⇒ 必须**恰好**定位「记录了该参考表依赖」的证据。
     #     在临时 git 仓库里镜像参考表 + 一个输入，先取基线（应无 stale），
     #     再变异 dimension_table.py ⇒ 断言 stale 证据集合 == 独立算出的期望集合。
-    ok &= _selfcheck_deps()
+    _selfcheck_deps(rep)
 
     # ---------- ⑦ 未受影响项保持原状 ----------
-    ok &= _selfcheck_unaffected()
+    _selfcheck_unaffected(rep)
 
     # ---------- ⑧ 重验：可追溯 + 重写哈希不恢复 valid（构造性） ----------
-    ok &= _selfcheck_reverify()
+    _selfcheck_reverify(rep)
 
     # ---------- ⑨ 未入库依赖：给判定，不抛 traceback（Phase 56 / B2 防回退） ----------
-    ok &= _selfcheck_none_guard()
-    return 0 if ok else 1
+    _selfcheck_none_guard(rep)
+
+    # ---------- ⑩ 自指：本自检的断言必须可被 `names`（#87 执法工具）采集 ----------
+    _selfcheck_collectable(rep)
+
+    rep.report()
+    c = rep.counts()
+    print("  ⇒ %s（PASS %d / FAIL %d / SKIP %d）"
+          % ("全过" if rep.ok else "未通过", c["pass"], c["fail"], c["skip"]))
+    return 0 if rep.ok else 1
 
 
 def _evidence_with_ref(edges, rid):
@@ -705,7 +761,24 @@ def _write_mutated(ap, rel):
     return True, ""
 
 
-def _selfcheck_none_guard():
+def _none_guard_probe():
+    """⑨ 探针：返回 `(ok, detail)`。`_write_mutated` 不得抛 `None + bytes`。"""
+    probe_rel = "11_真实数据/__phase56_not_in_repo_probe__.py"
+    tmp = tempfile.mkdtemp(prefix="sttp_lineage_sc9_")
+    try:
+        try:
+            wok, why = _write_mutated(os.path.join(tmp, probe_rel), probe_rel)
+        except Exception as e:                 # noqa: BLE001 —— 本断言就是要把任何异常抓成 FAIL
+            return False, "抛了 %s: %s（应返回结构化失败，不得 traceback）" % (
+                type(e).__name__, e)
+        wrote = os.path.exists(os.path.join(tmp, probe_rel))
+        good = (wok is False and "dependency_not_in_repo" in (why or "") and not wrote)
+        return good, "ok=%s｜落盘=%s｜原因 %s" % (wok, wrote, (why or "")[:70] or "（空）")
+    finally:
+        sr.rmtree_force(tmp)
+
+
+def _selfcheck_none_guard(rep):
     """⑨ 依赖未入库时：`_write_mutated` 必须**返回结构化失败**，不得抛 `None + bytes`。
 
     ★ 为什么必须单列一条（而不是靠 ⑥⑦ 顺带覆盖）：
@@ -713,36 +786,70 @@ def _selfcheck_none_guard():
       ⇒ 拿真实数据测它等于**永远测不到**（#90 的镜像错误：全绿可能是测量器没测）。
       故这里**构造**那个输入——一个确定不在 HEAD 里的相对路径——断言返回值的**形状与原因**，
       而不是靠"跑一遍没崩"来证明（#100：须有"注入已知缺陷必红"的构造性证据）。
+    ★ 打印形状由 `_Rep.report()` 统一成 `[PASS]/[FAIL] NAME`：构造性探针
+      （`red_probe.py`）只认 `[FAIL] NAME` 这一种行形状。第一版写成 `: FAIL`
+      ⇒ R13 报"注入缺陷后不变红"，而实际上它**变了**（RC=1）——
+      **判据被看见了，但探针看不见它**（#83 的镜像）。D71 换登记器时这条形状约束
+      **必须原样保留**，故它由 `_Rep` 集中保证而不是散落在每段里。
     """
-    probe_rel = "11_真实数据/__phase56_not_in_repo_probe__.py"
-    tmp = tempfile.mkdtemp(prefix="sttp_lineage_sc9_")
+    ok, det = _none_guard_probe()
+    rep.add(ok, "LIN15 ⑨ 未入库依赖给判定（返回结构化失败，不得 traceback）", det)
+
+
+def _selfcheck_collectable(rep):
+    """⑩ 自指（D71）：**本次真正跑过的每一条断言，`names`（#87 执法工具）都必须能看见**。
+
+    ★ 为什么必须单列一条（而不是"改用 `rep.add` 就算修好"）：
+      换登记器只是**手段**。要守的是**结果** —— 一旦有人把某段改回裸 `print`，
+      采集数就会悄悄掉，而**没有任何断言会红**。这正是 D71 本身的形状：
+      「仪器看不见被测对象」，只是这次换了个层级（#90 的镜像）。
+    ★ 判据为什么用「运行期条目 ⊆ 静态采集集合」而不是「采集数 ≥ N」：
+      数数只能抓到"整体变少"，抓不到"某一条换了写法"。集合包含关系直接回答
+      「这一条到底看得见吗」，是**逐条**而非**总量**的口径（#87 的原意）。
+    ★ 为什么用**外部工具**而不是再写一遍正则：用自己的一段解析器验自己，
+      等于把同一个盲区复制一份。这里直接 import 执法工具，它的可信度由
+      `assert_name_diff.py --selfcheck`（S1–S8，含自指 S6）独立保证。
+    ★ 为什么还要 `want` 这份**硬编码清单**（只靠「运行期 ⊆ 静态」是不够的）：
+      把某条断言整段改回裸 `print` 时，静态采集与运行期登记会**同步消失**
+      ⇒ 包含关系仍然成立 ⇒ 判据**恒真**。必须另有**绝对量**：本自检应有
+      `LIN1`–`LIN16` 共 16 条，缺一条就红（铁律：非真空判据要用绝对量，不用增量）。
+      `extra` 非空同样判红 —— 新增断言却没登记进 `want` 时**主动提醒**，
+      否则清单会越用越旧、重新长出盲区（D79 家族：枚举式清单漏项）。
+    ★ 为什么只在**自检分支内** import 测试工具：`11_真实数据/` 是生产路径，
+      不引入生产期对 `06_PoC/tests/` 的依赖。
+    ★ 本条自己的名字也必须是**字面量直传**：第一版写成 `name = "LIN16 …"` 再传变量
+      ⇒ 采集器只认常量实参 ⇒ 静态采集里**没有 LIN16** ⇒ 本条当场 FAIL。
+      这不是笔误运气好，而是**判据按设计咬住了自己**（自指的第一次真实捕获）。
+    """
     try:
-        try:
-            wok, why = _write_mutated(os.path.join(tmp, probe_rel), probe_rel)
-        except Exception as e:                 # noqa: BLE001 —— 本断言就是要把任何异常抓成 FAIL
-            print("  [FAIL] ⑨ 未入库依赖给判定 —— 抛了 %s: %s（应返回结构化失败，不得 traceback）"
-                  % (type(e).__name__, e))
-            return False
-        wrote = os.path.exists(os.path.join(tmp, probe_rel))
-        good = (wok is False and "dependency_not_in_repo" in (why or "") and not wrote)
-        # ★ 打印成 `[PASS]/[FAIL]` 而非 `: PASS`：构造性探针（`red_probe.py`）只认
-        #   `[FAIL] NAME` 这一种行形状。第一版写成 `: FAIL` ⇒ R13 报"注入缺陷后不变红"，
-        #   而实际上它**变了**（RC=1）——**判据被看见了，但探针看不见它**（#83 的镜像）。
-        print("  %s ⑨ 未入库依赖给判定 —— ok=%s｜落盘=%s｜原因 %s"
-              % ("[PASS]" if good else "[FAIL]", wok, wrote, (why or "")[:70] or "（空）"))
-        return good
-    finally:
-        sr.rmtree_force(tmp)
+        _tests = os.path.join(ROOT, "06_PoC", "tests")
+        if _tests not in sys.path:
+            sys.path.insert(0, _tests)
+        import assert_name_diff as andf
+        got = andf.from_python(os.path.abspath(__file__))
+        static_ids = {andf.norm(n) for n in got}
+        runtime_ids = {andf.norm(n) for n, _st, _d in rep.items}
+        uncollectable = sorted(runtime_ids - static_ids)
+        want = {"LIN%d" % i for i in range(1, 17)}
+        missing = sorted(want - static_ids)
+        extra = sorted(static_ids - want)
+        _ok = not uncollectable and not missing and not extra
+        _det = ("静态采集 %d 条 / %d 个 ID ｜ 运行期登记 %d 条 ｜ 采集不到：%s"
+                " ｜ 应有而未采到：%s ｜ 未登记进 want：%s"
+                % (len(got), len(static_ids), len(rep.items),
+                   uncollectable or "（无）", missing or "（无）", extra or "（无）"))
+    except Exception as e:                      # noqa: BLE001 —— 采集器不可用本身就是 FAIL
+        _ok, _det = False, "采集器不可用：%s: %s" % (type(e).__name__, e)
+    rep.add(_ok, "LIN16 ⑩ 自指：本次跑过的每条断言都能被 `names` 工具采集（D71）", _det)
 
 
-def _selfcheck_deps():
-    """⑥ 依赖感知失效：变异参考表 ⇒ **恰好**定位记录了该依赖的证据（无假阳/假阴）。"""
+def _deps_probe():
+    """⑥ 探针：返回 `(ok|None, detail)`；`None` = 图上尚无 A04 记录 ⇒ **测不到**。"""
     _n, edges = load_graph()
     exp = _evidence_with_ref(edges, "dimension_table")
     if not exp:
-        print("  ⑥ 依赖感知失效          : SKIP —— 图上证据尚无 A04 记录"
-              "（先跑 phase45_evidence_deps_delta.py 并 apply）")
-        return True            # 明确 SKIP，**不计通过**（项目惯例：不算 FAIL 也不算 PASS）
+        return None, ("图上证据尚无 A04 记录 ⇒ 测不到"
+                      "（先跑 phase45_evidence_deps_delta.py 并 apply）")
     tmp = tempfile.mkdtemp(prefix="sttp_lineage_sc3_")
     try:
         _mirror_refs(tmp, skip=("11_真实数据/dimension_table.py",))
@@ -754,33 +861,36 @@ def _selfcheck_deps():
         ap = os.path.join(tmp, rel)
         _w_ok, _w_why = _write_mutated(ap, rel)
         if not _w_ok:
-            print("  ⑥ 依赖感知失效          : FAIL —— %s" % _w_why)
-            return False
+            return False, "无法构造变异：%s" % _w_why
         _git_commit_all(tmp, "mutate-reference")
         _c1, _a1, d1 = analyze(base=tmp, edges=edges)
         got_new = _stale_keys(edges, tmp, d1) - base_stale
         exp_new = exp - base_stale
-        eq = (got_new == exp_new)
-        print("  ⑥ 依赖感知失效          : %s（期望 %d / 命中 %d，差 %d）"
-              % ("PASS" if eq else "FAIL", len(exp_new), len(got_new),
-                 len(got_new ^ exp_new)))
-        print("     变异 %s ⇒ changed_reference=%s｜changed_verifier=%s｜changed_dep=%s"
-              % (rel, d1["deps"]["changed_reference_ids"],
-                 d1["deps"]["changed_verifier_ids"],
-                 [os.path.basename(x) for x in d1["deps"]["changed_dep_versions"]]))
-        return eq
+        return (got_new == exp_new,
+                "期望 %d / 命中 %d / 差 %d ｜ changed_reference=%s｜changed_verifier=%s"
+                "｜changed_dep=%s"
+                % (len(exp_new), len(got_new), len(got_new ^ exp_new),
+                   d1["deps"]["changed_reference_ids"],
+                   d1["deps"]["changed_verifier_ids"],
+                   [os.path.basename(x) for x in d1["deps"]["changed_dep_versions"]]))
     finally:
         sr.rmtree_force(tmp)
 
 
-def _selfcheck_unaffected():
-    """⑦ 未受影响项保持原状：只记录 `element_reference` 的证据不被量纲表变异牵连。"""
+def _selfcheck_deps(rep):
+    """⑥ 依赖感知失效：变异参考表 ⇒ **恰好**定位记录了该依赖的证据（无假阳/假阴）。"""
+    ok, det = _deps_probe()
+    # `ok is None` ⇒ SKIP（不计通过，也不计失败；铁律 #20）
+    rep.add(ok, "LIN7 ⑥ 依赖感知失效：变异参考表 ⇒ 恰好定位依赖它的证据", det)
+
+
+def _unaffected_probe():
+    """⑦ 探针：返回 `(ok|None, detail)`。"""
     _n, edges = load_graph()
     only_el = (_evidence_with_ref(edges, "element_reference")
                - _evidence_with_ref(edges, "dimension_table"))
     if not only_el:
-        print("  ⑦ 未受影响项保持原状    : SKIP —— 无「只依赖元素表」的证据可测")
-        return True
+        return None, "无「只依赖元素表」的证据可测 ⇒ 测不到"
     tmp = tempfile.mkdtemp(prefix="sttp_lineage_sc4_")
     try:
         _mirror_refs(tmp, skip=("11_真实数据/dimension_table.py",))
@@ -789,32 +899,39 @@ def _selfcheck_unaffected():
         ap = os.path.join(tmp, rel)
         _w_ok, _w_why = _write_mutated(ap, rel)
         if not _w_ok:
-            print("  ⑦ 未受影响项保持原状    : FAIL —— %s" % _w_why)
-            return False
+            return False, "无法构造变异：%s" % _w_why
         _git_commit_all(tmp, "mutate-reference")
         _c, _a, d1 = analyze(base=tmp, edges=edges)
         stale = _stale_keys(edges, tmp, d1)
         leaked = only_el & stale
-        okx = not leaked
-        print("  ⑦ 未受影响项保持原状    : %s（只依赖元素表的 %d 条证据中，被量纲表变异牵连 %d 条）"
-              % ("PASS" if okx else "FAIL", len(only_el), len(leaked)))
-        for k in list(leaked)[:3]:
-            print("       ⚠ 误牵连：%s#%d" % k)
-        return okx
+        return (not leaked,
+                "只依赖元素表的 %d 条证据中，被牵连 %d 条%s"
+                % (len(only_el), len(leaked),
+                   "：%s" % list(leaked)[:3] if leaked else ""))
     finally:
         sr.rmtree_force(tmp)
 
 
-def _selfcheck_reverify():
-    """⑧ 重验：新旧记录可追溯 + **单纯重写哈希不恢复 valid**（构造性，走真实 `reverify()`）。
+def _selfcheck_unaffected(rep):
+    """⑦ 未受影响项保持原状：只记录 `element_reference` 的证据不被量纲表变异牵连。"""
+    ok, det = _unaffected_probe()
+    rep.add(ok, "LIN8 ⑦ 未受影响项保持原状（只依赖元素表的证据不被量纲表变异牵连）", det)
 
+
+def _reverify_probe():
+    """⑧ 探针：返回 `{ID: (ok|None, detail)}`；`None` = 临时仓库缺源哈希 ⇒ **测不到**。
+
+    ★ 为什么把探针与登记**分开**（D71 的实现约束）：每条断言名在源码里只能出现**一处**
+      `rep.add(...)` 字面量。若 SKIP 分支另写一批 `rep.skip("<同名>")`，
+      16 条断言会长出 11 组「同 ID 家族 / 字面重复」告警 —— 噪音一多，
+      `names` 的真告警就没人看了（D62 的规矩）。三态统一走 `rep.add(None, …)`。
     ★ 为什么用**受控小图**而非整图：整图有 3 万余条待重验证据，自检会写出一份
       15 MB 的临时账本（秒级变分钟级）。用**构造的小图**走**同一条生产代码路径**
       （`reverify()` / `evidence_status()` / `detect_inplace_rewrites()`）即可，
       判据强度不降（铁律 #65：对照要有效，不要无效的规模）。
     """
     import copy as _cp
-    ok = True
+    out = {}
     tmp = tempfile.mkdtemp(prefix="sttp_lineage_sc5_")
     try:
         _mirror_refs(tmp)
@@ -823,8 +940,9 @@ def _selfcheck_reverify():
 
         # 构造一条**带记录依赖**的证据（src = `dimension_table` 来源，其 locator 已在临时仓库）
         if cur["src_hashes"].get("dimension_table") is None:
-            print("  ⑧ 重验可追溯/防改哈希    : SKIP —— 临时仓库取不到 `dimension_table` 来源哈希")
-            return True
+            _why = "临时仓库取不到 `dimension_table` 来源哈希 ⇒ 测不到"
+            return {k: (None, _why) for k in
+                    ("LIN9", "LIN10", "LIN11", "LIN12", "LIN13", "LIN14")}
         cid = "selfcheck|dimension_table|claimX"
         ev = {"kind": "recompute", "impl": "verification_model.formula_members",
               "detail": "selfcheck", "indep": True,
@@ -856,10 +974,8 @@ def _selfcheck_reverify():
 
         cur2 = ed.current_snapshot(base=tmp, byte_source="repo", src_hashes=sr.hash_map(tmp))
         st_pre, rs_pre = ed.evidence_status(ed.recorded_deps(ev), cur2)
-        c_pre = (base_st == "valid" and st_pre == "stale")
-        print("  ⑧0 重验前旧证据已 stale  : %s（基线 %s → 变异后 %s：%s）"
-              % ("PASS" if c_pre else "FAIL", base_st, st_pre, rs_pre))
-        ok &= c_pre
+        out["LIN9"] = (base_st == "valid" and st_pre == "stale",
+                       "基线 %s → 变异后 %s：%s" % (base_st, st_pre, rs_pre))
 
         new_g = os.path.join(tmp, "_new_graph.json")
         json.dump({"nodes": [], "edges": _cp.deepcopy(old_edges)},
@@ -867,21 +983,18 @@ def _selfcheck_reverify():
         ledger_path = os.path.join(tmp, "ledger.json")
         entries, stats = reverify(old_g, new_g, base=tmp, emit_ledger=True,
                                   out_ledger=ledger_path)
-        c_a = (stats.get("n_reverified") == 1)
-        print("  ⑧a 重验生成新证据        : %s（1 条；账本 %d 条）"
-              % ("PASS" if c_a else "FAIL", len(entries)))
-        ok &= c_a
+        out["LIN10"] = (stats.get("n_reverified") == 1,
+                        "重验 %d 条；账本 %d 条"
+                        % (stats.get("n_reverified", 0), len(entries)))
 
         en = entries[0] if entries else {}
         c_b = (bool(entries) and en.get("supersedes") == ev["evd"]
                and en.get("new_evidence_id") == en.get("evidence_id")
                and en.get("evidence_id") != ev["evd"]
                and "ref_changed:dimension_table" in en.get("reason", ""))
-        print("  ⑧b 新旧记录可追溯        : %s（supersedes=%s → 新 %s；原因 %s）"
-              % ("PASS" if c_b else "FAIL",
-                 str(en.get("supersedes"))[:18], str(en.get("evidence_id"))[:18],
-                 en.get("reason")))
-        ok &= c_b
+        out["LIN11"] = (c_b, "supersedes=%s → 新 %s ｜ 原因 %s"
+                        % (str(en.get("supersedes"))[:18], str(en.get("evidence_id"))[:18],
+                           en.get("reason")))
 
         # (c) ★ 单纯重写哈希**不**恢复 valid。
         #     ★ 关键区分：**新证据**（新 id + reverified_at + supersedes + 账本）合法 ⇒ valid；
@@ -915,30 +1028,43 @@ def _selfcheck_reverify():
                and any(r.startswith(ed.R_HASH_REWRITTEN) for r in rs_cheat)
                and n_mark == 1 and st_marked == "needs_review"
                and any(r.startswith(ed.R_HASH_REWRITTEN) for r in rs_marked))
-        print("  ⑧c 重写哈希不恢复 valid  : %s（新证据+账本=%s｜原地改+无账本=%s｜"
-              "改全 4 个值+图级检出记号 %d 条 ⇒ %s）"
-              % ("PASS" if c_c else "FAIL", st_led, st_cheat, n_mark, st_marked))
-        ok &= c_c
+        out["LIN12"] = (c_c, "新证据+账本=%s｜原地改+无账本=%s｜改全 4 个值+图级检出记号 %d 条 ⇒ %s"
+                        % (st_led, st_cheat, n_mark, st_marked))
 
         # (d) 原地改哈希 ⇒ detect_inplace_rewrites 必报违规
         tampered = _cp.deepcopy(old_edges)
         tev = tampered[0]["props"]["verification_evidence"][0]
         tev["refs"] = {"dimension_table": _dup((tev.get("refs") or {}).get("dimension_table"))}
         viol = detect_inplace_rewrites(old_edges, tampered, {})
-        c_d = (len(viol) == 1)
-        print("  ⑧d 原地改哈希必被检出    : %s（违规 %d 条；字段 %s）"
-              % ("PASS" if c_d else "FAIL", len(viol),
-                 (viol[0]["field"] if viol else "-")))
-        ok &= c_d
+        out["LIN13"] = (len(viol) == 1,
+                        "违规 %d 条；字段 %s"
+                        % (len(viol), (viol[0]["field"] if viol else "-")))
 
         # (e) 旧证据**保留**（不被删除）—— 用「新图里仍能查到旧 evd」断言
-        still = any(ev.get("evd") == ev["evd"] for ev in
+        still = any(e2.get("evd") == ev["evd"] for e2 in
                     new_edges_evs(json.load(open(new_g, encoding="utf-8"))["edges"]))
-        print("  ⑧e 旧证据保留（不删除）  : %s" % ("PASS" if still else "FAIL"))
-        ok &= still
-        return ok
+        out["LIN14"] = (still, "新图仍可查到旧 evd=%s" % str(ev["evd"])[:18])
     finally:
         sr.rmtree_force(tmp)
+    return out
+
+
+def _selfcheck_reverify(rep):
+    """⑧ 重验：新旧记录可追溯 + **单纯重写哈希不恢复 valid**（构造性，走真实 `reverify()`）。"""
+    res = _reverify_probe()
+    rep.add(res["LIN9"][0],
+            "LIN9 ⑧0 重验前旧证据确实变 stale（基线 valid → 变异后 stale）", res["LIN9"][1])
+    rep.add(res["LIN10"][0], "LIN10 ⑧a 重验生成新证据（1 条）", res["LIN10"][1])
+    rep.add(res["LIN11"][0],
+            "LIN11 ⑧b 新旧记录可追溯（supersedes 指向旧 evd、新 id 不同、原因含 ref_changed）",
+            res["LIN11"][1])
+    rep.add(res["LIN12"][0],
+            "LIN12 ⑧c 重写哈希不恢复 valid（新证据+账本=valid；原地改+无账本=needs_review）",
+            res["LIN12"][1])
+    rep.add(res["LIN13"][0],
+            "LIN13 ⑧d 原地改哈希必被检出（detect_inplace_rewrites 报 1 条）", res["LIN13"][1])
+    rep.add(res["LIN14"][0],
+            "LIN14 ⑧e 旧证据保留（不删除，重验只由账本标示被取代）", res["LIN14"][1])
 
 
 def new_edges_evs(edges):
@@ -1023,14 +1149,21 @@ def main():
     a = ap.parse_args()
 
     if a.selfcheck_guard:
-        return 0 if _selfcheck_none_guard() else 1
+        # ★ ⑨ + ⑩ 都是**不依赖权威图**的纯静态/纯函数守卫（秒级）⇒ 放在同一个快入口里。
+        #   ⑩ 必须跟 ⑨ 一起跑，否则 D71 的回归守卫只能靠 3 分钟的 `--selfcheck` 验，
+        #   而「一条没人愿意跑的构造性证据等于没有」（R13 立下的纪律）。
+        _rep = _Rep()
+        _selfcheck_none_guard(_rep)
+        _selfcheck_collectable(_rep)
+        _rep.report()
+        return 0 if _rep.ok else 1
 
     if a.selfcheck:
         print("=" * 92)
-        print("lineage_invalidation 判据非真空自检（九段：①–⑤ 来源级 + ⑥–⑧ 依赖级 + ⑨ 守卫级）")
+        print("lineage_invalidation 判据非真空自检"
+              "（十段：①–⑤ 来源级 + ⑥–⑧ 依赖级 + ⑨ 守卫级 + ⑩ 自指可采集性）")
         print("=" * 92)
         rc = selfcheck()
-        print("  ⇒ %s" % ("全过" if rc == 0 else "未通过"))
         return rc
 
     # ★ A04：`--reverify` 必须**显式**说明新旧图 —— 否则「重验的是哪份图」不可追溯。

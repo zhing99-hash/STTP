@@ -150,6 +150,58 @@ _BACKEND_LOCK = threading.Lock()
 _WARM_LOCK = threading.Lock()
 _WARM = {"started": False, "done": False, "error": None, "t0": None, "ms": None}
 
+# ---------------------------------------------------------------------------
+# D70：客户端断连（**预期事件**，不是错误）
+# ---------------------------------------------------------------------------
+# 为什么必须单列一层（外部评审 2026-10-17 · RC1-12 成立）：
+#   `ThreadingHTTPServer` 的每请求线程在客户端 RST 后会把 `ConnectionResetError`/
+#   `BrokenPipeError` 漏到 `socketserver`，后者走 `handle_error()` 打印
+#   「Exception occurred during processing of request …」+ 完整 traceback + 40 个短横线
+#   ⇒ **一次关闭标签页就能往日志里灌三层栈**，真异常被淹掉；且 `do_GET` 的兜底
+#   `except Exception` 在「写响应时断连」这一路上还会**再试一次 `_json(500)`**，
+#   第二次写又炸 ⇒ 最终仍是三层 traceback，只是栈顶换了地方。
+# 为什么不能 `except Exception: pass`（铁律 #67：异常绝不吞成空）：
+#   1) 断连要**留一行可检索的日志**（stage + 已尝试字节 + 原因），否则「日志干净」
+#      与「日志没在写」不可区分（#90：全绿可能只是没测到）；
+#   2) **非断连**异常必须照原样抛给 `handle_error()` 打 traceback —— 那是真 bug。
+# 分列口径：`stage` 取 `read`（读请求行/头时断）/ `write`（写响应时断）/ `cleanup`（连接回收）。
+_DISCONNECT_PREFIX = "客户端断连"
+_STAGE_LABEL = {"read": "读取请求行/头", "write": "写响应", "cleanup": "连接回收"}
+DISCONNECT_STATS = {"read": 0, "write": 0, "cleanup": 0}
+
+
+def _is_disconnect(exc: BaseException) -> bool:
+    """是否属于「客户端主动断开」这一类（Python 已把它们归到 `ConnectionError` 下）。
+
+    覆盖：`BrokenPipeError`（EPIPE）/ `ConnectionResetError`（ECONNRESET）/ 
+    `ConnectionAbortedError`（Windows 10053）。**不含** `socket.timeout`——
+    超时是「等太久」，不是「对面走了」，把它混进来会掩盖真正卡住的请求。
+    """
+    return isinstance(exc, ConnectionError)
+
+
+def _emit(line: str) -> None:
+    """写一行日志；**stdout 自身断开**时静默。
+
+    ★ 为什么单独包一层：`log_message()` 在断连路径上也会被调用，若 stdout 已断
+      （例如 `| head` 提前退出），`print` 会抛 `BrokenPipeError` ⇒ 被上层误记成
+      「客户端断连」⇒ 断连计数失真、真实原因被掩盖。这一层只兜 stdout，
+      **不兜**任何与 HTTP 有关的异常。
+    """
+    try:
+        print(line)
+    except (BrokenPipeError, ConnectionError, OSError):
+        pass
+
+
+def _note_disconnect(stage: str, exc: BaseException, detail: str = "") -> None:
+    """登记并打印一次断连（`stage` ∈ read / write / cleanup）。"""
+    if stage in DISCONNECT_STATS:
+        DISCONNECT_STATS[stage] += 1
+    _emit("[HTTP] %s（%s） %s ｜ %s: %s"
+          % (_DISCONNECT_PREFIX, _STAGE_LABEL.get(stage, stage), detail,
+             type(exc).__name__, exc))
+
 
 def _load_queries():
     """import 守卫：加载 03_知识层/queries.py。"""
@@ -975,35 +1027,79 @@ def load_graph_data() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# HTTP 处理器
+# HTTP 服务器 / 处理器
 # ---------------------------------------------------------------------------
+# ---- 服务器（D70：断连不产生三层 traceback）----
+class VizServer(ThreadingHTTPServer):
+    """`ThreadingHTTPServer` + 断连分类。
+
+    ★ 为什么还要覆盖 `handle_error`（明明 `handle_one_request` 已经接了）：
+      `handle_one_request` 只覆盖「读/写响应」两段；`StreamRequestHandler.finish()`
+      里的 `wfile.close()` 在连接已被对端复位时同样可能抛 `ConnectionResetError`，
+      而它发生在 `handle()` 之外 ⇒ 仍会落到 `socketserver.process_request_thread`
+      的 `except Exception` ⇒ `handle_error`。不接这一层，日志里照样有三层栈。
+    ★ 非断连异常**照原样**交给 `super().handle_error()`：那是真 bug，
+      必须保留完整栈（铁律 #67 的反面：不许把可诊断性一起"修"掉）。
+    """
+
+    daemon_threads = True
+
+    def handle_error(self, request, client_address):
+        exc = sys.exc_info()[1]
+        if _is_disconnect(exc):
+            _note_disconnect("cleanup", exc, "对端 %s" % (client_address[0]
+                                                          if client_address else "-"))
+            return
+        super().handle_error(request, client_address)
+
+
 class VizHandler(BaseHTTPRequestHandler):
     server_version = "FormulaGraphViz/1.0"
 
     # ---- 工具：统一响应（带 CORS） ----
     def _send(self, code: int, body: bytes, content_type: str):
-        self.send_response(code)
-        self.send_header("Content-Type", content_type)
-        self.send_header("Content-Length", str(len(body)))
-        self.send_header("Access-Control-Allow-Origin", "*")           # CORS
-        self.send_header("Access-Control-Allow-Headers", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
-        self.send_header("Cache-Control", "no-store")
-        self.end_headers()
-        if self.command != "HEAD":
-            self.wfile.write(body)
+        """发送完整响应；**客户端已断开时返回 False 而不抛**（D70）。
+
+        ★ 为什么要返回布尔而不是静默：调用方（如 `do_GET` 的兜底 `except`）需要知道
+          「这次 500 到底有没有送达」—— 若客户端已走，再尝试 `_json(500)` 只会第二次
+          炸出 traceback。返回值让「送达/未送达」成为**可判定的结果**，而不是靠异常类型猜。
+        """
+        attempted = 0
+        try:
+            self.send_response(code)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Access-Control-Allow-Origin", "*")           # CORS
+            self.send_header("Access-Control-Allow-Headers", "*")
+            self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            if self.command != "HEAD":
+                attempted = len(body)
+                self.wfile.write(body)
+            return True
+        except ConnectionError as e:
+            # ★ 断连不是 500：不重试、不伪装成服务端错误，只留一行可检索的记录。
+            #   「已尝试 N 字节」而非「已发送」—— `sendall` 部分写后抛，**无法**知道
+            #   真正送达多少（诚实措辞，不让日志说它不知道的事）。
+            self.close_connection = True
+            _note_disconnect("write", e,
+                             "%s %s ｜ 已尝试 %d 字节"
+                             % (self.command or "-", getattr(self, "path", "") or "-",
+                                attempted))
+            return False
 
     def _json(self, code: int, obj):
         body = json.dumps(obj, ensure_ascii=False, indent=2).encode("utf-8")
-        self._send(code, body, "application/json; charset=utf-8")
+        return self._send(code, body, "application/json; charset=utf-8")
 
     def _html(self, code: int, path: str):
         try:
             with open(path, "r", encoding="utf-8") as f:
                 body = f.read().encode("utf-8")
-            self._send(code, body, "text/html; charset=utf-8")
+            return self._send(code, body, "text/html; charset=utf-8")
         except FileNotFoundError:
-            self._json(404, {"error": f"not found: {os.path.basename(path)}"})
+            return self._json(404, {"error": f"not found: {os.path.basename(path)}"})
 
     def _static(self, rel: str, base_dir: str):
         """安全地发送 base_dir 下的静态文件（A4：/vendor/* 用）。
@@ -1023,11 +1119,33 @@ class VizHandler(BaseHTTPRequestHandler):
                 body = f.read()
         except FileNotFoundError:
             return self._json(404, {"error": f"not found: {rel}"})
-        self._send(200, body, ctype)
+        return self._send(200, body, ctype)
 
     # ---- 日志：静音默认打印，保留简洁访问日志 ----
     def log_message(self, fmt, *args):  # noqa: A003
-        print(f"  [HTTP] {self.address_string()} {fmt % args}")
+        _emit(f"  [HTTP] {self.address_string()} {fmt % args}")
+
+    # ---- D70：读请求行/头时断连（本机实测的**主要**现场） ----
+    def handle_one_request(self):
+        """包一层 `BaseHTTPRequestHandler.handle_one_request`，接住客户端断连。
+
+        ★ 为什么必须在这一层（而不是 `do_GET` 里）：实测 traceback 出现在
+          `self.rfile.readline(65537)`（Python 3.11 `http/server.py:404`）——
+          **请求行都还没读到**，`do_GET` 根本没被调用，它的 `except` 兜不住。
+          链路是：readline 抛 `ConnectionResetError` → `handle()` → `socketserver`
+          → `handle_error()` → 三层栈。
+        ★ 为什么不是「关掉 `handle_error` 的打印」：那会把**真**异常的栈也一起吞掉。
+          这里只接 `ConnectionError` 这一类，其余照原样上抛（`handle_error` 仍会打栈）。
+        """
+        try:
+            return super().handle_one_request()
+        except ConnectionError as e:
+            self.close_connection = True
+            _note_disconnect("read", e,
+                             "%s ｜ 对端 %s" % (getattr(self, "requestline", "") or "-",
+                                                self.client_address[0]
+                                                if self.client_address else "-"))
+            return None
 
     # ---- OPTIONS（CORS 预检） ----
     def do_OPTIONS(self):  # noqa: N802
@@ -1089,6 +1207,13 @@ class VizHandler(BaseHTTPRequestHandler):
 
             # 未知路径
             return self._json(404, {"error": "not found", "path": self.path})
+        except ConnectionError as e:
+            # ★ D70：断连**不是 500**。若走到这里（`_send` 之外的连接类异常，
+            #   例如读响应体后才暴露的 ECONNRESET），仍不得尝试再写一次错误页。
+            self.close_connection = True
+            _note_disconnect("cleanup", e, "%s ｜ 路由 %s"
+                             % (self.command or "-", route))
+            return False
         except Exception as e:  # noqa: BLE001
             return self._json(500, {"error": f"{type(e).__name__}: {e}"})
 
@@ -1546,7 +1671,7 @@ def main(argv=None) -> int:
     print("  按 Ctrl+C 停止")
     print("=" * 68)
 
-    httpd = ThreadingHTTPServer((args.host, args.port), VizHandler)
+    httpd = VizServer((args.host, args.port), VizHandler)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

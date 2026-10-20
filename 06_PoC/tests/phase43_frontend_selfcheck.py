@@ -35,11 +35,13 @@
 退出码：0 = 无 FAIL；1 = 有 FAIL；2 = 前置不满足（缺文件 / 缺 node）。
 """
 
+import contextlib
 import io
 import json
 import os
 import pathlib
 import re
+import struct
 import subprocess
 import sys
 import threading
@@ -1305,6 +1307,155 @@ def main(argv=None):
             rep.add(sn == 200 and dn.get("status") == "no_result" and not (dn.get("paths") or []),
                     "H8m 【负对照】`src`/`dst` 发到 /api/subgraph ⇒ no_result（坐实 P0-4 不是玄学）",
                     f"HTTP {sn} · status={dn.get('status')} · {(dn.get('reason') or '')[:60]}")
+
+            # ============================================================ H9 段
+            # ★ D70：客户端断连（外部评审 2026-10-17 · RC1-12，**本轮复现并修复**）
+            #   复现到的现场：客户端 RST 后，服务端在 `handle_one_request` 的
+            #   `self.rfile.readline(65537)` 抛 `ConnectionResetError` ⇒ 漏到 `socketserver`
+            #   ⇒ `handle_error()` 打印「Exception occurred during processing of request」
+            #   + 完整 traceback + 40 个短横线 ⇒ **一次关闭标签页 = 三层栈**，真异常被淹掉。
+            #   ★ 为什么必须**端到端**测、不能只读 `do_GET` 的 `except`：这条路上
+            #     **请求行都还没读到**，`do_GET` 根本没被调用 —— 只看代码会得出
+            #     「已经兜住了」的错误结论（正是本轮踩到的判断陷阱）。
+            #   ★ 两个方向都要守：**不许打栈**（可读性）且**不许静默**（铁律 #67：
+            #     异常吞成空 ⇒ 「日志干净」与「日志没在写」不可区分）。
+            rep.section("[H9] 客户端断连（D70：不打三层栈，也不静默吞掉）")
+            import viz_server as V  # noqa: F811 —— 同模块缓存；本段直接调生产方法
+
+            _log0 = 0
+            try:
+                _log0 = os.path.getsize(_logf.name)
+            except OSError:
+                pass
+
+            def _log_since(off):
+                try:
+                    with open(_logf.name, "rb") as _f:
+                        _f.seek(off)
+                        return _f.read().decode("utf-8", "replace")
+                except OSError:
+                    return ""
+
+            # ---- H9a：**确定性**触发「读请求行时 RST」----
+            #   只发到 `\r`（不构成完整请求行）⇒ 服务端**必定**阻塞在 `readline` 里，
+            #   此刻 RST ⇒ `recv` 返回 ECONNRESET。比「发完整请求再抢时序」确定得多
+            #   （后者会因机器快慢时红时绿，属铁律 #20 的反面）。
+            _rst_ok, _rst_err = False, ""
+            for _attempt in range(3):
+                try:
+                    _rs = socket.socket()
+                    _rs.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER,
+                                   struct.pack("ii", 1, 0))
+                    _rs.connect(("127.0.0.1", hport))
+                    _rs.sendall(b"GET /api/healthz HTTP/1.1\r")
+                    _time.sleep(0.05)
+                    _rs.close()                 # SO_LINGER(1,0) ⇒ 发 RST 而非 FIN
+                    _rst_ok = True
+                    break
+                except OSError as _e:
+                    _rst_err = str(_e)[:80]
+            _time.sleep(1.0)
+            _new = _log_since(_log0)
+            _n_tb = _new.count("Traceback (most recent call last)")
+            _n_hdr = _new.count("Exception occurred during processing of request")
+            rep.add(_rst_ok and _n_tb == 0 and _n_hdr == 0,
+                    "H9a 读请求行时 RST ⇒ 服务端**不打** traceback / 不打印 "
+                    "「Exception occurred during processing of request」",
+                    f"RST {('成功' if _rst_ok else '失败:' + _rst_err)} · 新增日志 "
+                    f"{len(_new)} 字符 · traceback {_n_tb} 次 · 三层栈头 {_n_hdr} 次")
+
+            # ---- H9b：断连必须**留一行可检索的记录**（静默吞掉同样不合格）----
+            rep.add("客户端断连" in _new,
+                    "H9b 断连**留一行可检索日志**（静默吞掉同样不合格 —— 铁律 #67）",
+                    next((ln.strip()[:120] for ln in _new.splitlines()
+                          if "客户端断连" in ln), "（未找到 ⇒ 可能被静默吞掉）"))
+
+            # ---- H9c：断连未损害服务（子进程仍活、后续请求正常）----
+            _alive = False
+            try:
+                _st_h, _b_h = _hz(timeout=10)
+                _alive = (_st_h == 200 and (_b_h or {}).get("status") == "ok")
+            except Exception:  # noqa: BLE001 —— 本断言就是要把「服务没了」抓成 FAIL
+                _alive = False
+            rep.add(_alive and proc.poll() is None,
+                    "H9c 断连后服务仍可用（healthz 200 且子进程存活）",
+                    f"healthz={'200' if _alive else '失败'} · 子进程 poll={proc.poll()}")
+
+            # ---- H9d：**写响应**时断连 ⇒ `_send` 返回 False、不抛、计入统计 ----
+            #   ★ 为什么这一段走「真 socketpair + 生产 `_send`」而不是端到端：
+            #     小响应（healthz 几百字节）一次 `sendall` 就能全进内核发送缓冲 ⇒
+            #     断连**写成功**，端到端会**假绿**（本轮实测确认）；而要确定性触发
+            #     就必须用大响应，真实大响应路由 `/graph_data.json` 在干净检出里
+            #     可能不存在（会触发即时生成并**写盘**，弄脏工作树，铁律 #97）。
+            #     故：除「谁来调用它」之外全部是生产路径 —— 判据强度不降。
+            def _dead_sock():
+                _a, _b = socket.socketpair()
+                _b.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER,
+                              struct.pack("ii", 1, 0))
+                _b.close()                     # RST
+                _time.sleep(0.05)
+                return _a
+
+            def _mk_handler(_sock):
+                _h = V.VizHandler.__new__(V.VizHandler)   # 跳过 socket setup，只测 `_send`
+                _h.wfile = _sock.makefile("wb", 0)        # 与 `wbufsize=0` 同口径
+                _h.command = "GET"
+                _h.path = "/api/stats"
+                _h.request_version = "HTTP/1.1"
+                _h.protocol_version = "HTTP/1.1"
+                _h.client_address = ("127.0.0.1", 4242)
+                _h.close_connection = False
+                _h.requestline = "GET /api/stats HTTP/1.1"
+                return _h
+
+            _BIG = b"x" * (20 * 1000 * 1000)      # 20 MB：远超任何内核发送缓冲 ⇒ 必失败
+            _w0 = V.DISCONNECT_STATS.get("write", 0)
+            _h1 = _mk_handler(_dead_sock())
+            _ret, _err = None, ""
+            try:
+                _ret = _h1._send(200, _BIG, "application/octet-stream")
+            except BaseException as _e:  # noqa: BLE001 —— 抛了就是 FAIL，要拿到类型
+                _err = f"{type(_e).__name__}: {_e}"
+            _w1 = V.DISCONNECT_STATS.get("write", 0)
+            rep.add(_ret is False and not _err and _w1 == _w0 + 1,
+                    "H9d 写响应时断连 ⇒ `_send` 返回 False、不抛、并计入 `write` 断连统计",
+                    f"返回={_ret!r} · 异常={_err or '（无）'} · write 计数 {_w0}→{_w1}")
+
+            # ---- H9e：【可红性】同一构造下**裸 sendall** 必抛 ⇒ H9d 非真空 ----
+            #   没有这条，H9d 在「socket 其实没断」时也会因为某种其它原因返回 False，
+            #   而没人能发现（铁律 #100：注入已知缺陷必须变红）。
+            _naked = ""
+            try:
+                _dead_sock().sendall(_BIG)
+            except BaseException as _e:  # noqa: BLE001 —— 抓的就是"确实会抛"
+                _naked = type(_e).__name__
+            rep.add(_naked in ("BrokenPipeError", "ConnectionResetError",
+                               "ConnectionAbortedError"),
+                    "H9e 【可红性】同一构造下**裸 sendall** 必抛 ConnectionError "
+                    "⇒ H9d 的 False 是**捕获**的结果，不是真空",
+                    f"裸写抛出：{_naked or '（未抛出 ⇒ H9d 可能真空）'}")
+
+            # ---- H9f：断连后不得继续读下一个请求（否则会空转/重复记日志）----
+            rep.add(getattr(_h1, "close_connection", False) is True,
+                    "H9f 断连后 `close_connection=True`（不再在同一连接上读下一个请求）",
+                    f"close_connection={getattr(_h1, 'close_connection', None)!r}")
+
+            # ---- H9g：【负对照】**非断连**异常必须照旧打完整栈 ----
+            #   防止「一刀切静音」把真 bug 的可诊断性一起修掉（铁律 #67 的反面）。
+            _stub = V.VizServer.__new__(V.VizServer)      # 不 bind，只借 `handle_error`
+            _ebuf = io.StringIO()
+            try:
+                raise ValueError("H9g-sentinel")
+            except ValueError:
+                with contextlib.redirect_stderr(_ebuf):
+                    _stub.handle_error(None, ("127.0.0.1", 1))
+            _etxt = _ebuf.getvalue()
+            _has_tb = "Traceback (most recent call last)" in _etxt
+            rep.add(_has_tb and "H9g-sentinel" in _etxt,
+                    "H9g 【负对照】非断连异常仍走 `handle_error` 打完整栈"
+                    "（断连静音**不外溢**到真异常）",
+                    f"stderr {len(_etxt)} 字符 · 含 traceback={_has_tb} · "
+                    f"含哨兵={'H9g-sentinel' in _etxt}")
         except Exception as e:  # noqa: BLE001
             rep.skip("H8 冷启动端到端", f"子进程起服务失败：{e}")
         finally:

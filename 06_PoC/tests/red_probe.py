@@ -244,7 +244,11 @@ PROBES = [
                 "旧自检直接 `None + bytes` ⇒ TypeError。评审那次全量冻结门禁 107/108，"
                 "现场只有 traceback、没有一句可读判定。"
                 "★ 用 `--selfcheck-guard` 单跑 ⑨（0.4 s）而不是整套 `--selfcheck`（3 min）："
-                "**一条没人愿意跑的构造性证据等于没有**。"),
+                "**一条没人愿意跑的构造性证据等于没有**。"
+                "★ D71 起 ⑨ 的断言名改为 `LIN15 …`（原来以 `⑨` 开头）—— 整套自检改成"
+                "`rep.add` 登记后，名字必须与 `names` 采集器口径对齐。`expect_red` 随之改"
+                "为 `LIN15`：**改名必须同步锚点**，否则探针会静默退化成「永远匹配不上」"
+                "（看起来仍在守，实际什么也没测 —— #90 的镜像）。"),
         "file": "11_真实数据/lineage_invalidation.py",
         "old": ('    body = sr.repo_blob(rel, ROOT)\n'
                 '    if body is None:\n'
@@ -253,7 +257,7 @@ PROBES = [
         "new": "    body = sr.repo_blob(rel, ROOT)      # redprobe: 去掉 None 守卫（回到旧写法）",
         "cmd": "PY 11_真实数据/lineage_invalidation.py --selfcheck-guard",
         "cwd": ROOT,
-        "expect_red": ["⑨"],
+        "expect_red": ["LIN15"],
         "requires": [],
     },
     {
@@ -459,6 +463,35 @@ PROBES = [
         "requires": ["authority"],
     },
     {
+        "id": "R26",
+        "kind": "mutate",
+        "why": ("D71 的**回归**守卫：把某一条断言从 `rep.add(...)` 改回**裸 `print`** "
+                "⇒ 铁律 #87 的采集器就看不见它（静态采集里 `LIN4` 消失）⇒ ⑩ 自指必须红。"
+                "★ 为什么这条必须存在：D71 的原始缺陷正是「自检走 print ⇒ `names` 采到 0 条"
+                "⇒ 删掉任何一条断言都无人发现」。只把 print 换成 rep.add 是**手段**；"
+                "没有这条探针，将来谁再改回 print 也不会有人知道 —— 那就是 D71 复发。"
+                "★ 为什么挑 `LIN4`（③ 未变异图无变更）：它在本文件里**只有一处** `rep.add`"
+                "（`LIN15` 有两处：正常分支 + `except` 分支，只替换一处时静态采集仍采得到、"
+                "判据不会红 —— 第一版就踩了这个坑）。要模拟「这条断言从可采集集合里彻底消失」，"
+                "必须挑单点登记的那一条。"
+                "★ 为什么期望红的是 ⑩ 而不是 ③：把 `rep.add` 换成 `print` 后 ③ 自己"
+                "**根本不再产生条目**（不是 FAIL 而是消失）—— 这正是 D71 的形状，"
+                "只有 ⑩ 的绝对量清单（缺 LIN4）能把它抓住。"
+                "★ 为什么用 `--selfcheck-guard` 而不是 `--selfcheck`：后者 3 分 18 秒，"
+                "构造性证据必须便宜到有人愿意跑（R13 立下的纪律）。"
+                "⑩ 是纯静态判据 ⇒ 不跑 ③ 也能验到它。"),
+        "file": "11_真实数据/lineage_invalidation.py",
+        "old": ('    rep.add(clean, "LIN4 ③ 未变异图无变更（无假阳性基线）",\n'
+                '            "受影响 %d ｜ 直接变更 %s" % (len(a0), d0["changed_direct"]))'),
+        "new": ('    print("  [PASS] LIN4 ③ 未变异图无变更 —— redprobe: 改回裸 print（D71 复发）")\n'
+                '    # redprobe: 此处原有的 rep.add 被移除，采集器将看不到 LIN4'),
+        "cmd": "PY 11_真实数据/lineage_invalidation.py --selfcheck-guard",
+        "cwd": ROOT,
+        "expect_red": ["LIN16"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -481,7 +514,7 @@ PROBES = [
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
-                      "R24", "R25", "RN")
+                      "R24", "R25", "R26", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -753,6 +786,8 @@ def emit(rep, res):
             res["R24"][1])
     rep.add(res["R25"][0], "R25 给无指称公式编一条适用条件 ⇒ S4 必须变红（恒真性质不得冒充前提）",
             res["R25"][1])
+    rep.add(res["R26"][0], "R26 断言改回裸 print ⇒ LIN16 ⑩ 自指必须变红（D71 的回归守卫）",
+            res["R26"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
