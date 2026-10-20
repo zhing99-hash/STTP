@@ -157,11 +157,14 @@ def run_assertions(edges, gi, gp, reg, redist_of, rep,
             mismatch = sum(1 for e, a_, b_ in zip(edges, gi, gp)
                            if (e.get("props") or {}).get("evidence_grade_internal") != a_
                            or (e.get("props") or {}).get("evidence_grade_public") != b_)
-            ok_commit = (snap["graded_at_commit"] == snap["head"]
-                         and snap["rule_in_snapshot"] == rule)
-            rep.add(mismatch == 0 and ok_commit, "G5",
-                    "落盘值与现算不一致 %d 条；graded_at_commit=%s / 规则=%s（须 == 当前 HEAD / %s）"
-                    % (mismatch, snap["graded_at_commit"], snap["rule_in_snapshot"], rule))
+            # ★ 硬断言只管**值与规则版本**；`graded_at_commit` 落后于 HEAD **不是错误** ——
+            #   任何一个新提交都会让它落后（图没变、分数也没变），把它判红等于要求
+            #   「每次提交都必须重跑 gradepersist」，那是噪音不是纪律。
+            #   真正要抓的是「图变了 / 规则变了而分数没跟着重算」⇒ 值不等 ⇒ 这里红。
+            ok_rule = snap["rule_in_snapshot"] == rule
+            rep.add(mismatch == 0 and ok_rule, "G5",
+                    "落盘值与现算不一致 %d 条（须 0）；快照规则 %s == 现行 %s：%s"
+                    % (mismatch, snap["rule_in_snapshot"], rule, ok_rule))
     return ci, cp
 
 
@@ -343,6 +346,11 @@ def main():
                             persisted=persisted, snap=snap, rule=q.GRADE_RULE_VERSION)
 
     n = rep.dump()
+    if persisted and snap["graded_at_commit"] != snap["head"]:
+        # ★ 放在 dump **之后**：与断言表混排会被读成「又一条判据」。
+        print("   ★ 提示：落盘时 commit %s 早于当前 HEAD %s"
+              "（图未变则分数仍一致；要刷新记录请跑 bash sttp.sh gradepersist --apply）"
+              % (snap["graded_at_commit"], snap["head"]))
     out = {
         "meta": {"head": head_sha(), "n_edges_total": len(edges),
                  "grade_rule": q.GRADE_RULE_VERSION,
