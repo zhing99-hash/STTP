@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """G1 侦察：`symbols` 回填到底能拿到什么（先量，后写）。
 
 要回答四个问题，答不上来就不许动 delta：

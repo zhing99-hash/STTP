@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """G3 适用条件 · 可行性探针（只读，不写图，不承诺数字）
 
 为什么要先探：

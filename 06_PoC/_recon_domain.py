@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """G2 学科分类 · 侦察脚本（只读，不写图）
 
 为什么要先侦察：
