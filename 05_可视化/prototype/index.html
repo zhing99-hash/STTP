@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright 2026 zhing -->
+<!--
+  STTP · 公式知识图谱 —— M2 交互原型（单文件，零依赖，双击可开）
+  数据：graph_data_phase41.json 真实子集（68 节点 / 127 边），证据等级按 GRADE_RULE=e1 现算。
+  用途：确认信息结构与交互，确认后才接入 06_PoC/js/。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>STTP · 公式知识图谱（M2 原型）</title>
+<meta name="description" content="公式知识图谱交互原型：先问一个问题，再看那一块图，最后看清它凭什么成立。" />
+<style>
+:root{
+  --bg:#0f1419; --panel:#1a2230; --panel-2:#222c3c; --line:#2e3a4d;
+  --text:#e6edf3; --muted:#9aa7b8; --dim:#7d8b9e;
+  --hover:#2c3850;
+  --accent:#4C72B0; --accent-2:#5b8dd6; --canvas:#0b0f15;
+  --ok:#3fb950; --warn:#d29922; --err:#f85149;
+  --e5:#4FD1C5; --e4:#63A4DE; --e3:#7C8FA6; --e2:#5d6b7d; --e1:#C4705E;
+  --phys:#DD8452; --math:#4C72B0; --chem:#55A868; --cross:#8C8C9A;
+  --left-w:272px; --right-w:352px;
+  --radius:6px;
+  --font:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"Fira Code",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:var(--font); background:var(--bg); color:var(--text);
+  font-size:13px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+button,input{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+
+.app{
+  display:grid;height:100vh;
+  grid-template-columns:var(--left-w) 1fr var(--right-w);
+  grid-template-rows:52px 1fr 38px;
+  grid-template-areas:"hd hd hd" "left main right" "ft ft ft";
+}
+
+/* ---------- header ---------- */
+header{
+  grid-area:hd;display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--panel);border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:baseline;gap:9px;white-space:nowrap}
+.brand b{font-size:14px;letter-spacing:.06em;font-weight:650}
+.brand span{font-size:11px;color:var(--muted);letter-spacing:.02em}
+.snap{
+  display:flex;gap:12px;font-family:var(--mono);font-size:11px;color:var(--muted);
+  padding-left:14px;border-left:1px solid var(--line);
+}
+.snap b{color:var(--text);font-weight:500}
+.hd-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tag{
+  font-size:10.5px;padding:2px 7px;border:1px solid var(--line);border-radius:3px;
+  color:var(--muted);white-space:nowrap;background:var(--panel-2);
+}
+.tag.proto{border-color:#3d6ba8;color:#9ecbff}
+
+/* ---------- left ---------- */
+aside#left{
+  grid-area:left;background:var(--panel);border-right:1px solid var(--line);
+  overflow-y:auto;padding:0;
+}
+.blk{padding:12px 13px;border-bottom:1px solid var(--line)}
+.blk h3{
+  margin:0 0 8px;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  color:var(--dim);text-transform:uppercase;
+}
+.search{position:relative}
+.search input{
+  width:100%;padding:8px 30px 8px 10px;background:var(--canvas);
+  border:1px solid var(--line);border-radius:var(--radius);
+}
+.search input::placeholder{color:var(--dim)}
+.search .k{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:10px;color:var(--dim);
+  border:1px solid var(--line);border-radius:3px;padding:0 4px;
+}
+.results{margin-top:8px;display:flex;flex-direction:column;gap:1px}
+.res{
+  text-align:left;display:block;width:100%;padding:6px 8px;border:1px solid transparent;
+  background:transparent;border-radius:4px;
+}
+.res:hover{background:var(--hover,#2c3850)}
+.res[aria-selected="true"]{background:#26405f;border-color:#3d6ba8}
+.res .l{display:block;font-size:12px;line-height:1.35}
+.res .m{
+  display:flex;gap:6px;align-items:center;font-size:10.5px;color:var(--muted);
+  font-family:var(--mono);margin-top:2px;
+}
+.dot{width:6px;height:6px;border-radius:50%;flex:0 0 auto}
+.res-empty{padding:8px;font-size:11.5px;color:var(--muted)}
+
+/* 档位 */
+.levels{display:flex;flex-direction:column;gap:2px}
+.lv{
+  display:flex;align-items:center;gap:8px;width:100%;padding:5px 7px;
+  background:transparent;border:1px solid transparent;border-radius:4px;text-align:left;
+}
+.lv:hover{background:#2c3850}
+.lv[aria-pressed="true"]{background:#26405f;border-color:#3d6ba8}
+.lv .sw{width:18px;height:0;border-top-width:2px;border-top-style:solid;flex:0 0 auto}
+.lv .t{font-size:11.5px}
+.lv .n{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+
+/* 图例 */
+.legend{display:flex;flex-direction:column;gap:5px}
+.lg{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.lg i{width:12px;height:12px;border-radius:3px;flex:0 0 auto;border:1.5px solid}
+.lg i.sym{width:10px;height:10px;transform:rotate(45deg)}
+.note{font-size:10.5px;color:var(--dim);line-height:1.5;margin-top:8px}
+
+/* ---------- main ---------- */
+main{grid-area:main;overflow:hidden;position:relative;background:var(--canvas);display:flex;flex-direction:column}
+.stage{display:none;flex:1;min-height:0}
+.stage.on{display:flex;flex-direction:column;flex:1;min-height:0}
+
+/* 任务入口 */
+#stage-home{align-items:center;justify-content:center;padding:28px 22px;overflow-y:auto}
+.home-inner{width:100%;max-width:660px}
+.eyebrow{
+  font-size:10.5px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+h1{font-size:23px;font-weight:600;margin:14px 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:12.5px;margin:0 0 22px;max-width:52ch}
+.bigsearch{
+  display:flex;gap:8px;padding:6px;background:var(--panel);
+  border:1px solid var(--line);border-radius:8px;
+}
+.bigsearch input{
+  flex:1;background:transparent;border:0;padding:9px 10px;font-size:14px;
+}
+.bigsearch input::placeholder{color:var(--dim)}
+.btn{
+  padding:9px 16px;border-radius:6px;border:1px solid #3d6ba8;background:#21406b;
+  color:#dbe9ff;font-size:12.5px;white-space:nowrap;
+}
+.btn:hover{background:#2a4f82}
+.btn.ghost{background:var(--panel-2);border-color:var(--line);color:var(--text)}
+.btn.ghost:hover{background:#2c3850}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+.card{
+  text-align:left;padding:10px 12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:6px;
+}
+.card:hover{border-color:#3d6ba8;background:#1e2839}
+.card .q{font-size:12.5px;margin-bottom:3px}
+.card .h{font-size:10.5px;color:var(--dim);font-family:var(--mono)}
+.card.trap{border-style:dashed}
+.card.trap:hover{border-color:var(--warn)}
+.disciplines{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.disc{
+  padding:5px 10px;background:var(--panel);border:1px solid var(--line);border-radius:999px;
+  font-size:11.5px;color:var(--muted);display:flex;gap:6px;align-items:center;
+}
+.disc:hover{border-color:#3d6ba8;color:var(--text)}
+.disc b{font-family:var(--mono);font-weight:500;color:var(--text)}
+
+/* 图 */
+#stage-graph{position:relative}
+.graph-top{
+  display:flex;align-items:center;gap:10px;padding:9px 14px;
+  border-bottom:1px solid var(--line);background:var(--panel);flex-wrap:wrap;
+}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;
+  background:var(--panel-2);border:1px solid var(--line);font-size:11.5px;
+}
+.chip button{border:0;background:transparent;color:var(--muted);padding:0 0 0 2px;font-size:13px;line-height:1}
+.chip button:hover{color:var(--text)}
+.g-hint{margin-left:auto;font-size:11px;color:var(--dim)}
+.canvas-wrap{flex:1;min-height:0;position:relative;background:
+  radial-gradient(ellipse at 50% 42%,#131a24 0%,var(--canvas) 68%)}
+.canvas-wrap::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.28;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:radial-gradient(ellipse at 50% 45%,#000 20%,transparent 78%);
+}
+svg#g{position:relative;width:100%;height:100%;display:block}
+svg#g .nd{cursor:pointer}
+svg#g .nd text{pointer-events:none;user-select:none}
+svg#g .ed{transition:opacity .16s}
+svg#g .ed.dim{opacity:.14}
+
+/* 空态 */
+#stage-empty{align-items:center;justify-content:center;padding:30px 22px;overflow-y:auto}
+.empty-inner{width:100%;max-width:620px}
+.empty-mark{
+  width:38px;height:38px;border-radius:50%;border:1px solid var(--warn);
+  display:flex;align-items:center;justify-content:center;color:var(--warn);
+  font-family:var(--mono);font-size:15px;margin-bottom:14px;
+}
+h2.e{font-size:18px;font-weight:600;margin:0 0 6px}
+.e-sub{color:var(--muted);font-size:12.5px;margin:0 0 18px}
+.reasons{list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:1px}
+.reasons li{
+  display:flex;gap:10px;padding:9px 12px;background:var(--panel);
+  border:1px solid var(--line);border-left:2px solid var(--warn);font-size:12px;
+}
+.reasons .k{font-family:var(--mono);color:var(--dim);flex:0 0 96px;font-size:10.5px;padding-top:2px}
+.reasons b{font-weight:600}
+.actions{display:flex;flex-direction:column;gap:8px}
+.act{
+  text-align:left;padding:11px 13px;background:var(--panel);border:1px solid var(--line);
+  border-radius:6px;display:flex;gap:12px;align-items:flex-start;
+}
+.act:hover:not(:disabled){border-color:#3d6ba8;background:#1e2839}
+.act:disabled{opacity:.5;cursor:not-allowed}
+.act .num{font-family:var(--mono);font-size:11px;color:var(--accent-2);flex:0 0 18px;padding-top:1px}
+.act .t{font-size:12.5px;margin-bottom:2px}
+.act .d{font-size:11px;color:var(--muted);line-height:1.45}
+.act .d code{font-family:var(--mono);font-size:10.5px;color:#9ecbff;background:#1b2a40;padding:0 3px;border-radius:2px}
+
+/* 预热 */
+.warm{
+  position:absolute;inset:0;background:rgba(11,15,21,.92);z-index:5;
+  display:flex;align-items:center;justify-content:center;
+}
+.warm-box{width:min(420px,84vw)}
+.warm-t{font-size:12.5px;margin-bottom:14px;color:var(--muted)}
+.steps{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.st{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim)}
+.st .b{
+  width:9px;height:9px;border-radius:50%;border:1px solid var(--dim);flex:0 0 auto;
+}
+.st.on{color:var(--text)}
+.st.on .b{border-color:var(--accent-2);background:var(--accent-2);box-shadow:0 0 0 3px rgba(91,141,214,.16)}
+.st.done{color:var(--muted)}
+.st.done .b{border-color:var(--ok);background:var(--ok)}
+.st .ms{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.bar{height:2px;background:var(--line);overflow:hidden;border-radius:2px}
+.bar i{display:block;height:100%;width:0;background:var(--accent-2);transition:width .3s ease}
+
+/* ---------- right ---------- */
+aside#right{
+  grid-area:right;background:var(--panel);border-left:1px solid var(--line);
+  overflow-y:auto;
+}
+.rblk{padding:13px;border-bottom:1px solid var(--line)}
+.rblk h4{
+  margin:0 0 9px;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  color:var(--dim);text-transform:uppercase;display:flex;align-items:center;gap:8px;
+}
+.rblk h4 .x{margin-left:auto;font-size:10px;letter-spacing:0;color:var(--dim);text-transform:none}
+.kv{display:grid;grid-template-columns:74px 1fr;gap:4px 8px;font-size:11.5px}
+.kv dt{color:var(--dim);font-size:11px}
+.kv dd{margin:0;color:var(--text)}
+.mono{font-family:var(--mono);font-size:11px}
+
+/* 结论 */
+.concl{font-size:12.5px;line-height:1.6;margin:0 0 10px}
+.concl b{color:#9ecbff;font-weight:600}
+.grade-bars{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.gb{display:grid;grid-template-columns:26px 1fr 40px;gap:8px;align-items:center;font-size:10.5px;color:var(--muted)}
+.gb .t{height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.gb .t i{display:block;height:100%}
+.gb .n{text-align:right;font-family:var(--mono);color:var(--text)}
+
+/* 公式卡 */
+.card-h{display:flex;align-items:flex-start;gap:8px;margin-bottom:4px}
+.card-h h5{margin:0;font-size:14px;font-weight:600;line-height:1.35;flex:1}
+.badge{
+  flex:0 0 auto;font-family:var(--mono);font-size:10.5px;padding:2px 6px;border-radius:3px;
+  border:1px solid;white-space:nowrap;
+}
+.badge.e5{color:var(--e5);border-color:var(--e5);background:rgba(79,209,197,.1)}
+.badge.e4{color:var(--e4);border-color:var(--e4);background:rgba(99,164,222,.1)}
+.badge.e3{color:#a3b2c6;border-color:var(--e3);background:rgba(124,143,166,.1)}
+.badge.e2{color:#8b9aad;border-color:var(--e2);background:rgba(93,107,125,.12)}
+.badge.e1{color:var(--e1);border-color:var(--e1);background:rgba(196,112,94,.1)}
+.formula{
+  margin:12px 0;padding:16px 12px;background:var(--canvas);border:1px solid var(--line);
+  border-radius:6px;text-align:center;font-family:var(--mono);font-size:21px;letter-spacing:.02em;
+  overflow-x:auto;
+}
+.formula sup{font-size:.62em}
+.formula sub{font-size:.62em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;font-size:.76em;line-height:1.15}
+.frac>span:first-child{border-bottom:1px solid currentColor;padding:0 3px}
+.frac>span:last-child{padding:0 3px}
+.grade-line{
+  display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);
+  padding:7px 9px;background:var(--panel-2);border-radius:4px;line-height:1.45;
+}
+.grade-line .sw{width:20px;border-top-width:2px;border-top-style:solid;flex:0 0 auto}
+.grade-line.neg{border-left:2px solid var(--warn)}
+.field{margin-top:11px}
+.field .lab{font-size:10.5px;color:var(--dim);letter-spacing:.04em;margin-bottom:3px}
+.field .val{font-size:12px;line-height:1.55}
+.field .val.empty{color:var(--warn);font-style:normal}
+.field .why{font-size:10.5px;color:var(--dim);margin-top:3px;line-height:1.45}
+table.sym{width:100%;border-collapse:collapse;font-size:11.5px}
+table.sym th{
+  text-align:left;font-weight:500;color:var(--dim);font-size:10px;letter-spacing:.05em;
+  border-bottom:1px solid var(--line);padding:0 0 4px;
+}
+table.sym td{padding:4px 0;border-bottom:1px solid rgba(46,58,77,.5);font-family:var(--mono);font-size:11px}
+table.sym td.q{color:var(--muted);font-family:var(--font)}
+.emptybox{
+  padding:10px;border:1px dashed var(--line);border-radius:4px;
+  font-size:11.5px;color:var(--muted);line-height:1.5;
+}
+.emptybox b{color:var(--text);font-weight:600}
+.ico{width:13px;height:13px;vertical-align:-2px;stroke:currentColor;fill:none;stroke-width:1.6}
+
+/* ---------- footer ---------- */
+footer{
+  grid-area:ft;display:flex;align-items:center;gap:14px;padding:0 14px;
+  background:var(--panel);border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:10.5px;color:var(--muted);overflow-x:auto;white-space:nowrap;
+}
+footer .sp{margin-left:auto;color:var(--dim)}
+footer b{color:var(--text);font-weight:500}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--ok);display:inline-block;margin-right:5px}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(6,9,13,.78);display:none;z-index:40;padding:24px}
+.modal.on{display:flex;align-items:flex-start;justify-content:center;overflow-y:auto}
+.sheet{
+  width:min(720px,100%);background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;margin:auto;
+}
+.sheet-h{
+  display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);
+}
+.sheet-h b{font-size:13px}
+.sheet-h .cls{margin-left:auto;background:transparent;border:1px solid var(--line);border-radius:4px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.sheet-h .cls:hover{color:var(--text);border-color:#3d6ba8}
+.sheet-b{padding:16px}
+
+/* tooltip */
+#tip{
+  position:fixed;z-index:60;pointer-events:none;display:none;max-width:260px;
+  background:#0b1017;border:1px solid #3d6ba8;border-radius:4px;padding:6px 8px;
+  font-size:11px;line-height:1.45;box-shadow:0 6px 18px rgba(0,0,0,.5);
+}
+#tip .tt{font-weight:600;margin-bottom:2px}
+#tip .tm{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  :root{--left-w:244px;--right-w:312px}
+}
+@media (max-width:1023px){
+  .app{grid-template-columns:1fr;grid-template-rows:52px 1fr auto 38px;
+       grid-template-areas:"hd" "main" "right" "ft"}
+  aside#left{
+    position:fixed;left:0;top:52px;bottom:38px;width:270px;z-index:30;
+    transform:translateX(-101%);transition:transform .2s ease;box-shadow:18px 0 40px rgba(0,0,0,.5);
+  }
+  aside#left.open{transform:none}
+  aside#right{border-left:0;border-top:1px solid var(--line);max-height:38vh}
+  .hd-right .menu{display:inline-block}
+  .cards{grid-template-columns:1fr}
+}
+@media (max-width:767px){
+  h1{font-size:19px}
+  .bigsearch{flex-direction:column}
+  .btn{width:100%}
+  .snap{display:none}
+  aside#right{max-height:42vh}
+  .formula{font-size:17px}
+  footer{font-size:10px;gap:9px}
+  #stage-home{padding:18px 14px}
+}
+@media (min-width:1440px){
+  :root{--left-w:300px;--right-w:392px}
+  body{font-size:13.5px}
+}
+.menu{display:none;background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:4px 8px;font-size:11px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <button class="menu" id="menuBtn" aria-label="打开检索面板">检索</button>
+    <div class="brand"><b>STTP</b><span>公式知识图谱</span></div>
+    <div class="snap">
+      <span>快照 <b id="snapName">phase41</b></span>
+      <span>实体 <b id="snapN">—</b></span>
+      <span>关系 <b id="snapE">—</b></span>
+    </div>
+    <div class="hd-right">
+      <span class="tag proto">M2 原型 · 真实子集</span>
+      <span class="tag" id="ruleTag">规则 e1</span>
+    </div>
+  </header>
+
+  <!-- ============ 左栏 ============ -->
+  <aside id="left">
+    <div class="blk">
+      <h3>检索</h3>
+      <div class="search">
+        <input id="q" type="search" placeholder="公式、符号或物理量" aria-label="检索实体" autocomplete="off" />
+        <span class="k">/</span>
+      </div>
+      <div class="results" id="results" role="listbox" aria-label="检索结果"></div>
+    </div>
+
+    <div class="blk">
+      <h3>可信档位</h3>
+      <div class="levels" id="levels">
+        <button class="lv" data-min="1" aria-pressed="true">
+          <span class="sw" style="border-top-color:var(--e2)"></span>
+          <span class="t">全部证据</span><span class="n" id="c1">—</span>
+        </button>
+        <button class="lv" data-min="3" aria-pressed="false">
+          <span class="sw" style="border-top-color:var(--e3)"></span>
+          <span class="t">E3 及以上</span><span class="n" id="c3">—</span>
+        </button>
+        <button class="lv" data-min="4" aria-pressed="false">
+          <span class="sw" style="border-top-color:var(--e4)"></span>
+          <span class="t">E4 及以上</span><span class="n" id="c4">—</span>
+        </button>
+      </div>
+      <p class="note">档位只改变<b>可见边</b>，不改判定。切换后状态栏会报出隐藏条数。</p>
+    </div>
+
+    <div class="blk">
+      <h3>证据等级</h3>
+      <div class="legend">
+        <div class="lg"><span class="sw" style="width:18px;border-top:2px solid var(--e5)"></span>E5 多源独立 · 可复算</div>
+        <div class="lg"><span class="sw" style="width:18px;border-top:2px solid var(--e4)"></span>E4 单源机检 · 可复算</div>
+        <div class="lg"><span class="sw" style="width:18px;border-top:2px solid var(--e3)"></span>E3 来源断言 · 可复算</div>
+        <div class="lg"><span class="sw" style="width:18px;border-top:2px dashed var(--e2)"></span>E2 来源未入库 · 不可复算</div>
+        <div class="lg"><span class="sw" style="width:18px;border-top:2px dotted var(--e1)"></span>E1 推断或无源 · 待补证</div>
+      </div>
+      <p class="note"><b>虚线不是「错」。</b>E2 表示来源文件未随仓库分发，因此无法复算——本库 96.6% 的关系处于这一档。</p>
+    </div>
+
+    <div class="blk">
+      <h3>节点类型</h3>
+      <div class="legend">
+        <div class="lg"><i style="background:#2b4a6f;border-color:#63A4DE"></i>公式 Formula</div>
+        <div class="lg"><i style="background:#1f3d3a;border-color:#4FD1C5;border-radius:50%"></i>物理量</div>
+        <div class="lg"><i class="sym" style="background:#3a3320;border-color:#d2b164"></i>符号 Symbol</div>
+        <div class="lg"><i style="background:#332b3f;border-color:#a98fd6"></i>常量 Constant</div>
+      </div>
+      <p class="note">原型把「填充=类型、描边=学科」对调：本子集学科单一（几乎全物理），类型更有区分度。</p>
+    </div>
+  </aside>
+
+  <!-- ============ 主区 ============ -->
+  <main id="main">
+
+    <!-- 1. 任务入口 -->
+    <section class="stage on" id="stage-home">
+      <div class="home-inner">
+        <div class="eyebrow">先问一个问题</div>
+        <h1>查一个物理公式，看它凭什么成立</h1>
+        <p class="sub">不只是「库里有没有」。要看：用了哪些符号与物理量、适用条件填了没有、每条关系背后是什么证据、能不能复算。</p>
+
+        <form class="bigsearch" id="homeForm">
+          <input id="homeQ" type="search" placeholder="输入公式名、符号或物理量，例如「质能方程」「F=ma」「mass」" aria-label="输入问题" autocomplete="off" />
+          <button class="btn" type="submit">查这张图</button>
+        </form>
+
+        <div class="cards" id="cards"></div>
+
+        <div class="disciplines">
+          <button class="disc" data-sub="物理">物理 <b>5,040</b></button>
+          <button class="disc" data-sub="数学">数学 <b>32</b></button>
+          <button class="disc" data-sub="化学">化学 <b>18</b></button>
+          <span class="note" style="margin:0 0 0 4px">公式的学科分布 —— 这是一个物理公式库</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 局部图 -->
+    <section class="stage" id="stage-graph">
+      <div class="graph-top">
+        <span class="chip" id="curChip"><span id="curLabel">—</span><button id="clearChip" aria-label="清除当前查询">×</button></span>
+        <span class="g-hint">点节点看它的公式卡 · 边悬停看证据</span>
+      </div>
+      <div class="canvas-wrap">
+        <svg id="g" viewBox="0 0 900 620" preserveAspectRatio="xMidYMid meet" role="img" aria-label="局部关系图"></svg>
+        <div class="warm" id="warm">
+          <div class="warm-box">
+            <div class="warm-t">正在准备这张图 —— 三步都能看到</div>
+            <div class="steps">
+              <div class="st" id="s1"><span class="b"></span><span>加载图结构</span><span class="ms" id="m1"></span></div>
+              <div class="st" id="s2"><span class="b"></span><span>计算证据等级</span><span class="ms" id="m2"></span></div>
+              <div class="st" id="s3"><span class="b"></span><span>布局就绪</span><span class="ms" id="m3"></span></div>
+            </div>
+            <div class="bar"><i id="wbar"></i></div>
+            <div style="margin-top:14px"><button class="btn ghost" id="skipWarm" style="padding:5px 12px;font-size:11.5px">跳过</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 空结果与放宽 -->
+    <section class="stage" id="stage-empty">
+      <div class="empty-inner">
+        <div class="empty-mark">!</div>
+        <h2 class="e" id="eTitle">找到了，但这个视图里没有可画的关系</h2>
+        <p class="e-sub" id="eSub">—</p>
+        <ul class="reasons" id="eReasons"></ul>
+        <div class="actions" id="eActions"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 右栏 ============ -->
+  <aside id="right">
+    <div class="rblk" id="rConcl">
+      <h4>结论<span class="x" id="conclScope"></span></h4>
+      <p class="concl" id="conclText">选一个实体后，这里给出这块图的读数与证据分布。</p>
+      <div class="grade-bars" id="gradeBars"></div>
+    </div>
+    <div id="rCard"></div>
+  </aside>
+
+  <!-- ============ 状态栏：参数透明化 ============ -->
+  <footer id="paramBar">
+    <span><span class="pulse"></span><span id="stMode">就绪</span></span>
+    <span>档位 <b id="stLv">全部</b></span>
+    <span>跳数 <b id="stHop">2</b></span>
+    <span>可见边 <b id="stVis">—</b></span>
+    <span>隐藏 <b id="stHid">0</b></span>
+    <span class="sp" id="stMeta">—</span>
+  </footer>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalT">
+  <div class="sheet">
+    <div class="sheet-h">
+      <b id="modalT">公式卡</b>
+      <button class="cls" id="modalCls">关闭</button>
+    </div>
+    <div class="sheet-b" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="tip" role="tooltip"></div>
+<div class="sr" aria-live="polite" id="live"></div>
+
+<script>window.DATA = {"meta":{"snapshot":"graph_data_phase41.json","head":"e0b38a3","at":"2026-10-19","nodes_total":9657,"edges_total":48712,"grade_rule":"e1","subset_nodes":68,"subset_edges":127,"pool_size":302},"nodes":[{"id":"CM:fo:centripetal","l":"Centripetal force","t":"Formula","s":"物理","d":"physics.mechanics","lx":"F=\\frac{mv^2}{r}","de":"物体作圆周运动所需指向圆心的力，与质量、速度平方成正比，与半径成反比。","us":"估算卫星轨道、车辆转弯等圆周运动所需的向心受力。","ap":null,"as":null,"dg":5,"nt":"formula"},{"id":"CM:fo:gravity","l":"Newton's law of gravitation","t":"Formula","s":"物理","d":"physics.gravitation","lx":"F=G\\frac{m_1 m_2}{r^2}","de":"两质点间的引力与两质量之积成正比、与距离平方成反比。","us":"计算天体轨道、地表重力加速度与逃逸速度。","ap":null,"as":null,"dg":5,"nt":"formula"},{"id":"CM:fo:momentum","l":"Momentum","t":"Formula","s":"物理","d":"physics.mechanics","lx":"p=mv","de":"动量定义质量与速度之积，是描述运动「多少」的矢量。","us":"分析碰撞与爆炸过程（动量守恒）；作为冲量-动量定理与相对论动量的变量。","ap":null,"as":null,"dg":6,"nt":"formula"},{"id":"CM:pq:grav_const","l":"Gravitational constant","t":"Constant","s":"物理","d":"phys.constant","lx":"","de":"","us":"","ap":null,"as":null,"dg":2,"nt":"constant"},{"id":"CM:pq:momentum","l":"Momentum","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":6,"nt":"physical_quantity"},{"id":"CM:pq:torque","l":"Torque","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":9,"nt":"physical_quantity"},{"id":"CM:pq:work","l":"Work","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":8,"nt":"physical_quantity"},{"id":"CM:sy:G","l":"G (gravitational constant)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"G","de":"","us":"","ap":null,"as":null,"dg":1,"nt":"symbol"},{"id":"CM:sy:p","l":"p (momentum)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"p","de":"","us":"","ap":null,"as":null,"dg":1,"nt":"symbol"},{"id":"FO:emc2","l":"Mass-energy equivalence","t":"Formula","s":"物理","d":"physics.relativity","lx":"E=mc^2","de":"质量与能量等价，静止质量对应的能量为质量乘光速平方。","us":"核反应与湮灭过程的能量核算；质量与能量的互换换算。","ap":null,"as":null,"dg":8,"nt":"formula"},{"id":"FO:fma","l":"Newton's second law","t":"Formula","s":"物理","d":"physics.mechanics","lx":"F=ma","de":"物体所受的合力等于其质量与加速度的乘积。","us":"由受力求加速度（动力学计算）；建立运动微分方程。","ap":null,"as":null,"dg":9,"nt":"formula"},{"id":"FO:ke","l":"Kinetic energy","t":"Formula","s":"物理","d":"physics.mechanics","lx":"KE=\\tfrac{1}{2}mv^2","de":"动能等于质量与速度平方乘积的一半。","us":"动能定理与碰撞能量核算；能量守恒分析的常用量。","ap":null,"as":null,"dg":8,"nt":"formula"},{"id":"MX:phy:acceleration","l":"a","t":"PhysicalQuantity","s":"物理","d":"physics","lx":"","de":"","us":"","ap":null,"as":null,"dg":1,"nt":"physical_quantity"},{"id":"MX:phy:newton2","l":"F=ma","t":"PhysicalQuantity","s":"物理","d":"physics","lx":"","de":"","us":"","ap":null,"as":null,"dg":5,"nt":"physical_quantity"},{"id":"PB:fo:600","l":"m = k₀ · ℓ·q·E_f⁻¹·B²","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ·q·E_f⁻¹·B²","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:601","l":"m = k₀ · ℓ⁻³·q·E_f⁻¹·Φ²","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻³·q·E_f⁻¹·Φ²","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:602","l":"m = k₀ · ℓ⁻¹·q²·μ₀","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻¹·q²·μ₀","de":"","us":"","ap":null,"as":null,"dg":4,"nt":null},{"id":"PB:fo:603","l":"m = k₀ · ℓ⁻²·i²·C_e·L_e²","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻²·i²·C_e·L_e²","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:604","l":"m = k₀ · ℓ⁻¹·i²·L_e²·ε","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻¹·i²·L_e²·ε","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:605","l":"m = k₀ · ℓ·i²·ε·μ₀²","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ·i²·ε·μ₀²","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:606","l":"m = k₀ · ℓ⁻²·U⁻¹·R⁻¹·Φ³","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻²·U⁻¹·R⁻¹·Φ³","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:607","l":"m = k₀ · ℓ⁻²·U²·C_e²·L_e","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻²·U²·C_e²·L_e","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:608","l":"m = k₀ · ℓ⁻¹·U²·C_e²·μ₀","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻¹·U²·C_e²·μ₀","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:609","l":"m = k₀ · ℓ⁻¹·U⁻¹·Φ³·σ","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻¹·U⁻¹·Φ³·σ","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:610","l":"m = k₀ · ℓ⁻¹·U⁻¹·Φ³·ρ_e⁻¹","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ⁻¹·U⁻¹·Φ³·ρ_e⁻¹","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:fo:611","l":"m = k₀ · ℓ·U²·ε²·μ₀","t":"Formula","s":"物理","d":"phys","lx":"m = k₀ · ℓ·U²·ε²·μ₀","de":"","us":"","ap":null,"as":null,"dg":5,"nt":null},{"id":"PB:pq:bfield","l":"bfield","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":492,"nt":null},{"id":"PB:pq:capacitance","l":"capacitance","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":639,"nt":null},{"id":"PB:pq:charge","l":"charge","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":544,"nt":null},{"id":"PB:pq:conductivity","l":"conductivity","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":421,"nt":null},{"id":"PB:pq:current","l":"current","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":465,"nt":null},{"id":"PB:pq:efield","l":"efield","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":490,"nt":null},{"id":"PB:pq:gravity","l":"gravity","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":534,"nt":null},{"id":"PB:pq:inductance","l":"inductance","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":580,"nt":null},{"id":"PB:pq:length","l":"length","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":626,"nt":null},{"id":"PB:pq:mag_flux","l":"mag_flux","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":575,"nt":null},{"id":"PB:pq:permeability","l":"permeability","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":554,"nt":null},{"id":"PB:pq:permittivity","l":"permittivity","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":551,"nt":null},{"id":"PB:pq:resistance","l":"resistance","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":559,"nt":null},{"id":"PB:pq:resistivity","l":"resistivity","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":421,"nt":null},{"id":"PB:pq:torque","l":"torque","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":444,"nt":null},{"id":"PB:pq:voltage","l":"voltage","t":"PhysicalQuantity","s":"物理","d":"phys","lx":"","de":"","us":"","ap":null,"as":null,"dg":523,"nt":null},{"id":"PQ:accel","l":"Acceleration","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":537,"nt":"physical_quantity"},{"id":"PQ:c","l":"Speed of light","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":75,"nt":"physical_quantity"},{"id":"PQ:energy","l":"Energy","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":461,"nt":"physical_quantity"},{"id":"PQ:force","l":"Force","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":520,"nt":"physical_quantity"},{"id":"PQ:ke","l":"Kinetic energy","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":6,"nt":"physical_quantity"},{"id":"PQ:mass","l":"Mass","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":5020,"nt":"physical_quantity"},{"id":"PQ:vel","l":"Velocity","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":541,"nt":"physical_quantity"},{"id":"QM:fo:schrodinger","l":"Schrödinger equation (time-independent)","t":"Formula","s":"物理","d":"physics.qm","lx":"-\\frac{\\hbar^2}{2m}\\nabla^2\\psi + V\\psi = E\\psi","de":"定态波函数所满足的本征方程，本征值即体系允许的能级。","us":"求解量子体系的能级与波函数（氢原子、势阱、谐振子）。","ap":null,"as":null,"dg":6,"nt":"formula"},{"id":"QM:pq:reduced_planck","l":"Reduced Planck constant","t":"Constant","s":"物理","d":"phys.constant","lx":"","de":"","us":"","ap":null,"as":null,"dg":3,"nt":"constant"},{"id":"QM:pq:work_function","l":"Work function","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":8,"nt":"physical_quantity"},{"id":"QM:sy:hbar","l":"ħ (reduced Planck)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"\\hbar","de":"","us":"","ap":null,"as":null,"dg":2,"nt":"symbol"},{"id":"QM:sy:psi","l":"ψ (wavefunction)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"\\psi","de":"","us":"","ap":null,"as":null,"dg":1,"nt":"symbol"},{"id":"RT:fo:mass_energy","l":"Mass-energy equivalence","t":"Formula","s":"物理","d":"physics.relativity","lx":"E=mc^2","de":"物体的静止质量与其蕴含的能量等价，换算系数为光速的平方。","us":"核算核反应与湮灭过程的能量释放；粒子物理中的质量-能量换算。","ap":null,"as":null,"dg":6,"nt":"formula"},{"id":"RT:fo:rel_momentum","l":"Relativistic momentum","t":"Formula","s":"物理","d":"physics.relativity","lx":"p=\\gamma m v","de":"高速运动物体的动量等于洛伦兹因子乘质量乘速度。","us":"粒子加速器中的动量-能量换算；高速碰撞的运动学计算。","ap":null,"as":null,"dg":5,"nt":"formula"},{"id":"RT:pq:light_speed","l":"Speed of light","t":"Constant","s":"物理","d":"phys.constant","lx":"","de":"","us":"","ap":null,"as":null,"dg":8,"nt":"constant"},{"id":"RT:sy:c","l":"c (speed of light)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"c","de":"","us":"","ap":null,"as":null,"dg":3,"nt":"symbol"},{"id":"RT:sy:gamma","l":"γ (Lorentz factor)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"\\gamma","de":"","us":"","ap":null,"as":null,"dg":4,"nt":"symbol"},{"id":"SY:a","l":"a (acceleration)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"a","de":"","us":"","ap":null,"as":null,"dg":1,"nt":"symbol"},{"id":"SY:c","l":"c (speed of light)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"c","de":"","us":"","ap":null,"as":null,"dg":3,"nt":"symbol"},{"id":"SY:e","l":"E (energy)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"E","de":"","us":"","ap":null,"as":null,"dg":1,"nt":"symbol"},{"id":"SY:f","l":"F (force)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"F","de":"","us":"","ap":null,"as":null,"dg":6,"nt":"symbol"},{"id":"SY:ke","l":"KE (kinetic energy)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"KE","de":"","us":"","ap":null,"as":null,"dg":1,"nt":"symbol"},{"id":"SY:m","l":"m (mass)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"m","de":"","us":"","ap":null,"as":null,"dg":9,"nt":"symbol"},{"id":"SY:v","l":"v (velocity)","t":"Symbol","s":"物理","d":"phys.symbol","lx":"v","de":"","us":"","ap":null,"as":null,"dg":8,"nt":"symbol"},{"id":"TH:pq:heat","l":"Heat","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":8,"nt":"physical_quantity"},{"id":"TH:pq:internal_energy","l":"Internal energy","t":"PhysicalQuantity","s":"物理","d":"phys.quantity","lx":"","de":"","us":"","ap":null,"as":null,"dg":11,"nt":"physical_quantity"}],"edges":[{"s":"FO:emc2","t":"PQ:energy","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:emc2","t":"PQ:mass","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:emc2","t":"PQ:c","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:emc2","t":"SY:e","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"FO:emc2","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"FO:emc2","t":"SY:c","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"PQ:energy","t":"FO:emc2","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"RT:fo:mass_energy","t":"FO:emc2","ty":"same_as","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:fma","t":"PQ:mass","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:fma","t":"PQ:force","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:fma","t":"PQ:accel","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:fma","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"FO:fma","t":"SY:f","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"FO:fma","t":"SY:a","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"FO:fma","t":"MX:phy:newton2","ty":"same_as","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"PQ:ke","t":"FO:fma","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:ke","t":"FO:fma","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"PB:fo:600","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:601","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:602","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:603","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:604","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:605","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:606","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:607","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:608","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:609","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:610","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"PB:fo:611","t":"PQ:mass","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit","sample":true,"total":5000},{"s":"FO:ke","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:momentum","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:gravity","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:centripetal","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"QM:fo:schrodinger","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"RT:fo:rel_momentum","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"RT:fo:mass_energy","t":"SY:m","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"FO:ke","t":"PQ:mass","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:ke","t":"PQ:vel","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:ke","t":"PQ:ke","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"FO:ke","t":"SY:v","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"FO:ke","t":"SY:ke","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:gravity","t":"PQ:mass","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"CM:fo:gravity","t":"CM:pq:grav_const","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"CM:fo:gravity","t":"SY:f","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:gravity","t":"CM:sy:G","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"RT:fo:mass_energy","t":"PQ:mass","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"RT:fo:mass_energy","t":"PQ:mass","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"RT:fo:mass_energy","t":"RT:pq:light_speed","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"RT:fo:mass_energy","t":"RT:sy:c","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"PB:fo:600","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:600","t":"PB:pq:charge","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:600","t":"PB:pq:efield","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:600","t":"PB:pq:bfield","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:603","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:603","t":"PB:pq:capacitance","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:603","t":"PB:pq:current","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:603","t":"PB:pq:inductance","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:611","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:611","t":"PB:pq:voltage","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:611","t":"PB:pq:permeability","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:611","t":"PB:pq:permittivity","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:610","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:610","t":"PB:pq:voltage","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:610","t":"PB:pq:mag_flux","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:610","t":"PB:pq:resistivity","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:605","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:605","t":"PB:pq:current","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:605","t":"PB:pq:permeability","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:605","t":"PB:pq:permittivity","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:609","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:609","t":"PB:pq:voltage","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:609","t":"PB:pq:mag_flux","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:609","t":"PB:pq:conductivity","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:601","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:601","t":"PB:pq:charge","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:601","t":"PB:pq:efield","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:601","t":"PB:pq:mag_flux","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"QM:fo:schrodinger","t":"PQ:mass","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"QM:fo:schrodinger","t":"QM:pq:reduced_planck","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"QM:fo:schrodinger","t":"QM:pq:work_function","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"QM:fo:schrodinger","t":"QM:sy:hbar","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"QM:fo:schrodinger","t":"QM:sy:psi","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"PB:fo:608","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:608","t":"PB:pq:voltage","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:608","t":"PB:pq:capacitance","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:608","t":"PB:pq:permeability","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:602","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:602","t":"PB:pq:charge","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:602","t":"PB:pq:permeability","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:606","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:606","t":"PB:pq:voltage","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:606","t":"PB:pq:resistance","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:606","t":"PB:pq:mag_flux","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"CM:fo:momentum","t":"PQ:mass","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"CM:fo:momentum","t":"PQ:vel","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"CM:fo:momentum","t":"CM:pq:momentum","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"CM:fo:momentum","t":"SY:v","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:momentum","t":"CM:sy:p","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:centripetal","t":"PQ:mass","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"CM:fo:centripetal","t":"CM:pq:torque","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"CM:fo:centripetal","t":"SY:f","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"CM:fo:centripetal","t":"SY:v","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"PB:fo:607","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:607","t":"PB:pq:voltage","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:607","t":"PB:pq:capacitance","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:607","t":"PB:pq:inductance","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:604","t":"PB:pq:length","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:604","t":"PB:pq:current","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:604","t":"PB:pq:inductance","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"PB:fo:604","t":"PB:pq:permittivity","ty":"has_symbol","g":2,"lv":"rule_checked","fd":"unverifiable_not_in_repo","ei":"explicit"},{"s":"RT:fo:rel_momentum","t":"CM:pq:momentum","ty":"derived_from","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"RT:fo:rel_momentum","t":"CM:pq:momentum","ty":"defines","g":3,"lv":"source_asserted","fd":"verified","ei":"explicit"},{"s":"RT:fo:rel_momentum","t":"SY:v","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"RT:fo:rel_momentum","t":"RT:sy:gamma","ty":"has_symbol","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"PQ:accel","t":"PB:pq:gravity","ty":"dimensionally_consistent","g":1,"lv":"rule_checked","fd":"unverifiable_no_source","ei":"inferred"},{"s":"CM:pq:torque","t":"TH:pq:internal_energy","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"CM:pq:torque","t":"TH:pq:heat","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"CM:pq:torque","t":"QM:pq:work_function","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:energy","t":"CM:pq:work","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:energy","t":"CM:pq:torque","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:energy","t":"TH:pq:internal_energy","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:energy","t":"TH:pq:heat","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:energy","t":"QM:pq:work_function","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:energy","t":"PB:pq:torque","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:c","t":"PQ:vel","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"inferred"},{"s":"PQ:ke","t":"PQ:energy","ty":"dimensionally_consistent","g":4,"lv":"rule_checked","fd":"verified","ei":"explicit"},{"s":"MX:phy:newton2","t":"MX:phy:acceleration","ty":"dimensionally_consistent","g":1,"lv":"model_inferred","fd":"unverifiable_no_source","ei":"inferred"}],"pool":[{"i":"PQ:mass","l":"Mass","t":"PhysicalQuantity","s":"物理","d":5020},{"i":"PB:pq:molar_mass","l":"molar_mass","t":"PhysicalQuantity","s":"物理","d":813},{"i":"PB:pq:capacitance","l":"capacitance","t":"PhysicalQuantity","s":"物理","d":639},{"i":"PB:pq:length","l":"length","t":"PhysicalQuantity","s":"物理","d":626},{"i":"PB:pq:momentum","l":"momentum","t":"PhysicalQuantity","s":"物理","d":594},{"i":"PB:pq:inductance","l":"inductance","t":"PhysicalQuantity","s":"物理","d":580},{"i":"PB:pq:mag_flux","l":"mag_flux","t":"PhysicalQuantity","s":"物理","d":575},{"i":"PB:pq:resistance","l":"resistance","t":"PhysicalQuantity","s":"物理","d":559},{"i":"PB:pq:permeability","l":"permeability","t":"PhysicalQuantity","s":"物理","d":554},{"i":"PB:pq:permittivity","l":"permittivity","t":"PhysicalQuantity","s":"物理","d":551},{"i":"PB:pq:charge","l":"charge","t":"PhysicalQuantity","s":"物理","d":544},{"i":"PQ:vel","l":"Velocity","t":"PhysicalQuantity","s":"物理","d":541},{"i":"PQ:accel","l":"Acceleration","t":"PhysicalQuantity","s":"物理","d":537},{"i":"PB:pq:gravity","l":"gravity","t":"PhysicalQuantity","s":"物理","d":534},{"i":"PB:pq:time","l":"time","t":"PhysicalQuantity","s":"物理","d":533},{"i":"PB:pq:voltage","l":"voltage","t":"PhysicalQuantity","s":"物理","d":523},{"i":"PQ:force","l":"Force","t":"PhysicalQuantity","s":"物理","d":520},{"i":"PB:pq:bfield","l":"bfield","t":"PhysicalQuantity","s":"物理","d":492},{"i":"PB:pq:efield","l":"efield","t":"PhysicalQuantity","s":"物理","d":490},{"i":"PB:pq:inertia","l":"inertia","t":"PhysicalQuantity","s":"物理","d":479},{"i":"PB:pq:current","l":"current","t":"PhysicalQuantity","s":"物理","d":465},{"i":"PQ:energy","l":"Energy","t":"PhysicalQuantity","s":"物理","d":461},{"i":"PB:pq:ang_momentum","l":"ang_momentum","t":"PhysicalQuantity","s":"物理","d":454},{"i":"PB:pq:action","l":"action","t":"PhysicalQuantity","s":"物理","d":454},{"i":"PB:pq:torque","l":"torque","t":"PhysicalQuantity","s":"物理","d":444},{"i":"PB:pq:viscosity","l":"viscosity","t":"PhysicalQuantity","s":"物理","d":444},{"i":"PB:pq:omega","l":"omega","t":"PhysicalQuantity","s":"物理","d":423},{"i":"PB:pq:frequency","l":"frequency","t":"PhysicalQuantity","s":"物理","d":423},{"i":"PB:pq:resistivity","l":"resistivity","t":"PhysicalQuantity","s":"物理","d":421},{"i":"PB:pq:conductivity","l":"conductivity","t":"PhysicalQuantity","s":"物理","d":421},{"i":"PB:pq:stiffness","l":"stiffness","t":"PhysicalQuantity","s":"物理","d":406},{"i":"PB:pq:surf_tension","l":"surf_tension","t":"PhysicalQuantity","s":"物理","d":406},{"i":"PB:pq:power","l":"power","t":"PhysicalQuantity","s":"物理","d":403},{"i":"PQ:chem:alogp","l":"脂水分配系数","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PQ:chem:psa","l":"拓扑极性表面积","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PQ:chem:hbd","l":"氢键供体数","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PQ:chem:hba","l":"氢键受体数","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PQ:chem:rtb","l":"可旋转键数","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PQ:chem:aromatic_rings","l":"芳香环数","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PQ:chem:heavy_atoms","l":"重原子数","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PQ:chem:qed_weighted","l":"类药性定量估计","t":"PhysicalQuantity","s":"化学","d":314},{"i":"PB:pq:pressure","l":"pressure","t":"PhysicalQuantity","s":"物理","d":304},{"i":"PB:pq:kin_viscosity","l":"kin_viscosity","t":"PhysicalQuantity","s":"物理","d":292},{"i":"PB:pq:thermal_cond","l":"thermal_cond","t":"PhysicalQuantity","s":"物理","d":266},{"i":"PB:pq:molar_energy","l":"molar_energy","t":"PhysicalQuantity","s":"物理","d":266},{"i":"PB:pq:area","l":"area","t":"PhysicalQuantity","s":"物理","d":261},{"i":"PB:pq:flowrate","l":"flowrate","t":"PhysicalQuantity","s":"物理","d":203},{"i":"PB:pq:temperature","l":"temperature","t":"PhysicalQuantity","s":"物理","d":201},{"i":"PB:pq:expansion","l":"expansion","t":"PhysicalQuantity","s":"物理","d":201},{"i":"PB:pq:density","l":"density","t":"PhysicalQuantity","s":"物理","d":189},{"i":"PB:pq:specific_heat","l":"specific_heat","t":"PhysicalQuantity","s":"物理","d":170},{"i":"PB:pq:cat_activity","l":"cat_activity","t":"PhysicalQuantity","s":"物理","d":160},{"i":"PB:pq:entropy","l":"entropy","t":"PhysicalQuantity","s":"物理","d":158},{"i":"PB:pq:heat_capacity","l":"heat_capacity","t":"PhysicalQuantity","s":"物理","d":158},{"i":"PB:pq:lum_intensity","l":"lum_intensity","t":"PhysicalQuantity","s":"物理","d":122},{"i":"PQ:el:atomic_weight","l":"相对原子质量","t":"PhysicalQuantity","s":"化学","d":118},{"i":"PQ:el:ionization_energy","l":"第一电离能","t":"PhysicalQuantity","s":"化学","d":104},{"i":"PB:pq:amount","l":"amount","t":"PhysicalQuantity","s":"物理","d":103},{"i":"PQ:el:melting_point","l":"熔点","t":"PhysicalQuantity","s":"化学","d":102},{"i":"PQ:el:boiling_point","l":"沸点","t":"PhysicalQuantity","s":"化学","d":96},{"i":"PQ:el:density","l":"密度","t":"PhysicalQuantity","s":"化学","d":96},{"i":"PQ:el:conductivity","l":"热导率","t":"PhysicalQuantity","s":"化学","d":94},{"i":"PQ:el:electronegativity","l":"电负性","t":"PhysicalQuantity","s":"化学","d":93},{"i":"PB:pq:concentration","l":"concentration","t":"PhysicalQuantity","s":"物理","d":92},{"i":"PB:pq:thermal_diff","l":"thermal_diff","t":"PhysicalQuantity","s":"物理","d":90},{"i":"PQ:el:heat_capacity","l":"比热容","t":"PhysicalQuantity","s":"化学","d":88},{"i":"PB:pq:volume","l":"volume","t":"PhysicalQuantity","s":"物理","d":87},{"i":"PQ:el:electron_affinity","l":"电子亲和能","t":"PhysicalQuantity","s":"化学","d":86},{"i":"PQ:el:atomic_radius","l":"原子半径","t":"PhysicalQuantity","s":"化学","d":84},{"i":"PQ:c","l":"Speed of light","t":"PhysicalQuantity","s":"物理","d":75},{"i":"PQ:el:bulk_modulus","l":"体积模量","t":"PhysicalQuantity","s":"化学","d":69},{"i":"PQ:molar_entropy","l":"molar_entropy","t":"PhysicalQuantity","s":"物理","d":67},{"i":"PB:pq:illuminance","l":"illuminance","t":"PhysicalQuantity","s":"物理","d":64},{"i":"PB:pq:luminance","l":"luminance","t":"PhysicalQuantity","s":"物理","d":64},{"i":"PQ:el:hardness","l":"硬度（维氏）","t":"PhysicalQuantity","s":"化学","d":59},{"i":"TH:fo:ideal_gas","l":"Ideal gas law","t":"Formula","s":"物理","d":14},{"i":"CM:pq:mass","l":"Mass","t":"PhysicalQuantity","s":"物理","d":12},{"i":"TH:pq:internal_energy","l":"Internal energy","t":"PhysicalQuantity","s":"物理","d":11},{"i":"NT:fo:euler_theorem","l":"Euler's theorem","t":"Formula","s":"数学","d":11},{"i":"EM:fo:lorentz","l":"Lorentz force","t":"Formula","s":"物理","d":10},{"i":"CM:pq:torque","l":"Torque","t":"PhysicalQuantity","s":"物理","d":9},{"i":"SY:m","l":"m (mass)","t":"Symbol","s":"物理","d":9},{"i":"FO:fma","l":"Newton's second law","t":"Formula","s":"物理","d":9},{"i":"MA:fo:log_product","l":"Logarithm of a product","t":"Formula","s":"数学","d":9},{"i":"NT:fo:congruence","l":"Congruence modulo n","t":"Formula","s":"数学","d":9},{"i":"FO:ke","l":"Kinetic energy","t":"Formula","s":"物理","d":8},{"i":"CM:pq:work","l":"Work","t":"PhysicalQuantity","s":"物理","d":8},{"i":"RT:pq:light_speed","l":"Speed of light","t":"Constant","s":"物理","d":8},{"i":"QM:pq:work_function","l":"Work function","t":"PhysicalQuantity","s":"物理","d":8},{"i":"SY:v","l":"v (velocity)","t":"Symbol","s":"物理","d":8},{"i":"FO:emc2","l":"Mass-energy equivalence","t":"Formula","s":"物理","d":8},{"i":"TH:pq:heat","l":"Heat","t":"PhysicalQuantity","s":"物理","d":8},{"i":"SM:fo:boltzmann","l":"Boltzmann entropy","t":"Formula","s":"物理","d":8},{"i":"EM:fo:ohm","l":"Ohm's law","t":"Formula","s":"物理","d":7},{"i":"EM:fo:biot_savart","l":"Magnetic field of a wire","t":"Formula","s":"物理","d":7},{"i":"QM:fo:photoelectric","l":"Photoelectric effect","t":"Formula","s":"物理","d":7},{"i":"CE:fo:gibbs_standard","l":"Standard Gibbs energy and equilibrium constant","t":"Formula","s":"化学","d":7},{"i":"CE:fo:arrhenius","l":"Arrhenius equation","t":"Formula","s":"化学","d":7},{"i":"TH:pq:volume","l":"Volume","t":"PhysicalQuantity","s":"物理","d":7},{"i":"RT:fo:mass_energy","l":"Mass-energy equivalence","t":"Formula","s":"物理","d":6},{"i":"CM:pq:momentum","l":"Momentum","t":"PhysicalQuantity","s":"物理","d":6},{"i":"PQ:ke","l":"Kinetic energy","t":"PhysicalQuantity","s":"物理","d":6},{"i":"QM:fo:schrodinger","l":"Schrödinger equation (time-independent)","t":"Formula","s":"物理","d":6},{"i":"CM:fo:momentum","l":"Momentum","t":"Formula","s":"物理","d":6},{"i":"SY:f","l":"F (force)","t":"Symbol","s":"物理","d":6},{"i":"MA:fo:euler_identity","l":"Euler's identity","t":"Formula","s":"数学","d":6},{"i":"OP:fo:lens","l":"Thin lens equation","t":"Formula","s":"物理","d":6},{"i":"OP:fo:mirror","l":"Mirror equation","t":"Formula","s":"物理","d":6},{"i":"SM:fo:partition","l":"Partition function","t":"Formula","s":"物理","d":6},{"i":"CE:fo:gibbs_reaction","l":"Gibbs energy at arbitrary composition","t":"Formula","s":"化学","d":6},{"i":"CE:fo:nernst","l":"Nernst equation","t":"Formula","s":"化学","d":6},{"i":"TH:pq:temperature","l":"Temperature","t":"PhysicalQuantity","s":"物理","d":6},{"i":"CM:fo:gravity","l":"Newton's law of gravitation","t":"Formula","s":"物理","d":5},{"i":"PB:fo:600","l":"m = k₀ · ℓ·q·E_f⁻¹·B²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:603","l":"m = k₀ · ℓ⁻²·i²·C_e·L_e²","t":"Formula","s":"物理","d":5},{"i":"MX:phy:newton2","l":"F=ma","t":"PhysicalQuantity","s":"物理","d":5},{"i":"PB:fo:611","l":"m = k₀ · ℓ·U²·ε²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:610","l":"m = k₀ · ℓ⁻¹·U⁻¹·Φ³·ρ_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:605","l":"m = k₀ · ℓ·i²·ε·μ₀²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:609","l":"m = k₀ · ℓ⁻¹·U⁻¹·Φ³·σ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:601","l":"m = k₀ · ℓ⁻³·q·E_f⁻¹·Φ²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:608","l":"m = k₀ · ℓ⁻¹·U²·C_e²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:606","l":"m = k₀ · ℓ⁻²·U⁻¹·R⁻¹·Φ³","t":"Formula","s":"物理","d":5},{"i":"CM:fo:centripetal","l":"Centripetal force","t":"Formula","s":"物理","d":5},{"i":"PB:fo:607","l":"m = k₀ · ℓ⁻²·U²·C_e²·L_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:604","l":"m = k₀ · ℓ⁻¹·i²·L_e²·ε","t":"Formula","s":"物理","d":5},{"i":"RT:fo:rel_momentum","l":"Relativistic momentum","t":"Formula","s":"物理","d":5},{"i":"CE:fo:mass_action","l":"Law of mass action (equilibrium constant)","t":"Formula","s":"化学","d":5},{"i":"CM:fo:work","l":"Work","t":"Formula","s":"物理","d":5},{"i":"OM:fo:combustion","l":"Hydrocarbon combustion","t":"Formula","s":"化学","d":5},{"i":"TH:fo:first_law","l":"First law of thermodynamics","t":"Formula","s":"物理","d":5},{"i":"EM:fo:coulomb","l":"Coulomb's law","t":"Formula","s":"物理","d":5},{"i":"QM:fo:planck","l":"Planck relation","t":"Formula","s":"物理","d":5},{"i":"QM:fo:de_broglie","l":"de Broglie wavelength","t":"Formula","s":"物理","d":5},{"i":"MA:fo:quadratic","l":"Quadratic formula","t":"Formula","s":"数学","d":5},{"i":"SM:fo:maxwell","l":"Maxwell-Boltzmann distribution","t":"Formula","s":"物理","d":5},{"i":"PB:fo:612","l":"m = k₀ · ℓ²·R⁻²·L_e·B²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:613","l":"m = k₀ · ℓ⁻²·R⁻²·L_e·Φ²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:614","l":"m = k₀ · ℓ⁻¹·R⁻²·Φ²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:615","l":"m = k₀ · ℓ·C_e²·E_f²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:618","l":"m = k₀ · ℓ²·L_e·E_f²·ε²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:619","l":"m = k₀ · ℓ⁻²·E_f⁻¹·Φ³·σ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:620","l":"m = k₀ · ℓ⁻²·E_f⁻¹·Φ³·ρ_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:623","l":"m = k₀ · ℓ·Φ²·μ₀·σ²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:624","l":"m = k₀ · ℓ·Φ²·μ₀·ρ_e⁻²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:634","l":"m = k₀ · t²·v⁻¹·Θ·κ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:635","l":"m = k₀ · t²·v·c⁻¹·κ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:636","l":"m = k₀ · t²·v⁻¹·κ·β⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:637","l":"m = k₀ · t⁻¹·v⁻²·q²·R","t":"Formula","s":"物理","d":5},{"i":"PB:fo:638","l":"m = k₀ · t⁻²·v⁻²·q²·L_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:639","l":"m = k₀ · t·v⁻¹·q·E_f","t":"Formula","s":"物理","d":5},{"i":"PB:fo:640","l":"m = k₀ · t⁻¹·v⁻²·q·Φ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:641","l":"m = k₀ · t⁻¹·v⁻³·q²·ε⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:642","l":"m = k₀ · t⁻¹·v⁻¹·q²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:643","l":"m = k₀ · t·v⁻²·i·U","t":"Formula","s":"物理","d":5},{"i":"PB:fo:644","l":"m = k₀ · t·v⁻²·i²·R","t":"Formula","s":"物理","d":5},{"i":"PB:fo:645","l":"m = k₀ · t²·v⁻²·i²·C_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:646","l":"m = k₀ · t²·v⁻¹·i·E_f","t":"Formula","s":"物理","d":5},{"i":"PB:fo:647","l":"m = k₀ · t·v⁻³·i²·ε⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:648","l":"m = k₀ · t·v⁻¹·i²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:649","l":"m = k₀ · t·v⁻²·U²·R⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:650","l":"m = k₀ · t²·v⁻²·U²·L_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:651","l":"m = k₀ · t·v⁻¹·U²·ε","t":"Formula","s":"物理","d":5},{"i":"PB:fo:652","l":"m = k₀ · t·v⁻³·U²·μ₀⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:653","l":"m = k₀ · t²·v⁻¹·U²·σ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:654","l":"m = k₀ · t²·v⁻¹·U²·ρ_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:655","l":"m = k₀ · t⁻¹·v⁻²·R⁻¹·Φ²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:656","l":"m = k₀ · t²·v²·C_e·B²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:657","l":"m = k₀ · t⁻²·v⁻²·C_e·Φ²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:658","l":"m = k₀ · t³·v·E_f²·ε","t":"Formula","s":"物理","d":5},{"i":"PB:fo:659","l":"m = k₀ · t³·v⁻¹·E_f²·μ₀⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:660","l":"m = k₀ · t³·v·B²·μ₀⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:661","l":"m = k₀ · t⁻¹·v⁻¹·Φ²·ε","t":"Formula","s":"物理","d":5},{"i":"PB:fo:662","l":"m = k₀ · t⁻¹·v⁻³·Φ²·μ₀⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:663","l":"m = k₀ · t³·v·c_n·E_m","t":"Formula","s":"物理","d":5},{"i":"PB:fo:664","l":"m = k₀ · t·v⁻²·E_m·z","t":"Formula","s":"物理","d":5},{"i":"PB:fo:674","l":"m = k₀ · t⁻²·a⁻²·Θ·S_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:675","l":"m = k₀ · t⁻²·a⁻²·Θ·C","t":"Formula","s":"物理","d":5},{"i":"PB:fo:676","l":"m = k₀ · t·a⁻¹·Θ·κ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:677","l":"m = k₀ · t⁻²·a⁻²·S_e·β⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:678","l":"m = k₀ · t⁻²·a⁻²·C·β⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:679","l":"m = k₀ · t³·a·c⁻¹·κ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:680","l":"m = k₀ · t·a⁻¹·κ·β⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:681","l":"m = k₀ · t⁻²·a⁻²·q·U","t":"Formula","s":"物理","d":5},{"i":"PB:fo:682","l":"m = k₀ · t⁻²·a⁻²·q²·C_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:683","l":"m = k₀ · t⁻³·a⁻²·q·Φ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:684","l":"m = k₀ · t⁻²·a⁻¹·q²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:685","l":"m = k₀ · t⁻¹·a⁻²·i·U","t":"Formula","s":"物理","d":5},{"i":"PB:fo:686","l":"m = k₀ · t⁻¹·a⁻²·i²·R","t":"Formula","s":"物理","d":5},{"i":"PB:fo:687","l":"m = k₀ · t⁻²·a⁻²·i²·L_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:688","l":"m = k₀ · t·a⁻¹·i·E_f","t":"Formula","s":"物理","d":5},{"i":"PB:fo:689","l":"m = k₀ · t⁻²·a⁻²·i·Φ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:690","l":"m = k₀ · t⁻¹·a⁻²·U²·R⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:691","l":"m = k₀ · t⁻²·a⁻²·U²·C_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:692","l":"m = k₀ · t·a⁻¹·U²·σ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:693","l":"m = k₀ · t·a⁻¹·U²·ρ_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:694","l":"m = k₀ · t⁻²·a⁻²·L_e⁻¹·Φ²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:695","l":"m = k₀ · t²·a⁻¹·E_f²·μ₀⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:696","l":"m = k₀ · t⁻²·a⁻¹·Φ²·ε","t":"Formula","s":"物理","d":5},{"i":"PB:fo:697","l":"m = k₀ · t⁻¹·a⁻¹·Φ²·σ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:698","l":"m = k₀ · t⁻¹·a⁻¹·Φ²·ρ_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:699","l":"m = k₀ · t⁻²·a⁻²·n·E_m","t":"Formula","s":"物理","d":5},{"i":"PB:fo:700","l":"m = k₀ · t⁻¹·a⁻²·E_m·z","t":"Formula","s":"物理","d":5},{"i":"PB:fo:709","l":"m = k₀ · t⁻²·g⁻²·Θ·S_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:710","l":"m = k₀ · t⁻²·g⁻²·Θ·C","t":"Formula","s":"物理","d":5},{"i":"PB:fo:711","l":"m = k₀ · t·g⁻¹·Θ·κ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:712","l":"m = k₀ · t⁻²·g⁻²·S_e·β⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:713","l":"m = k₀ · t⁻²·g⁻²·C·β⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:714","l":"m = k₀ · t³·g·c⁻¹·κ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:715","l":"m = k₀ · t·g⁻¹·κ·β⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:716","l":"m = k₀ · t⁻²·g⁻²·q·U","t":"Formula","s":"物理","d":5},{"i":"PB:fo:717","l":"m = k₀ · t⁻²·g⁻²·q²·C_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:718","l":"m = k₀ · t⁻³·g⁻²·q·Φ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:719","l":"m = k₀ · t⁻²·g⁻¹·q²·μ₀","t":"Formula","s":"物理","d":5},{"i":"PB:fo:720","l":"m = k₀ · t⁻¹·g⁻²·i·U","t":"Formula","s":"物理","d":5},{"i":"PB:fo:721","l":"m = k₀ · t⁻¹·g⁻²·i²·R","t":"Formula","s":"物理","d":5},{"i":"PB:fo:722","l":"m = k₀ · t⁻²·g⁻²·i²·L_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:723","l":"m = k₀ · t·g⁻¹·i·E_f","t":"Formula","s":"物理","d":5},{"i":"PB:fo:724","l":"m = k₀ · t⁻²·g⁻²·i·Φ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:725","l":"m = k₀ · t⁻¹·g⁻²·U²·R⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:726","l":"m = k₀ · t⁻²·g⁻²·U²·C_e","t":"Formula","s":"物理","d":5},{"i":"PB:fo:727","l":"m = k₀ · t·g⁻¹·U²·σ","t":"Formula","s":"物理","d":5},{"i":"PB:fo:728","l":"m = k₀ · t·g⁻¹·U²·ρ_e⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:729","l":"m = k₀ · t⁻²·g⁻²·L_e⁻¹·Φ²","t":"Formula","s":"物理","d":5},{"i":"PB:fo:730","l":"m = k₀ · t²·g⁻¹·E_f²·μ₀⁻¹","t":"Formula","s":"物理","d":5},{"i":"PB:fo:731","l":"m = k₀ · t⁻²·g⁻¹·Φ²·ε","t":"Formula","s":"物理","d":5},{"i":"PB:fo:732","l":"m = k₀ · t⁻¹·g⁻¹·Φ²·σ","t":"Formula","s":"物理","d":5},{"i":"TH:pq:pressure","l":"Pressure","t":"PhysicalQuantity","s":"物理","d":5},{"i":"MC:pq:derivative","l":"Derivative","t":"PhysicalQuantity","s":"数学","d":5},{"i":"MG:pq:volume","l":"Volume","t":"PhysicalQuantity","s":"数学","d":5},{"i":"OP:pq:focal_length","l":"Focal length","t":"PhysicalQuantity","s":"物理","d":5},{"i":"OP:pq:object_dist","l":"Object distance","t":"PhysicalQuantity","s":"物理","d":5},{"i":"OP:pq:image_dist","l":"Image distance","t":"PhysicalQuantity","s":"物理","d":5},{"i":"CE:pq:gibbs_energy","l":"Gibbs free energy","t":"PhysicalQuantity","s":"化学","d":5},{"i":"CE:pq:concentration","l":"Molar concentration","t":"PhysicalQuantity","s":"化学","d":5},{"i":"RT:sy:gamma","l":"γ (Lorentz factor)","t":"Symbol","s":"物理","d":4},{"i":"PB:fo:602","l":"m = k₀ · ℓ⁻¹·q²·μ₀","t":"Formula","s":"物理","d":4},{"i":"CM:pq:angular_momentum","l":"Angular momentum","t":"PhysicalQuantity","s":"物理","d":4},{"i":"TH:pq:entropy","l":"Entropy","t":"PhysicalQuantity","s":"物理","d":4},{"i":"EM:pq:voltage","l":"Voltage","t":"PhysicalQuantity","s":"物理","d":4},{"i":"SY:c","l":"c (speed of light)","t":"Symbol","s":"物理","d":3},{"i":"QM:pq:reduced_planck","l":"Reduced Planck constant","t":"Constant","s":"物理","d":3},{"i":"RT:sy:c","l":"c (speed of light)","t":"Symbol","s":"物理","d":3},{"i":"MX:phy:kinetic_energy","l":"E_k","t":"PhysicalQuantity","s":"物理","d":3},{"i":"MX:phy:energy","l":"E","t":"PhysicalQuantity","s":"物理","d":3},{"i":"TH:pq:energy","l":"Energy","t":"PhysicalQuantity","s":"物理","d":3},{"i":"TH:pq:n_moles","l":"Amount of substance","t":"PhysicalQuantity","s":"物理","d":3},{"i":"EM:pq:charge","l":"Electric charge","t":"PhysicalQuantity","s":"物理","d":3},{"i":"EM:pq:current","l":"Electric current","t":"PhysicalQuantity","s":"物理","d":3},{"i":"EM:pq:bfield","l":"Magnetic field","t":"PhysicalQuantity","s":"物理","d":3},{"i":"EM:pq:emf","l":"Electromotive force","t":"PhysicalQuantity","s":"物理","d":3},{"i":"QM:pq:frequency","l":"Frequency","t":"PhysicalQuantity","s":"物理","d":3},{"i":"RT:pq:lorentz_factor","l":"Lorentz factor","t":"PhysicalQuantity","s":"物理","d":3},{"i":"RT:pq:proper_time","l":"Proper time","t":"PhysicalQuantity","s":"物理","d":3},{"i":"MG:pq:area","l":"Area","t":"PhysicalQuantity","s":"数学","d":3},{"i":"SM:pq:stat_entropy","l":"Statistical entropy","t":"PhysicalQuantity","s":"物理","d":3},{"i":"CM:pq:grav_const","l":"Gravitational constant","t":"Constant","s":"物理","d":2},{"i":"QM:sy:hbar","l":"ħ (reduced Planck)","t":"Symbol","s":"物理","d":2},{"i":"CO:pq:electron_mass","l":"electron mass","t":"Constant","s":"物理","d":2},{"i":"CO:pq:atomic_mass","l":"atomic mass constant","t":"Constant","s":"物理","d":2},{"i":"CM:pq:power","l":"Power","t":"PhysicalQuantity","s":"物理","d":2},{"i":"CM:pq:impulse","l":"Impulse","t":"PhysicalQuantity","s":"物理","d":2},{"i":"EM:pq:efield","l":"Electric field","t":"PhysicalQuantity","s":"物理","d":2},{"i":"EM:pq:resistance","l":"Resistance","t":"PhysicalQuantity","s":"物理","d":2},{"i":"EM:pq:inductance","l":"Inductance","t":"PhysicalQuantity","s":"物理","d":2},{"i":"EM:pq:mag_flux","l":"Magnetic flux","t":"PhysicalQuantity","s":"物理","d":2},{"i":"MG:pq:angle","l":"Angle","t":"PhysicalQuantity","s":"数学","d":2},{"i":"MG:pq:radius","l":"Radius","t":"PhysicalQuantity","s":"数学","d":2},{"i":"OP:pq:refractive_index","l":"Refractive index","t":"PhysicalQuantity","s":"物理","d":2},{"i":"CE:pq:equilibrium_constant","l":"Equilibrium constant","t":"PhysicalQuantity","s":"化学","d":2},{"i":"CE:pq:reaction_quotient","l":"Reaction quotient","t":"PhysicalQuantity","s":"化学","d":2},{"i":"CE:pq:gibbs_std","l":"Standard Gibbs free energy change","t":"PhysicalQuantity","s":"化学","d":2},{"i":"CE:pq:activation_energy","l":"Activation energy","t":"PhysicalQuantity","s":"化学","d":2},{"i":"SY:e","l":"E (energy)","t":"Symbol","s":"物理","d":1},{"i":"SY:ke","l":"KE (kinetic energy)","t":"Symbol","s":"物理","d":1},{"i":"QM:sy:psi","l":"ψ (wavefunction)","t":"Symbol","s":"物理","d":1},{"i":"CM:sy:p","l":"p (momentum)","t":"Symbol","s":"物理","d":1},{"i":"CM:sy:G","l":"G (gravitational constant)","t":"Symbol","s":"物理","d":1},{"i":"MX:phy:acceleration","l":"a","t":"PhysicalQuantity","s":"物理","d":1},{"i":"SY:a","l":"a (acceleration)","t":"Symbol","s":"物理","d":1},{"i":"CO:pq:proton_mass","l":"proton mass","t":"Constant","s":"物理","d":1},{"i":"CM:pq:force","l":"Force","t":"PhysicalQuantity","s":"物理","d":1},{"i":"CM:pq:accel","l":"Acceleration","t":"PhysicalQuantity","s":"物理","d":1},{"i":"CM:pq:vel","l":"Velocity","t":"PhysicalQuantity","s":"物理","d":1},{"i":"CM:pq:energy","l":"Energy","t":"PhysicalQuantity","s":"物理","d":1},{"i":"EM:pq:capacitance","l":"Capacitance","t":"PhysicalQuantity","s":"物理","d":1},{"i":"QM:pq:wavelength","l":"Wavelength","t":"PhysicalQuantity","s":"物理","d":1},{"i":"QM:pq:action","l":"Action","t":"PhysicalQuantity","s":"物理","d":1},{"i":"MA:pq:discriminant","l":"Discriminant","t":"PhysicalQuantity","s":"数学","d":1},{"i":"MA:pq:roots","l":"Roots of polynomial","t":"PhysicalQuantity","s":"数学","d":1},{"i":"MA:pq:binomial_coeff","l":"Binomial coefficient","t":"PhysicalQuantity","s":"数学","d":1},{"i":"MC:pq:integral","l":"Integral","t":"PhysicalQuantity","s":"数学","d":1},{"i":"MC:pq:limit","l":"Limit","t":"PhysicalQuantity","s":"数学","d":1},{"i":"MC:pq:order","l":"Order of derivative","t":"PhysicalQuantity","s":"数学","d":1},{"i":"SM:pq:microstates","l":"Number of microstates","t":"PhysicalQuantity","s":"物理","d":1},{"i":"SM:pq:partition_fn","l":"Partition function","t":"PhysicalQuantity","s":"物理","d":1},{"i":"CE:pq:ph","l":"pH","t":"PhysicalQuantity","s":"化学","d":1},{"i":"CE:pq:ka","l":"Acid dissociation constant","t":"PhysicalQuantity","s":"化学","d":1},{"i":"CE:pq:pka","l":"pKa","t":"PhysicalQuantity","s":"化学","d":1},{"i":"CE:pq:ksp","l":"Solubility product","t":"PhysicalQuantity","s":"化学","d":1},{"i":"CE:pq:cell_potential","l":"Cell potential","t":"PhysicalQuantity","s":"化学","d":1},{"i":"CE:pq:rate_constant","l":"Reaction rate constant","t":"PhysicalQuantity","s":"化学","d":1}],"hub":{"PQ:mass":{"in":5019,"out":1,"has_symbol":5000},"total_has_symbol":24341,"total_edges":48712,"cross_source_total":3249,"cross_source_molecule":3242,"derived_from_total":80}};</script>
+<script>
+"use strict";
+(function(){
+const D = window.DATA;
+const NODE = new Map(D.nodes.map(n => [n.id, n]));
+const EDGES = D.edges;
+
+/* ---------------- 状态 ---------------- */
+const S = {
+  center: null,
+  minGrade: 1,
+  hops: 2,
+  visible: [],      // 可见边
+  hidden: 0,
+  sel: null,
+};
+
+const LV_NAME = {1:'全部',3:'E3+',4:'E4+'};
+const TYPE = {
+  Formula:{fill:'#2b4a6f',stroke:'#63A4DE',shape:'rect',label:'公式'},
+  PhysicalQuantity:{fill:'#1f3d3a',stroke:'#4FD1C5',shape:'circle',label:'物理量'},
+  Symbol:{fill:'#3a3320',stroke:'#d2b164',shape:'diamond',label:'符号'},
+  Constant:{fill:'#332b3f',stroke:'#a98fd6',shape:'rect',label:'常量'},
+  Definition:{fill:'#2f3340',stroke:'#8C8C9A',shape:'rect',label:'定义'},
+  MathConcept:{fill:'#2f3340',stroke:'#8C8C9A',shape:'ellipse',label:'数学概念'},
+};
+const SUBJ = {'物理':'var(--phys)','数学':'var(--math)','化学':'var(--chem)'};
+const GCOLOR = {5:'var(--e5)',4:'var(--e4)',3:'var(--e3)',2:'var(--e2)',1:'var(--e1)'};
+const GDASH  = {5:'',4:'',3:'',2:'6 4',1:'2 4'};
+const GNAME  = {5:'多源独立 · 可复算',4:'单源机检 · 可复算',3:'来源断言 · 可复算',
+                2:'来源未入库 · 不可复算',1:'推断或无源 · 待补证'};
+const EDGE_CN = {defines:'定义',has_symbol:'使用符号',has_quantity:'度量',derived_from:'派生自',
+  same_as:'等同',dimensionally_consistent:'量纲一致',related_to:'相关',has_unit:'单位'};
+
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => { const e = document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; };
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const say = t => { $('#live').textContent = t; };
+
+/* ---------------- LaTeX 极简渲染（原型用；正式版 MathJax） ---------------- */
+function tex(s){
+  if(!s) return '';
+  let t = esc(s);
+  t = t.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, '<span class="frac"><span>$1</span><span>$2</span></span>');
+  t = t.replace(/\^\{([^{}]*)\}/g, '<sup>$1</sup>').replace(/\^(\w)/g, '<sup>$1</sup>');
+  t = t.replace(/_\{([^{}]*)\}/g, '<sub>$1</sub>').replace(/_(\w)/g, '<sub>$1</sub>');
+  t = t.replace(/\\cdot/g,'·').replace(/\\times/g,'×').replace(/\\approx/g,'≈').replace(/\\Delta/g,'Δ');
+  return t;
+}
+
+/* ---------------- 数据索引 ---------------- */
+const adjOut = new Map(), adjIn = new Map(), adjAll = new Map();
+for(const e of EDGES){
+  (adjOut.get(e.s) || adjOut.set(e.s,[]).get(e.s)).push(e);
+  (adjIn.get(e.t)  || adjIn.set(e.t,[]).get(e.t)).push(e);
+  (adjAll.get(e.s)|| adjAll.set(e.s,[]).get(e.s)).push(e);
+  (adjAll.get(e.t)|| adjAll.set(e.t,[]).get(e.t)).push(e);
+}
+
+function hopSet(start, hops){
+  const seen = new Set([start]); let frontier = [start];
+  for(let d=0; d<hops; d++){
+    const next = [];
+    for(const id of frontier){
+      for(const e of (adjAll.get(id)||[])){
+        const o = e.s===id ? e.t : e.s;
+        if(!seen.has(o)){ seen.add(o); next.push(o); }
+      }
+    }
+    frontier = next;
+  }
+  return seen;
+}
+
+/* ---------------- 启动 ---------------- */
+$('#snapName').textContent = D.meta.snapshot.replace('graph_data_','').replace('.json','');
+$('#snapN').textContent = D.meta.nodes_total.toLocaleString();
+$('#snapE').textContent = D.meta.edges_total.toLocaleString();
+$('#ruleTag').textContent = '规则 ' + D.meta.grade_rule;
+$('#stMeta').textContent = '子集 ' + D.meta.subset_nodes + ' 节点 / ' + D.meta.subset_edges + ' 边 · 全库 ' +
+  D.meta.nodes_total.toLocaleString() + ' / ' + D.meta.edges_total.toLocaleString() + ' · ' + D.meta.head;
+
+/* ---------------- 示例卡 ---------------- */
+const CARDS = [
+  {q:'质能方程', h:'FO:emc2 · E=mc^2', id:'FO:emc2'},
+  {q:'牛顿第二定律', h:'FO:fma · F=ma', id:'FO:fma'},
+  {q:'查一个物理量：mass', h:'10 条候选，其中 2 条重复实体', id:'PQ:mass', trap:true},
+  {q:'动能与功的关系', h:'FO:ke · 派生自牛顿第二定律', id:'FO:ke'},
+];
+$('#cards').innerHTML = CARDS.map(c =>
+  `<button class="card${c.trap?' trap':''}" data-id="${c.id}" data-q="${esc(c.q)}">
+     <div class="q">${esc(c.q)}${c.trap?' <span class="mono" style="color:var(--warn);font-size:10px">← 会走到空画布</span>':''}</div>
+     <div class="h">${esc(c.h)}</div>
+   </button>`).join('');
+$('#cards').addEventListener('click', ev => {
+  const b = ev.target.closest('.card'); if(!b) return;
+  $('#homeQ').value = b.dataset.q;
+  select(b.dataset.id, b.dataset.q);
+});
+
+/* ---------------- 检索 ---------------- */
+function search(q){
+  const s = q.trim().toLowerCase();
+  if(!s) return [];
+  const hit = D.pool.filter(p => (p.l||'').toLowerCase().includes(s) || (p.i||'').toLowerCase().includes(s));
+  hit.sort((a,b) => {
+    const sa = a.l.toLowerCase()===s ? 0 : a.l.toLowerCase().startsWith(s) ? 1 : 2;
+    const sb = b.l.toLowerCase()===s ? 0 : b.l.toLowerCase().startsWith(s) ? 1 : 2;
+    return sa-sb || b.d-a.d;
+  });
+  return hit.slice(0,40);
+}
+
+function renderResults(q){
+  const box = $('#results');
+  const hit = search(q);
+  if(!q.trim()){ box.innerHTML = `<div class="res-empty">输入后开始检索（内置 ${D.meta.pool_size} 个实体的检索子集；全库由服务端返回）</div>`; return; }
+  if(!hit.length){
+    box.innerHTML = `<div class="res-empty">没有匹配「${esc(q)}」。试试更短的词，或直接在左侧改档位后再搜。</div>`;
+    return;
+  }
+  box.innerHTML = hit.map(p => {
+    const t = TYPE[p.t] || {label:p.t, stroke:'#666'};
+    return `<button class="res" role="option" data-id="${p.i}" aria-selected="false">
+      <span class="l">${esc(p.l)}</span>
+      <span class="m"><span class="dot" style="background:${t.stroke}"></span>${esc(t.label)}<span>·</span>${esc(p.s||'—')}<span>·</span>deg ${p.d}</span>
+    </button>`;
+  }).join('');
+}
+
+$('#q').addEventListener('input', e => renderResults(e.target.value));
+$('#q').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    const first = $('#results .res');
+    if(first) first.click();
+  }
+});
+$('#results').addEventListener('click', e => {
+  const b = e.target.closest('.res'); if(!b) return;
+  document.querySelectorAll('.res[aria-selected="true"]').forEach(x => x.setAttribute('aria-selected','false'));
+  b.setAttribute('aria-selected','true');
+  select(b.dataset.id, b.querySelector('.l').textContent);
+});
+
+$('#homeForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = $('#homeQ').value.trim();
+  if(!q) return;
+  const hit = search(q);
+  if(hit.length === 1){ select(hit[0].i, hit[0].l); return; }
+  if(hit.length > 1){
+    $('#q').value = q; renderResults(q); openLeft();
+    $('#homeQ').value = q;
+    say('找到 ' + hit.length + ' 个候选，请从左侧选择');
+    document.querySelector('#results .res')?.focus();
+    return;
+  }
+  showEmpty(q, null);
+});
+
+$('#homeQ').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); $('#homeForm').requestSubmit(); } });
+$('.disciplines').addEventListener('click', e => {
+  const b = e.target.closest('.disc'); if(!b) return;
+  $('#q').value = b.dataset.sub; renderResults(b.dataset.sub); openLeft();
+});
+$('#menuBtn').addEventListener('click', () => $('#left').classList.toggle('open'));
+function openLeft(){ if(window.matchMedia('(max-width:1023px)').matches) $('#left').classList.add('open'); }
+$('#clearChip').addEventListener('click', () => { goHome(); });
+
+/* ---------------- 档位 ---------------- */
+$('#levels').addEventListener('click', e => {
+  const b = e.target.closest('.lv'); if(!b) return;
+  document.querySelectorAll('.lv').forEach(x => x.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  S.minGrade = +b.dataset.min;
+  $('#stLv').textContent = LV_NAME[S.minGrade];
+  if(S.center) drawGraph();
+  say('档位已切到 ' + LV_NAME[S.minGrade]);
+});
+
+/* ---------------- 三阶段预热 ---------------- */
+let warmTimers = [];
+function warmup(done){
+  const t0 = performance.now();
+  $('#warm').style.display = 'flex';
+  ['s1','s2','s3'].forEach(id => $('#'+id).className = 'st');
+  $('#wbar').style.width = '0';
+  const step = (i, pct, ms) => {
+    const prev = i>1 ? $('#s'+(i-1)) : null;
+    if(prev){ prev.className = 'st done'; prev.querySelector('.ms').textContent = ms + ' ms'; }
+    $('#s'+i).className = 'st on';
+    $('#wbar').style.width = pct + '%';
+  };
+  warmTimers.forEach(clearTimeout); warmTimers = [];
+  step(1, 22);
+  warmTimers.push(setTimeout(()=>step(2, 58, 210), 180));
+  warmTimers.push(setTimeout(()=>step(3, 88, 260), 460));
+  warmTimers.push(setTimeout(()=>{
+    ['s1','s2','s3'].forEach(id => { const n = $('#'+id); if(n.className.indexOf('done')<0) n.className='st done'; });
+    const ms = Math.round(performance.now() - t0);
+    $('#s3').querySelector('.ms').textContent = ms + ' ms';
+    $('#wbar').style.width = '100%';
+    setTimeout(()=>{ $('#warm').style.display = 'none'; done(); }, 180);
+  }, 720));
+}
+$('#skipWarm').addEventListener('click', () => {
+  warmTimers.forEach(clearTimeout);
+  $('#warm').style.display = 'none';
+  drawGraph(); say('已跳过预热');
+});
+
+/* ---------------- 选择与绘图 ---------------- */
+function select(id, label, force){
+  const n = NODE.get(id);
+  if(!n){ showEmpty(label || id, id); return; }
+  const outs = (adjOut.get(id) || []).length;
+  const ins  = (adjIn.get(id)  || []).length;
+  S.center = id; S.sel = id; S.reverse = !!force;
+  $('#curLabel').textContent = label || n.l;
+  // 枢纽型实体：出边 ≤1 且入边 >20 ⇒ 真实的体验就是空画布。先解释，再让用户决定要不要反向。
+  if(!force && outs <= 1 && ins > 20){ showEmpty(label || n.l, id); return; }
+  showStage('graph');
+  $('#stMode').textContent = force ? '入边视角' : '已定位';
+  warmup(drawGraph);
+}
+
+// 「换种子」：从子集里找真实用了符号 m 的公式，取度数最高的那个
+function massSeeds(){
+  const users = EDGES.filter(e => e.ty === 'has_symbol' && e.t === 'SY:m').map(e => e.s);
+  if(!users.length){ goHome(); return; }
+  users.sort((a,b) => (NODE.get(b)?.dg||0) - (NODE.get(a)?.dg||0));
+  select(users[0], (NODE.get(users[0])||{}).l || users[0], true);
+}
+
+function showStage(name){
+  document.querySelectorAll('.stage').forEach(x => x.classList.toggle('on', x.id === 'stage-' + name));
+}
+
+function drawGraph(){
+  const cid = S.center;
+  if(!cid) return;
+  const c = NODE.get(cid);
+  // 入边视角（枢纽）：1 跳 + 抽样 12 条，优先符号绑定、再按证据等级——
+  // 否则 2 跳会把整个子集拉进来，和「已隐藏 N 条」的空态解释自相矛盾。
+  let all;
+  if(S.reverse){
+    const inn = (adjIn.get(cid) || []).slice()
+      .sort((a,b) => (b.ty==='has_symbol') - (a.ty==='has_symbol') || b.g - a.g);
+    all = inn.slice(0, 12);
+    S.hidden = 0;
+  } else {
+    const keep = hopSet(cid, S.hops);
+    all = EDGES.filter(e => keep.has(e.s) && keep.has(e.t));
+  }
+  S.visible = all.filter(e => e.g >= S.minGrade);
+  S.hidden = all.length - S.visible.length;
+
+  // 只画可见边 + 关联节点
+  const used = new Set([cid]);
+  for(const e of S.visible){ used.add(e.s); used.add(e.t); }
+
+  // 分层
+  const dist = new Map([[cid,0]]);
+  for(const e of S.visible){
+    if(e.s===cid && !dist.has(e.t)) dist.set(e.t,1);
+    if(e.t===cid && !dist.has(e.s)) dist.set(e.s,1);
+  }
+  for(const e of S.visible){
+    for(const [a,b] of [[e.s,e.t],[e.t,e.s]]){
+      if(dist.has(a) && !dist.has(b)) dist.set(b, dist.get(a)+1);
+    }
+  }
+
+  const W=900,H=620,cx=450,cy=306;
+  const rings = [[],[],[]];
+  for(const id of used){ const d = dist.get(id) ?? 2; rings[Math.min(d,2)].push(id); }
+
+  const pos = new Map();
+  pos.set(cid, {x:cx, y:cy, r:30});
+
+  const place = (list, radius, rNode) => {
+    // 按类型分组，组内按度数排序，减少交叉
+    list.sort((a,b) => {
+      const ta = NODE.get(a)?.t || '', tb = NODE.get(b)?.t || '';
+      return ta === tb ? (NODE.get(b)?.dg||0)-(NODE.get(a)?.dg||0) : ta.localeCompare(tb);
+    });
+    const n = list.length;
+    list.forEach((id,i) => {
+      const ang = -Math.PI/2 + (i + .5) * (2*Math.PI/Math.max(n,1));
+      const rr = radius + (i%2 ? 12 : 0);
+      pos.set(id, {x: cx + Math.cos(ang)*rr*1.42, y: cy + Math.sin(ang)*rr, r: rNode});
+    });
+  };
+  place(rings[1], 132, 22);
+  place(rings[2], 236, 19);
+
+  // 边
+  const svg = $('#g');
+  const NS = 'http://www.w3.org/2000/svg';
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const defs = document.createElementNS(NS,'defs');
+  for(const g of [5,4,3,2,1]){
+    const m = document.createElementNS(NS,'marker');
+    m.setAttribute('id','ar'+g); m.setAttribute('viewBox','0 0 8 8');
+    m.setAttribute('refX','7'); m.setAttribute('refY','4');
+    m.setAttribute('markerWidth','6'); m.setAttribute('markerHeight','6');
+    m.setAttribute('orient','auto');
+    const p = document.createElementNS(NS,'path');
+    p.setAttribute('d','M0,1 L7,4 L0,7 z');
+    p.setAttribute('fill', GCOLOR[g]);
+    m.appendChild(p); defs.appendChild(m);
+  }
+  svg.appendChild(defs);
+
+  const gE = document.createElementNS(NS,'g');
+  const gN = document.createElementNS(NS,'g');
+  svg.appendChild(gE); svg.appendChild(gN);
+
+  for(const e of S.visible){
+    const a = pos.get(e.s), b = pos.get(e.t);
+    if(!a || !b) continue;
+    // 二次贝塞尔：控制点向中心偏移，形成弧形
+    const mx = (a.x+b.x)/2, my = (a.y+b.y)/2;
+    const dx = mx-cx, dy = my-cy;
+    const k = 0.13;
+    const qx = mx + dx*k, qy = my + dy*k;
+    const d = `M${a.x},${a.y} Q${qx},${qy} ${b.x},${b.y}`;
+
+    const p = document.createElementNS(NS,'path');
+    p.setAttribute('d', d);
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke', GCOLOR[e.g]);
+    p.setAttribute('stroke-width', e.g>=4 ? 1.9 : e.g===3 ? 1.5 : 1.2);
+    p.setAttribute('stroke-dasharray', GDASH[e.g] || 'none');
+    p.setAttribute('marker-end', 'url(#ar'+e.g+')');
+    p.setAttribute('opacity', e.g===2 ? .62 : .92);
+    p.setAttribute('class','ed');
+    p.setAttribute('pointer-events','none');
+    p.dataset.i = EDGES.indexOf(e);
+    p.dataset.g = e.g;
+    gE.appendChild(p);
+
+    // 命中线：1.5px 的线鼠标点不中，叠一条 12px 透明描边专收事件
+    const hit = document.createElementNS(NS,'path');
+    hit.setAttribute('d', d);
+    hit.setAttribute('fill','none');
+    hit.setAttribute('stroke','transparent');
+    hit.setAttribute('stroke-width','12');
+    hit.setAttribute('pointer-events','stroke');
+    hit.setAttribute('class','eh');
+    hit.style.cursor = 'help';
+    hit.dataset.i = EDGES.indexOf(e);
+    hit.addEventListener('mousemove', ev => showTip(ev, edgeTip(e)));
+    hit.addEventListener('mouseleave', hideTip);
+    gE.appendChild(hit);
+  }
+
+  // 节点
+  for(const id of used){
+    const p = pos.get(id); if(!p) continue;
+    const n = NODE.get(id) || {l:id, t:'Unknown'};
+    const T = TYPE[n.t] || {fill:'#2a2f3a', stroke:'#7a8798', shape:'rect', label:n.t};
+    const g = document.createElementNS(NS,'g');
+    g.setAttribute('class','nd');
+    g.setAttribute('transform', `translate(${p.x},${p.y})`);
+    g.dataset.id = id;
+
+    let shape;
+    if(T.shape === 'circle'){
+      shape = document.createElementNS(NS,'circle');
+      shape.setAttribute('r', p.r);
+    } else if(T.shape === 'diamond'){
+      const r = p.r*1.15;
+      shape = document.createElementNS(NS,'path');
+      shape.setAttribute('d', `M0,${-r} L${r},0 L0,${r} L${-r},0 Z`);
+    } else if(T.shape === 'ellipse'){
+      shape = document.createElementNS(NS,'ellipse');
+      shape.setAttribute('rx', p.r*1.25); shape.setAttribute('ry', p.r*.82);
+    } else {
+      shape = document.createElementNS(NS,'rect');
+      const w = p.r*2.5, h = p.r*1.5;
+      shape.setAttribute('x', -w/2); shape.setAttribute('y', -h/2);
+      shape.setAttribute('width', w); shape.setAttribute('height', h); shape.setAttribute('rx', 5);
+    }
+    shape.setAttribute('fill', T.fill);
+    shape.setAttribute('stroke', id===cid ? '#e6edf3' : T.stroke);
+    shape.setAttribute('stroke-width', id===cid ? 2.2 : 1.5);
+    g.appendChild(shape);
+
+    if(id === cid){
+      const halo = document.createElementNS(NS,'circle');
+      halo.setAttribute('r', p.r*1.9);
+      halo.setAttribute('fill','none');
+      halo.setAttribute('stroke','#3d6ba8');
+      halo.setAttribute('stroke-width','1');
+      halo.setAttribute('opacity','.55');
+      g.insertBefore(halo, shape);
+    }
+
+    // 标签
+    const label = (n.l || id);
+    const short = label.length > 15 ? label.slice(0,14) + '…' : label;
+    const t = document.createElementNS(NS,'text');
+    t.setAttribute('y', p.r + 13);
+    t.setAttribute('text-anchor','middle');
+    t.setAttribute('font-size', id===cid ? 12 : 10.5);
+    t.setAttribute('fill', id===cid ? '#e6edf3' : '#9aa7b8');
+    t.textContent = short;
+    g.appendChild(t);
+
+    if(id === cid){
+      const t2 = document.createElementNS(NS,'text');
+      t2.setAttribute('y', p.r + 26);
+      t2.setAttribute('text-anchor','middle');
+      t2.setAttribute('font-size','9.5');
+      t2.setAttribute('fill','#6b7a8f');
+      t2.setAttribute('font-family','monospace');
+      t2.textContent = id;
+      g.appendChild(t2);
+    }
+
+    g.addEventListener('click', () => { S.sel = id; renderCard(id); say('已选 ' + label); });
+    g.addEventListener('mousemove', ev => showTip(ev, nodeTip(n, id)));
+    g.addEventListener('mouseleave', hideTip);
+    gN.appendChild(g);
+  }
+
+  updateStats(all, c);
+  renderConcl(all, c);
+  renderCard(cid);
+}
+
+function updateStats(all, c){
+  $('#stVis').textContent = S.visible.length + ' / ' + all.length;
+  $('#stHid').textContent = S.hidden;
+  $('#stHop').textContent = S.hops;
+  $('#stLv').textContent = LV_NAME[S.minGrade];
+  // 档位计数
+  for(const g of [1,3,4]){
+    const n = all.filter(e => e.g >= g).length;
+    const node = $('#c'+g);
+    if(node) node.textContent = n;
+  }
+}
+
+/* ---------------- 结论 ---------------- */
+function renderConcl(all, c){
+  $('#conclScope').textContent = (S.reverse ? '入边视角 · 1 跳抽样 12 条 · ' : '2 跳 · ') + LV_NAME[S.minGrade];
+  const cnt = {1:0,2:0,3:0,4:0,5:0};
+  S.visible.forEach(e => cnt[e.g]++);
+  const total = S.visible.length || 1;
+  const hidden = S.hidden;
+  const hubNote = S.reverse && D.hub[c.id]
+    ? `<br><span style="color:var(--muted)">这里是<b>入边视角</b>：图上 ${S.visible.length} 条，全库共 ${D.hub[c.id].in.toLocaleString()} 条指向它（原型抽样 12 条）。</span>`
+    : '';
+  $('#conclText').innerHTML =
+    `从 <b>${esc(c.l)}</b> 出发，当前档位有 <b>${S.visible.length}</b> 条关系、` +
+    `<b>${new Set(S.visible.flatMap(e=>[e.s,e.t])).size}</b> 个实体。` +
+    (hidden ? `另有 <b>${hidden}</b> 条被你选的档位隐藏。` : `没有边被档位隐藏。`) + hubNote;
+
+  $('#gradeBars').innerHTML = [5,4,3,2,1].filter(g => cnt[g]).map(g => {
+    const pct = Math.round(cnt[g]/total*100);
+    return `<div class="gb">
+      <span style="color:${GCOLOR[g]}">E${g}</span>
+      <span class="t"><i style="width:${pct}%;background:${GCOLOR[g]}"></i></span>
+      <span class="n">${cnt[g]}</span>
+    </div>`;
+  }).join('') + `<div class="note" style="margin-top:6px">全库分布：E5 702｜E4 351｜E3 482｜E2 47,032｜E1 145。子集无 E5 —— 全库 E5 的 96% 是分子与物理量的绑定。</div>`;
+}
+
+/* ---------------- 公式卡 ---------------- */
+function renderCard(id){
+  const n = NODE.get(id);
+  if(!n){ $('#rCard').innerHTML = ''; return; }
+  const T = TYPE[n.t] || {label:n.t, stroke:'#666'};
+  const outs = (adjOut.get(id)||[]);
+  const ins = (adjIn.get(id)||[]);
+  const es = outs.concat(ins);
+
+  // 该节点的代表等级：取入出边里最高的一条（用于头部徽章）
+  const best = es.reduce((m,e) => Math.max(m, e.g), 0);
+  const bestEdge = es.find(e => e.g === best) || null;
+
+  const symRows = outs.filter(e => e.ty === 'has_symbol').map(e => {
+    const s = NODE.get(e.t) || {l:e.t};
+    return `<tr><td>${esc((s.l||'').split(' ')[0]||'—')}</td><td class="q">${esc(s.l||'')}</td><td style="color:${GCOLOR[e.g]}">E${e.g}</td></tr>`;
+  }).join('');
+
+  const qtyRows = outs.filter(e => e.ty === 'defines' || e.ty === 'has_quantity').map(e => {
+    const s = NODE.get(e.t) || {l:e.t};
+    return `<tr><td>${esc((s.l||'').slice(0,18))}</td><td class="q">${esc(TYPE[s.t]?.label||s.t)}</td><td style="color:${GCOLOR[e.g]}">E${e.g}</td></tr>`;
+  }).join('');
+
+  const gradeNote = bestEdge ? GNAME[bestEdge.g] : '无关系可供判定';
+
+  $('#rCard').innerHTML = `
+    <div class="rblk">
+      <h4>公式卡<span class="x">${esc(T.label)}</span></h4>
+      <div class="card-h">
+        <h5>${esc(n.l)}</h5>
+        <span class="badge e${best||1}">E${best||'—'}</span>
+      </div>
+      <div style="font-size:10.5px;color:var(--dim);font-family:var(--mono);margin-bottom:8px">${esc(id)}</div>
+
+      ${n.lx ? `<div class="formula">${tex(n.lx)}</div>` : ''}
+
+      <div class="grade-line ${best<=2?'neg':''}">
+        <span class="sw" style="border-top-color:${GCOLOR[best||1]};border-top-style:${(best<=2?'dashed':'solid')}"></span>
+        <span>最高证据 <b style="color:${GCOLOR[best||1]}">E${best||'—'}</b> · ${esc(gradeNote)}</span>
+      </div>
+
+      ${n.de ? `<div class="field"><div class="lab">说明</div><div class="val">${esc(n.de)}</div></div>` : ''}
+      ${n.us ? `<div class="field"><div class="lab">用法</div><div class="val">${esc(n.us)}</div></div>` : ''}
+
+      <div class="field">
+        <div class="lab">适用条件</div>
+        <div class="val empty">${n.ap ? esc(n.ap) : '未填写'}</div>
+        ${n.ap ? '' : `<div class="why">全库 5,090 个公式中填写数为 <b style="color:var(--warn)">0</b>。这不是这一条漏了，是整层缺失 —— M1 的第一项任务。</div>`}
+      </div>
+
+      <div class="field">
+        <div class="lab">假设前提</div>
+        <div class="val empty">${n.as ? esc(n.as) : '未填写'}</div>
+      </div>
+
+      ${symRows ? `<div class="field"><div class="lab">符号表（来自 has_symbol 边）</div>
+        <table class="sym"><thead><tr><th>符号</th><th>含义</th><th>证据</th></tr></thead><tbody>${symRows}</tbody></table></div>` : ''}
+
+      ${qtyRows ? `<div class="field"><div class="lab">关联物理量</div>
+        <table class="sym"><thead><tr><th>名称</th><th>类型</th><th>证据</th></tr></thead><tbody>${qtyRows}</tbody></table></div>` : ''}
+
+      <div class="field">
+        <div class="lab">使用案例</div>
+        <div class="emptybox">
+          <b>0 条</b>。全库只有 81 条人工撰写的 usage 文本（1.6%），没有 used_in / applied_to 关系。
+          <br>这条线要求「出生即打分」：抓取时就带页码或 DOI，否则事后补不回来。
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="lab">相关论文</div>
+        <div class="emptybox">
+          <b>0 篇</b>。全库 181 篇论文的 discusses 关系<b>全部指向数学概念</b>，
+          物理公式被论文讨论的数量为 0 —— 论文线要从物理主题重建。
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0">
+        <button class="btn ghost" style="width:100%;font-size:11.5px;padding:6px" id="expandCard">展开完整卡片</button>
+      </div>
+    </div>`;
+
+  const btn = $('#expandCard');
+  if(btn) btn.addEventListener('click', () => {
+    $('#modalT').textContent = n.l;
+    $('#modalBody').innerHTML = $('#rCard').innerHTML;
+    $('#modal').classList.add('on');
+  });
+}
+
+$('#modalCls').addEventListener('click', () => $('#modal').classList.remove('on'));
+$('#modal').addEventListener('click', e => { if(e.target.id === 'modal') $('#modal').classList.remove('on'); });
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') $('#modal').classList.remove('on');
+  if(e.key === '/' && document.activeElement.tagName !== 'INPUT'){ e.preventDefault(); $('#q').focus(); }
+});
+
+/* ---------------- 空态 ---------------- */
+function showEmpty(q, id){
+  showStage('empty');
+  const n = id ? NODE.get(id) : null;
+  const hub = D.hub['PQ:mass'];
+  const isMass = id === 'PQ:mass';
+
+  if(isMass){
+    $('#eTitle').textContent = '找到了 Mass，但这个视图里没有可画的关系';
+    $('#eSub').textContent = '这不是「没搜到」，是「搜到了、但结构决定了它画不出来」。把原因拆开看：';
+    $('#eReasons').innerHTML = `
+      <li><span class="k">节点身份</span><span>它是一个 <b>物理量</b>（PhysicalQuantity），不是公式。物理量本身只承载定义，不产生关系。</span></li>
+      <li><span class="k">出边</span><span>只有 <b>${hub.out}</b> 条（一条 has_unit）。以它为中心向外扩展，1 跳就只能画 1 条边。</span></li>
+      <li><span class="k">入边</span><span>有 <b>${hub.in.toLocaleString()}</b> 条指向它，其中 <b>${hub.has_symbol.toLocaleString()}</b> 条是公式的符号绑定 —— 因为全库 5,000 个公式都用 m 表示质量。</span></li>
+      <li><span class="k">为什么被隐藏</span><span>视图按「以选中节点为中心的<b>出边</b>」组织，入边默认不画。所以你看到的是空画布，而不是 5,000 条绑定。</span></li>`;
+    $('#eActions').innerHTML = `
+      <button class="act" data-act="reverse"><span class="num">01</span><span><div class="t">反向看：把它当目标</div><div class="d">画出前 12 条指向它的符号绑定（真实总数 <code>${hub.has_symbol.toLocaleString()}</code>，此处抽样）</div></span></button>
+      <button class="act" data-act="seeds"><span class="num">02</span><span><div class="t">换种子：看引用最多的公式</div><div class="d">按度数排序，列出用了 m 的前若干个公式</div></span></button>
+      <button class="act" data-act="entity"><span class="num">03</span><span><div class="t">先解决重复实体</div><div class="d">搜 mass 命中 10 条，其中 <code>PQ:mass</code> 与 <code>CM:pq:mass</code> 同名、<code>FO:emc2</code> 与 <code>RT:fo:mass_energy</code> 同式 —— 这两组还没合并</div></span></button>`;
+  } else {
+    $('#eTitle').textContent = '没有找到「' + esc(q) + '」';
+    $('#eSub').textContent = '原型内置 ' + D.meta.pool_size + ' 个实体的检索子集，全库有 ' + D.meta.nodes_total.toLocaleString() + ' 个。可能只是不在子集里。';
+    $('#eReasons').innerHTML = `
+      <li><span class="k">检索范围</span><span>当前是<b>原型子集</b>（${D.meta.pool_size} 个实体），不是全库。正式版由服务端返回。</span></li>
+      <li><span class="k">匹配方式</span><span>按名称与 ID 的子串匹配，不支持同义词与拼写纠正。</span></li>`;
+    $('#eActions').innerHTML = `
+      <button class="act" data-act="home"><span class="num">01</span><span><div class="t">回到示例</div><div class="d">用真实存在的公式试一次</div></span></button>
+      <button class="act" data-act="mass"><span class="num">02</span><span><div class="t">试一个已知会「空画布」的查询</div><div class="d">mass —— 用来确认空态解释是否讲清楚</div></span></button>`;
+  }
+
+  $('#eActions').onclick = ev => {
+    const b = ev.target.closest('.act'); if(!b) return;
+    const a = b.dataset.act;
+    if(a === 'reverse'){ select('PQ:mass', 'Mass（入边视角）', true); }
+    else if(a === 'seeds'){ massSeeds(); }
+    else if(a === 'home'){ goHome(); }
+    else if(a === 'mass'){ select('PQ:mass', 'Mass'); }
+    else if(a === 'entity'){ $('#q').value = 'mass'; renderResults('mass'); openLeft(); }
+  };
+  $('#stMode').textContent = '空结果';
+  $('#stVis').textContent = '0';
+  $('#stHid').textContent = '0';
+  say('空结果：' + (isMass ? 'Mass 是物理量，出边仅 1 条' : '未找到 ' + q));
+  $('#rConcl').querySelector('.concl').innerHTML = isMass
+    ? '空画布已解释：<b>物理量没有出边</b>，5,000 条入边是符号绑定。右侧三个动作分别放宽「方向 / 种子 / 实体」。'
+    : '没有结果。检查是否在子集范围内。';
+  $('#gradeBars').innerHTML = '';
+  $('#rCard').innerHTML = '';
+}
+
+/* ---------------- 返回入口 ---------------- */
+function goHome(){
+  showStage('home');
+  S.center = null;
+  $('#stMode').textContent = '就绪';
+  $('#stVis').textContent = '—'; $('#stHid').textContent = '0';
+  $('#curLabel').textContent = '—';
+  $('#rConcl').querySelector('.concl').textContent = '选一个实体后，这里给出这块图的读数与证据分布。';
+  $('#gradeBars').innerHTML = ''; $('#rCard').innerHTML = '';
+  say('回到任务入口');
+}
+
+/* ---------------- tooltip ---------------- */
+function showTip(ev, html){
+  const t = $('#tip');
+  t.innerHTML = html; t.style.display = 'block';
+  const x = Math.min(ev.clientX + 14, window.innerWidth - 280);
+  const y = Math.min(ev.clientY + 14, window.innerHeight - 90);
+  t.style.left = x + 'px'; t.style.top = y + 'px';
+}
+function hideTip(){ $('#tip').style.display = 'none'; }
+function nodeTip(n, id){
+  return `<div class="tt">${esc(n.l)}</div><div class="tm">${esc(id)} · ${esc(TYPE[n.t]?.label||n.t)} · deg ${n.dg}</div>`;
+}
+function edgeTip(e){
+  return `<div class="tt">${esc(EDGE_CN[e.ty]||e.ty)}</div>
+    <div class="tm">E${e.g} · ${esc(GNAME[e.g])}<br>${esc(e.lv||'')}${e.sample?'<br>抽样 '+12+' / 共 '+e.total.toLocaleString():''}</div>`;
+}
+
+/* ---------------- 初始 ---------------- */
+renderResults('');
+$('#q').value = '';
+$('#stMode').textContent = '就绪';
+})();
+</script>
+</body>
+</html>
