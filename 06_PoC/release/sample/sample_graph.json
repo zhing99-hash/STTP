@@ -8542,11 +8542,10 @@
       "sym": "P"
      }
     ],
-    "symbols": [
-     "P"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "作为细胞内「能量货币」的结算式，用于估算代谢反应可动用的能量上限。"
    },
    "confidence": 1.0,
@@ -8578,8 +8577,8 @@
     "source": "curated_seed",
     "symbol_table": [],
     "symbols": [],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
     "symbols_unresolved": "no_has_symbol_edge",
     "usage": "用于核算光合固碳量与产氧量，是生物质能与碳循环计算的起点。"
    },
@@ -8842,14 +8841,10 @@
       "sym": "T"
      }
     ],
-    "symbols": [
-     "k",
-     "e",
-     "E_a",
-     "T"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由两个温度下的速率常数反推活化能，或外推高温下的反应速率。"
    },
    "confidence": 1.0,
@@ -8906,14 +8901,10 @@
       "sym": "T"
      }
     ],
-    "symbols": [
-     "G",
-     "R",
-     "T",
-     "Q"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由实际浓度组成判断反应能否自发进行（ΔG < 0 为自发）。"
    },
    "confidence": 1.0,
@@ -8964,13 +8955,10 @@
       "sym": "T"
      }
     ],
-    "symbols": [
-     "G",
-     "R",
-     "T"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由平衡常数求标准自由能变；或由热力学数据预测反应方向。"
    },
    "confidence": 1.0,
@@ -9017,11 +9005,10 @@
       "sym_candidate": "\\mathrm{pH}"
      }
     ],
-    "symbols": [
-     "K_a"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "配制指定 pH 的缓冲液，或估算加入酸碱后 pH 的漂移量。"
    },
    "confidence": 1.0,
@@ -9072,13 +9059,10 @@
       "sym": "T"
      }
     ],
-    "symbols": [
-     "R",
-     "T",
-     "F"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由浓度计算原电池电动势，或由电位反推离子浓度（pH 电极的原理）。"
    },
    "confidence": 1.0,
@@ -9128,8 +9112,8 @@
      }
     ],
     "symbols": [],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
     "symbols_unresolved": "targets_carry_no_glyph",
     "usage": "把跨十几个数量级的酸度压缩成便于比较的 0–14 标度。"
    },
@@ -9180,8 +9164,8 @@
      }
     ],
     "symbols": [],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
     "symbols_unresolved": "targets_carry_no_glyph",
     "usage": "与 pH 联用（pH + pOH = 14）处理碱性溶液的浓度计算。"
    },
@@ -9490,12 +9474,10 @@
       "sym": "F"
      }
     ],
-    "symbols": [
-     "J",
-     "F"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由碰撞时间估算平均冲击力，或由冲量求速度变化。"
    },
    "confidence": 1.0,
@@ -9546,13 +9528,10 @@
       "sym": "v"
      }
     ],
-    "symbols": [
-     "p",
-     "m",
-     "v"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "分析碰撞与爆炸过程（动量守恒）；作为冲量-动量定理与相对论动量的变量。"
    },
    "confidence": 1.0,
@@ -9597,12 +9576,10 @@
       "sym": "F"
      }
     ],
-    "symbols": [
-     "W",
-     "F"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "计算机械过程传递的能量；作为动能定理与功率公式的输入。"
    },
    "confidence": 1.0,
@@ -10199,14 +10176,10 @@
       "sym": "\\pi"
      }
     ],
-    "symbols": [
-     "B",
-     "\\mu_0",
-     "I",
-     "\\pi"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由电流分布计算磁场（长直导线、圆环、螺线管）。"
    },
    "confidence": 1.0,
@@ -10253,11 +10226,10 @@
       "sym": "k"
      }
     ],
-    "symbols": [
-     "k"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "计算静电力的方向与大小；电场与电势定义的基础。"
    },
    "confidence": 1.0,
@@ -10304,11 +10276,10 @@
       "sym_candidate": "\\varepsilon"
      }
     ],
-    "symbols": [
-     "\\Phi"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "计算发电机与变压器的感应电压；配合楞次定律判定电流方向。"
    },
    "confidence": 1.0,
@@ -10352,12 +10323,10 @@
       "sym": "\\varepsilon_0"
      }
     ],
-    "symbols": [
-     "E",
-     "\\varepsilon_0"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "利用对称性快速求电场（球、柱、平面电荷分布）。"
    },
    "confidence": 1.0,
@@ -10422,14 +10391,10 @@
       "sym": "v"
      }
     ],
-    "symbols": [
-     "v",
-     "F",
-     "E",
-     "B"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "分析带电粒子在磁场中的运动（回旋半径、质谱仪、霍尔效应）。"
    },
    "confidence": 1.0,
@@ -10480,13 +10445,10 @@
       "sym": "V"
      }
     ],
-    "symbols": [
-     "V",
-     "I",
-     "R"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "电路计算的基础：由电压与电阻求电流，或做分压与限流设计。"
    },
    "confidence": 1.0,
@@ -10985,13 +10947,10 @@
       "sym": "m"
      }
     ],
-    "symbols": [
-     "E",
-     "m",
-     "c"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "核反应与湮灭过程的能量核算；质量与能量的互换换算。"
    },
    "confidence": 1.0,
@@ -11042,13 +11001,10 @@
       "sym": "m"
      }
     ],
-    "symbols": [
-     "F",
-     "m",
-     "a"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由受力求加速度（动力学计算）；建立运动微分方程。"
    },
    "confidence": 1.0,
@@ -11099,13 +11055,10 @@
       "sym": "v"
      }
     ],
-    "symbols": [
-     "KE",
-     "m",
-     "v"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "动能定理与碰撞能量核算；能量守恒分析的常用量。"
    },
    "confidence": 1.0,
@@ -11138,8 +11091,8 @@
     "source": "curated_seed",
     "symbol_table": [],
     "symbols": [],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
     "symbols_unresolved": "no_has_symbol_edge",
     "usage": "预测未发现元素的性质，组织元素分类与周期性趋势判断。"
    },
@@ -11179,11 +11132,10 @@
       "sym": "H"
      }
     ],
-    "symbols": [
-     "H"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "酸碱度标注与计算；与 CE:fo:ph 同一定义在不同学科下的实例。"
    },
    "confidence": 1.0,
@@ -11458,13 +11410,10 @@
       "sym": "\\pi"
      }
     ],
-    "symbols": [
-     "e",
-     "i",
-     "\\pi"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "复分析中指数与三角函数互化的特例；复数相位与旋转表示的常用形式。"
    },
    "confidence": 1.0,
@@ -11502,11 +11451,10 @@
       "sym": "x"
      }
     ],
-    "symbols": [
-     "x"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "化简含乘积的指数运算；在对数坐标下把乘积关系变为线性关系。"
    },
    "confidence": 1.0,
@@ -11744,13 +11692,10 @@
       "sym": "n"
      }
     ],
-    "symbols": [
-     "a",
-     "\\equiv",
-     "n"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "模运算与整除性推理的基础语言；密码学与哈希函数的前身。"
    },
    "confidence": 1.0,
@@ -11801,12 +11746,10 @@
       "sym": "n"
      }
     ],
-    "symbols": [
-     "\\equiv",
-     "n"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "解同余方程组；大整数运算与密码学中的分解与重构。"
    },
    "confidence": 1.0,
@@ -11857,13 +11800,10 @@
       "sym": "n"
      }
     ],
-    "symbols": [
-     "a",
-     "b",
-     "n"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "求最大公约数、判定互素；连分数与模逆元计算的基础。"
    },
    "confidence": 1.0,
@@ -11932,14 +11872,10 @@
       "sym": "\\varphi(n)"
      }
     ],
-    "symbols": [
-     "a",
-     "\\varphi(n)",
-     "n",
-     "\\equiv"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "模幂化简；RSA 等公钥密码算法正确性的理论基础。"
    },
    "confidence": 1.0,
@@ -11996,13 +11932,10 @@
       "sym": "p"
      }
     ],
-    "symbols": [
-     "a",
-     "p",
-     "\\equiv"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "素性检验（费马检验）与模逆元计算（p 为素数时逆元为 a 的 p-2 次幂）。"
    },
    "confidence": 1.0,
@@ -12047,12 +11980,10 @@
       "sym": "p"
      }
     ],
-    "symbols": [
-     "n",
-     "p"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "整数分解唯一性的论证基础；数论与 RSA 安全性的基石。"
    },
    "confidence": 1.0,
@@ -12103,13 +12034,10 @@
       "sym": "n"
      }
     ],
-    "symbols": [
-     "\\mathbb{Z}",
-     "a",
-     "n"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "研究模运算的乘法结构与其群阶（欧拉 φ 函数）。"
    },
    "confidence": 1.0,
@@ -12154,12 +12082,10 @@
       "sym": "p"
      }
     ],
-    "symbols": [
-     "p",
-     "\\equiv"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "素性判定的充要条件；组合数同余关系的推导工具。"
    },
    "confidence": 1.0,
@@ -12330,13 +12256,10 @@
       "sym": "O"
      }
     ],
-    "symbols": [
-     "C",
-     "H",
-     "O"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "配平燃烧反应、计算理论空气量与烟气组成。"
    },
    "confidence": 1.0,
@@ -12682,12 +12605,10 @@
       "sym": "\\lambda"
      }
     ],
-    "symbols": [
-     "\\lambda",
-     "h"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "估算电子与中子的衍射尺度（电子显微镜、晶体衍射）。"
    },
    "confidence": 1.0,
@@ -12737,13 +12658,10 @@
       "sym": "\\phi"
      }
     ],
-    "symbols": [
-     "h",
-     "\\nu",
-     "\\phi"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由截止电压测定逸出功；太阳能电池与光电探测器的能级判据。"
    },
    "confidence": 1.0,
@@ -12788,12 +12706,10 @@
       "sym": "\\nu"
      }
     ],
-    "symbols": [
-     "h",
-     "\\nu"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "光子能量计算（光谱、光电效应），量子化假设的基本关系式。"
    },
    "confidence": 1.0,
@@ -12843,13 +12759,10 @@
       "sym": "m"
      }
     ],
-    "symbols": [
-     "\\hbar",
-     "m",
-     "\\psi"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "求解量子体系的能级与波函数（氢原子、势阱、谐振子）。"
    },
    "confidence": 1.0,
@@ -12887,11 +12800,10 @@
       "sym": "\\hbar"
      }
     ],
-    "symbols": [
-     "\\hbar"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "估算量子体系能达到的位置/动量精度；判定经典近似的适用范围。"
    },
    "confidence": 1.0,
@@ -13131,12 +13043,10 @@
       "sym": "m"
      }
     ],
-    "symbols": [
-     "m",
-     "c"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "核算核反应与湮灭过程的能量释放；粒子物理中的质量-能量换算。"
    },
    "confidence": 1.0,
@@ -13186,13 +13096,10 @@
       "sym": "v"
      }
     ],
-    "symbols": [
-     "\\gamma",
-     "m",
-     "v"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "粒子加速器中的动量-能量换算；高速碰撞的运动学计算。"
    },
    "confidence": 1.0,
@@ -13303,13 +13210,10 @@
       "sym": "k_B"
      }
     ],
-    "symbols": [
-     "S",
-     "k_B",
-     "W"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由微观组态数估算宏观熵；统计力学与信息熵之间的桥梁。"
    },
    "confidence": 1.0,
@@ -13365,13 +13269,10 @@
       "sym": "v"
      }
     ],
-    "symbols": [
-     "v",
-     "e",
-     "k_B"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "计算平均速率与最概然速率；反应速率与蒸发过程的统计基础。"
    },
    "confidence": 1.0,
@@ -13433,14 +13334,10 @@
       "sym": "k_B"
      }
     ],
-    "symbols": [
-     "Z",
-     "e",
-     "k_B",
-     "T"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由配分函数 Z 导出内能、熵、自由能等全部热力学量。"
    },
    "confidence": 1.0,
@@ -13623,12 +13520,10 @@
       "sym": "V"
      }
     ],
-    "symbols": [
-     "P",
-     "V"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "气体等温压缩与膨胀过程的计算。"
    },
    "confidence": 1.0,
@@ -13673,12 +13568,10 @@
       "sym": "\\eta"
      }
     ],
-    "symbols": [
-     "\\eta",
-     "T"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "评估热机与发电循环的理论效率上限。"
    },
    "confidence": 1.0,
@@ -13722,12 +13615,10 @@
       "sym": "V"
      }
     ],
-    "symbols": [
-     "V",
-     "T"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "等压过程的体积-温度换算。"
    },
    "confidence": 1.0,
@@ -13771,12 +13662,10 @@
       "sym": "T"
      }
     ],
-    "symbols": [
-     "P",
-     "T"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "等容过程的压强-温度换算。"
    },
    "confidence": 1.0,
@@ -13839,15 +13728,10 @@
       "sym": "n"
      }
     ],
-    "symbols": [
-     "P",
-     "V",
-     "n",
-     "R",
-     "T"
-    ],
-    "symbols_at_commit": "6bfa751720a9eabcf6e69e4690a22af8ab7c16e5",
-    "symbols_rule_version": "s1",
+    "symbols": [],
+    "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_rule_version": "s2",
+    "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由三个状态量求第四个；化学计量与工程状态计算的基础。"
    },
    "confidence": 1.0,
