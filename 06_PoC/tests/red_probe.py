@@ -361,6 +361,38 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R20",
+        "kind": "mutate",
+        "why": ("符号回填 S2：**推导出的字形集必须等于源自己声明的字形集**。"
+                "把「优先取源声明（parquet `symbols` 列）」改成「优先取目标节点自带 symbol」，"
+                "70 条 `light_speed` 的边就会把 `c₀`（源写法）换成 `c`（策展写法）⇒ S2 必须变红。"
+                "★ 这一改读起来像「少绕一层、更直接」，只有实测集合比对能抓住它。"),
+        "file": "11_真实数据/phase61_symbol_backfill_delta.py",
+        "old": "        if is_pb:\n            key = target2key.get(tid)\n            if key and name2glyph.get(key):\n                sym, src = name2glyph[key], \"pb_symbols_column\"",
+        "new": "        if is_pb:\n            key = target2key.get(tid)\n            if False and key and name2glyph.get(key):   # redprobe: 改用策展写法（S2）\n                sym, src = name2glyph[key], \"pb_symbols_column\"",
+        "cmd": "PY 11_真实数据/phase61_symbol_backfill_delta.py --dry",
+        "cwd": ROOT,
+        "expect_red": ["S2"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R21",
+        "kind": "mutate",
+        "why": ("符号回填 Y3：**写进 symbols 的字形必须在该节点原文里出现**。"
+                "把这条判据改成恒假（`if False`）⇒ 合成图里那条「字形 q 不在 latex 中」的"
+                "违规节点不再被告发 ⇒ `--selfcheck` 的『Y3:bad 能被踩红』必须变红。"
+                "★ 用 `--selfcheck`：不依赖权威图，干净检出里也能跑（与 R17–R19 同纪律）。"),
+        "file": "06_PoC/symbol_report.py",
+        "old": "        bad = [s for s in (syms or []) if s and s not in hay]",
+        "new": "        bad = []   # redprobe: 字形可查性判据被架空（Y3）",
+        "cmd": "PY 06_PoC/symbol_report.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["Y3"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -382,7 +414,7 @@ PROBES = [
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
-                      "R17", "R18", "R19", "RN")
+                      "R17", "R18", "R19", "R20", "R21", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -642,6 +674,10 @@ def emit(rep, res):
             res["R18"][1])
     rep.add(res["R19"][0], "R19 去掉再分发折扣 ⇒ G4 必须变红（对外不得高于内部；合成图自检）",
             res["R19"][1])
+    rep.add(res["R20"][0], "R20 符号改用策展写法 ⇒ S2 必须变红（推导字形集须等于源声明）",
+            res["R20"][1])
+    rep.add(res["R21"][0], "R21 字形可查性判据被架空 ⇒ Y3 必须变红（合成图自检）",
+            res["R21"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
@@ -665,7 +701,10 @@ def main(argv=None):
         return 0
 
     node = find_node()
-    avail = {"node": bool(node), "playwright": importlib.util.find_spec("playwright") is not None}
+    # `authority` = 权威图快照在不在（它被 .gitignore 排除 ⇒ 干净检出里没有）。
+    # ★ 需要它的探针（R20）在缺失时记 SKIP，**不得**记 FAIL —— 与 R5/R6 的「外部前置缺失」同口径。
+    avail = {"node": bool(node), "playwright": importlib.util.find_spec("playwright") is not None,
+             "authority": os.path.isfile(os.path.join(ROOT, "06_PoC", "etl", "normalized.json"))}
     only = [s.strip() for s in a.only.split(",") if s.strip()]
     selected = [p for p in PROBES if not only or p["id"] in only]
     selected_ids = {p["id"] for p in selected}

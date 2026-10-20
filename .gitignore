@@ -36,6 +36,9 @@ elementkg_synthetic_corpus_40w/
 # `bash sttp.sh gradepersist`（= phase60_grade_delta.py + apply_delta）在库内确定性重算
 #（幂等：同一 commit 上复跑得到逐字节相同的 delta）。
 06_PoC/etl/neo4j/phase60_grade_delta.json
+# Phase 61：符号回填 delta（5 082 个节点 × `symbols` + `symbol_table`，**实测 3.1 MB**）⇒
+# 不入库。可由 `bash sttp.sh symbolbackfill` 在库内确定性重算（幂等、次序无关，见生成侧 S4/S5）。
+06_PoC/etl/neo4j/phase61_symbol_backfill_delta.json
 # 摄入前的自动备份 raw（每个约 16 MB，仅本地回溯用）与临时探索脚本
 11_真实数据/*.before_*.json
 11_真实数据/_*

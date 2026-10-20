@@ -51,6 +51,8 @@
 #   bash sttp.sh interpcheck [--selfcheck]          「非通过」判据自述解释器的**全链防漏网**扫描（Phase 55 D58；铁律 #92）
 #   bash sttp.sh grade [--json OUT] [--top N]       证据等级 1—5 **只读**报告 + §7 对账 G1–G4 + 落盘状态（Phase 60）
 #   bash sttp.sh gradepersist [--dry] [--apply]     证据等级**落盘**：生成 delta（默认写 delta、不落盘）→ apply_delta（--apply 才真写）
+#   bash sttp.sh symbols [--sample N] [--json OUT]  符号回填**只读**报告 + 对账 Y1–Y5（Phase 61 · M1 G1）
+#   bash sttp.sh symbolbackfill [--dry] [--apply]   符号回填：has_symbol 边 → 节点 symbols/symbol_table（零抓取）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -588,6 +590,39 @@ EOF
     else
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase60_grade_delta.json \
         --phase 60 --tag grade || exit $?
+    fi
+    ;;
+  symbols)
+    # Phase 61（M1 G1）：符号回填的**只读**报告 + 对账 Y1–Y5。
+    #   Y1 覆盖率 ／ Y2 列 == 表内字形 ／ Y3 字形在原文可查 ／ Y4 归属清晰 ／ Y5 非真空。
+    # ★ 与生成侧**不共享代码**：复用 `--selfcheck` 用合成节点验判据能被踩红（D72 家族）。
+    shift
+    "$PY" 06_PoC/symbol_report.py "$@" || exit $?
+    ;;
+  symbolbackfill)
+    # Phase 61（M1 G1）：把 `has_symbol` 边**反向聚合**成节点的 `symbols` / `symbol_table`。
+    #   零抓取：只读本地 normalized.json + physicsbabel_circuits.parquet。
+    # 两步与 gradepersist 同形：① 生成 delta（自检未过即拒绝产出）；② apply_delta（--apply 才真写）。
+    # ★ 人工值优先：落盘前就有人写 `symbols` 的节点**一律不覆盖**，差异单列待复核。
+    shift
+    require_authority symbolbackfill "$NORM_GRAPH"
+    _sb_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _sb_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成符号回填 delta =="
+    "$PY" 11_真实数据/phase61_symbol_backfill_delta.py ${_sb_args[@]+"${_sb_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qx -- "--dry"; then
+      echo "== [2/2] 跳过（--dry：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase61_symbol_backfill_delta.json \
+        --phase 61 --tag symbolbackfill --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase61_symbol_backfill_delta.json \
+        --phase 61 --tag symbolbackfill || exit $?
     fi
     ;;
   *)
