@@ -52,6 +52,156 @@ function kv(lbl, val) {
   return `<div class="detail-block"><div class="lbl">${esc(lbl)}</div><div class="val">${val}</div></div>`;
 }
 
+// ---------------------------------------------------------------------------
+// Phase 64 · M3：变量表（G1）与适用条件三态（G3）
+//
+// ★ 两处都遵守同一条纪律：**空位是信息**。
+//   没有内容时必须说清「为什么没有」，不能渲染成空白 ——
+//   空白会让用户以为是**我们漏了**，而实际可能是「这件事对它无从谈起」。
+//   这与 `whyRow` 对未识别值「显式暴露、不静默吞」是同一族。
+// ---------------------------------------------------------------------------
+
+/** `symbol_table` 条目的来源标签（G1 的核心口径：源声明 ≠ 沿边反推） */
+export const SYMBOL_SRC_LABEL = {
+  pb_symbols_column: { label: "源声明", note: "PhysicsBabel 的 symbols 列里原文给出的字形" },
+  edge_target:       { label: "沿边反推", note: "由 has_symbol 边指向的量反推 —— 不是公式原文里写明的字形" },
+};
+
+/** `symbols_unresolved`：变量表**为什么没能生成**（数据侧已给出原因，前端不得丢弃） */
+export const SYMBOL_UNRESOLVED_LABEL = {
+  no_has_symbol_edge:   "这条公式在图里没有 <code>has_symbol</code> 边 ⇒ 无从得知它用了哪些量。",
+  targets_carry_no_glyph: "边指向的量没有字形 ⇒ 知道涉及哪个量，但不知道原文里写成什么符号。",
+  glyphs_only_from_edges: "没有源声明字形，表中符号<b>全部</b>由边反推得到。",
+};
+
+/**
+ * `applicability_status` 三态（G3）：语义各不相同，**不得合并显示**。
+ *
+ * ★ `note` 是 **HTML 片段**（含 `<b>`），直接插入不转义 —— 它来自代码常量，非用户数据。
+ *   第一版把 `**加粗**` 写在里面，结果星号原样显示在详情卡上（详情卡是 HTML，不跑 Markdown）。
+ */
+export const APPLICABILITY_STATE = {
+  extracted: {
+    label: "已抽取", cls: "ok",
+    note: "从原文里抽到了适用条件，每条都附原文片段可核验。",
+  },
+  no_referent: {
+    label: "无指称", cls: "",
+    note: "这条公式是把基本量纲拼出来的<b>齐次合成式</b>，不对应具体物理过程 ⇒ "
+        + "<b>谈不上</b>适用条件。这不是「漏抽」：抽不出来是因为它本来就没有指称对象。",
+  },
+  not_extracted: {
+    label: "未抽出", cls: "warn",
+    note: "这条公式<b>有</b>自然语言说明，但没从里面抽出适用条件 —— "
+        + "属于<b>待办</b>，与「无指称」不是一回事。",
+  },
+};
+
+/**
+ * 拆 `symbol_table` 条目的「符号 / 量名」。
+ *
+ * 数据里有两种形态（实测：无括号 24,111 / 有括号 191）：
+ *   · PB 侧    `{sym:"m",   quantity:"Mass"}`         → 符号与量名分列存
+ *   · 策展侧   `{sym:"P",   quantity:"P (pressure)"}`  → quantity 把符号和量名拼在一起
+ * 另有 20 条 `sym` 为 null（`{sym:null, quantity:"Q (charge)"}`）——
+ * 此时符号只能从 quantity 括号前取，**不能留空**。
+ */
+export function splitSymbolQuantity(entry) {
+  const q = String((entry && entry.quantity) || "").trim();
+  const m = /^(.+?)\s*\(([^)]+)\)\s*$/.exec(q);
+  const symRaw = String((entry && entry.sym) || "").trim();
+  if (m) {
+    return { sym: symRaw || m[1].trim(), qty: m[2].trim(), symFromQuantity: !symRaw };
+  }
+  return { sym: symRaw, qty: q, symFromQuantity: false };
+}
+
+/** 变量表区块；无表且无「为什么没有」时返回 ""（不是渲染成空行） */
+export function symbolTableBlock(attrs) {
+  const a = attrs || {};
+  const tbl = Array.isArray(a.symbol_table) ? a.symbol_table.filter(Boolean) : [];
+
+  // 无表：若数据侧说明了原因，就把原因显示出来 —— 「没抽到」与「无从谈起」是两件事，
+  // 整行消失会让用户以为是我们漏了（G3 同一条纪律，用在变量表上）。
+  if (!tbl.length) {
+    const why = SYMBOL_UNRESOLVED_LABEL[a.symbols_unresolved];
+    if (!why) return "";
+    return `<div class="detail-block"><div class="lbl">变量表 `
+         + `<span class="pill warn">未生成</span></div>`
+         + `<div class="val"><span class="note">${why}</span></div></div>`;
+  }
+
+  const rows = tbl.map((e) => splitSymbolQuantity(e));
+  const nEdge = tbl.filter((e) => e.src === "edge_target").length;
+  const nDecl = tbl.length - nEdge;
+
+  const head = `<span class="pill">${tbl.length} 个符号</span>`
+    + (nDecl ? ` <span class="pill">源声明 ${nDecl}</span>` : "")
+    + (nEdge ? ` <span class="pill warn">沿边反推 ${nEdge}</span>` : "");
+
+  const body = tbl.map((e, i) => {
+    const { sym, qty } = rows[i];
+    const src = SYMBOL_SRC_LABEL[e.src];
+    // 源声明是常态 ⇒ 不打扰；沿边反推是例外 ⇒ 标出来（G1 的整条纪律都在这一个 pill 上）
+    const srcPill = (e.src === "edge_target")
+      ? ` <span class="pill warn" title="${esc(src ? src.note : "来源未知")}">${esc(src ? src.label : e.src)}</span>`
+      : (src ? "" : ` <span class="pill err" title="未识别的来源值 —— 显式暴露，不静默当空">${esc(String(e.src))}</span>`);
+    const symCell = sym
+      ? `<code class="sym">${esc(sym)}</code>`
+      : `<code class="sym missing" title="该条目没有字形（sym 为空，且 quantity 无括号可拆）">—</code>`;
+    return `<div class="symrow">${symCell}<span class="qty">${qty ? esc(qty) : '<span class="note">（未标明指称的量）</span>'}</span>`
+         + `<span class="symsrc">${srcPill}</span></div>`;
+  }).join("");
+
+  // 全反推时额外说明：否则用户看到「沿边反推 5」会以为是混合，其实一个都没源声明
+  const allEdge = (nEdge === tbl.length) ? SYMBOL_UNRESOLVED_LABEL.glyphs_only_from_edges : "";
+  const note = allEdge
+    || "「源声明」= 公式原文写明的字形；「沿边反推」= 由 <code>has_symbol</code> 边指向的量反推，"
+     + "原文里未必有该字形。";
+
+  return `<div class="detail-block"><div class="lbl">变量表 ${head}</div>`
+       + `<div class="val symtab">${body}</div>`
+       + `<div class="note">${note}</div></div>`;
+}
+
+/** 适用条件区块；三态各有措辞，未知值显式暴露 */
+export function applicabilityBlock(attrs) {
+  const st = (attrs || {}).applicability_status;
+  if (!st) return "";                      // 非公式节点 / 老数据：不渲染（不是渲染成空）
+  const meta = APPLICABILITY_STATE[st];
+  // `meta.note` 含 `<b>`：正文直接插入（代码常量，安全）；`title` 属性里必须去标签
+  const plain = (s) => String(s || "").replace(/<[^>]+>/g, "");
+  const label = `<div class="lbl">适用条件 `
+    + `<span class="pill ${meta ? meta.cls : "err"}" title="${esc(meta ? plain(meta.note) : "未识别的状态值")}">`
+    + `${esc(meta ? meta.label : "未知状态")}</span></div>`;
+
+  if (!meta) {
+    return `<div class="detail-block">${label}<div class="val">`
+      + `<code>applicability_status = ${esc(String(st))}</code>`
+      + `<div class="note">前端未识别的状态值 —— <b>显式暴露，不静默当空</b>。`
+      + `若数据侧新增了状态，这里要同步补标签。</div></div></div>`;
+  }
+
+  if (st === "extracted") {
+    const items = Array.isArray(attrs.applicability) ? attrs.applicability.filter(Boolean) : [];
+    const evs = Array.isArray(attrs.applicability_evidence) ? attrs.applicability_evidence.filter(Boolean) : [];
+    const evOf = (term) => evs.find((e) => e && e.term === term) || null;
+    const body = items.map((t) => {
+      const ev = evOf(t);
+      // 出处必须可见：项目纪律是「有值必有据」，条件是从哪句话里读出来的要摆给读者
+      const cite = ev
+        ? `<div class="note">出处：<code>${esc(ev.field || "?")}</code>「${esc(ev.snippet || "")}」</div>`
+        : `<div class="note">（该条件没有附出处 —— 这正是可追溯性的缺口，不应被隐藏）</div>`;
+      return `<div class="appitem"><span class="appterm">${esc(t)}</span>${cite}</div>`;
+    }).join("");
+    return `<div class="detail-block">${label}<div class="val">${body}</div>`
+         + `<div class="note">${meta.note}</div></div>`;
+  }
+
+  return `<div class="detail-block">${label}<div class="val"><span class="note">${meta.note}</span>`
+       + `</div></div>`;
+}
+
 /** 渲染一个节点到右栏（保留 MathJax 公式渲染、ghost 标注、置信度） */
 export function renderNodeDetail(el, node, opts = {}) {
   if (!el) return;
@@ -69,7 +219,18 @@ export function renderNodeDetail(el, node, opts = {}) {
            + (opts.ghost ? '<span class="badge">外部节点</span>' : "")
            + `</div>`);
   parts.push(kv("id", `<code>${esc(n.id)}</code>`));
-  if (n.domain) parts.push(kv("domain", esc(n.domain)));
+  // `domain` 由 `project_node` 提到节点顶层；同时兜住只写在 attrs 里的情况 ——
+  // 少了这个兜底，投影层一旦漏提该字段，学科与跨域标签就整行消失而无人察觉。
+  const domMain = n.domain || attrs.domain;
+  if (domMain) {
+    // Phase 62：`domain` 已落到二级学科，`domain_tags` 存全标签（跨域 84.3%）。
+    // 只显示主标签会把「这条公式其实横跨两个学科」藏起来；`domain_tags` 含主标签本身，
+    // 故先剔除再当「其余标签」显示。
+    const tags = (Array.isArray(attrs.domain_tags) ? attrs.domain_tags : [])
+      .filter((t) => t && t !== domMain);
+    parts.push(kv("domain", esc(domMain)
+      + (tags.length ? ` <span class="pill" title="该公式同时涉及这些学科 —— 合成式天生跨域，不是错分">跨域 ${tags.length}：${esc(tags.join(" / "))}</span>` : "")));
+  }
   if (typeof n.confidence === "number") parts.push(kv("置信度", esc(n.confidence)));
   const lv = attrs.verification_level || n.verification_level;
   if (lv) parts.push(kv("验证档", badgeOf(lv)));
@@ -78,6 +239,15 @@ export function renderNodeDetail(el, node, opts = {}) {
     parts.push(kv("公式（LaTeX）",
       `<div id="mj" class="latex">\\[${esc(n.formula || attrs.latex)}\\]</div>`
       + `<button class="toolbtn" id="btn-copy-latex" data-tex="${esc(n.formula || attrs.latex)}">复制 LaTeX</button>`));
+  }
+  // ★ Phase 64 · M3：变量表紧跟公式（先看到式子、再看到每个符号是什么），
+  //   适用条件紧随其后（什么时候能用）。两者都可能在数据里缺席 ——
+  //   缺席时**不渲染该行**，而「有状态但无内容」时必须写明原因（函数内处理）。
+  {
+    const symBlock = symbolTableBlock(attrs);
+    if (symBlock) parts.push(symBlock);
+    const appBlock = applicabilityBlock(attrs);
+    if (appBlock) parts.push(appBlock);
   }
   // ★ Phase 54：公式元数据 4 行（发现时间 / 发现人 / 公式介绍 / 使用描述）。
   //   渲染规则（用户确认）：
