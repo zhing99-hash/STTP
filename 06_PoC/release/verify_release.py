@@ -43,6 +43,7 @@ import hashlib
 import importlib
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -107,6 +108,60 @@ def check_manifest(rep, manifest):
     ok = bool(arts)
     rep.add(ok, "A0 manifest 含样例产物", "样例条目 %d 个" % len(arts))
     return arts
+
+
+_VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.\-]+))?$")
+
+
+def check_release_meta(rep, manifest):
+    """A0b–A0d 版本元数据**三处独立来源**交叉一致（Phase 66 · RC1）。
+
+    ★ 为什么这条断言必须存在：`release.phase` 曾**硬编码 37**，连续漂移 28 个开发阶段
+      无人发现 —— 因为本脚本**从来不读它**。没有判据的字段不是"低优先级"，
+      是**必然会说谎的字段**（通律③：判据范围宽一格就等于恒真）。
+    ★ 为什么是"三处"而不是"两处"：只比 `manifest` 与 `VERSION` 会留下"一起改"的缝；
+      再加**产物文件名**（`graph_data_phaseN.json`）这一处**由构建产生、不随改字而变**的证据，
+      才能把「清单里写的阶段」与「数据实际由哪个阶段导出」钉在一起。
+    ★ 判据一律用**绝对量**（逐字相等 / 整数相等），不用增量：
+      增量在二次运行会假警报（通律②）。
+    """
+    rel = manifest.get("release") or {}
+    vpath = os.path.join(ROOT, "VERSION")
+    if not os.path.exists(vpath):
+        # ★ 不是 SKIP：VERSION 是发布必备元数据，缺了就是不能发布（fail-closed）
+        rep.add(False, "A0b 版本号与 VERSION 一致",
+                "缺少 %s（发布必备；缺失不得降级为 WARN）" % os.path.relpath(vpath, ROOT))
+        return
+    raw = open(vpath, encoding="utf-8").read().strip()
+    m = _VERSION_RE.match(raw)
+    if not m:
+        rep.add(False, "A0b 版本号与 VERSION 一致",
+                "VERSION 内容 `%s` 不符合 `MAJOR.MINOR.PATCH[-PRE]`" % raw)
+        return
+    got = rel.get("version")
+    rep.add(got == raw, "A0b 版本号与 VERSION 一致",
+            "manifest %s ／ VERSION %s" % (got, raw))
+
+    minor = int(m.group(2))
+    rep.add(rel.get("phase") == minor, "A0c 开发阶段 == VERSION 的 MINOR",
+            "manifest.phase=%s ／ VERSION.%s ⇒ %d"
+            % (rel.get("phase"), raw, minor))
+
+    snap = ((manifest.get("artifacts") or {}).get("full") or {}).get("snapshot") or {}
+    spath = snap.get("path") or ""
+    fm = re.search(r"phase(\d+)\.json$", os.path.basename(spath))
+    if not spath:
+        # 未登记快照 ⇒ **本段测不到**（干净 clone 上属正常）：不写 PASS 冒充测过
+        #   （铁律 #20：SKIP ≠ PASS）。快照是否存在由 H1/H1b 负责，不在这里重复判定。
+        return
+    if not fm:
+        rep.add(False, "A0d 快照阶段与清单一致",
+                "快照文件名 `%s` 不含 phaseN，无法交叉验证" % os.path.basename(spath))
+        return
+    real = int(fm.group(1))
+    rep.add(rel.get("snapshot_phase") == real, "A0d 快照阶段与清单一致",
+            "manifest.snapshot_phase=%s ／ 文件名 phase%d"
+            % (rel.get("snapshot_phase"), real))
 
 
 def check_artifacts(rep, arts):
@@ -426,6 +481,7 @@ def main(argv=None) -> int:
 
     rep = Report()
     arts = check_manifest(rep, manifest)
+    check_release_meta(rep, manifest)      # ★ A0b–A0d：VERSION / manifest / 快照文件名 三处交叉
     check_artifacts(rep, arts)
     norm, view = load_sample()
     check_counts(rep, arts, norm, view)

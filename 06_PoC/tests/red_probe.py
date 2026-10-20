@@ -492,6 +492,46 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R27",
+        "kind": "mutate",
+        "why": ("RC1 · A0c：`release.phase` 曾**硬编码 37** 并连续漂移 28 个开发阶段无人发现 —— "
+                "因为 `verify_release` 从来不读它。**没有判据的字段不是低优先级，"
+                "是必然会说谎的字段。** 本探针把 manifest 的开发阶段改小 1 ⇒ A0c 必须红。"
+                "★ 为什么改 manifest 而不是改 VERSION：VERSION 是**事实源**，"
+                "改它等于换掉了被测对象的前提（测出来的是「文件不同」，不是「判据有效」）；"
+                "改**清单**才是模拟「清单与事实源漂移」这个真实故障形状。"
+                "★ 锚点会随版本号漂移而失效：`anchor_report()` 在开跑前静态检查全表锚点，"
+                "命中 ≠ 1 次会**大声报错**（#74），不会静默；届时随 VERSION 一起改这一行。"),
+        "file": "06_PoC/release/manifest.json",
+        "old": '  "phase": 65,',
+        # ★ 注入值必须是**合法 JSON**：第一版写成 `"phase": 64,   # 注释`，
+        #   清单当场解析失败 ⇒ verify 走 RC=3（manifest 不可读）而不是 A0c 变红，
+        #   探针报「注入缺陷后没变红」—— **测到的是解析器，不是判据**。
+        "new": '  "phase": 64,',
+        "cmd": "PY 06_PoC/release/verify_release.py",
+        "cwd": ROOT,
+        "expect_red": ["A0c"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R28",
+        "kind": "mutate",
+        "why": ("RC1 · A0d：第三条独立来源是**产物文件名**（`graph_data_phase41.json`）—— "
+                "它由构建产生、不随改字而变。把清单里的 `snapshot_phase` 改错 ⇒ A0d 必须红。"
+                "★ 为什么这一条与 R27 分开：两条断言咬的是**不同的一对来源**"
+                "（清单↔VERSION / 清单↔产物名）。只测前者，"
+                "「清单与数据实际由哪个阶段导出」这层仍然无人校验（通律③）。"),
+        "file": "06_PoC/release/manifest.json",
+        "old": '  "snapshot_phase": 41,',
+        "new": '  "snapshot_phase": 40,',
+        "cmd": "PY 06_PoC/release/verify_release.py",
+        "cwd": ROOT,
+        "expect_red": ["A0d"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -514,7 +554,7 @@ PROBES = [
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
-                      "R24", "R25", "R26", "RN")
+                      "R24", "R25", "R26", "R27", "R28", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -788,6 +828,10 @@ def emit(rep, res):
             res["R25"][1])
     rep.add(res["R26"][0], "R26 断言改回裸 print ⇒ LIN16 ⑩ 自指必须变红（D71 的回归守卫）",
             res["R26"][1])
+    rep.add(res["R27"][0], "R27 清单开发阶段与 VERSION 漂移 ⇒ A0c 必须变红（RC1 版本元数据守卫）",
+            res["R27"][1])
+    rep.add(res["R28"][0], "R28 清单快照阶段与产物文件名不符 ⇒ A0d 必须变红（第三条来源）",
+            res["R28"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

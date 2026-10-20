@@ -63,6 +63,10 @@ SAMPLE_DIR = os.path.join(HERE, "sample")
 LOCK = os.path.join(ROOT, "requirements.lock")
 PYPROJECT = os.path.join(ROOT, "pyproject.toml")
 DIST = os.path.join(ROOT, "dist")
+VERSION_FILE = os.path.join(ROOT, "VERSION")
+
+# 版本号形状：`MAJOR.MINOR.PATCH[-PRE]`。MINOR 即**开发阶段号**（Phase N ⇒ 0.N.0）。
+_VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.\-]+))?$")
 
 # 需要登记为「发布产物」的文件 —— ★ 派生自**唯一事实源**（Phase 55 · D64 / #88）。
 #   原先这里是一份**手工副本**，与 `make_sample.py` 里三处字面量构成"两处各写一套、
@@ -138,6 +142,32 @@ def read_requires_python() -> tuple:
         return None, "pyproject.toml 未声明 requires-python"
     except Exception as e:                                                       # noqa: BLE001
         return None, "pyproject.toml 不可解析：%s" % e
+
+
+class VersionError(RuntimeError):
+    """`VERSION` 缺失或不可解析。**不得降级为 "unknown"**（见 `read_version` 注释）。"""
+
+
+def read_version() -> dict:
+    """从仓库根的 `VERSION`（唯一事实源）解析版本号。
+
+    ★ 为什么必须有一个文件来当唯一事实源：`release.phase` 原本**硬编码 `37`**，
+      连续漂移 28 个开发阶段没人发现 —— 因为 `verify_release.py` **从不读它**。
+      没有判据的字段不是"低优先级"，是**必然会说谎的字段**（通律：宽一格的判据恒真）。
+      现在三处独立来源（VERSION 文件 / manifest / 快照产物文件名）由 `verify_release`
+      交叉断言，任意一处漂移必红。
+    ★ 缺失或格式不符 ⇒ 抛 `VersionError`（fail-closed），不写 "unknown"：
+      清单的用途是让第三人对得上账，一个假版本号比没有更糟。
+    """
+    if not os.path.exists(VERSION_FILE):
+        raise VersionError("缺少 %s（版本号唯一事实源；内容形如 `0.65.0-rc1`）"
+                           % os.path.relpath(VERSION_FILE, ROOT))
+    raw = open(VERSION_FILE, encoding="utf-8").read().strip()
+    m = _VERSION_RE.match(raw)
+    if not m:
+        raise VersionError("VERSION 内容 `%s` 不符合 `MAJOR.MINOR.PATCH[-PRE]`" % raw)
+    return {"version": raw, "major": int(m.group(1)), "minor": int(m.group(2)),
+            "patch": int(m.group(3)), "prerelease": m.group(4) or ""}
 
 
 def resolve_snapshot(explicit: str | None) -> str | None:
@@ -351,6 +381,14 @@ def main(argv=None) -> int:
     ap.add_argument("--out", default=MANIFEST)
     a = ap.parse_args(argv)
 
+    # ---- 版本号前置断言（fail-closed，先于一切计算）----
+    #   ★ 早失败：版本号读不到就不该先跑几分钟仪器再报错。
+    try:
+        ver = read_version()
+    except VersionError as e:
+        print("  ❌ 版本号不可用（fail-closed，不写清单）：%s" % e)
+        return 2
+
     # ---- 洁净度前置断言（唯一实现；E21 残余）----
     porcelain, allow_dirty, dirty = dirty_report(a.allow_dirty)
     if a.check_dirty:
@@ -512,12 +550,27 @@ def main(argv=None) -> int:
     if dirty and not allow_dirty:
         print_dirty_refusal(porcelain)
         return 2
+
+    # 快照的**生成阶段**（数据侧）与**开发阶段**（代码侧）是两个不同的数，不得混用：
+    #   * `phase`         = VERSION 的 MINOR（当前开发到第几个 Phase）
+    #   * `snapshot_phase`= 快照文件名里的 phaseN（这份数据由哪个阶段的管线导出）
+    # 原实现把 `phase` 硬编码 37 且不校验 ⇒ 连续漂移 28 个阶段无人发现（见 `read_version`）。
+    snap_phase = None
+    if snap:
+        _m = re.search(r"phase(\d+)\.json$", os.path.basename(snap))
+        snap_phase = int(_m.group(1)) if _m else None
+
     manifest = {
         "schema": "sttp-release-manifest/v1",
         "release": {
             "name": "STTP 研究快照",
-            "phase": 37,
+            "version": ver["version"],
+            "phase": ver["minor"],
+            "snapshot_phase": snap_phase,
             "created": created,
+            "phase_note": ("`phase`=VERSION 的 MINOR（开发阶段，唯一事实源 VERSION 文件）；"
+                           "`snapshot_phase`=完整快照文件名里的阶段（数据导出阶段，可为 null）。"
+                           "两者由 verify_release 交叉校验，漂移即 FAIL。"),
             "positioning": "路线 A：研究原型（收敛版）—— 可复现研究 / 真实跨学科任务 / 方法比较",
             "code_license": "Apache-2.0",
             "data_license_doc": "DATA_LICENSES.md",
@@ -587,6 +640,8 @@ def main(argv=None) -> int:
     print("  发布清单（Phase 37 · R06）")
     print("=" * 70)
     print("  写入        : %s" % os.path.relpath(a.out, ROOT).replace("\\", "/"))
+    print("  版本        : %s（开发阶段 %d ／ 数据快照阶段 %s）"
+          % (ver["version"], ver["minor"], snap_phase if snap_phase is not None else "—"))
     print("  git HEAD    : %s%s" % (manifest["code"]["git_head_at_build_short"],
                                    "（生成时工作区另有未提交改动）" if dirty else ""))
     for fn, info in artifacts["sample"].items():
