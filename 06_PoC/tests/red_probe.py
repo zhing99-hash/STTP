@@ -393,6 +393,38 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R22",
+        "kind": "mutate",
+        "why": ("学科分类 S3：**人工已有细分的 89 个节点绝不覆盖**。"
+                "把「人工值优先」这条短路掉 ⇒ 那 89 个（math.DG / chem.acidbase …）"
+                "会被规则重算覆盖成派生值 ⇒ S3 必须变红。"
+                "★ 这一改读起来像「统一口径、更一致」，只有实测逐条比对能抓住它。"),
+        "file": "11_真实数据/phase62_domain_delta.py",
+        "old": "    if (not managed) and cur and cur != \"phys\":\n        return cur, [cur], None, \"curated\", None",
+        "new": "    if False and (not managed) and cur and cur != \"phys\":   # redprobe: 人工值不再优先（S3）\n        return cur, [cur], None, \"curated\", None",
+        "cmd": "PY 11_真实数据/phase62_domain_delta.py --dry",
+        "cwd": ROOT,
+        "expect_red": ["S3"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R23",
+        "kind": "mutate",
+        "why": ("学科分类 Y3：**`domain_tags` 换算的领域组必须等于 dim_exponents 重算的**。"
+                "把这条判据改成恒假（`if False`）⇒ 合成图里那条「标签说 em、参与量只有 mass」的"
+                "违规节点不再被告发 ⇒ `--selfcheck` 的『Y3:bad 能被踩红』必须变红。"
+                "★ 用 `--selfcheck`：不依赖权威图，干净检出里也能跑（与 R17–R19/R21 同纪律）。"),
+        "file": "06_PoC/domain_report.py",
+        "old": "            if g_tag != g_dim:\n                problems[\"Y3\"].append(n[\"id\"])",
+        "new": "            if False and g_tag != g_dim:   # redprobe: 参与量一致性判据被架空（Y3）\n                problems[\"Y3\"].append(n[\"id\"])",
+        "cmd": "PY 06_PoC/domain_report.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["Y3"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -414,7 +446,7 @@ PROBES = [
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
-                      "R17", "R18", "R19", "R20", "R21", "RN")
+                      "R17", "R18", "R19", "R20", "R21", "R22", "R23", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -678,6 +710,10 @@ def emit(rep, res):
             res["R20"][1])
     rep.add(res["R21"][0], "R21 字形可查性判据被架空 ⇒ Y3 必须变红（合成图自检）",
             res["R21"][1])
+    rep.add(res["R22"][0], "R22 人工已有细分不再优先 ⇒ S3 必须变红（89 个 curated 不得被覆盖）",
+            res["R22"][1])
+    rep.add(res["R23"][0], "R23 参与量一致性判据被架空 ⇒ Y3 必须变红（合成图自检）",
+            res["R23"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

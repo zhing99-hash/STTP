@@ -53,6 +53,8 @@
 #   bash sttp.sh gradepersist [--dry] [--apply]     证据等级**落盘**：生成 delta（默认写 delta、不落盘）→ apply_delta（--apply 才真写）
 #   bash sttp.sh symbols [--sample N] [--json OUT]  符号回填**只读**报告 + 对账 Y1–Y5（Phase 61 · M1 G1）
 #   bash sttp.sh symbolbackfill [--dry] [--apply]   符号回填：has_symbol 边 → 节点 symbols/symbol_table（零抓取）
+#   bash sttp.sh domains [--sample N] [--json OUT]  学科分类**只读**报告 + 对账 Y1–Y6（Phase 62 · M1 G2）
+#   bash sttp.sh domainbackfill [--dry] [--apply]   学科分类：pb_domains ⇄ 参与量双路径互校验（纯规则，零抓取）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -623,6 +625,41 @@ EOF
     else
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase61_symbol_backfill_delta.json \
         --phase 61 --tag symbolbackfill || exit $?
+    fi
+    ;;
+  domains)
+    # Phase 62（M1 G2）：学科分类的**只读**报告 + 对账 Y1–Y6。
+    #   Y1 覆盖率 ／ Y2 主标签 ∈ 全标签 ／ Y3 与参与量一致 ／ Y4 归属清晰 ／ Y5 非真空 ／
+    #   Y6 反循环（判级模型不得读 props.domain）+ 学科大类未改坏。
+    # ★ 与生成侧**不共享代码**（映射表在报告里独立抄写一遍）—— 避免「用同一段代码验自己」。
+    shift
+    "$PY" 06_PoC/domain_report.py "$@" || exit $?
+    ;;
+  domainbackfill)
+    # Phase 62（M1 G2）：`domain` 二级学科分类（纯规则，零抓取）。
+    #   两条路径互校验：源声明（pb_domains）⇄ 参与量（dim_exponents + 手工映射表），
+    #   侦察已验证两者应集合相等 5000/5000；不等则 S2 红、拒绝产出。
+    # ★ 不强行消歧：5,000 个量纲合成式天生跨域，`domain` 存主标签、`domain_tags` 存全标签。
+    # ★ 人工值优先：已有细分的 89 个（curated_seed / mathxiv）只补字段、不改值。
+    shift
+    require_authority domainbackfill "$NORM_GRAPH"
+    _db_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _db_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成学科分类 delta =="
+    "$PY" 11_真实数据/phase62_domain_delta.py ${_db_args[@]+"${_db_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qx -- "--dry"; then
+      echo "== [2/2] 跳过（--dry：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase62_domain_delta.json \
+        --phase 62 --tag domainbackfill --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase62_domain_delta.json \
+        --phase 62 --tag domainbackfill || exit $?
     fi
     ;;
   *)
