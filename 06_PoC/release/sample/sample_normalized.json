@@ -10648,6 +10648,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.972539",
     "description": "ATP 水解为 ADP 与无机磷酸的化学计量式，该反应释放约 30.5 kJ/mol 的自由能。",
@@ -10703,6 +10704,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.972539",
     "description": "绿色植物以光能为驱动，把二氧化碳与水合成为葡萄糖并释放氧气的总化学计量式。",
@@ -10886,6 +10888,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "description": "反应速率常数随温度呈指数增长，指数项由活化能与温度之比决定。",
@@ -10950,6 +10953,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "description": "任意组成下的反应自由能 = 标准自由能 + 反应商的对数修正项。",
@@ -11008,6 +11012,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "description": "标准反应自由能与平衡常数之间的定量关系，把「能否自发」与「平衡位置」连起来。",
@@ -11060,6 +11065,25 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "缓冲溶液",
+     "弱酸"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "informal",
+      "snippet": "缓冲溶液 pH 计算式，同样建立在对数之上。",
+      "term": "缓冲溶液"
+     },
+     {
+      "field": "description",
+      "snippet": "缓冲溶液的 pH 由弱酸的 pKa 与共轭碱/酸浓度之比决定",
+      "term": "弱酸"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "description": "缓冲溶液的 pH 由弱酸的 pKa 与共轭碱/酸浓度之比决定。",
@@ -11108,6 +11132,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "description": "电极电势随离子浓度（活度）偏离标准态而变化的关系式。",
@@ -11160,6 +11185,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "description": "pH 定义为氢离子活度（浓度）的负常用对数。",
@@ -11210,6 +11236,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.662433",
     "description": "pOH 定义为氢氧根离子浓度的负常用对数。",
@@ -11463,6 +11490,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:33.661781",
     "description": "合外力对时间的累积（冲量）等于动量的变化量。",
@@ -11509,6 +11537,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:33.661781",
     "description": "动量定义质量与速度之积，是描述运动「多少」的矢量。",
@@ -11561,6 +11590,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:33.661781",
     "description": "恒力沿位移方向所做的功等于力与位移之积。",
@@ -12040,6 +12070,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
     "description": "载流导线在周围空间产生的磁感应强度与电流成正比、与距离成反比。",
@@ -12097,6 +12128,25 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "静止",
+     "点电荷"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "两静止点电荷间的作用力与电荷量之积成正比、",
+      "term": "静止"
+     },
+     {
+      "field": "description",
+      "snippet": "两静止点电荷间的作用力与电荷量之积成正比、与距离",
+      "term": "点电荷"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
     "description": "两静止点电荷间的作用力与电荷量之积成正比、与距离平方成反比。",
@@ -12145,6 +12195,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
     "description": "回路中的感应电动势等于磁通量变化率的负值。",
@@ -12193,6 +12244,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "真空"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "面上的电通量等于其所包围的电荷量除以真空介电常数。",
+      "term": "真空"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
     "description": "闭合曲面上的电通量等于其所包围的电荷量除以真空介电常数。",
@@ -12238,6 +12302,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
     "description": "带电粒子在电磁场中所受的力 = 电场力 + 速度叉乘磁场的力。",
@@ -12304,6 +12369,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "导体"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "导体两端的电压与流过的电流成正比，比例常",
+      "term": "导体"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.257304",
     "description": "导体两端的电压与流过的电流成正比，比例常数为电阻。",
@@ -12702,6 +12780,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
     "description": "质量与能量等价，静止质量对应的能量为质量乘光速平方。",
@@ -12754,6 +12833,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
     "description": "物体所受的合力等于其质量与加速度的乘积。",
@@ -12806,6 +12886,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
     "description": "动能等于质量与速度平方乘积的一半。",
@@ -12858,6 +12939,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "description": "元素的性质随原子序数（当时为原子量）呈周期性变化。",
@@ -12891,6 +12973,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "description": "pH 定义为氢离子浓度的负常用对数，用于统一表征酸碱性。",
@@ -13101,6 +13184,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.330252",
     "description": "把 e、i、π、1、0 五个基本常数联系成一个等式：e^{iπ} + 1 = 0。",
@@ -13153,6 +13237,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.330252",
     "description": "两数乘积的对数等于两数对数之和，把乘法运算化为加法。",
@@ -13325,6 +13410,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "两整数同余当且仅当它们的差能被模数整除。",
@@ -13389,6 +13475,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "互素"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "一组两两互素的模数下，同余方程组存在唯一的最小正",
+      "term": "互素"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "一组两两互素的模数下，同余方程组存在唯一的最小正解。",
@@ -13441,6 +13540,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "两数的最大公约数等于较小数与两数相除所得余数的最大公约数，可迭代归约。",
@@ -13493,6 +13593,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "互素"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "与模数互素的整数 a，其 φ(n) 次幂模 n",
+      "term": "互素"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "与模数互素的整数 a，其 φ(n) 次幂模 n 恒等于 1。",
@@ -13563,6 +13676,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "素数"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "informal",
+      "snippet": "欧拉定理在 n 为素数时的特例（φ(p)=p−1）。",
+      "term": "素数"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "对素数 p，任意整数 a 的 p 次幂与 a 本身模 p 同余。",
@@ -13621,6 +13747,25 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "素数",
+     "大于 1"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "informal",
+      "snippet": "任一大于 1 的整数可唯一分解为素数幂之积。",
+      "term": "素数"
+     },
+     {
+      "field": "informal",
+      "snippet": "任一大于 1 的整数可唯一分解为素数幂之积。",
+      "term": "大于 1"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "每个大于 1 的整数都能唯一地分解为素数的乘积（不计顺序）。",
@@ -13667,6 +13812,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "模 n 的剩余类中与 n 互素者，对乘法构成一个群。",
@@ -13719,6 +13865,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "素数"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "informal",
+      "snippet": "p 为素数的充要条件：(p−1)! ≡ −1 ",
+      "term": "素数"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-10-09T08:54:02.922912",
     "description": "p 是素数当且仅当 (p-1) 的阶乘与 -1 模 p 同余。",
@@ -13855,6 +14014,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "完全燃烧"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "烃 CₓHᵧ 完全燃烧时生成 x 个二氧化碳与 y/2 个",
+      "term": "完全燃烧"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:34.178105",
     "description": "烃 CₓHᵧ 完全燃烧时生成 x 个二氧化碳与 y/2 个水分子。",
@@ -14136,6 +14308,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.752388",
     "description": "粒子的物质波波长等于普朗克常数除以其动量。",
@@ -14182,6 +14355,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.752388",
     "description": "光电子的最大动能等于光子能量减去材料的逸出功。",
@@ -14233,6 +14407,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.752388",
     "description": "光子的能量与其频率成正比，比例常数为普朗克常数。",
@@ -14279,6 +14454,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "定态"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "定态波函数所满足的本征方程，本征值即体系",
+      "term": "定态"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.752388",
     "description": "定态波函数所满足的本征方程，本征值即体系允许的能级。",
@@ -14330,6 +14518,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:47.752388",
     "description": "位置与动量的不确定度之积不小于约化普朗克常数的一半。",
@@ -14522,6 +14711,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.244844",
     "description": "物体的静止质量与其蕴含的能量等价，换算系数为光速的平方。",
@@ -14568,6 +14758,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.244844",
     "description": "高速运动物体的动量等于洛伦兹因子乘质量乘速度。",
@@ -14667,6 +14858,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
     "description": "熵与微观状态数的对数成正比，比例常数为玻尔兹曼常数。",
@@ -14719,6 +14911,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "理想气体"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "理想气体分子速率的分布函数，呈先升后降的非对",
+      "term": "理想气体"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
     "description": "理想气体分子速率的分布函数，呈先升后降的非对称峰。",
@@ -14776,6 +14981,7 @@
     "Entity"
    ],
    "props": {
+    "applicability_status": "not_extracted",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.450035",
     "description": "对各能级按玻尔兹曼因子求和所得的总和，编码体系的全部统计信息。",
@@ -14948,6 +15154,31 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "恒温下",
+     "理想气体",
+     "等温"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "恒温下理想气体的压强与体积成反比。",
+      "term": "恒温下"
+     },
+     {
+      "field": "description",
+      "snippet": "恒温下理想气体的压强与体积成反比。",
+      "term": "理想气体"
+     },
+     {
+      "field": "usage",
+      "snippet": "气体等温压缩与膨胀过程的计算。",
+      "term": "等温"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
     "description": "恒温下理想气体的压强与体积成反比。",
@@ -14993,6 +15224,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "两个热源"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "工作在两个热源之间的热机，其效率上限由两热源的温度",
+      "term": "两个热源"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
     "description": "工作在两个热源之间的热机，其效率上限由两热源的温度比决定。",
@@ -15039,6 +15283,31 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "恒压下",
+     "理想气体",
+     "等压"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "恒压下理想气体的体积与绝对温度成正比。",
+      "term": "恒压下"
+     },
+     {
+      "field": "description",
+      "snippet": "恒压下理想气体的体积与绝对温度成正比。",
+      "term": "理想气体"
+     },
+     {
+      "field": "usage",
+      "snippet": "等压过程的体积-温度换算。",
+      "term": "等压"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
     "description": "恒压下理想气体的体积与绝对温度成正比。",
@@ -15084,6 +15353,31 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "恒容下",
+     "理想气体",
+     "等容"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "恒容下理想气体的压强与绝对温度成正比。",
+      "term": "恒容下"
+     },
+     {
+      "field": "description",
+      "snippet": "恒容下理想气体的压强与绝对温度成正比。",
+      "term": "理想气体"
+     },
+     {
+      "field": "usage",
+      "snippet": "等容过程的压强-温度换算。",
+      "term": "等容"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
     "description": "恒容下理想气体的压强与绝对温度成正比。",
@@ -15129,6 +15423,19 @@
     "Entity"
    ],
    "props": {
+    "applicability": [
+     "理想气体"
+    ],
+    "applicability_evidence": [
+     {
+      "field": "description",
+      "snippet": "理想气体的压强、体积与物质的量由气体常数联系",
+      "term": "理想气体"
+     }
+    ],
+    "applicability_rule_version": "a1",
+    "applicability_source": "curated_text",
+    "applicability_status": "extracted",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:35:28.083336",
     "description": "理想气体的压强、体积与物质的量由气体常数联系成一个状态方程。",
