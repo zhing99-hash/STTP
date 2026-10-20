@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "b00ff0fe4d585709293a087f5f7ec8549b17cf45",
-  "git_head_at_build_short": "b00ff0f",
+  "git_head_at_build": "51a2c9cf58a1a7cc2a7dec6ca84ed54fc713690f",
+  "git_head_at_build_short": "51a2c9c",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -664,11 +664,14 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-20T14:50:06+08:00",
+  "created": "2026-10-20T16:15:35+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
-  "phase": 37,
-  "positioning": "路线 A：研究原型（收敛版）—— 可复现研究 / 真实跨学科任务 / 方法比较"
+  "phase": 65,
+  "phase_note": "`phase`=VERSION 的 MINOR（开发阶段，唯一事实源 VERSION 文件）；`snapshot_phase`=完整快照文件名里的阶段（数据导出阶段，可为 null）。两者由 verify_release 交叉校验，漂移即 FAIL。",
+  "positioning": "路线 A：研究原型（收敛版）—— 可复现研究 / 真实跨学科任务 / 方法比较",
+  "snapshot_phase": 41,
+  "version": "0.65.0-rc1"
  },
  "schema": "sttp-release-manifest/v1"
 }
