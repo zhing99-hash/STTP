@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 77027925,
+    "bytes": 80181928,
     "edges": 48712,
     "nodes": 9657,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "e96af46fa9a64ab7c396c0f2a16284e4e7d5ba52d06b0750d4bafd001e0e75e7",
+    "sha256": "926364818fc5205b2e296e1381707659f197ff3baeeb734c68c6e252a44ae712",
     "subjects": {
      "化学": 4108,
      "数学": 277,
@@ -28,20 +28,20 @@
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 392062,
+    "bytes": 419179,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "4ba6a41eaf39982e6b48fdefd2168b08b26fed8f77ba2d94c9035eeea0a2b568",
+    "sha256": "d6fce93df47eb0c10f5f40ae6140e6bb0fe482b3bc7321d33a8827d074ecf6a3",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 481994,
+    "bytes": 509111,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "4723b5c9a5999a7b6d38a2837f29d0f737b55a52c25602c66f2a6b1201acda37",
+    "sha256": "2d917fd01f6e9cdb1b1e244bd4c8aa77083d7e7afb8f96f82d9167ee1b9217f7",
     "subjects": {
      "化学": 49,
      "数学": 18,
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "8af4be19188822e13e97dda733a403c748f54112",
-  "git_head_at_build_short": "8af4be1",
+  "git_head_at_build": "3d2965ab33fcd94f1ebb745fa63d3916ff74b042",
+  "git_head_at_build_short": "3d2965a",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -463,7 +463,8 @@
    "edges": 48712,
    "frozen_gate": {
     "tally": {
-     "PASS": 108
+     "FAIL": 2,
+     "PASS": 106
     }
    },
    "nodes": 9657,
@@ -663,7 +664,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-20T09:38:12+08:00",
+  "created": "2026-10-20T10:41:55+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
