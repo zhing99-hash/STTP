@@ -2,15 +2,15 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 80184572,
+    "bytes": 80951948,
     "edges": 48712,
     "nodes": 9657,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "e0b0675e64ff56e9e0412c33805dd5ffb1744264f840e10bf2d989e633fd16fd",
+    "sha256": "1350f72466a058bd4c2fc3d87aa5756d459492a022e783d5638e8ea20f6551b3",
     "subjects": {
-     "化学": 4108,
+     "化学": 4427,
      "数学": 277,
-     "物理": 5247,
+     "物理": 4928,
      "跨学科": 25
     },
     "tracked_in_git": false
@@ -28,20 +28,20 @@
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 420049,
+    "bytes": 424068,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "1d88f1e17e3f344e1f0d8aa74a809300c7f7a86e1e63358a032b61f857d9c308",
+    "sha256": "56e9124dc5e65e901bcaa8114b8056b0306affacb527b302118541e08396e8ca",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 509981,
+    "bytes": 514000,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "06a4195be14758b8bd6d81aa49f3ae89fac3a2297e7ed192fb62a35e25157254",
+    "sha256": "8b80c50df1ace6312c2419528e81c0f9c671bfba8990e7abd09162cad9c1cb0f",
     "subjects": {
      "化学": 49,
      "数学": 18,
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "746a721cb161af2148b3e0c4b5ee6d6cf2007e00",
-  "git_head_at_build_short": "746a721",
+  "git_head_at_build": "d1f8df6c429447c3e0b060427bf4c024324a6cf6",
+  "git_head_at_build_short": "d1f8df6",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -286,7 +286,7 @@
     "cross_domain": {
      "by_pair": {
       "化学 ↔ 数学": 10,
-      "化学 ↔ 物理": 898,
+      "化学 ↔ 物理": 2485,
       "化学 ↔ 跨学科": 5,
       "数学 ↔ 物理": 11,
       "数学 ↔ 跨学科": 16,
@@ -298,16 +298,16 @@
       "derived_from": 7,
       "dimensionally_consistent": 2,
       "has_quantity": 877,
-      "has_symbol": 16,
+      "has_symbol": 1603,
       "has_unit": 3,
       "releases": 1,
       "same_as": 27,
       "uses_operator": 10
      },
-     "cross": 945,
-     "cross_ratio": 1.94,
+     "cross": 2532,
+     "cross_ratio": 5.198,
      "edges_total": 48712,
-     "same": 47767
+     "same": 46180
     },
     "defects": {
      "dangling_edges": 0,
@@ -389,7 +389,8 @@
       "数学": 181
      },
      "PB": {
-      "物理": 5050
+      "化学": 319,
+      "物理": 4731
      },
      "PC": {
       "化学": 14
@@ -437,9 +438,9 @@
     },
     "nodes": 9657,
     "subjects": {
-     "化学": 4108,
+     "化学": 4427,
      "数学": 277,
-     "物理": 5247,
+     "物理": 4928,
      "跨学科": 25
     },
     "types": {
@@ -472,10 +473,10 @@
     "T9_evidence_traceable": {
      "graph_evidence_coverage_pct": 100.0,
      "graph_independent_evidence_pct": 71.38,
-     "independent": 34780,
-     "independent_rate_pct": 85.93,
-     "ok_edges": 40473,
-     "traceable": 40473,
+     "independent": 36367,
+     "independent_rate_pct": 86.46,
+     "ok_edges": 42060,
+     "traceable": 42060,
      "traceable_rate_pct": 100.0
     },
     "graph": "06_PoC\\etl\\normalized.json",
@@ -486,7 +487,7 @@
      "rule_checked": 31520,
      "source_asserted": 13797
     },
-    "north_star_pct": 99.65,
+    "north_star_pct": 99.66,
     "tasks": [
      {
       "coverage_pct": 100.0,
@@ -568,15 +569,15 @@
      {
       "coverage_pct": 100.0,
       "desc": "两端点学科不同的**任意类型**语义边 —— **本项目的核心命题**",
-      "edges": 945,
+      "edges": 2532,
       "gaps": {
        "model_inferred": 24,
        "source_asserted": 29
       },
       "min_level": "rule_checked",
       "name": "跨域桥（跨学科端点）",
-      "ok": 892,
-      "rate_pct": 94.39,
+      "ok": 2479,
+      "rate_pct": 97.91,
       "task": "T7"
      },
      {
@@ -663,7 +664,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-20T11:29:32+08:00",
+  "created": "2026-10-20T13:23:20+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 37,
