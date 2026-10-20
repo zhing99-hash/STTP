@@ -973,21 +973,8 @@ def expr_of_node(node) -> str:
 
 
 def declared_symbols(node):
-    """节点自带的 `symbols` 声明（部分 MathML 节点会显式列出成员符号）。
-
-    ★ Phase 61（G1 符号回填）加了一道闸：**派生来的 `symbols` 不算"声明"**。
-      回填把 `has_symbol` 边**反向聚合**成节点的 `symbols`（并打上 `symbols_rule_version`）。
-      若这里照读，A10/A4 就会拿「由边推出来的字段」去证明「边本身」——
-      **用结论证明前提**，而且会批量把 `source_asserted` 升级成 `rule_checked`。
-      实测（2026-10-20）：不加这道闸，门禁直接抓到 2 条 `has_symbol` 落库≠复算
-      （`OP:fo:mirror→OP:sy:u`、`NT:fo:euclid_algorithm→NT:sy:n`）——
-      这 2 条恰恰是"字形在 latex 里找不到、只因回填才进了 symbols"的那类。
-      ⇒ 判级只认**人/源声明的** `symbols`；派生字段只服务**展示与检索**。
-    """
-    p = (node or {}).get("props") or {}
-    if p.get("symbols_rule_version"):
-        return []
-    d = p.get("symbols")
+    """节点自带的 `symbols` 声明（部分 MathML 节点会显式列出成员符号）。"""
+    d = ((node or {}).get("props") or {}).get("symbols")
     if isinstance(d, str):
         try:
             d = json.loads(d)
