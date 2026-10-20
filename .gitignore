@@ -42,6 +42,9 @@ elementkg_synthetic_corpus_40w/
 # Phase 62：学科分类 delta（5 090 个节点 × `domain` + `domain_tags`，**实测 1.4 MB**）⇒
 # 不入库。可由 `bash sttp.sh domainbackfill` 在库内确定性重算（幂等、次序无关，见生成侧 S5/S8）。
 06_PoC/etl/neo4j/phase62_domain_delta.json
+# Phase 63：适用条件 delta（5 090 个节点 × `applicability_status`，**实测 1.0 MB**）⇒
+# 不入库。可由 `bash sttp.sh applicabackfill` 在库内确定性重算（幂等、次序无关，见 S6/S8）。
+06_PoC/etl/neo4j/phase63_applicability_delta.json
 # 摄入前的自动备份 raw（每个约 16 MB，仅本地回溯用）与临时探索脚本
 11_真实数据/*.before_*.json
 11_真实数据/_*
