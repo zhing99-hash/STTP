@@ -33,7 +33,8 @@ import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
          evidenceStatusBadge, EDGE_TYPE_COLOR } from "../js/style.js";
 import { renderEdgeDetail, renderNodeDetail } from "../js/evidence.js";
-import { buildLegend } from "../js/viz.js";
+import { buildLegend, toCyEdge } from "../js/viz.js";
+import { GRADE_STYLE, GRADE_UNKNOWN, gradeStyle, gradeToWidth, gradeToOpacity } from "../js/style.js";
 import { renderCardsHTML, renderCandidatesHTML, CANDIDATE_LIMIT } from "../js/task.js";
 
 let pass = 0, fail = 0;
@@ -1234,7 +1235,9 @@ const _rAll = C.taskRequest(pathCard, {
   seed: "A", second: "B", scope: { trust: "all", hops: 3 },
 });
 const _rDef = C.taskRequest(pathCard, { seed: "A", second: "B" });
-check("F38l 【B1】scope 真的透传：trust/hops 随 scope 变化（写死 ⇒ 两值相等 ⇒ 必红）",
+check("F42k 【B1】scope 真的透传：trust/hops 随 scope 变化（写死 ⇒ 两值相等 ⇒ 必红）",
+      // ★ 原 ID F38l 与下方「学科筛选」断言撞号（Phase 56 改名时漏查既有 F38l）——
+      //   撞号会让名字采集器与红探针都只认到其中一条 ⇒ 必须唯一。
       _rAll && _rDef
       && _rAll.trust === "all" && _rAll.max_hops === 3
       && _rDef.trust === "verified" && _rDef.max_hops !== _rAll.max_hops,
@@ -1490,6 +1493,58 @@ check("F42j 图例「发现年代」区块按时间序 + 带计数，并明说�
       && _lg.innerHTML.indexOf("1900–1909") < _lg.innerHTML.indexOf("暂无")
       && _lg.innerHTML.includes("×3") && _lg.innerHTML.includes("不参与筛选"),
       "乱序传入也须按时间序渲染（排序发生在 buildLegend 内部）");
+
+
+// ---------------------------------------------------------------------------
+// F43 证据等级 1–5（Phase 58）：通道接管 + 区分度 + fail-closed（未判定 ≠ E5）
+// ---------------------------------------------------------------------------
+const _mkEdge = (grade) => ({
+  id: "e-" + grade, source: "a", target: "b", type: "has_symbol", kind: "k",
+  explicit_or_inferred: "explicit", confidence: 0.95, grade,
+});
+
+check("F43a GRADE_STYLE 五档齐全，宽与透明度自 E5→E1 单调递减（视觉可分级）",
+      [5, 4, 3, 2, 1].every((g) => GRADE_STYLE[g])
+      && [5, 4, 3, 2, 1].every((g, i, a) => i === 0
+          || (GRADE_STYLE[a[i - 1]].width > GRADE_STYLE[g].width
+              && GRADE_STYLE[a[i - 1]].opacity > GRADE_STYLE[g].opacity)),
+      [5, 4, 3, 2, 1].map((g) => GRADE_STYLE[g] && GRADE_STYLE[g].width + "/" + GRADE_STYLE[g].opacity).join(" "));
+
+check("F43b toCyEdge：grade 进 data；null ⇒ 未判定样式（不得渲染成 E5）",
+      toCyEdge(_mkEdge(null)).data.grade === null
+      && toCyEdge(_mkEdge(null)).data._width === GRADE_UNKNOWN.width
+      && toCyEdge(_mkEdge(5)).data.grade === 5
+      && toCyEdge(_mkEdge(5)).data._width === GRADE_STYLE[5].width,
+      "null→" + toCyEdge(_mkEdge(null)).data._width + "  E5→" + toCyEdge(_mkEdge(5)).data._width);
+
+check("F43c toCyEdge：五档产生**互异**的 (width, opacity)（区分度——confidence 76% 挤 0.95 的病根不得复发）",
+      new Set([5, 4, 3, 2, 1, null].map((g) => {
+        const d = toCyEdge(_mkEdge(g)).data;
+        return d._width + "/" + d._opacity;
+      })).size === 6,
+      [5, 4, 3, 2, 1, null].map((g) => gradeToWidth(g) + "/" + gradeToOpacity(g)).join(" "));
+
+{
+  const fs = await import("node:fs");
+  const vizSrc = fs.readFileSync(new URL("../js/viz.js", import.meta.url), "utf-8");
+  const evSrc = fs.readFileSync(new URL("../js/evidence.js", import.meta.url), "utf-8");
+  check("F43d 旧 confidence 编码已退场：viz.js 不再引用 confToWidth/confToOpacity（不留双口径，铁律 #90）",
+        !/confToWidth|confToOpacity/.test(vizSrc),
+        "viz.js 引用数：" + (vizSrc.match(/confTo(Width|Opacity)/g) || []).length);
+  check("F43e 边详情卡含「证据等级」与 grade_rule=e1（等级固化口径可见）",
+        /证据等级/.test(evSrc) && /grade_rule=e1/.test(evSrc),
+        "evidence.js 命中：" + /证据等级/.test(evSrc) + "/" + /grade_rule=e1/.test(evSrc));
+  check("F43f 图例含「证据等级」区块且五档 label 全出现（含未判定）",
+        (function () {
+          const el = { innerHTML: "" };
+          try { buildLegend(el, {}); } catch (e) { return false; }
+          return /证据等级/.test(el.innerHTML)
+            && [5, 4, 3, 2, 1].every((g) => el.innerHTML.includes(gradeStyle(g).label))
+            && el.innerHTML.includes(GRADE_UNKNOWN.label);
+        })(),
+        "legend html 长度 " + (function () { const el = { innerHTML: "" };
+          try { buildLegend(el, {}); } catch (e) { return -1; } return el.innerHTML.length; })());
+}
 
 
 // ---------------------------------------------------------------------------

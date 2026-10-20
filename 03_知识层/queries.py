@@ -403,6 +403,44 @@ def fidelity_counts(edges, stale_registry) -> dict:
     return c
 
 
+# ★ 证据等级 1–5（Phase 58 · `00_项目管理/证据分级规范与抓取优先级_20261019.md`）。
+#   **派生**而非人工打分：grade = min(断言强度档, 字节忠实度档)，多源独立且 ≥3 时 +1（封顶 5）。
+#   规则变更必须升 `GRADE_RULE_VERSION` —— 分数写进投影后即固化（D64 同族：不得随前端现算漂移）。
+GRADE_RULE_VERSION = "e1"
+GRADE_VL = {"cross_source": 5, "by_construction": 4, "rule_checked": 4,
+            "source_asserted": 3, "model_inferred": 1}   # 缺 level ⇒ 按 1（fail-closed）
+GRADE_FD = {"verified": 5, "unverifiable_not_in_repo": 2,
+            "unverifiable_no_source": 1, "changed": 1}   # 未入库=2：「不可复算」≠「不可信」
+
+
+def edge_grade(e, stale_registry) -> Optional[int]:
+    """边的证据等级 1–5；登记表不可用 ⇒ **None**（不可判定，不得假装 5 分）。
+
+    多源加成：证据来自 ≥2 个不同来源、或 ≥2 条标记 `indep` 的独立证据，且基础档 ≥3 ⇒ +1。
+    """
+    if not stale_registry:
+        return None
+    props = e.get("props") or {}
+    v = GRADE_VL.get(props.get("verification_level"), 1)
+    f = GRADE_FD.get(edge_fidelity(e, stale_registry), 1)
+    g = min(v, f)
+    evs = [x for x in (props.get("verification_evidence") or []) if isinstance(x, dict)]
+    n_src = len({x.get("src") for x in evs if x.get("src")})
+    n_indep = sum(1 for x in evs if x.get("indep"))
+    if g >= 3 and (n_src >= 2 or n_indep >= 2):
+        g = min(5, g + 1)
+    return g
+
+
+def grade_counts(edges, stale_registry) -> dict:
+    """等级分布计数；`null` 单列（登记表不可用时不是 0 条，是**不可判定**）。"""
+    c = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "null": 0}
+    for e in edges:
+        g = edge_grade(e, stale_registry)
+        c["null" if g is None else str(g)] += 1
+    return c
+
+
 def evidence_status_counts(edges, stale_registry) -> Optional[dict]:
     """A04 状态分列计数（**边级聚合**）。
 

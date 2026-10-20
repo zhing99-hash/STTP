@@ -24,7 +24,7 @@
 
 import {
   subjectColor, nodeTypeStyle, edgeTypeColor, eoiStyle,
-  confToWidth, confToOpacity,
+  gradeToWidth, gradeToOpacity, gradeStyle, GRADE_STYLE, GRADE_UNKNOWN,
   SUBJECT_COLOR, SUBJECT_ORDER, NODE_TYPE_STYLE, NODE_TYPE_ORDER,
   EDGE_TYPE_COLOR, EOI_STYLE, fidelityBadge, evidenceStatusBadge,
 } from "./style.js";
@@ -83,7 +83,6 @@ export function toCyNode(n) {
 /** 把后端投影边 → Cytoscape element */
 export function toCyEdge(e) {
   const eoi = eoiStyle(e.explicit_or_inferred);
-  const c = typeof e.confidence === "number" ? e.confidence : 0.5;
   return {
     group: "edges",
     data: {
@@ -96,14 +95,18 @@ export function toCyEdge(e) {
       confidence: typeof e.confidence === "number" ? e.confidence : null,
       why: e.why_shown || null,
       stale: !!e.stale,
+      // ★ 证据等级 1–5（Phase 58）：服务端 `queries.edge_grade()` 固化下发；
+      //   null = 登记表不可用 ⇒ 未判定（GRADE_UNKNOWN 渲染），不得当成 E5。
+      grade: (typeof e.grade === "number") ? e.grade : null,
       // ★ A04（Phase 45）：`stale` 已把两层合流（字节忠实度 ∪ 依赖状态）；
       //   这里另存状态本身，供 tooltip / 证据卡分辨「是来源变了还是依赖变了」。
       //   `null` = 该图上无 A04 记录（**不得**当作 valid）。
       status: (e.evidence_status == null) ? null : e.evidence_status,
       _color: edgeTypeColor(e.type),
       _line: eoi.line,
-      _width: confToWidth(c),
-      _opacity: confToOpacity(c),
+      // ★ Phase 58：宽 + 透明度改由**证据等级**驱动（confidence 76% 挤在 0.95，无区分度）
+      _width: gradeToWidth((typeof e.grade === "number") ? e.grade : null),
+      _opacity: gradeToOpacity((typeof e.grade === "number") ? e.grade : null),
     },
     classes: e.explicit_or_inferred === "inferred" ? "eoi-inferred" : "eoi-explicit",
   };
@@ -310,7 +313,9 @@ export function createViz(opts = {}) {
       tooltip.innerHTML =
         `<b>${esc(d.type)}</b> <span class="pill">（语义关系 type）</span><br>`
         + `<span class="note">kind（来源/管线）：</span>${esc(d.kind)}<br>`
-        + `<span class="note">置信度：</span>${d.confidence == null ? "—" : d.confidence}<br>`
+        + `<span class="note">证据等级：</span>`
+        + `<span style="color:${gradeStyle(d.grade).color}">${esc(gradeStyle(d.grade).label)}</span>`
+        + `<br><span class="note">置信度（旧口径）：</span>${d.confidence == null ? "—" : d.confidence}<br>`
         + `<span class="note">验证档：</span>${esc(d.vl || "—")}`
         + `<br><span class="note">explicit/inferred：</span>${d._line === "dashed" ? "inferred（推断）" : "explicit（显式）"}`
         + (d.stale ? `<br><span style="color:${fidelityBadge(d.fidelity).color}">证据忠实度：${esc(fidelityBadge(d.fidelity).label)}</span>` : "")
@@ -403,6 +408,17 @@ export function buildLegend(el, { nodeTypes = [], edgeTypes = [], eras = [], era
     const st = EOI_STYLE[k];
     parts.push(`<div class="legend-item"><span class="line-chip" style="border-top-color:${st.color};border-top-style:${st.line}"></span>${esc(st.label)}</div>`);
   });
+
+  // ★ Phase 58：证据等级（宽 + 透明度）—— 用线宽样条直接示意「越粗越实、越淡越虚」。
+  //   规则 e1：grade = min(断言强度档, 字节忠实度档)，多源独立且 ≥3 时 +1。
+  parts.push('<h3 style="margin-top:12px">证据等级（线宽 + 透明度，规则 e1）</h3>');
+  [5, 4, 3, 2, 1].forEach((g) => {
+    const st = GRADE_STYLE[g];
+    parts.push(`<div class="legend-item"><span class="line-chip" style="border-top-color:${st.color};border-top-width:${Math.min(6, st.width)}px;opacity:${st.opacity};min-width:34px"></span>${esc(st.label)}</div>`);
+  });
+  parts.push(`<div class="legend-item"><span class="line-chip" style="border-top-color:${GRADE_UNKNOWN.color};border-top-width:1px;opacity:${GRADE_UNKNOWN.opacity};min-width:34px"></span>${esc(GRADE_UNKNOWN.label)}</div>`);
+  parts.push('<div class="legend-item note">E2 占全图 96.6%：<b>不可复算 ≠ 不可信</b>（多为规则机检通过、'
+    + '但 locator 未随仓库分发）。全库五档：E5 702｜E4 351｜E3 482｜E2 47 032｜E1 145。</div>');
   parts.push('<div class="legend-item"><span class="line-chip" style="border-top-color:#d29922"></span>证据判 stale（琥珀）＝ 两层任一命中：'
     + '<b>字节忠实度</b>「已变更 / 不可判定」<b>或</b> <b>验证依赖（A04）</b>「依赖已变更 / 命题已否决」</div>');
   parts.push('<div class="legend-item note">「locator 未入库 ⇒ 不可从仓库复算」'

@@ -961,6 +961,40 @@ def main(argv=None) -> int:
             bad_val.append((e["id"], fv))
     rep.add(not bad_val, "V18j 每条边 fidelity ∈ 四分类 ∪ {null}（无越界取值）",
             "越界=%s" % bad_val[:3] if bad_val else "%d 条合法" % len(fid_r["edges"]))
+
+    # V18o ★ 证据等级（Phase 58）：每条边 grade ∈ {1..5} ∪ {null}；
+    #   本环境登记表可用 ⇒ **不得出现 null**（null = 未判定，只在登记表不可用时合法）。
+    bad_g = []
+    for e in fid_r["edges"]:
+        g = e.get("grade")
+        if not (isinstance(g, int) and 1 <= g <= 5):
+            bad_g.append((e.get("id"), g))
+    rep.add(not bad_g and len(fid_r["edges"]) > 0,
+            "V18o 每条边 grade ∈ {1..5}（登记表可用 ⇒ 无 null）",
+            "越界=%s" % bad_g[:3] if bad_g else "%d 条合法" % len(fid_r["edges"]))
+
+    # V18p ★ 等级统计两处口径各自闭合（V18i3 同族，防「统计与边各算一套」）：
+    #   ① /api/stats 的 evidence_grade（全图）== 独立重算 `Q.grade_counts(b_all, reg)`；
+    #   ② subgraph 响应 stats.evidence_grade（可见子图）== 响应内逐边重数；
+    #   ③ 规则版本随行（前端要把它钉在 UI 上，缺了就是口径失踪）。
+    gc_all = Q.grade_counts(b_all, reg)
+    stats_g = stats_r.get("evidence_grade")
+    stats_g6 = ({k: stats_g.get(k) for k in ("1", "2", "3", "4", "5", "null")}
+                if isinstance(stats_g, dict) else None)
+    sub_stats_g = ((fid_r.get("stats") or {}).get("evidence_grade")
+                   if isinstance(fid_r.get("stats"), dict) else None)
+    gc_sub = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "null": 0}
+    for e in fid_r["edges"]:
+        g = e.get("grade")
+        gc_sub["null" if g is None else str(g)] += 1
+    ok_p = (isinstance(stats_g, dict)
+            and stats_g6 == gc_all and sub_stats_g == gc_sub
+            and stats_g.get("n_edges_total") == len(b_all)
+            and stats_g.get("rule") == Q.GRADE_RULE_VERSION)
+    rep.add(ok_p,
+            "V18p 等级分列两处口径各自闭合（全图重算 == /api/stats；子图重数 == 响应 stats）",
+            "全图=%s stats=%s｜子图=%s resp=%s（rule=%s）"
+            % (gc_all, stats_g6, gc_sub, sub_stats_g, stats_g.get("rule") if isinstance(stats_g, dict) else None))
     # V18k 【Phase 45 重写，铁律 #74】旧断言「stale ⇔ fidelity ∈ STALE_FIDELITIES」
     #   在 A04 接入后**不再成立**（依赖层可单独把一条边判 stale）。
     #   改守**真性质**：`stale ⇔ 字节层命中 ∪ 依赖层命中` —— 两处口径仍不漂移。

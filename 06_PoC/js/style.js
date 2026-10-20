@@ -237,10 +237,30 @@ export function evidenceStatusBadge(v) {
 }
 
 // ---------------------------------------------------------------------------
-// 置信度 → 线宽 / 不透明度（沿用既有口径，避免"改了视觉但没改语义"）
+// 证据等级 1–5（Phase 58）：接管**线宽 + 不透明度**（原 confidence 的通道）。
+// ★ 语义来源：`03_知识层/queries.py:edge_grade()`（GRADE_RULE_VERSION = "e1"）——
+//   grade = min(断言强度档, 字节忠实度档)，多源独立且 ≥3 时 +1。**服务端固化**，
+//   前端只渲染不现算（D64 同族：现算随 HEAD 漂移）。
+// ★ 为什么替换 confidence：实测 76% 的边挤在 0.95，宽度/透明度编码**无区分度**；
+//   grade 的五档分布（1.4/0.7/1.0/96.6/0.3%）把「能不能复算」直接画出来。
+// ★ 通道分工（互不侵占）：颜色=type、线型=eoi、**宽+透明度=grade**、stale=琥珀描边。
 // ---------------------------------------------------------------------------
-export function confToWidth(c) { return 1 + (Math.max(0, (c == null ? 0.5 : c)) - 0.5) * 8; }
-export function confToOpacity(c) { return 0.35 + (c == null ? 0.5 : c) * 0.6; }
+export const GRADE_STYLE = Object.freeze({
+  5: { width: 3.6, opacity: 1.00, color: "#3fb950", label: "E5 多源独立 · 可复算" },
+  4: { width: 2.8, opacity: 0.95, color: "#58a6ff", label: "E4 单源机检 · 可复算" },
+  3: { width: 2.2, opacity: 0.85, color: "#d29922", label: "E3 来源断言 · 可复算" },
+  2: { width: 1.4, opacity: 0.50, color: "#8b949e", label: "E2 来源未入库 · 不可复算" },
+  1: { width: 1.2, opacity: 0.40, color: "#f85149", label: "E1 推断或无源 · 待补证" },
+});
+export const GRADE_UNKNOWN = {
+  width: 1.2, opacity: 0.35, color: "#8f9bb3", label: "未判定（登记表不可用）",
+};
+
+export function gradeStyle(g) {
+  return GRADE_STYLE[g] || GRADE_UNKNOWN;
+}
+export function gradeToWidth(g) { return gradeStyle(g).width; }
+export function gradeToOpacity(g) { return gradeStyle(g).opacity; }
 
 // ---------------------------------------------------------------------------
 // 证据字段标签（证据卡片用；铁律 #59：`impl` = 谁验的，`src` = 读的是哪个源/哪版）

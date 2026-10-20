@@ -22,7 +22,7 @@
 
 import { WHY_SHOWN_LABEL, deriveEra, ERA_NONE } from "./core.js";
 import { verificationBadge, EVIDENCE_FIELDS, edgeTypeColor, eoiStyle,
-         fidelityBadge, evidenceStatusBadge } from "./style.js";
+         fidelityBadge, evidenceStatusBadge, gradeStyle } from "./style.js";
 
 export function esc(s) {
   return String(s == null ? "" : s)
@@ -190,7 +190,14 @@ export function renderEdgeDetail(el, edge) {
            + `<span class="badge">来源/管线 kind=${esc(d.kind)}</span></div>`);
   parts.push(kv("端点", `<code>${esc(d.source)}</code> → <code>${esc(d.target)}</code>`));
   parts.push(kv("来源性质", `${esc(eoi.label)}（explicit_or_inferred）`));
-  if (typeof d.confidence === "number") parts.push(kv("置信度", esc(d.confidence)));
+  // ★ 证据等级（Phase 58）：服务端固化下发；null = 未判定（登记表不可用），不得当 E5。
+  {
+    const gs = gradeStyle(d.grade);
+    parts.push(kv("证据等级", `<span class="badge" style="border-color:${gs.color}">${esc(gs.label)}</span>`
+      + ` <span class="pill">grade=${d.grade == null ? "null" : esc(String(d.grade))}</span>`
+      + ` <span class="pill">grade_rule=e1</span>`));
+  }
+  if (typeof d.confidence === "number") parts.push(kv("置信度（旧口径）", esc(d.confidence)));
   if (d.verification_level) {
     parts.push(kv("验证档", badgeOf(d.verification_level)
       + (d.verification_scope ? ` <span class="pill">${esc(d.verification_scope)}</span>` : "")

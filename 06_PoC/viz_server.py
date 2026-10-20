@@ -601,6 +601,41 @@ def fidelity_counts_global():
         return None
 
 
+_GRADE_COUNTS_CACHE = {"key": None, "val": None}
+
+
+def grade_counts_global():
+    """**全图**证据等级 1–5 分列计数（`queries.grade_counts`，按 HEAD 缓存）。
+
+    ★ Phase 58：等级**固化**在服务端（`queries.edge_grade`，规则 e1）。
+      `null` 单列 = 登记表不可用（不可判定 ≠ 0 条）。
+      全图实测（HEAD e0b38a3 口径）：E5 702｜E4 351｜E3 482｜E2 47 032｜E1 145。
+    """
+    q = _load_queries()
+    b = get_backend()
+    if not q or not b:
+        return None
+    base = ROOT
+    try:
+        key = _head_sha(base)
+        with _STALE_LOCK:
+            if _GRADE_COUNTS_CACHE["key"] == key and _GRADE_COUNTS_CACHE["val"]:
+                return _GRADE_COUNTS_CACHE["val"]
+        reg = stale_registry()
+        if reg is None:
+            return None
+        out = q.grade_counts(b.all_edges(), reg)
+        out["n_edges_total"] = b.edge_count
+        out["rule"] = q.GRADE_RULE_VERSION
+        with _STALE_LOCK:
+            _GRADE_COUNTS_CACHE["key"] = key
+            _GRADE_COUNTS_CACHE["val"] = out
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] 证据等级计数不可用（{type(e).__name__}: {e}）")
+        return None
+
+
 _EVIDENCE_STATUS_COUNTS_CACHE = {"key": None, "val": None}
 
 
@@ -843,6 +878,11 @@ def graph_stats() -> dict:
                 #   `needs_review` 不计入 stale（不可判定 ≠ 已变更），但必须始终可见；
                 #   `no_record` = 图上尚无 A04 记录的边。
                 "evidence_status": evidence_status_counts_global(),
+                # ★ Phase 58：证据等级 1–5 **全图分列**（与忠实度/A04 并列第三块）。
+                #   等级由 `queries.edge_grade()` 在服务端固化（规则 e1），前端只渲染。
+                "evidence_grade": grade_counts_global(),
+                "evidence_grade_rule": (getattr(_load_queries(), "GRADE_RULE_VERSION", None)
+                                        if _load_queries() else None),
                 "a04": a04_registry_summary(),
                 "source_repo_status": _repo_status_counts(),
                 "evidence_byte_source": "repo（git cat-file blob HEAD:<path>）",
@@ -1278,6 +1318,10 @@ class VizHandler(BaseHTTPRequestHandler):
                 #   「不可从仓库复算」渲染成「已变更」。
                 #   ★ 登记表不可用时 `fidelity` 为 **null**（不可判定），**不得**写成 "verified"。
                 p["fidelity"] = q.edge_fidelity(e, stale) if stale else None
+                # ★ 证据等级 1–5（Phase 58）：**服务端固化**后随投影下发，
+                #   前端只渲染不现算（D64 同族：现算会随 HEAD 漂移）。
+                #   登记表不可用 ⇒ null（不可判定），前端必须显示「未判定」而非 5 分。
+                p["grade"] = q.edge_grade(e, stale)
                 p["stale"] = bool(stale) and q.edge_is_stale(e, stale)
                 reasons = q.fidelity_reasons(e, stale) if stale else []
                 if reasons:
@@ -1341,6 +1385,9 @@ class VizHandler(BaseHTTPRequestHandler):
         #   不合并进 `stale`，避免「stale 很小」被误读成「证据都可字节复算」。
         stats["evidence_fidelity"] = fidelity_local
         stats["evidence_fidelity_global"] = fidelity_counts_global()
+        # ★ 证据等级分布（Phase 58）：本次可见子图分列 + 规则版本（分数固化在服务端）。
+        stats["evidence_grade"] = (q.grade_counts(r["edges"], stale) if gx else None)
+        stats["evidence_grade_rule"] = q.GRADE_RULE_VERSION
         # ★ A04（Phase 45）：本次可见子图 + 全图的**验证依赖状态**分列（与上面并列）。
         #   `stats["evidence_status"]` 由 `queries.subgraph()` 在 stats 内给出（本次可见边）；
         #   这里补上全图口径。两者均为 None ⇒ 该图上无 A04 记录（不假装 valid）。

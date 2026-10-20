@@ -273,6 +273,40 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R15",
+        "kind": "mutate",
+        "why": ("证据等级（Phase 58）：边的**线宽 + 透明度**必须由 grade 驱动。"
+                "★ 若写死成常量，五档塌成一档 ⇒ 又退回 confidence 时代的病（76% 挤在 0.95、"
+                "宽度无区分度），而这是 Phase 58 要解决的正是这个问题。"
+                "本探针把两行都写成常量 ⇒ F43b / F43c 必须变红（F43c 的「六档互异」直接被消灭）。"),
+        "file": "06_PoC/js/viz.js",
+        "old": ("      _width: gradeToWidth((typeof e.grade === \"number\") ? e.grade : null),\n"
+                "      _opacity: gradeToOpacity((typeof e.grade === \"number\") ? e.grade : null),"),
+        "new": "      _width: 2,      // redprobe: 写死（等级编码退场）\n"
+               "      _opacity: 0.6,   // redprobe: 写死",
+        "cmd": "NODE tests/frontend_core_check.mjs",
+        "cwd": POC,
+        "expect_red": ["F43b", "F43c"],
+        "expect_rc": 1,
+        "requires": ["node"],
+    },
+    {
+        "id": "R16",
+        "kind": "mutate",
+        "why": ("证据等级**不得**让「未判定」冒充最高档：登记表不可用时 grade 为 null，"
+                "前端若把 null 当 5 分渲染（`grade === null ? 5 : grade`），"
+                "就会把「不知道」画成「最强证据」—— 与 D72「恒真判据什么都不守」同族。"
+                "本探针把 null 兜底成 5 ⇒ F43b 必须变红。"),
+        "file": "06_PoC/js/style.js",
+        "old": "export function gradeStyle(g) {\n  return GRADE_STYLE[g] || GRADE_UNKNOWN;",
+        "new": "export function gradeStyle(g) {\n  return GRADE_STYLE[g] || GRADE_STYLE[5];   // redprobe: null 冒充 E5",
+        "cmd": "NODE tests/frontend_core_check.mjs",
+        "cwd": POC,
+        "expect_red": ["F43b"],
+        "expect_rc": 1,
+        "requires": ["node"],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -293,7 +327,7 @@ PROBES = [
 #   （f-string 只在**开头是字面量**时可用）⇒ 断言名必须写成字面量才进得了名字集合。
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
-                      "R10", "R11", "R12", "R13", "R14", "RN")
+                      "R10", "R11", "R12", "R13", "R14", "R15", "R16", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -543,6 +577,10 @@ def emit(rep, res):
             res["R13"][1])
     rep.add(res["R14"][0], "R14 把 not_in_repo 也算 stale ⇒ V18h 必须变红（D72 构造性判据）",
             res["R14"][1])
+    rep.add(res["R15"][0], "R15 边宽/透明度写死常量 ⇒ F43b/F43c 必须变红（等级编码退场即无区分度）",
+            res["R15"][1])
+    rep.add(res["R16"][0], "R16 grade=null 兜底成 E5 ⇒ F43b 必须变红（未判定不得冒充最高档）",
+            res["R16"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
