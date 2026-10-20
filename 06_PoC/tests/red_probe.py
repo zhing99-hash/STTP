@@ -425,6 +425,40 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R24",
+        "kind": "mutate",
+        "why": ("适用条件 S3：**未经人工裁决的候选一律拒写**。"
+                "往词典里加一个「三角形」（它确实出现在 MG:fo:law_cosines / law_sines 的"
+                "描述里，但核对表没裁决过）⇒ 出现 unverified ⇒ S3 必须变红。"
+                "★ 这一改读起来像「扩充词典、提高召回」，很正当；"
+                "只有 S3 能拦住它——否则新增文本会悄悄混进未经核对的条件，准确率变成假数。"),
+        "file": "11_真实数据/phase63_applicability_delta.py",
+        "old": "         \"smooth\", \"prime\", \"coprime\"]",
+        "new": "         \"smooth\", \"prime\", \"coprime\", \"三角形\"]   # redprobe: 未裁决候选（S3）",
+        "cmd": "PY 11_真实数据/phase63_applicability_delta.py --dry",
+        "cwd": ROOT,
+        "expect_red": ["S3"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R25",
+        "kind": "mutate",
+        "why": ("适用条件 S4：**无指称的公式不得有任何适用条件**。"
+                "让 `derive()` 给 no_referent 分支凭空返回一个条件「量纲齐次」⇒ S4 必须变红。"
+                "★ 这正是 R4 判否的那条歧路：拿恒真性质冒充前提。")
+        ,
+        "file": "11_真实数据/phase63_applicability_delta.py",
+        "old": "        return \"no_referent\", [], [], [], []",
+        "new": ("        return \"no_referent\", [\"量纲齐次\"], [], [], []"
+                "   # redprobe: 给无指称的编一条（S4）"),
+        "cmd": "PY 11_真实数据/phase63_applicability_delta.py --dry",
+        "cwd": ROOT,
+        "expect_red": ["S4"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -446,7 +480,8 @@ PROBES = [
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
-                      "R17", "R18", "R19", "R20", "R21", "R22", "R23", "RN")
+                      "R17", "R18", "R19", "R20", "R21", "R22", "R23",
+                      "R24", "R25", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -714,6 +749,10 @@ def emit(rep, res):
             res["R22"][1])
     rep.add(res["R23"][0], "R23 参与量一致性判据被架空 ⇒ Y3 必须变红（合成图自检）",
             res["R23"][1])
+    rep.add(res["R24"][0], "R24 词典扩充出未裁决候选 ⇒ S3 必须变红（禁止未经核对的条件落盘）",
+            res["R24"][1])
+    rep.add(res["R25"][0], "R25 给无指称公式编一条适用条件 ⇒ S4 必须变红（恒真性质不得冒充前提）",
+            res["R25"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

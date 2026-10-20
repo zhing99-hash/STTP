@@ -55,6 +55,8 @@
 #   bash sttp.sh symbolbackfill [--dry] [--apply]   符号回填：has_symbol 边 → 节点 symbols/symbol_table（零抓取）
 #   bash sttp.sh domains [--sample N] [--json OUT]  学科分类**只读**报告 + 对账 Y1–Y6（Phase 62 · M1 G2）
 #   bash sttp.sh domainbackfill [--dry] [--apply]   学科分类：pb_domains ⇄ 参与量双路径互校验（纯规则，零抓取）
+#   bash sttp.sh applicability [--sample N]         适用条件**只读**报告 + 对账 W1–W8（Phase 63 · M1 G3）
+#   bash sttp.sh applicabackfill [--dry] [--apply]  适用条件落盘：词典发现 + 人工裁决（零抓取，只落核对过的）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -660,6 +662,41 @@ EOF
     else
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase62_domain_delta.json \
         --phase 62 --tag domainbackfill || exit $?
+    fi
+    ;;
+  applicability)
+    # Phase 63（M1 G3）：适用条件的**只读**报告 + 对账 W1–W8。
+    #   W1 status 全覆盖 ／ W2 evidence 可追溯 ／ W3 无编造 ／ W4 归属清晰 ／ W5 非真空 ／
+    #   W6 反循环（判级模型不得读 applicability）／ W7 无指称判定正确 ／ W8 与人工核对表一致。
+    # ★ 与生成侧**不共享代码**；但人工核对表（54 条裁决）是**事实**，两边共享并互相校验。
+    shift
+    "$PY" 06_PoC/applicability_report.py "$@" || exit $?
+    ;;
+  applicabackfill)
+    # Phase 63（M1 G3）：适用条件落盘（零抓取）。
+    #   规则 a1 = 词典**发现**候选 + 人工核对表**裁决**；
+    #   出现核对表里没有的新候选 ⇒ S3 红、拒绝产出（否则未经核对的条件会悄悄落盘）。
+    # ★ 只落 30 条，不追求覆盖率：5,000 条 PB 合成式没有指称对象，无从谈适用条件，
+    #   一律标 `no_referent` —— 这是**信息**，不是空缺（改数字不等于能达成 1,500）。
+    shift
+    require_authority applicabackfill "$NORM_GRAPH"
+    _ab_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _ab_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成适用条件 delta =="
+    "$PY" 11_真实数据/phase63_applicability_delta.py ${_ab_args[@]+"${_ab_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qx -- "--dry"; then
+      echo "== [2/2] 跳过（--dry：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase63_applicability_delta.json \
+        --phase 63 --tag applicabackfill --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase63_applicability_delta.json \
+        --phase 63 --tag applicabackfill || exit $?
     fi
     ;;
   *)

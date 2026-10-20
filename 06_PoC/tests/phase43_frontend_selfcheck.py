@@ -1377,7 +1377,8 @@ def main(argv=None):
     #     否则「新增命令忘了挂守卫」与「挂了守卫忘了进名单」两种漏法都查不出来。
     _NEED_GUARD = ["stats", "t7", "noise", "scopeaudit", "gatecheck",
                    "eval", "gnneval", "dimaudit", "lineage",
-                   "gradepersist", "symbolbackfill", "domainbackfill", "evdeps"]
+                   "gradepersist", "symbolbackfill", "domainbackfill", "evdeps",
+                   "applicabackfill"]
     #   （`evdeps` 是 G2b 加上后**立刻抓出来**的：它早挂了守卫，只是没人把它记进名单）
 
     def _guard_probe(text):
