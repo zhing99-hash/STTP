@@ -31,6 +31,11 @@ elementkg_synthetic_corpus_40w/
 # 的 pack 上限，不入库。可由
 # `python 11_真实数据/apply_formula_meta.py --apply` 在库内确定性重算（幂等，复跑 0 改动）。
 06_PoC/etl/neo4j/phase54_formula_meta_delta.json
+# Phase 60：证据等级 1—5 落盘 delta（48 712 条边 × 5 个 props 键，**实测 15.7 MB**）⇒
+# 同样远超 ≲100 KB 的 pack 上限，不入库。可由
+# `bash sttp.sh gradepersist`（= phase60_grade_delta.py + apply_delta）在库内确定性重算
+#（幂等：同一 commit 上复跑得到逐字节相同的 delta）。
+06_PoC/etl/neo4j/phase60_grade_delta.json
 # 摄入前的自动备份 raw（每个约 16 MB，仅本地回溯用）与临时探索脚本
 11_真实数据/*.before_*.json
 11_真实数据/_*

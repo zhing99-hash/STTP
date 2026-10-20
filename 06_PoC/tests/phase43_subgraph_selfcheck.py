@@ -995,6 +995,38 @@ def main(argv=None) -> int:
             "V18p 等级分列两处口径各自闭合（全图重算 == /api/stats；子图重数 == 响应 stats）",
             "全图=%s stats=%s｜子图=%s resp=%s（rule=%s）"
             % (gc_all, stats_g6, gc_sub, sub_stats_g, stats_g.get("rule") if isinstance(stats_g, dict) else None))
+    # V18q ★ Phase 60 **双口径分列**（铁律 #90）：`/api/stats` 必须同时给出
+    #   `evidence_grade`（内部 e1）与 `evidence_grade_public`（对外 p1），且
+    #   ① 键不同（**不合并**、不平均、不择优）；
+    #   ② 各自带自己的规则版本（两个版本号**不同** ⇒ 共用一个就是"把两套写成一套"）；
+    #   ③ 逐档单调：对外 ≥k 分的边数 **不得多于** 内部（对外不可能更可复算）。
+    #   ★ 缺 `source_registry` ⇒ 记 SKIP（不可判定，不得假通过，铁律 #20）。
+    try:
+        sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
+        import source_registry as SR2      # noqa: E402, F811
+        gp_all = Q.grade_public_counts(b_all, reg, redist_of=SR2.is_redistributable)
+    except Exception as ex:                # noqa: BLE001
+        gp_all = None
+        rep.note("V18q：source_registry 不可用（%s: %s）⇒ 对外口径记 SKIP" % (type(ex).__name__, ex))
+    stats_gp = stats_r.get("evidence_grade_public")
+    if gp_all is None:
+        rep.add(None, "V18q 对外口径（p1）与内部口径（e1）在 /api/stats 上**分列**且不合并",
+                "source_registry 不可用 ⇒ 不可判定（SKIP）")
+    else:
+        stats_gp6 = ({k: stats_gp.get(k) for k in ("1", "2", "3", "4", "5", "null")}
+                     if isinstance(stats_gp, dict) else None)
+        mono = all(sum(int(gp_all.get(str(g), 0)) for g in range(k, 6))
+                   <= sum(int(gc_all.get(str(g), 0)) for g in range(k, 6))
+                   for k in (3, 4, 5))
+        rules = (stats_r.get("evidence_grade_rule"), stats_r.get("evidence_grade_public_rule"))
+        ok_q = (isinstance(stats_gp, dict) and stats_gp6 == gp_all and mono
+                and rules[0] == Q.GRADE_RULE_VERSION
+                and rules[1] == Q.GRADE_PUBLIC_RULE_VERSION
+                and rules[0] != rules[1])
+        rep.add(ok_q,
+                "V18q 对外口径（p1）与内部口径（e1）在 /api/stats 上**分列**且不合并",
+                "对外=%s stats=%s｜单调(≥3/4/5)=%s｜规则=%s / %s"
+                % (gp_all, stats_gp6, mono, rules[0], rules[1]))
     # V18k 【Phase 45 重写，铁律 #74】旧断言「stale ⇔ fidelity ∈ STALE_FIDELITIES」
     #   在 A04 接入后**不再成立**（依赖层可单独把一条边判 stale）。
     #   改守**真性质**：`stale ⇔ 字节层命中 ∪ 依赖层命中` —— 两处口径仍不漂移。

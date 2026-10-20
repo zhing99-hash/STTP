@@ -49,6 +49,8 @@
 #   bash sttp.sh names <旧文件> <新文件> [--pair 旧:新]  断言**名字集合**比对（铁律 #87：只看总数会漏掉"加 2 删 1"）
 #   bash sttp.sh redprobe [--only R1,R4]            **构造性可红性**探针：注入已知缺陷 ⇒ 关键断言**必须真的变红**（Phase 53 D55；铁律 #100）
 #   bash sttp.sh interpcheck [--selfcheck]          「非通过」判据自述解释器的**全链防漏网**扫描（Phase 55 D58；铁律 #92）
+#   bash sttp.sh grade [--json OUT] [--top N]       证据等级 1—5 **只读**报告 + §7 对账 G1–G4 + 落盘状态（Phase 60）
+#   bash sttp.sh gradepersist [--dry] [--apply]     证据等级**落盘**：生成 delta（默认写 delta、不落盘）→ apply_delta（--apply 才真写）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
@@ -545,6 +547,48 @@ EOF
     shift
     set -e
     "$PY" 06_PoC/tests/interp_selfreport_check.py "$@"
+    ;;
+  grade)
+    # Phase 60（M0 收口）：证据等级 1—5 的**只读**报告。
+    #   ① 全图双口径分布（内部 e1 / 对外 p1，**分列**、永不合并，铁律 #90）；
+    #   ② ≤2 分清单按来源聚合 = 抓取任务包；
+    #   ③ §7 的对账断言 G1–G4（守恒 / 满分须可复算 / 低分构造性反例 / 双口径单调且可解释）
+    #      + G5 落盘一致（**未落盘记 SKIP，不假通过**，铁律 #20）；
+    #   ④ 落盘状态（多少条边带字段、落盘时 commit、规则版本）。
+    # ★ 只读：不写 normalized.json，不联网；产物只去 `--json`（默认 .runlog/，E29 家族）。
+    # ★ 缺权威图 ⇒ RC=2（与 require_authority 同口径：这是**已知边界**而非代码缺陷）。
+    shift
+    "$PY" 06_PoC/grade_report.py "$@" || exit $?
+    ;;
+  gradepersist)
+    # Phase 60（M0 收口）：把等级**固化进图快照** —— 规范 §7 说得很清楚，
+    #   现算的分数会随 HEAD 漂移（来源一变，同一条公式昨天 5 分今天 1 分），
+    #   这与 D64（时序自锁）同族，使用者会读成系统故障。
+    # 两步：① 生成 delta（**自检未过即拒绝产出**：null ≠ 0 或「对外 > 内部」都直接 RC≠0，
+    #        宁可不落盘也不把错的固化）；② apply_delta（**不带 --apply 即 dry-run**）。
+    # ★ 非破坏性：只加 5 个 props 键，不改判级、不删边；同一 commit 上重跑幂等。
+    shift
+    require_authority gradepersist "$NORM_GRAPH"
+    _gp_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _gp_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成等级 delta =="
+    "$PY" 11_真实数据/phase60_grade_delta.py ${_gp_args[@]+"${_gp_args[@]}"} || exit $?
+    # `--dry` ⇒ 只算不写 delta ⇒ 第 2 步**没有输入**，跑它只会报「文件不存在」
+    # （把「我故意只算」读成「脚本坏了」）。故显式跳过并说明。
+    if printf '%s\n' "$@" | grep -qx -- "--dry"; then
+      echo "== [2/2] 跳过（--dry：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase60_grade_delta.json \
+        --phase 60 --tag grade --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase60_grade_delta.json \
+        --phase 60 --tag grade || exit $?
+    fi
     ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"

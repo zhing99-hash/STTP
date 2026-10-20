@@ -441,6 +441,59 @@ def grade_counts(edges, stale_registry) -> dict:
     return c
 
 
+# ★ 对外口径（Phase 60）：F 维从「本机能否复算」换成「**随包分发时能否复算**」。
+#   判据**不新造**：直接取 A03 再分发三态的血缘闭包（`source_registry.is_redistributable`），
+#   由调用方**形参注入**（03 层不反向 import 11 层，与 `node_type_of` / `status_by_edge` 同例）。
+#   ★ 为什么不用「全部封顶 2」：那会让对外口径**完全丧失区分度**，等于对外只能说一句
+#     「全都 2 分」—— 而实测有 15 条边的来源**全部**可再分发，它们对外仍然 5 分
+#     （`06_PoC/_recon_grade_public.py`）。把能守住的分守住，才是双口径的意义。
+GRADE_PUBLIC_RULE_VERSION = "p1"
+
+
+def edge_grade_public(e, stale_registry, redist_of=None) -> Optional[int]:
+    """对外口径的证据等级 1–5。
+
+    `redist_of`：可调用对象 `src -> bool`（该来源可否随包分发）。
+    **不注入 ⇒ None**（不可判定）——避免出现「对外分数算出来了，其实是猜的」。
+
+    与内部口径的**唯一差异**在 F 维 —— 且写成 **`min(内部 F, 再分发折扣)`** 的形式：
+      · 证据来源**全部**可再分发 ⇒ 折扣 = 5（即不打折，沿用内部 F）；
+      · 任一来源不可再分发 ⇒ 折扣 = 2（对外包里没有它 ⇒ 不可复算，**但不是不可信**）；
+      · 多源加成同样只数**可再分发**的来源（包里只剩一个来源，就不该拿「双源」加成）。
+
+    ★ 为什么必须写成 `min`：**对外不可能比内部更可复算**，这一条是 G4 的判据本身。
+      早期版本写成 `if all(...) else 2` 的分支形式 ⇒ 5 条「来源未登记」的边出现
+      对外 2 分 > 内部 1 分（`_recon_grade_public.py` 之后的实测）——分支形式**看起来**
+      在说同一件事，实际悄悄破坏了单调性。`min` 形式把这条不变量**写进表达式**，
+      不需要靠断言去抓（能用表达式守住的不变量，不要留给断言）。
+    """
+    if not stale_registry or redist_of is None:
+        return None
+    props = e.get("props") or {}
+    evs = [x for x in (props.get("verification_evidence") or []) if isinstance(x, dict)]
+    srcs = [x.get("src") for x in evs if x.get("src")]
+    f_int = GRADE_FD.get(edge_fidelity(e, stale_registry), 1)
+    discount = 5 if srcs and all(redist_of(s) for s in srcs) else 2
+    f = min(f_int, discount)
+    v = GRADE_VL.get(props.get("verification_level"), 1)
+    g = min(v, f)
+    n_src = len({s for s in srcs if redist_of(s)})
+    n_indep = sum(1 for x in evs
+                  if x.get("indep") and x.get("src") and redist_of(x.get("src")))
+    if g >= 3 and (n_src >= 2 or n_indep >= 2):
+        g = min(5, g + 1)
+    return g
+
+
+def grade_public_counts(edges, stale_registry, redist_of=None) -> dict:
+    """对外口径分布计数；`redist_of` 缺失 ⇒ **整列 null**（不是 0，见上）。"""
+    c = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "null": 0}
+    for e in edges:
+        g = edge_grade_public(e, stale_registry, redist_of)
+        c["null" if g is None else str(g)] += 1
+    return c
+
+
 def evidence_status_counts(edges, stale_registry) -> Optional[dict]:
     """A04 状态分列计数（**边级聚合**）。
 

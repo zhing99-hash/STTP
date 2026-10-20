@@ -636,6 +636,43 @@ def grade_counts_global():
         return None
 
 
+_GRADE_PUBLIC_CACHE = {"key": None, "val": None}
+
+
+def grade_public_counts_global():
+    """**全图**对外口径（规则 p1）等级计数 —— 与内部口径**分列**，永不合并（#90）。
+
+    F 维改用「来源可否随包分发」（A03 再分发闭包 ⇒ `source_registry.is_redistributable`）。
+    ★ 为什么不干脆「对外全部封顶 2」：实测有 15 条边的来源**全部**可再分发，
+      它们对外仍是 5 分（`_recon_grade_public.py`）。一刀切会把这 15 条也抹掉，
+      对外就只剩「全是 2 分」一句可说 —— 那是**放弃区分度**，不是保守。
+    """
+    q = _load_queries()
+    b = get_backend()
+    sr = _load_source_registry()
+    if not q or not b or not sr:
+        return None
+    base = ROOT
+    try:
+        key = (_head_sha(base), tuple(sr.ids()))
+        with _STALE_LOCK:
+            if _GRADE_PUBLIC_CACHE["key"] == key and _GRADE_PUBLIC_CACHE["val"]:
+                return _GRADE_PUBLIC_CACHE["val"]
+        reg = stale_registry()
+        if reg is None:
+            return None
+        out = q.grade_public_counts(b.all_edges(), reg, redist_of=sr.is_redistributable)
+        out["n_edges_total"] = b.edge_count
+        out["rule"] = q.GRADE_PUBLIC_RULE_VERSION
+        with _STALE_LOCK:
+            _GRADE_PUBLIC_CACHE["key"] = key
+            _GRADE_PUBLIC_CACHE["val"] = out
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] 对外口径等级计数不可用（{type(e).__name__}: {e}）")
+        return None
+
+
 _EVIDENCE_STATUS_COUNTS_CACHE = {"key": None, "val": None}
 
 
@@ -883,6 +920,12 @@ def graph_stats() -> dict:
                 "evidence_grade": grade_counts_global(),
                 "evidence_grade_rule": (getattr(_load_queries(), "GRADE_RULE_VERSION", None)
                                         if _load_queries() else None),
+                # ★ Phase 60：对外口径（p1）**分列**在内部口径（e1）**旁边**，
+                #   两者**永不合并、永不平均**（#90）。缺 `source_registry` ⇒ 整列 null。
+                "evidence_grade_public": grade_public_counts_global(),
+                "evidence_grade_public_rule": (
+                    getattr(_load_queries(), "GRADE_PUBLIC_RULE_VERSION", None)
+                    if _load_queries() else None),
                 "a04": a04_registry_summary(),
                 "source_repo_status": _repo_status_counts(),
                 "evidence_byte_source": "repo（git cat-file blob HEAD:<path>）",

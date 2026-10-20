@@ -307,6 +307,60 @@ PROBES = [
         "requires": ["node"],
     },
     {
+        "id": "R17",
+        "kind": "mutate",
+        "why": ("证据等级 G2：5 分必须**可字节复算**（`fidelity == verified`）。"
+                "把 `unverifiable_not_in_repo` 从 2 档改判成 5 档 ⇒ 合成图里那条 "
+                "「cross_source + 来源未入库」的靶边会变成 5 分 ⇒ G2 必须变红。"
+                "★ 用 `--selfcheck`：**不依赖权威图** ⇒ 干净检出里也能跑（与 R13 同纪律）。"),
+        "file": "03_知识层/queries.py",
+        "old": '"unverifiable_not_in_repo": 2,',
+        "new": '"unverifiable_not_in_repo": 5,   # redprobe: 未入库改判可复算（G2）',
+        "cmd": "PY 06_PoC/grade_report.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["G2"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R18",
+        "kind": "mutate",
+        "why": ("证据等级 G3：**1 分不得由「可复算的来源断言」退化而来**（构造性反例）。"
+                "把 `source_asserted` 从 3 档降到 1 档 ⇒ 那条「可复算的 source_asserted」边"
+                "变成 1 分 ⇒ G3 必须变红。这条守的是**映射表本身被改**这一类退化："
+                "改一个数字就能让 13 797 条边集体掉两档，而名字集合上完全看不见。"),
+        "file": "03_知识层/queries.py",
+        # ★ 锚点必须**包含到该行末尾**（`"model_inferred": 1}`）：锚点后面还剩半行代码，
+        #   行尾注释会把它们一起吞掉 ⇒ SyntaxError ⇒ 命令根本跑不起来
+        #   （RC 非零但**没有 FAIL 行** ⇒ 本探针会误报"断言没变红"——
+        #    这是本探针唯一一次"看起来是断言死了、其实是突变写错"，故记在此处）。
+        "old": '"source_asserted": 3, "model_inferred": 1}',
+        "new": ('"source_asserted": 1, "model_inferred": 1}\n'
+                "            # redprobe: 来源断言降档（G3）"),
+        "cmd": "PY 06_PoC/grade_report.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["G3"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R19",
+        "kind": "mutate",
+        "why": ("证据等级 G4：对外口径**不得高于内部**（对外不可能比内部更可复算）。"
+                "★ 这条不变量是靠 `min(内部 F, 再分发折扣)` 的**表达式**守住的 —— "
+                "早前写成 `if/else` 分支时，5 条「来源未登记」的边出现了对外 2 分 > 内部 1 分，"
+                "是 `bash sttp.sh grade` 实测抓出来的（不是断言设计的功劳）。"
+                "本探针把折扣写成恒 5 ⇒ 对外全面高于内部 ⇒ G4 必须变红。"),
+        "file": "03_知识层/queries.py",
+        "old": "    f = min(f_int, discount)",
+        "new": "    f = 5   # redprobe: 去掉再分发折扣（G4）",
+        "cmd": "PY 06_PoC/grade_report.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["G4"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -327,7 +381,8 @@ PROBES = [
 #   （f-string 只在**开头是字面量**时可用）⇒ 断言名必须写成字面量才进得了名字集合。
 #   两处的一致性由 `R0` 断言（否则"注册表改了、断言行忘改"会静默）。
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
-                      "R10", "R11", "R12", "R13", "R14", "R15", "R16", "RN")
+                      "R10", "R11", "R12", "R13", "R14", "R15", "R16",
+                      "R17", "R18", "R19", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
@@ -581,6 +636,12 @@ def emit(rep, res):
             res["R15"][1])
     rep.add(res["R16"][0], "R16 grade=null 兜底成 E5 ⇒ F43b 必须变红（未判定不得冒充最高档）",
             res["R16"][1])
+    rep.add(res["R17"][0], "R17 未入库改判 5 档 ⇒ G2 必须变红（满分必须可复算；合成图自检）",
+            res["R17"][1])
+    rep.add(res["R18"][0], "R18 source_asserted 降档 ⇒ G3 必须变红（低分构造性反例；合成图自检）",
+            res["R18"][1])
+    rep.add(res["R19"][0], "R19 去掉再分发折扣 ⇒ G4 必须变红（对外不得高于内部；合成图自检）",
+            res["R19"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
