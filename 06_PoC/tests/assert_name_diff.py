@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """断言**名字集合**比对（铁律 #87）。
 
 为什么需要它

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """「非通过」判据的**自述** —— 唯一实现（铁律 #88 / #92 / #93；D57 / D58 族）。
 
 问题

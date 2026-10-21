@@ -58,6 +58,11 @@
 #   bash sttp.sh applicability [--sample N]         适用条件**只读**报告 + 对账 W1–W8（Phase 63 · M1 G3）
 #   bash sttp.sh applicabackfill [--dry] [--apply]  适用条件落盘：词典发现 + 人工裁决（零抓取，只落核对过的）
 #   bash sttp.sh verify       跑仓库自带 verify_deploy.py
+#   bash sttp.sh papers [--sample N]             公式↔文献 **mentioned_in** 只读报告 + 对账 U1–U8（Phase 68 · M1 G4）
+#   bash sttp.sh licence [DIR...]                第一方源码许可证头检查（S1–S4，Phase 68 D92）
+#   bash sttp.sh paperfetch [--limit N|--resume] mentioned_in 候选**联网**检索（★ 非自包含：需网络；
+#                        一天约 100 次额度，`--estimate` 先估算请求量、**不联网**）
+#   bash sttp.sh papermentionbackfill [--dry|--apply]  mentioned_in 落盘：规则发现 + 人工裁决表（80 条 curated）
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
 set -u
@@ -697,6 +702,75 @@ EOF
     else
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase63_applicability_delta.json \
         --phase 63 --tag applicabackfill || exit $?
+    fi
+    ;;
+  papers)
+    # Phase 68（M1 G4）：`mentioned_in` 的**只读**报告 + 对账 U1–U8。
+    #   U1 三态全覆盖 ／ U2 每条引用的定位句**独立分词复核**（不复用生成侧代码）／
+    #   U3 空位不撒谎 ／ U4 归属清晰 ／ U5 非真空 ／ U6 边端点 Paper→Formula ／
+    #   U7 **discusses 不得连到 Formula**（一旦有，就是把主题对齐打扮成"文献讨论了公式"）／
+    #   U8 与人工裁决表**双向**一致（只比总数会漏掉"加 2 删 1"）。
+    # ★ 落地规模是 80 条 curated：其余 5,010 条是**无指称**（合成式 + 名字是种类名的
+    #   mathxiv 节点），标 no_referent —— 那是信息，不是欠账。
+    shift
+    "$PY" 06_PoC/paper_mention_report.py "$@" || exit $?
+    ;;
+  licence)
+    # Phase 68 · D92：发布清单里写着"全部第一方源码 SPDX 头"，而这句话此前**没有判据**。
+    #   结果 Phase 66 手抄一遍缺 5 个、Phase 68 多看一个目录又缺 2 个 —— 两轮都是人肉核对。
+    #   这里把它变成可反复跑、可被注入验证的检查（S4 负对照：无头文件必须被抓出来）。
+    shift
+    "$PY" 06_PoC/licence_check.py "$@" || exit $?
+    ;;
+  paperfetch)
+    # Phase 68（M1 G4）：80 条 curated 具名公式在 OpenAlex 上的 mentioned_in 候选检索。
+    # ★ 非自包含：**需要联网**（api.openalex.org 直连，代理会 502）。
+    # ★ D95：任何一条失败 ⇒ 脚本**不会**覆盖已有候选池（写 .partial.json 并 RC=1），
+    #   防止一次限流把 447 条候选静默替成 59 条。
+    # ★ `--resume` 只沿用上次**成功**的条目；失败的条目会被重抓。
+    # ★ D96：额度耗尽（`BudgetExhausted`）时脚本会**在第一条就停下**（不再白白
+    #   重试两小时），并报出重置的绝对时刻；此时应改用 `--estimate` 规划次日重跑。
+    shift
+    # ★ `--estimate` 必须能绕过 `--fetch`：估算的价值就在于**不联网、不消耗配额**。
+    #   若这里无条件拼上 --fetch，用户传 --estimate 也会被后者覆盖掉 ——
+    #   一次几十美元的额度就这样没了，而且失败形态是"什么都没发生"。
+    _pf_mode=""
+    for _a in "$@"; do
+      case "$_a" in
+        --estimate|--selfcheck|--show) _pf_mode="1" ;;
+      esac
+    done
+    if [ -z "$_pf_mode" ]; then
+      set -- --fetch "$@"
+    fi
+    "$PY" 11_真实数据/phase68_paper_fetch.py "$@" || exit $?
+    ;;
+  papermentionbackfill)
+    # Phase 68（M1 G4）：mentioned_in 落盘。
+    #   规则 m1 = 名字连续串出现在标题/摘要 + 学科优先（缺则回退）+ 单词名否决；
+    #   裁决层 = VERDICT 表（80 条逐条读过）。表缺一条 ⇒ S3 红、拒绝产出。
+    # ★ 边名是 **mentioned_in（提及）**，不是 `discusses（讨论）`：
+    #   "某篇文献提到了牛顿第二定律"是可核验的真句子；
+    #   "讨论了 m = k₀·F·S·i⁻²·ρ_e⁻¹"是假的 —— 那 5,002 个合成式谁也不是。
+    shift
+    require_authority papermentionbackfill "$NORM_GRAPH"
+    _pm_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _pm_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成 mentioned_in delta =="
+    "$PY" 11_真实数据/phase68_paper_mention_delta.py ${_pm_args[@]+"${_pm_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qx -- "--dry"; then
+      echo "== [2/2] 跳过（--dry：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase68_paper_mention_delta.json \
+        --phase 68 --tag papermentionbackfill --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase68_paper_mention_delta.json \
+        --phase 68 --tag papermentionbackfill || exit $?
     fi
     ;;
   *)

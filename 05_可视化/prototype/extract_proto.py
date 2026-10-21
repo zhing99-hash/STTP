@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 # -*- coding: utf-8 -*-
 """从 phase41 快照抽取 M2 原型用的真实子集（一次性工具，不入仓库）。
 

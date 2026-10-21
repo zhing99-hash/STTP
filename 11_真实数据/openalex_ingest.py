@@ -29,14 +29,28 @@ Phase 8 目标是「真实 ETL 规模化」（路线图 §3）。原计划的 ar
     python 11_真实数据/openalex_ingest.py --fetch            # 拉取 raw（默认写入 11_真实数据/）
     python 11_真实数据/openalex_ingest.py --fetch --limit 200
     python 11_真实数据/openalex_ingest.py --build            # raw -> seed 格式（供 merge_seed_delta）
+    python 11_真实数据/openalex_ingest.py --selfcheck        # 离线自检（含 to_raw 不丢摘要）
+
+Phase 68 改动（D92-①：摘要从未被抓取）
+-------------------------------------
+本模块原先把 `abstract_inverted_index` **既没进 SELECT 也没进 to_raw** ⇒ 抓出来的
+188 条 raw 摘要覆盖率为 0（G4 探针 R5 实测），而摘要正是「公式在文献里有没有被提到」
+唯一的定位依据。现在：
+
+  * SELECT / fields 增列 `abstract_inverted_index`
+  * `to_raw()` 增 `abstract`（还原文本）与 `abstract_len`（词数，用于覆盖率统计）
+  * HTTP 层改为复用 `fetch_common`（规划 F17），本模块不再自带第三份 `_get_json`
+
+★ 只改生成器，**不重跑历史抓取**：`openalex_math_raw.json` 是登记过的数据源产物，
+  它的字节进过来源核对；为补摘要而重写它会让既有证据判定为漂移。**修了生成器，不等于历史产物会变** ——
+  这一点必须写进文档，否则下一个人会以为 raw 里应该有摘要，然后得出「本地 0 条 ⇒ 网络也没有」的错误结论。
 """
 from __future__ import annotations
 import argparse
 import json
 import os
-import ssl
+import re
 import sys
-import time
 import urllib.request
 import urllib.parse
 from datetime import datetime
@@ -44,6 +58,15 @@ from datetime import datetime
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+
+sys.path.insert(0, HERE)
+# ★ 复用抓取公共层（F17）：限速/重试/UA/绕过代理只此一份实现。
+#   本模块原先自带一份 `_get_json`，与 chebi_synonym_fetch、_recon_papers 构成三份
+#   互不相同的 HTTP 代码；差别只在注释里（"代理会 502，必须直连"），抄丢一次就踩一次。
+from fetch_common import (                                    # noqa: E402
+    get_json, invert_abstract, abstract_len, POLITE_MAILTO, STATS, FetchError,
+)
+
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 RAW = os.path.join(HERE, "openalex_math_raw.json")
 SEED = os.path.join(HERE, "seed_papers_openalex.json")
@@ -59,41 +82,35 @@ SELECT = ",".join([
     "id", "doi", "title", "display_name", "publication_year", "type", "cited_by_count",
     "authorships", "primary_topic", "topics", "concepts", "referenced_works",
     "ids", "language", "open_access", "locations", "biblio",
+    "abstract_inverted_index",          # ★ D92-①：漏这一列 ⇒ 摘要覆盖率永远为 0
 ])
 
 _create = datetime.now().isoformat(timespec="seconds")
 
 
 # ---------------------------------------------------------------- HTTP
-def _opener():
-    ctx = ssl.create_default_context()
-    return urllib.request.build_opener(
-        urllib.request.HTTPSHandler(context=ctx),
-        urllib.request.ProxyHandler({}),   # 直连（OpenAlex 直连可达；代理会 502）
-    )
-
-
 def _get_json(url: str, timeout: int = 30):
-    req = urllib.request.Request(url, headers={
-        "User-Agent": "STTP-ETL/0.1 (research; mailto:%s)" % MAILTO,
-        "Accept": "application/json",
-    })
-    with _opener().open(req, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8", "replace"))
+    """薄转发到 `fetch_common.get_json`（保留旧名：外部文档引用过它）。
+
+    行为差异有两处，都是刻意的：
+      * 失败会抛 `FetchError`（带可重试/不可重试标注），不再是裸 URLError 冒出去
+      * 自动限速默认 0.35s ⇒ 调用方**不必再自己 sleep**（下面两处 time.sleep 已删）。
+        留着调用方的 sleep 不会坏，但会让"限速"这件事出现在两个地方，
+        改一个忘一个是必然的。
+    """
+    return get_json(url, timeout=timeout)
 
 
 def fetch_works(subfield_id: str, limit: int, per_page: int = 100):
     """按 subfield 拉取 article 类 works（按被引降序），cursor 分页。"""
     got, cursor, pages = [], "*", 0
-    fields = "id,doi,title,display_name,publication_year,type,cited_by_count,authorships," \
-             "primary_topic,topics,concepts,referenced_works,ids,language,open_access,locations,biblio"
     while len(got) < limit:
         q = urllib.parse.urlencode({
             "filter": "primary_topic.subfield.id:%s,type:article" % subfield_id,
             "sort": "cited_by_count:desc",
             "per_page": min(per_page, limit - len(got)),
             "cursor": cursor,
-            "select": fields,
+            "select": SELECT,            # ★ 不再另写一份 fields（原先两处需手工同步）
             "mailto": MAILTO,
         })
         d = _get_json("%s?%s" % (BASE, q))
@@ -104,7 +121,6 @@ def fetch_works(subfield_id: str, limit: int, per_page: int = 100):
         print("  第 %d 页：+%d（累计 %d / 目标 %d）" % (pages, len(res), len(got), limit))
         if not res or not cursor:
             break
-        time.sleep(0.35)   # 礼貌限速
     return got
 
 
@@ -122,7 +138,6 @@ def fetch_works_by_ids(wids, per_page: int = 50):
         })
         d = _get_json("%s?%s" % (BASE, q))
         out += d.get("results", [])
-        time.sleep(0.35)
     return out
 
 
@@ -154,6 +169,7 @@ def to_raw(w: dict) -> dict:
             venue = src["display_name"]
             break
     refs = [r.rsplit("/", 1)[-1] for r in (w.get("referenced_works") or [])]
+    aix = w.get("abstract_inverted_index")
     return {
         "wid": oa_id(w),
         "doi": ids.get("doi") or w.get("doi"),
@@ -174,6 +190,12 @@ def to_raw(w: dict) -> dict:
         "is_oa": (w.get("open_access") or {}).get("is_oa"),
         "oa_status": (w.get("open_access") or {}).get("oa_status"),
         "referenced_works": refs,
+        # ★ 摘要（D92-①）。存**还原后的文本**而不存倒排表：
+        #   倒排表只是另一种表示，同时存两份就等于允许"文本自己错而且没人查"；
+        #   文本才是后面做定位句、做人工核对时真正看的那一层。还原正确性由
+        #   fetch_common --selfcheck 的 F1/F5/F6 守着。
+        "abstract": invert_abstract(aix),
+        "abstract_len": abstract_len(aix),
     }
 
 
@@ -372,6 +394,61 @@ def cmd_build(args):
     return 0
 
 
+# ---------------------------------------------------------------- 自检
+_SYNTH_WORK = {
+    "id": "https://openalex.org/W0000000000",
+    "display_name": "A synthetic work for self-check",
+    "publication_year": 2026,
+    "type": "article",
+    "abstract_inverted_index": {
+        "We": [0], "verify": [1], "Snell's": [2], "law": [3], "here": [4], ".": [5],
+    },
+    "ids": {"doi": None},
+    "authorships": [{"author": {"display_name": "Self Check"}}],
+    "open_access": {"is_oa": True, "oa_status": "gold"},
+}
+
+
+def _sc(ok: bool, name: str, detail: str = "") -> bool:
+    print("  [%s] %s%s" % ("PASS" if ok else "FAIL", name, ("  — " + detail) if detail else ""))
+    return ok
+
+
+def cmd_selfcheck(args):
+    """离线自检：**不联网**，只验证"生成器不再丢摘要"这一类可离线判定的契约。
+
+    ★ 为什么连 SELECT 常量都要单独判：`fetch_works` 原先自带一份 `fields` 串，
+      与 `SELECT` 手工同步 ⇒ 将来谁再加一列，最可能的结果就是 SELECT 加了、
+      另一个串没加，抓出来照样没摘要。常量本身也要有人核对。
+    """
+    print("=" * 74)
+    print("openalex_ingest 离线自检（摘要保留 + 常量单一来源）")
+    print("=" * 74)
+    raw = to_raw(_SYNTH_WORK)
+    rs = [
+        _sc(raw.get("abstract") == "We verify Snell's law here .",
+            "O1 to_raw 保留摘要文本", repr(raw.get("abstract"))),
+        _sc(raw.get("abstract_len") == 6, "O2 摘要词数落盘",
+            "= %s" % raw.get("abstract_len")),
+        _sc("abstract_inverted_index" in SELECT, "O3 SELECT 含摘要列（浏览器实际请求的那一份）"),
+        _sc(to_raw({}).get("abstract") == "", "O4 无摘要时不写脏值（空串而非 None）"),
+    ]
+    # 常量单一来源：两处请求都引用同一个 SELECT，源码里不得再有一份硬编码字段串。
+    # ★★ 锚点用**正则提取调用形态**，不要写成包含字段内容或 select 常量的字面串 ——
+    #    第一版 O5 数 SELECT 的字段内容，第二版数 select 键后面跟的那个常量名，
+    #    两次都被**断言自己的源码/注释**算进去了（自指第三次，同 D77/D87 一族）。
+    #    ⇒ 注释里也不要再现拼出那个调用形态。
+    src = open(os.path.abspath(__file__), encoding="utf-8").read()
+    selvals = re.findall(r'"select":\s*([A-Za-z_][A-Za-z_0-9]*)', src)
+    rs.append(_sc(selvals == ["SELECT", "SELECT"],
+                  "O5 两个请求都用同一个 SELECT 常量（无第二份硬编码字段串）",
+                  "调用点取值 %s" % selvals))
+    bad = sum(1 for x in rs if not x)
+    print("-" * 74)
+    print("  合计 %d 条，通过 %d，失败 %d" % (len(rs), len(rs) - bad, bad))
+    return 1 if bad else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--fetch", action="store_true", help="拉取 raw")
@@ -379,7 +456,10 @@ def main():
     ap.add_argument("--limit", type=int, default=150, help="初次拉取篇数")
     ap.add_argument("--expand", type=int, default=40, help="补充高频被引篇数")
     ap.add_argument("--per-page", type=int, default=100)
+    ap.add_argument("--selfcheck", action="store_true", help="离线自检（不联网）")
     args = ap.parse_args()
+    if args.selfcheck:
+        return cmd_selfcheck(args)
     if args.fetch:
         return cmd_fetch(args)
     if args.build:

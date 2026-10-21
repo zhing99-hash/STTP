@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """「非通过」判据自述解释器 —— **全链防漏网**扫描仪（铁律 #92 / #88 / #90 / #98）。
 
 它解决的问题

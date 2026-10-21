@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 # -*- coding: utf-8 -*-
 """Phase 63 · G3 适用条件落盘（规则 a1，零抓取，只写人工核对过的）
 

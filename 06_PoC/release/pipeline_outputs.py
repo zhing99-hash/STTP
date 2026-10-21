@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """发布链**自身产物**的清单 —— 唯一事实源（铁律 #88；Phase 55 · D64）。
 
 它解决的问题

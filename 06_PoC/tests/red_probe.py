@@ -532,6 +532,62 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R29",
+        "kind": "expect",
+        "why": ("Phase 68 · S5b/D96：**输入不完整必须拒绝产出**。喂一份 65/80 条未真正检索的"
+                "候选池（2026-10-21 真实劣化产物，做成夹具 ⇒ 不联网可复现）⇒ delta 必须 RC=2。"
+                "★ 这条守的是最容易被忽略的一种造假：没查到的记成「确认没有」。"
+                "整张图上 5,090 个节点只要有一批被这么处理，"
+                "对外口径就会变成「99% 公式在文献里没有提及」—— 而真相是那天额度用完了。"
+                "★ 用 expect 而非 mutate：若日后有人删掉这道闸门，本探针会立刻失败"
+                "（RC 变成 0），而不是等下一次真的撞上配额。"),
+        "cmd": ("PY 11_真实数据/phase68_paper_mention_delta.py --dry "
+                "--pool 06_PoC/tests/fixtures/phase68_pool_degraded.json"),
+        "cwd": ROOT,
+        "expect_rc": 2,
+        "expect_text": ["候选池不完整", "not_extracted"],
+        "requires": [],
+    },
+    {
+        "id": "R30",
+        "kind": "mutate",
+        "why": ("Phase 68 · S5b：把「抓取失败」的白名单分支改成计入 `no_referent` —— "
+                "这是最省事、也让覆盖率最好看的一种退化（失败瞬间全变成\"已确认无\"），"
+                "绿字却能继续报出来。注入后 S5b 必须变红。"
+                "★ 为什么值得单独立一条探针：它跟 D72「恒真判据什么都守不住」是同一族，"
+                "但这里退化得更隐蔽 —— 计数对得上、三态都在、**每个数都变了，没人看得见**。"),
+        "file": "11_真实数据/phase68_paper_mention_delta.py",
+        # ★ 锚点必须是**单行**：本文件是 CRLF 行尾，而 `read_text()` 故意不做行尾
+        #   翻译（`newline=""`，为了还原逐字节一致）⇒ 多行锚点里的 `\n` 永远匹配不上，
+        #   表现为"锚点命中 0 次"（那时报红的是 RS 而不是 R30，容易误诊）。
+        "old": '            newp = {"papers_status": "not_extracted", "papers": []}',
+        "new": '            newp = {"papers_status": "no_referent"}   # redprobe: 抓取失败写成已确认无（S5b）',
+        "cmd": ("PY 11_真实数据/phase68_paper_mention_delta.py --dry --allow-partial "
+                "--pool 06_PoC/tests/fixtures/phase68_pool_degraded.json"),
+        "cwd": ROOT,
+        "expect_red": ["S5b"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R31",
+        "kind": "mutate",
+        "why": ("Phase 68 · S5b 的另一半：只**去掉未检索计数**、状态留着不动。"
+                "这样 daily 汇总里三态数量照样齐整（65 行落在 not_extracted），"
+                "但「这 65 条是因为抓取失败才未知」这件事就**不再可被读出** —— "
+                "下一次有人问「为什么这么多未抽取」，答案是空的。"
+                "★ 同一条断言、两种死法，所以配两条探针（R30 死语义／R31 死计数）。"),
+        "file": "11_真实数据/phase68_paper_mention_delta.py",
+        "old": '            st["unsearched"] += 1',
+        "new": '            pass   # redprobe: 未检索行不再计数（S5b）',
+        "cmd": ("PY 11_真实数据/phase68_paper_mention_delta.py --dry --allow-partial "
+                "--pool 06_PoC/tests/fixtures/phase68_pool_degraded.json"),
+        "cwd": ROOT,
+        "expect_red": ["S5b"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -554,10 +610,11 @@ PROBES = [
 DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
-                      "R24", "R25", "R26", "R27", "R28", "RN")
+                      "R24", "R25", "R26", "R27", "R28",
+                      "R29", "R30", "R31", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
-ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "R0")
+ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
 
 
 # ---------------------------------------------------------------------------
@@ -780,6 +837,36 @@ def registry_report():
     return bad
 
 
+def residue_report():
+    """残留污染自检：**上一次被中断的运行的注入内容**是否已留在事实源里。
+
+    ★ 2026-10-21 真事：`redprobe` 在前台被 SIGTERM 掐断（默认超时 120s），
+      某条探针的注入内容留在 `queries.py` 里；下一次运行便以此时的内容为基准，
+      ⇒ 锚点命中 0 次，而 RR「还原自检」却显示"全部逐字节一致"
+      —— **它证明的是"还原回了运行前的样子"，而运行前就已经是脏的**。
+      铁律 #97 只说"不许弄脏"，没说"脏了要能发现"，这条补的就是后半句。
+
+    判据很简单：任一 mutate 探针的**被注入文本**（`new`）若已在目标文件里出现，
+    那它只可能来自一次没还原干净的运行（正常文件内容不会带 `redprobe:` 注入体）。
+    """
+    residue = []
+    for p in PROBES:
+        if p["kind"] != "mutate":
+            continue
+        fp = os.path.join(ROOT, p["file"])
+        if not os.path.isfile(fp):
+            continue
+        body = p["new"]
+        # 取注入体里最具标识的一行（通常带 `redprobe:` 注释或新增的赋值）
+        probe_line = next((l.strip() for l in body.splitlines()
+                           if l.strip() and ("redprobe" in l or l.startswith("+"))),
+                          body.strip().splitlines()[0].strip())
+        if probe_line and probe_line in read_text(fp):
+            residue.append("%s 的注入内容仍残留在 %s（= 上次运行被中断且未还原）"
+                           % (p["id"], p["file"]))
+    return residue
+
+
 # ---------------------------------------------------------------------------
 def emit(rep, res):
     """把结果写成**字面量断言名**（见 DECLARED_PROBE_IDS 的说明）。"""
@@ -832,11 +919,19 @@ def emit(rep, res):
             res["R27"][1])
     rep.add(res["R28"][0], "R28 清单快照阶段与产物文件名不符 ⇒ A0d 必须变红（第三条来源）",
             res["R28"][1])
+    rep.add(res["R29"][0], "R29 候选池不完整（65/80 未检索）⇒ delta 必须拒绝产出 RC=2（D96）",
+            res["R29"][1])
+    rep.add(res["R30"][0], "R30 抓取失败改记 no_referent ⇒ S5b 必须变红（不许把未知写成已确认无）",
+            res["R30"][1])
+    rep.add(res["R31"][0], "R31 同样内容是「未检索」但不再计数 ⇒ S5b 必须变红（失败行可识别）",
+            res["R31"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
     rep.add(res["RR"][0], "RR 还原自检：被碰过的文件逐字节等于初始内容（#97 不得弄脏工作树）",
             res["RR"][1])
+    rep.add(res["RT"][0], "RT 残留自检：上次被中断的运行没有把注入留在工作树里",
+            res["RT"][1])
     rep.add(res["R0"][0], "R0 注册表自检：ID 序列/唯一性/字段齐备与声明一致", res["R0"][1])
 
 
@@ -898,6 +993,13 @@ def main(argv=None):
         dirty.append("还原异常：%s" % restore_error)
     res["RR"] = (not dirty, "被碰过 %d 个文件；%s"
                  % (len(touched), "全部逐字节一致" if not dirty else "★ 不一致：" + "、".join(dirty)))
+
+    # ---- RT 残留自检：上一次被中断的运行是否把注入留在了工作树里 ----
+    bad_residue = residue_report()
+    res["RT"] = (not bad_residue, "%s" % (
+        "无残留（每个 mutate 目标的注入体都不在文件里）"
+        if not bad_residue else "★ " + "；".join(bad_residue)
+        + " ⇒ 先 git checkout -- <file> 再跑，否则本次会以脏内容为基准"))
 
     # ---- RS 锚点自检（覆盖整个注册表，与 --only 无关）----
     bad_anchor = anchor_report()

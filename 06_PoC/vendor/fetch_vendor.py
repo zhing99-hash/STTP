@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 zhing
 """
 A4 · CDN 依赖本地化（vendoring）
 

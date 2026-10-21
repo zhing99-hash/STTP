@@ -1,0 +1,1974 @@
+{
+  "meta": {
+    "phase": "Phase68-paper-mention",
+    "source": "openalex",
+    "endpoint": "https://api.openalex.org/works",
+    "filter": "title_and_abstract.search + type:article，被引降序",
+    "per_formula": 25,
+    "rule": "mentioned_in_v1：公式名规范化后必须**连续**出现在标题或摘要",
+    "fetched_at": "2026-10-21T09:20:08",
+    "n_formulas_total": 5090,
+    "n_curated": 80,
+    "stats": {
+      "requests": 210,
+      "cache_hits": 0,
+      "retries": 130,
+      "failures": 65
+    },
+    "dropped_snippet": {
+      "dropped_snippet": 3
+    },
+    "license": "CC0",
+    "note": "候选池，不是结论；判定与落盘由 phase68_paper_mention_delta 依 VERDICT 表执行",
+    "trust": "DEGRADED",
+    "integrity": {
+      "n_rows": 80,
+      "n_error": 65,
+      "n_clean": 15,
+      "n_clean_with_candidates": 7,
+      "n_candidates": 59,
+      "error_kinds": {
+        "重试 3 次仍失败：HTTP 429": 65
+      },
+      "note": "本文件是 2026-10-21 第二轮的运行产物：当日 OpenAlex 共享 IP 配额耗尽 ⇒ 65/80 条未真正检索。它**覆盖掉了第一轮 447 条候选的完整结果**，而当时的写盘守卫（D95）还没加上。禁止直接作为 declarative 结论的输入。"
+    },
+    "fixture": true,
+    "fixture_note": "**用于判据的红侧复现**：2026-10-21 OpenAlex 共享 IP 当日额度耗尽时的真实产物（65/80 条未检索）。它存在的唯一目的，是让「输入不完整 ⇒ 拒绝产出」这条守卫在不联网、不碰工作树的前提下可被反复验证。"
+  },
+  "formulas": [
+    {
+      "fid": "BC:fo:atp_hydrolysis_eq",
+      "name": "ATP hydrolysis",
+      "domain": "chem.energy",
+      "search_name": "ATP hydrolysis",
+      "name_tokens": [
+        "atp",
+        "hydrolysis"
+      ],
+      "field_of": "fields/16",
+      "search_total": 21103,
+      "candidates": [
+        {
+          "wid": "W2151274733",
+          "doi": "https://doi.org/10.1115/1.1451234",
+          "title": "Mechanics of Motor Proteins and the Cytoskeleton",
+          "year": 2002,
+          "cited_by": 2830,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Microtubule and mitosis dynamics",
+          "where": "abstract",
+          "snippet": "l Filaments - Force Generation by Cytoskeletal Filaments - Active Polymerization - PART III: MOTOR PROTEINS - Structures of Motor Proteins - Speeds of Motors - ATP Hydrolysis - Steps and Forces - Motility Models: From Crossbridges to Motion - Afterword - Appendix - Bibliography - Index"
+        },
+        {
+          "wid": "W1932645010",
+          "doi": "https://doi.org/10.1128/mmbr.57.1.50-108.1993",
+          "title": "The complete general secretory pathway in gram-negative bacteria",
+          "year": 1993,
+          "cited_by": 1774,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Bacterial Genetics and Biotechnology",
+          "where": "abstract",
+          "snippet": "ypeptide segments to the periplasmic side of this membrane almost always requires at least six different proteins encoded by the sec genes and is dependent on both ATP hydrolysis and the electrochemical energy potential."
+        },
+        {
+          "wid": "W2111607026",
+          "doi": "https://doi.org/10.1126/science.1207056",
+          "title": "mTORC1 Senses Lysosomal Amino Acids Through an Inside-Out Mechanism That Requires the Vacuolar H + -ATPase",
+          "year": 2011,
+          "cited_by": 1674,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "PI3K/AKT/mTOR signaling in cancer",
+          "where": "abstract",
+          "snippet": "The v-ATPase engages in extensive amino acid-sensitive interactions with the Ragulator, a scaffolding complex that anchors the Rag GTPases to the lysosome. In a cell-free system, ATP hydrolysis by the v-ATPase was necessary for amino acids to regulate the v-ATPase-Ragulator interaction and promote mTORC1 translocation."
+        },
+        {
+          "wid": "W2176715668",
+          "doi": "https://doi.org/10.1152/physrev.1996.76.2.371",
+          "title": "Molecular diversity of myofibrillar proteins: gene regulation and functional significance",
+          "year": 1996,
+          "cited_by": 1547,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Muscle Physiology and Disorders",
+          "where": "abstract",
+          "snippet": "The diversity among isomyosins is related to the differences in the parameters of chemomechanical transduction as ATP hydrolysis rate and shortening velocity."
+        },
+        {
+          "wid": "W2175029576",
+          "doi": "https://doi.org/10.1177/153537020322800201",
+          "title": "Regulation of Signaling Protein Function and Trafficking by the hsp90/hsp70-Based Chaperone Machinery",
+          "year": 2003,
+          "cited_by": 1483,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Heat shock proteins research",
+          "where": "abstract",
+          "snippet": "the most important concept is that ATP hydrolysis by an intrinsic ATPase activity results in a conformational change in hsp90 that is required to induce conformational change in a substrate protein."
+        },
+        {
+          "wid": "W1500700435",
+          "doi": "https://doi.org/10.1016/s0021-9258(19)44681-4",
+          "title": "A23187: A Divalent Cation Ionophore",
+          "year": 1972,
+          "cited_by": 1173,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Mitochondrial Function and Pathology",
+          "where": "abstract",
+          "snippet": "Under these conditions, coupled phosphorylation supported by glutamate, and ATP hydrolysis are severely depressed, but increasing concentrations of magnesium in the incubating medium prevent these inhibitions."
+        },
+        {
+          "wid": "W2125771483",
+          "doi": "https://doi.org/10.1098/rsta.2004.1539",
+          "title": "Structural basis of biological nitrogen fixation",
+          "year": 2005,
+          "cited_by": 1120,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/21",
+          "field": "Energy",
+          "topic": "Metalloenzymes and iron-sulfur proteins",
+          "where": "abstract",
+          "snippet": "f two component metalloproteins, the MoFe-protein with the FeMo-cofactor that provides the active site for substrate reduction, and the Fe-protein that couples ATP hydrolysis to electron transfer."
+        },
+        {
+          "wid": "W2113395636",
+          "doi": "https://doi.org/10.1083/jcb.136.6.1307",
+          "title": "Actin Depolymerizing Factor (ADF/Cofilin) Enhances the Rate of Filament Turnover: Implication in Actin-based Motility",
+          "year": 1997,
+          "cited_by": 1049,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Cellular Mechanics and Interactions",
+          "where": "abstract",
+          "snippet": "In conclusion, the function of ADF is not to sequester G-actin. ADF uses ATP hydrolysis in actin assembly to enhance filament dynamics."
+        }
+      ],
+      "error": null
+    },
+    {
+      "fid": "BC:fo:photosynthesis_eq",
+      "name": "Photosynthesis stoichiometry",
+      "domain": "chem.stoich",
+      "search_name": "Photosynthesis stoichiometry",
+      "name_tokens": [
+        "photosynthesis",
+        "stoichiometry"
+      ],
+      "field_of": "fields/16",
+      "search_total": 445,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:arrhenius",
+      "name": "Arrhenius equation",
+      "domain": "chem.kinetics",
+      "search_name": "Arrhenius equation",
+      "name_tokens": [
+        "arrhenius",
+        "equation"
+      ],
+      "field_of": "fields/16",
+      "search_total": 17204,
+      "candidates": [
+        {
+          "wid": "W2052953969",
+          "doi": "https://doi.org/10.1021/ed061p494",
+          "title": "The development of the Arrhenius equation",
+          "year": 1984,
+          "cited_by": 1702,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/16",
+          "field": "Chemistry",
+          "topic": "History and advancements in chemistry",
+          "where": "title",
+          "snippet": "The development of the Arrhenius equation"
+        },
+        {
+          "wid": "W1969945203",
+          "doi": "https://doi.org/10.1002/marc.200600404",
+          "title": "Isoconversional Kinetic Analysis of Thermally Stimulated Processes in Polymers",
+          "year": 2006,
+          "cited_by": 1117,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/25",
+          "field": "Materials Science",
+          "topic": "Thermal and Kinetic Analysis",
+          "where": "abstract",
+          "snippet": "An isoconversional method applies the Arrhenius equation to a narrow temperature region, Δ T related to a given extent of conversion."
+        },
+        {
+          "wid": "W1980909228",
+          "doi": null,
+          "title": "Basin Analysis: Principles and Applications",
+          "year": 1990,
+          "cited_by": 1097,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/19",
+          "field": "Earth and Planetary Sciences",
+          "topic": "Geological and Geophysical Studies",
+          "where": "abstract",
+          "snippet": "9.5 Theory: the Arrhenius equation and maturation indices."
+        },
+        {
+          "wid": "W2366586089",
+          "doi": "https://doi.org/10.1242/jeb.118851",
+          "title": "The effects of temperature on aerobic metabolism: towards a mechanistic understanding of the responses of ectotherms to a changing environment",
+          "year": 2015,
+          "cited_by": 877,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/23",
+          "field": "Environmental Science",
+          "topic": "Physiological and biochemical adaptations",
+          "where": "abstract",
+          "snippet": "c metabolism is often attributed to the competing effects of thermodynamics, which can be described using the Arrhenius equation, and the effects of temperature on protein stability, this account represents an over-simplification of the factors acting even at the level of single prot…"
+        },
+        {
+          "wid": "W2079253547",
+          "doi": "https://doi.org/10.1021/es062237m",
+          "title": "Oxidation of Chlorinated Ethenes by Heat-Activated Persulfate: Kinetics and Products",
+          "year": 2006,
+          "cited_by": 757,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/23",
+          "field": "Environmental Science",
+          "topic": "Advanced oxidation water treatment",
+          "where": "abstract",
+          "snippet": "ance were pseudo-first-order for 1-2 half-lives, and the resulting rate constants-measured from 30 to 70 degrees C--fit the Arrhenius equation, yielding apparent activation energies of 101 +/- 4 kJ mol(-1) for tetrachloroethene (PCE), 108 +/- 3 kJ mol(-1) for trichloroethene (TCE), 1…"
+        },
+        {
+          "wid": "W2058955158",
+          "doi": "https://doi.org/10.1039/dc9786600199",
+          "title": "Pressure and temperature dependence of self-diffusion in water",
+          "year": 1978,
+          "cited_by": 741,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/25",
+          "field": "Materials Science",
+          "topic": "Material Dynamics and Properties",
+          "where": "abstract",
+          "snippet": "A free-volume analysis has led to a modified Arrhenius equation which involves pressure-dependent terms."
+        }
+      ],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:gibbs_reaction",
+      "name": "Gibbs energy at arbitrary composition",
+      "domain": "chem.equilibrium",
+      "search_name": "Gibbs energy at arbitrary composition",
+      "name_tokens": [
+        "gibbs",
+        "energy",
+        "at",
+        "arbitrary",
+        "composition"
+      ],
+      "field_of": "fields/16",
+      "search_total": 46,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:gibbs_standard",
+      "name": "Standard Gibbs energy and equilibrium constant",
+      "domain": "chem.equilibrium",
+      "search_name": "Standard Gibbs energy and equilibrium constant",
+      "name_tokens": [
+        "standard",
+        "gibbs",
+        "energy",
+        "and",
+        "equilibrium",
+        "constant"
+      ],
+      "field_of": "fields/16",
+      "search_total": 679,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:henderson",
+      "name": "Henderson–Hasselbalch equation",
+      "domain": "chem.acidbase",
+      "search_name": "Henderson–Hasselbalch equation",
+      "name_tokens": [
+        "hendersonhasselbalch",
+        "equation"
+      ],
+      "field_of": "fields/16",
+      "search_total": 587,
+      "candidates": [
+        {
+          "wid": "W3115438173",
+          "doi": "https://doi.org/10.1093/jaoac/58.4.864",
+          "title": "Buffers for pH and Metal Ion Control.",
+          "year": 1975,
+          "cited_by": 872,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/15",
+          "field": "Chemical Engineering",
+          "topic": "Chemical and Physical Properties in Aqueous Solutions",
+          "where": "abstract",
+          "snippet": "The Henderson-Hasselbalch equation.- References."
+        },
+        {
+          "wid": "W1987303342",
+          "doi": "https://doi.org/10.1097/00000542-199905000-00007",
+          "title": "Rapid Saline Infusion Produces Hyperchloremic Acidosis in Patients Undergoing Gynecologic Surgery",
+          "year": 1999,
+          "cited_by": 754,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Renal function and acid-base balance",
+          "where": "abstract",
+          "snippet": "The serum bicarbonate concentration was calculated using the Henderson-Hasselbalch equation and also using the Stewart approach from the strong ion difference and the amount of weak plasma acid."
+        },
+        {
+          "wid": "W1976149946",
+          "doi": "https://doi.org/10.1021/ed078p1499",
+          "title": "The Henderson-Hasselbalch Equation: Its History and Limitations",
+          "year": 2001,
+          "cited_by": 513,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/16",
+          "field": "Chemistry",
+          "topic": "Various Chemistry Research Topics",
+          "where": "title",
+          "snippet": "The Henderson-Hasselbalch Equation: Its History and Limitations"
+        },
+        {
+          "wid": "W1914224118",
+          "doi": "https://doi.org/10.1042/bj2580683",
+          "title": "Xanthene-dye-labelled phosphatidylethanolamines as probes of interfacial pH. Studies in phospholipid vesicles",
+          "year": 1989,
+          "cited_by": 401,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/16",
+          "field": "Chemistry",
+          "topic": "Molecular Sensors and Ion Detection",
+          "where": "abstract",
+          "snippet": "values were determined by fitting the fluorescence ratios to the Henderson-Hasselbalch equation."
+        },
+        {
+          "wid": "W2011162378",
+          "doi": "https://doi.org/10.1097/00003246-199908000-00030",
+          "title": "Unmeasured anions identified by the Fencl-Stewart method predict mortality better than base excess, anion gap, and lactate in patients in the pediatric intensive care unit",
+          "year": 1999,
+          "cited_by": 268,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Renal function and acid-base balance",
+          "where": "abstract",
+          "snippet": "BE was calculated from the standard bicarbonate, which is derived from the Henderson-Hasselbalch equation and reported on the blood gas analysis."
+        },
+        {
+          "wid": "W1973392033",
+          "doi": "https://doi.org/10.3109/00365517709098927",
+          "title": "The Van Slyke Equation",
+          "year": 1977,
+          "cited_by": 205,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Renal function and acid-base balance",
+          "where": "abstract",
+          "snippet": "The Henderson-Hasselbalch equation has always occupied a central place in the description of the acid-base status of the blood."
+        },
+        {
+          "wid": "W2124865771",
+          "doi": "https://doi.org/10.1152/ajpgi.1990.259.4.g519",
+          "title": "Validation of tonometric measurement of gut intramural pH during endotoxemia and mesenteric occlusion in pigs",
+          "year": 1990,
+          "cited_by": 195,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Abdominal vascular conditions and treatments",
+          "where": "abstract",
+          "snippet": "Tissue pH is calculated by using the Henderson-Hasselbalch equation and measurements of arterial [HCO-3] and CO2 tension (PCO3) of saline contained in a Silastic balloon within the lumen of the gut."
+        },
+        {
+          "wid": "W3179607730",
+          "doi": "https://doi.org/10.1080/17425255.2021.1951223",
+          "title": "Crosstalk of physiological pH and chemical pKa under the umbrella of physiologically based pharmacokinetic modeling of drug absorption, distribution, metabolism, excretion, and toxicity",
+          "year": 2021,
+          "cited_by": 193,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/17",
+          "field": "Computer Science",
+          "topic": "Computational Drug Discovery Methods",
+          "where": "abstract",
+          "snippet": "The Henderson-Hasselbalch equation and pH-partition hypothesis form the theoretical base to define the impact of pH-pKa crosstalk on drug ionization and thence its absorption, distribution, meta"
+        },
+        {
+          "wid": "W2137399565",
+          "doi": "https://doi.org/10.1021/bi002740q",
+          "title": "A Novel View of pH Titration in Biomolecules",
+          "year": 2001,
+          "cited_by": 191,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Protein Structure and Dynamics",
+          "where": "abstract",
+          "snippet": "e sites in a molecule interact with each other, their pH titration can be considerably more complex than that of an independent site described by the classical Henderson-Hasselbalch equation."
+        },
+        {
+          "wid": "W2119165459",
+          "doi": "https://doi.org/10.1111/j.1749-6632.1993.tb18346.x",
+          "title": "Saliva Testing for Drugs of Abuse",
+          "year": 1993,
+          "cited_by": 187,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/30",
+          "field": "Pharmacology, Toxicology and Pharmaceutics",
+          "topic": "Forensic Toxicology and Drug Analysis",
+          "where": "abstract",
+          "snippet": "Estimations of the theoretical S/P (total) ratios for acidic and basic drugs were based on the Henderson-Hasselbalch equation."
+        },
+        {
+          "wid": "W1997378909",
+          "doi": "https://doi.org/10.1097/00003246-199102000-00025",
+          "title": "Gastric tonometry in healthy volunteers",
+          "year": 1991,
+          "cited_by": 186,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Gastroesophageal reflux and treatments",
+          "where": "abstract",
+          "snippet": "MEASUREMENTS AND MAIN RESULTS: Gastric pHi was calculated from the arterial (HCO3-) and the tonometrically determined intraluminal PCO2 using the Henderson-Hasselbalch equation."
+        },
+        {
+          "wid": "W2128939350",
+          "doi": "https://doi.org/10.1897/07-583.1",
+          "title": "Estimation of the soil–water partition coefficient normalized to organic carbon for ionizable organic chemicals",
+          "year": 2008,
+          "cited_by": 182,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/23",
+          "field": "Environmental Science",
+          "topic": "Environmental Chemistry and Analysis",
+          "where": "abstract",
+          "snippet": "The Henderson-Hasselbalch equation was applied to calculate dissociation."
+        },
+        {
+          "wid": "W2275555839",
+          "doi": "https://doi.org/10.1152/jappl.1997.83.1.297",
+          "title": "A simplified strong ion model for acid-base equilibria: application to horse plasma",
+          "year": 1997,
+          "cited_by": 181,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Renal function and acid-base balance",
+          "where": "abstract",
+          "snippet": "The Henderson-Hasselbalch equation and Stewart's strong ion model are currently used to describe mammalian acid-base equilibria."
+        },
+        {
+          "wid": "W2019305764",
+          "doi": "https://doi.org/10.1097/00000542-199905000-00003",
+          "title": "Hyperchloremic Metabolic Acidosis Is a Predictable Consequence of Intraoperative Infusion of 0.9% Saline",
+          "year": 1999,
+          "cited_by": 180,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Hemodynamic Monitoring and Therapy",
+          "where": "abstract",
+          "snippet": "During the first 2 h of saline infusion, the serum bicarbonate concentration (HCO3-), calculated from the Henderson-Hasselbalch equation) decreased from 23.5 +/- 2.2 mM to 18.4 +/- 2.0 mM."
+        },
+        {
+          "wid": "W2037582268",
+          "doi": "https://doi.org/10.1111/j.1939-165x.2000.tb00241.x",
+          "title": "Clinical Assessment of Acid‐Base Status: Comparison of the Henderson‐Hasselbalch and Strong Ion Approaches",
+          "year": 2000,
+          "cited_by": 172,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Renal function and acid-base balance",
+          "where": "abstract",
+          "snippet": "The traditional approach for clinically assessing acid-base status uses the Henderson-Hasselbalch equation to categorize 4 primary acid-base disturbances: respiratory acidosis (increased PCO2), respiratory alkalosis (decreased PCO2), metabolic acidosis (decreased ex"
+        },
+        {
+          "wid": "W2108881945",
+          "doi": "https://doi.org/10.1017/s1466252307001156",
+          "title": "Ammonia and urea transport across the rumen epithelium: a review",
+          "year": 2006,
+          "cited_by": 171,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/11",
+          "field": "Agricultural and Biological Sciences",
+          "topic": "Ruminant Nutrition and Digestive Physiology",
+          "where": "abstract",
+          "snippet": "Hence, the relative transport rates of NH3 or NH4+ are determined by the ruminal pH according to the Henderson-Hasselbalch equation."
+        },
+        {
+          "wid": "W1997335957",
+          "doi": "https://doi.org/10.1097/00003246-198812000-00009",
+          "title": "Prognostic value of gastric intramural pH in surgical intensive care patients",
+          "year": 1988,
+          "cited_by": 168,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/27",
+          "field": "Medicine",
+          "topic": "Sepsis Diagnosis and Treatment",
+          "where": "abstract",
+          "snippet": "The stomach wall pH was calculated from the PCO2 in gastric juice and arterial bicarbonate concentration using the Henderson-Hasselbalch equation."
+        }
+      ],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:ka",
+      "name": "Acid dissociation constant",
+      "domain": "chem.acidbase",
+      "search_name": "Acid dissociation constant",
+      "name_tokens": [
+        "acid",
+        "dissociation",
+        "constant"
+      ],
+      "field_of": "fields/16",
+      "search_total": 17023,
+      "candidates": [
+        {
+          "wid": "W2097654784",
+          "doi": "https://doi.org/10.1126/science.289.5481.920",
+          "title": "The Structural Basis of Ribosome Activity in Peptide Bond Synthesis",
+          "year": 2000,
+          "cited_by": 2268,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "RNA and protein synthesis mechanisms",
+          "where": "abstract",
+          "snippet": "e base of A2486 (A2451 in Escherichia coli) playing the same general base role as histidine-57 in chymotrypsin. The unusual pK(a) (where K(a) is the acid dissociation constant) required for A2486 to perform this function may derive in part from its hydrogen bonding to G2482 (G2447 in E.…"
+        }
+      ],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:ksp",
+      "name": "Solubility product",
+      "domain": "chem.solubility",
+      "search_name": "Solubility product",
+      "name_tokens": [
+        "solubility",
+        "product"
+      ],
+      "field_of": "fields/16",
+      "search_total": 104193,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:kw",
+      "name": "Water autoionization constant",
+      "domain": "chem.acidbase",
+      "search_name": "Water autoionization constant",
+      "name_tokens": [
+        "water",
+        "autoionization",
+        "constant"
+      ],
+      "field_of": "fields/16",
+      "search_total": 24,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:le_chatelier",
+      "name": "Le Chatelier's principle",
+      "domain": "chem.equilibrium",
+      "search_name": "Le Chatelier's principle",
+      "name_tokens": [
+        "le",
+        "chatelier",
+        "principle"
+      ],
+      "field_of": "fields/16",
+      "search_total": 243,
+      "candidates": [
+        {
+          "wid": "W2018944415",
+          "doi": "https://doi.org/10.1103/physrevlett.32.324",
+          "title": "Maximum Mass of a Neutron Star",
+          "year": 1974,
+          "cited_by": 693,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/31",
+          "field": "Physics and Astronomy",
+          "topic": "Pulsars and Gravitational Waves Research",
+          "where": "abstract",
+          "snippet": "On the basis of Einstein's theory of relativity, the principle of causality, and Le Chatelier's principle, it is here established that the maximum mass of the equilibrium configuration of a neutron star cannot be larger than $3.2{M}_{[m?]}$."
+        },
+        {
+          "wid": "W4390912254",
+          "doi": "https://doi.org/10.1002/adma.202310645",
+          "title": "Inhibition of Vanadium Cathodes Dissolution in Aqueous Zn‐Ion Batteries",
+          "year": 2024,
+          "cited_by": 347,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/22",
+          "field": "Engineering",
+          "topic": "Advanced battery technologies research",
+          "where": "abstract",
+          "snippet": "bicity and restriction of the outward penetration of dissolved vanadium cations, thereby shifting the reaction equilibrium and suppressing the vanadium dissolution following Le Chatelier's principle, is described."
+        },
+        {
+          "wid": "W2065521584",
+          "doi": "https://doi.org/10.1039/c3ta14484d",
+          "title": "Stable blue TiO2−x nanoparticles for efficient visible light photocatalysts",
+          "year": 2014,
+          "cited_by": 339,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/21",
+          "field": "Energy",
+          "topic": "TiO2 Photocatalysis and Solar Cells",
+          "where": "abstract",
+          "snippet": "Here we have developed an effective strategy for the large-scale synthesis of blue titania with Ti3+ localized in the core of TiO2−x nanoparticles (NPs) based on Le Chatelier's principle."
+        },
+        {
+          "wid": "W2321631184",
+          "doi": "https://doi.org/10.1021/am302439g",
+          "title": "Oxygen Concentration Control of Dopamine-Induced High Uniformity Surface Coating Chemistry",
+          "year": 2012,
+          "cited_by": 244,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/25",
+          "field": "Materials Science",
+          "topic": "Polymer Surface Interaction Studies",
+          "where": "abstract",
+          "snippet": "ncentrations in the dopamine solution lead to highly homogeneous, thin layer deposition on any material surfaces via accelerated reaction kinetics, elucidated by Le Chatelier's principle toward dopamine oxidation steps in a Michael-addition reaction."
+        },
+        {
+          "wid": "W1994664470",
+          "doi": "https://doi.org/10.1002/(sici)1098-2736(200002)37:2<160::aid-tea5>3.0.co;2-m",
+          "title": "Identification and Analysis of Student Conceptions Used to Solve Chemical Equilibrium Problems",
+          "year": 2000,
+          "cited_by": 203,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/33",
+          "field": "Social Sciences",
+          "topic": "Science Education and Pedagogy",
+          "where": "abstract",
+          "snippet": "This study identified and quantified chemistry conceptions students use when solving chemical equilibrium problems requiring application of Le Chatelier's principle, and explored the feasibility of designing a paper and pencil test to accomplish these purposes."
+        },
+        {
+          "wid": "W2161578969",
+          "doi": "https://doi.org/10.1080/0140528850070211",
+          "title": "Misconceptions of chemical equilibrium",
+          "year": 1985,
+          "cited_by": 183,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/33",
+          "field": "Social Sciences",
+          "topic": "Science Education and Pedagogy",
+          "where": "abstract",
+          "snippet": "Those propositions deemed necessary for an understanding of chemical equilibrium and Le Chatelier's Principle were defined by the investigators and validated."
+        },
+        {
+          "wid": "W1994430879",
+          "doi": "https://doi.org/10.1016/j.cattod.2007.06.081",
+          "title": "Mixed sites and promoter segregation: A DFT study of the manifestation of Le Chatelier's principle for the Co(Ni)MoS active phase in reaction conditions",
+          "year": 2007,
+          "cited_by": 177,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/22",
+          "field": "Engineering",
+          "topic": "Catalysis and Hydrodesulfurization Studies",
+          "where": "title",
+          "snippet": "Mixed sites and promoter segregation: A DFT study of the manifestation of Le Chatelier's principle for the Co(Ni)MoS active phase in reaction conditions"
+        },
+        {
+          "wid": "W2171736670",
+          "doi": "https://doi.org/10.1002/tea.3660320906",
+          "title": "Students' and teachers' misapplication of le chatelier's principle: Implications for the teaching of chemical equilibrium",
+          "year": 1995,
+          "cited_by": 176,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/33",
+          "field": "Social Sciences",
+          "topic": "Science Education and Pedagogy",
+          "where": "title",
+          "snippet": "Students' and teachers' misapplication of le chatelier's principle: Implications for the teaching of chemical equilibrium"
+        },
+        {
+          "wid": "W2009728278",
+          "doi": "https://doi.org/10.1021/bi00342a032",
+          "title": "High-resolution differential scanning calorimetric analysis of the subunits of Escherichia coli aspartate transcarbamoylase",
+          "year": 1985,
+          "cited_by": 127,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Biochemical and Molecular Research",
+          "where": "abstract",
+          "snippet": "These effects vary with ligand concentration in the manner expected from the van't Hoff equation, indicating that they are simply manifestations of Le Chatelier's principle rather than being due to \"stabilization\" or \"destabilization\" of the proteins."
+        },
+        {
+          "wid": "W2896971667",
+          "doi": "https://doi.org/10.1021/acs.accounts.8b00382",
+          "title": "Progress toward Solid State Synthesis by Design",
+          "year": 2018,
+          "cited_by": 121,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/16",
+          "field": "Chemistry",
+          "topic": "Inorganic Chemistry and Materials",
+          "where": "abstract",
+          "snippet": "ials can be understood through these three reaction driving parameters, which include the exploitation of Le Chatelier's principle, thermo-kinetic reaction coupling, and lowering the activation energy of formation of the metastable product, and we identify several materials whose synthese…"
+        },
+        {
+          "wid": "W1974742590",
+          "doi": "https://doi.org/10.1021/ja200228w",
+          "title": "Size and Sequence and the Volume Change of Protein Folding",
+          "year": 2011,
+          "cited_by": 111,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Protein Structure and Dynamics",
+          "where": "abstract",
+          "snippet": "The application of hydrostatic pressure generally leads to protein unfolding, implying, in accordance with Le Chatelier's principle, that the unfolded state has a smaller molar volume than the folded state."
+        },
+        {
+          "wid": "W2069286445",
+          "doi": "https://doi.org/10.1021/bi00375a025",
+          "title": "Thermodynamic study of yeast phosphoglycerate kinase",
+          "year": 1987,
+          "cited_by": 107,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/16",
+          "field": "Chemistry",
+          "topic": "thermodynamics and calorimetric analyses",
+          "where": "abstract",
+          "snippet": "f-completion, t 1/2, of the denaturation and the denaturational enthalpy are increased by the binding of the ligands, the increase in t 1/2 being a manifestation of Le Chatelier's principle and that in enthalpy reflecting the enthalpy of dissociation of the ligand."
+        },
+        {
+          "wid": "W2094722674",
+          "doi": "https://doi.org/10.1039/tf9666201336",
+          "title": "Stability and some properties of the second black film",
+          "year": 1966,
+          "cited_by": 107,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/16",
+          "field": "Chemistry",
+          "topic": "Surfactants and Colloidal Systems",
+          "where": "abstract",
+          "snippet": "Some conclusions about the composition and heat of formation of the second black film are drawn using Le Chatelier's principle."
+        },
+        {
+          "wid": "W2101859870",
+          "doi": "https://doi.org/10.1016/j.celrep.2012.09.036",
+          "title": "Cellular Strategies for Regulating Functional and Nonfunctional Protein Aggregation",
+          "year": 2012,
+          "cited_by": 92,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Heat shock proteins research",
+          "where": "abstract",
+          "snippet": "concentrations below the critical ones required for aggregation and (2) shift the equilibrium between the monomeric and oligomeric/aggregate form, as explained by Le Chatelier's principle."
+        },
+        {
+          "wid": "W4391678357",
+          "doi": "https://doi.org/10.1016/j.ensm.2024.103250",
+          "title": "The Le Chatelier's principle enables closed loop regenerating ternary cathode materials for spent lithium-ion batteries",
+          "year": 2024,
+          "cited_by": 80,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/22",
+          "field": "Engineering",
+          "topic": "Extraction and Separation Processes",
+          "where": "title",
+          "snippet": "The Le Chatelier's principle enables closed loop regenerating ternary cathode materials for spent lithium-ion batteries"
+        }
+      ],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:mass_action",
+      "name": "Law of mass action (equilibrium constant)",
+      "domain": "chem.equilibrium",
+      "search_name": "Law of mass action",
+      "name_tokens": [
+        "law",
+        "of",
+        "mass",
+        "action"
+      ],
+      "field_of": "fields/16",
+      "search_total": 8862,
+      "candidates": [
+        {
+          "wid": "W1984135072",
+          "doi": "https://doi.org/10.1063/1.441588",
+          "title": "Exploiting the isomorphism between quantum theory and classical statistical mechanics of polyatomic fluids",
+          "year": 1981,
+          "cited_by": 1309,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/31",
+          "field": "Physics and Astronomy",
+          "topic": "Quantum, superfluid, helium dynamics",
+          "where": "abstract",
+          "snippet": "This connection allows the treatment of exchange in condensed phases in terms of the classical law of mass action, and provides a computational advance over existing methods for interacting systems."
+        },
+        {
+          "wid": "W2066482395",
+          "doi": "https://doi.org/10.1098/rspb.1983.0093",
+          "title": "Operational models of pharmacological agonism",
+          "year": 1983,
+          "cited_by": 1109,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Receptor Mechanisms and Signaling",
+          "where": "abstract",
+          "snippet": "The traditional receptor-stimulus model of agonism began with a description of drug action based on the law of mass action and has developed by a series of modifications, each accounting for new experimental evidence."
+        },
+        {
+          "wid": "W1563650227",
+          "doi": null,
+          "title": "Evaluation of enzyme inhibitors in drug discovery. A guide for medicinal chemists and pharmacologists.",
+          "year": 2005,
+          "cited_by": 1048,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Enzyme function and inhibition",
+          "where": "abstract",
+          "snippet": "A1.1 The Law of Mass Action and Reaction Order."
+        },
+        {
+          "wid": "W2126928912",
+          "doi": "https://doi.org/10.1111/j.1472-8206.2008.00633.x",
+          "title": "The Hill equation: a review of its capabilities in pharmacological modelling",
+          "year": 2008,
+          "cited_by": 866,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/26",
+          "field": "Mathematics",
+          "topic": "Statistical Methods in Clinical Trials",
+          "where": "abstract",
+          "snippet": "The mechanistic aspect of the Hill equation, involving a strong connection with the Guldberg and Waage law of mass action, is also described."
+        },
+        {
+          "wid": "W2323879535",
+          "doi": "https://doi.org/10.1021/ja01453a010",
+          "title": "UNDAMPED OSCILLATIONS DERIVED FROM THE LAW OF MASS ACTION.",
+          "year": 1920,
+          "cited_by": 753,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/26",
+          "field": "Mathematics",
+          "topic": "Advanced Differential Equations and Dynamical Systems",
+          "where": "title",
+          "snippet": "UNDAMPED OSCILLATIONS DERIVED FROM THE LAW OF MASS ACTION."
+        },
+        {
+          "wid": "W2113652248",
+          "doi": "https://doi.org/10.1085/jgp.29.3.149",
+          "title": "CRYSTALLINE SOYBEAN TRYPSIN INHIBITOR",
+          "year": 1946,
+          "cited_by": 700,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Protease and Inhibitor Mechanisms",
+          "where": "abstract",
+          "snippet": "The reaction between chymotrypsin and the soybean inhibitor was found to agree with the law of mass action, for a reversible uni-unimolecular reaction."
+        },
+        {
+          "wid": "W2007326202",
+          "doi": "https://doi.org/10.1098/rspb.1977.0137",
+          "title": "Relaxation and fluctuations of membrane currents that flow through drug-operated channels",
+          "year": 1977,
+          "cited_by": 622,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Ion channel regulation and function",
+          "where": "abstract",
+          "snippet": "sity function, fluctuation variance and mean open channel lifetime to the rate constants and single channel conductances for any theory of drug action based on the law of mass action."
+        }
+      ],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:nernst",
+      "name": "Nernst equation",
+      "domain": "chem.electrochem",
+      "search_name": "Nernst equation",
+      "name_tokens": [
+        "nernst",
+        "equation"
+      ],
+      "field_of": "fields/16",
+      "search_total": 5690,
+      "candidates": [
+        {
+          "wid": "W3138295406",
+          "doi": "https://doi.org/10.1149/1.2043866",
+          "title": "Performance Modeling of the Ballard Mark IV Solid Polymer Electrolyte Fuel Cell: I . Mechanistic Model Development",
+          "year": 1995,
+          "cited_by": 777,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/22",
+          "field": "Engineering",
+          "topic": "Fuel Cells and Related Materials",
+          "where": "abstract",
+          "snippet": "Thermodynamic equilibrium potentials are defined using the Nernst equation."
+        },
+        {
+          "wid": "W2081299190",
+          "doi": "https://doi.org/10.1113/jphysiol.1975.sp011012",
+          "title": "Potassium activation in Helix aspersa neurones under voltage clamp: a component mediated by calcium influx.",
+          "year": 1975,
+          "cited_by": 624,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Ion channel regulation and function",
+          "where": "abstract",
+          "snippet": "The reversal potential of this component changed by 58 mV for a tenfold change in the external potassium concentration as predicted by the Nernst equation."
+        },
+        {
+          "wid": "W2026339353",
+          "doi": "https://doi.org/10.1113/jphysiol.1987.sp016787",
+          "title": "Dopamine acts on D2 receptors to increase potassium conductance in neurones of the rat substantia nigra zona compacta.",
+          "year": 1987,
+          "cited_by": 612,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Ion channel regulation and function",
+          "where": "abstract",
+          "snippet": "The change in reversal potentials in these and intermediate potassium concentrations was described by the Nernst equation."
+        },
+        {
+          "wid": "W1876408798",
+          "doi": "https://doi.org/10.1152/jn.1986.55.6.1268",
+          "title": "Calcium-dependent current generating the afterhyperpolarization of hippocampal neurons",
+          "year": 1986,
+          "cited_by": 547,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/13",
+          "field": "Biochemistry, Genetics and Molecular Biology",
+          "topic": "Ion channel regulation and function",
+          "where": "abstract",
+          "snippet": "The AHP current showed a dependence on extracellular K+, which was close to that predicted for a K+ current by the Nernst equation."
+        },
+        {
+          "wid": "W1528180634",
+          "doi": "https://doi.org/10.1061/jsdeag.0005168",
+          "title": "Physical Model for Steel Corrosion in Concrete Sea Structures—Theory",
+          "year": 1979,
+          "cited_by": 475,
+          "language": "en",
+          "field_id": "https://openalex.org/fields/22",
+          "field": "Engineering",
+          "topic": "Concrete Corrosion and Durability",
+          "where": "abstract",
+          "snippet": "(4)the cathodic and anodic electric potentials depending on oxygen and ferrous hydroxide concentrations according to Nernst equation; (5)the polarization of electrodes due to changes in concentration of oxygen and ferrous hydroxide; (6)the flow of electric current through the electro"
+        }
+      ],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:ph",
+      "name": "pH definition",
+      "domain": "chem.acidbase",
+      "search_name": "pH definition",
+      "name_tokens": [
+        "ph",
+        "definition"
+      ],
+      "field_of": "fields/16",
+      "search_total": 4630,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:poh",
+      "name": "pOH definition",
+      "domain": "chem.acidbase",
+      "search_name": "pOH definition",
+      "name_tokens": [
+        "poh",
+        "definition"
+      ],
+      "field_of": "fields/16",
+      "search_total": 40,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CE:fo:reaction_quotient",
+      "name": "Reaction quotient",
+      "domain": "chem.equilibrium",
+      "search_name": "Reaction quotient",
+      "name_tokens": [
+        "reaction",
+        "quotient"
+      ],
+      "field_of": "fields/16",
+      "search_total": 1609,
+      "candidates": [],
+      "error": null
+    },
+    {
+      "fid": "CM:fo:centripetal",
+      "name": "Centripetal force",
+      "domain": "physics.mechanics",
+      "search_name": "Centripetal force",
+      "name_tokens": [
+        "centripetal",
+        "force"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "CM:fo:gravity",
+      "name": "Newton's law of gravitation",
+      "domain": "physics.gravitation",
+      "search_name": "Newton's law of gravitation",
+      "name_tokens": [
+        "newton",
+        "law",
+        "of",
+        "gravitation"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "CM:fo:impulse",
+      "name": "Impulse-momentum",
+      "domain": "physics.mechanics",
+      "search_name": "Impulse-momentum",
+      "name_tokens": [
+        "impulsemomentum"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "CM:fo:momentum",
+      "name": "Momentum",
+      "domain": "physics.mechanics",
+      "search_name": "Momentum",
+      "name_tokens": [
+        "momentum"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "CM:fo:power",
+      "name": "Power",
+      "domain": "physics.mechanics",
+      "search_name": "Power",
+      "name_tokens": [
+        "power"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "CM:fo:work",
+      "name": "Work",
+      "domain": "physics.mechanics",
+      "search_name": "Work",
+      "name_tokens": [
+        "work"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "EM:fo:biot_savart",
+      "name": "Magnetic field of a wire",
+      "domain": "physics.em",
+      "search_name": "Magnetic field of a wire",
+      "name_tokens": [
+        "magnetic",
+        "field",
+        "of",
+        "a",
+        "wire"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "EM:fo:coulomb",
+      "name": "Coulomb's law",
+      "domain": "physics.em",
+      "search_name": "Coulomb's law",
+      "name_tokens": [
+        "coulomb",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "EM:fo:faraday",
+      "name": "Faraday's law",
+      "domain": "physics.em",
+      "search_name": "Faraday's law",
+      "name_tokens": [
+        "faraday",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "EM:fo:gauss",
+      "name": "Gauss's law",
+      "domain": "physics.em",
+      "search_name": "Gauss's law",
+      "name_tokens": [
+        "gauss",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "EM:fo:lorentz",
+      "name": "Lorentz force",
+      "domain": "physics.em",
+      "search_name": "Lorentz force",
+      "name_tokens": [
+        "lorentz",
+        "force"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "FO:emc2",
+      "name": "Mass-energy equivalence",
+      "domain": "physics.relativity",
+      "search_name": "Mass-energy equivalence",
+      "name_tokens": [
+        "massenergy",
+        "equivalence"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "FO:fma",
+      "name": "Newton's second law",
+      "domain": "physics.mechanics",
+      "search_name": "Newton's second law",
+      "name_tokens": [
+        "newton",
+        "second",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "FO:ke",
+      "name": "Kinetic energy",
+      "domain": "physics.mechanics",
+      "search_name": "Kinetic energy",
+      "name_tokens": [
+        "kinetic",
+        "energy"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "IC:fo:periodic",
+      "name": "Periodic law",
+      "domain": "chem.periodic",
+      "search_name": "Periodic law",
+      "name_tokens": [
+        "periodic",
+        "law"
+      ],
+      "field_of": "fields/16",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "IC:fo:ph",
+      "name": "pH definition",
+      "domain": "chem.acidbase",
+      "search_name": "pH definition",
+      "name_tokens": [
+        "ph",
+        "definition"
+      ],
+      "field_of": "fields/16",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MA:fo:binomial",
+      "name": "Binomial theorem",
+      "domain": "math.algebra",
+      "search_name": "Binomial theorem",
+      "name_tokens": [
+        "binomial",
+        "theorem"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MA:fo:euler_identity",
+      "name": "Euler's identity",
+      "domain": "math.analysis",
+      "search_name": "Euler's identity",
+      "name_tokens": [
+        "euler",
+        "identity"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MA:fo:log_product",
+      "name": "Logarithm of a product",
+      "domain": "math.algebra",
+      "search_name": "Logarithm of a product",
+      "name_tokens": [
+        "logarithm",
+        "of",
+        "a",
+        "product"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MA:fo:pythagoras",
+      "name": "Pythagorean theorem",
+      "domain": "math.geometry",
+      "search_name": "Pythagorean theorem",
+      "name_tokens": [
+        "pythagorean",
+        "theorem"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MA:fo:quadratic",
+      "name": "Quadratic formula",
+      "domain": "math.algebra",
+      "search_name": "Quadratic formula",
+      "name_tokens": [
+        "quadratic",
+        "formula"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MC:fo:chain_rule",
+      "name": "Chain rule",
+      "domain": "math.calculus",
+      "search_name": "Chain rule",
+      "name_tokens": [
+        "chain",
+        "rule"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MC:fo:ftc",
+      "name": "Fundamental theorem of calculus",
+      "domain": "math.calculus",
+      "search_name": "Fundamental theorem of calculus",
+      "name_tokens": [
+        "fundamental",
+        "theorem",
+        "of",
+        "calculus"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MC:fo:limit_def",
+      "name": "Derivative as a limit",
+      "domain": "math.calculus",
+      "search_name": "Derivative as a limit",
+      "name_tokens": [
+        "derivative",
+        "as",
+        "a",
+        "limit"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MC:fo:power_rule",
+      "name": "Power rule",
+      "domain": "math.calculus",
+      "search_name": "Power rule",
+      "name_tokens": [
+        "power",
+        "rule"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MC:fo:taylor",
+      "name": "Taylor series",
+      "domain": "math.calculus",
+      "search_name": "Taylor series",
+      "name_tokens": [
+        "taylor",
+        "series"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MG:fo:circle_area",
+      "name": "Circle area",
+      "domain": "math.geometry",
+      "search_name": "Circle area",
+      "name_tokens": [
+        "circle",
+        "area"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MG:fo:euler_poly",
+      "name": "Euler's polyhedron formula",
+      "domain": "math.geometry",
+      "search_name": "Euler's polyhedron formula",
+      "name_tokens": [
+        "euler",
+        "polyhedron",
+        "formula"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MG:fo:law_cosines",
+      "name": "Law of cosines",
+      "domain": "math.geometry",
+      "search_name": "Law of cosines",
+      "name_tokens": [
+        "law",
+        "of",
+        "cosines"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MG:fo:law_sines",
+      "name": "Law of sines",
+      "domain": "math.geometry",
+      "search_name": "Law of sines",
+      "name_tokens": [
+        "law",
+        "of",
+        "sines"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "MG:fo:sphere_vol",
+      "name": "Sphere volume",
+      "domain": "math.geometry",
+      "search_name": "Sphere volume",
+      "name_tokens": [
+        "sphere",
+        "volume"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:basel",
+      "name": "Basel problem",
+      "domain": "math.numbertheory",
+      "search_name": "Basel problem",
+      "name_tokens": [
+        "basel",
+        "problem"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:congruence",
+      "name": "Congruence modulo n",
+      "domain": "math.numbertheory",
+      "search_name": "Congruence modulo n",
+      "name_tokens": [
+        "congruence",
+        "modulo",
+        "n"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:crt",
+      "name": "Chinese remainder theorem",
+      "domain": "math.numbertheory",
+      "search_name": "Chinese remainder theorem",
+      "name_tokens": [
+        "chinese",
+        "remainder",
+        "theorem"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:euclid_algorithm",
+      "name": "Euclidean algorithm",
+      "domain": "math.numbertheory",
+      "search_name": "Euclidean algorithm",
+      "name_tokens": [
+        "euclidean",
+        "algorithm"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:euler_theorem",
+      "name": "Euler's theorem",
+      "domain": "math.numbertheory",
+      "search_name": "Euler's theorem",
+      "name_tokens": [
+        "euler",
+        "theorem"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:fermat_little",
+      "name": "Fermat's little theorem",
+      "domain": "math.numbertheory",
+      "search_name": "Fermat's little theorem",
+      "name_tokens": [
+        "fermat",
+        "little",
+        "theorem"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:fundamental_arithmetic",
+      "name": "Fundamental theorem of arithmetic",
+      "domain": "math.numbertheory",
+      "search_name": "Fundamental theorem of arithmetic",
+      "name_tokens": [
+        "fundamental",
+        "theorem",
+        "of",
+        "arithmetic"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:unit_group",
+      "name": "Multiplicative group of integers modulo n",
+      "domain": "math.numbertheory",
+      "search_name": "Multiplicative group of integers modulo n",
+      "name_tokens": [
+        "multiplicative",
+        "group",
+        "of",
+        "integers",
+        "modulo",
+        "n"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "NT:fo:wilson",
+      "name": "Wilson's theorem",
+      "domain": "math.numbertheory",
+      "search_name": "Wilson's theorem",
+      "name_tokens": [
+        "wilson",
+        "theorem"
+      ],
+      "field_of": "fields/26",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "OM:fo:combustion",
+      "name": "Hydrocarbon combustion",
+      "domain": "chem.thermo",
+      "search_name": "Hydrocarbon combustion",
+      "name_tokens": [
+        "hydrocarbon",
+        "combustion"
+      ],
+      "field_of": "fields/16",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "OP:fo:lens",
+      "name": "Thin lens equation",
+      "domain": "physics.optics",
+      "search_name": "Thin lens equation",
+      "name_tokens": [
+        "thin",
+        "lens",
+        "equation"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "OP:fo:mirror",
+      "name": "Mirror equation",
+      "domain": "physics.optics",
+      "search_name": "Mirror equation",
+      "name_tokens": [
+        "mirror",
+        "equation"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "OP:fo:refr_speed",
+      "name": "Speed of light in medium",
+      "domain": "physics.optics",
+      "search_name": "Speed of light in medium",
+      "name_tokens": [
+        "speed",
+        "of",
+        "light",
+        "in",
+        "medium"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "OP:fo:snell",
+      "name": "Snell's law",
+      "domain": "physics.optics",
+      "search_name": "Snell's law",
+      "name_tokens": [
+        "snell",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "QM:fo:de_broglie",
+      "name": "de Broglie wavelength",
+      "domain": "physics.qm",
+      "search_name": "de Broglie wavelength",
+      "name_tokens": [
+        "de",
+        "broglie",
+        "wavelength"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "QM:fo:photoelectric",
+      "name": "Photoelectric effect",
+      "domain": "physics.qm",
+      "search_name": "Photoelectric effect",
+      "name_tokens": [
+        "photoelectric",
+        "effect"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "QM:fo:planck",
+      "name": "Planck relation",
+      "domain": "physics.qm",
+      "search_name": "Planck relation",
+      "name_tokens": [
+        "planck",
+        "relation"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "QM:fo:schrodinger",
+      "name": "Schrödinger equation (time-independent)",
+      "domain": "physics.qm",
+      "search_name": "Schrödinger equation",
+      "name_tokens": [
+        "schrodinger",
+        "equation"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "QM:fo:uncertainty",
+      "name": "Heisenberg uncertainty",
+      "domain": "physics.qm",
+      "search_name": "Heisenberg uncertainty",
+      "name_tokens": [
+        "heisenberg",
+        "uncertainty"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "RT:fo:length_contraction",
+      "name": "Length contraction",
+      "domain": "physics.relativity",
+      "search_name": "Length contraction",
+      "name_tokens": [
+        "length",
+        "contraction"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "RT:fo:lorentz_factor",
+      "name": "Lorentz factor",
+      "domain": "physics.relativity",
+      "search_name": "Lorentz factor",
+      "name_tokens": [
+        "lorentz",
+        "factor"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "RT:fo:mass_energy",
+      "name": "Mass-energy equivalence",
+      "domain": "physics.relativity",
+      "search_name": "Mass-energy equivalence",
+      "name_tokens": [
+        "massenergy",
+        "equivalence"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "RT:fo:rel_momentum",
+      "name": "Relativistic momentum",
+      "domain": "physics.relativity",
+      "search_name": "Relativistic momentum",
+      "name_tokens": [
+        "relativistic",
+        "momentum"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "RT:fo:time_dilation",
+      "name": "Time dilation",
+      "domain": "physics.relativity",
+      "search_name": "Time dilation",
+      "name_tokens": [
+        "time",
+        "dilation"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "SM:fo:boltzmann",
+      "name": "Boltzmann entropy",
+      "domain": "physics.statmech",
+      "search_name": "Boltzmann entropy",
+      "name_tokens": [
+        "boltzmann",
+        "entropy"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "SM:fo:ideal_gas_kin",
+      "name": "Ideal gas (kinetic theory)",
+      "domain": "physics.statmech",
+      "search_name": "Ideal gas",
+      "name_tokens": [
+        "ideal",
+        "gas"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "SM:fo:maxwell",
+      "name": "Maxwell-Boltzmann distribution",
+      "domain": "physics.statmech",
+      "search_name": "Maxwell-Boltzmann distribution",
+      "name_tokens": [
+        "maxwellboltzmann",
+        "distribution"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "SM:fo:partition",
+      "name": "Partition function",
+      "domain": "physics.statmech",
+      "search_name": "Partition function",
+      "name_tokens": [
+        "partition",
+        "function"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "TH:fo:boyle",
+      "name": "Boyle's law",
+      "domain": "physics.thermo",
+      "search_name": "Boyle's law",
+      "name_tokens": [
+        "boyle",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "TH:fo:carnot",
+      "name": "Carnot efficiency",
+      "domain": "physics.thermo",
+      "search_name": "Carnot efficiency",
+      "name_tokens": [
+        "carnot",
+        "efficiency"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "TH:fo:charles",
+      "name": "Charles's law",
+      "domain": "physics.thermo",
+      "search_name": "Charles's law",
+      "name_tokens": [
+        "charles",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "TH:fo:first_law",
+      "name": "First law of thermodynamics",
+      "domain": "physics.thermo",
+      "search_name": "First law of thermodynamics",
+      "name_tokens": [
+        "first",
+        "law",
+        "of",
+        "thermodynamics"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "TH:fo:gay_lussac",
+      "name": "Gay-Lussac's law",
+      "domain": "physics.thermo",
+      "search_name": "Gay-Lussac's law",
+      "name_tokens": [
+        "gaylussac",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    },
+    {
+      "fid": "TH:fo:ideal_gas",
+      "name": "Ideal gas law",
+      "domain": "physics.thermo",
+      "search_name": "Ideal gas law",
+      "name_tokens": [
+        "ideal",
+        "gas",
+        "law"
+      ],
+      "field_of": "fields/31",
+      "search_total": null,
+      "candidates": [],
+      "error": "重试 3 次仍失败：HTTP 429"
+    }
+  ]
+}
