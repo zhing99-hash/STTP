@@ -722,6 +722,17 @@ EOF
     shift
     "$PY" 06_PoC/licence_check.py "$@" || exit $?
     ;;
+  docnums)
+    # Phase 68 · D100：**报告里的数字**也要有判据。
+    #   起因：RC1 报告写「symbols 5,090/5,090 = 100%」，现算是 98.39%，
+    #   phase61 脚本自报也是 98.39% ⇒ 错的是报告，而那句话没有任何判据咬住它。
+    #   （与 D96 同族：一句没有判据的陈述，必然会说谎 —— 这次说谎的不是代码，是报告。）
+    #   自此，交付物里登记过的覆盖率数字由本命令与**图里现算值**逐字比对；
+    #   改数字必须变红（rc=1），改版导致定位行匹配不到也算失败（不静默跳过）。
+    shift
+    require_authority docnums "$NORM_GRAPH"
+    "$PY" 06_PoC/report_number_check.py "$@" || exit $?
+    ;;
   paperfetch)
     # Phase 68（M1 G4）：80 条 curated 具名公式在 OpenAlex 上的 mentioned_in 候选检索。
     # ★ 非自包含：**需要联网**（api.openalex.org 直连，代理会 502）。
