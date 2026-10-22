@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 81689190,
+    "bytes": 81823326,
     "edges": 48813,
     "nodes": 9750,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "f5d5022046124bbd48e0054c7d97e8198e97b6b29a7c879f8f2db1e361c53659",
+    "sha256": "00ac981ea99a3f9a30848a81a75d9b78a92ae2b50bf2134e883c6e91473eef8c",
     "subjects": {
      "化学": 4442,
      "数学": 300,
@@ -28,32 +28,32 @@
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 484312,
-    "edges": 255,
-    "nodes": 170,
+    "bytes": 612447,
+    "edges": 360,
+    "nodes": 200,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "56065774bb342ce86a1606a1e480464f1fd9808bef2847f977418d4661c65b76",
+    "sha256": "5c17c10bbbc40c2629bceccdf515348708f37e4fef65d4afd75ba3c0ea0bc105",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 574295,
-    "edges": 255,
-    "nodes": 170,
+    "bytes": 747559,
+    "edges": 360,
+    "nodes": 200,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "cd5fce22c80eba9fc28b7567e05ae38a093aeecff46c35685e8ba10bd787e812",
+    "sha256": "ef7630e589671cd154feec847376244b5c8a4e1451d84eb09e425cdd572007cd",
     "subjects": {
-     "化学": 49,
+     "化学": 79,
      "数学": 18,
      "物理": 103
     },
     "tracked_in_git": true
    },
    "sample_queries.json": {
-    "bytes": 1455,
+    "bytes": 1435,
     "path": "06_PoC/release/sample/sample_queries.json",
     "queries": 5,
-    "sha256": "3d75c3b5c3ebe18dc1189e1006edac7145dd699c7fcfb7030c902e2661cdbc11",
+    "sha256": "6e84be76cf8da9f15c969948dfedf04988ad8913173f35fbc04fa33aaac508fb",
     "tracked_in_git": true
    }
   }
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "9a59088c356d4a90ff04f96ca63d86df0c67db27",
-  "git_head_at_build_short": "9a59088",
+  "git_head_at_build": "bd703b7fa564973302bf36ef018b933c9b59abaa",
+  "git_head_at_build_short": "bd703b7",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -610,11 +610,11 @@
    }
   },
   "sample": {
-   "edges": 255,
-   "nodes": 170,
+   "edges": 360,
+   "nodes": 200,
    "recomputable": "sample（入库产物，verify_release 现算比对）",
    "subjects": {
-    "化学": 49,
+    "化学": 79,
     "数学": 18,
     "物理": 103
    }
@@ -623,13 +623,11 @@
  "license": {
   "audit_violations": 0,
   "excluded_by_source": {
-   "ChEBI": 5092,
-   "ElementKG2.0": 7797,
+   "ElementKG2.0": 6068,
    "LLM-review": 9,
    "NIST Chemistry WebBook": 157,
    "Phase13.GNN.typed": 76,
    "Phase13.Gate.B1": 2578,
-   "Phase13.Gate.B2": 5,
    "Phase13.Gate.B4": 23,
    "Phase13.Gate.B5": 698,
    "Phase9.GNN": 18,
@@ -638,8 +636,8 @@
    "PubChem": 53,
    "chembl_api": 2512,
    "cross_source_alignment": 15,
-   "curated_seed": 78,
-   "curated_seed/energy_combustion": 13,
+   "curated_seed": 27,
+   "curated_seed/energy_combustion": 6,
    "dimension_table": 8,
    "heuristic": 7,
    "llm_inferred_gnn": 1,
@@ -647,8 +645,8 @@
    "openalex-mention": 101,
    "rhea_chebi": 5
   },
-  "excluded_edges": 43396,
-  "excluded_nodes": 6913,
+  "excluded_edges": 36512,
+  "excluded_nodes": 6787,
   "note": "★ 铁律 #64：许可政策由程序执行 —— 发布样例必须 public_demo（默认）；verify_release 会**独立重算**样例内每条边/每个节点的来源血缘闭包并断言 0 违规，且断言剔除计数非真空（0 边 ⇒ 白名单形同虚设）。",
   "policy": "只保留血缘闭包 = redistributable 的边与端点；缺 props.source 视为不可再分发",
   "profile": "public_demo",
@@ -680,7 +678,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-22T10:11:18+08:00",
+  "created": "2026-10-22T10:55:11+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 65,
