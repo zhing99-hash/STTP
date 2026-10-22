@@ -63,6 +63,10 @@
 #   bash sttp.sh paperfetch [--limit N|--resume] mentioned_in 候选**联网**检索（★ 非自包含：需网络；
 #                        一天约 100 次额度，`--estimate` 先估算请求量、**不联网**）
 #   bash sttp.sh papermentionbackfill [--dry|--apply]  mentioned_in 落盘：规则发现 + 人工裁决表（80 条 curated）
+#   bash sttp.sh chembackfill [--dry|--apply|--selfcheck]  F4 化学侧 + symbols 派生（Phase 69；幂等，判据看合并后最终态）
+#   bash sttp.sh dataset [--e2e] [--profile P]   可下载数据集：JSONL + manifest + sha256（Phase 70 · F5）
+#                         ★ 按来源三态**剔除**不可再分发内容；产物 + 随包校验器落在 06_PoC/dataset/dist/
+#                         ★ --e2e：真的起静态服务 + 逐文件下载 + **断网**跑随包校验器（F5 的验收动作）
 # 说明：export / pushall / reconcile / probe 的额外参数原样透传。
 # ============================================================================
 set -u
@@ -816,6 +820,20 @@ EOF
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase69_chem_delta.json \
         --phase 69 --tag chembackfill || exit $?
     fi
+    ;;
+  dataset)
+    # Phase 70（F5）：可下载**数据集** —— JSONL + manifest + sha256。
+    #   验收原文是「目录可被第三方 wget 后离线校验通过」⇒ 这条命令只负责**产出目录**，
+    #   「能不能被校验通过」由随包复制过去的 `verify_dataset.py`（V0–V9）独立判定；
+    #   构建器**不给自己发合格证**（S6 是在临时目录上跑那个校验器，0 FAIL 才提升）。
+    # ★ 许可：直接复用 `make_sample.license_partition`（三态表只有 source_registry 一份），
+    #   public_demo 下 `PhysicsBabel` / `ElementKG2.0` 等不打包来源会被剔除 —— 这是政策
+    #   由程序执行（铁律 #64），不是 bug：48,813 边里 43,396 条按政策不能外发。
+    # ★ `--e2e`：起 127.0.0.1 静态服务 → 逐文件纯 HTTP GET → 与源目录逐字节比 → 在
+    #   **socket 被打断**的子进程里跑校验器。断网不是"我没看到它联网"，是它联不上。
+    shift
+    require_authority dataset "$NORM_GRAPH"
+    "$PY" 06_PoC/dataset/export_dataset.py "$@" || exit $?
     ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"

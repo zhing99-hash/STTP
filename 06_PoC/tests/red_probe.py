@@ -675,6 +675,40 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R36",
+        "kind": "mutate",
+        "why": ("Phase 70 · F5：随包校验器的 V2（逐文件 sha256）是「下载后仍是同一份」的唯一判据。"
+                "把 `real_sha/real_n` 直接取自清单（等于拿清单跟自己比）就能让它恒绿 —— "
+                "此时**改一个字节也不会被发现**，而所有下游（wget 测试、发布资产）都会认为校验通过。"
+                "⇒ 架空 V2 后，校验器自检的 VS2 必须变红。"),
+        "file": "06_PoC/dataset/verify_dataset.py",
+        "old": "        real_sha, real_n = sha256_file(fp), os.path.getsize(fp)",
+        "new": ("        real_sha, real_n = f.get(\"sha256\"), f.get(\"bytes\")"
+                "  # redprobe: V2 判据架空（拿清单比清单）"),
+        "cmd": "PY 06_PoC/dataset/verify_dataset.py --selftest",
+        "cwd": ROOT,
+        "expect_red": ["VS2"],
+        "requires": [],
+    },
+    {
+        "id": "R37",
+        "kind": "mutate",
+        "why": ("Phase 70 · F5：数据集**对外**包必须在构建侧按来源三态剔除不可再分发内容。"
+                "把 profile 写死成 internal_research（或任何「不过滤」）会让 43,396 条政策上不能外发的"
+                "边混进包里 —— 而 verify_dataset 的 V5 只核对「记录与来源表一致」，两边同一个错就都绿。"
+                "所以这条只能由**构建侧独立重算**的 S2（audit_redistribution，不听分区函数自述）抓住。"),
+        "file": "06_PoC/dataset/export_dataset.py",
+        "old": "    pnodes, pedges, lic = ms.license_partition(nodes, edges, profile)",
+        "new": ("    pnodes, pedges, lic = ms.license_partition(nodes, edges, \"internal_research\")"
+                "  # redprobe: 许可过滤被写死"),
+        "cmd": ("PY 06_PoC/dataset/export_dataset.py --out .runlog/redprobe-ds "
+                "--skip-determinism"),
+        "cwd": ROOT,
+        "expect_red": ["S2"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -698,7 +732,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
-                      "R29", "R30", "R31", "R32", "R33", "R34", "R35", "RN")
+                      "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -1020,6 +1054,10 @@ def emit(rep, res):
             res["R34"][1])
     rep.add(res["R35"][0], "R35 给无依据的反应编一个名字 ⇒ S5/S7 必须变红（D103：F4 不凑 95%）",
             res["R35"][1])
+    rep.add(res["R36"][0], "R36 校验器 V2 拿清单比清单（哈希判据架空）⇒ VS2 必须变红（F5）",
+            res["R36"][1])
+    rep.add(res["R37"][0], "R37 数据构建把许可 profile 写死成不过滤 ⇒ S2 必须变红（F5：政策由程序执行）",
+            res["R37"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

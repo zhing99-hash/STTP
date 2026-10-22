@@ -254,6 +254,7 @@
   **67 · G4 论文线探针** —— **判死「5,090 个公式被论文讨论数」**：5,002 条 `name` 就是 LaTeX 式子
   （无指称对象），可建关联的只有 80 条 curated（物理 38）；`discusses` 178 条含 Formula 端点 **0**；
   检索判别带 0 ↔ 92,302 **无可用阈值** ⇒ 改三态口径，详见 `07_交付物/G4_论文线_可行性探针_20261020.md`）。
+  **Phase 68–70（2026-10-21/22）已完成**（见 **§0.3.25 / §0.3.26 / §0.3.27**：**68 · G4 论文线落地** —— 80 条 curated 具名公式全检索，`mentioned_in` 101 条边 + 93 Paper 节点入图，三态 `extracted 45 / no_referent 5,045 / not_extracted 0`；★ **D101 三态硬线认错**（界线是「有没有真正检索过」，不是「有没有候选」）与 **D102 两份实现口径漂移**（同一份证据两个结论）各修一次。**69 · F4 化学侧 + symbols 派生** —— symbol 覆盖率 **98.39% → 99.82%**、`canonical_smiles` 定口径 **98.83%**、反应名三态（`named 950 / derived 59 / unnamed 699`，**不凑 95%**）。**70 · F5 数据集导出** —— 2,837 节点 / 5,417 边 / 15.5 MiB，随包校验器 V0–V9，**wget 后断网校验**端到端 E1–E5 全过；★ 对外包 `composed_of` = 0 条（ChEBI 边的另一端是 ElementKG2.0 元素）。`redprobe` **42/0/0**）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -2236,6 +2237,59 @@ licence 196/196、docnums 5/5（RC1 与评估报告的 symbols 数字已随实�
 
 
 ---
+
+#### 0.3.27 Phase 70（**F5 数据集导出：把「wget 后离线校验」拆成四个真做的动作**）—— 更新于 2026-10-22
+
+F5 的验收只有一句：「目录可被第三方 `wget` 后**离线校验通过**」。这句话里藏着三个容易滑过去的词 ——
+**第三方**（拿目录的人不 clone 仓库）、**wget**（纯静态、无鉴权、逐文件可取）、
+**离线**（不是「我没看到它联网」）。本轮把这三个词各自变成可执行判据。
+
+**产出**：`bash sttp.sh dataset` → `06_PoC/dataset/dist/`（约 16 MB，`.gitignore` 排除）
+
+| 文件 | 说明 |
+|---|---|
+| `nodes.jsonl` / `edges.jsonl` | **2,837 节点 / 5,417 边**（源 9,750 / 48,813） |
+| `manifest.json` | 源 sha256 / 逐文件 sha256+字节 / 计数 / 来源许可表 / **boundary（已知边界）** |
+| `SHA256SUMS` | 与 `sha256sum -c` 兼容（不装 python 也能查） |
+| `verify_dataset.py` | **随包**校验器 V0–V9，**只依赖标准库**，不 import 仓库任何模块 |
+| `ATTRIBUTION.md` | 10 个来源逐行署名（CC BY 来源的署名义务落在这里） |
+
+**「离线」是怎么被证明的（本轮最关键的一条）**
+
+子进程里用 `sitecustomize` 把 `socket.connect / connect_ex / sendto / create_connection` **打断**，
+再跑随包校验器 ⇒ **RC=0、10 条判据全过、零网络访问**。
+「我没看到它联网」不是证明；**它联不上还能跑完**才是。这条同时排除了「校验器偷偷回连仓库取数据」
+这种最隐蔽的假通过。外加负对照：在**下载副本**上改一个字节 ⇒ 必须变红（否则那次绿只是空跑）。
+
+**三条「不造第二套口径」**
+* 许可：直接调 `make_sample.license_partition`（三态表只有 `source_registry` 一份）；
+* 投影：直接调 `graph_export.project_node/project_edge`（与 `formula-graph-view/v1` 同一份代码）；
+* 产物清单：`export_dataset.FILES` 一处声明 + **S4 反向断言**「声明集 == 实际写出集」。
+
+**许可分区：为什么只剩 11%**
+
+`public_demo` 取**血缘闭包**（边来源 + 两端节点来源都必须 `redistributable`）⇒ 剔除 **43,396 边 / 6,913 节点**：
+PhysicsBabel 24,104、ElementKG2.0 7,797、**ChEBI 5,092**、Phase13.Gate.B1 2,578、chembl_api 2,512。
+★ ChEBI 本身可再分发却被剔，是因为那 5,092 条**全是 `composed_of`（分子→元素）且另一端是 ElementKG2.0 的 Element** ——
+**后果：对外包 `composed_of` = 0 条**，1,397 个分子没有组成关系。这是政策结果不是 bug；
+要补只有「核对 ElementKG2.0 许可」或「换 `element_reference` 重接元素层」两条路，两条都还没做。
+**所以对外数据集目前「能查反应、不能算分子式」—— 这句话必须写进对外材料。**
+
+**判据与学费**
+* 构建侧 S1–S7（含**确定性**：二次全量重建逐字节相同；**fail-closed**：先写 `dist.tmp`，
+  随包校验器 0 FAIL 才 `os.replace` 成 `dist/`）；随包 V0–V9；端到端 E1–E5；
+  自检 VS1–VS9（合成夹具逐项注入缺陷 + 负对照）、E1–E5（许可判据可红）；红探针 **R36/R37**。
+* **D104 · 判据的输入形态也是接口**：S2 首跑就红，报 16,251 处违规、来源 `<none>` ——
+  我把**投影后的记录**（属性收在 `attrs`）喂给了要 `props.source` 的 `audit_redistribution`。
+  **判据没错，是接线错**（#111：判据红了先分清「数据错」还是「喂错」）。
+* **D105 · 忽略规则在大小写不敏感的文件系统上会多吞东西**：`.gitignore` 写 `06_PoC/dataset/dist*`，
+  Windows 上 `core.ignorecase=true` ⇒ **`DIST_README.md` 被一起吞掉**，`git status` 里根本不出现它。
+  形态极安静：文件在、代码引用它、构建能跑，**只是永远提交不了**，干净检出上才会炸。
+  修：收窄为 `dist/` + `dist.tmp/`，随包 README 改名 `README_dist.md`（#112）。
+
+**验证**：red_probe **42/0/0**（新增 R36/R37）｜frontend **121/0/2**｜dataset 构建 S1–S7 **7/0**、
+随包校验 V0–V9 **10/0**、端到端 E1–E5 **5/0**、两份自检 **9/0** 与 **5/0**｜图 **9,750 节点 / 48,813 边**（本轮只读快照）。
+报告：`07_交付物/Phase70_F5数据集导出_20261022.md`。
 
 ## 一、项目愿景与目标
 

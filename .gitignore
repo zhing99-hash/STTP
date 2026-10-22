@@ -108,3 +108,13 @@ _probe/
 # 一旦被 `git add -A` 扫进库，后人很容易把它当成"论文线成果"引用 ——
 # 与 `_probe/` 同理，宁可显式忽略，也不赌后来人的记性。
 11_真实数据/phase68_paper_mentions.json
+
+# ===== Phase 70 · F5 数据集产物（构建物，不入库）=====
+# `dist/` 是可下载目录（约 16 MB：JSONL + 清单 + 随包校验器），由 `bash sttp.sh dataset` 从
+# 权威快照确定性重建（同输入 ⇒ 同 sha256）。入库的应是**代码**，不是 16 MB 产物 ——
+# 与 `06_PoC/etl/normalized.json` 同一条惯例。`dist*` 一并忽略，是为了兜住构建中途被中断
+# 留下的 `.tmp`（它会让工作树变脏 ⇒ 直接掐死 `bash sttp.sh release` 的洁净度前置断言）。
+#   ★ 刻意**不写** `dist*`：Windows 上 `core.ignorecase=true`，`dist*` 会连 `README_dist.md`
+#     一起吞掉（实测：改名前的 `DIST_README.md` 就是这样从 `git status` 里消失的）。
+06_PoC/dataset/dist/
+06_PoC/dataset/dist.tmp/
