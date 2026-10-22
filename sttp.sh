@@ -64,6 +64,9 @@
 #                        一天约 100 次额度，`--estimate` 先估算请求量、**不联网**）
 #   bash sttp.sh papermentionbackfill [--dry|--apply]  mentioned_in 落盘：规则发现 + 人工裁决表（80 条 curated）
 #   bash sttp.sh chembackfill [--dry|--apply|--selfcheck]  F4 化学侧 + symbols 派生（Phase 69；幂等，判据看合并后最终态）
+#   bash sttp.sh elementrebuild [--dry|--apply|--selfcheck]  元素层重建（Phase 71；幂等，判据看合并后最终态）
+#                         ★ Element 节点改由 element_reference 重建；same_period/same_family 用权威表
+#                           重算并断言与现有集一致后才改来源（**重算，不是改标签**）
 #   bash sttp.sh dataset [--e2e] [--profile P]   可下载数据集：JSONL + manifest + sha256（Phase 70 · F5）
 #                         ★ 按来源三态**剔除**不可再分发内容；产物 + 随包校验器落在 06_PoC/dataset/dist/
 #                         ★ --e2e：真的起静态服务 + 逐文件下载 + **断网**跑随包校验器（F5 的验收动作）
@@ -819,6 +822,40 @@ EOF
     else
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase69_chem_delta.json \
         --phase 69 --tag chembackfill || exit $?
+    fi
+    ;;
+  elementrebuild)
+    # Phase 71：元素层重建（侦察见 07_交付物/Phase71_元素层许可侦察_20261022.md）
+    #   为什么这一步能救回 composed_of —— 不是「核下了许可」，是**把两件事分开**：
+    #     ① 118 个 Element 节点的 8 个真值字段**本来就来自 element_reference**（节点自带
+    #        `periodic_source: element_reference_iupac`），ElementKG 只贡献了 27 个物性字段；
+    #        物性字段已剥离到 `11_真实数据/element_props_elementkg.json`（内部归档、不入库）。
+    #     ② same_period / same_family 共 1,734 条的 `verifier` 就是 `element_reference.py`，
+    #        准入判据写在 elementkg_ingest.py:136-144 —— 它们**本来就是自建派生**，
+    #        却被记成 ElementKG 的来源，于是被许可过滤器连坐（D106）。
+    #   ★ 硬线：两条边用权威表**重新生成**，断言「生成集 == 图上有集」双向都为空才改来源；
+    #     断言不过就拒绝改（宁可这轮什么都不做，也不能把来源改错）。
+    #   ★ 判据 E1–E6 看**合并后的最终态**（E6 是把合并结果再跑一遍 build 要求 0 变更），
+    #     所以可以安全重跑。
+    shift
+    require_authority elementrebuild "$NORM_GRAPH"
+    _er_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _er_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成 element delta =="
+    "$PY" 11_真实数据/phase71_element_delta.py ${_er_args[@]+"${_er_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qxE -- "--dry|--selfcheck"; then
+      echo "== [2/2] 跳过（--dry / --selfcheck：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase71_element_delta.json \
+        --phase 71 --tag elementrebuild --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase71_element_delta.json \
+        --phase 71 --tag elementrebuild || exit $?
     fi
     ;;
   dataset)

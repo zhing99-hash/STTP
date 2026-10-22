@@ -75,7 +75,10 @@ DIST_README = os.path.join(HERE, "README_dist.md")
 
 MANIFEST_SCHEMA = "sttp-dataset-manifest/v1"
 RECORD_SCHEMA = "sttp-dataset/v1"
-DATASET_VERSION = "dataset_v1.0.0"
+# v1.1.0（Phase 71）：元素层改由 element_reference 重建，包内新增 118 元素节点、
+#   5,145 条 composed_of、1,734 条元素间边（same_period/same_family）；
+#   record_schema / manifest_schema 未变 —— 只是**内容**多了，不是格式变了。
+DATASET_VERSION = "dataset_v1.1.0"
 
 # 产物文件集（**一处声明**：写盘 / 清单 / 校验全部从它派生）
 DATA_FILES = (("nodes.jsonl", "nodes"), ("edges.jsonl", "edges"))
@@ -235,6 +238,14 @@ def build_into(src_path: str, profile: str, out_dir: str) -> dict:
         files.append({"path": p, "role": "doc", "bytes": os.path.getsize(fp),
                       "sha256": sha256_file(fp)})
 
+    # ★ Phase 71：把「包里缺什么」算成**数字**再写进 boundary ——
+    #   写一句「部分分子没有组成关系」等于没说；使用者要自己数才知道缺多少、该不该慌。
+    _mol = {r.get("id") for r in nrec
+            if r.get("type") == "Molecule" or "Molecule" in (r.get("labels") or [])}
+    _co = {r.get("source") for r in erec if r.get("type") == "composed_of"}
+    _mol_with = len(_mol & _co)
+    _mol_without = len(_mol - _co)
+
     src_sha = sha256_file(src_path)
     manifest = {
         "schema": MANIFEST_SCHEMA,
@@ -286,6 +297,15 @@ def build_into(src_path: str, profile: str, out_dir: str) -> dict:
             "来源三态（redistributable/internal_only/forbidden）的判定规则在仓库 source_registry.py；"
             "包内只有判定结果，无法独立重算「某上游该不该可再分发」",
             "sha256 覆盖字节而非语义：语义由 counts（V6）、引用闭合（V4）、上游溯源（V8）共同约束",
+            # ---- Phase 71 新增：把「包缺什么」写明白，别让使用者自己猜 ----
+            "Element 节点只含 IUPAC 元素真值（原子序数/周期/族/块/series/原子量/名/符号）；"
+            "熔点/沸点/密度/电负性/电子构型等**物性字段已剥离**（来源 ElementKG 1.0 条款未明示），"
+            "如需这些字段请直接取上游",
+            "ElementKG 2.0 的内容（官能团、reagent_of、has_element 等）不在包内："
+            "其条款为 CC BY-SA，ShareAlike 会约束整包、且是否延伸至下游模型权重尚不明确",
+            "`composed_of` 只覆盖有分子式来源的分子：包内 %d 个分子中 %d 个有组成关系，"
+            "其余 %d 个在源图里本就没有该数据（不是许可剔除）"
+            % (len(_mol), _mol_with, _mol_without),
         ],
     }
     write_json(os.path.join(out_dir, MANIFEST), manifest)

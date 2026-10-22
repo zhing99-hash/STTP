@@ -709,6 +709,50 @@ PROBES = [
         "requires": ["authority"],
     },
     {
+        "id": "R38",
+        "kind": "mutate",
+        "why": ("Phase 71：Element 节点里 27 个物性字段来自 ElementKG 1.0（条款未明示），"
+                "必须剥离才谈得上「Element 层可再分发」。文件头写着「不删数据、只把不可外发的挪走」，"
+                "靠的就是 `rebuild_element` 只从 ER_TRUTH_FIELDS 重建 —— 一旦顺手写成"
+                "`new.update(其余字段)`（看起来很像「保留更多信息」），物性就悄悄回到了节点上，"
+                "`audit_redistribution` 会把 118 个元素判成 internal_only，包又回到 composed_of=0。"
+                "这个过程**没有任何报错**：图能建、包能出、测试全绿，只是少了一半边。"
+                "★ 探针走 `--selfcheck` 而不是 `--dry`：重建一旦成功，`build` 会对 118 个元素全部"
+                "   走 `elem_already` 分支、产不出 delta —— 那时 `--dry` 的 E5 看的是**已合规的图**，"
+                "   必然恒绿。判据必须落在**纯函数**上（S5 用合成 props 测 rebuild_element），"
+                "   才不依赖生产数据此刻长什么样（#115）。"),
+        "file": "11_真实数据/phase71_element_delta.py",
+        # ★ 目标文件是 LF（本文件是 CRLF）—— old/new 里的换行必须写 \n，
+        #   写成 \r\n 会永远命中不了（RS 锚点自检会报，但那时已经绕了一圈）
+        "old": ("    dropped = {k: v for k, v in (p or {}).items() if k not in KEEP_FIELDS}\n"
+                "    return new, dropped"),
+        "new": ("    new.update({k: v for k, v in (p or {}).items() if k not in KEEP_FIELDS})"
+                "  # redprobe: 物性回填\n"
+                "    dropped = {}\n"
+                "    return new, dropped"),
+        "cmd": "PY 11_真实数据/phase71_element_delta.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["S5"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R39",
+        "kind": "mutate",
+        "why": ("Phase 71：`same_period` 改成 `source=element_reference` 的唯一依据是"
+                "「用权威表重算，结果与图上现有集合逐对一致」。若把判据键从 `period_of_z`"
+                "换成 `group_of_z`（同族而非同周期），生成集就会与现有集大幅错位 ——"
+                "此时若还照样改来源，等于拿一个**没核对过**的推导去冒充自建资产。"
+                "⇒ E2（重算集 == 现有集）必须变红，脚本必须拒绝执行。"),
+        "file": "11_真实数据/phase71_element_delta.py",
+        "old": "        return er.period_of_z((props or {}).get(\"atomic_number\"))",
+        "new": "        return er.group_of_z((props or {}).get(\"atomic_number\"))  # redprobe: 键错位",
+        "cmd": "PY 11_真实数据/phase71_element_delta.py --dry",
+        "cwd": ROOT,
+        "expect_red": ["E2"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -732,7 +776,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
-                      "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "RN")
+                      "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "R38", "R39", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -1058,6 +1102,10 @@ def emit(rep, res):
             res["R36"][1])
     rep.add(res["R37"][0], "R37 数据构建把许可 profile 写死成不过滤 ⇒ S2 必须变红（F5：政策由程序执行）",
             res["R37"][1])
+    rep.add(res["R38"][0], "R38 元素物性不剥离（rebuild 时顺手 update 其余字段）⇒ S5 必须变红（Phase 71）",
+            res["R38"][1])
+    rep.add(res["R39"][0], "R39 元素边判据键错位（族号冒充周期）⇒ E2 必须变红（Phase 71）",
+            res["R39"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

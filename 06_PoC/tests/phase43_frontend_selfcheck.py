@@ -1579,12 +1579,13 @@ def main(argv=None):
                    "eval", "gnneval", "dimaudit", "lineage",
                    "gradepersist", "symbolbackfill", "domainbackfill", "evdeps",
                    "applicabackfill", "papermentionbackfill", "docnums",
-                   "chembackfill", "dataset"]
+                   "chembackfill", "dataset", "elementrebuild"]
     #   （`evdeps` 是 G2b 加上后**立刻抓出来**的：它早挂了守卫，只是没人把它记进名单）
     #   （`papermentionbackfill` 同理，Phase 68 新增命令挂了守卫却漏登记 ——
     #     G2b 第二天就把它报出来了：这正说明"挂了守卫"和"断言看得见"是两件事）
     #   （`chembackfill` 是 Phase 69 新增时**主动补进来的** —— 上一次的教训是不必等 G2b 来报）
     #   （`dataset` 同理，Phase 70 F5 新增：它读权威快照建数据集，缺图必须 RC=2 而非裸 traceback）
+    #   （`elementrebuild` 同理，Phase 71 新增：它读写权威快照，缺图必须 RC=2 而非裸 traceback）
 
     def _guard_probe(text):
         has_def = "require_authority()" in text

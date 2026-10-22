@@ -21,11 +21,19 @@ delta schema（四段，与 push_element_merge.py 对齐）
 --------------------------------------------------
     {
       "meta": {...},
-      "nodes":         [ {id, labels?, props} … ],   # upsert：存在则合并 props，缺 labels 保留原样
+      "nodes":         [ {id, labels?, props, props_drop?} … ],   # upsert：存在则合并 props，缺 labels 保留原样
       "delete_nodes":  [ {id} | "id" … ],            # DETACH DELETE：连同关联边一并移除
       "edges":         [ {id?, source, target, type, kind?, props?} … ],   # MERGE（按 type|source|target）
       "delete_edges":  [ {source, target, type} | {id} … ]
     }
+
+`props_drop`（Phase 71 新增，可选）
+----------------------------------
+upsert 的 props 是 `merged.update()` —— **只能加改，不能删除**。需要从一个节点上
+**移除**若干字段时（例如把不可再分发的上游字段剥离），单靠给 `props` 赋 `None`
+不够：字段还在，只是变成 null，在许可审计里仍然算「含上游内容」。
+`props_drop: ["melting_point", …]` 在合并后逐字段 `pop`，语义是**真的移除**。
+不给该键时行为与旧版完全一致（向后兼容）。
 
 行为
 ----
@@ -129,6 +137,9 @@ def main():
             old = node_by_id[nid]
             merged = dict(old.get("props") or {})
             merged.update(props)
+            # ★ props_drop：真正的移除（upsert 语义只能加改，删不掉字段）
+            for k in (dn.get("props_drop") or []):
+                merged.pop(k, None)
             if merged != (old.get("props") or {}):
                 old["props"] = merged
                 updated_n += 1

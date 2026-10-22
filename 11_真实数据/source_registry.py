@@ -109,12 +109,29 @@ REGISTRY = {
         upstream=[], lineage_recorded=True,
         license="待核对（DATA_LICENSES.md 二）；不入发布包",
         note="方程/量/符号主源；dim_exponents 为方程内指数（Phase 40 起改指 exponent_in_term）"),
-    "ElementKG2.0": dict(
-        kind="database", version="ElementKG 2.0（本地 raw）", retrieved="2026-10-08",
-        locator=["11_真实数据/elementkg10m_raw.json", "11_真实数据/elementkg_raw.json"],
+    # ★ Phase 71 拆分：1.0 与 2.0 是**两个**数据集、**两套**条款，此前被合并登记在
+    #   `ElementKG2.0` 名下（locator 同时指向两个 raw 文件）。侦察证实图里 118 个 Element
+    #   节点来自 1.0，而 1.0 在 OpenKG 上没有授权字段、OWL 文件内也无任何许可声明 ——
+    #   把 2.0 的条款套到 1.0 的内容上，是**未经证实的授权推断**（D106）。
+    "ElementKG1.0": dict(
+        kind="database", version="ElementKG 1.0（元素本体 OWL）", retrieved="2026-10-08",
+        locator=["11_真实数据/elementkg_raw.json"],
         upstream=[], lineage_recorded=True,
-        license="待核对（DATA_LICENSES.md 二）；不入发布包",
-        note="元素关系源；自述型关系（same_source_elementkg）"),
+        license="未明示（OpenKG 数据集页无授权字段；elementkg.owl 4,075,836 B 内 "
+                "license/licence/creativecommons/cc-by/rights/dc:rights 检索 0 命中）"
+                "；不打包进对外包",
+        note="元素物性源（熔点/沸点/密度/电负性/电子构型…）。★ Phase 71 起图内 Element "
+             "节点改由 element_reference 重建（真值 8 字段本就来自它、物性字段已剥离到 "
+             "element_props_elementkg.json 内部归档）⇒ **图内已无 1.0 内容残留**"),
+    "ElementKG2.0": dict(
+        kind="database", version="ElementKG 2.0（10M 子集）", retrieved="2026-10-08",
+        locator=["11_真实数据/elementkg10m_raw.json"],
+        upstream=[], lineage_recorded=True,
+        license="CC BY-SA（OpenKG 资源页元数据 `License: Creative Commons Attribution "
+                "Share-Alike`，**未标注版本号**）；因 ShareAlike 会约束整包，不打包进 public_demo",
+        note="分子/官能团/反应关系源（has_functionalgroup / reagent_of / has_element / "
+             "has_quantity…）。★ 条款本身允许再分发，但 SA 的传染边界（是否延伸至下游模型权重）"
+             "在法律上不明确 ⇒ 默认**不混入**对外包；如需分发，应单独出一个整体 CC BY-SA 的子集"),
     "ChEBI": dict(
         kind="database", version="ChEBI（OLS4 API 缓存）", retrieved="2026-10-09",
         locator=["11_真实数据/chebi_cache.json", "11_真实数据/chebi_synonym_cache.json"],
@@ -339,7 +356,13 @@ REDISTRIBUTION = {
     "wikidata": REDISTRIBUTABLE,                   # CC0
     "chembl_api": INTERNAL_ONLY,                   # CC BY-SA 3.0：对外分发须专项核对（DATA_LICENSES 一）
     "PhysicsBabel": INTERNAL_ONLY,                 # 待核对；不入发布包（DATA_LICENSES 二）
-    "ElementKG2.0": INTERNAL_ONLY,                 # 待核对；不入发布包
+    # Phase 71：2.0 的条款**已核到**是 CC BY-SA（OpenKG 元数据，无版本号）——
+    #   标 INTERNAL_ONLY 不是「条款不明」，而是「ShareAlike 会约束整包」这条**分发策略**：
+    #   public_demo 声明的是「各来源按各自条款」，一旦掺入 SA 内容，整包就得随 SA，
+    #   而 SA 是否延伸到下游模型权重在法律上不明确 ⇒ 不拿这个雷去换 6 千条边。
+    "ElementKG2.0": INTERNAL_ONLY,
+    # 1.0 才是条款真正不明的那一个（页面无授权字段、OWL 零声明）；且 Phase 71 后图内已无其内容。
+    "ElementKG1.0": INTERNAL_ONLY,
     "PubChem": INTERNAL_ONLY,                      # 逐字段核对前不外发快照
     "mathxiv": INTERNAL_ONLY,                      # 含 arXiv 派生内容；不外发原始文本
     # ---- 项目自策划 ----

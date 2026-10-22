@@ -99,6 +99,53 @@ def truth_applicability():
     return _ratio(_formulas(_load_graph()), "applicability_status")
 
 
+DIST = os.path.join(ROOT, "06_PoC", "dataset", "dist")
+
+
+def _load_dist():
+    """对外数据集产物（构建物、不入库）。缺件时 RC=2 报「不适用」，不裸 traceback（铁律 #53）。"""
+    man = os.path.join(DIST, "manifest.json")
+    if not os.path.exists(man):
+        print("[RC=2] 数据集产物不可用：%s" % man)
+        print("      请先 `bash sttp.sh dataset` 重建；本仪器的真值必须现算。")
+        sys.exit(2)
+    with io.open(man, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def truth_public_size():
+    """对外包节点/边 —— 读 manifest.counts（构建器写的，S3 已断言与分区自洽）。"""
+    c = _load_dist()["counts"]
+    return (c["nodes"], c["edges"], None)
+
+
+def truth_molecule_coverage():
+    """包内「有 composed_of 的分子 / 全部分子」—— 从 JSONL **逐行现算**，
+    不读 manifest 里的派生统计（那等于拿构建器的自述当真值）。"""
+    import json as _j
+    nodes_p = os.path.join(DIST, "nodes.jsonl")
+    edges_p = os.path.join(DIST, "edges.jsonl")
+    mol = set()
+    with io.open(nodes_p, encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            r = _j.loads(line)
+            if r.get("type") == "Molecule" or "Molecule" in (r.get("labels") or []):
+                mol.add(r.get("id"))
+    co = set()
+    with io.open(edges_p, encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            r = _j.loads(line)
+            if r.get("type") == "composed_of":
+                co.add(r.get("source"))
+    got = len(mol & co)
+    total = len(mol)
+    return (got, total, round(got * 100.0 / total, 2) if total else 0.0)
+
+
 def truth_nodes_edges():
     g = _load_graph()
     return (len(g["nodes"]), len(g["edges"]), None)
@@ -113,6 +160,8 @@ def truth_nodes_edges():
 
 RC1 = "07_交付物/RC1_整体状态评估_20261020.md"
 ASSESS = "07_交付物/整体评估_20261021.md"
+P71 = "07_交付物/Phase71_元素层重建_20261022.md"
+PLAN = "00_项目管理/下一阶段规划_数据扩展与前端优化_20261019.md"
 
 _NUM = r"([\d,]+)\s*/\s*([\d,]+)\s*=\s*\*{0,2}([\d.]+)%"
 
@@ -124,6 +173,14 @@ DECLARATIONS = [
          truth=truth_applicability),
     dict(key="symbols 覆盖率（评估报告）", file=ASSESS, row="| **`symbols`** |", pat=_NUM,
          truth=truth_symbols),
+    # ---- Phase 71：对外数据集的规模（这组数字以前没人咬，改了也不会有人知道）----
+    dict(key="对外包节点/边（Phase71 报告）", file=P71,
+         row="对外包最终规模：", pat=r"([\d,]+)\s*节点\s*/\s*([\d,]+)\s*边",
+         truth=truth_public_size),
+    dict(key="对外包节点/边（规划文档 F5）", file=PLAN, row="| **F5** |",
+         pat=r"([\d,]+)\s*节点\s*/\s*([\d,]+)\s*边", truth=truth_public_size),
+    dict(key="包内分子组成覆盖（Phase71 报告）", file=P71,
+         row="| 包内分子有组成关系 |", pat=_NUM, truth=truth_molecule_coverage),
 ]
 
 
@@ -144,16 +201,19 @@ def check_one(decl, text_map=None):
     m = re.search(decl["pat"], lines[0])
     if not m:
         return (False, "%s：行内没取到数字 —— %s" % (rel, lines[0][:80]))
+    # ★ pattern 允许两种形态：`A / B = C%`（三组）与 `A 节点 / B 边`（两组）
     got = (int(m.group(1).replace(",", "")),
-           int(m.group(2).replace(",", "")),
-           float(m.group(3)))
+           int(m.group(2).replace(",", "")))
     want = decl["truth"]()
     if want[2] is None:      # 只比计数（如节点/边）
-        ok = (got[0], got[1]) == (want[0], want[1])
-    else:
-        ok = got == want
+        ok = got == (want[0], want[1])
+        return (ok, "报告 %d / %d ｜ 现算 %d / %d" % (got[0], got[1], want[0], want[1]))
+    if m.lastindex is None or m.lastindex < 3:
+        return (False, "pattern 缺百分比组，但真值是比率 —— %s" % lines[0][:80])
+    got = got + (float(m.group(3)),)
+    ok = got == want
     return (ok, "报告 %d / %d = %.2f%% ｜ 现算 %d / %d = %.2f%%"
-            % (got[0], got[1], got[2], want[0], want[1], want[2] or 0.0))
+            % (got[0], got[1], got[2], want[0], want[1], want[2]))
 
 
 def run_all(text_map=None):

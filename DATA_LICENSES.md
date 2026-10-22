@@ -28,7 +28,8 @@
 |---|---|---|
 | MathXiv / ArxiTeX | 项目内加工语料，含 arXiv 派生内容；arXiv 各论文许可不一 | **待核对**；不外发原始文本，仅保留内部 ID 与自建结构化结果 |
 | PhysicsBabel | 上游数据集，条款未见明示 | **待核对**；不入发布包 |
-| ElementKG 1.0 / 2.0 | 上游研究数据集，条款未见明示 | **待核对**；不入发布包 |
+| **ElementKG 1.0**（元素本体 OWL） | OpenKG 数据集页**无授权字段**；下载 `elementkg.owl` 实测 4,075,836 B，全文检索 `license/licence/creativecommons/cc-by/rights/dc:rights` ⇒ **0 命中**，且无 `owl:Ontology` 头 | **条款未明示**；不打包。★ Phase 71 起图内 Element 节点改由 `element_reference` 重建（真值字段本就来自它、27 个物性字段已剥离到 `element_props_elementkg.json` 内部归档）⇒ **图内已无 1.0 内容残留** |
+| **ElementKG 2.0**（10M 子集） | OpenKG 资源页 CKAN 元数据 `License: Creative Commons Attribution Share-Alike`（中英文页一致），**未标注版本号** | **条款允许再分发，但不混入 public_demo**：ShareAlike 会约束整包，而 SA 是否延伸至下游模型权重在法律上不明确。如需分发，应单独出一个整体 CC BY-SA 的子集 |
 | PubChem | 主体可自由使用，部分字段来自第三方 | 逐字段核对前不外发快照 |
 | KEGG | 订阅/受限条款 | **不打包、不分发**；仅保留可达性记录 |
 | SABIO-RK / BioCyc / MetaCyc / zbMATH / DBLP / OpenAIRE / DataCite / Semantic Scholar | 各有服务条款 | 仅侦察记录，未入库；接入前先核条款 |
@@ -56,5 +57,13 @@
 | 发布复查 | `06_PoC/release/verify_release.py` A4–A6 | A4 manifest profile 必须 `public_demo`；**A5 独立重算**样例内每条边/每个节点的来源血缘闭包（0 违规）；A6 剔除计数非真空 |
 
 **后果（如实披露）**：全图 48712 边中，`PhysicsBabel`（24104 边）与 `ElementKG2.0`（7797 边）
-属本表 §二「待核对、不入发布包」⇒ 发布样例按政策只能给出 **170 节点 / 255 边**
+属本表「不入发布包」⇒ 发布样例按政策只能给出 **170 节点 / 255 边**
 （剔除 43295 边 / 6820 节点）。这是政策生效后的**真实可分发规模**，不是缺陷。
+
+> **Phase 71 更新（2026-10-22）**：上面这组数字是 Phase 70 以前的口径。Phase 71 把两种东西
+> 分开了 —— ①「条款不明」的 ElementKG **1.0** 内容，已由图内**剔除并重建**（Element 节点改由
+> `element_reference`，Apache-2.0）；②「条款允许但带 SA」的 ElementKG **2.0** 内容，仍按分发策略
+> 不混入。同时纠出一批**本属自建**却被记在上游名下的边（`same_period` / `same_family` 共 1,734 条，
+> `verifier` 本来就是 `element_reference.py`，重算与现有集**逐对一致**），它们的来源已订正。
+> 对外包因此从 **2,837 节点 / 5,417 边** 变为 **2,963 / 12,301**，`composed_of` 由 0 变为 5,145。
+> 详见 `07_交付物/Phase71_元素层重建_20261022.md`。

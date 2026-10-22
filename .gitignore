@@ -29,6 +29,15 @@ elementkg_synthetic_corpus_40w/
 # 同样超 ≲100 KB 的 pack 上限 ⇒ 不入库。可由
 # `python 11_真实数据/phase69_chem_delta.py` 幂等重算（同一份输入跑两次结论一致）。
 06_PoC/etl/neo4j/phase69_chem_delta.json
+
+# ===== Phase 71 · 元素层重建的产物（构建物，不入库）=====
+# delta 可用 `bash sttp.sh elementrebuild` 从权威图幂等重算（2.5 MB，含 1,734 条边的完整 props）。
+06_PoC/etl/neo4j/phase71_element_delta.json
+
+# `element_props_elementkg.json` 是 ElementKG 物性字段的**内部归档**（118 个元素 / 1,752 个值）。
+# 它本身就是 ElementKG 的数据副本，条款未明示 ⇒ 与上游 raw 同一条惯例：不入库。
+# 代码侧用 `bash sttp.sh elementrebuild` 可重新生成（前提是本机有 elementkg_raw.json）。
+11_真实数据/element_props_elementkg.json
 # Phase 45 A04：给 49572 条证据补「记录时刻的依赖快照」（evd/refs/vfr/vch/dvs），
 # **实测 35.5 MB**（早先按字段宽度估成 ~9 MB，实测差 4 倍 —— 估算值必须换成实测量）⇒
 # 同样超 ≲100 KB 的 pack 上限，不入库。可由
