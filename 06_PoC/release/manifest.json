@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 81542670,
+    "bytes": 81689190,
     "edges": 48813,
     "nodes": 9750,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "76e40f8a9c64a62b9b022d474a712a9088e5cb8032d514e912cd9446c61b6650",
+    "sha256": "f5d5022046124bbd48e0054c7d97e8198e97b6b29a7c879f8f2db1e361c53659",
     "subjects": {
      "化学": 4442,
      "数学": 300,
@@ -28,20 +28,20 @@
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 478612,
+    "bytes": 484312,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "84042c538bbb95955673747de487576a81fa8b0f5f4cf09c8acae399a1590296",
+    "sha256": "56065774bb342ce86a1606a1e480464f1fd9808bef2847f977418d4661c65b76",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 568595,
+    "bytes": 574295,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "e3dbd89a2b9439042069bc95371ae75b62d74c3e6c332a4e14e1e31352d6b773",
+    "sha256": "cd5fce22c80eba9fc28b7567e05ae38a093aeecff46c35685e8ba10bd787e812",
     "subjects": {
      "化学": 49,
      "数学": 18,
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "a68568b3599e6637be37fbf84021709d846e91e7",
-  "git_head_at_build_short": "a68568b",
+  "git_head_at_build": "9fddf39386740238de3ed959f79d0b90f4745527",
+  "git_head_at_build_short": "9fddf39",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -680,7 +680,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-22T08:58:23+08:00",
+  "created": "2026-10-22T09:43:04+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 65,
