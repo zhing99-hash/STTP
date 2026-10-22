@@ -151,6 +151,41 @@ def truth_nodes_edges():
     return (len(g["nodes"]), len(g["edges"]), None)
 
 
+RELEASE = os.path.join(ROOT, "06_PoC", "release", "manifest.json")
+
+
+def truth_sample_size():
+    """release 离线样例的节点/边 —— 现算自**两份**样例产物的计数，并要求二者一致。
+
+    为什么不只读一份：样例包里有同一批节点/边的两个视图
+    （`sample_graph.json` 是 formula-graph-view，`sample_normalized.json` 是 normalized 口径）。
+    若两个数字打架，说明抽样器写出了不自洽的包 —— 此时「报告写 200」本身就无所谓对错，
+    故按 RC=2 报「不适用」而不是随便挑一份当真值。
+
+    ★ 与 `truth_public_size()` 的区别：那个读构建器的 `manifest.counts`（构建产物目录），
+      这个读**发布清单**（`release/manifest.json`，入库存档）。DATA_LICENSES.md 讲的是
+      「打出来的离线样例」，口径属于后者。
+    """
+    if not os.path.exists(RELEASE):
+        print("[RC=2] 发布清单不可用：%s" % RELEASE)
+        print("      请先 `bash sttp.sh release` 重建；本仪器的真值必须现算。")
+        sys.exit(2)
+    with io.open(RELEASE, encoding="utf-8") as fh:
+        man = json.load(fh)
+    art = (man.get("artifacts") or {}).get("sample") or {}
+    sizes = []
+    for name in ("sample_normalized.json", "sample_graph.json"):
+        a = art.get(name) or {}
+        if "nodes" not in a or "edges" not in a:
+            print("[RC=2] 发布清单里 %s 缺 nodes/edges 计数" % name)
+            sys.exit(2)
+        sizes.append((int(a["nodes"]), int(a["edges"])))
+    if len(set(sizes)) != 1:
+        print("[RC=2] 两份样例产物的规模不一致：%s ⇒ 样例包不自洽，无法定真值" % (sizes,))
+        sys.exit(2)
+    return (sizes[0][0], sizes[0][1], None)
+
+
 # ---------------------------------------------------------------- 声明登记
 #
 # 每条声明 = 「报告里的哪一行」+「真值从哪来」。
@@ -181,6 +216,9 @@ DECLARATIONS = [
          pat=r"([\d,]+)\s*节点\s*/\s*([\d,]+)\s*边", truth=truth_public_size),
     dict(key="包内分子组成覆盖（Phase71 报告）", file=P71,
          row="| 包内分子有组成关系 |", pat=_NUM, truth=truth_molecule_coverage),
+    # ---- 离线样例的规模：以前是手写，改完 release 就漂（170/255 那次的教训）----
+    dict(key="release 离线样例节点/边（DATA_LICENSES）", file="DATA_LICENSES.md",
+         row="实为 ", pat=r"([\d,]+)\s*节点\s*/\s*([\d,]+)\s*边", truth=truth_sample_size),
 ]
 
 

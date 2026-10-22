@@ -547,10 +547,16 @@ def main(argv=None) -> int:
     d = a.dataset_dir or os.path.dirname(os.path.abspath(__file__))
     if not os.path.isdir(d):
         print("[前置缺失] 目录不存在：%s（RC=2：不冒充校验通过）" % d)
+        # ★ 铁律 #92：非通过出口必须自述解释器。**本文件刻意内联打印而不 import
+        #   `06_PoC/interp_note.py`** —— 它会被复制进对外数据集、由第三方在**仓库之外**
+        #   以 `python3 verify_dataset.py` 运行（Phase 70 F5），一旦依赖仓库内模块就失去
+        #   「下载即可自证」的性质（铁律 #53）。此处的偏离已登记在 `interp_selfreport_check.EXEMPT`。
+        print("        原因：数据集目录缺件 · 解释器 %s" % sys.executable)
         return 2
     rows = verify(d)
     if not rows:
         print("[前置缺失] 无法判定（RC=2）")
+        print("        原因：产物里没有可判定的记录 · 解释器 %s" % sys.executable)
         return 2
     w = max(len(r[0]) for r in rows) + 1
     for rid, ok, detail in rows:

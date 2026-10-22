@@ -20,6 +20,12 @@
     tests/a4_offline_render.py        前置不满足块（D56）
     tests/phase51_task_flow_e2e.py    前置不满足块（D56）
     tests/phase45_install_selfcheck.py 构建后端缺失 SKIP
+    dataset/export_dataset.py         `[前置缺失]` 规范图缺件（D107，Phase 71 补）
+    dataset/wget_offline_e2e.py       `[前置缺失]` 数据集产物缺件（D107，Phase 71 补）
+
+★ 末两条的来历值得写下来：它们**是 Phase 70 加的，漏了这条纪律**，而当时所有测试都绿 ——
+  因为缺件分支在绿树上永不执行。抓出它们的不是测试，是 `gatecheck` 的静态扫描（Q3）。
+  这就是「同族未改」（D58）的真实复发形态：**不是忘了改，是根本没想到这也算一个入口**。
 
 ★ 为什么把实现**收在一处**：Phase 53 只修了 `verify_release` 一处、把其余登记为
   「同族未改」（D58）。「同族未改」的真正危险不是那几行没改，而是**将来新增第 6 个
@@ -51,6 +57,12 @@ ENTRY_POINTS = (
     "06_PoC/tests/a4_offline_render.py",
     "06_PoC/tests/phase51_task_flow_e2e.py",
     "06_PoC/tests/phase45_install_selfcheck.py",
+    # ★ Phase 70 新增、Phase 71 才被 Q3 抓出来的两个（D107）：
+    #   它们新增了 `[前置缺失]` 出口，但当时没人想到「这也是第 6/7 个入口」。
+    #   这正是本清单存在的理由 —— **新增出口时的漏网，只有静态扫描能发现**，
+    #   因为缺件分支在绿树上永不执行，跑测试也看不到它。
+    "06_PoC/dataset/export_dataset.py",
+    "06_PoC/dataset/wget_offline_e2e.py",
 )
 
 

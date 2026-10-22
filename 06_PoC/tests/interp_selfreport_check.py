@@ -97,12 +97,69 @@ EXEMPT = {
         "**测谎仪自身的词表** —— 它必须**字面持有**这些措辞（否则无从扫描），"
         "命中自己不是缺陷而是判据成立的前提（铁律 #98：执法工具须在被执法集合里，"
         "故此处**显式声明**而非静默跳过）。",
+    "06_PoC/dataset/verify_dataset.py":
+        "**随数据集一起分发的自包含校验器** —— 它被复制进对外包、由第三方在**仓库之外**"
+        "以 `python3 verify_dataset.py` 运行（Phase 70 F5 的「下载即可自证」），"
+        "一旦 import 仓库内模块就失去该性质（铁律 #53）。"
+        "★ 它**并未豁免这条纪律本身**：两处 `[前置缺失]` 出口仍**内联**打印 `sys.executable`，"
+        "只是实现方式是内联而非共享模块（#88 的最小让步，已在此显式声明）。",
 }
+
+
+# ---------------------------------------------------------------------------
+# 「豁免」不等于「免纪律」（Phase 71 · D107）
+#
+# 下面这些文件**不能用共享实现** `interp_note`，但它们仍然必须自述解释器 ——
+# 区别只在**实现方式**（内联 `sys.executable`），不在**要不要自述**。
+# ★ 为什么要单独一张表：把「因为不能 import 所以整条纪律不作数」和
+#   「换了实现方式但纪律照旧」混成一句话，就等于给了一个永久后门 ——
+#   后门一旦开出，下一个人删掉那行 print 也不会有人知道。
+#   故 Q7 用**可数**的判据咬住它（#96：一句没有判据的陈述必然说谎）。
+# ---------------------------------------------------------------------------
+INLINE_EXEMPT = {
+    "06_PoC/dataset/verify_dataset.py":
+        "随数据集分发、须在仓库外以 `python3 verify_dataset.py` 独立运行（Phase 70 F5 的"
+        "「下载即可自证」）⇒ 不得 import 仓库内模块（铁律 #53）；"
+        "两处 `[前置缺失]` 出口**内联**打印 `sys.executable`。",
+}
+
+_EXIT_MARK = "[前置缺失]"
+
+
+def inline_counts(src: str) -> tuple[int, int]:
+    """返回 (`[前置缺失]` 出口数, `sys.executable` 出现次数) —— Q7 的**纯函数**事实源。
+
+    ★ 它证明的是「自述**还在**」，不是「自述在正确的分支里」：
+      要证明后者得做控制流分析，那是另一个量级。此处如实标注能力边界 ——
+      宁可说清「这条判据弱」，也不要让它看起来比实际更强（D59 的教训）。
+    """
+    return (src.count(_EXIT_MARK), src.count("sys.executable"))
+
+
+def inline_ok(src: str) -> bool:
+    """出口 ≥1 处，且每处出口都配得上一次 `sys.executable`（计数代理）。"""
+    exits, se = inline_counts(src)
+    return exits > 0 and se >= exits
+
+
+def check_inline(rep: Rep) -> None:
+    bad = []
+    for p in INLINE_EXEMPT:
+        fp = os.path.join(ROOT, p)
+        if not os.path.exists(fp):
+            bad.append((p, "文件不存在（豁免表已腐烂）"))
+            continue
+        src = io.open(fp, encoding="utf-8", errors="replace").read()
+        if not inline_ok(src):
+            bad.append((p, "出口 %d 处 ｜ sys.executable 仅 %d 次" % inline_counts(src)))
+    rep.add(not bad,
+            "Q7 豁免为「内联自述」的文件：每处非通过出口都配得上一次 sys.executable"
+            "（**豁免的是实现方式，不是纪律本身**；删掉内联打印 ⇒ 在此变红）",
+            "问题项：%s" % bad if bad else "%d 个内联豁免，均自述解释器" % len(INLINE_EXEMPT))
 
 
 class Rep:
     """极简报告器（与其它仪器同形：`rep.add(cond, NAME, detail)`）。"""
-
     def __init__(self) -> None:
         self.rows: list[tuple[str, str, str]] = []
 
@@ -277,6 +334,20 @@ def selfcheck() -> int:
         rep.add(isinstance(own_hits, list),
                 "S6 自指：本仪器自身可被自己的扫描器解析（不抛异常）",
                 "自身命中 %s（本文件属**执法工具**，不进 Q3 判据）" % own_hits)
+
+        # S7/S8 · Q7（内联豁免）的构造性可红性
+        inline_good = ('if not os.path.isdir(d):\n'
+                       '    print("[前置缺失] 目录不存在")\n'
+                       '    print("原因：缺件 · 解释器 %s" % sys.executable)\n')
+        inline_bad = ('if not os.path.isdir(d):\n'
+                      '    print("[前置缺失] 目录不存在")\n')          # 删掉了内联自述
+        rep.add(inline_ok(inline_good),
+                "S7 正例：出口后内联打印 sys.executable ⇒ Q7 判为合格",
+                "counts=%s" % (inline_counts(inline_good),))
+        rep.add(not inline_ok(inline_bad),
+                "S8 负对照：出口在、内联自述被删 ⇒ Q7 必须判不合格"
+                "（证明 Q7 不是「文件里出现过 sys.executable」这种恒真判据）",
+                "counts=%s" % (inline_counts(inline_bad),))
     finally:
         shutil.rmtree(tmp)
     print("== interp_selfreport_check 自检（构造性可红；铁律 #100）==")
@@ -322,6 +393,7 @@ def main(argv=None) -> int:
     check_entries(rep)
     check_exempt(rep)
     check_scan(rep, hits)
+    check_inline(rep)
     rep.report()
     print("-" * 74)
     print("  PASS %d ／ FAIL %d" % (rep.n_pass, rep.n_fail))

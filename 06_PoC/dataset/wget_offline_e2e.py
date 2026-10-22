@@ -45,7 +45,13 @@ import threading
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+POC = os.path.dirname(HERE)                                 # 06_PoC
 DIST = os.path.join(HERE, "dist")
+
+# ★ Phase 71 收口（D107）：「前置不满足 ⇒ 非通过」的出口必须自述解释器（铁律 #92）。
+#   本文件在 Phase 70 新增了 `[前置缺失]` 出口却没接这条纪律 ⇒ gatecheck 的 Q3 报了出来。
+sys.path.insert(0, POC)
+import interp_note as IN                                    # noqa: E402  ← 非通过出口自述唯一实现
 
 # `sitecustomize` 会在解释器启动时被自动导入 ⇒ 用它当"断网开关"，不需要改被测脚本一行。
 GUARD = '''# -*- coding: utf-8 -*-
@@ -119,10 +125,12 @@ def main(argv=None) -> int:
     src = os.path.abspath(a.dir)
     if not os.path.isdir(src):
         print("[前置缺失] 数据集目录不存在：%s（RC=2；先跑 `bash sttp.sh dataset`）" % src)
+        print("        原因：%s" % IN.skip_detail("数据集产物缺件（端到端未执行）"))
         return 2
     mpath = os.path.join(src, "manifest.json")
     if not os.path.isfile(mpath):
         print("[前置缺失] 缺 manifest.json（RC=2）")
+        print("        原因：%s" % IN.skip_detail("数据集清单缺件（端到端未执行）"))
         return 2
     with io.open(mpath, encoding="utf-8") as f:
         manifest = json.load(f)

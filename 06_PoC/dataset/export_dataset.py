@@ -67,6 +67,10 @@ sys.path.insert(0, os.path.join(POC, "release"))
 import graph_export as gx                                  # noqa: E402  ← 投影唯一口径
 import source_registry as sr                               # noqa: E402  ← 三态唯一口径
 import make_sample as ms                                   # noqa: E402  ← 许可分区唯一口径
+# ★ Phase 71 收口（D107）：「前置不满足 ⇒ 非通过」的出口必须**自述解释器**（铁律 #92）。
+#   本文件在 Phase 70 新增了 `[前置缺失]` 出口却没接这条纪律 —— `bash sttp.sh gatecheck`
+#   的 Q3 在下一轮里把它抓了出来（说明那条判据有用，也说明**新增出口**最容易漏网）。
+import interp_note as IN                                   # noqa: E402  ← 非通过出口自述唯一实现
 
 DEFAULT_SRC = os.path.join(POC, "etl", "normalized.json")
 DIST = os.path.join(HERE, "dist")
@@ -490,6 +494,9 @@ def main(argv=None) -> int:
     if not os.path.exists(a.src):
         print("[前置缺失] 找不到规范图：%s（RC=2）" % a.src)
         print("        （`06_PoC/etl/normalized.json` 被 .gitignore 排除；先跑 `bash sttp.sh export`）")
+        # ★ 铁律 #92：非通过出口必须自述解释器 —— 否则「依赖/解释器选错」与「产品缺陷」
+        #   外观完全相同，读者会去查一个不存在的 bug（D57/D58 族）。
+        print("        原因：%s" % IN.skip_detail("规范图缺件（对外包构建未执行）"))
         return 2
 
     print("=" * 78)
