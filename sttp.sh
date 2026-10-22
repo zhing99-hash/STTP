@@ -784,6 +784,39 @@ EOF
         --phase 68 --tag papermentionbackfill || exit $?
     fi
     ;;
+  chembackfill)
+    # Phase 69（F4 化学侧 + symbols 派生）：**侦察先行**，只做能做的一半。
+    #   A1 symbols 派生：82 条空 symbols 里 78 条是「推出来了没写回」（symbol_table 有值、
+    #      symbols_rule_version=s2）⇒ 按 latex 首次出现位置排序派生，98.39% → 99.82%，
+    #      **不碰 Phase 61 规则本身**。
+    #   A2 SMILES 口径：定 `canonical_smiles` 为权威（此前 smiles/canonical_smiles 并存而
+    #      门槛没规定算哪个），22 条用 RDKit 规范化补齐 ⇒ 98.83%。
+    #   B  反应名三态：只补**有 reactant+product 边做依据**的 59 条，其余 699 条标
+    #      `unnamed_no_evidence`。侦察已判「≥95%」不可达（源头 800 条 name 全为 None），
+    #      硬冲的代价是给 614 条无依据的反应编名字。
+    # ★ 判据 C1–C5 看的是「合并后的最终态」而非本轮产出 ⇒ **可安全重跑（幂等）**。
+    # ★ `--selfcheck` 只跑离线自检（含负对照），不生成 delta、不联网。
+    shift
+    require_authority chembackfill "$NORM_GRAPH"
+    _cb_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _cb_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成 chem delta =="
+    "$PY" 11_真实数据/phase69_chem_delta.py ${_cb_args[@]+"${_cb_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qxE -- "--dry|--selfcheck"; then
+      echo "== [2/2] 跳过（--dry / --selfcheck：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase69_chem_delta.json \
+        --phase 69 --tag chembackfill --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase69_chem_delta.json \
+        --phase 69 --tag chembackfill || exit $?
+    fi
+    ;;
   *)
     awk 'NR>=3 && /^# =====/{exit} NR>=3{sub(/^# ?/,""); print}' "$0"
     ;;

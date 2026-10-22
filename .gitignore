@@ -25,6 +25,10 @@ elementkg_synthetic_corpus_40w/
 # 超过 ≲100 KB 的 pack 上限 ⇒ 不入库。可由
 # `python 11_真实数据/phase68_paper_mention_delta.py` 重算（前提是候选池已抓取完整）。
 06_PoC/etl/neo4j/phase68_paper_mention_delta.json
+# Phase 69 化学侧 + symbols 派生：实测量 **910 KB**（853+1708 个节点的属性快照），
+# 同样超 ≲100 KB 的 pack 上限 ⇒ 不入库。可由
+# `python 11_真实数据/phase69_chem_delta.py` 幂等重算（同一份输入跑两次结论一致）。
+06_PoC/etl/neo4j/phase69_chem_delta.json
 # Phase 45 A04：给 49572 条证据补「记录时刻的依赖快照」（evd/refs/vfr/vch/dvs），
 # **实测 35.5 MB**（早先按字段宽度估成 ~9 MB，实测差 4 倍 —— 估算值必须换成实测量）⇒
 # 同样超 ≲100 KB 的 pack 上限，不入库。可由

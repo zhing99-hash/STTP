@@ -76,7 +76,10 @@ export function subjectColor(s) {
 }
 
 // ---------------------------------------------------------------------------
-// 语义关系 `type`（边颜色）—— ★ 24 种，与规范图实测集合**逐项相等**
+// 语义关系 `type`（边颜色）—— ★ 25 种，与规范图实测集合**逐项相等**
+//   ★ Phase 68 落图 `mentioned_in` 后**没同步这里**，X1 于 Phase 69 首次跑 frontend
+//     时报「前端缺 ['mentioned_in']」—— 前一天落完盘只跑了 release、没跑 frontend。
+//     这是「跑了自己记得的那几套」的第二次同类欠账（上一次是 G2b 漏登记命令）。
 // ---------------------------------------------------------------------------
 export const EDGE_TYPE_COLOR = Object.freeze({
   has_symbol:                 "#7f7f7f",
@@ -103,6 +106,9 @@ export const EDGE_TYPE_COLOR = Object.freeze({
   chemical_reaction:          "#d62728",
   proves:                     "#e377c2",
   releases:                   "#d62728",
+  // ★ 与 `discusses`(#8c6bb1) 同色系但可区分：两者都是文献关系，
+  //   `discusses` 曾是"讨论"（已判不成立），`mentioned_in` 是"提及"（可核验）。
+  mentioned_in:               "#a55194",
 });
 export const EDGE_TYPE_FALLBACK = "#8f9bb3";
 

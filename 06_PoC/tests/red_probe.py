@@ -601,7 +601,9 @@ PROBES = [
                 "写的人会觉得「差不多就是全覆盖了」，而 82 条空列表（E=mc²/F=ma）在 90% 门槛下是绿的。"),
         "file": "07_交付物/RC1_整体状态评估_20261020.md",
         # ★ 单行锚点（本仓库多个文件是 CRLF，`read_text()` 不做行尾翻译 ⇒ 多行锚点永不命中）。
-        "old": "**5,008 / 5,090 = 98.39%**",
+        # ★ 锚点必须跟着**报告的真实数字**走：Phase 69 把 98.39% 提成 99.82% 时，
+        #   这里不改就会「锚点未命中」⇒ R32 以「没变红」的形式假红（RS 会先报锚点）。
+        "old": "**5,081 / 5,090 = 99.82%**",
         "new": "**5,090 / 5,090 = 100%**   # redprobe: 报告数字写满（D100）",
         "cmd": "PY 06_PoC/report_number_check.py --selfcheck",
         "cwd": ROOT,
@@ -636,6 +638,43 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R34",
+        "kind": "mutate",
+        "why": ("Phase 69 · A1：`symbols` 派生自**本公式自己的** symbol_table，一个都不许多。"
+                "侦察已证明 82 条空 symbols 里 78 条是「推出来了没写回」（symbol_table 有值、"
+                "symbols_rule_version=s2）⇒ 补的时候最容易顺手多补几个把覆盖率做上去。"
+                "在派生结果里凭空加一个符号 ⇒ S1（排序规则重现历史 5,000 条）必须变红。"
+                "★ 为什么用 S1 而不是 C1：图已落盘后重跑是幂等的（本轮不再产出 symbols），"
+                "C1 无从触发；而 S1 对历史 5,000 条重算，**不依赖图当前状态**，离线可复跑。"),
+        "file": "11_真实数据/phase69_chem_delta.py",
+        "old": "    ordered = sorted(syms, key=key)",
+        "new": ("    ordered = sorted(syms, key=key) + [\"ZZZ\"]"
+                "  # redprobe: 凭空多补一个符号（D103）"),
+        "cmd": "PY 11_真实数据/phase69_chem_delta.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["S1"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R35",
+        "kind": "mutate",
+        "why": ("Phase 69 · B：反应名**只**从该反应自己的 reactant/product 边拼，拼不出就标"
+                "`unnamed_no_evidence`，不编造。这是 F4 里唯一能诚实拿到的部分（59 条）；"
+                "给拼不出的 699 条随便起个名字，就能把覆盖率从 59% 抬到 100% ——"
+                "正是侦察判定「≥95% 不可达」时要防的那件事。"
+                "给无依据的反应编一个名字 ⇒ S5/S7 必须变红。"),
+        "file": "11_真实数据/phase69_chem_delta.py",
+        "old": "\"name\": None, \"status\": ST_UNNAMED,",
+        "new": ("\"name\": \"unknown → unknown\", \"status\": ST_UNNAMED,"
+                "  # redprobe: 给无依据的反应编名（D103）"),
+        "cmd": "PY 11_真实数据/phase69_chem_delta.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["S5", "S7"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -659,7 +698,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
-                      "R29", "R30", "R31", "R32", "R33", "RN")
+                      "R29", "R30", "R31", "R32", "R33", "R34", "R35", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -977,6 +1016,10 @@ def emit(rep, res):
             res["R32"][1])
     rep.add(res["R33"][0], "R33 把「查过确认无」记回「未检索」⇒ S5c 必须变红（D101：三态硬线是检索过没有）",
             res["R33"][1])
+    rep.add(res["R34"][0], "R34 派生 symbols 时凭空多补一个 ⇒ S1 必须变红（D103：符号只来自自己的 symbol_table）",
+            res["R34"][1])
+    rep.add(res["R35"][0], "R35 给无依据的反应编一个名字 ⇒ S5/S7 必须变红（D103：F4 不凑 95%）",
+            res["R35"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

@@ -180,9 +180,30 @@ def selfcheck():
 
     # S3 负对照（运行时，不写盘）：把报告里的数字改掉 ⇒ 必须判为不一致
     real = _read(RC1)
-    #   ★ 只改**第一处数字**（symbols 那一行），且用「100%」这种**最容易手写错**的值
-    mutated = real.replace("**5,008 / 5,090 = 98.39%**", "**5,090 / 5,090 = 100%**", 1)
-    if mutated == real:
+    # ★ 锚点必须**动态取**，不能写死。写死的两个失效场景都真实发生过：
+    #   ① 报告数字随数据变（Phase 69 把它从 98.39% 提到 99.82%）⇒ 锚点落空；
+    #   ② R32 探针注入的正是这一行 ⇒ 注入态下锚点必然落空，而落空后若 `return 1`，
+    #      S2/S4 会被一起挡掉，R32 就变成「判据没红」的假红。
+    #   故：从报告里解析出当前值，再改成**与它不同**的值（本来就是 100% 就改 99.99%）。
+    mutated = None
+    _lines = real.splitlines(True)
+    for _i, _ln in enumerate(_lines):
+        if _ln.startswith("| `symbols` |"):
+            _m = re.search(_NUM, _ln)
+            if _m:
+                _n0 = int(_m.group(1).replace(",", ""))
+                _d0 = int(_m.group(2).replace(",", ""))
+                _p0 = float(_m.group(3))
+                _n1 = _d0 if _n0 != _d0 else max(_n0 - 1, 0)
+                _p1 = 100.0 if _p0 != 100.0 else 99.99
+                _seg = "%s / %s = %.2f%%" % (format(_n1, ","), format(_d0, ","), _p1)
+                _lines[_i] = _ln[:_m.start()] + _seg + _ln[_m.end():]
+                mutated = "".join(_lines)
+            break
+    if mutated is None:
+        rep.append(("S3 负对照：改掉报告数字 ⇒ 必须判不一致", False,
+                    "无法在报告里定位并改写 symbols 行的数字（行前缀/格式已变？）"))
+    elif mutated == real:
         rep.append(("S3 负对照：改掉报告数字 ⇒ 必须判不一致", False,
                     "注入失败 —— 没找到待替换的数字（报告已改版？）"))
     else:
