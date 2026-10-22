@@ -2,6 +2,1236 @@
  "edges": [
   {
    "confidence": 1.0,
+   "count": 10,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=10 vs 记录 10 (from C10H16N5O13P3)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:bb70102afa1f1105",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:atp|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:atp",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 16,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=16 vs 记录 16 (from C10H16N5O13P3)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:41f2ff2d598a5296",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:atp|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:atp",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 5,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "N: 独立解析 N=5 vs 记录 5 (from C10H16N5O13P3)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:cfea6930adebb078",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:atp|EK:el:N",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:atp",
+   "target": "EK:el:N",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 13,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "O: 独立解析 O=13 vs 记录 13 (from C10H16N5O13P3)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:3e604bbc0626c20c",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:atp|EK:el:O",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:atp",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=1 vs 记录 1 (from CO2)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:53743762476e9a37",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:co2|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:co2",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "O: 独立解析 O=2 vs 记录 2 (from CO2)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:d35246470d95d3d8",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:co2|EK:el:O",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:co2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 6,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=6 vs 记录 6 (from C6H12O6)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:0efad72360a6f00d",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:glucose|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:glucose",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 12,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=12 vs 记录 12 (from C6H12O6)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:9ed79fe4da0c1c67",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:glucose|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:glucose",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 6,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "O: 独立解析 O=6 vs 记录 6 (from C6H12O6)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:eab7d1e2377adfb2",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:glucose|EK:el:O",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:glucose",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=2 vs 记录 2 (from H2O)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:dc547457593f2b0b",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:h2o|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:h2o",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "O: 独立解析 O=2 vs 记录 2 (from O2)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:649514950dede84c",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|BC:mo:o2|EK:el:O",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "BC:mo:o2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "Cl: 独立解析 Cl=2 vs 记录 2 (from Cl2)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:375336a5e3fb7b79",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:cl2|EK:el:Cl",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:cl2",
+   "target": "EK:el:Cl",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=2 vs 记录 2 (from H2O)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:4a7bcce8121229ea",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:h2o|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:h2o",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "O: 独立解析 O=1 vs 记录 1 (from H2O)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:f23df0c87d0efa63",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:h2o|EK:el:O",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:h2o",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "Cl: 独立解析 Cl=1 vs 记录 1 (from HCl)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:1b9eddcb5174bcc5",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:hcl|EK:el:Cl",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:hcl",
+   "target": "EK:el:Cl",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=1 vs 记录 1 (from HCl)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:d782b8f2062b3f36",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:hcl|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:hcl",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "Cl: 独立解析 Cl=1 vs 记录 1 (from NaCl)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:70b66412ce0729fd",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:nacl|EK:el:Cl",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:nacl",
+   "target": "EK:el:Cl",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "Na: 独立解析 Na=1 vs 记录 1 (from NaCl)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:bcfb800f876680c6",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:nacl|EK:el:Na",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:nacl",
+   "target": "EK:el:Na",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "Na: 独立解析 Na=1 vs 记录 1 (from Na)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:470f91ee34667432",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:na|EK:el:Na",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:na",
+   "target": "EK:el:Na",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "O: 独立解析 O=2 vs 记录 2 (from O2)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:d3d3c7ceef4fdfd4",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|IC:mo:o2|EK:el:O",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "IC:mo:o2",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=1 vs 记录 1 (from CH4)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:c9a46141590eec01",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed/energy_combustion",
+     "src_hash": "de46bf0f471ae17446e4e9c3dee1c131c1018fbacee284fc6cd3f3d1a74744da",
+     "src_ver": "STTP 自策划种子（能燃切片）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|MO:ch4|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "MO:ch4",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 4,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=4 vs 记录 4 (from CH4)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:f4d6b31a8977c54a",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed/energy_combustion",
+     "src_hash": "de46bf0f471ae17446e4e9c3dee1c131c1018fbacee284fc6cd3f3d1a74744da",
+     "src_ver": "STTP 自策划种子（能燃切片）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|MO:ch4|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "MO:ch4",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=1 vs 记录 1 (from CO2)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:cd8b25f9766a898b",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed/energy_combustion",
+     "src_hash": "de46bf0f471ae17446e4e9c3dee1c131c1018fbacee284fc6cd3f3d1a74744da",
+     "src_ver": "STTP 自策划种子（能燃切片）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|MO:co2|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "MO:co2",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=2 vs 记录 2 (from C2H6)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:052ca8d6fcfe79b4",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|OM:mo:ethane|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "OM:mo:ethane",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 6,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=6 vs 记录 6 (from C2H6)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:c998a33b80ea82ef",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|OM:mo:ethane|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "OM:mo:ethane",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 2,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=2 vs 记录 2 (from C2H5OH)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:f7e4cb2d1c032602",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|OM:mo:ethanol|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "OM:mo:ethanol",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 6,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=6 vs 记录 6 (from C2H5OH)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:ebd9a82656a2d46a",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|OM:mo:ethanol|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "OM:mo:ethanol",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "O: 独立解析 O=1 vs 记录 1 (from C2H5OH)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:98e959b481ffabac",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|OM:mo:ethanol|EK:el:O",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "OM:mo:ethanol",
+   "target": "EK:el:O",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 1,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "C: 独立解析 C=1 vs 记录 1 (from CH4)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:fabd73092179d309",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|OM:mo:methane|EK:el:C",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "OM:mo:methane",
+   "target": "EK:el:C",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
+   "count": 4,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "H: 独立解析 H=4 vs 记录 4 (from CH4)",
+     "dvs": {
+      "11_真实数据/dimension_table.py": "08a5fd5d6444",
+      "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+     },
+     "evd": "evd:18c04d5c4fa99476",
+     "impl": "verification_model.parse_formula_independent(源节点 formula)",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "dimension_table": "ab9c5bcde8932ae5",
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "curated_seed",
+     "src_hash": "afc7e96cef93b01b797b427ef07419a49f3ea8b0b76443c855928e502a5b06fe",
+     "src_ver": "STTP 自策划种子（16 个 seed_*.json）",
+     "vch": "100148c147cb",
+     "vfr": "verification_model"
+    }
+   ],
+   "explicit_or_inferred": "explicit",
+   "gate": null,
+   "id": "composed_of|OM:mo:methane|EK:el:H",
+   "kind": "molecule_element",
+   "rationale": null,
+   "source": "OM:mo:methane",
+   "target": "EK:el:H",
+   "type": "composed_of",
+   "verification_level": "rule_checked",
+   "verification_scope": "formula_count_node_recheck",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "verification_model.parse_formula_independent(源节点 formula)"
+  },
+  {
+   "confidence": 1.0,
    "domain": null,
    "evidence": [
     {
@@ -7985,6 +9215,2481 @@
    "verifier": "curated_seed"
   },
   {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family As=('g', 15) vs Bi=('g', 15)",
+     "evd": "evd:3c9b510c7a11e66f",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:As|EK:el:Bi",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:As",
+   "target": "EK:el:Bi",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family As=('g', 15) vs Mc=('g', 15)",
+     "evd": "evd:67b7159c4d8a0b32",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:As|EK:el:Mc",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:As",
+   "target": "EK:el:Mc",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family As=('g', 15) vs N=('g', 15)",
+     "evd": "evd:38857fa9be0e33b5",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:As|EK:el:N",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:As",
+   "target": "EK:el:N",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family As=('g', 15) vs P=('g', 15)",
+     "evd": "evd:aef25d93f739bdb3",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:As|EK:el:P",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:As",
+   "target": "EK:el:P",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family As=('g', 15) vs Sb=('g', 15)",
+     "evd": "evd:803106a8b3bd1bf1",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:As|EK:el:Sb",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:As",
+   "target": "EK:el:Sb",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family At=('g', 17) vs Br=('g', 17)",
+     "evd": "evd:4da24ab595b57a36",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:At|EK:el:Br",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:At",
+   "target": "EK:el:Br",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family At=('g', 17) vs Cl=('g', 17)",
+     "evd": "evd:212f2c03a26c77f5",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:At|EK:el:Cl",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:At",
+   "target": "EK:el:Cl",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family At=('g', 17) vs F=('g', 17)",
+     "evd": "evd:29036f9bbeb68c1c",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:At|EK:el:F",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:At",
+   "target": "EK:el:F",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family At=('g', 17) vs I=('g', 17)",
+     "evd": "evd:aeb2c7e792aab59f",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:At|EK:el:I",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:At",
+   "target": "EK:el:I",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family At=('g', 17) vs Ts=('g', 17)",
+     "evd": "evd:9caeb9a4d37c2169",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:At|EK:el:Ts",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:At",
+   "target": "EK:el:Ts",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Bi=('g', 15) vs Mc=('g', 15)",
+     "evd": "evd:218d0b1662a0c1e1",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Bi|EK:el:Mc",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Bi",
+   "target": "EK:el:Mc",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Bi=('g', 15) vs P=('g', 15)",
+     "evd": "evd:3ba10727f88c08d1",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Bi|EK:el:P",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Bi",
+   "target": "EK:el:P",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Br=('g', 17) vs I=('g', 17)",
+     "evd": "evd:8c90c1c77458b064",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Br|EK:el:I",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Br",
+   "target": "EK:el:I",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Cl=('g', 17) vs Br=('g', 17)",
+     "evd": "evd:6c130f920ec3fed8",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Cl|EK:el:Br",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Cl",
+   "target": "EK:el:Br",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Cl=('g', 17) vs I=('g', 17)",
+     "evd": "evd:ceccaefef8d6493e",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Cl|EK:el:I",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Cl",
+   "target": "EK:el:I",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Cs=('g', 1) vs H=('g', 1)",
+     "evd": "evd:cc7149d40e129022",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Cs|EK:el:H",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Cs",
+   "target": "EK:el:H",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Cs=('g', 1) vs Li=('g', 1)",
+     "evd": "evd:8149121cb1eadfab",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Cs|EK:el:Li",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Cs",
+   "target": "EK:el:Li",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family C=('g', 14) vs Fl=('g', 14)",
+     "evd": "evd:7416e97ec0d7e505",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:C|EK:el:Fl",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:C",
+   "target": "EK:el:Fl",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family C=('g', 14) vs Ge=('g', 14)",
+     "evd": "evd:0364e519d9159067",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:C|EK:el:Ge",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:C",
+   "target": "EK:el:Ge",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Fl=('g', 14) vs Ge=('g', 14)",
+     "evd": "evd:7e9b0f02a263af6a",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Fl|EK:el:Ge",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Fl",
+   "target": "EK:el:Ge",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Fr=('g', 1) vs Cs=('g', 1)",
+     "evd": "evd:2e125cfebedff100",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Fr|EK:el:Cs",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Fr",
+   "target": "EK:el:Cs",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Fr=('g', 1) vs H=('g', 1)",
+     "evd": "evd:77a642370ea036cf",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Fr|EK:el:H",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Fr",
+   "target": "EK:el:H",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Fr=('g', 1) vs K=('g', 1)",
+     "evd": "evd:e06fa9cace05ffd8",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Fr|EK:el:K",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Fr",
+   "target": "EK:el:K",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Fr=('g', 1) vs Li=('g', 1)",
+     "evd": "evd:1317e8555747c2d9",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Fr|EK:el:Li",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Fr",
+   "target": "EK:el:Li",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Fr=('g', 1) vs Na=('g', 1)",
+     "evd": "evd:f2a688af22a67054",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Fr|EK:el:Na",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Fr",
+   "target": "EK:el:Na",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family F=('g', 17) vs Br=('g', 17)",
+     "evd": "evd:2509ce4acf798508",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:F|EK:el:Br",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:F",
+   "target": "EK:el:Br",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family F=('g', 17) vs Cl=('g', 17)",
+     "evd": "evd:a9f050e32975e6dc",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:F|EK:el:Cl",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:F",
+   "target": "EK:el:Cl",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family F=('g', 17) vs I=('g', 17)",
+     "evd": "evd:12c98037203bb3c6",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:F|EK:el:I",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:F",
+   "target": "EK:el:I",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family F=('g', 17) vs Ts=('g', 17)",
+     "evd": "evd:27ca84f609d22db4",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:F|EK:el:Ts",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:F",
+   "target": "EK:el:Ts",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family K=('g', 1) vs Cs=('g', 1)",
+     "evd": "evd:659a4b9c289e1ac9",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:K|EK:el:Cs",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:K",
+   "target": "EK:el:Cs",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family K=('g', 1) vs H=('g', 1)",
+     "evd": "evd:eeab0bd62f4baca9",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:K|EK:el:H",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:K",
+   "target": "EK:el:H",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family K=('g', 1) vs Li=('g', 1)",
+     "evd": "evd:3841bdb27a208a94",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:K|EK:el:Li",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:K",
+   "target": "EK:el:Li",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Li=('g', 1) vs H=('g', 1)",
+     "evd": "evd:fab9d1bfc24a0af8",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Li|EK:el:H",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Li",
+   "target": "EK:el:H",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Lv=('g', 16) vs S=('g', 16)",
+     "evd": "evd:455236f42a3a6b48",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Lv|EK:el:S",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Lv",
+   "target": "EK:el:S",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Na=('g', 1) vs Cs=('g', 1)",
+     "evd": "evd:c0c322b6b871d1e6",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Na|EK:el:Cs",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Na",
+   "target": "EK:el:Cs",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Na=('g', 1) vs H=('g', 1)",
+     "evd": "evd:92561ad9b2b4d66b",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Na|EK:el:H",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Na",
+   "target": "EK:el:H",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Na=('g', 1) vs K=('g', 1)",
+     "evd": "evd:3b02f8e53924567b",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Na|EK:el:K",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Na",
+   "target": "EK:el:K",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Na=('g', 1) vs Li=('g', 1)",
+     "evd": "evd:31fb4d5499185b92",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Na|EK:el:Li",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Na",
+   "target": "EK:el:Li",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family N=('g', 15) vs Bi=('g', 15)",
+     "evd": "evd:5ef34120013b175a",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:N|EK:el:Bi",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:N",
+   "target": "EK:el:Bi",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family N=('g', 15) vs Mc=('g', 15)",
+     "evd": "evd:0bb071b0ca9d5a3f",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:N|EK:el:Mc",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:N",
+   "target": "EK:el:Mc",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family N=('g', 15) vs P=('g', 15)",
+     "evd": "evd:5ed75aacf84574c6",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:N|EK:el:P",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:N",
+   "target": "EK:el:P",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family O=('g', 16) vs Lv=('g', 16)",
+     "evd": "evd:f19c6cbca465208f",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:O|EK:el:Lv",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:O",
+   "target": "EK:el:Lv",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family O=('g', 16) vs Po=('g', 16)",
+     "evd": "evd:90e991692ba782d9",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:O|EK:el:Po",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:O",
+   "target": "EK:el:Po",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family O=('g', 16) vs S=('g', 16)",
+     "evd": "evd:eb01bdd1f9b1688c",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:O|EK:el:S",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:O",
+   "target": "EK:el:S",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family O=('g', 16) vs Se=('g', 16)",
+     "evd": "evd:2b53d4ca429de0ca",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:O|EK:el:Se",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:O",
+   "target": "EK:el:Se",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family O=('g', 16) vs Te=('g', 16)",
+     "evd": "evd:26f53aa751b1641e",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:O|EK:el:Te",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:O",
+   "target": "EK:el:Te",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Pb=('g', 14) vs C=('g', 14)",
+     "evd": "evd:fc8abdc318a6e040",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Pb|EK:el:C",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Pb",
+   "target": "EK:el:C",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Pb=('g', 14) vs Fl=('g', 14)",
+     "evd": "evd:9cbcfaa184a256f1",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Pb|EK:el:Fl",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Pb",
+   "target": "EK:el:Fl",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Pb=('g', 14) vs Ge=('g', 14)",
+     "evd": "evd:b1bac8a9d8d58ef6",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Pb|EK:el:Ge",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Pb",
+   "target": "EK:el:Ge",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Po=('g', 16) vs Lv=('g', 16)",
+     "evd": "evd:91793f0f22cdda39",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Po|EK:el:Lv",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Po",
+   "target": "EK:el:Lv",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Po=('g', 16) vs S=('g', 16)",
+     "evd": "evd:ab9300e8f0a5f571",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Po|EK:el:S",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Po",
+   "target": "EK:el:S",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family P=('g', 15) vs Mc=('g', 15)",
+     "evd": "evd:f58998a9621f223e",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:P|EK:el:Mc",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:P",
+   "target": "EK:el:Mc",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sb=('g', 15) vs Bi=('g', 15)",
+     "evd": "evd:0f9c6b66069a9dd3",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sb|EK:el:Bi",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sb",
+   "target": "EK:el:Bi",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sb=('g', 15) vs Mc=('g', 15)",
+     "evd": "evd:6ccece6fd5dfd6e3",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sb|EK:el:Mc",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sb",
+   "target": "EK:el:Mc",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sb=('g', 15) vs N=('g', 15)",
+     "evd": "evd:2070eff0a78b559d",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sb|EK:el:N",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sb",
+   "target": "EK:el:N",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sb=('g', 15) vs P=('g', 15)",
+     "evd": "evd:2a67095cb314226e",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sb|EK:el:P",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sb",
+   "target": "EK:el:P",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Se=('g', 16) vs Lv=('g', 16)",
+     "evd": "evd:a28666ad9efcb5fd",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Se|EK:el:Lv",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Se",
+   "target": "EK:el:Lv",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Se=('g', 16) vs Po=('g', 16)",
+     "evd": "evd:5835c18951b60dce",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Se|EK:el:Po",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Se",
+   "target": "EK:el:Po",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Se=('g', 16) vs S=('g', 16)",
+     "evd": "evd:47d50f5371661211",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Se|EK:el:S",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Se",
+   "target": "EK:el:S",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Si=('g', 14) vs C=('g', 14)",
+     "evd": "evd:96476b2c98fd9752",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Si|EK:el:C",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Si",
+   "target": "EK:el:C",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Si=('g', 14) vs Fl=('g', 14)",
+     "evd": "evd:4b8428d6c888b621",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Si|EK:el:Fl",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Si",
+   "target": "EK:el:Fl",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Si=('g', 14) vs Ge=('g', 14)",
+     "evd": "evd:ae6dce1c6a95d5a5",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Si|EK:el:Ge",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Si",
+   "target": "EK:el:Ge",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Si=('g', 14) vs Pb=('g', 14)",
+     "evd": "evd:e08041082531fe62",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Si|EK:el:Pb",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Si",
+   "target": "EK:el:Pb",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Si=('g', 14) vs Sn=('g', 14)",
+     "evd": "evd:92e344da1e8da930",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Si|EK:el:Sn",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Si",
+   "target": "EK:el:Sn",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sn=('g', 14) vs C=('g', 14)",
+     "evd": "evd:dfff585bd3fcd45c",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sn|EK:el:C",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sn",
+   "target": "EK:el:C",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sn=('g', 14) vs Fl=('g', 14)",
+     "evd": "evd:e527004b15950b0d",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sn|EK:el:Fl",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sn",
+   "target": "EK:el:Fl",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sn=('g', 14) vs Ge=('g', 14)",
+     "evd": "evd:e612165060454d58",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sn|EK:el:Ge",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sn",
+   "target": "EK:el:Ge",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Sn=('g', 14) vs Pb=('g', 14)",
+     "evd": "evd:b1cdaffa6d004185",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Sn|EK:el:Pb",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Sn",
+   "target": "EK:el:Pb",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Te=('g', 16) vs Lv=('g', 16)",
+     "evd": "evd:a6828240e3626c86",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Te|EK:el:Lv",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Te",
+   "target": "EK:el:Lv",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Te=('g', 16) vs Po=('g', 16)",
+     "evd": "evd:a54b08ef683e00a4",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Te|EK:el:Po",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Te",
+   "target": "EK:el:Po",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Te=('g', 16) vs S=('g', 16)",
+     "evd": "evd:a727a2f044aab3a2",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Te|EK:el:S",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Te",
+   "target": "EK:el:S",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Te=('g', 16) vs Se=('g', 16)",
+     "evd": "evd:26870ba4242e4045",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Te|EK:el:Se",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Te",
+   "target": "EK:el:Se",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Ts=('g', 17) vs Br=('g', 17)",
+     "evd": "evd:f1347f5921aedbb3",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Ts|EK:el:Br",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Ts",
+   "target": "EK:el:Br",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Ts=('g', 17) vs Cl=('g', 17)",
+     "evd": "evd:5b23507fc1f51275",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Ts|EK:el:Cl",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Ts",
+   "target": "EK:el:Cl",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
+   "confidence": 0.85,
+   "domain": null,
+   "evidence": [
+    {
+     "detail": "权威表比对一致：family Ts=('g', 17) vs I=('g', 17)",
+     "evd": "evd:44da3a5aa38960cf",
+     "impl": "element_reference.py",
+     "impl_ver": "100148c147cb",
+     "indep": true,
+     "kind": "recompute",
+     "refs": {
+      "element_reference": "3a4e6d035f109462"
+     },
+     "src": "ElementKG2.0",
+     "src_hash": "5c407a5ee1f38ff1b4a351cafaad6f92b1be10d5abaa90bd06922b48d98edd92",
+     "src_ver": "ElementKG 2.0（本地 raw）"
+    }
+   ],
+   "explicit_or_inferred": "inferred",
+   "gate": null,
+   "id": "same_family|EK:el:Ts|EK:el:I",
+   "kind": "ek_same_family",
+   "rationale": null,
+   "source": "EK:el:Ts",
+   "target": "EK:el:I",
+   "type": "same_family",
+   "verification_level": "rule_checked",
+   "verification_scope": "family_authority_equal",
+   "verified": true,
+   "verified_strict": true,
+   "verifier": "element_reference.py"
+  },
+  {
    "confidence": null,
    "domain": null,
    "evidence": [
@@ -8387,7 +12092,7 @@
  ],
  "meta": {
   "dangling_endpoints": [],
-  "edge_count": 255,
+  "edge_count": 360,
   "edge_id_collisions_fixed": 0,
   "edge_kinds": {
    "P_from_PV": 1,
@@ -8405,6 +12110,7 @@
    "coprime_factorization": 1,
    "derived": 6,
    "e_base": 1,
+   "ek_same_family": 75,
    "energy_from_hnu": 1,
    "energy_from_photoelectric": 1,
    "eponym_euler": 1,
@@ -8435,6 +12141,7 @@
    "mass_velocity": 2,
    "math_operator_bridge": 12,
    "metal_reactant": 1,
+   "molecule_element": 30,
    "momentum_in_dispersion": 1,
    "nernst_potential": 1,
    "o2_product": 1,
@@ -8461,6 +12168,7 @@
    "work_energy": 3
   },
   "edge_types": {
+   "composed_of": 30,
    "defines": 69,
    "derived_from": 57,
    "dimensionally_consistent": 23,
@@ -8471,15 +12179,17 @@
    "related_to": 3,
    "releases": 1,
    "same_as": 14,
+   "same_family": 75,
    "uses_operator": 10
   },
   "explicit_or_inferred": {
-   "explicit": 222,
-   "inferred": 33
+   "explicit": 252,
+   "inferred": 108
   },
-  "node_count": 170,
+  "node_count": 200,
   "node_types": {
    "Constant": 20,
+   "Element": 30,
    "Formula": 49,
    "MathConcept": 5,
    "Molecule": 18,
@@ -8490,16 +12200,16 @@
   },
   "source_file": "sample_normalized.json",
   "subjects": {
-   "化学": 49,
+   "化学": 79,
    "数学": 18,
    "物理": 103
   },
   "verification_levels": {
-   "rule_checked": 91,
+   "rule_checked": 196,
    "source_asserted": 164
   },
-  "verified_edges": 91,
-  "verified_strict_edges": 91,
+  "verified_edges": 196,
+  "verified_strict_edges": 196,
   "warnings": []
  },
  "nodes": [
@@ -10455,6 +14165,846 @@
    ],
    "subject": "物理",
    "type": "Constant"
+  },
+  {
+   "attrs": {
+    "atomic_number": 33,
+    "atomic_weight": 74.921595,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 15,
+    "id": "EK:el:As",
+    "name": "Arsenic",
+    "ntype": "element",
+    "period": 4,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "As"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:As",
+   "label": "Arsenic",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 85,
+    "atomic_weight": 210.0,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 17,
+    "id": "EK:el:At",
+    "name": "Astatine",
+    "ntype": "element",
+    "period": 6,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "At"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:At",
+   "label": "Astatine",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 83,
+    "atomic_weight": 208.9804,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 15,
+    "id": "EK:el:Bi",
+    "name": "Bismuth",
+    "ntype": "element",
+    "period": 6,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Bi"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Bi",
+   "label": "Bismuth",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 35,
+    "atomic_weight": 79.904,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 17,
+    "id": "EK:el:Br",
+    "name": "Bromine",
+    "ntype": "element",
+    "period": 4,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Br"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Br",
+   "label": "Bromine",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 6,
+    "atomic_weight": 12.011,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 14,
+    "id": "EK:el:C",
+    "name": "Carbon",
+    "ntype": "element",
+    "period": 2,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "C"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:C",
+   "label": "Carbon",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 17,
+    "atomic_weight": 35.45,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 17,
+    "id": "EK:el:Cl",
+    "name": "Chlorine",
+    "ntype": "element",
+    "period": 3,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Cl"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Cl",
+   "label": "Chlorine",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 55,
+    "atomic_weight": 132.90545196,
+    "block": "s",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 1,
+    "id": "EK:el:Cs",
+    "name": "Caesium",
+    "ntype": "element",
+    "period": 6,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Cs"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Cs",
+   "label": "Caesium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 9,
+    "atomic_weight": 18.998403163,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 17,
+    "id": "EK:el:F",
+    "name": "Fluorine",
+    "ntype": "element",
+    "period": 2,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "F"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:F",
+   "label": "Fluorine",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 114,
+    "atomic_weight": 289.0,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 14,
+    "id": "EK:el:Fl",
+    "name": "Flerovium",
+    "ntype": "element",
+    "period": 7,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Fl"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Fl",
+   "label": "Flerovium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 87,
+    "atomic_weight": 223.0,
+    "block": "s",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 1,
+    "id": "EK:el:Fr",
+    "name": "Francium",
+    "ntype": "element",
+    "period": 7,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Fr"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Fr",
+   "label": "Francium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 32,
+    "atomic_weight": 72.63,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 14,
+    "id": "EK:el:Ge",
+    "name": "Germanium",
+    "ntype": "element",
+    "period": 4,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Ge"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Ge",
+   "label": "Germanium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 1,
+    "atomic_weight": 1.008,
+    "block": "s",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 1,
+    "id": "EK:el:H",
+    "name": "Hydrogen",
+    "ntype": "element",
+    "period": 1,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "H"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:H",
+   "label": "Hydrogen",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 53,
+    "atomic_weight": 126.90447,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 17,
+    "id": "EK:el:I",
+    "name": "Iodine",
+    "ntype": "element",
+    "period": 5,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "I"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:I",
+   "label": "Iodine",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 19,
+    "atomic_weight": 39.0983,
+    "block": "s",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 1,
+    "id": "EK:el:K",
+    "name": "Potassium",
+    "ntype": "element",
+    "period": 4,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "K"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:K",
+   "label": "Potassium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 3,
+    "atomic_weight": 6.94,
+    "block": "s",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 1,
+    "id": "EK:el:Li",
+    "name": "Lithium",
+    "ntype": "element",
+    "period": 2,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Li"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Li",
+   "label": "Lithium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 116,
+    "atomic_weight": 293.0,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 16,
+    "id": "EK:el:Lv",
+    "name": "Livermorium",
+    "ntype": "element",
+    "period": 7,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Lv"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Lv",
+   "label": "Livermorium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 115,
+    "atomic_weight": 290.0,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 15,
+    "id": "EK:el:Mc",
+    "name": "Moscovium",
+    "ntype": "element",
+    "period": 7,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Mc"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Mc",
+   "label": "Moscovium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 7,
+    "atomic_weight": 14.007,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 15,
+    "id": "EK:el:N",
+    "name": "Nitrogen",
+    "ntype": "element",
+    "period": 2,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "N"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:N",
+   "label": "Nitrogen",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 11,
+    "atomic_weight": 22.98976928,
+    "block": "s",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 1,
+    "id": "EK:el:Na",
+    "name": "Sodium",
+    "ntype": "element",
+    "period": 3,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Na"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Na",
+   "label": "Sodium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 8,
+    "atomic_weight": 15.999,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 16,
+    "id": "EK:el:O",
+    "name": "Oxygen",
+    "ntype": "element",
+    "period": 2,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "O"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:O",
+   "label": "Oxygen",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 15,
+    "atomic_weight": 30.973761998,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 15,
+    "id": "EK:el:P",
+    "name": "Phosphorus",
+    "ntype": "element",
+    "period": 3,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "P"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:P",
+   "label": "Phosphorus",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 82,
+    "atomic_weight": 207.2,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 14,
+    "id": "EK:el:Pb",
+    "name": "Lead",
+    "ntype": "element",
+    "period": 6,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Pb"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Pb",
+   "label": "Lead",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 84,
+    "atomic_weight": 209.0,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 16,
+    "id": "EK:el:Po",
+    "name": "Polonium",
+    "ntype": "element",
+    "period": 6,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Po"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Po",
+   "label": "Polonium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 16,
+    "atomic_weight": 32.06,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 16,
+    "id": "EK:el:S",
+    "name": "Sulfur",
+    "ntype": "element",
+    "period": 3,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "S"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:S",
+   "label": "Sulfur",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 51,
+    "atomic_weight": 121.76,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 15,
+    "id": "EK:el:Sb",
+    "name": "Antimony",
+    "ntype": "element",
+    "period": 5,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Sb"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Sb",
+   "label": "Antimony",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 34,
+    "atomic_weight": 78.971,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 16,
+    "id": "EK:el:Se",
+    "name": "Selenium",
+    "ntype": "element",
+    "period": 4,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Se"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Se",
+   "label": "Selenium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 14,
+    "atomic_weight": 28.085,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 14,
+    "id": "EK:el:Si",
+    "name": "Silicon",
+    "ntype": "element",
+    "period": 3,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Si"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Si",
+   "label": "Silicon",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 50,
+    "atomic_weight": 118.71,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 14,
+    "id": "EK:el:Sn",
+    "name": "Tin",
+    "ntype": "element",
+    "period": 5,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Sn"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Sn",
+   "label": "Tin",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 52,
+    "atomic_weight": 127.6,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 16,
+    "id": "EK:el:Te",
+    "name": "Tellurium",
+    "ntype": "element",
+    "period": 5,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Te"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Te",
+   "label": "Tellurium",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
+  },
+  {
+   "attrs": {
+    "atomic_number": 117,
+    "atomic_weight": 294.0,
+    "block": "p",
+    "domain": "chem.element",
+    "element_source_version": "elem-r1",
+    "group": 17,
+    "id": "EK:el:Ts",
+    "name": "Tennessine",
+    "ntype": "element",
+    "period": 7,
+    "periodic_source": "element_reference_iupac",
+    "source": "element_reference",
+    "symbol": "Ts"
+   },
+   "confidence": null,
+   "domain": "chem.element",
+   "formula": "",
+   "id": "EK:el:Ts",
+   "label": "Tennessine",
+   "labels": [
+    "Element",
+    "Entity"
+   ],
+   "subject": "化学",
+   "type": "Element"
   },
   {
    "attrs": {

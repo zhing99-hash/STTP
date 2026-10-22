@@ -4,8 +4,8 @@
   {
    "desc": "页面与查询必须属于同一数据版本：节点/边计数一致（页面 /graph_data.json ↔ 查询后端）",
    "expect": {
-    "edges": 255,
-    "nodes": 170
+    "edges": 360,
+    "nodes": 200
    },
    "id": "Q1-stats",
    "kind": "stats"
@@ -26,7 +26,7 @@
    },
    "id": "Q3-neighbors",
    "kind": "neighbors_min",
-   "node": "PQ:energy"
+   "node": "EK:el:H"
   },
   {
    "desc": "跨学科桥两端在同一连通分量内，路径查询可用",
@@ -41,7 +41,7 @@
   },
   {
    "desc": "样例保留证据链：达标边必须带 verification_level 与逐条 evidence",
-   "edge_id": "derived_from|CE:pq:faraday_const|CO:pq:avogadro",
+   "edge_id": "composed_of|BC:mo:atp|EK:el:C",
    "expect": {
     "min_level_rank": 4,
     "require_evidence": true
