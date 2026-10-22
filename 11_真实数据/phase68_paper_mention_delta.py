@@ -260,6 +260,8 @@ def main():
     st = collections.Counter()
     unverified, accept_but_empty, ref_bad, forged, snippet_bad = [], [], [], [], []
     pretend = []
+    curated_no_ref = set()   # D101：记 no_referent 的 **curated** 条（查过、裁决为无）
+    fake_unsearched = []     # D101：记 not_extracted 但池里**没有 error**（把已确认无说成未知）
     cross_cnt = 0
 
     for n in forms:
@@ -377,17 +379,38 @@ def main():
                     "papers_rule_version": RULE_VERSION,
                     "papers_search_total": row.get("search_total")}
         else:
-            st["not_extracted"] += 1
-            newp = {"papers_status": "not_extracted", "papers": [],
+            # ★ D101：走到这里的是「**检索过了**（没有 error），但裁决后没有可采信的候选」。
+            #   两种子情形：① 搜索命中为 0 候选（名字在 title/abstract 里压根没连续出现）；
+            #   ② 有候选但人工判定它不是指这个公式（如 Periodic law 命中生态学的 periodic）。
+            #   对 mentioned_in（提及）这条边而言，两者都是**「查过了，确认没有指称」**
+            #   ⇒ no_referent。此前一律记成 not_extracted，等于把「已确认无」降级成
+            #   「未知」：80 条里 35 条明明查过，报告却要说它们没被检索。
+            #   D96 防的是「未知 ⇒ 已确认无」这个方向；这里歪的是它的镜像。
+            #   区分依据只有一条硬线：**有没有 error**（有没有真正检索过）。
+            st["no_referent"] += 1
+            st["no_referent_curated"] += 1
+            curated_no_ref.add(fid)
+            newp = {"papers_status": "no_referent", "papers": [],
                     "papers_count": 0,
                     "papers_reason": (VERDICT.get(fid) or ("", ""))[1],
+                    "papers_reject_kind": ("no_candidate" if not pool else "verdict_reject"),
                     "papers_search_total": row.get("search_total")}
-        if newp.get("papers_status") == "no_referent":
-            ref_bad.append(fid)   # 走到这说明它其实在 curated 名单里 ⇒ 分类冲突
+        # ★ 双向：只有「本轮没检索过（有 error）」的 curated 落进 no_referent 才算编造；
+        #   检索过且裁决为无的落进 no_referent 是**正确的**，不该红。
+        if newp.get("papers_status") == "no_referent" and fid in set(bad_rows):
+            ref_bad.append(fid)
+        # ★ S5c：反方向的同一条硬线 —— 记成「未检索」的，必须**真的**没检索过。
+        #   只比**计数**不够：完全可以在保住 extracted/not_extracted 数字不变的前提下，
+        #   把状态字符串从 no_referent 换成 not_extracted（数字照旧、语义已歪），
+        #   那正是最省事的退化方式（D96 里 pretend 那一条防的就是同类手法）。
+        if newp.get("papers_status") == "not_extracted" and not row.get("error"):
+            fake_unsearched.append(fid)
         d_nodes.append({"id": fid, "props": newp})
 
     total = st["extracted"] + st["no_referent"] + st["not_extracted"]
-    checked = st["extracted"] + st["not_extracted"]
+    # D101：curated 的三态是 extracted / no_referent(查过、裁决为无) / not_extracted(没查)。
+    #   三者之和才等于 curated 条数；此前只算 extracted+not_extracted，是在旧分类下才成立的等式。
+    checked = st["extracted"] + st["not_extracted"] + st["no_referent_curated"]
     print("  extracted %d ｜ not_extracted %d ｜ no_referent %d（合计 %d / %d）"
           % (st["extracted"], st["not_extracted"], st["no_referent"], total, len(forms)))
     if st["unsearched"]:
@@ -409,13 +432,21 @@ def main():
         ("S4 裁决与候选一致", not accept_but_empty,
          "判 accept 却拿不到候选的：%d 条（须 0 ⇒ 候选池变了，表要重读）%s"
          % (len(accept_but_empty), accept_but_empty[:3])),
-        ("S5 不编造（有名字的不许记成无指称）", not ref_bad,
-         "no_referent 集合里混进了 curated：%d 条 / 旧值冲突 %d" % (len(forged), len(ref_bad))),
+        # ★ D101 改写：旧版是「curated 一律不许记 no_referent」—— 那是在把
+        #   「查过确认无」也一并禁掉，逼着它们落到 not_extracted（未知）才不红。
+        #   正确的硬线是：**没检索过的**不许记成已确认无（那才是编造）。
+        ("S5 不编造（**未检索过**的不许记成已确认无）", not ref_bad,
+         "no_referent 里混进本轮有 error 的 curated：%d 条（须 0）／ 已裁决为无的 "
+         "curated %d 条（应 >0，证明这条分支在走）"
+         % (len(ref_bad), len(curated_no_ref))),
         # ★ D96：这条断言守的是**故障退化的正确方向**。配额失败必须落到
         #   not_extracted；落到 no_referent 就会把一次基础设施故障写成一条永久结论。
         ("S5b 抓取失败 ⇒ not_extracted（不许落到 no_referent）",
          len(bad_rows) == st["unsearched"] and not pretend,
          "池里 error %d 条 ／ 记为未检索 %d 条（必须相等）／状态被写成 no_referent 的 %d 条（须 0）" % (len(bad_rows), st["unsearched"], len(pretend))),
+        ("S5c 检索过的不许记成未检索（D101 镜像）", not fake_unsearched,
+         "记 not_extracted 但池里没有 error 的 curated：%d 条（须 0 —— "
+         "出现即「把已确认无降级成未知」）%s" % (len(fake_unsearched), fake_unsearched[:3])),
         ("S6 非真空", st["extracted"] > 0 and st["no_referent"] > 0 and checked == len(rows),
          "extracted %d（>0 证明抽到了）；no_referent %d（>0 证明这条分支在走）；"
          "已裁决 %d = curated %d" % (st["extracted"], st["no_referent"], checked, len(rows))),
@@ -466,8 +497,12 @@ def main():
             "n_extracted": st["extracted"], "n_not_extracted": st["not_extracted"],
             "n_no_referent": st["no_referent"],
             "n_new_paper_nodes": len(new_papers), "n_edges": len(d_edges),
-            "note": "no_referent 5,010 条 = 5,002 条无人类名的 PB 合成式 + 8 条 mathxiv "
-                    "名字为类型名(definition/lemma)的节点 —— 两者都无从谈「被提及」。",
+            "note": "no_referent %d 条 = 5,010 条「无从谈被提及」（5,002 条无人类名的 PB "
+                    "合成式 + 8 条 mathxiv 名字为类型名 definition/lemma 的节点）"
+                    " + %d 条 curated 中**检索过但裁决为无**（0 候选或候选非指该式）"
+                    " ⇒ 是「查过了，确认无」，不是「没查」。"
+                    % (st["no_referent"], st["no_referent_curated"]),
+            "n_no_referent_curated": st["no_referent_curated"],
         },
         "nodes": d_nodes,
         "delete_nodes": [],

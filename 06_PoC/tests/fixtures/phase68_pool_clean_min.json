@@ -1,0 +1,157 @@
+{
+ "meta": {
+  "phase": 68,
+  "tag": "paper-mention",
+  "trust": "FIXTURE",
+  "note": "红探针 R33 离线夹具：1 条 accept(有候选) + 2 条 reject(一条 0 候选、一条候选非指该式) + 1 条 error。用于验证「检索过但裁决为无 ⇒ no_referent」这一分类被判据咬住，不依赖联网产物。",
+  "n_curated": 4
+ },
+ "formulas": [
+  {
+   "fid": "CE:fo:arrhenius",
+   "name": "Arrhenius equation",
+   "domain": "chem.kinetics",
+   "search_name": "Arrhenius equation",
+   "name_tokens": [
+    "arrhenius",
+    "equation"
+   ],
+   "field_of": "fields/16",
+   "search_total": 17204,
+   "candidates": [
+    {
+     "wid": "W2052953969",
+     "doi": "https://doi.org/10.1021/ed061p494",
+     "title": "The development of the Arrhenius equation",
+     "year": 1984,
+     "cited_by": 1702,
+     "language": "en",
+     "field_id": "https://openalex.org/fields/16",
+     "field": "Chemistry",
+     "topic": "History and advancements in chemistry",
+     "where": "title",
+     "snippet": "The development of the Arrhenius equation"
+    },
+    {
+     "wid": "W1969945203",
+     "doi": "https://doi.org/10.1002/marc.200600404",
+     "title": "Isoconversional Kinetic Analysis of Thermally Stimulated Processes in Polymers",
+     "year": 2006,
+     "cited_by": 1117,
+     "language": "en",
+     "field_id": "https://openalex.org/fields/25",
+     "field": "Materials Science",
+     "topic": "Thermal and Kinetic Analysis",
+     "where": "abstract",
+     "snippet": "An isoconversional method applies the Arrhenius equation to a narrow temperature region, Δ T related to a given extent of conversion."
+    },
+    {
+     "wid": "W1980909228",
+     "doi": null,
+     "title": "Basin Analysis: Principles and Applications",
+     "year": 1990,
+     "cited_by": 1097,
+     "language": "en",
+     "field_id": "https://openalex.org/fields/19",
+     "field": "Earth and Planetary Sciences",
+     "topic": "Geological and Geophysical Studies",
+     "where": "abstract",
+     "snippet": "9.5 Theory: the Arrhenius equation and maturation indices."
+    },
+    {
+     "wid": "W2366586089",
+     "doi": "https://doi.org/10.1242/jeb.118851",
+     "title": "The effects of temperature on aerobic metabolism: towards a mechanistic understanding of the responses of ectotherms to a changing environment",
+     "year": 2015,
+     "cited_by": 877,
+     "language": "en",
+     "field_id": "https://openalex.org/fields/23",
+     "field": "Environmental Science",
+     "topic": "Physiological and biochemical adaptations",
+     "where": "abstract",
+     "snippet": "c metabolism is often attributed to the competing effects of thermodynamics, which can be described using the Arrhenius equation, and the effects of temperature on protein stability, this account represents an over-simplification of the factors acting even at the level of single prot…"
+    },
+    {
+     "wid": "W2079253547",
+     "doi": "https://doi.org/10.1021/es062237m",
+     "title": "Oxidation of Chlorinated Ethenes by Heat-Activated Persulfate: Kinetics and Products",
+     "year": 2006,
+     "cited_by": 757,
+     "language": "en",
+     "field_id": "https://openalex.org/fields/23",
+     "field": "Environmental Science",
+     "topic": "Advanced oxidation water treatment",
+     "where": "abstract",
+     "snippet": "ance were pseudo-first-order for 1-2 half-lives, and the resulting rate constants-measured from 30 to 70 degrees C--fit the Arrhenius equation, yielding apparent activation energies of 101 +/- 4 kJ mol(-1) for tetrachloroethene (PCE), 108 +/- 3 kJ mol(-1) for trichloroethene (TCE), 1…"
+    },
+    {
+     "wid": "W2058955158",
+     "doi": "https://doi.org/10.1039/dc9786600199",
+     "title": "Pressure and temperature dependence of self-diffusion in water",
+     "year": 1978,
+     "cited_by": 741,
+     "language": "en",
+     "field_id": "https://openalex.org/fields/25",
+     "field": "Materials Science",
+     "topic": "Material Dynamics and Properties",
+     "where": "abstract",
+     "snippet": "A free-volume analysis has led to a modified Arrhenius equation which involves pressure-dependent terms."
+    }
+   ]
+  },
+  {
+   "fid": "BC:fo:photosynthesis_eq",
+   "name": "Photosynthesis stoichiometry",
+   "domain": "chem.stoich",
+   "search_name": "Photosynthesis stoichiometry",
+   "name_tokens": [
+    "photosynthesis",
+    "stoichiometry"
+   ],
+   "field_of": "fields/16",
+   "search_total": 445,
+   "candidates": []
+  },
+  {
+   "fid": "IC:fo:periodic",
+   "name": "Periodic law",
+   "domain": "chem.periodic",
+   "search_name": "Periodic law",
+   "name_tokens": [
+    "periodic",
+    "law"
+   ],
+   "field_of": "fields/16",
+   "search_total": 16801,
+   "candidates": [
+    {
+     "wid": "W2039810102",
+     "doi": "https://doi.org/10.2307/3817",
+     "title": "Habitat, the Templet for Ecological Strategies?",
+     "year": 1977,
+     "cited_by": 2286,
+     "language": "en",
+     "field_id": "https://openalex.org/fields/23",
+     "field": "Environmental Science",
+     "topic": "Ecology and Vegetation Dynamics Studies",
+     "where": "abstract",
+     "snippet": "It is noteworthy that from Dobereiner's early efforts in 1816 it took more than fifty years before Mendeleeff ormulated his Periodic Law (1869) and even after this there were various attempts at rearrangement."
+    }
+   ]
+  },
+  {
+   "fid": "CE:fo:ksp",
+   "name": "Solubility product",
+   "domain": "chem.solubility",
+   "search_name": "Solubility product",
+   "name_tokens": [
+    "solubility",
+    "product"
+   ],
+   "field_of": "fields/16",
+   "search_total": 104193,
+   "candidates": [],
+   "error": "429 budget exhausted (fixture)"
+  }
+ ]
+}

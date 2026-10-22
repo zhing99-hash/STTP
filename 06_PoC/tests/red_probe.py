@@ -610,6 +610,32 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R33",
+        "kind": "mutate",
+        "why": ("Phase 68 · D101：三态的硬线是「**有没有真正检索过**」，不是「有没有候选」。"
+                "旧分类把 curated 里『检索过、但裁决为无』的 35 条一律记成 not_extracted，"
+                "于是 80 条明明全查过，报告却要写『35 条未检索』——"
+                "把「已确认无」降级成「未知」，是 D96 所防方向的**镜像**，同样是歪的。"
+                "（35 条里 34 条是 0 候选，1 条是候选非指该式：Periodic law 命中的是生态学的 periodic。）"
+                "把 no_referent 改回 not_extracted ⇒ S5/S6 必须变红。"
+                "★ 起因很具体：旧版 S5 写的是「curated 一律不许记 no_referent」，"
+                "为了不红，代码只能把它们塞进 not_extracted —— **是判据先把分类逼歪的**。"),
+        "file": "11_真实数据/phase68_paper_mention_delta.py",
+        # ★ 单行锚点（本文件是 CRLF，多行锚点永不命中）
+        # ★ 锚点**必须带上行尾逗号**：注释放逗号之前会把逗号也注释掉 ⇒ SyntaxError，
+        #   脚本崩溃返回 RC=1 却没有任何断言名变红 —— 那不是「判据抓到了缺陷」，
+        #   是「探针自己把被测程序弄崩了」，expect_red 依然落空（R33 第一版就是这么红的）。
+        "old": "\"papers_status\": \"no_referent\", \"papers\": [],",
+        "new": ("\"papers_status\": \"not_extracted\", \"papers\": [],"
+                "  # redprobe: 查过确认无记成未知（D101）"),
+        "cmd": ("PY 11_真实数据/phase68_paper_mention_delta.py --dry --allow-partial "
+                "--pool 06_PoC/tests/fixtures/phase68_pool_clean_min.json"),
+        "cwd": ROOT,
+        "expect_red": ["S5c"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -633,7 +659,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R10", "R11", "R12", "R13", "R14", "R15", "R16",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
-                      "R29", "R30", "R31", "R32", "RN")
+                      "R29", "R30", "R31", "R32", "R33", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -949,6 +975,8 @@ def emit(rep, res):
             res["R31"][1])
     rep.add(res["R32"][0], "R32 报告数字写满（100% vs 98.39%）⇒ S2 必须变红（D100：报告也要有判据）",
             res["R32"][1])
+    rep.add(res["R33"][0], "R33 把「查过确认无」记回「未检索」⇒ S5c 必须变红（D101：三态硬线是检索过没有）",
+            res["R33"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

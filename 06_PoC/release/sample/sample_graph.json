@@ -8522,6 +8522,49 @@
     "meta_source": "Lohmann, Über die Pyrophosphatfraktion im Muskel, Naturwissenschaften 17 (1929)",
     "name": "ATP hydrolysis",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 2830,
+      "doi": "https://doi.org/10.1115/1.1451234",
+      "field": "Biochemistry, Genetics and Molecular Biology",
+      "field_matched": false,
+      "openalex_id": "W2151274733",
+      "openalex_node": "PA:oa:W2151274733",
+      "snippet": "l Filaments - Force Generation by Cytoskeletal Filaments - Active Polymerization - PART III: MOTOR PROTEINS - Structures of Motor Proteins - Speeds of Motors - ATP Hydrolysis - Steps and Forces - Motility Models: From Crossbridges to Motion - Afterword - Appendix - Bibliography - Index",
+      "title": "Mechanics of Motor Proteins and the Cytoskeleton",
+      "where": "abstract",
+      "year": 2002
+     },
+     {
+      "cited_by": 1774,
+      "doi": "https://doi.org/10.1128/mmbr.57.1.50-108.1993",
+      "field": "Biochemistry, Genetics and Molecular Biology",
+      "field_matched": false,
+      "openalex_id": "W1932645010",
+      "openalex_node": "PA:oa:W1932645010",
+      "snippet": "ypeptide segments to the periplasmic side of this membrane almost always requires at least six different proteins encoded by the sec genes and is dependent on both ATP hydrolysis and the electrochemical energy potential.",
+      "title": "The complete general secretory pathway in gram-negative bacteria",
+      "where": "abstract",
+      "year": 1993
+     },
+     {
+      "cited_by": 1674,
+      "doi": "https://doi.org/10.1126/science.1207056",
+      "field": "Biochemistry, Genetics and Molecular Biology",
+      "field_matched": false,
+      "openalex_id": "W2111607026",
+      "openalex_node": "PA:oa:W2111607026",
+      "snippet": "The v-ATPase engages in extensive amino acid-sensitive interactions with the Ragulator, a scaffolding complex that anchors the Rag GTPases to the lysosome. In a cell-free system, ATP hydrolysis by the v-ATPase was necessary for amino acids to regulate the v-ATPase-Ragulator interaction and promote mTORC1 translocation.",
+      "title": "mTORC1 Senses Lysosomal Amino Acids Through an Inside-Out Mechanism That Requires the Vacuolar H + -ATPase",
+      "where": "abstract",
+      "year": 2011
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 21103,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -8584,6 +8627,12 @@
     "meta_source": "Ingenhousz, Experiments upon Vegetables, discovering their great power of purifying the common air (1779)",
     "name": "Photosynthesis stoichiometry",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 445,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [],
     "symbols": [],
@@ -8823,6 +8872,25 @@
     "meta_source": "Arrhenius, Über die Reaktionsgeschwindigkeit bei der Inversion von Rohrzucker durch Säuren, Z. Phys. Chem. 4 (1889)",
     "name": "Arrhenius equation",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 1702,
+      "doi": "https://doi.org/10.1021/ed061p494",
+      "field": "Chemistry",
+      "field_matched": true,
+      "openalex_id": "W2052953969",
+      "openalex_node": "PA:oa:W2052953969",
+      "snippet": "The development of the Arrhenius equation",
+      "title": "The development of the Arrhenius equation",
+      "where": "title",
+      "year": 1984
+     }
+    ],
+    "papers_count": 1,
+    "papers_rule_version": "m1",
+    "papers_search_total": 17204,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -8894,6 +8962,12 @@
     "meta_source": "Gibbs, On the Equilibrium of Heterogeneous Substances, Trans. Connecticut Acad. (1876)",
     "name": "Gibbs energy at arbitrary composition",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 46,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -8959,6 +9033,12 @@
     "meta_source": "Gibbs (1876)；van 't Hoff, Études de dynamique chimique (1884) 补出 K 的温度依赖（渐进）",
     "name": "Standard Gibbs energy and equilibrium constant",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 679,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -9036,6 +9116,37 @@
     "meta_source": "Henderson, Concerning the relationship between the strength of acids and their capacity to preserve neutrality, Am. J. Physiol. (1908)；Hasselbalch (1916) 补对数形式（渐进）",
     "name": "Henderson–Hasselbalch equation",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 513,
+      "doi": "https://doi.org/10.1021/ed078p1499",
+      "field": "Chemistry",
+      "field_matched": true,
+      "openalex_id": "W1976149946",
+      "openalex_node": "PA:oa:W1976149946",
+      "snippet": "The Henderson-Hasselbalch Equation: Its History and Limitations",
+      "title": "The Henderson-Hasselbalch Equation: Its History and Limitations",
+      "where": "title",
+      "year": 2001
+     },
+     {
+      "cited_by": 401,
+      "doi": "https://doi.org/10.1042/bj2580683",
+      "field": "Chemistry",
+      "field_matched": true,
+      "openalex_id": "W1914224118",
+      "openalex_node": "PA:oa:W1914224118",
+      "snippet": "values were determined by fitting the fluorescence ratios to the Henderson-Hasselbalch equation.",
+      "title": "Xanthene-dye-labelled phosphatidylethanolamines as probes of interfacial pH. Studies in phospholipid vesicles",
+      "where": "abstract",
+      "year": 1989
+     }
+    ],
+    "papers_count": 2,
+    "papers_rule_version": "m1",
+    "papers_search_total": 587,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -9091,6 +9202,49 @@
     "meta_source": "Nernst, Die elektromotorische Wirksamkeit der Ionen, Z. Phys. Chem. 4 (1889)",
     "name": "Nernst equation",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 777,
+      "doi": "https://doi.org/10.1149/1.2043866",
+      "field": "Engineering",
+      "field_matched": false,
+      "openalex_id": "W3138295406",
+      "openalex_node": "PA:oa:W3138295406",
+      "snippet": "Thermodynamic equilibrium potentials are defined using the Nernst equation.",
+      "title": "Performance Modeling of the Ballard Mark IV Solid Polymer Electrolyte Fuel Cell: I . Mechanistic Model Development",
+      "where": "abstract",
+      "year": 1995
+     },
+     {
+      "cited_by": 624,
+      "doi": "https://doi.org/10.1113/jphysiol.1975.sp011012",
+      "field": "Biochemistry, Genetics and Molecular Biology",
+      "field_matched": false,
+      "openalex_id": "W2081299190",
+      "openalex_node": "PA:oa:W2081299190",
+      "snippet": "The reversal potential of this component changed by 58 mV for a tenfold change in the external potassium concentration as predicted by the Nernst equation.",
+      "title": "Potassium activation in Helix aspersa neurones under voltage clamp: a component mediated by calcium influx.",
+      "where": "abstract",
+      "year": 1975
+     },
+     {
+      "cited_by": 612,
+      "doi": "https://doi.org/10.1113/jphysiol.1987.sp016787",
+      "field": "Biochemistry, Genetics and Molecular Biology",
+      "field_matched": false,
+      "openalex_id": "W2026339353",
+      "openalex_node": "PA:oa:W2026339353",
+      "snippet": "The change in reversal potentials in these and intermediate potassium concentrations was described by the Nernst equation.",
+      "title": "Dopamine acts on D2 receptors to increase potassium conductance in neurones of the rat substantia nigra zona compacta.",
+      "where": "abstract",
+      "year": 1987
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 5690,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -9150,6 +9304,12 @@
     "meta_source": "Sørensen, Enzymstudien II: Über die Messung und die Bedeutung der Wasserstoffionenkonzentration, Biochem. Z. (1909)",
     "name": "pH definition",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 4630,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -9207,6 +9367,12 @@
     "meta_source": "Sørensen (1909)，同一 pH 标度体系（依赖 CE:fo:kw 的 Kw 常数）",
     "name": "pOH definition",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "唯一候选里的 pOH 是「术后高淀粉酶血症」缩写，与 pOH 定义无关",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 40,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -9527,6 +9693,12 @@
     "meta_source": "Newton, Principia (1687)（第二定律对时间积分的形式）",
     "name": "Impulse-momentum",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "单词型名字（连字符按词内处理）⇒ 候选无法与背景词区分",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 3733,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -9580,6 +9752,12 @@
     "meta_source": "Newton, Principia (1687), Definition II: quantity of motion；笛卡尔 1644 提出「运动的量」概念（渐进）",
     "name": "Momentum",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "单词型名字（统计学功效/动量混在同一批候选里）",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 371140,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -9639,6 +9817,12 @@
     "meta_source": "Coriolis, Du calcul de l'effet des machines (1829)（首次给出「功」(travail) 的现代定义）",
     "name": "Work",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "单词型名字（劳务/功？无法分辨）",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 9202902,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -10232,6 +10416,12 @@
     "meta_source": "Biot & Savart, Note sur le magnétisme de la pile de Volta, Ann. Chim. Phys. (1820)",
     "name": "Magnetic field of a wire",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 15054,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -10315,6 +10505,49 @@
     "meta_source": "Coulomb, Premier mémoire sur l'électricité et le magnétisme (1785)",
     "name": "Coulomb's law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 332,
+      "doi": "https://doi.org/10.1103/physrevlett.26.721",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2000061454",
+      "openalex_node": "PA:oa:W2000061454",
+      "snippet": "New Experimental Test of Coulomb's Law: A Laboratory Upper Limit on the Photon Rest Mass",
+      "title": "New Experimental Test of Coulomb's Law: A Laboratory Upper Limit on the Photon Rest Mass",
+      "where": "title",
+      "year": 1971
+     },
+     {
+      "cited_by": 2179,
+      "doi": null,
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1500697756",
+      "openalex_node": "PA:oa:W1500697756",
+      "snippet": "Fundamental Postulates of Electrostatics in Free Space. Coulomb's Law.",
+      "title": "Field and wave electromagnetics",
+      "where": "abstract",
+      "year": 1983
+     },
+     {
+      "cited_by": 1831,
+      "doi": "https://doi.org/10.1002/wcms.19",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1990437495",
+      "openalex_node": "PA:oa:W1990437495",
+      "snippet": "Abstract The electrostatic potential V(r) that is created by a system of nuclei and electrons is formulated directly from Coulomb's law and is a physical observable, which can be determined both experimentally and computationally.",
+      "title": "The electrostatic potential: an overview",
+      "where": "abstract",
+      "year": 2011
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 1045,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -10370,6 +10603,49 @@
     "meta_source": "Faraday, Experimental Researches in Electricity, Phil. Trans. R. Soc. (1831)",
     "name": "Faraday's law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 269,
+      "doi": "https://doi.org/10.1103/physrevlett.98.246601",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2015442441",
+      "openalex_node": "PA:oa:W2015442441",
+      "snippet": "Generalization of Faraday’s Law to Include Nonconservative Spin Forces",
+      "title": "Generalization of Faraday’s Law to Include Nonconservative Spin Forces",
+      "where": "title",
+      "year": 2007
+     },
+     {
+      "cited_by": 2179,
+      "doi": null,
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1500697756",
+      "openalex_node": "PA:oa:W1500697756",
+      "snippet": "Introduction. Faraday's Law of Electromagnetic Induction.",
+      "title": "Field and wave electromagnetics",
+      "where": "abstract",
+      "year": 1983
+     },
+     {
+      "cited_by": 223,
+      "doi": "https://doi.org/10.1103/physrevlett.68.1022",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1996516736",
+      "openalex_node": "PA:oa:W1996516736",
+      "snippet": "This motive force couples to the electron's spin, similar to the way Faraday's law couples an electromotive force to the electric charge.",
+      "title": "Berry’s phase, motive forces, and mesoscopic conductivity",
+      "where": "abstract",
+      "year": 1992
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 1308,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -10436,6 +10712,49 @@
     "meta_source": "Gauss, Theoria attractionis corporum sphaeroidicorum ellipticorum homogeneorum (1813)",
     "name": "Gauss's law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 2179,
+      "doi": null,
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1500697756",
+      "openalex_node": "PA:oa:W1500697756",
+      "snippet": "Coulomb's Law. Gauss's Law and Applications.",
+      "title": "Field and wave electromagnetics",
+      "where": "abstract",
+      "year": 1983
+     },
+     {
+      "cited_by": 284,
+      "doi": "https://doi.org/10.1103/physrevd.42.3376",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2028184956",
+      "openalex_node": "PA:oa:W2028184956",
+      "snippet": "The Hamiltonian and Gauss's-law constraints are solved and eliminated from the Einstein-Maxwell action, producing a \"reduced action\" that depends upon two remaining degrees of freedom (two f",
+      "title": "Charged black hole in a grand canonical ensemble",
+      "where": "abstract",
+      "year": 1990
+     },
+     {
+      "cited_by": 205,
+      "doi": "https://doi.org/10.1103/physreva.88.023617",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1969538961",
+      "openalex_node": "PA:oa:W1969538961",
+      "snippet": "building blocks in the effective construction of quantum simulations for $d+1$ dimensional lattice gauge theories ($d>1$), but unlike in previous proposals, here gauge invariance and Gauss's law are natural symmetries, which do not have to be imposed as a constraint.…",
+      "title": "Quantum simulations of gauge theories with ultracold atoms: Local gauge invariance from angular-momentum conservation",
+      "where": "abstract",
+      "year": 2013
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 483,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -10489,6 +10808,49 @@
     "meta_source": "Lorentz, Versuch einer Theorie der electrischen und optischen Erscheinungen in bewegten Körpern (1895)",
     "name": "Lorentz force",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 1256,
+      "doi": "https://doi.org/10.1080/14786439808206556",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2048072145",
+      "openalex_node": "PA:oa:W2048072145",
+      "snippet": "Predicted pinning functions are found to provide adequate explanation of measured Lorentz force curves in a wide range of high- K , strong-pinning materials.",
+      "title": "Flux pinning mechanisms in type II superconductors",
+      "where": "abstract",
+      "year": 1974
+     },
+     {
+      "cited_by": 1142,
+      "doi": "https://doi.org/10.1103/physrevb.48.12893",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1985987562",
+      "openalex_node": "PA:oa:W1985987562",
+      "snippet": "the Lorentz force can drive the vortices ``uphill'' against the flux-density gradient.",
+      "title": "Type-II-superconductor strip with current in a perpendicular magnetic field",
+      "where": "abstract",
+      "year": 1993
+     },
+     {
+      "cited_by": 958,
+      "doi": "https://doi.org/10.1098/rspa.1935.0048",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2133345131",
+      "openalex_node": "PA:oa:W2133345131",
+      "snippet": "(1) This equation, which might replace Ohm;s law for supraconductors, simply expresses the influence of the electric part of the Lorentz force on freely movable electrons of the mass m and charge e, the number per cm3 being n (we use rational units).",
+      "title": "The electromagnetic equations of the supraconductor",
+      "where": "abstract",
+      "year": 1935
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 12519,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -10574,6 +10936,7 @@
     "meta_source": "Ohm, Die galvanische Kette, mathematisch bearbeitet (1827)",
     "name": "Ohm's law",
     "ntype": "formula",
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -11081,6 +11444,12 @@
     "meta_source": "Einstein, Ist die Trägheit eines Körpers von seinem Energieinhalt abhängig?, Ann. Phys. (1905)（与 RT:fo:mass_energy 同一结果的重复条目）",
     "name": "Mass-energy equivalence",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 2484,
+    "papers_status": "no_referent",
     "source": "curated_seed/energy_combustion",
     "symbol_table": [
      {
@@ -11140,6 +11509,25 @@
     "meta_source": "Newton, Philosophiæ Naturalis Principia Mathematica (1687), Lex II",
     "name": "Newton's second law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 184,
+      "doi": "https://doi.org/10.1088/0264-9381/26/14/143001",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2056283858",
+      "openalex_node": "PA:oa:W2056283858",
+      "snippet": "The modified Newtonian dynamics (MOND) proposal aims at solving the problem by postulating that Newton's second law of motion is modified for accelerations smaller than ∼10 −10 m s −2 .",
+      "title": "The tensor-vector-scalar theory and its cosmology",
+      "where": "abstract",
+      "year": 2009
+     }
+    ],
+    "papers_count": 1,
+    "papers_rule_version": "m1",
+    "papers_search_total": 1628,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed/energy_combustion",
     "symbol_table": [
      {
@@ -11199,6 +11587,49 @@
     "meta_source": "Coriolis, Du calcul de l'effet des machines (1829)（采用 ½mv² 形式）；Leibniz 1686 的 vis viva = mv²（渐进）",
     "name": "Kinetic energy",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 7213,
+      "doi": "https://doi.org/10.1103/physrevlett.71.1994",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2035188058",
+      "openalex_node": "PA:oa:W2035188058",
+      "snippet": "Within the first laser period after ionization there is a significant probability that the electron will return to the vicinity of the ion with very high kinetic energy.",
+      "title": "Plasma perspective on strong field multiphoton ionization",
+      "where": "abstract",
+      "year": 1993
+     },
+     {
+      "cited_by": 7135,
+      "doi": "https://doi.org/10.1021/ar700111a",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2085336624",
+      "openalex_node": "PA:oa:W2085336624",
+      "snippet": "Our M06-class functionals depend on spin-up and spin-down electron densities (i.e., spin densities), spin density gradients, spin kinetic energy densities, and, for nonlocal (also called hybrid) functionals, Hartree-Fock exchange.",
+      "title": "Density Functionals with Broad Applicability in Chemistry",
+      "where": "abstract",
+      "year": 2008
+     },
+     {
+      "cited_by": 7101,
+      "doi": "https://doi.org/10.1103/physrevlett.91.146401",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2032719166",
+      "openalex_node": "PA:oa:W2032719166",
+      "snippet": "The electron density, its gradient, and the Kohn-Sham orbital kinetic energy density are the local ingredients of a meta-generalized gradient approximation (meta-GGA).",
+      "title": "Climbing the Density Functional Ladder: Nonempirical Meta–Generalized Gradient Approximation Designed for Molecules and Solids",
+      "where": "abstract",
+      "year": 2003
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 240314,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed/energy_combustion",
     "symbol_table": [
      {
@@ -11258,6 +11689,12 @@
     "meta_source": "Mendeleev, Über die Beziehungen der Eigenschaften zu den Atomgewichten der Elemente, Z. Chem. (1869)",
     "name": "Periodic law",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "唯一候选是生态学论文，periodic law 指周期性现象而非元素周期律",
+    "papers_reject_kind": "verdict_reject",
+    "papers_search_total": 16801,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [],
     "symbols": [],
@@ -11298,6 +11735,12 @@
     "meta_source": "Sørensen, Enzymstudien II (1909)",
     "name": "pH definition",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 4630,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -11569,6 +12012,37 @@
     "meta_source": "Euler, Introductio in analysin infinitorum (1748)",
     "name": "Euler's identity",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 85,
+      "doi": "https://doi.org/10.1070/rm1990v045n05abeh002680",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1996123738",
+      "openalex_node": "PA:oa:W1996123738",
+      "snippet": "Definition of and Euler's identity § 2.",
+      "title": "The distribution of prime numbers",
+      "where": "abstract",
+      "year": 1990
+     },
+     {
+      "cited_by": 25,
+      "doi": "https://doi.org/10.1215/ijm/1255986266",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1489158779",
+      "openalex_node": "PA:oa:W1489158779",
+      "snippet": "parity of p(n).In particular, in 1959 Kolberg proved that p(n) assumes both even and odd values infinitely often (for n > 0).His proof was based on Euler's identity + E 0 k>l k(3k + 1) and the summation extends over all where s k 1/2k(3k 1), tk 7 terms with a non-negative argument…",
+      "title": "On the parity of partition functions",
+      "where": "abstract",
+      "year": 1995
+     }
+    ],
+    "papers_count": 2,
+    "papers_rule_version": "m1",
+    "papers_search_total": 214,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -11627,6 +12101,12 @@
     "meta_source": "Napier, Mirifici Logarithmorum Canonis Descriptio (1614)",
     "name": "Logarithm of a product",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 2851,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -11849,6 +12329,12 @@
     "meta_source": "Gauss, Disquisitiones Arithmeticae (1801)",
     "name": "Congruence modulo n",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 920,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -11932,6 +12418,37 @@
     "meta_source": "《孙子算经》「物不知数」题（约公元 3–5 世纪，取 4 世纪代表年；作者不详）",
     "name": "Chinese remainder theorem",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 837,
+      "doi": "https://doi.org/10.2307/2007902",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1967061303",
+      "openalex_node": "PA:oa:W1967061303",
+      "snippet": "The Chinese Remainder Theorem.",
+      "title": "Elementary Number Theory and Its Applications.",
+      "where": "abstract",
+      "year": 1987
+     },
+     {
+      "cited_by": 302,
+      "doi": null,
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1509149194",
+      "openalex_node": "PA:oa:W1509149194",
+      "snippet": "Cryptology. Ring Homomorphisms and Isomorphisms: The Chinese Remainder Theorem.",
+      "title": "Discrete and Combinatorial Mathematics: An Applied Introduction",
+      "where": "abstract",
+      "year": 1998
+     }
+    ],
+    "papers_count": 2,
+    "papers_rule_version": "m1",
+    "papers_search_total": 1916,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -11991,6 +12508,12 @@
     "meta_source": "Euclid, Elements VII.1–2（约公元前 300）",
     "name": "Euclidean algorithm",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 17211,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12062,6 +12585,37 @@
     "meta_source": "Euler, Theorematum quorundam ad numeros primos spectantium demonstratio (1736)",
     "name": "Euler's theorem",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 837,
+      "doi": "https://doi.org/10.2307/2007902",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1967061303",
+      "openalex_node": "PA:oa:W1967061303",
+      "snippet": "Pseudoprimes. Euler's Theorem.",
+      "title": "Elementary Number Theory and Its Applications.",
+      "where": "abstract",
+      "year": 1987
+     },
+     {
+      "cited_by": 680,
+      "doi": "https://doi.org/10.2307/3616468",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W2097652132",
+      "openalex_node": "PA:oa:W2097652132",
+      "snippet": "…rd Rule. Cauchy's Mean Value Theorem and the Stronger Form of L'Hopital's Rule. Limits that Arise Frequently. The Distributive Law for Vector Cross Products. Determinants and Cramer's Rule. Euler's Theorem and the …",
+      "title": "Calculus and Analytic Geometry",
+      "where": "abstract",
+      "year": 1985
+     }
+    ],
+    "papers_count": 2,
+    "papers_rule_version": "m1",
+    "papers_search_total": 611,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12151,6 +12705,49 @@
     "meta_source": "Fermat 1640 年致 Frénicle de Bessy 的信；Euler 1736 给出证明（渐进）",
     "name": "Fermat's little theorem",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 28,
+      "doi": "https://doi.org/10.1080/00029890.1986.11971858",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W2149087856",
+      "openalex_node": "PA:oa:W2149087856",
+      "snippet": "A Coloring Proof of a Generalisation of Fermat's Little Theorem",
+      "title": "A Coloring Proof of a Generalisation of Fermat's Little Theorem",
+      "where": "title",
+      "year": 1986
+     },
+     {
+      "cited_by": 23,
+      "doi": "https://doi.org/10.2307/1559040",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W2312509361",
+      "openalex_node": "PA:oa:W2312509361",
+      "snippet": "Fermat's Little Theorem from the Multinomial Theorem",
+      "title": "Fermat's Little Theorem from the Multinomial Theorem",
+      "where": "title",
+      "year": 2002
+     },
+     {
+      "cited_by": 15,
+      "doi": "https://doi.org/10.2307/2309563",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W2312455723",
+      "openalex_node": "PA:oa:W2312455723",
+      "snippet": "Combinatorial Proof of Fermat's \"Little\" Theorem",
+      "title": "Combinatorial Proof of Fermat's \"Little\" Theorem",
+      "where": "title",
+      "year": 1956
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 109,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12234,6 +12831,49 @@
     "meta_source": "Euclid, Elements IX.14（约公元前 300）；Gauss 1801 给出完整现代陈述与证明（渐进）",
     "name": "Fundamental theorem of arithmetic",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 302,
+      "doi": null,
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1509149194",
+      "openalex_node": "PA:oa:W1509149194",
+      "snippet": "The Greatest Common Divisor: The Euclidean Algorithm. The Fundamental Theorem of Arithmetic.",
+      "title": "Discrete and Combinatorial Mathematics: An Applied Introduction",
+      "where": "abstract",
+      "year": 1998
+     },
+     {
+      "cited_by": 237,
+      "doi": "https://doi.org/10.2307/2686292",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W2014078972",
+      "openalex_node": "PA:oa:W2014078972",
+      "snippet": "of the Regular Pentagon 4.3 Euclid's Number Theory Euclidean Divisibility Properties The Algorithm of Euclid The Fundamental Theorem of Arithmetic An Infinity of Primes 4.4 Eratosthenes, the Wise Man of Alexandria The Sieve of Eratosthenes Measurement of the Earth The Almagest of Claudius Ptolemy P…",
+      "title": "The History of Mathematics: An Introduction",
+      "where": "abstract",
+      "year": 1986
+     },
+     {
+      "cited_by": 143,
+      "doi": null,
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1524896264",
+      "openalex_node": "PA:oa:W1524896264",
+      "snippet": "Factorization and the Fundamental Theorem of Arithmetic.",
+      "title": "A Friendly Introduction to Number Theory",
+      "where": "abstract",
+      "year": 1996
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 693,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12287,6 +12927,12 @@
     "meta_source": "Gauss, Disquisitiones Arithmeticae (1801)",
     "name": "Multiplicative group of integers modulo n",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 91,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12358,6 +13004,49 @@
     "meta_source": "Waring, Meditationes Algebraicae (1770) 首次公布 Wilson 的观察；Lagrange 1771 给出证明（渐进）",
     "name": "Wilson's theorem",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 837,
+      "doi": "https://doi.org/10.2307/2007902",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1967061303",
+      "openalex_node": "PA:oa:W1967061303",
+      "snippet": "Wilson's Theorem and Fermat's Little Theorem.",
+      "title": "Elementary Number Theory and Its Applications.",
+      "where": "abstract",
+      "year": 1987
+     },
+     {
+      "cited_by": 49,
+      "doi": "https://doi.org/10.1002/(sici)1520-6610(1999)7:3<185::aid-jcd3>3.0.co;2-3",
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W1973658497",
+      "openalex_node": "PA:oa:W1973658497",
+      "snippet": "One of the principal constructions generalizes Wilson's theorem for transversal designs.",
+      "title": "New recursive methods for transversal covers",
+      "where": "abstract",
+      "year": 1999
+     },
+     {
+      "cited_by": 21,
+      "doi": null,
+      "field": "Mathematics",
+      "field_matched": true,
+      "openalex_id": "W2410777021",
+      "openalex_node": "PA:oa:W2410777021",
+      "snippet": "provide information about the ceiling function, as well as a proof that it is indeed metric preserving, supported by Wilson's Theorem and the Borsik-Doboš Theorem.In addition, the paper will show that the amenable condition and triangle triplet condition guarantee that a function…",
+      "title": "Metric Preserving Functions",
+      "where": "abstract",
+      "year": 2009
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 149,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12543,6 +13232,25 @@
     "meta_source": "Lavoisier, Mémoire sur la combustion en général (1777)（确立燃烧的氧化学说）",
     "name": "Hydrocarbon combustion",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 1570,
+      "doi": "https://doi.org/10.1016/0360-1285(84)90118-7",
+      "field": "Chemical Engineering",
+      "field_matched": false,
+      "openalex_id": "W1977513091",
+      "openalex_node": "PA:oa:W1977513091",
+      "snippet": "Chemical kinetic modeling of hydrocarbon combustion",
+      "title": "Chemical kinetic modeling of hydrocarbon combustion",
+      "where": "title",
+      "year": 1984
+     }
+    ],
+    "papers_count": 1,
+    "papers_rule_version": "m1",
+    "papers_search_total": 25931,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12903,6 +13611,49 @@
     "meta_source": "de Broglie, Recherches sur la théorie des quanta（博士论文，1924）",
     "name": "de Broglie wavelength",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 1705,
+      "doi": "https://doi.org/10.1103/physrevd.95.043541",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2594838509",
+      "openalex_node": "PA:oa:W2594838509",
+      "snippet": "An intriguing alternative to CDM is that the dark matter is an extremely light ($m\\ensuremath{\\sim}{10}^{\\ensuremath{-}22}\\text{ }\\text{ }\\mathrm{eV}$) boson having a de Broglie wavelength $\\ensuremath{\\lambda}\\ensure",
+      "title": "Ultralight scalars as cosmological dark matter",
+      "where": "abstract",
+      "year": 2017
+     },
+     {
+      "cited_by": 865,
+      "doi": "https://doi.org/10.1103/physrevlett.61.826",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2083763968",
+      "openalex_node": "PA:oa:W2083763968",
+      "snippet": "…mit (23 \\ensuremath{\\mu}K) and the one-photon recoil energy (4 \\ensuremath{\\mu}K). The corresponding de Broglie wavelength (1.4 \\ensuremath{\\mu}m) is larger than the atomic-transition optical wavelength.…",
+      "title": "Laser Cooling below the One-Photon Recoil Energy by Velocity-Selective Coherent Population Trapping",
+      "where": "abstract",
+      "year": 1988
+     },
+     {
+      "cited_by": 643,
+      "doi": "https://doi.org/10.1103/physreva.53.4250",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2070587062",
+      "openalex_node": "PA:oa:W2070587062",
+      "snippet": "Provided that the thermal de Broglie wavelength ${\\ensuremath{\\lambda}}_{\\mathit{T}}$ exceeds the exciton Bohr radius ${\\mathit{a}}_{\\mathit{B}}$, an exciton laser operates without electronic population inve",
+      "title": "Nonequilibrium condensates and lasers without inversion: Exciton-polariton lasers",
+      "where": "abstract",
+      "year": 1996
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 1231,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -12955,6 +13706,37 @@
     "meta_source": "Einstein, Über einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt, Ann. Phys. (1905)",
     "name": "Photoelectric effect",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 909,
+      "doi": "https://doi.org/10.1088/0034-4885/68/5/r04",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2058874525",
+      "openalex_node": "PA:oa:W2058874525",
+      "snippet": "The concept of the photon , central to Einstein's explanation of the photoelectric effect, is exactly 100 years old.",
+      "title": "Single-photon sources",
+      "where": "abstract",
+      "year": 2005
+     },
+     {
+      "cited_by": 542,
+      "doi": "https://doi.org/10.1118/1.4747264",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2089573650",
+      "openalex_node": "PA:oa:W2089573650",
+      "snippet": "Yet, BT dose calculation accuracy is highly dependent on scatter conditions and photoelectric effect cross-sections relative to water.",
+      "title": "Report of the Task Group 186 on model‐based dose calculation methods in brachytherapy beyond the TG‐43 formalism: Current status and recommendations for clinical implementation",
+      "where": "abstract",
+      "year": 2012
+     }
+    ],
+    "papers_count": 2,
+    "papers_rule_version": "m1",
+    "papers_search_total": 10569,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13014,6 +13796,12 @@
     "meta_source": "Planck, Zur Theorie des Gesetzes der Energieverteilung im Normalspectrum (1900)",
     "name": "Planck relation",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 2469,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13078,6 +13866,49 @@
     "meta_source": "Schrödinger, Quantisierung als Eigenwertproblem, Ann. Phys. (1926)",
     "name": "Schrödinger equation (time-independent)",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 3366,
+      "doi": "https://doi.org/10.1016/0021-9991(82)90091-2",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2032222091",
+      "openalex_node": "PA:oa:W2032222091",
+      "snippet": "Solution of the Schrödinger equation by a spectral method",
+      "title": "Solution of the Schrödinger equation by a spectral method",
+      "where": "title",
+      "year": 1982
+     },
+     {
+      "cited_by": 2892,
+      "doi": "https://doi.org/10.1103/physrev.138.b979",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2004871937",
+      "openalex_node": "PA:oa:W2004871937",
+      "snippet": "Solution of the Schrödinger Equation with a Hamiltonian Periodic in Time",
+      "title": "Solution of the Schrödinger Equation with a Hamiltonian Periodic in Time",
+      "where": "title",
+      "year": 1965
+     },
+     {
+      "cited_by": 1713,
+      "doi": "https://doi.org/10.1103/physrev.150.1079",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2223094112",
+      "openalex_node": "PA:oa:W2223094112",
+      "snippet": "Derivation of the Schrödinger Equation from Newtonian Mechanics",
+      "title": "Derivation of the Schrödinger Equation from Newtonian Mechanics",
+      "where": "title",
+      "year": 1966
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 52027,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13136,6 +13967,49 @@
     "meta_source": "Heisenberg, Über den anschaulichen Inhalt der quantentheoretischen Kinematik und Mechanik, Z. Phys. (1927)",
     "name": "Heisenberg uncertainty",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 1107,
+      "doi": "https://doi.org/10.1103/revmodphys.40.411",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1971151444",
+      "openalex_node": "PA:oa:W1971151444",
+      "snippet": "The relations among the operators and state vectors under consideration are clarified in the context of the Heisenberg uncertainty relations.",
+      "title": "Phase and Angle Variables in Quantum Mechanics",
+      "where": "abstract",
+      "year": 1968
+     },
+     {
+      "cited_by": 871,
+      "doi": "https://doi.org/10.1126/science.1094419",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2125844894",
+      "openalex_node": "PA:oa:W2125844894",
+      "snippet": "g a single-electron transistor to a high-quality factor, 19.7-megahertz nanomechanical resonator, we demonstrate position detection approaching that set by the Heisenberg uncertainty principle limit.",
+      "title": "Approaching the Quantum Limit of a Nanomechanical Resonator",
+      "where": "abstract",
+      "year": 2004
+     },
+     {
+      "cited_by": 855,
+      "doi": "https://doi.org/10.1103/revmodphys.58.647",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1974023876",
+      "openalex_node": "PA:oa:W1974023876",
+      "snippet": "mplex character of the quantum-mechanical state vector and the mechanism associated with its \"collapse.\" It also leads in a natural way to justification of the Heisenberg uncertainty principle and the Born probability law ($P=\\ensuremath{\\psi}{\\ensuremath{\\psi}}^{*}$), basic elements of the Copenhagen interpretation.",
+      "title": "The transactional interpretation of quantum mechanics",
+      "where": "abstract",
+      "year": 1986
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 2957,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13378,6 +14252,12 @@
     "meta_source": "Einstein, Ist die Trägheit eines Körpers von seinem Energieinhalt abhängig?, Ann. Phys. (1905)",
     "name": "Mass-energy equivalence",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 2484,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13430,6 +14310,12 @@
     "meta_source": "Einstein (1905)（狭义相对论对动量的修正）",
     "name": "Relativistic momentum",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 12791,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13549,6 +14435,12 @@
     "meta_source": "Boltzmann, Über die Beziehung zwischen dem zweiten Hauptsatze der mechanischen Wärmetheorie und der Wahrscheinlichkeitsrechnung (1877)；Planck 1900 写出 S = k ln W 形式（渐进）",
     "name": "Boltzmann entropy",
     "ntype": "formula",
+    "papers": [],
+    "papers_count": 0,
+    "papers_reason": "0 条候选",
+    "papers_reject_kind": "no_candidate",
+    "papers_search_total": 4285,
+    "papers_status": "no_referent",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13619,6 +14511,49 @@
     "meta_source": "Maxwell, Illustrations of the Dynamical Theory of Gases, Phil. Mag. (1860)",
     "name": "Maxwell-Boltzmann distribution",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 423,
+      "doi": "https://doi.org/10.1103/physreve.72.036108",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2079584573",
+      "openalex_node": "PA:oa:W2079584573",
+      "snippet": "The predicted distribution function is a one-parameter continuous deformation of the classical Maxwell-Boltzmann distribution and has a simple analytic form, showing power law tails in accordance with the experimental evidence.",
+      "title": "Statistical mechanics in the context of special relativity. II.",
+      "where": "abstract",
+      "year": 2005
+     },
+     {
+      "cited_by": 296,
+      "doi": "https://doi.org/10.1088/0067-0049/208/1/10",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2035630444",
+      "openalex_node": "PA:oa:W2035630444",
+      "snippet": "ions of solar system astrophysical plasmas, suggested that the electrons in H ii regions are characterized by a κ-distribution of energies rather than a simple Maxwell–Boltzmann distribution.",
+      "title": "NEW STRONG-LINE ABUNDANCE DIAGNOSTICS FOR H II REGIONS: EFFECTS OF κ-DISTRIBUTED ELECTRON ENERGIES AND NEW ATOMIC DATA",
+      "where": "abstract",
+      "year": 2013
+     },
+     {
+      "cited_by": 269,
+      "doi": "https://doi.org/10.1086/165652",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2284427550",
+      "openalex_node": "PA:oa:W2284427550",
+      "snippet": "First, an analytic approximation is made by defining an appropriate truncation of a Maxwell-Boltzmann distribution for the WIMPs and calculating the exact evaporation rate from this distribution due to interaction with a truly thermal distribution of nuclei.",
+      "title": "Weakly interacting massive particle distribution in and evaporation from the sun",
+      "where": "abstract",
+      "year": 1987
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 2331,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13683,6 +14618,49 @@
     "meta_source": "Gibbs, Elementary Principles in Statistical Mechanics (1902)；Boltzmann 1877 已使用同型求和（渐进）",
     "name": "Partition function",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 12923,
+      "doi": "https://doi.org/10.1103/physrev.106.620",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2032558547",
+      "openalex_node": "PA:oa:W2032558547",
+      "snippet": "ics as a form of statistical inference rather than as a physical theory, it is found that the usual computational rules, starting with the determination of the partition function, are an immediate consequence of the maximum-entropy principle.",
+      "title": "Information Theory and Statistical Mechanics",
+      "where": "abstract",
+      "year": 1957
+     },
+     {
+      "cited_by": 6513,
+      "doi": "https://doi.org/10.1103/physrev.65.117",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2074670256",
+      "openalex_node": "PA:oa:W2074670256",
+      "snippet": "The partition function of a two-dimensional \"ferromagnetic\" with scalar \"spins\" (Ising model) is computed rigorously for the case of vanishing field.",
+      "title": "Crystal Statistics. I. A Two-Dimensional Model with an Order-Disorder Transition",
+      "where": "abstract",
+      "year": 1944
+     },
+     {
+      "cited_by": 3828,
+      "doi": "https://doi.org/10.1103/physrevlett.69.1849",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1763748250",
+      "openalex_node": "PA:oa:W1763748250",
+      "snippet": "Evaluation of the partition function yields that the entropy is equal to twice the perimeter length of the horizon.",
+      "title": "Black hole in three-dimensional spacetime",
+      "where": "abstract",
+      "year": 1992
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 67393,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13916,6 +14894,37 @@
     "meta_source": "Boyle, New Experiments Physico-Mechanical, Touching the Spring of the Air (1662)",
     "name": "Boyle's law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 913,
+      "doi": "https://doi.org/10.1093/mnras/116.3.351",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2114351830",
+      "openalex_node": "PA:oa:W2114351830",
+      "snippet": "Boyle's Law and Gravitational Instability",
+      "title": "Boyle's Law and Gravitational Instability",
+      "where": "title",
+      "year": 1956
+     },
+     {
+      "cited_by": 78,
+      "doi": "https://doi.org/10.1142/s0217732315400027",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2163097718",
+      "openalex_node": "PA:oa:W2163097718",
+      "snippet": "Black holes and Boyle's law — The thermodynamics of the cosmological constant",
+      "title": "Black holes and Boyle's law — The thermodynamics of the cosmological constant",
+      "where": "title",
+      "year": 2015
+     }
+    ],
+    "papers_count": 2,
+    "papers_rule_version": "m1",
+    "papers_search_total": 501,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -13981,6 +14990,49 @@
     "meta_source": "Carnot, Réflexions sur la puissance motrice du feu (1824)",
     "name": "Carnot efficiency",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 548,
+      "doi": "https://doi.org/10.1209/0295-5075/81/20003",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2061597479",
+      "openalex_node": "PA:oa:W2061597479",
+      "snippet": "For infinitely long cycle times, the engine works at the Carnot efficiency limit producing, however, zero power.",
+      "title": "Efficiency at maximum power: An analytically solvable model for stochastic heat engines",
+      "where": "abstract",
+      "year": 2007
+     },
+     {
+      "cited_by": 546,
+      "doi": "https://doi.org/10.1103/physrevlett.105.150603",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W1978252435",
+      "openalex_node": "PA:oa:W1978252435",
+      "snippet": "For engines reaching Carnot efficiency ${\\ensuremath{\\eta}}_{C}=1\\ensuremath{-}{T}_{c}/{T}_{h}$ in the reversible limit (long cycle time, zero dissipation), we find in the limit of low dissipation t",
+      "title": "Efficiency at Maximum Power of Low-Dissipation Carnot Engines",
+      "where": "abstract",
+      "year": 2010
+     },
+     {
+      "cited_by": 435,
+      "doi": "https://doi.org/10.1063/1.2916405",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W2080257772",
+      "openalex_node": "PA:oa:W2080257772",
+      "snippet": "work, has to transfer some heat to a reservoir at lower temperature T1, and that no engine could convert into work more of the heat taken in at Th than the fraction ηC = 1−(T1/Th) known as the Carnot efficiency.",
+      "title": "Thermodynamics in finite time",
+      "where": "abstract",
+      "year": 1984
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 2551,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -14057,6 +15109,49 @@
     "meta_source": "Charles 1787 的未发表实验；Gay-Lussac 1802 公开发表（渐进）",
     "name": "Charles's law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 8,
+      "doi": "https://doi.org/10.1021/ed068p1042",
+      "field": "Chemistry",
+      "field_matched": false,
+      "openalex_id": "W2066409840",
+      "openalex_node": "PA:oa:W2066409840",
+      "snippet": "Charles's law revisited",
+      "title": "Charles's law revisited",
+      "where": "title",
+      "year": 1991
+     },
+     {
+      "cited_by": 3,
+      "doi": "https://doi.org/10.5012/jkcs.2011.55.6.1042",
+      "field": "Social Sciences",
+      "field_matched": false,
+      "openalex_id": "W2036119484",
+      "openalex_node": "PA:oa:W2036119484",
+      "snippet": "Comparative Analysis of Conceptual and Algorithmic Problem Solving Ability on Boyle's Law and Charles's Law in Middle School 1st Grade Students",
+      "title": "Comparative Analysis of Conceptual and Algorithmic Problem Solving Ability on Boyle's Law and Charles's Law in Middle School 1st Grade Students",
+      "where": "title",
+      "year": 2011
+     },
+     {
+      "cited_by": 3,
+      "doi": "https://doi.org/10.1080/00033798700200321",
+      "field": "Arts and Humanities",
+      "field_matched": false,
+      "openalex_id": "W2038999334",
+      "openalex_node": "PA:oa:W2038999334",
+      "snippet": "Gay-Lussac's gas-expansivity experiments and the traditional mis-teaching of ‘Charles's Law’",
+      "title": "Gay-Lussac's gas-expansivity experiments and the traditional mis-teaching of ‘Charles's Law’",
+      "where": "title",
+      "year": 1987
+     }
+    ],
+    "papers_count": 3,
+    "papers_rule_version": "m1",
+    "papers_search_total": 93,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -14133,6 +15228,25 @@
     "meta_source": "Gay-Lussac, Recherches sur la dilatation des gaz et des vapeurs, Ann. Chim. (1802)",
     "name": "Gay-Lussac's law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 0,
+      "doi": "https://doi.org/10.5281/zenodo.20432438",
+      "field": "Physics and Astronomy",
+      "field_matched": true,
+      "openalex_id": "W7162639721",
+      "openalex_node": "PA:oa:W7162639721",
+      "snippet": "The isotropic background noise of 2.73 K in the Universe may represent not a temperature, but a pressure, as in Gay-Lussac's law",
+      "title": "The isotropic background noise of 2.73 K in the Universe may represent not a temperature, but a pressure, as in Gay-Lussac's law",
+      "where": "title",
+      "year": 2026
+     }
+    ],
+    "papers_count": 1,
+    "papers_rule_version": "m1",
+    "papers_search_total": 33,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
@@ -14198,6 +15312,25 @@
     "meta_source": "Clapeyron, Mémoire sur la puissance motrice de la chaleur (1834)（综合玻意耳、查理、盖-吕萨克三定律）",
     "name": "Ideal gas law",
     "ntype": "formula",
+    "papers": [
+     {
+      "cited_by": 512,
+      "doi": "https://doi.org/10.1029/rs009i010p00803",
+      "field": "Engineering",
+      "field_matched": false,
+      "openalex_id": "W2163847452",
+      "openalex_node": "PA:oa:W2163847452",
+      "snippet": "With the use of the full three‐term equation including non‐ideal gas law effects, the accuracy of the new radio refractive index equation ranges from 0.018%, or about 0.05 N , for dry air to 0.048%, or 0.21 N , for extremely",
+      "title": "An improved equation for the radio refractive index of air",
+      "where": "abstract",
+      "year": 1974
+     }
+    ],
+    "papers_count": 1,
+    "papers_rule_version": "m1",
+    "papers_search_total": 3237,
+    "papers_source": "openalex-mention",
+    "papers_status": "extracted",
     "source": "curated_seed",
     "symbol_table": [
      {
