@@ -42,6 +42,13 @@ elementkg_synthetic_corpus_40w/
 # ===== Phase 72 · 论文提及档位登记的产物（构建物，不入库）=====
 # delta 可用 `bash sttp.sh mentionalign` 从权威图幂等重算（103 条边的完整 props）。
 06_PoC/etl/neo4j/phase72_mention_delta.json
+# ===== Phase 73 · 验证器等价性证明落图的产物（构建物，不入库）=====
+# delta = 32,583 条边的 verification_evidence（只多一个 `rva` 键），实测 27.18 MB ⇒ 超 pack 上限。
+# 可用 `bash sttp.sh reverify` 从权威图 + 已入库的 `reverify_attestations.json` 幂等重算。
+# ★ **证明表**（11_真实数据/reverify_attestations.json）必须入库：它是审计链的锚，
+#   不进库就等于「重验过」与「偷偷重写哈希」在干净检出里无法区分（Phase 45 账本正因为
+#   逐证据 10 MB 只能不入库，才留下了这个缺口；本表按「版本对」记账 ⇒ 2 KB）。
+06_PoC/etl/neo4j/phase73_reverify_delta.json
 # Phase 45 A04：给 49572 条证据补「记录时刻的依赖快照」（evd/refs/vfr/vch/dvs），
 # **实测 35.5 MB**（早先按字段宽度估成 ~9 MB，实测差 4 倍 —— 估算值必须换成实测量）⇒
 # 同样超 ≲100 KB 的 pack 上限，不入库。可由

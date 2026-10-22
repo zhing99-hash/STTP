@@ -456,6 +456,10 @@ def evidence_status_registry(edges, src_hashes=None):
             if _EVIDENCE_STATUS_CACHE["key"] == key and _EVIDENCE_STATUS_CACHE["val"] is not None:
                 return _EVIDENCE_STATUS_CACHE["val"]
         ledger = ed.load_ledger(base)
+        # ★ Phase 73：等价证明表（逐「版本对 + 范围」）。**必须**传进来 ——
+        #   漏传的后果是「多判 stale」（更严），不是「把 stale 说成 valid」（更松）；
+        #   但 A04 状态是 `subgraph` 判据的唯一输入，漏传会让 V18h 假红，故在此显式加载。
+        attests = ed.load_attestations(base)
         cur = ed.current_snapshot(base=base, byte_source="repo", src_hashes=src_hashes)
         out = {}
         for e in edges:
@@ -474,7 +478,8 @@ def evidence_status_registry(edges, src_hashes=None):
                 eid = ev.get("evd") or ed.evidence_id(q.edge_key(e), idx, ev)
                 declared = set(ed.impl_refs(ev.get("impl")) or [])
                 st, rs = ed.evidence_status(rc, cur, claim_rejected=bool(props.get("rejected")),
-                                            ledger_entry=ledger.get(eid))
+                                            ledger_entry=ledger.get(eid),
+                                            attestations=attests)
                 rank = q.EVIDENCE_STATUS_RANK.get(st, -1)
                 if rank > worst_rank:
                     worst, worst_rank = st, rank

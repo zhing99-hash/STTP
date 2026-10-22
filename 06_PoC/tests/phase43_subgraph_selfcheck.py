@@ -690,7 +690,15 @@ def main(argv=None) -> int:
                 if isinstance(ev, dict) and hm.get(ev.get("src")):
                     refs[ev["src"]] = refs.get(ev["src"], 0) + 1
         sid_t = max(refs, key=refs.get) if refs else None
-        reg0 = V.stale_registry()
+        # ★ Phase 73（D109）：**两侧必须同一命题**。
+        #   旧写法 `reg0 = V.stale_registry()` 取的是服务端 registry（含 A04 证据层），
+        #   而 `reg1` 是 `Q.build_stale_registry()` 本地构造（**不含** A04）⇒
+        #   「含 A04 的 stale 总数」 vs 「不含 A04 的 stale 总数」比大小，两侧根本不是一个问题：
+        #     · A04 判出 0 条时两边恒等 ⇒ 判据恒真，什么都不守；
+        #     · A04 一旦判出 stale（本图 3.2 万条）⇒ 左大右小 ⇒ **假红**。
+        #   这与 D72（V18h 旧版）是同一个模子，Phase 57 修 V18h 时漏修了同函数的 V16c。
+        #   修法：两侧都用同一条构造路径，**只让哈希图这一个变量不同**。
+        reg0 = Q.build_stale_registry(sr.ids(), hm, rsm)
         n0 = sum(1 for e in all_e if Q.edge_is_stale(e, reg0))
         if sid_t:
             hm2 = dict(hm)

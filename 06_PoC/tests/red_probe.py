@@ -817,6 +817,41 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R43",
+        "kind": "mutate",
+        "why": ("Phase 73 · D109：`rva` 是证据与「代码等价」证明之间的**唯一**连接。"
+                "如果 `_attestation_ok` 不再核对 `to_code_hash`（看起来像「少比一个字段，宽容点」），"
+                "证明就退化成一张**永久通行证**：验证器以后再改一百次，3.2 万条证据仍然 valid。"
+                "★ 这条没有任何报错、没有失败计数 —— 图能建、包能出，只是「重验」这个词失去了意义。"
+                "⇒ 判据 E6（伪造 to ⇒ 必须回落 stale）必须变红。"),
+        "file": "11_真实数据/evidence_deps.py",
+        # ★ 目标文件是 LF
+        "old": "    if att.get(\"to_code_hash\") is None or att.get(\"to_code_hash\") != cur_ch:\n        return False",
+        "new": "    if False:  # redprobe: 证明的 to 不再核对\n        return False",
+        "cmd": "PY 11_真实数据/phase73_reverify_delta.py --dry",
+        "cwd": ROOT,
+        "expect_red": ["E6"],
+        "expect_rc": 2,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R44",
+        "kind": "mutate",
+        "why": ("Phase 73：等价性证明的全部力量都在 P5 —— **插入的分支必须正向点名被排除的边类型**。"
+                "放宽成「只要插入了就算」（`if True`）看起来只是少一条检查，"
+                "实际后果是：任何一次改验证器都能被自己证明成「不影响老证据」，"
+                "3.2 万条 stale 会被**毫无依据地**清掉。"
+                "⇒ 自检 S4（守卫不含排除类型 ⇒ 必须拒）必须变红。"),
+        "file": "11_真实数据/reverify_attest.py",
+        "old": "        if _mentions(stmt.test, exclude_types) and not _has_negative(stmt.test):",
+        "new": "        if True:  # redprobe: 守卫不再点名排除类型",
+        "cmd": "PY 11_真实数据/reverify_attest.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["S4"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -841,7 +876,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
                       "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "R38", "R39",
-                      "R40", "R41", "R42", "RN")
+                      "R40", "R41", "R42", "R43", "R44", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -1177,6 +1212,10 @@ def emit(rep, res):
             res["R41"][1])
     rep.add(res["R42"][0], "R42 m1 重算恒真（不看文本里有没有）⇒ S2 必须变红（证据不得是空白合格证）",
             res["R42"][1])
+    rep.add(res["R43"][0], "R43 证明的 to 不再核对（等价性退化成永久通行证）⇒ E6 必须变红（D109）",
+            res["R43"][1])
+    rep.add(res["R44"][0], "R44 守卫不再点名被排除类型（任何改动都能自证无害）⇒ S4 必须变红（D109）",
+            res["R44"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

@@ -41,7 +41,7 @@ S3 是**运行时负对照**：把报告文本里的数字换成假的，喂给�
 用法
 ----
     python 06_PoC/report_number_check.py              # 对账（RC=0 通过 / RC=1 不一致）
-    python 06_PoC/report_number_check.py --selfcheck   # 自检 S1–S4（含负对照）
+    python 06_PoC/report_number_check.py --selfcheck   # 自检 S1–S5（含 S3/S4 两个负对照）
     python 06_PoC/report_number_check.py --show        # 打印每条声明与现算值
 """
 
@@ -184,6 +184,88 @@ def truth_mention_scope():
     return (a, b, None)
 
 
+# ---- Phase 73：A04 分档 + `rva` 覆盖率（D109 的收尾面）----
+#
+# 这组数字此前**只有一半**被咬住：`subgraph` 的 V18h 断言「`not_in_repo` 的边里 0 条 stale」，
+# 但「`valid` / `needs_review` 各多少」「多少条证据带了 `rva`」没有任何判据。
+# 而 Phase 73 处置的**全部意义**恰好落在这两个数上：只加 `rva`、`vch` 一个字不改 ——
+# 若某次操作顺手把 `vch` 也改成当前值，`stale` 一样会是 0、V18h 照样绿，
+# **只有 rva 覆盖率**能把「重验过」与「重写哈希」分开（`hash_rewritten_without_reverify`
+# 要堵的正是后者）。所以这里必须咬住的是**一对**数字，不是「stale=0」一个。
+
+
+@_lru_cache(maxsize=1)
+def _a04():
+    """现算 A04 分档与 `rva` 覆盖（口径与 `viz_server.evidence_status_registry` 同一条路径）。
+
+    ★ 三个「必须」：
+      1. **必须** `byte_source="repo"` —— 工作树 CRLF 会被当成「来源已变更」（Phase 44 · D1）；
+      2. **必须**把等价证明表传进 `evidence_status()` —— 漏传只是**多判** stale（更严，
+         不是更松），但会让这里的数字与 `subgraph` V18h 打架；两处判据各说各话比没有更糟；
+      3. **必须**在同一份 current 快照上判全部证据（逐条现算会读到不同快照，铁律 #40）。
+    """
+    for rel in ("06_PoC", "11_真实数据", "03_知识层"):
+        d = os.path.join(ROOT, rel)
+        if d not in sys.path:
+            sys.path.insert(0, d)
+    import evidence_deps as ed                            # noqa: E402
+    import queries as q                                   # noqa: E402
+    import source_registry as sr                          # noqa: E402
+    g = _load_graph()
+    ledger = ed.load_ledger(ROOT)
+    attests = ed.load_attestations(ROOT)
+    # ★ `src_hashes` **不可省**：省掉后每条带 `src` 的证据都会判 `unverifiable_source`
+    #   ⇒ 全图落进 `needs_review`（本仪器第一版就这么错过一次：valid 1,100 被算成 0）。
+    #   这正是「仪器漏一个输入，读数会整片偏」的又一例 —— 与 D110b 同族。
+    cur = ed.current_snapshot(base=ROOT, byte_source="repo",
+                              src_hashes=sr.hash_map(base=ROOT))
+    cnt = {"valid": 0, "stale": 0, "needs_review": 0, "rejected": 0}
+    n_evd = rva_evd = rva_edges = 0
+    for e in g["edges"]:
+        props = e.get("props") or {}
+        key = None
+        touched = False
+        for idx, ev in enumerate(props.get("verification_evidence") or []):
+            if not isinstance(ev, dict) or not ed.has_recorded_deps(ev):
+                continue      # 未带 A04 记录的证据**不编造状态**（与 viz_server 同口径）
+            if key is None:
+                key = q.edge_key(e)
+            eid = ev.get("evd") or ed.evidence_id(key, idx, ev)
+            st, _rs = ed.evidence_status(
+                ed.recorded_deps(ev), cur,
+                claim_rejected=bool(props.get("rejected")),
+                ledger_entry=ledger.get(eid), attestations=attests)
+            cnt[st] = cnt.get(st, 0) + 1
+            n_evd += 1
+            if ev.get("rva"):
+                rva_evd += 1
+                touched = True
+        if touched:
+            rva_edges += 1
+    cnt.update(rva_evd=rva_evd, n_evd=n_evd, rva_edges=rva_edges, n_edges=len(g["edges"]))
+    return cnt
+
+
+def truth_a04_valid_stale():
+    a = _a04()
+    return (a["valid"], a["stale"], None)
+
+
+def truth_a04_needs_review_rejected():
+    a = _a04()
+    return (a["needs_review"], a["rejected"], None)
+
+
+def truth_rva_evidence():
+    a = _a04()
+    return (a["rva_evd"], a["n_evd"], None)
+
+
+def truth_rva_edges():
+    a = _a04()
+    return (a["rva_edges"], a["n_edges"], None)
+
+
 RELEASE = os.path.join(ROOT, "06_PoC", "release", "manifest.json")
 
 
@@ -231,8 +313,11 @@ ASSESS = "07_交付物/整体评估_20261021.md"
 P71 = "07_交付物/Phase71_元素层重建_20261022.md"
 PLAN = "00_项目管理/下一阶段规划_数据扩展与前端优化_20261019.md"
 P72 = "07_交付物/Phase72_论文提及档位登记_20261022.md"
+P73 = "07_交付物/Phase73_验证器等价性证明_20261022.md"
 
 _NUM = r"([\d,]+)\s*/\s*([\d,]+)\s*=\s*\*{0,2}([\d.]+)%"
+#: 两计数形态（`A / B`，不带百分比）—— Phase 73 的现算核对表用这一种
+_CNT2 = r"([\d,]+)\s*/\s*([\d,]+)"
 
 DECLARATIONS = [
     dict(key="symbols 覆盖率", file=RC1, row="| `symbols` |", pat=_NUM, truth=truth_symbols),
@@ -256,6 +341,19 @@ DECLARATIONS = [
     # ---- Phase 72：m1 重算的档位分布（这行没有别的判据咬 ⇒ 必须登记在这里）----
     dict(key="提及边档位分布（Phase72 报告）", file=P72,
          row="| 提及边档位分布 |", pat=r"([\d,]+)\s*/\s*([\d,]+)", truth=truth_mention_scope),
+    # ---- Phase 73：A04 分档 + rva 覆盖率（`修改` 与 `重写哈希` 的唯一分辨器）----
+    # ★ 刻意**不**登记 `subgraph` 100/0/3、`grade` 6/0、V18h 47,055/0 ——
+    #   它们是**仪器自己的输出**，由 `gatecheck` 直接跑那台仪器来判。
+    #   登记在这里等于"仪器跑仪器"，两处判据必然漂移（#88 的同族）。
+    dict(key="A04 valid / stale（Phase73）", file=P73,
+         row="| A04 `valid` / `stale` |", pat=_CNT2, truth=truth_a04_valid_stale),
+    dict(key="A04 needs_review / rejected（Phase73）", file=P73,
+         row="| A04 `needs_review` / `rejected` |", pat=_CNT2,
+         truth=truth_a04_needs_review_rejected),
+    dict(key="带 rva 的证据 / 全部 A04 证据（Phase73）", file=P73,
+         row="| 带 `rva` 的证据 / 全部 A04 证据 |", pat=_CNT2, truth=truth_rva_evidence),
+    dict(key="带 rva 的边 / 全部边（Phase73）", file=P73,
+         row="| 带 `rva` 的边 / 全部边 |", pat=_CNT2, truth=truth_rva_edges),
 ]
 
 
@@ -350,10 +448,41 @@ def selfcheck():
                     "改后 symbols 判不一致=%s（期望 True）；未改的 symbol_table 仍一致=%s（期望 True）"
                     % (not sym[0], table_ok)))
 
-    # S4 登记表非真空 + 每条字段齐备
+    # S4 负对照（运行时，不写盘）：Phase 73「现算核对表」那四行 —— 本轮新加的判据 ——
+    #   也必须能红。为什么单独给一条：这四行是**为一次处置新加的判据**，而"新判据第一次就绿"
+    #   恰恰是最该反问的时刻（D110：正向判据证明机制能工作，反向判据证明它**在起作用**）。
+    #   S3 咬的是 RC1 的旧表，咬不到 P73。
+    real73 = _read(P73)
+    mut73 = None
+    _l73 = real73.splitlines(True)
+    for _i, _ln in enumerate(_l73):
+        if _ln.startswith("| 带 `rva` 的证据 / 全部 A04 证据 |"):
+            _m = re.search(_CNT2, _ln)
+            if _m:
+                _n0 = int(_m.group(1).replace(",", ""))
+                _seg = "%s / %s" % (format(max(_n0 - 1, 0), ","), _m.group(2))
+                _l73[_i] = _ln[:_m.start()] + _seg + _ln[_m.end():]
+                mut73 = "".join(_l73)
+            break
+    if mut73 is None or mut73 == real73:
+        rep.append(("S4 负对照：改掉 Phase73 核对表数字 ⇒ 必须判不一致", False,
+                    "无法在 Phase73 报告里定位并改写「带 rva 的证据」行（行前缀已变？）"))
+    else:
+        mr = run_all({P73: mut73})
+        idx73 = [i for i, d in enumerate(DECLARATIONS) if d["file"] == P73]
+        hit = [i for i in idx73 if DECLARATIONS[i]["row"].startswith("| 带 `rva` 的证据")]
+        rest = [i for i in idx73 if i not in hit]
+        bad_ok = bool(hit) and all(not mr[i][0] for i in hit)
+        rest_ok = all(mr[i][0] for i in rest)
+        rep.append(("S4 负对照：改掉 Phase73 核对表数字 ⇒ 必须判不一致",
+                    bad_ok and rest_ok,
+                    "被改的那条判不一致=%s（期望 True）；同表其余 %d 条仍一致=%s（期望 True）"
+                    % (bad_ok, len(rest), rest_ok)))
+
+    # S5 登记表非真空 + 每条字段齐备
     need = {"key", "file", "row", "pat", "truth"}
     miss = [d.get("key", "?") for d in DECLARATIONS if not need.issubset(set(d))]
-    rep.append(("S4 登记表非真空且字段齐备", len(DECLARATIONS) >= 2 and not miss,
+    rep.append(("S5 登记表非真空且字段齐备", len(DECLARATIONS) >= 2 and not miss,
                 "%d 条声明；缺字段：%s" % (len(DECLARATIONS), miss or "无")))
 
     print("\n【报告数字对账 · 自检】")
@@ -370,7 +499,7 @@ def selfcheck():
 
 def main():
     ap = argparse.ArgumentParser(description="交付物报告数字 ⇄ 现算真值 对账")
-    ap.add_argument("--selfcheck", action="store_true", help="自检 S1–S4（含 S3 负对照）")
+    ap.add_argument("--selfcheck", action="store_true", help="自检 S1–S5（含 S3/S4 两个负对照）")
     ap.add_argument("--show", action="store_true", help="打印每条声明与现算值")
     args = ap.parse_args()
 

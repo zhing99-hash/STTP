@@ -63,6 +63,10 @@ ENTRY_POINTS = (
     #   因为缺件分支在绿树上永不执行，跑测试也看不到它。
     "06_PoC/dataset/export_dataset.py",
     "06_PoC/dataset/wget_offline_e2e.py",
+    # ★ Phase 73：`reverify_attest.py --check` 在**证明表缺失/取不到 blob** 时无法判定。
+    #   本轮是**主动登记的**（不是等 Q3 来报）—— 上一轮 D107 的教训是"新增出口时的漏网
+    #   只有静态扫描能发现"，那就别等它发现。
+    "11_真实数据/reverify_attest.py",
 )
 
 

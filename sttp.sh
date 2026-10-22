@@ -37,6 +37,7 @@
 #   bash sttp.sh release-full [--allow-dirty]       对完整快照跑全量发布校验（洁净度前置断言 + --release 门禁 + manifest 现算比对）
 #   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
 #   bash sttp.sh gnneval [--gnn-seeds 1,2]           推理增量评测协议 v2：P1/P2 + 基线对照 + 种子方差（Phase 39 R11续）
+#   bash sttp.sh gatecheck                         门禁七步（Phase 73：/3 → /7，并入 subgraph/grade/等价证明复核/报告数字对账）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
@@ -69,6 +70,8 @@
 #                           重算并断言与现有集一致后才改来源（**重算，不是改标签**）
 #   bash sttp.sh mentionalign [--dry|--apply|--selfcheck]  论文提及档位登记 + 证据补齐（Phase 72；幂等）
 #                         ★ m1 规则登记进判级模型 ⇒ 落库对齐重算；101 条边补 evidence 对象（D108）
+#   bash sttp.sh reverify [--dry|--apply|--check|--selfcheck]  验证器等价性证明落图（Phase 73；幂等）
+#                         ★ 只加 rva、不改 vch；证明缺失 ⇒ 证据继续 stale（fail-closed）
 #   bash sttp.sh dataset [--e2e] [--profile P]   可下载数据集：JSONL + manifest + sha256（Phase 70 · F5）
 #                         ★ 按来源三态**剔除**不可再分发内容；产物 + 随包校验器落在 06_PoC/dataset/dist/
 #                         ★ --e2e：真的起静态服务 + 逐文件下载 + **断网**跑随包校验器（F5 的验收动作）
@@ -292,24 +295,48 @@ EOF
     #   的执法工具，但它自身一直没有断言覆盖（"谁来核对核对器"）。
     #   ★ 它**不依赖权威图** ⇒ 刻意放在 require_authority **之前**：干净检出里也能跑，
     #     而不是被守卫一并挡成 RC=2（真实原因只有"缺图"，不该掩盖"自检从未执行"）。
-    echo "== [0/3] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
+    echo "== [0/7] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
     "$PY" 06_PoC/tests/assert_name_diff.py --selfcheck || exit $?
     # ★ Phase 53（D55 收口）：把「构造性可红性探针」挂在这里，与上一步同理放在守卫**之前**
     #   —— 它不依赖权威图 ⇒ 干净检出里也能跑。
     #   动机：`names` 只能证明"没有断言被删"，**证明不了"还活着的断言仍在断言它声称的语义"**
     #   （"名字还在、判据被换掉"）。本步对关键断言**注入已知缺陷**，断言必须真的变红。
     #   ★ 它会**自己还原**被突变的事实源（逐字节 + sha256），还原失败即 RC=3 并显式告警。
-    echo "== [1/3] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
+    echo "== [1/7] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
     "$PY" 06_PoC/tests/red_probe.py || exit $?
     # ★ Phase 55（D58 收口）：同上 —— 不依赖权威图，故也放在守卫**之前**
     #   （干净检出里"自检从未执行"不得被"缺图"一并掩盖）。
     #   它是 `interp_note.py` 的**执行工具**：那条纪律的实现收在一处只保证"不分叉"，
     #   本步负责"不漏接"（#92）。
-    echo "== [2/3] 「非通过」判据自述解释器 —— 全链防漏网（铁律 #92；D58）=="
+    echo "== [2/7] 「非通过」判据自述解释器 —— 全链防漏网（铁律 #92；D58）=="
     "$PY" 06_PoC/tests/interp_selfreport_check.py || exit $?
+
+    # ★ Phase 73（D110 的操作性推论）：**凭证必须有日常复核**，否则它就是装饰品。
+    #   `11_真实数据/reverify_attestations.json` 是**入库**的等价性证明表，图上的 32,609 条
+    #   证据靠它才被判回 valid。它唯一的防伪手段是「拿 git 历史里的真 blob 重算 AST 证明」
+    #   —— 就是本步。没有本步会发生什么：把表里的 `to_code_hash` 改成当前值，证据照样
+    #   valid、`subgraph` V18h 照样绿（它只要求 stale=0）⇒ **伪造一份永久通行证无人发现**。
+    #   正向判据证明机制能工作，只有反向复核证明它**在起作用**。
+    #   本步不依赖权威图 ⇒ 同样放在守卫之前（干净检出里也能跑）。
+    echo "== [3/7] 等价性证明复核（拿 git 历史重算，不信表里的结论；D110）=="
+    "$PY" 11_真实数据/reverify_attest.py --check || exit $?
     require_authority gatecheck "$NORM_GRAPH"
-    echo "== [3/3] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
+    echo "== [4/7] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
     "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
+    echo "== [5/7] 局部图谱查询自检（A04 状态只在这里被真正读一遍）=="
+    # ★ Phase 73（D109）：这一步以前**不在**门禁里，Phase 72 收尾就漏跑了它 ——
+    #   而 32,583 条证据 stale 只有它能看见。处置不是"以后记得跑"，
+    #   而是"把上一次没跑的那台并进门禁"（#118）。
+    "$PY" 06_PoC/tests/phase43_subgraph_selfcheck.py || exit $?
+    echo "== [6/7] 证据等级报告 + G1–G5 对账（落盘值必须等于现算）=="
+    "$PY" 06_PoC/grade_report.py || exit $?
+
+    # ★ Phase 73（D100 的续）：**报告里的数字也要有判据** —— 判据此前覆盖了代码、覆盖了数据，
+    #   唯独没覆盖我们自己写下的结论。本步把已登记的报告数字与图里现算值**逐字**比对。
+    #   本轮新登记的 4 条里，「带 rva 的证据 / 全部 A04 证据」是关键那条：把 `vch` 改成当前值
+    #   同样能让 stale 归零、V18h 同样绿 —— 只有 rva 覆盖率能把「重验过」与「重写哈希」分开。
+    echo "== [7/7] 报告数字对账（报告写的 == 图里现算；D100）=="
+    "$PY" 06_PoC/report_number_check.py || exit $?
     ;;
   release)
     # Phase 37（R06）：可复现发布包 = 离线样例 → 发布清单 → fail-closed 校验。
@@ -888,6 +915,47 @@ EOF
     else
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase72_mention_delta.json \
         --phase 72 --tag mentionalign || exit $?
+    fi
+    ;;
+  reverify)
+    # Phase 73（D109）：把「验证器整文件哈希变了」与「判据语义变了」分开。
+    #   ★ 起因：Phase 72 给 verification_model.py 加了 105 行（只服务 mentioned_in 的新分支），
+    #     没删没改任何既有语句，却让 3.2 万条证据全部判 stale —— 这是**第二次**踩
+    #     （Phase 61 踩过并 revert，提交信息里就写着「会让 32,609 条证据全部 stale」）。
+    #   ★ 处置不是「重写哈希」（那正是 hash_rewritten_without_reverify 要堵的假象），
+    #     而是：生成**可重算的等价性证明**（reverify_attest.py：AST 插入-only +
+    #     守卫正向点名被排除的边类型），证据上只加一个 `rva` 指回它，`vch` 一个字不改。
+    #   ★ 证明缺省即不认（fail-closed）：没有 rva ⇒ 证据继续 stale，绝不悄悄放行。
+    shift
+    if printf '%s\n' "$@" | grep -qx -- '--selfcheck'; then
+      "$PY" 11_真实数据/reverify_attest.py --selfcheck || exit $?
+      "$PY" 11_真实数据/phase73_reverify_delta.py --selfcheck || exit $?
+      exit 0
+    fi
+    if printf '%s\n' "$@" | grep -qx -- '--check'; then
+      "$PY" 11_真实数据/reverify_attest.py --check || exit $?
+      exit 0
+    fi
+    require_authority reverify "$NORM_GRAPH"
+    echo "== [1/3] 复算等价性证明（不信表里的结论；算不出来 ⇒ RC=2）=="
+    "$PY" 11_真实数据/reverify_attest.py --check || exit $?
+    echo "== [2/3] 生成 rva delta（判据 E1–E7 不过即拒绝产出）=="
+    _rv_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _rv_args+=("$_a"); fi
+    done
+    "$PY" 11_真实数据/phase73_reverify_delta.py ${_rv_args[@]+"${_rv_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qx -- '--dry'; then
+      echo "== [3/3] 跳过（--dry：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [3/3] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- '--apply'; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase73_reverify_delta.json \
+        --phase 73 --tag reverify --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase73_reverify_delta.json \
+        --phase 73 --tag reverify || exit $?
     fi
     ;;
   dataset)

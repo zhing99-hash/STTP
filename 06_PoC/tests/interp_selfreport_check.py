@@ -186,12 +186,24 @@ class Rep:
 #   ★ 必须含未跟踪：否则"提交前绿、提交后红"（E28 的教训，铁律候选 #82）。
 # ---------------------------------------------------------------------------
 def iter_py(repo: str) -> list[str]:
+    """仓库内全部 `.py`（已跟踪 + 未跟踪未忽略）。
+
+    ★ Phase 73（D110）：必须带 `-c core.quotepath=false`。
+      git 默认把**非 ASCII 路径**输出成 `"11_\\347\\234\\237..."` 这种带引号转义的形式，
+      于是 `os.path.join(ROOT, rel)` 打不开 ⇒ 被 `except OSError: pass` **静默跳过**。
+      后果不是"少扫一个文件"，而是**整个 `11_真实数据/`、`03_知识层/` 从未被扫过** ——
+      而 `--check` 的命中数与非空断言照样是绿的（它只看扫到的那些）。
+      这个坑本项目已经踩过一次：`phase43_subgraph_selfcheck` 的 V16f 就为此显式加了同一个开关。
+      「同一条命令的默认值换个仪器就再坑一次」—— 所以开关写在**取文件的那一处**，
+      并在自检里加判据（S: 非 ASCII 路径必须真的进集合）。
+    """
     out: list[str] = []
     for args in (["ls-files", "*.py"],
                  ["ls-files", "--others", "--exclude-standard", "*.py"]):
         try:
-            r = subprocess.run(["git", *args], cwd=repo, capture_output=True,
-                               text=True, encoding="utf-8", errors="replace")
+            r = subprocess.run(["git", "-c", "core.quotepath=false", *args], cwd=repo,
+                               capture_output=True, text=True, encoding="utf-8",
+                               errors="replace")
         except Exception:                                                    # noqa: BLE001
             continue
         out += [ln.strip() for ln in (r.stdout or "").splitlines() if ln.strip()]
@@ -348,6 +360,19 @@ def selfcheck() -> int:
                 "S8 负对照：出口在、内联自述被删 ⇒ Q7 必须判不合格"
                 "（证明 Q7 不是「文件里出现过 sys.executable」这种恒真判据）",
                 "counts=%s" % (inline_counts(inline_bad),))
+
+        # S9 · 取文件那一环的静默漏扫（D110）
+        #   ★ 为什么必须单独立一条：`iter_py` 漏掉非 ASCII 路径时，**下游所有判据照样全绿**
+        #     （它们只看扫到的那些），Q3 的「命中 ⊆ 入口」甚至更容易满足 ⇒ 这是"全绿即失控"。
+        #     故判据必须直接落在**取集合**这一步：集合里得有非 ASCII 路径，且每个路径都真能打开。
+        files = iter_py(ROOT)
+        non_ascii = [p for p in files if any(ord(ch) > 127 for ch in p)]
+        missing = [p for p in files if not os.path.exists(os.path.join(ROOT, p))]
+        rep.add(bool(non_ascii) and not missing,
+                "S9 取文件不漏扫：集合含非 ASCII 路径且逐条可打开"
+                "（缺 `core.quotepath=false` ⇒ 整片目录被静默跳过）",
+                "非 ASCII %d 个（例 %s）｜打不开 %d 个"
+                % (len(non_ascii), (non_ascii[0] if non_ascii else "-"), len(missing)))
     finally:
         shutil.rmtree(tmp)
     print("== interp_selfreport_check 自检（构造性可红；铁律 #100）==")

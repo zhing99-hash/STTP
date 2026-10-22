@@ -1579,7 +1579,7 @@ def main(argv=None):
                    "eval", "gnneval", "dimaudit", "lineage",
                    "gradepersist", "symbolbackfill", "domainbackfill", "evdeps",
                    "applicabackfill", "papermentionbackfill", "docnums",
-                   "chembackfill", "dataset", "elementrebuild", "mentionalign"]
+                   "chembackfill", "dataset", "elementrebuild", "mentionalign", "reverify"]
     #   （`evdeps` 是 G2b 加上后**立刻抓出来**的：它早挂了守卫，只是没人把它记进名单）
     #   （`papermentionbackfill` 同理，Phase 68 新增命令挂了守卫却漏登记 ——
     #     G2b 第二天就把它报出来了：这正说明"挂了守卫"和"断言看得见"是两件事）

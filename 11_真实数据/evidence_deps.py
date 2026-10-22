@@ -397,6 +397,60 @@ def load_ledger(base=ROOT):
 
 
 # ---------------------------------------------------------------------------
+# 6b. 重验证明（Phase 73）：证明「验证器版本 bump 但语义未变」
+# ---------------------------------------------------------------------------
+ATTESTATION_OUT = "11_真实数据/reverify_attestations.json"
+
+
+def load_attestations(base=ROOT):
+    """`{rva_id: attestation}`；文件缺失 ⇒ `{}`（**fail-closed**：缺证明 ⇒ 证据仍判 stale）。
+
+    ★ 为什么不复用重验账本（`reverify_ledger.json`）：账本是**逐证据**的（3.2 万条 ⇒ 10 MB
+      量级，只能不进库 ⇒ 干净检出里审计链断裂）。本表是**逐「版本对 + 范围」**的
+      （1 条入口覆盖 3.2 万条证据），可入库、可评审、可**当场重算**。
+    ★ 证明**不是许可**：表里的 `proof` 由 `11_真实数据/reverify_attest.py --check`
+      对着 git 历史里的真实 blob **重新算一遍**（AST 插入-only + 守卫范围），
+      算不出来就整条不成立。也就是说这张表只是「待复核的断言」，不是「已批准的通行证」。
+    """
+    p = base if os.path.isabs(base) and base.endswith(".json") else os.path.join(base, ATTESTATION_OUT)
+    if not os.path.exists(p):
+        return {}
+    try:
+        d = json.load(open(p, encoding="utf-8"))
+    except (ValueError, OSError):
+        return {}
+    ent = d.get("attestations") if isinstance(d, dict) else None
+    if not isinstance(ent, list):
+        return {}
+    return {a["id"]: a for a in ent if isinstance(a, dict) and a.get("id")}
+
+
+def _attestation_ok(rec, current, attestations):
+    """证据自带的 `rva` 是否**当场**成立（版本对 + 验证器身份三者全对上才算）。
+
+    只做**绑定**核对（from/to/verifier 与记录侧、当前侧逐一对齐）。
+    语义等价性由 `reverify_attest.py --check` 重算 AST 证明 —— 两件事分开：
+      绑定过期 ⇒ 本函数当场拒；证明造假 ⇒ 那个 gate 拒。缺一不可。
+    """
+    rva = rec.get("_rva")
+    if not rva or not attestations:
+        return False
+    att = attestations.get(rva)
+    if not isinstance(att, dict):
+        return False
+    ver = rec.get("verifier") or {}
+    vid = ver.get("verifier_id")
+    if att.get("kind") != "code_equivalent" or att.get("verifier") != vid:
+        return False
+    if att.get("from_code_hash") != ver.get("code_hash"):
+        return False
+    cur_ch = ((current.get("verifiers") or {}).get(vid) or {}).get("code_hash")
+    if att.get("to_code_hash") is None or att.get("to_code_hash") != cur_ch:
+        return False
+    return True
+
+
+# ---------------------------------------------------------------------------
 # 7. 状态计算
 # ---------------------------------------------------------------------------
 # ---- 7a. 图里**记录**的依赖快照 / **当前**快照（失效器与查询层共用同一口径）----
@@ -425,7 +479,12 @@ def recorded_deps(ev):
            if vid else {"verifier_id": None, "code_hash": None, "dependency_versions": {}})
     return {"src": ev.get("src"), "src_hash": ev.get("src_hash"),
             "reference_refs": ref_list, "verifier": ver,
-            "_src_hash_rewritten": bool(ev.get("_src_hash_rewritten"))}
+            "_src_hash_rewritten": bool(ev.get("_src_hash_rewritten")),
+            # ★ Phase 73：证据**自带**的重验证明引用（`rva:<id>`）。与 `_src_hash_rewritten`
+            #   同一条教训（D 家族）：字段在图上、却在裁决里消失 ⇒ 静默错位。
+            #   注意这是**引用**不是许可 —— attestation 是否成立由 `_attestation_ok()`
+            #   对照 from/to 与当前快照当场验，见 `evidence_status()` 第 3.5 步。
+            "_rva": ev.get("rva")}
 
 
 def current_snapshot(base=ROOT, byte_source="repo", src_hashes=None):
@@ -466,7 +525,8 @@ def mark_rewrites(edges, violations, key="_src_hash_rewritten"):
     return n
 
 
-def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=None):
+def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=None,
+                    attestations=None):
     """计算单条证据的 `(status, status_reasons[])`。
 
     参数
@@ -478,12 +538,19 @@ def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=Non
           dependency_versions}}}`
     claim_rejected : 该命题是否已被显式否决（`props.rejected is True`）。
     ledger_entry : 重验账本里该证据的条目（无 ⇒ None）。
+    attestations : `load_attestations()` 的结果（**缺省 None = 一张都没有**）。
+        缺省即「不认任何等价性证明」—— 这是**有意的** fail-closed：
+        调用方漏传只会更严（多判 stale），不会更松（把 stale 说成 valid）。
 
     判定优先级（**确定性**，不依赖遍历顺序）
     -----------------------------------------
     1. `claim_rejected` ⇒ `rejected`（原因 `claim_rejected`）。
     2. 收集原因：**已变更**（可复算且不符）与**不可判定**（不可复算/缺记录）。
     3. 有任一**已变更**原因 ⇒ `stale`（确定信号优先于「不可判定」）。
+       3.5 例外：若唯一的「已变更」原因是 `verifier_changed`，且证据自带的 `rva`
+       与当前验证器身份**逐项对齐**（`_attestation_ok`），则该原因被
+       「`reverified:code_equivalent`」取代（Phase 73；证明的语义由
+       `reverify_attest.py --check` 独立重算，不在本函数里做）。
     4. 否则有任一**不可判定**原因（或账本显示被无留痕地改写过）⇒ `needs_review`。
     5. 否则 ⇒ `valid`。
 
@@ -532,6 +599,19 @@ def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=Non
 
     if not (recorded.get("reference_refs") or vid):
         reasons.append(R_NO_REFERENCE)          # 信息性：本条无参考/验证器可绑
+
+    # ★ 3.5（Phase 73）「验证器版本变了」与「判据语义变了」不是一回事
+    #   `vch` 是**整文件**摘要：给验证器加一个只服务新边类型的 `if` 分支，也会让
+    #   全部老证据翻 stale（Phase 61 踩过一次并 revert，Phase 72 又踩一次）。
+    #   处置不是「重写哈希」（那正是本文件要堵的），而是：**给出可重算的等价性证明**
+    #   （`reverify_attest.py`：AST 插入-only + 新增守卫只命中被排除的边类型），
+    #   证据上带 `rva` 指回该证明，本函数**当场**核对版本对是否仍然对齐。
+    #   ★ 只抵掉 `verifier_changed` 这一条原因；`src_changed` / `dep_version_changed`
+    #     一概不动 —— 证明的是「代码没变」，不是「数据没变」。
+    if attestations and any(r.split(":")[0] == R_VERIFIER_CHANGED for r in reasons):
+        if _attestation_ok(recorded, current, attestations):
+            reasons = [r for r in reasons if not r.startswith(R_VERIFIER_CHANGED)]
+            reasons.append("%s:code_equivalent" % R_REVERIFIED)
 
     # ★ 「重写哈希不能恢复 valid」的程序化堵口
     if ledger_entry is None:
@@ -755,6 +835,31 @@ def selfcheck():
     for d in detail:
         print("       %s" % d)
     ok &= c7
+
+    print("  ⑧ 等价证明的绑定与失效  : ", end="")
+    cur2 = {"src_hashes": {"S": "aaaa"}, "reference_hashes": {},
+            "verifiers": {"V": {"code_hash": "NEW", "dependency_versions": {}}}}
+    rv = {"src": "S", "src_hash": "aaaa", "reference_refs": [],
+          "verifier": {"verifier_id": "V", "code_hash": "cccc", "dependency_versions": {}}}
+    good = {"id": "rva:1", "kind": "code_equivalent", "verifier": "V",
+            "from_code_hash": "cccc", "to_code_hash": "NEW"}
+    s_none = evidence_status(rv, cur2)[0]
+    s_good, rs_good = evidence_status(dict(rv, _rva="rva:1"), cur2,
+                                      attestations={"rva:1": good})
+    s_rv, rs_rv = evidence_status(dict(rv, _rva="rva:1"), cur2,
+                                 attestations={"rva:1": dict(good, to_code_hash="OLD")})
+    s_from = evidence_status(dict(rv, _rva="rva:1"), cur2,
+                             attestations={"rva:1": dict(good, from_code_hash="zzzz")})[0]
+    s_ver = evidence_status(dict(rv, _rva="rva:1"), cur2,
+                            attestations={"rva:1": dict(good, verifier="OTHER")})[0]
+    s_noid = evidence_status(rv, cur2, attestations={"rva:1": good})[0]
+    c8 = (s_none == "stale"
+          and s_good == "valid" and any(x.startswith(R_REVERIFIED) for x in rs_good)
+          and s_rv == "stale" and s_from == "stale" and s_ver == "stale"
+          and s_noid == "stale")
+    print("%s（无 rva=%s｜rva 齐全=%s｜to 过期=%s｜from 不符=%s｜验证器不符=%s｜有表无 rva=%s）"
+          % ("PASS" if c8 else "FAIL", s_none, s_good, s_rv, s_from, s_ver, s_noid))
+    ok &= c8
 
     return 0 if ok else 1
 
