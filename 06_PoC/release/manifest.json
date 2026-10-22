@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 81823326,
+    "bytes": 81905406,
     "edges": 48813,
     "nodes": 9750,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "00ac981ea99a3f9a30848a81a75d9b78a92ae2b50bf2134e883c6e91473eef8c",
+    "sha256": "65e1ee8d979740b5a798ef4b2c36967cba767ac135524a620b20e9dd484c52d4",
     "subjects": {
      "化学": 4442,
      "数学": 300,
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "bd703b7fa564973302bf36ef018b933c9b59abaa",
-  "git_head_at_build_short": "bd703b7",
+  "git_head_at_build": "0f462fb9ec08da6a7e0bda28c230b3f78cfc2edc",
+  "git_head_at_build_short": "0f462fb",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -478,20 +478,20 @@
    "edges": 48712,
    "frozen_gate": {
     "tally": {
-     "FAIL": 7,
-     "PASS": 101
+     "FAIL": 4,
+     "PASS": 104
     }
    },
    "nodes": 9657,
    "recomputable": "full_snapshot（不入库；`bash sttp.sh release-full` 现算校验）",
    "task_trust": {
     "T9_evidence_traceable": {
-     "graph_evidence_coverage_pct": 99.79,
-     "graph_independent_evidence_pct": 71.23,
-     "independent": 36367,
-     "independent_rate_pct": 86.46,
-     "ok_edges": 42060,
-     "traceable": 42060,
+     "graph_evidence_coverage_pct": 100.0,
+     "graph_independent_evidence_pct": 71.44,
+     "independent": 36369,
+     "independent_rate_pct": 86.47,
+     "ok_edges": 42062,
+     "traceable": 42062,
      "traceable_rate_pct": 100.0
     },
     "graph": "06_PoC\\etl\\normalized.json",
@@ -499,8 +499,8 @@
      "by_construction": 11,
      "cross_source": 3249,
      "model_inferred": 135,
-     "rule_checked": 31621,
-     "source_asserted": 13797
+     "rule_checked": 31623,
+     "source_asserted": 13795
     },
     "north_star_pct": 99.66,
     "tasks": [
@@ -560,12 +560,12 @@
       "desc": "公式↔参与物理量/符号",
       "edges": 24341,
       "gaps": {
-       "source_asserted": 31
+       "source_asserted": 29
       },
       "min_level": "rule_checked",
       "name": "公式—参与量",
-      "ok": 24310,
-      "rate_pct": 99.87,
+      "ok": 24312,
+      "rate_pct": 99.88,
       "task": "T5"
      },
      {
@@ -678,7 +678,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-22T10:55:11+08:00",
+  "created": "2026-10-22T14:40:26+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 65,
