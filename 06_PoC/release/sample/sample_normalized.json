@@ -10735,10 +10735,14 @@
       "sym": "P"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "P"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
+    "symbols_incomplete": true,
     "symbols_rule_version": "s2",
-    "symbols_unresolved": "glyphs_only_from_edges",
+    "symbols_unresolved": 2,
     "usage": "作为细胞内「能量货币」的结算式，用于估算代谢反应可动用的能量上限。"
    }
   },
@@ -10788,6 +10792,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "Nc1ncnc2c1ncn2[C@@H]1O[C@H](COP(=O)(O)O)[C@@H](O)[C@H]1O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.972539",
     "domain": "chem.molecule",
@@ -10807,6 +10813,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O=C=O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.972539",
     "domain": "chem.molecule",
@@ -10826,6 +10834,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "OCC1OC(O)C(O)C(O)C1O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.972539",
     "domain": "chem.molecule",
@@ -10845,6 +10855,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.972539",
     "domain": "chem.molecule",
@@ -10864,6 +10876,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O=O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-30T08:35:01.972539",
     "domain": "chem.molecule",
@@ -10892,6 +10906,8 @@
     "id": "BC:rx:atp_hydrolysis",
     "name": "ATP hydrolysis",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -10910,6 +10926,8 @@
     "id": "BC:rx:photosynthesis",
     "name": "Photosynthesis",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -10929,6 +10947,8 @@
     "id": "BC:rx:respiration",
     "name": "Cellular respiration",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -11009,8 +11029,14 @@
       "sym": "T"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "k",
+     "e",
+     "E_a",
+     "T"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由两个温度下的速率常数反推活化能，或外推高温下的反应速率。"
@@ -11074,8 +11100,14 @@
       "sym": "T"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "G",
+     "R",
+     "T",
+     "Q"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由实际浓度组成判断反应能否自发进行（ΔG < 0 为自发）。"
@@ -11133,8 +11165,13 @@
       "sym": "T"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "G",
+     "R",
+     "T"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由平衡常数求标准自由能变；或由热力学数据预测反应方向。"
@@ -11231,10 +11268,14 @@
       "sym_candidate": "\\mathrm{pH}"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "K_a"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
+    "symbols_incomplete": true,
     "symbols_rule_version": "s2",
-    "symbols_unresolved": "glyphs_only_from_edges",
+    "symbols_unresolved": 1,
     "usage": "配制指定 pH 的缓冲液，或估算加入酸碱后 pH 的漂移量。"
    }
   },
@@ -11327,8 +11368,13 @@
       "sym": "T"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "R",
+     "T",
+     "F"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由浓度计算原电池电动势，或由电位反推离子浓度（pH 电极的原理）。"
@@ -11697,8 +11743,12 @@
       "sym": "F"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "J",
+     "F"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由碰撞时间估算平均冲击力，或由冲量求速度变化。"
@@ -11756,8 +11806,13 @@
       "sym": "v"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "p",
+     "m",
+     "v"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "分析碰撞与爆炸过程（动量守恒）；作为冲量-动量定理与相对论动量的变量。"
@@ -11809,8 +11864,12 @@
       "sym": "F"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "W",
+     "F"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "计算机械过程传递的能量；作为动能定理与功率公式的输入。"
@@ -12306,8 +12365,14 @@
       "sym": "\\pi"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "B",
+     "\\mu_0",
+     "I",
+     "\\pi"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由电流分布计算磁场（长直导线、圆环、螺线管）。"
@@ -12416,10 +12481,14 @@
       "sym": "k"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "k"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
+    "symbols_incomplete": true,
     "symbols_rule_version": "s2",
-    "symbols_unresolved": "glyphs_only_from_edges",
+    "symbols_unresolved": 1,
     "usage": "计算静电力的方向与大小；电场与电势定义的基础。"
    }
   },
@@ -12508,10 +12577,14 @@
       "sym_candidate": "\\varepsilon"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\Phi"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
+    "symbols_incomplete": true,
     "symbols_rule_version": "s2",
-    "symbols_unresolved": "glyphs_only_from_edges",
+    "symbols_unresolved": 1,
     "usage": "计算发电机与变压器的感应电压；配合楞次定律判定电流方向。"
    }
   },
@@ -12609,8 +12682,12 @@
       "sym": "\\varepsilon_0"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "E",
+     "\\varepsilon_0"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "利用对称性快速求电场（球、柱、平面电荷分布）。"
@@ -12719,10 +12796,17 @@
       "sym": "v"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "v",
+     "F",
+     "E",
+     "B"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
+    "symbols_incomplete": true,
     "symbols_rule_version": "s2",
-    "symbols_unresolved": "glyphs_only_from_edges",
+    "symbols_unresolved": 1,
     "usage": "分析带电粒子在磁场中的运动（回旋半径、质谱仪、霍尔效应）。"
    }
   },
@@ -12785,8 +12869,13 @@
       "sym": "V"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "V",
+     "I",
+     "R"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "电路计算的基础：由电压与电阻求电流，或做分压与限流设计。"
@@ -13190,8 +13279,13 @@
       "sym": "m"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "E",
+     "m",
+     "c"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "核反应与湮灭过程的能量核算；质量与能量的互换换算。"
@@ -13262,8 +13356,13 @@
       "sym": "m"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "F",
+     "m",
+     "a"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由受力求加速度（动力学计算）；建立运动微分方程。"
@@ -13358,8 +13457,13 @@
       "sym": "v"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "KE",
+     "m",
+     "v"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "动能定理与碰撞能量核算；能量守恒分析的常用量。"
@@ -13445,8 +13549,11 @@
       "sym": "H"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "H"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "酸碱度标注与计算；与 CE:fo:ph 同一定义在不同学科下的实例。"
@@ -13459,6 +13566,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "ClCl",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "domain": "chem.molecule",
@@ -13478,6 +13587,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "domain": "chem.molecule",
@@ -13497,6 +13608,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "Cl",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "domain": "chem.molecule",
@@ -13516,6 +13629,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "[Na]",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "domain": "chem.molecule",
@@ -13535,6 +13650,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "[Cl-].[Na+]",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "domain": "chem.molecule",
@@ -13554,6 +13671,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O=O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:54:48.726342",
     "domain": "chem.molecule",
@@ -13582,6 +13701,8 @@
     "id": "IC:rx:neutralization",
     "name": "Neutralization",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -13601,6 +13722,8 @@
     "id": "IC:rx:redox",
     "name": "Hydrogen combustion",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -13619,6 +13742,8 @@
     "id": "IC:rx:synthesis",
     "name": "Sodium chloride synthesis",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -13699,8 +13824,13 @@
       "sym": "\\pi"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "e",
+     "i",
+     "\\pi"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "复分析中指数与三角函数互化的特例；复数相位与旋转表示的常用形式。"
@@ -13745,8 +13875,11 @@
       "sym": "x"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "x"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "化简含乘积的指数运算；在对数坐标下把乘积关系变为线性关系。"
@@ -13816,6 +13949,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "C",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
     "domain": "chem.molecule",
@@ -13835,6 +13970,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O=C=O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
     "domain": "chem.molecule",
@@ -13854,6 +13991,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
     "domain": "chem.molecule",
@@ -13873,6 +14012,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "O=O",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T15:23:25.250577",
     "domain": "chem.molecule",
@@ -13949,8 +14090,13 @@
       "sym": "n"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "a",
+     "\\equiv",
+     "n"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "模运算与整除性推理的基础语言；密码学与哈希函数的前身。"
@@ -14045,8 +14191,12 @@
       "sym": "n"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\equiv",
+     "n"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "解同余方程组；大整数运算与密码学中的分解与重构。"
@@ -14104,8 +14254,13 @@
       "sym": "n"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "a",
+     "b",
+     "n"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "求最大公约数、判定互素；连分数与模逆元计算的基础。"
@@ -14218,8 +14373,14 @@
       "sym": "\\varphi(n)"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "a",
+     "\\varphi(n)",
+     "n",
+     "\\equiv"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "模幂化简；RSA 等公钥密码算法正确性的理论基础。"
@@ -14332,8 +14493,13 @@
       "sym": "p"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "a",
+     "p",
+     "\\equiv"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "素性检验（费马检验）与模逆元计算（p 为素数时逆元为 a 的 p-2 次幂）。"
@@ -14440,8 +14606,12 @@
       "sym": "p"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "n",
+     "p"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "整数分解唯一性的论证基础；数论与 RSA 安全性的基石。"
@@ -14499,8 +14669,13 @@
       "sym": "n"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\mathbb{Z}",
+     "a",
+     "n"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "研究模运算的乘法结构与其群阶（欧拉 φ 函数）。"
@@ -14601,8 +14776,12 @@
       "sym": "p"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "p",
+     "\\equiv"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "素性判定的充要条件；组合数同余关系的推导工具。"
@@ -14775,8 +14954,13 @@
       "sym": "O"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "C",
+     "H",
+     "O"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "配平燃烧反应、计算理论空气量与烟气组成。"
@@ -14789,6 +14973,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "CC",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:34.178105",
     "domain": "chem.molecule",
@@ -14808,6 +14994,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "CCO",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:34.178105",
     "domain": "chem.molecule",
@@ -14827,6 +15015,8 @@
     "Molecule"
    ],
    "props": {
+    "canonical_smiles": "C",
+    "canonical_smiles_source": "rdkit_from_smiles",
     "confidence": 1.0,
     "created_at": "2026-09-29T16:34:34.178105",
     "domain": "chem.molecule",
@@ -14855,6 +15045,8 @@
     "id": "OM:rx:ethane_comb",
     "name": "Ethane combustion",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -14874,6 +15066,8 @@
     "id": "OM:rx:ethanol_comb",
     "name": "Ethanol combustion",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed"
    }
   },
@@ -15094,8 +15288,12 @@
       "sym": "\\lambda"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\lambda",
+     "h"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "估算电子与中子的衍射尺度（电子显微镜、晶体衍射）。"
@@ -15177,8 +15375,13 @@
       "sym": "\\phi"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "h",
+     "\\nu",
+     "\\phi"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由截止电压测定逸出功；太阳能电池与光电探测器的能级判据。"
@@ -15230,8 +15433,12 @@
       "sym": "\\nu"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "h",
+     "\\nu"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "光子能量计算（光谱、光电效应），量子化假设的基本关系式。"
@@ -15337,8 +15544,13 @@
       "sym": "m"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\hbar",
+     "m",
+     "\\psi"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "求解量子体系的能级与波函数（氢原子、势阱、谐振子）。"
@@ -15420,8 +15632,11 @@
       "sym": "\\hbar"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\hbar"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "估算量子体系能达到的位置/动量精度；判定经典近似的适用范围。"
@@ -15626,8 +15841,12 @@
       "sym": "m"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "m",
+     "c"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "核算核反应与湮灭过程的能量释放；粒子物理中的质量-能量换算。"
@@ -15684,8 +15903,13 @@
       "sym": "v"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\gamma",
+     "m",
+     "v"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "粒子加速器中的动量-能量换算；高速碰撞的运动学计算。"
@@ -15736,6 +15960,8 @@
     "id": "RX:comb_ch4",
     "name": "Methane combustion",
     "ntype": "reaction",
+    "reaction_name_rule": "chem-s1",
+    "reaction_name_status": "named_from_source",
     "source": "curated_seed/energy_combustion"
    }
   },
@@ -15791,8 +16017,13 @@
       "sym": "k_B"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "S",
+     "k_B",
+     "W"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由微观组态数估算宏观熵；统计力学与信息熵之间的桥梁。"
@@ -15904,8 +16135,13 @@
       "sym": "v"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "v",
+     "e",
+     "k_B"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "计算平均速率与最概然速率；反应速率与蒸发过程的统计基础。"
@@ -16011,8 +16247,14 @@
       "sym": "k_B"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "Z",
+     "e",
+     "k_B",
+     "T"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由配分函数 Z 导出内能、熵、自由能等全部热力学量。"
@@ -16221,8 +16463,12 @@
       "sym": "V"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "P",
+     "V"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "气体等温压缩与膨胀过程的计算。"
@@ -16323,8 +16569,12 @@
       "sym": "\\eta"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "\\eta",
+     "T"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "评估热机与发电循环的理论效率上限。"
@@ -16436,8 +16686,12 @@
       "sym": "V"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "V",
+     "T"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "等压过程的体积-温度换算。"
@@ -16525,8 +16779,12 @@
       "sym": "T"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "P",
+     "T"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "等容过程的压强-温度换算。"
@@ -16621,8 +16879,15 @@
       "sym": "n"
      }
     ],
-    "symbols": [],
+    "symbols": [
+     "P",
+     "V",
+     "n",
+     "R",
+     "T"
+    ],
     "symbols_at_commit": "0601408e841ac0328db38daf7154736d5095623c",
+    "symbols_derive_version": "chem-s1",
     "symbols_rule_version": "s2",
     "symbols_unresolved": "glyphs_only_from_edges",
     "usage": "由三个状态量求第四个；化学计量与工程状态计算的基础。"
