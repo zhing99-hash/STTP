@@ -778,6 +778,16 @@ def _mutation_probe():
         files = set()
         for meta in REFERENCE_REGISTRY.values():
             files |= set(meta["paths"])
+        # ★ **验证器及其直接本地依赖**也必须镜像（Phase 72 补）。
+        #   为什么：`verifier_identity(base=tmp)` 会把验证器的 `code_imports` 结果逐个算 blob。
+        #   原来只镜像参考表 ⇒ 验证器依赖在 tmp 仓库里**取不到 blob** ⇒ `dependency_versions`
+        #   里该 rel 为 None ⇒ 基线变成 `needs_review:unverifiable_verifier`，⑦ 段假红。
+        #   ⇒ 这个洞**与数据无关**，是探针环境的洞：任何一条新依赖都会把它顶出来
+        #      （本轮由 `verification_model → phase68_paper_fetch` 首次暴露）。
+        #   修在探针侧，才对将来所有新依赖都成立（而不是"别加依赖"）。
+        for _vrel in VERIFIER_MODULES.values():
+            files.add(_vrel)
+            files |= set(code_imports(_vrel) or ())
         for rel in sorted(files):
             ap = os.path.join(tmp, rel)
             os.makedirs(os.path.dirname(ap), exist_ok=True)

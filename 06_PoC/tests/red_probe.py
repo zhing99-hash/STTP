@@ -775,6 +775,48 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R41",
+        "kind": "mutate",
+        "why": ("Phase 72 · D108：`gatecheck [3/3]` 红了四轮的根因是**判级模型里没有 m1 这一档** ——"
+                "101 条 `mentioned_in` 落库 `rule_checked`，重算却落到 B8「无来源无判据」。"
+                "处置是**把规则登记进 `verification_model`**（不是把落库改小去迁就重算）。"
+                "把 A11 的 kind 判据改掉 ⇒ m1 重新「没登记」⇒ **E8 必须变红**。"
+                "★ 为什么不是指望 E3：E3 判「落库 == 重算」的最终态，而 delta 的作用正是"
+                "  「把落库改成重算」⇒ 重算被改坏时落库会跟着一起坏，两边仍**一致** ⇒ E3 恒绿。"
+                "  能抓住「m1 被撤」的只有直接查重算 scope 的 E8（自洽 ≠ 登记）。"
+                "★ 与 R38 的坑（#115）不同：E3 判的是「合并态 vs 重算函数」，注入改的是**重算侧**，"
+                "   落库侧不受影响 ⇒ 判据不依赖「本轮有没有跑过」，可以安全用 `--dry`。"),
+        "file": "11_真实数据/verification_model.py",
+        # ★ 目标文件是 LF
+        "old": "    if t == \"mentioned_in\" and kind == \"openalex_name_mention\":",
+        "new": ("    if t == \"mentioned_in\" and kind == \"openalex_name_mention_x\":"
+                "  # redprobe: m1 重新「没登记」"),
+        "cmd": "PY 11_真实数据/phase72_mention_delta.py --dry",
+        "cwd": ROOT,
+        "expect_red": ["E8"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R42",
+        "kind": "mutate",
+        "why": ("Phase 72：`name_mention_in_text` 是 m1 重算的**唯一实现**。"
+                "写成恒真（看起来像「更宽容地接受历史数据」）会让 101 条边**无论文本里有没有这个公式名**"
+                "都判 `rule_checked` —— 于是 (q) 的「独立证据」变成一张可以随便填的合格证，"
+                "而 (t) 的「落库必须等于重算」形同虚设（两者一起恒真）。"
+                "★ 这条**没有报错也没有失败计数**：图能建、包能出，只是「证据」这个词失去了意义。"
+                "⇒ S2（snippet 里没有该名字 ⇒ 必须判否）必须变红。"),
+        "file": "11_真实数据/verification_model.py",
+        "old": "    if find_span is None:\n        return None, \"m1 实现不可用",
+        "new": ("    return True, \"redprobe: 恒真\"\n"
+                "    if find_span is None:\n        return None, \"m1 实现不可用"),
+        "cmd": "PY 11_真实数据/phase72_mention_delta.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["S2"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -799,7 +841,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
                       "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "R38", "R39",
-                      "R40", "RN")
+                      "R40", "R41", "R42", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -1131,6 +1173,10 @@ def emit(rep, res):
             res["R39"][1])
     rep.add(res["R40"][0], "R40 离线样例规模写旧值（170/255 冒充 200/360）⇒ S2 必须变红（D100 补登记）",
             res["R40"][1])
+    rep.add(res["R41"][0], "R41 m1 从判级模型里「消失」（重算落回未分类）⇒ E8 必须变红（D108）",
+            res["R41"][1])
+    rep.add(res["R42"][0], "R42 m1 重算恒真（不看文本里有没有）⇒ S2 必须变红（证据不得是空白合格证）",
+            res["R42"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

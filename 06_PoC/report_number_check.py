@@ -48,11 +48,14 @@ S3 是**运行时负对照**：把报告文本里的数字换成假的，喂给�
 from __future__ import annotations
 
 import argparse
+import functools
 import io
 import json
 import os
 import re
 import sys
+
+_lru_cache = functools.lru_cache
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GRAPH = os.path.join(ROOT, "06_PoC", "etl", "normalized.json")
@@ -151,6 +154,36 @@ def truth_nodes_edges():
     return (len(g["nodes"]), len(g["edges"]), None)
 
 
+@_lru_cache(maxsize=1)
+def _gate_baseline():
+    """门禁基线的**现算**事实：`vm.classify_all` 全图重算一遍（慢，故整段缓存）。
+
+    返回的三个量里，本模块目前只消费「提及边档位分布」——
+    另两个（落库≠重算、strict 条数）**已有 `gatecheck (t)/(q)` 直接咬住**，
+    此处不再登记一遍（同一件事两处判据 ⇒ 将来必有一处漂移，#88 的同族）。
+    """
+    for p in (os.path.join(ROOT, "06_PoC"), os.path.join(ROOT, "11_真实数据")):
+        if p not in sys.path:
+            sys.path.insert(0, p)
+    import verification_model as vm                       # noqa: E402
+    g = _load_graph()
+    res, _ctx = vm.classify_all(g["nodes"], g["edges"])
+    title_n = snip_n = 0
+    for _e, r in res:
+        sc = (r or {}).get("verification_scope") or ""
+        if sc == "name_mention_title_recompute":
+            title_n += 1
+        elif sc == "name_mention_snippet_recompute":
+            snip_n += 1
+    return (title_n, snip_n)
+
+
+def truth_mention_scope():
+    """`mentioned_in` 的重算档位分布（title 档 / snippet 档）—— 现算，不读报告。"""
+    a, b = _gate_baseline()
+    return (a, b, None)
+
+
 RELEASE = os.path.join(ROOT, "06_PoC", "release", "manifest.json")
 
 
@@ -197,6 +230,7 @@ RC1 = "07_交付物/RC1_整体状态评估_20261020.md"
 ASSESS = "07_交付物/整体评估_20261021.md"
 P71 = "07_交付物/Phase71_元素层重建_20261022.md"
 PLAN = "00_项目管理/下一阶段规划_数据扩展与前端优化_20261019.md"
+P72 = "07_交付物/Phase72_论文提及档位登记_20261022.md"
 
 _NUM = r"([\d,]+)\s*/\s*([\d,]+)\s*=\s*\*{0,2}([\d.]+)%"
 
@@ -219,6 +253,9 @@ DECLARATIONS = [
     # ---- 离线样例的规模：以前是手写，改完 release 就漂（170/255 那次的教训）----
     dict(key="release 离线样例节点/边（DATA_LICENSES）", file="DATA_LICENSES.md",
          row="实为 ", pat=r"([\d,]+)\s*节点\s*/\s*([\d,]+)\s*边", truth=truth_sample_size),
+    # ---- Phase 72：m1 重算的档位分布（这行没有别的判据咬 ⇒ 必须登记在这里）----
+    dict(key="提及边档位分布（Phase72 报告）", file=P72,
+         row="| 提及边档位分布 |", pat=r"([\d,]+)\s*/\s*([\d,]+)", truth=truth_mention_scope),
 ]
 
 

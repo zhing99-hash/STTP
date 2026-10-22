@@ -67,6 +67,19 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 import dimension_table as dm          # noqa: E402
 import element_reference as er        # noqa: E402
 
+# Phase 72：论文提及边（规则 **m1**：名字 token 串连续出现于标题/摘要）的重算实现。
+#   ★ 刻意 **import 而不是复刻**：m1 的 tokenizer / span 匹配只有一份实现
+#     （`phase68_paper_fetch`），复刻一份就会变成「同一条规则两个版本」（#88/#102）。
+#   ★ 该模块只依赖标准库（其 `fetch_common` 也是 urllib），不会把第三方依赖带进
+#     判据核心（铁律 #101：判据本身必须能在裸环境里跑）。
+#   ★ 导入失败 ⇒ `name_mention_in_text` 一律返回「不可判定」⇒ classify **不猜**（fail-closed）。
+try:
+    from phase68_paper_fetch import canon_tokens, name_tokens, find_span
+    MENTION_RULE_OK = True
+except Exception:                                       # noqa: BLE001
+    canon_tokens = name_tokens = find_span = None
+    MENTION_RULE_OK = False
+
 NORM = os.path.join(ROOT, "06_PoC", "etl", "normalized.json")
 
 # ------------------------------------------------------------------- 属性形态守卫
@@ -207,6 +220,13 @@ SCOPE_KIND = {
     "inchikey_match_carryover": ("carryover", False),
     "inchikey_mismatch": ("rebuttal", False),
     "operator_usage_unconfirmed": ("source_assertion", False),
+    # ---- Phase 72：论文提及（m1 连续串匹配）**重算** ----
+    #   两个 scope 刻意分开：输入来源不同 ⇒ 「独立性」强弱不同，必须让读者一眼看见。
+    #     · title  ：输入取自 **Paper 节点的 title**（与边的记录无关 ⇒ 真独立复核）
+    #     · snippet：输入取自 **边自带的 snippet**（原文没落库到节点 ⇒ 只是把规则重跑一遍）
+    "name_mention_title_recompute": ("recompute", True),
+    "name_mention_snippet_recompute": ("recompute", True),
+    "name_mention_mismatch": ("rebuttal", False),
     # ---- by_construction：构造性产生（无判断空间）→ construction / indep=False ----
     "symbol_scan_from_text": ("construction", False),
     "formula_only": ("construction", False),
@@ -1096,6 +1116,39 @@ def qname_of_node(node: dict) -> str:
 
 
 # --------------------------------------------------------------------------- 分类
+MENTION_VERIFIER = "verification_model.name_mention_in_text"
+MENTION_RULE = "m1"
+
+
+def name_mention_in_text(name: str, text: str):
+    """规则 m1 的**重算**：`name` 的 token 串是否**连续**出现于 `text`。
+
+    返回 `(True|False|None, why)`。`None` = **不可判定**（规则实现不可用 / 名字或文本缺失）
+    —— 不可判定一律**不猜**（铁律 #20），让调用方落到"未分类"而不是编一个结论。
+
+    ★ 与建边用的是同一份实现（`phase68_paper_fetch.canon_tokens/find_span`）：
+      这是**重跑规则**，不是**新证据源**。输入取自 Paper 节点 title 时独立性最强
+      （与边的记录无关）；输入取自边自带 snippet 时只证明"规则可复现"。
+      二者由 `classify` 分别记为两个 scope，不混（见 SCOPE_KIND 注释）。
+    """
+    if find_span is None:
+        return None, "m1 实现不可用（phase68_paper_fetch 不可导入）⇒ 不猜"
+    if not (name or "").strip():
+        return None, "公式名为空 ⇒ 不猜"
+    if not (text or "").strip():
+        return None, "待检文本为空 ⇒ 不猜"
+    ntoks = name_tokens(name)
+    toks = canon_tokens(text)
+    if not ntoks:
+        return None, "公式名 token 化后为空 ⇒ 不猜"
+    i = find_span(toks, ntoks)
+    if i >= 0:
+        lo, hi = toks[i][1], toks[i + len(ntoks) - 1][2]
+        return True, ("「%s」连续出现于待检文本[%d:%d]：…%s…"
+                      % (name, lo, hi, text[max(0, lo - 24):hi + 24]))
+    return False, "「%s」未在待检文本中连续出现（m1 重算未复现）" % name
+
+
 def classify(e: dict, ctx: dict):
     """返回 {verification_level, verification_scope, verifier[, note]}；不可判定返回 None。
 
@@ -1328,6 +1381,29 @@ def classify(e: dict, ctx: dict):
                  detail="%s ∈ 源结构化表达式（latex/formula/symbols）"
                         % ctx["sym_expr_ok"][eid][1])
 
+    # A11 论文提及（Phase 72）：规则 **m1**（名字 token 串连续出现于标题/摘要）**重算**。
+    #    背景（铁律 #23 的第 N 次复发）：Phase 68 落库时把这 101 条写成 `rule_checked`
+    #    （"跑了 m1"），但 `classify` 里**没有 m1 这一档** ⇒ 重算落到 B8「无来源无判据」
+    #    ⇒ 落库 ≠ 重算，`gatecheck [3/3]` 的正对照红了一轮没人发现（D108）。
+    #    修法不是把落库改小，而是**把 m1 登记进判级模型** —— 与 D106 同形：
+    #    错的经常不是数据，是「登记口径」。
+    #    ⚠ 判据**只读文本与名字**，绝不读已存的 `verification_level`（否则复算 = 复述）。
+    #    ★ 判否即判否：重算复现不出公式名 ⇒ 这条边的依据不存在 ⇒ `unverified` + rebuttal，
+    #      不因为"当年建过边"就放行。
+    if t == "mentioned_in" and kind == "openalex_name_mention":
+        ok, via, why = ctx["mention_ok"].get(eid, (None, None, ""))
+        if ok is True:
+            return R("rule_checked",
+                     "name_mention_title_recompute" if via == "node_title"
+                     else "name_mention_snippet_recompute",
+                     MENTION_VERIFIER,
+                     "m1 重算复现：%s（输入=%s）"
+                     % (why, "Paper 节点 title" if via == "node_title" else "边自带 snippet"),
+                     detail=why)
+        if ok is False:
+            return R("unverified", "name_mention_mismatch", MENTION_VERIFIER,
+                     "m1 重算未在文本中复现该公式名（建边依据不成立）", detail=why)
+
     # A11 模型产物语义边的「目标缺席」反驳（Phase 31）：**仅模型产物** —— 目标标识在源的
     #     **结构化表达式**里毫无支撑 → 撤。适用于 `defines`/`has_symbol`/`derived_from`。
     #     闸门：`ctx["derived_support_ok"]` **只为**模型产物建档 ⇒ 85 条合法 `derived_from`
@@ -1516,6 +1592,9 @@ _CLAIM_TEMPLATES = {
     "product_of": "「{s}」是「{t}」的反应产物",
     "cites": "「{s}」引用「{t}」",
     "discusses": "「{s}」讨论「{t}」",
+    # Phase 72：论文提及（m1）。措辞必须**只声明事实**：「文本里出现该名字」，
+    # 不得写成「讨论了该公式」—— 命中字面 ≠ 真的在讲它（这也是 m1 只给复算档的原因）。
+    "mentioned_in": "「{s}」的标题/摘要文本中出现「{t}」",
 }
 
 
@@ -1575,8 +1654,34 @@ def build_ctx(nodes, edges):
         "derived_support_ok": {},  # eid -> (ok, why)：derived_from（**仅模型产物**）目标是否有结构化支撑
         "rxn_side_ok": {},      # eid -> (ok, strength, why)：反应侧别跨源校验（Phase 33）
         "codata_def_ok": {},    # eid -> (ok, why)：CODATA 常量定义式数值复算（Phase 33）
+        "mention_ok": {},       # eid -> (ok, via, why)：论文提及 m1 重算（Phase 72）
         "bugs": collections.defaultdict(list),
     }
+
+    # (z) 论文提及（m1）复算 —— **只**服务 `mentioned_in` / kind=openalex_name_mention。
+    #     ★ 输入优先级：`where=title` 且 Paper 节点带 title ⇒ 用**节点 title**
+    #       （这条输入与边的记录无关，是真正的第二输入）；
+    #       否则（原文是摘要、而摘要**没有落库到节点**）只能用边自带 snippet ——
+    #       此时只证明"规则可复现"，故由 classify 另记一个 scope，不与前者混。
+    for _e in edges:
+        if _e.get("type") != "mentioned_in":
+            continue
+        _p = _e.get("props") or {}
+        if (_p.get("kind") or _e.get("kind") or "") != "openalex_name_mention":
+            continue
+        _eid = (_e.get("id") or "%s|%s|%s"
+                % (_e.get("type"), _e.get("source"), _e.get("target")))
+        _tn = node_by_id.get(_e.get("target")) or {}
+        _name = ((_tn.get("props") or {}).get("name") or _p.get("matched_name") or "")
+        _src = node_by_id.get(_e.get("source")) or {}
+        _title = ((_src.get("props") or {}).get("title") or "")
+        if _p.get("where") == "title" and _title:
+            _ok, _why = name_mention_in_text(_name, _title)
+            _via = "node_title"
+        else:
+            _ok, _why = name_mention_in_text(_name, _p.get("snippet"))
+            _via = "edge_snippet"
+        ctx["mention_ok"][_eid] = (_ok, _via, _why)
 
     # (a) PhysicsBabel 公式成员集合（独立实现：直接读 Formula.dim_exponents）
     for n in nodes:

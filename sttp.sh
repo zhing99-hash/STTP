@@ -67,6 +67,8 @@
 #   bash sttp.sh elementrebuild [--dry|--apply|--selfcheck]  元素层重建（Phase 71；幂等，判据看合并后最终态）
 #                         ★ Element 节点改由 element_reference 重建；same_period/same_family 用权威表
 #                           重算并断言与现有集一致后才改来源（**重算，不是改标签**）
+#   bash sttp.sh mentionalign [--dry|--apply|--selfcheck]  论文提及档位登记 + 证据补齐（Phase 72；幂等）
+#                         ★ m1 规则登记进判级模型 ⇒ 落库对齐重算；101 条边补 evidence 对象（D108）
 #   bash sttp.sh dataset [--e2e] [--profile P]   可下载数据集：JSONL + manifest + sha256（Phase 70 · F5）
 #                         ★ 按来源三态**剔除**不可再分发内容；产物 + 随包校验器落在 06_PoC/dataset/dist/
 #                         ★ --e2e：真的起静态服务 + 逐文件下载 + **断网**跑随包校验器（F5 的验收动作）
@@ -856,6 +858,36 @@ EOF
     else
       "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase71_element_delta.json \
         --phase 71 --tag elementrebuild || exit $?
+    fi
+    ;;
+  mentionalign)
+    # Phase 72 · D108：`gatecheck [3/3]` 的**正对照**（未注入的原图）过不去 ——
+    #   101 条 `mentioned_in`（Phase 68 论文线）落库 `rule_checked` 却没有证据对象，
+    #   而 `verification_model` 里**根本没登记 m1 这条规则** ⇒ 重算落到「无来源无判据」。
+    # ★ 处置不是把落库改小去迁就重算，而是**把 m1 登记进判级模型**（与 D106 同形：
+    #   错的经常不是数据，是登记口径），再把落库对齐重算、补上证据对象。
+    # ★ 证据由 `vm.build_evidence` 从**重算结果**构造（铁律 #36 同源），不照旧标签另写一份。
+    # ★ 输入分两档（title 档用 Paper 节点的 title；snippet 档只能用边自带 snippet），
+    #   两个 scope 分开记 —— 独立性强弱必须让读者一眼看见。
+    shift
+    require_authority mentionalign "$NORM_GRAPH"
+    _ma_args=()
+    for _a in "$@"; do
+      if [ "$_a" = "--apply" ]; then :; else _ma_args+=("$_a"); fi
+    done
+    echo "== [1/2] 生成 mention delta =="
+    "$PY" 11_真实数据/phase72_mention_delta.py ${_ma_args[@]+"${_ma_args[@]}"} || exit $?
+    if printf '%s\n' "$@" | grep -qxE -- "--dry|--selfcheck"; then
+      echo "== [2/2] 跳过（--dry / --selfcheck：未生成 delta 文件）=="
+      exit 0
+    fi
+    echo "== [2/2] 应用 delta（不带 --apply 即 dry-run）=="
+    if printf '%s\n' "$@" | grep -qx -- "--apply"; then
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase72_mention_delta.json \
+        --phase 72 --tag mentionalign --apply || exit $?
+    else
+      "$PY" 06_PoC/apply_delta.py --delta 06_PoC/etl/neo4j/phase72_mention_delta.json \
+        --phase 72 --tag mentionalign || exit $?
     fi
     ;;
   dataset)

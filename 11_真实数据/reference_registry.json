@@ -57,7 +57,8 @@
    "code_hash": "100148c147cb",
    "dependency_versions": {
     "11_真实数据/dimension_table.py": "08a5fd5d6444",
-    "11_真实数据/element_reference.py": "a6ad4fec1dfd"
+    "11_真实数据/element_reference.py": "a6ad4fec1dfd",
+    "11_真实数据/phase68_paper_fetch.py": "7fbcac542ccb"
    }
   }
  },
