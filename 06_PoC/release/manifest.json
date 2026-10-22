@@ -2,15 +2,15 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 81159579,
-    "edges": 48712,
-    "nodes": 9657,
+    "bytes": 81542670,
+    "edges": 48813,
+    "nodes": 9750,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "3395c352aebe575ca3744cc646434ec255b681bc39484612a490e57d1d310553",
+    "sha256": "76e40f8a9c64a62b9b022d474a712a9088e5cb8032d514e912cd9446c61b6650",
     "subjects": {
-     "化学": 4427,
-     "数学": 277,
-     "物理": 4928,
+     "化学": 4442,
+     "数学": 300,
+     "物理": 4983,
      "跨学科": 25
     },
     "tracked_in_git": false
@@ -28,20 +28,20 @@
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 433092,
+    "bytes": 478612,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "8888a09cd1cf730b3cb3501115af2c1655fdd6e9062aa362472e04598f859d1d",
+    "sha256": "84042c538bbb95955673747de487576a81fa8b0f5f4cf09c8acae399a1590296",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 523024,
+    "bytes": 568595,
     "edges": 255,
     "nodes": 170,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "92809f9367984b385f59a9d34b0f3dca53cf64c78f3e5e3298e2ccfe453fe430",
+    "sha256": "e3dbd89a2b9439042069bc95371ae75b62d74c3e6c332a4e14e1e31352d6b773",
     "subjects": {
      "化学": 49,
      "数学": 18,
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "b2d4aac6333c581eed002138431cb4a6bf50e36b",
-  "git_head_at_build_short": "b2d4aac",
+  "git_head_at_build": "a68568b3599e6637be37fbf84021709d846e91e7",
+  "git_head_at_build_short": "a68568b",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -151,9 +151,9 @@
      "isolated_count": 0,
      "isolated_sample": [],
      "largest": [
-      9628,
-      16,
-      5,
+      9713,
+      23,
+      6,
       3,
       3
      ],
@@ -175,6 +175,13 @@
         "MC:sy:n",
         "MX:math:derivative_power",
         "MX:math:power_rule",
+        "PA:oa:W1594563152",
+        "PA:oa:W1971383683",
+        "PA:oa:W2042319042",
+        "PA:oa:W2082131924",
+        "PA:oa:W2093897717",
+        "PA:oa:W2117161260",
+        "PA:oa:W2145137020",
         "WD:Q1190543"
        ],
        "sample": [
@@ -183,14 +190,15 @@
         "WD:Q1190543",
         "MC:fo:power_rule"
        ],
-       "size": 16,
+       "size": 23,
        "subjects": {
-        "数学": 15,
+        "数学": 22,
         "跨学科": 1
        },
        "types": {
         "Formula": 5,
         "MathConcept": 2,
+        "Paper": 7,
         "PhysicalQuantity": 4,
         "Symbol": 4,
         "WikidataEntity": 1
@@ -202,7 +210,8 @@
         "MG:fo:law_sines",
         "MG:pq:angle",
         "MG:sy:theta",
-        "MG:un:radian"
+        "MG:un:radian",
+        "PA:oa:W1967425026"
        ],
        "sample": [
         "MG:fo:law_cosines",
@@ -210,12 +219,13 @@
         "MG:pq:angle",
         "MG:un:radian"
        ],
-       "size": 5,
+       "size": 6,
        "subjects": {
-        "数学": 5
+        "数学": 6
        },
        "types": {
         "Formula": 2,
+        "Paper": 1,
         "PhysicalQuantity": 1,
         "Symbol": 1,
         "Unit": 1
@@ -305,9 +315,9 @@
       "uses_operator": 10
      },
      "cross": 2532,
-     "cross_ratio": 5.198,
-     "edges_total": 48712,
-     "same": 46180
+     "cross_ratio": 5.187,
+     "edges_total": 48813,
+     "same": 46281
     },
     "defects": {
      "dangling_edges": 0,
@@ -316,16 +326,18 @@
      "self_loop_edges": 0,
      "selfloop_sample": []
     },
-    "edges": 48712,
+    "edges": 48813,
     "island_freeze": {
      "actual_components": 6,
      "actual_islands": 5,
-     "actual_nodes": 29,
+     "actual_nodes": 37,
      "known_islands": 5,
      "known_nodes": 29,
      "max_components": 6,
-     "notes": [],
-     "verdict": "FROZEN-OK"
+     "notes": [
+      "**新增孤岛节点** 8 个（不在冻结清单内）：['PA:oa:W1594563152', 'PA:oa:W1967425026', 'PA:oa:W1971383683', 'PA:oa:W2042319042', 'PA:oa:W2082131924']"
+     ],
+     "verdict": "REGRESSION"
     },
     "namespace_subject": {
      "BC": {
@@ -386,7 +398,9 @@
       "物理": 15
      },
      "PA": {
-      "数学": 181
+      "化学": 15,
+      "数学": 204,
+      "物理": 55
      },
      "PB": {
       "化学": 319,
@@ -436,11 +450,11 @@
       "跨学科": 5
      }
     },
-    "nodes": 9657,
+    "nodes": 9750,
     "subjects": {
-     "化学": 4427,
-     "数学": 277,
-     "物理": 4928,
+     "化学": 4442,
+     "数学": 300,
+     "物理": 4983,
      "跨学科": 25
     },
     "types": {
@@ -452,7 +466,7 @@
      "Lemma": 2,
      "MathConcept": 13,
      "Molecule": 2133,
-     "Paper": 181,
+     "Paper": 274,
      "PhysicalQuantity": 145,
      "Reaction": 1708,
      "Symbol": 113,
@@ -464,15 +478,16 @@
    "edges": 48712,
    "frozen_gate": {
     "tally": {
-     "PASS": 108
+     "FAIL": 7,
+     "PASS": 101
     }
    },
    "nodes": 9657,
    "recomputable": "full_snapshot（不入库；`bash sttp.sh release-full` 现算校验）",
    "task_trust": {
     "T9_evidence_traceable": {
-     "graph_evidence_coverage_pct": 100.0,
-     "graph_independent_evidence_pct": 71.38,
+     "graph_evidence_coverage_pct": 99.79,
+     "graph_independent_evidence_pct": 71.23,
      "independent": 36367,
      "independent_rate_pct": 86.46,
      "ok_edges": 42060,
@@ -484,7 +499,7 @@
      "by_construction": 11,
      "cross_source": 3249,
      "model_inferred": 135,
-     "rule_checked": 31520,
+     "rule_checked": 31621,
      "source_asserted": 13797
     },
     "north_star_pct": 99.66,
@@ -629,10 +644,11 @@
    "heuristic": 7,
    "llm_inferred_gnn": 1,
    "mathxiv": 41,
+   "openalex-mention": 101,
    "rhea_chebi": 5
   },
-  "excluded_edges": 43295,
-  "excluded_nodes": 6820,
+  "excluded_edges": 43396,
+  "excluded_nodes": 6913,
   "note": "★ 铁律 #64：许可政策由程序执行 —— 发布样例必须 public_demo（默认）；verify_release 会**独立重算**样例内每条边/每个节点的来源血缘闭包并断言 0 违规，且断言剔除计数非真空（0 边 ⇒ 白名单形同虚设）。",
   "policy": "只保留血缘闭包 = redistributable 的边与端点；缺 props.source 视为不可再分发",
   "profile": "public_demo",
@@ -664,7 +680,7 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-21T13:38:39+08:00",
+  "created": "2026-10-22T08:58:23+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 65,
