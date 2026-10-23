@@ -42,6 +42,14 @@ export const ENDPOINTS = Object.freeze({
    *   `/api/healthz` 只读进程内计数器 ⇒ 冷启动期间也能立即作答。
    */
   healthz: "/api/healthz",
+  /**
+   * ★ Phase 76（F13）：学科 → 领域 → 领域标签的三层导航。
+   *
+   * **为什么必须有后端聚合**：`bundleGraph` 只在 `mode=bundle` 下读取，live 页面
+   * 手上**没有全图**（`BUNDLE_MAX_BYTES = 8 MB` 对全图是拒绝而非截断，铁律 #66）
+   * ⇒ 在浏览器里对 9,750 个节点做学科汇总，得先下 85 MB。导航的数据面只能在后端。
+   */
+  nav: "/api/nav",
   /** 仅在 mode=bundle（离线样例/小图）下读取；live 模式**永不**请求它（验收 V1）。 */
   bundleGraph: "/graph_data.json",
 });
@@ -326,6 +334,11 @@ export function buildParams(opts = {}) {
   put("deadline_ms", o.deadline_ms);
   put("max_paths", o.max_paths);
   put("limit", o.limit);
+  // ★ Phase 76（F13）`/api/nav` 专用：`level` 是层名、`parent` 是**上一层的 key 原样**
+  //   （学科名或领域名，中文/带点的英文都要**不做加工**地发出去 —— 归一化会变成
+  //   "查不到" 而看起来像"这一类里没有东西"）。二者只有 `/api/nav` 读。
+  put("level", o.level);
+  put("parent", o.parent);
   // ★ 后端读的是 `exclude_model_inferred`（不是 `exclude_inferred`）。
   //   本函数**曾经**发 `exclude_inferred` ⇒ 「排除推断边」勾选框**完全无效**
   //   （实测：`exclude_inferred=1` 仍返回 5 条含 inferred 的边；
@@ -683,6 +696,13 @@ export const MODE_BADGE = Object.freeze({
 export const ENDPOINT_CLIENT_BUDGET_MS = Object.freeze({
   search: 3000,
   overview: 5000,
+  /**
+   * `/api/nav` 同样**不接受** `deadline_ms`（不做 deadline 预算）⇒ 等待预算是纯客户端常量。
+   * 取值依据：冷进程首次建索引 + 全图 9,750 节点逐条分桶实测 < 0.3 s，但冷启动期间
+   * 读路径预热可达 4.9 s（Phase 49 · P0-2 的现场）⇒ 给 8000，比 `/api/overview` 宽。
+   * 与 `contracts/endpoints.schema.json` 的 `client_budget_ms` 逐值相等（X16g 求差）。
+   */
+  nav: 8000,
 });
 
 /** 客户端等待预算相对服务端 `deadline_ms` 的默认余量（毫秒）。 */

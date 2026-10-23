@@ -248,6 +248,69 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
   .banner .ed-note { margin-top: 4px; color: var(--warn); font-size: 11.5px; }
   .banner .ed-not-fail { margin-bottom: 3px; }
 
+  /* ---------- F13 学科/领域导航抽屉 ---------- */
+  #nav-drawer {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 8px 9px; margin-bottom: 12px;
+  }
+  .nav-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .nav-h { font-size: 12px; font-weight: 600; color: var(--text); flex: 1; }
+  .nav-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin-bottom: 5px; }
+  .nav-crumb-btn {
+    background: none; border: none; padding: 1px 2px; color: #9ecbff;
+    font-size: 11.5px; cursor: pointer; font-family: inherit;
+  }
+  .nav-crumb-btn:hover { text-decoration: underline; }
+  .nav-sep { color: var(--muted); font-size: 11px; }
+  .nav-title { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
+  .nav-hint { display: block; font-size: 10.5px; color: #6f7d90; margin-top: 2px; line-height: 1.5; }
+  .nav-load, .nav-empty { font-size: 11.5px; color: var(--muted); padding: 6px 0; line-height: 1.6; }
+  .nav-bad {
+    font-size: 11.5px; color: #ff9d97; background: rgba(248,81,73,.10);
+    border: 1px solid rgba(248,81,73,.35); border-radius: 4px; padding: 5px 7px;
+    margin-bottom: 7px; line-height: 1.6;
+  }
+  .nav-info {
+    font-size: 11px; color: var(--muted); background: rgba(76,114,176,.12);
+    border: 1px solid rgba(76,114,176,.35); border-radius: 4px; padding: 5px 7px;
+    margin-bottom: 7px; line-height: 1.6;
+  }
+  .nav-count { font-size: 10.5px; color: #6f7d90; margin-bottom: 6px; font-family: var(--mono); }
+  .nav-list { list-style: none; margin: 0; padding: 0; }
+  .nav-row { border-top: 1px solid #2a3546; padding: 5px 0 7px; }
+  .nav-row:first-child { border-top: none; }
+  .nav-go, .nav-leaf {
+    display: flex; align-items: center; gap: 6px; width: 100%;
+    background: none; border: none; padding: 2px 0; font-family: inherit;
+    font-size: 12.5px; color: var(--text); text-align: left;
+  }
+  .nav-go { cursor: pointer; }
+  .nav-go:hover .nav-key { text-decoration: underline; }
+  .nav-key { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-n {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 0 6px;
+  }
+  .nav-chev { color: var(--muted); font-size: 13px; }
+  .nav-samples { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .nav-sample {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 4px;
+    color: var(--muted); font-size: 10.5px; padding: 1px 6px; cursor: pointer;
+    font-family: inherit; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nav-sample:hover { background: var(--hover); color: var(--text); }
+
+  /* 条目过多时的尾部分组：折叠但**不隐藏**（展开即可见，且写明还有多少/多少节点） */
+  .nav-more { margin-top: 4px; }
+  .nav-more > summary {
+    cursor: pointer; font-size: 10.5px; color: var(--muted);
+    padding: 3px 0; list-style: none;
+  }
+  .nav-more > summary::-webkit-details-marker { display: none; }
+  .nav-more > summary:hover { color: var(--text); }
+  .nav-more[open] > summary { margin-bottom: 2px; }
+
   /* ---------- 详情 / 证据 ---------- */
   .detail-title { font-size: 16px; font-weight: 700; margin: 0 0 2px; word-break: break-all; }
   .detail-block { margin-top: 11px; }
@@ -426,6 +489,8 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
   <div class="spacer"></div>
   <!-- ★ 生成图之后想改查询 ⇒ 回到首屏（保留上次输入与已确认实体） -->
   <button class="toolbtn" id="btn-reopen-task" hidden title="回到任务入口，修改问题 / 实体 / 范围">← 修改查询</button>
+  <button class="toolbtn" id="btn-nav" hidden aria-expanded="false"
+          title="按学科 / 领域 / 领域标签浏览（三层聚合；每格只取计数与前 6 个代表，不下载全图）">浏览</button>
   <button class="toolbtn" id="btn-overview" title="聚合元图（学科 × 类型），替代「全图浏览」">概览</button>
   <button class="toolbtn" id="btn-export-png" title="导出当前子图 PNG（含快照水印）">PNG</button>
   <button class="toolbtn" id="btn-export-svg" title="导出当前子图 SVG">SVG</button>
@@ -436,6 +501,13 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
 <aside id="left">
   <div id="left-toolbar">
     <button class="toolbtn tiny" id="btn-toggle-panel" aria-expanded="true" title="折叠/展开查询面板">面板</button>
+  </div>
+  <div id="nav-drawer" hidden>
+    <div class="nav-head">
+      <span class="nav-h">按学科浏览</span>
+      <button class="toolbtn tiny" data-nav-close title="关闭浏览（画布不变）">关闭</button>
+    </div>
+    <div id="nav-body"></div>
   </div>
   <div id="panel-query"></div>
   <div class="section">

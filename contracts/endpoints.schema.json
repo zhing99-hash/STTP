@@ -105,6 +105,20 @@
       "legacy": true,
       "note": "读的是 `qs.get(\"node\")`（不经 `self._p`），且返回**非统一信封**。已被 `/api/subgraph?mode=ego` 取代。"
     },
+    "/api/nav": {
+      "handler": "_api_nav",
+      "response_schema": "contracts/nav.schema.json",
+      "required": [],
+      "params": {
+        "level": "enum(subject|domain|tags)",
+        "parent": "str(上层 items[].key 原样)",
+        "limit": "int"
+      },
+      "frontend_uses": ["level", "parent", "limit"],
+      "frontend_must_not_send": ["mode", "q", "seeds", "hops", "subjects", "trust"],
+      "client_budget_ms": 8000,
+      "note": "Phase 76（F13）新增。三层导航：subject → domain → tags，每格只给「计数 + 前 limit 个代表节点」，**绝不返回全图**（铁律 #66）—— live 页面手上没有全图，所以聚合只能在后端（`core.js:45` 的 bundle 分支 live 下永不请求）。★ 与 `/api/overview` **不合并**：overview 答「这张图长什么样」（学科×类型元图，不可下钻），nav 答「我能往下翻到什么」（层级 + 计数 + 可点击代表）。★ 计数口径：前两层单归属 ⇒ `stats.sum_items == stats.scanned`；第三层多值 ⇒ 靠 `stats.multi_valued` 与 `tagged/untagged` 换式子。★ `parent` 必须**原样**转发（中文、带点的英文、含空格标签），归一化会把「没找到」伪装成「没有」。★ 本端点**不读** `deadline_ms` ⇒ 等待预算是纯客户端常量，与 `core.js` 的 `ENDPOINT_CLIENT_BUDGET_MS.nav` 逐值相等（X16g）。"
+    },
     "/api/stats": {
       "handler": "do_GET 内联",
       "required": [],

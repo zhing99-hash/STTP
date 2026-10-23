@@ -33,6 +33,7 @@ import { QueryPanel, renderStatusLine, renderBanner, bindSearch, esc } from "./p
 import { renderNodeDetail, renderEdgeDetail, renderOverviewDetail } from "./evidence.js";
 import { TaskEntry } from "./task.js";
 import { emptyDiagOf } from "./empty.js";
+import { navHTML, navPush, navClip, navTargetOf } from "./nav.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -54,6 +55,13 @@ const state = {
   // ★ F12：上一次**真正发出**的查询（模式 + 种子 + 跳数）。「一键放宽」必须
   //   用同一模式重发，否则会把"给这个节点找个邻域"变成"全图筛一块"，结果面目全非。
   lastQuery: null,
+  /**
+   * ★ F13：学科/领域导航抽屉。
+   *   `stack` = 已下钻的路径（`[{level, key}]`），`env` = 当前层的响应。
+   *   `seq` 是**竞态序号**：连点两格时两个请求都在飞，先发的后回 ⇒ 不设序号
+   *   会把「学科层的结果」画到「领域层」的标题下面（看起来像数据错乱）。
+   */
+  nav: { open: false, stack: [], env: null, loading: false, seq: 0 },
 };
 
 // ---------------------------------------------------------------------------
@@ -467,6 +475,85 @@ function renderPathList(paths) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// F13：学科 / 领域 导航抽屉
+// ---------------------------------------------------------------------------
+/**
+ * 这次要发的请求。★ 逻辑在 `nav.js`（纯函数，node 可断言）：栈 → `{level, parent}`
+ *   这件事若在这里各算一遍，标题与请求迟早分叉（D118 的同族）。
+ */
+const navTarget = () => navTargetOf(state.nav.stack);
+
+function renderNav() {
+  const el = $("nav-body");
+  if (!el) return;
+  el.innerHTML = navHTML(state.nav.env, {
+    stack: state.nav.stack, loading: state.nav.loading,
+  });
+}
+
+async function loadNav() {
+  const seq = ++state.nav.seq;
+  state.nav.loading = true;
+  renderNav();
+  const { level, parent } = navTarget();
+  // `limit=6`：每格最多 6 个代表节点。★ 不是越大越好 —— 抽屉宽 288px，
+  //   超过 6 个就是一片按钮墙，反而看不出有哪几类（计数才是要点）。
+  const env = await state.api.nav({ level, parent, limit: 6 });
+  if (seq !== state.nav.seq) return null;      // 有更新的请求在飞 ⇒ 丢弃这次结果
+  state.nav.loading = false;
+  state.nav.env = env;
+  renderNav();
+  return env;
+}
+
+function toggleNav(on) {
+  const box = $("nav-drawer");
+  if (!box) return;
+  state.nav.open = on === undefined ? !state.nav.open : !!on;
+  box.hidden = !state.nav.open;
+  const b = $("btn-nav");
+  if (b) b.setAttribute("aria-expanded", String(state.nav.open));
+  if (!state.nav.open) return;
+  focusPanel(true);                            // 抽屉在左栏里，栏折叠了就看不见
+  if (state.nav.env) renderNav(); else loadNav();
+}
+
+function bindNav() {
+  const box = $("nav-drawer");
+  if (!box) return;
+  box.addEventListener("click", async (e) => {
+    const t = e.target && e.target.closest
+      ? e.target.closest("[data-nav-close],[data-nav-seed],[data-nav-down],[data-nav-back]")
+      : null;
+    if (!t || !box.contains(t)) return;
+
+    if (t.hasAttribute("data-nav-close")) { toggleNav(false); return; }
+
+    // 代表节点 ⇒ 走**现有** ego 链路（不新开渲染路径）。空结果会由 F12 诊断接手。
+    if (t.hasAttribute("data-nav-seed")) {
+      const id = t.getAttribute("data-nav-seed");
+      if (id) await runEgo(id, { label: `浏览 · ${id}` });
+      return;
+    }
+
+    if (t.hasAttribute("data-nav-down")) {
+      const key = t.getAttribute("data-nav-down");
+      if (!key) return;
+      state.nav.stack = navPush(state.nav.stack, key);
+      await loadNav();
+      return;
+    }
+
+    if (t.hasAttribute("data-nav-back")) {
+      const n = parseInt(t.getAttribute("data-nav-back"), 10);
+      if (!Number.isFinite(n) || n < 0) return;
+      state.nav.stack = navClip(state.nav.stack, n);
+      await loadNav();
+    }
+  });
+}
+
 async function showOverview() {
   state.overview = true;
   const env = await state.api.overview({ mode: "aggregate" });
@@ -611,6 +698,14 @@ async function boot() {
   }
 
   bindSearch($("search-input"), $("search-results"), state.api, (id) => runEgo(id));
+
+  // ★ F13：导航抽屉只在 live 模式挂（bundle/offline 下没有 /api/nav；宁可不出按钮，
+  //   也不给一个点了没反应的入口 —— 与「任务入口只在 live 挂」同一条纪律）。
+  if (det.mode === "live") {
+    $("btn-nav") && ($("btn-nav").hidden = false);
+    $("btn-nav") && $("btn-nav").addEventListener("click", () => toggleNav());
+    bindNav();
+  }
 
   // 头部/工具条
   $("btn-expand") && $("btn-expand").addEventListener("click", expandSelected);

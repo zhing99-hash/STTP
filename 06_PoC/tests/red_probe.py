@@ -899,6 +899,44 @@ PROBES = [
         "requires": ["authority"],
     },
     {
+        "id": "R47",
+        "kind": "mutate",
+        "why": ("Phase 76 · F13：导航里「分类名不存在」与「这一类里没有东西」是**两件事**，"
+                "而它们的界面表现几乎一样（列表空）。这里把 `parent_exists === false` 的"
+                "红字分支短路掉（看起来很合理：空就空着，别吓用户），于是「物理x」这种打错的"
+                "名字会显示成「物理x 里没有领域」—— 用户会去改筛选条件，而真相是名字打错了。"
+                "★ 这条也没有任何报错：列表本来就是空的。"
+                "⇒ 判据 F46l（分类不存在必须明说「不是没有结果，是这个分类名不存在」）必须变红。"),
+        "file": "06_PoC/js/nav.js",
+        "new": ("  // redprobe: 分类不存在也当普通空（把「名字打错」显示成「这一类里没东西」）\n"
+                "  if (false) {"),
+        "old": "  if (st.parent_exists === false) {",
+        "cmd": "NODE tests/frontend_core_check.mjs",
+        "cwd": POC,
+        "expect_red": ["F46l"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R48",
+        "kind": "mutate",
+        "why": ("Phase 76 · F13：导航栈里每一项都记着「这个 key 属于哪一层」，回退时靠它复位。"
+                "这里把层名记成**下一层**（写的时候看起来更'顺手'：反正要下钻了），"
+                "于是「物理 → 电磁学 → 回退一格」会回到 `level=tags&parent=物理` —— "
+                "请求合法、返回空、页面显示「物理里没有领域标签」。"
+                "★ 它不报错，只在**回退**这一条路径上错；而回退是最少被手点的路径。"
+                "⇒ 判据 F46z（push 必须记**当前**层）必须变红。"),
+        "file": "06_PoC/js/nav.js",
+        "new": ("  // redprobe: 把「这一格属于哪一层」记成下一层（回退时层级错位）\n"
+                "  return s.concat([{ level: nextLevel(lv) || lv, key: String(key) }]);"),
+        "old": "  return s.concat([{ level: lv, key: String(key) }]);",
+        "cmd": "NODE tests/frontend_core_check.mjs",
+        "cwd": POC,
+        "expect_red": ["F46z"],
+        "expect_rc": 1,
+        "requires": ["node"],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -923,7 +961,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
                       "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "R38", "R39",
-                      "R40", "R41", "R42", "R43", "R44", "R45", "R46", "RN")
+                      "R40", "R41", "R42", "R43", "R44", "R45", "R46", "R47", "R48", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -1290,6 +1328,9 @@ def emit(rep, res):
             res["R45"][1])
     rep.add(res["R46"][0], "R46 无领域节点被静默丢掉（看起来每格都对）⇒ V22c 必须变红（F13）",
             res["R46"][1])
+    rep.add(res["R47"][0], "R47 分类名不存在被当成普通空 ⇒ F46l 必须变红（F13）", res["R47"][1])
+    rep.add(res["R48"][0], "R48 导航栈把层级记错（回退才暴露）⇒ F46z 必须变红（F13）",
+            res["R48"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

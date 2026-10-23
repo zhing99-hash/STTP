@@ -71,6 +71,13 @@ export function normalizeEnvelope(raw) {
      *   （子图能画出来，但"3 条路径"的清单是空的 —— 又一处"后端给了、UI 回吞"）。
      */
     paths: Array.isArray(r.paths) ? r.paths : [],
+    /**
+     * ★ Phase 76（F13）：`/api/nav` 的层级条目。此前归一化**只搬它认识的字段** ⇒
+     *   新端点的 `items` 会被静默丢掉，表现为「抽屉永远空白」而 status=ok。
+     *   与 `paths` 同族（后端给了、UI 回吞）。**不在这里校验条目合法性** ——
+     *   那是 `nav.js` 的事（它在 node 里可断言），此层只搬。
+     */
+    items: Array.isArray(r.items) ? r.items : [],
     meta: r.meta && typeof r.meta === "object" ? r.meta : null,
     stats: r.stats && typeof r.stats === "object" ? r.stats : {},
     raw: r,
@@ -86,7 +93,8 @@ export function localErrorEnvelope({ status = "error", errorCode = "TOOL_EXECUTI
     status: st.status, statusInfo: st, unknownStatus: st.unknown,
     reason, error_code: errorCode, snapshot_id: null, query_hash: null, seed: null,
     query: null, hidden_by_trust: null, nodes: [], edges: [], expandable: [],
-    hits: [], paths: [], meta: null, stats: {}, raw: null, client_aborted: clientAborted,
+    hits: [], paths: [], items: [], meta: null, stats: {}, raw: null,
+    client_aborted: clientAborted,
     total_matches: null, truncated: null,
   };
 }
@@ -340,6 +348,25 @@ export class Api {
     // ★ 同 `search()`：预算取自契约（X16g 钉住），不再就地写 5000。
     return this._get(ENDPOINTS.overview, p,
       { deadlineMs: opts.deadlineMs || ENDPOINT_CLIENT_BUDGET_MS.overview });
+  }
+
+  /**
+   * GET /api/nav —— 学科 / 领域 / 领域标签 三层导航（F13）。
+   *
+   * ★ `level` 与 `parent` **不做任何改写**：`parent` 是上一层的 `items[].key` 原样
+   *   （`化学`、`chem.reaction`、含空格的标签都可能出现），归一化（大小写/空格/全半角）
+   *   会让后端按另一个名字去找 ⇒ 返回空 ⇒ 界面上看起来是「这一类里没东西」。
+   *   这是 D115 的同族：**把"没找到"伪装成"没有"**。
+   */
+  nav(opts = {}) {
+    const p = buildParams({
+      level: opts.level || "subject",
+      parent: opts.parent,
+      limit: opts.limit,
+      mode: null,                    // /api/nav 不认 mode（与 /api/search 同理）
+    });
+    return this._get(ENDPOINTS.nav, p,
+      { deadlineMs: opts.deadlineMs || ENDPOINT_CLIENT_BUDGET_MS.nav });
   }
 
   /** GET /graph_data.json —— **仅** bundle 模式调用（验收 V1 断言的静态面） */

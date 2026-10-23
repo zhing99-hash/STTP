@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sttp-nav/v1",
+  "title": "STTP 学科/领域导航响应（GET /api/nav）",
+  "description": "Phase 76（F13）。**聚合，非全图**（铁律 #66）：每格只给「计数 + 前 limit 个代表节点」，绝不返回节点全集。三层：subject → domain → tags。★ 前两层**单归属** ⇒ stats.sum_items == stats.scanned 必须成立（导航不许漏人）；第三层 domain_tags 是**多值**的 ⇒ stats.sum_items > stats.scanned 是正常的，可核的式子换成 stats.tagged + stats.untagged == stats.scanned（由 stats.multi_valued 区分口径）。",
+  "type": "object",
+  "required": ["status", "note", "level", "items", "stats"],
+  "properties": {
+    "status": { "enum": ["ok", "no_result", "error"] },
+    "note": { "type": "string", "pattern": "聚合" },
+    "level": { "enum": ["subject", "domain", "tags"] },
+    "parent": { "type": ["string", "null"] },
+    "snapshot_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{12}$" },
+    "query_hash": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "label", "n", "samples"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "n": { "type": "integer", "minimum": 0 },
+          "samples": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "type", "degree"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" },
+                "type": { "type": "string" },
+                "degree": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "required": ["scanned", "sum_items", "conserved", "multi_valued", "parent_exists",
+                   "full_nodes", "scan_complete"],
+      "properties": {
+        "scanned": { "type": "integer", "minimum": 0 },
+        "sum_items": { "type": "integer", "minimum": 0 },
+        "conserved": { "type": "boolean" },
+        "multi_valued": { "type": "boolean" },
+        "tagged": { "type": "integer", "minimum": 0 },
+        "untagged": { "type": "integer", "minimum": 0 },
+        "parent_exists": { "type": "boolean" },
+        "full_nodes": { "type": "integer", "minimum": 0 },
+        "scan_complete": { "type": "boolean" },
+        "elapsed_ms": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

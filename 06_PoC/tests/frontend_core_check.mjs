@@ -29,6 +29,11 @@ import { Api, normalizeEnvelope } from "../js/api.js";
 import { detectMode } from "../js/modes.js";
 import { renderStatusLine, renderBanner, bindSearch, esc as escPanel } from "../js/panels.js";
 import { emptyDiagOf, emptyDiagHTML, boundaryText, scopeText, esc as escEmpty } from "../js/empty.js";
+import {
+  NAV_LEVELS, NAV_LEVEL_LABEL, nextLevel, currentLevel,
+  navItemsOf, navStatsOf, navNotice, navEmptyText, navHTML,
+  navPush, navClip, navTargetOf,
+} from "../js/nav.js";
 import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUSES, STALE_EVIDENCE_STATUSES, EVIDENCE_STATUS_RANK,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
@@ -1756,6 +1761,230 @@ check("F45n 计数为 0 的那一行标 `dead` 且写「无效」（让用户知
 const dUnknown = emptyDiagOf(envOf({ scope: "ego", why: "brand_new_state", action: null, counts: [] }));
 check("F45o 没见过的 why ⇒ 仍渲染并**显式暴露原值**（不静默当空，与 whyRow 同一条纪律）",
       emptyDiagHTML(dUnknown).includes("brand_new_state"), "");
+
+
+// ---------------------------------------------------------------------------
+// F46 学科/领域导航抽屉（F13）—— 分类可以是空的，但「空」必须说清是哪一种
+// ---------------------------------------------------------------------------
+// 为什么这一组必须以「空」为主：导航最容易犯的错是**漏人**（某几个节点谁都不收），
+// 而漏人**从不报错** —— 页面上只会少一格，没人看得出。故这里逐条咬住四件事：
+//   ① 层级顺序与后端同源（顺序写错 ⇒ 下钻到后端不认的层，表现为「点了没反应」）；
+//   ② 前两层守恒、第三层多值的**两套式子**各查各的；
+//   ③ 四种「空」各说各的话（0 个 / 全无标签 / 分类不存在 / 请求失败）；
+//   ④ 句子里的数字必须恒成立 —— 模板句 + 具体数字，写错一个分支就是一句谎话（D119）。
+
+check("F46a 层级顺序 subject → domain → tags，且三层中文名齐备（前端唯一一份，D114）",
+      NAV_LEVELS.join("/") === "subject/domain/tags"
+      && NAV_LEVEL_LABEL.subject && NAV_LEVEL_LABEL.domain && NAV_LEVEL_LABEL.tags,
+      NAV_LEVELS.join(" → "));
+
+check("F46b nextLevel 逐层正确，末层与未知层都给 null（末层不得出现「下钻」入口）",
+      nextLevel("subject") === "domain" && nextLevel("domain") === "tags"
+      && nextLevel("tags") === null && nextLevel("bogus") === null, "");
+
+check("F46c currentLevel 由**栈长度**定层：空栈=subject，超长不越界回到末层",
+      currentLevel([]) === "subject"
+      && currentLevel([{ level: "subject", key: "化学" }]) === "domain"
+      && currentLevel([{}, {}]) === "tags"
+      && currentLevel([{}, {}, {}, {}]) === "tags", "");
+
+const navRaw = [
+  { key: "物理", label: "物理", n: 3, samples: [] },
+  { key: "", label: "空 key", n: 1, samples: [] },
+  { key: "x", n: "abc", samples: [] },
+  { key: "y", label: "负计数", n: -1, samples: [] },
+  { key: "z", label: "零计数", n: 0, samples: [] },
+  null,
+];
+check("F46d 条目过滤：缺 key / 计数非数字 / 负数一律剔除；**n=0 保留**（0 是真的有这一格）",
+      JSON.stringify(navItemsOf({ items: navRaw }).map((it) => it.key))
+        === JSON.stringify(["物理", "z"]),
+      JSON.stringify(navItemsOf({ items: navRaw }).map((it) => it.key)));
+
+const navSamp = navItemsOf({ items: [{ key: "k", label: "k", n: 1, samples: [
+  { id: "N:1" },
+  { label: "无 id" },
+  { id: "N:2", label: "<b>x</b>", type: "Formula", degree: 7 },
+] }] })[0].samples;
+check("F46e 代表节点：缺 label 回落成 id、缺 id 剔除、degree 缺失保留为 null（不补 0）",
+      navSamp.length === 2 && navSamp[0].label === "N:1"
+      && navSamp[0].degree === null && navSamp[1].degree === 7,
+      JSON.stringify(navSamp));
+
+const navS0 = navStatsOf({});
+check("F46f 缺计数字段 ⇒ null 而不是 0（「没有」与「不知道」必须分得开）",
+      navS0.scanned === null && navS0.conserved === null
+      && navS0.parent_exists === null && navS0.multi_valued === false, JSON.stringify(navS0));
+
+// --- 单归属层：不守恒 = 漏人 ---
+const nvLose = { status: "ok", level: "subject",
+  stats: { scanned: 10, sum_items: 7, conserved: false, multi_valued: false,
+           parent_exists: true, full_nodes: 10 } };
+const nnLose = navNotice(nvLose);
+check("F46g 单归属层不守恒 ⇒ 红字 + 明确算出**漏了几个人**（导航不许漏人）",
+      nnLose && nnLose.kind === "bad" && nnLose.text.includes("漏人")
+      && nnLose.text.includes("3"), nnLose ? nnLose.text : "(null)");
+
+// --- 多值层：两套式子各查各的 ---
+const nvMultiBad = { status: "ok", level: "tags", parent: "p",
+  stats: { scanned: 10, sum_items: 4, conserved: false, multi_valued: true,
+           tagged: 3, untagged: 5, parent_exists: true } };
+const nnMultiBad = navNotice(nvMultiBad);
+check("F46h 多值层自己的对账式不成立 ⇒ 照样红（「多值」不是免检牌）",
+      nnMultiBad && nnMultiBad.kind === "bad" && nnMultiBad.text.includes("免检牌"),
+      nnMultiBad ? nnMultiBad.text : "(null)");
+
+const nvNoTag = { status: "no_result", level: "tags", parent: "chem.reaction",
+  stats: { scanned: 1697, sum_items: 0, conserved: false, multi_valued: true,
+           tagged: 0, untagged: 1697, parent_exists: true } };
+check("F46i 多值层一格都没标签 ⇒ **不**输出解释句（否则会成为「各格之和 0 > 扫描 1697」这种假话）",
+      navNotice(nvNoTag) === null, JSON.stringify(navNotice(nvNoTag)));
+check("F46j 一格都没标签时由空态说清「全部没有领域标签」且带出真实节点数（D115）",
+      navEmptyText(nvNoTag).includes("全部没有领域标签")
+      && navEmptyText(nvNoTag).includes("1697"), navEmptyText(nvNoTag));
+
+const nvMultiOk = { status: "ok", level: "tags", parent: "physics.em",
+  stats: { scanned: 100, sum_items: 120, conserved: false, multi_valued: true,
+           tagged: 80, untagged: 20, parent_exists: true } };
+const nnMultiOk = navNotice(nvMultiOk);
+check("F46k 多值层正常 ⇒ 说明句只陈述**恒成立**的关系（「不必相等」而非「大于」）+ 给出可核等式",
+      nnMultiOk && nnMultiOk.kind === "info"
+      && nnMultiOk.text.includes("不必相等")
+      && nnMultiOk.text.includes("有标签 80")
+      && nnMultiOk.text.includes("= 扫描 100"), nnMultiOk ? nnMultiOk.text : "(null)");
+
+const nvNoParent = { status: "no_result", level: "domain", parent: "不存在的学科",
+  stats: { scanned: 0, sum_items: 0, conserved: true, multi_valued: false,
+           parent_exists: false } };
+const nnNoParent = navNotice(nvNoParent);
+check("F46l 分类名不存在 ⇒ 明说「不是没有结果，是这个分类名不存在」（两件事不许混）",
+      nnNoParent && nnNoParent.kind === "bad"
+      && nnNoParent.text.includes("不存在") && nnNoParent.text.includes("不是")
+      && nnNoParent.text.includes("不存在的学科"), nnNoParent ? nnNoParent.text : "(null)");
+
+check("F46m scanned=0 ⇒ 说「0 个节点（已扫描）」，不得与「没扫过」同形（D115）",
+      navEmptyText({ level: "domain", stats: { scanned: 0, sum_items: 0,
+        conserved: true, parent_exists: true } }).includes("已扫描"), "");
+
+const navErr = navHTML({ status: "error", reason: "后端挂了" }, { stack: [] });
+check("F46n 请求失败 ⇒ 出红字并带出原因，且不冒充「空」",
+      navErr.includes("请求失败") && navErr.includes("后端挂了")
+      && !navErr.includes("undefined"), "");
+
+const navStack = [{ level: "subject", key: "化学" }, { level: "domain", key: "chem.reaction" }];
+const navTags = navHTML({
+  status: "ok", level: "tags", parent: "chem.reaction",
+  stats: { scanned: 2, sum_items: 3, conserved: false, multi_valued: true,
+           tagged: 2, untagged: 0, parent_exists: true },
+  items: [{ key: "physics.em", label: "physics.em", n: 2,
+            samples: [{ id: "P:a", label: "a", degree: 1 }] }],
+}, { stack: navStack });
+check("F46o 末层（领域标签）**不给**下钻按钮，且明说这是最后一层",
+      !navTags.includes("data-nav-down") && navTags.includes("最后一层"), "");
+check("F46p 末层仍给代表节点入口（叶子层不是死路）",
+      navTags.includes('data-nav-seed="P:a"'), "");
+
+const backs = Array.from(navTags.matchAll(/data-nav-back="(\d+)"/g)).map((m) => m[1]);
+check("F46q 面包屑回退层级 = 0..stack.length，逐层可回（多一层就会回到错的层）",
+      JSON.stringify(backs) === JSON.stringify(["0", "1", "2"]), backs.join(","));
+
+const navXss = navHTML({
+  status: "ok", level: "subject", parent: null,
+  stats: { scanned: 1, sum_items: 1, conserved: true, multi_valued: false, parent_exists: true },
+  items: [{ key: "<script>alert(1)</script>", label: "<script>alert(1)</script>", n: 1,
+            samples: [{ id: "N:<x>", label: "<img onerror=1>", degree: 0 }] }],
+}, { stack: [] });
+check("F46r 条目名与 id 全部转义（分类名来自数据，不是可信 HTML）",
+      !navXss.includes("<script>") && !navXss.includes("<img")
+      && navXss.includes("&lt;script&gt;"), "");
+
+const navLoading = navHTML(nvMultiOk, { stack: [], loading: true });
+check("F46s 载入中只出「载入中…」，不残留上一层的列表（否则新旧两层同屏）",
+      navLoading.includes("载入中") && !navLoading.includes("nav-list"), "");
+
+const navNoResultHtml = navHTML(nvNoTag, { stack: navStack });
+check("F46t no_result 是**正常空态**，不得渲染成「请求失败」",
+      !navNoResultHtml.includes("请求失败")
+      && navNoResultHtml.includes("全部没有领域标签"), "");
+
+const navRawKey = navItemsOf({ items: [{ key: " Physics EM ", label: "x", n: 1 }] })[0].key;
+check("F46u key **原样保留**（大小写/空格都是后端的东西；归一化会把「没找到」伪装成「没有」）",
+      navRawKey === " Physics EM ", JSON.stringify(navRawKey));
+
+check("F46v 整份渲染不出现 undefined / NaN（缺字段必须走 null 分支，不许字符串化）",
+      !navTags.includes("undefined") && !navTags.includes("NaN")
+      && !navErr.includes("NaN") && !navXss.includes("NaN"), "");
+
+// ★ 端到端：**真正发出去的 URL**。F37c 只能证明 `buildParams` 认 `level/parent`，
+//   证不了 `Api.nav()` 真把它们传进去 —— 那正是 P48/P49 的四种「参数静默丢失」的同一形状。
+const navSeen = [];
+const navApi = new Api({ base: "http://x", deadlineMs: 4000, fetchImpl: async (url) => {
+  navSeen.push(url);
+  return { ok: true, status: 200, headers: { get: () => null },
+           json: async () => ({ status: "ok", level: "domain", parent: "化学", items: [], stats: {} }) };
+} });
+await navApi.nav({ level: "domain", parent: "化学", limit: 6 });
+const navUrl = navSeen[0] || "";
+check("F46w Api.nav 真的发出 level / parent / limit（父子名原样百分号编码，不做归一化）",
+      navUrl.includes("level=domain")
+      && navUrl.includes("parent=" + encodeURIComponent("化学"))
+      && navUrl.includes("limit=6"), navUrl);
+check("F46x Api.nav **不发 mode**（该端点不认它；发了只会污染 query_hash）",
+      !navUrl.includes("mode="), navUrl);
+const navEnvN = normalizeEnvelope({ status: "ok", items: [{ key: "物理", n: 1 }], stats: {} });
+check("F46y 归一化**搬得动 items**（漏这一段 = 抽屉永远空白而 status=ok，与 paths 同族）",
+      navEnvN.items.length === 1 && navEnvN.items[0].key === "物理", "");
+
+// ★ 栈操作是「点击之后发什么请求」的唯一来源。真浏览器不在零安装路径上（D14），
+//   所以这条链路只能靠纯函数钉住：把 DOM 事件剥掉，只留「栈怎么变、请求怎么推」。
+const navS1 = navPush([], "化学");
+const navS2 = navPush(navS1, "chem.reaction");
+check("F46z navPush 记录的是**当前层**（不是下一层）：学科 key 记为 subject，领域 key 记为 domain",
+      JSON.stringify(navS1) === JSON.stringify([{ level: "subject", key: "化学" }])
+      && JSON.stringify(navS2)
+        === JSON.stringify([{ level: "subject", key: "化学" },
+                            { level: "domain", key: "chem.reaction" }]),
+      JSON.stringify(navS2));
+
+check("F46aa 末层（tags）再 push **无效果**：末层没有下一层，点了不该有反应",
+      JSON.stringify(navPush(navS2, "physics.em")) === JSON.stringify(navS2), "");
+check("F46ab 空 key 不产生一层（否则会多出一层 parent=\"\" 的死请求）",
+      navPush([], "").length === 0, "");
+
+check("F46ac navClip 夹住越界值而不是抛错（点坏一个按钮不该白屏）",
+      navClip(navS2, 9).length === 2 && navClip(navS2, -5).length === 0
+      && navClip(navS2, 1).length === 1
+      && navClip(navS2, "不是数字").length === 2, "");
+
+const navT0 = navTargetOf([]);
+const navT2 = navTargetOf(navS2);
+check("F46ad navTargetOf：空栈 ⇒ 顶层无 parent；两层栈 ⇒ tags + 栈顶 key（层级只由栈长推一次）",
+      navT0.level === "subject" && navT0.parent === null
+      && navT2.level === "tags" && navT2.parent === "chem.reaction",
+      JSON.stringify([navT0, navT2]));
+
+const navOrig = [{ level: "subject", key: "化学" }];
+navPush(navOrig, "x"); navClip(navOrig, 0);
+check("F46ae 栈操作**不修改入参**（原地改会让「返回上一层」拿到被污染的历史）",
+      navOrig.length === 1 && navOrig[0].key === "化学", "");
+
+// ★ 实测触发：真实快照里「化学」下有 28 个领域（14 个各 1 个节点）。全部铺开是一屏 28 行。
+const manyEnv = (n) => ({
+  status: "ok", level: "domain", parent: "化学",
+  stats: { scanned: 25, sum_items: 25, conserved: true, multi_valued: false, parent_exists: true },
+  items: Array.from({ length: n }, (_, i) => ({
+    key: `k${i}`, label: `k${i}`, n: i === n - 1 ? 1 : 2, samples: [],
+  })),
+});
+const manyHtml = navHTML(manyEnv(13), { stack: [{ level: "subject", key: "化学" }] });
+check("F46af 条目超过阈值 ⇒ 尾部收进 `<details>`，且写明**还有几个 / 合计几个节点**",
+      manyHtml.includes('<details class="nav-more">')
+      && manyHtml.includes("另有 3 个")
+      && manyHtml.includes("合计 5 个节点"), "");
+check("F46ag 折叠 ≠ 删除：被收起的条目**仍然渲染**（展开就能看见，D110b）",
+      manyHtml.includes('data-nav-down="k12"'), "");
+check("F46ah 条目数不超阈值时**不出现** details（否则每一层都多一行「另有 0 个」）",
+      !navHTML(manyEnv(10), { stack: [] }).includes("nav-more"), "");
 
 // ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）

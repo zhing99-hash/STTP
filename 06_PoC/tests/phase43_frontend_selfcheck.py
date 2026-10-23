@@ -868,6 +868,39 @@ def main(argv=None):
         except Exception as e:  # noqa: BLE001
             rep.skip("X17 前端读取字段 ↔ 数据契约一致", f"读取失败：{e}")
 
+    # ---------------------------------------------------------------- X18 跨层：导航层级
+    # ★ F13：前端按 `stack.length` 推层、后端按 `level` 名分派 —— 两侧的**顺序**必须同源。
+    #   顺序不一致的症状极其隐蔽：点「物理」下钻，请求发的是 `level=tags&parent=物理`，
+    #   后端照做，返回空 ⇒ 页面上是「物理里没有领域」。**不报错**，只是每次都空。
+    rep.section("[X18] 导航层级顺序：前端 `js/nav.js` ↔ 后端 `queries.NAV_LEVELS`（逐值 + 顺序）")
+    try:
+        _navjs = read(os.path.join(POC, "js", "nav.js"))
+        _qpy = read(os.path.join(ROOT, "03_知识层", "queries.py"))
+        _m_fe = re.search(r"NAV_LEVELS\s*=\s*Object\.freeze\(\[([^\]]*)\]\)", _navjs)
+        _m_be = re.search(r"^NAV_LEVELS\s*=\s*\(([^)]*)\)", _qpy, re.M)
+        _fe = re.findall(r'"([a-z_]+)"', _m_fe.group(1)) if _m_fe else []
+        _be = re.findall(r'"([a-z_]+)"', _m_be.group(1)) if _m_be else []
+        _ok18 = bool(_fe) and bool(_be) and _fe == _be
+        rep.add(_ok18,
+                "X18a 前端 NAV_LEVELS == 后端 NAV_LEVELS（逐值且**顺序**相同）",
+                f"前端 {_fe} / 后端 {_be}"
+                + ("" if _ok18 else " ⇒ 下钻会发到后端不认的层，表现为「这一类里没有东西」"))
+
+        # 可红性自证：把前端顺序反转，同一判据必须判不等（否则这条断言恒真）
+        _rev = list(reversed(_fe))
+        rep.add(bool(_fe) and _rev != _be,
+                "X18a-NEG 【负对照】把前端层序反转 ⇒ 必须判不等（检测非恒真）",
+                f"反转后 {_rev} vs 后端 {_be}")
+
+        # 层名中文：每个 level 都必须有一句中文，否则界面上会出现裸的 `tags`
+        _labels = set(re.findall(r"^\s*([a-z_]+):\s*\"", _navjs, re.M))
+        _miss_lab = [lv for lv in _be if lv not in _labels]
+        rep.add(bool(_be) and not _miss_lab,
+                "X18b 每个 level 都有中文层名（缺一个，界面上就会裸出 `tags` 这种英文键）",
+                "缺：" + "、".join(_miss_lab) if _miss_lab else f"{len(_be)} 层齐备")
+    except Exception as e:  # noqa: BLE001
+        rep.skip("X18 导航层级跨层一致", f"读取/解析失败：{e}")
+
     # ---------------------------------------------------------------- N 段
     rep.section("[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）")
     node = find_node()
