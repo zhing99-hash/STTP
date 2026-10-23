@@ -296,6 +296,10 @@
   ⇒ `undecided` 不给建议；名字不存在 ⇒ 不给动作。判据用**合成图**（真图当前没有度为 0 的节点，
   那条分支在真图上走不到）。`subgraph` **112/0/3**、`frontend_core_check` **209/0**、
   `frontend` **122/0/2**、`redprobe` **50/0/0**、`gatecheck` **八步 RC=0**）。
+  ★ **同日追加**：前端服役快照由 `graph_data_phase41.json` 切到 `graph_data_phase73.json`
+  （9,657/48,712 → **9,750/48,813**，`attrs.domain_tags` 0 → **5,090** 条）—— 此前页面比权威图
+  **少 93 节点 / 101 边**且无人咬住，而 `evidence.js` 读的 `domain_tags` 恒空。详见 **§0.3.33**
+  （含两条遗留：`.env` 不入库、`/graph_data.json` 被 `indent=2` 撑大 31%）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -2561,7 +2565,7 @@ delta）、44 份 `graph_data_phase*.json`（1.2 GB，只有 `phase41` 在服役
 ★ **D111**：**新判据第一次跑就红了 N 条时，先问"这 N 条里有没有判据自己的错"，再问怎么变绿。**
 直接把判据调到绿，等于把仪器调成永远说好话 —— 本轮 14 条里真问题有 7 条。
 
-**剩余边界**：① **`.env` 的 `GRAPH_DATA_FILE` 仍指向 `graph_data_phase41.json`（10-16，56 MB）**，
+**剩余边界**：① ~~**`.env` 的 `GRAPH_DATA_FILE` 仍指向 `graph_data_phase41.json`（10-16，56 MB）**~~ （**2026-10-23 已解决**：改指 `graph_data_phase73.json`，见 §0.3.33），
 最新快照是 `phase73`（10-22，62 MB）⇒ **viz 页面至今读的是 Phase 41 的投影，Phase 71/72/73 的成果
 没进前端**（改它属于功能变更，本轮未动）；② H2 白名单是"当前状态 + 余量"，不是第一性上限；
 ③ 35 个 `_recon_*.py` 仍在原位（`_` 对它们是**诚实**的，移动会让 24 份文档的历史引用失效），
@@ -2628,11 +2632,55 @@ delta）、44 份 `graph_data_phase*.json`（1.2 GB，只有 `phase41` 在服役
 ④ 仓库卫生判据**整份跳过** `SELF`：若将来把真的执行仓库内脚本的代码写进
 `repo_hygiene_selfcheck.py`，H1 看不见它（当前该文件只读文件、不执行脚本）；要咬住得把排除
 从「整份跳过」改成「只扣除表内 path」+ 与 S6a 的计数对账；
-⑤ **`.env` 的 `GRAPH_DATA_FILE` 仍指向 `graph_data_phase41.json`**（9657 节点 / 0 条 `domain_tags`），
+⑤ ~~**`.env` 的 `GRAPH_DATA_FILE` 仍指向 `graph_data_phase41.json`**（9657 节点 / 0 条 `domain_tags`）~~（**2026-10-23 已解决**，见 §0.3.33：现指 `phase73`，9,750 节点 / **5,090** 条 `attrs.domain_tags`），
 而 `phase73` 有 **5,090 条 `domain_tags`** ⇒ **F13 学科导航在当前服役快照上无法实现**，
 换快照是 F13 的硬前置（未在本轮擅自改动）。
 
 报告：`07_交付物/Phase75_空结果解释与一键放宽_20261023.md`。
+
+#### 0.3.33 前端服役快照切换（phase41 → phase73）：页面与权威图终于同源 —— 更新于 2026-10-23
+
+**问题（两处，第二处更硬）**：① 现役 `.env` 的 `GRAPH_DATA_FILE` 指向 `graph_data_phase41.json`
+（2026-10-16），而权威图 `06_PoC/etl/normalized.json` 在 Phase 73 的 delta 之后已是 **9,750 / 48,813**
+—— 两边差 **93 节点 / 101 边**，而**没有任何判据咬住这个差**：页面上显示的图比我们声称的图少一点，
+谁也不知道。② `attrs.domain_tags` 在 phase41 里 **0 条**、在 phase73 里 **5,090 条**，而
+`06_PoC/js/evidence.js:229` **已经在读它** ⇒ 那段代码在现役页面上**恒空**（看起来在跑，永远拿不到数据）。
+
+**判断**：这不是「快照旧一点」，是**静默不一致**。旧快照的价值是历史对照，不是现役数据。
+
+**处置**：`.env` 的 `GRAPH_DATA_FILE` 改为 `06_PoC/graph_data_phase73.json`。**代码零改动** ——
+两份快照的 node/edge **键集合差集为空**（现算：`phase73-only = []`、`phase41-only = []`），
+结构与字段完全一致，差别只有 Phase 73 的 delta 与 `attrs` 里的领域标签。
+
+**实测（问服务端真返回，不是读文件）**：
+
+| 项 | phase41（改前） | phase73（改后） |
+|---|---|---|
+| `/graph_data.json` 节点 / 边 | 9,657 / 48,712 | **9,750 / 48,813** |
+| 带 `attrs.domain_tags` 的节点 | 0 | **5,090** |
+| 带 `subject` 的节点 | 9,657 | **9,750** |
+| 与 `normalized.json` 同规模 | ❌ 差 93 / 101 | ✅ 一致 |
+
+核验方式：起服务 → `curl --noproxy '*' http://127.0.0.1:<port>/graph_data.json` → 与
+`graph_data_phase73.json` 的**节点 id 序列、边 id 序列逐元素相等**（现算 `True / True`）。
+
+**代价（如实登记）**：
+
+1. 首屏字节变大：磁盘 57 → **62 MB**；★ 但实际**线上下发 85 MB** —— `/graph_data.json` 走 `_json()`
+   用 `indent=2` 重新序列化，**比磁盘文件大 31%**（64.7 MB → 85.0 MB）。这是**既有缺陷**
+   （phase41 同样被撑大），本轮**没改**：改它会动到所有端点的响应路径，属独立一项（见遗留②）。
+2. 页面计数全变（9,657→9,750、48,712→48,813）：引用旧数的截图/说明要重出。
+3. `PAT_WHITELIST` 对 `graph_data_phase*.json` 的上限是 **2 份** ⇒ phase41 必须保留（历史对照），
+   phase73 占第二格；**再生成新快照就得先删一份** —— 这条上限现在真顶住了。
+
+**遗留（下一轮，不在本条）**：
+
+① **`.env` 不在版本控制里**（`.gitignore` 第 89 行）⇒「页面服务哪份快照」这件事**没有任何 git 记录**，
+   两个 clone 可以静默服务不同的图 —— D110b 的同族：**看不见的配置 = 没有配置**。要咬住它，
+   得把服役快照显式写进入库文件（如 `06_PoC/SERVING_SNAPSHOT`），`.env` 只做覆盖；
+   并让 `viz_server` 启动横幅报出**快照名 + 节点/边数 + sha256 前 12 位**。
+② `/graph_data.json` 的 `indent=2` 让 85 MB 成为线上下发量，而浏览器解析器并不需要缩进 ——
+   改 compact 可省 **~20 MB（31%）**，但要先确认没有别处依赖这个格式。
 
 ## 一、项目愿景与目标
 
@@ -2685,7 +2733,8 @@ Password:   （见 环境变量 / .env，禁止明文）
 ### 2.2 本地可视化服务
 ```
 地址:   http://127.0.0.1:8765/
-数据:   06_PoC/graph_data_phase34.json（9657 节点 / 48712 边）—— 由 .env 的 GRAPH_DATA_FILE 指定
+数据:   06_PoC/graph_data_phase73.json（**9,750 节点 / 48,813 边**，2026-10-23 起）—— 由 .env 的 GRAPH_DATA_FILE 指定
+        （此前 phase41：9,657 / 48,712 与权威图 `normalized.json` **不一致**，见 §0.3.33）
 前端:   06_PoC/graph_view.html（Cytoscape.js + MathJax，**依赖已本地 vendored**，可完全离线）
 ```
 
@@ -2694,7 +2743,7 @@ Password:   （见 环境变量 / .env，禁止明文）
 bash sttp.sh viz          # 自动读 .env：GRAPH_DATA_FILE / VIZ_PORT / STTP_PYTHON
 ```
 > 长驻请后台启动并重定向日志，例如：`bash sttp.sh viz > .runlog/viz.log 2>&1 &`
-> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase34.json python 06_PoC/viz_server.py`
+> 手动等价形式：`GRAPH_DATA_FILE=06_PoC/graph_data_phase73.json python 06_PoC/viz_server.py`
 > ⚠️ 必须用系统 Python（`.env` 的 `STTP_PYTHON`）；托管 3.13 是空环境，缺依赖。
 
 ### 2.3 GitHub 仓库
@@ -3565,7 +3614,7 @@ python -c "from neo4j import GraphDatabase; d=GraphDatabase.driver('$env:NEO4J_U
 
 # 4. 启动本地可视化
 bash sttp.sh viz
-# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase34.json）
+# 浏览器打开 http://127.0.0.1:8765/   （数据源 = .env 的 GRAPH_DATA_FILE = graph_data_phase73.json）
 
 # 5. 从 Aura 反向导出 viz 快照（默认 graph_data_aura.json）
 bash sttp.sh export
