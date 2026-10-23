@@ -38,7 +38,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 NORM = os.path.join(ROOT, "06_PoC", "etl", "normalized.json")
 VM = os.path.join(ROOT, "11_真实数据", "verification_model.py")
-RECON = os.path.join(ROOT, "06_PoC", "_recon_applicability.py")
+RECON = os.path.join(ROOT, "06_PoC", "06_PoC/tests/recon_applicability.py")
 
 RULE_VERSION = "a1"
 STATUSES = ("extracted", "no_referent", "not_extracted")
@@ -47,7 +47,7 @@ TEXT_KEYS = ("informal", "description", "usage")
 
 def load_verdict():
     """人工核对表是**事实**（54 条逐条读过的裁决），不是逻辑 —— 可共享。"""
-    spec = importlib.util.spec_from_file_location("_recon_applicability", RECON)
+    spec = importlib.util.spec_from_file_location("recon_applicability", RECON)
     if spec is None or spec.loader is None:
         return {}
     mod = importlib.util.module_from_spec(spec)

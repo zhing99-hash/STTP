@@ -275,6 +275,17 @@
   `subgraph` **100/0/3**、`grade` **6/0**、图规模不变。★ **D109 版本变了≠语义变了**、
   **D110 凭证必须能"被改坏后仍通过"才算数**（E6 抓出我的第一版）、**D110b 静默漏扫让 122/212 个
   `.py` 从未被检查**。`redprobe` **49/0/0**、`gatecheck` **七步 RC=0**、`docnums` **14/14**）。
+
+  **Phase 74（2026-10-23）已完成**（见 **§0.3.31**：**仓库治理与卫生判据** —— 工作树 **6.8 GB**
+  里 3.0 GB 是无人查看的产物：44 份 `before_*`（1.7 GB）+ 44 份 `graph_data_phase*`（1.2 GB）+
+  `.runlog`（322 MB）。删到 **3.8 GB**，并把 **5 个被常设流程依赖的 `_` 前缀脚本**迁进 `tests/`
+  （`_` 意为「一次性」，而 `sttp.sh` 的 `scopeaudit` / `mnxrecov` / `reach35` 与 `gatecheck`
+  都在依赖它们）。★ 重点不是删了什么，是把清理**固化**成判据 `repo_hygiene_selfcheck.py`
+  （**H1** 常设流程不得依赖一次性脚本 / **H2** 大产物须在白名单内且条数受限 / **H3** 引用不腐烂），
+  并入 `gatecheck` **八步**。判据第一次跑红 14 项，**其中 7 项是判据自己错**（把 docstring 里的
+  说明性提及判成违规）；另外真抓出**指南虚构的一行数据源**（`wikidata_adapter.py` 从未入库，
+  且现算 `same_as` 为 **0**）。`repo_hygiene` **RC=0** / 自检 **S0–S5**、`gatecheck`
+  **八步 RC=0**、`redprobe` **49/0/0**）。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -2498,6 +2509,59 @@ B8「无来源无判据 ⇒ unverified」⇒ 落库 ≠ 重算；同时它们只
 `needs_review` 是**数据可得性**问题（原文不在仓库），本轮修不了。
 报告：`07_交付物/Phase73_验证器等价性证明_20261022.md`。
 
+#### 0.3.31 Phase 74（**仓库治理与卫生判据：清理不挂判据 = 把垃圾扫到地毯下面**）—— 更新于 2026-10-23
+
+**问题**：工作树 **6.8 GB**，其中 3.0 GB 是无人查看的产物 —— 44 份 `normalized.before_*.json`
+（1.7 GB，`apply_delta` 自动生成的 apply 前备份，**全仓无任何脚本引用**，回滚依据另有 `etl/neo4j/` 的
+delta）、44 份 `graph_data_phase*.json`（1.2 GB，只有 `phase41` 在服役）、`.runlog/`（322 MB）。
+**体积不是主要问题，判据缺失才是**：`apply_delta` 每跑一轮多留 78 MB、`merge_seed_delta` 每跑一轮
+多留 62 MB，仓库的熵单调递增 —— 一次性清理管不了六个月。
+
+**处置**：① 删（`before_*` 留最近 3 份、`graph_data_phase*` 留 2 份、`.runlog` 清空）
+⇒ **6.8 GB → 3.8 GB**，全程不动公共数据集 / parquet / delta（删了取不回来）；
+② 迁 —— **5 个 `_` 前缀脚本被常设流程依赖**（`_` 在本仓库意为"一次性复盘脚本"）：
+`_gate_selfcheck_phase31.py`（`gatecheck` 步骤）、`_recon_phase35_{scope,mnx_recov,reachability}.py`
+（`sttp.sh` 的 `scopeaudit`/`mnxrecov`/`reach35` 三条常设命令）、`_recon_applicability.py`
+（被 `phase63_delta` 用 `importlib` **加载**）⇒ 全部迁入 `06_PoC/tests/` 并去掉 `_`；
+③ 固化 —— 新判据 `06_PoC/tests/repo_hygiene_selfcheck.py`（**H1** 常设流程不得依赖一次性脚本 /
+**H2** 被忽略的 > 50 MB 产物必须在白名单内且条数受限 / **H3** 活引用里的路径必须存在），
+挂进 `gatecheck` **八步**的 `[4/8]`（不依赖权威图 ⇒ 放在守卫之前）。
+
+| 量 | 治理前 | 治理后 |
+|---|---|---|
+| 工作树体积 | 6.8 GB | **3.8 GB** |
+| 常设流程依赖一次性脚本 | **5 处** | **0 处** |
+| 活引用里的失效路径 | 1 处 | **0 处** |
+
+★ **判据第一次跑就红了 14 项，其中 7 项是判据自己写错了** —— 第一版按"文本里出现过"扫，
+把 docstring / 注释里的**说明性提及**判成违规（如 `phase62_domain_delta.py` 写「侦察
+（`06_PoC/_recon_domain.py`）先把这件事的性质量清楚了」）。把说明性提及判成违规，作者唯一能做的
+就是删掉说明文字 —— **判据逼人破坏文档，说明判据本身错了**。两次收窄：`.py` 改用 AST 取字符串
+常量并排除 docstring；H1 载体收窄为「常设流程 = `sttp.sh` + `.py`」，不含 `.md`（指南写
+`python 06_PoC/_recon_domain.py` 是在告诉你"当年这个数字用这条命令量出来"，一次性脚本被一次性
+复现，正是它该有的用法）。
+
+★ 两个**意外发现**：① **我上一轮漏了 4 处** —— 上一轮数的是引用**次数**（12/8/6/5…）只看了第一名，
+而 `sttp.sh` 的三条常设命令引用数只有 2；**"看起来同类"的一批文件不能靠抽样下结论，要问引用方是谁**
+（**D112**）。② **指南里有一行虚构的数据源**：§6.1 表写「Wikidata｜19 `same_as` 边｜
+`11_真实数据/wikidata_adapter.py`｜✅」，而该脚本 `git log --all` **无任何提交**（从未入库），
+且对 `normalized.json` 现算 48,813 条边 `same_as` 为 **0** ⇒ 已改为「0 条 · 从未落地 · ❌」并加注。
+这行能挂这么久，是因为**从来没有任何判据核对"指南写的路径存在吗"** —— H3 第一次跑就抓到了。
+
+★ **D111**：**新判据第一次跑就红了 N 条时，先问"这 N 条里有没有判据自己的错"，再问怎么变绿。**
+直接把判据调到绿，等于把仪器调成永远说好话 —— 本轮 14 条里真问题有 7 条。
+
+**剩余边界**：① **`.env` 的 `GRAPH_DATA_FILE` 仍指向 `graph_data_phase41.json`（10-16，56 MB）**，
+最新快照是 `phase73`（10-22，62 MB）⇒ **viz 页面至今读的是 Phase 41 的投影，Phase 71/72/73 的成果
+没进前端**（改它属于功能变更，本轮未动）；② H2 白名单是"当前状态 + 余量"，不是第一性上限；
+③ 35 个 `_recon_*.py` 仍在原位（`_` 对它们是**诚实**的，移动会让 24 份文档的历史引用失效），
+现由 H1 保护 —— 一旦被接进常设流程，门禁立刻红；④ `00_项目管理/` 判为历史目录，不参与活引用判定。
+
+**仪器**：`repo_hygiene` H1/H2/H3 **RC=0**、自检 **S0–S5 全过**（3 个负对照）；`gatecheck`
+**七步 → 八步 RC=0**；`redprobe` **49/0/0**（新增"用完即删"：探针导出的 110 MB 临时数据集
+`.runlog/redprobe-ds.tmp` 跑完即清理 —— 它是门禁里 `[4/8]` 第一次红的**真凶**）。
+报告：`07_交付物/Phase74_仓库治理与卫生判据_20261023.md`。
+
 ## 一、项目愿景与目标
 
 **一句话目标**：把数学公式、物理规律、化学物质与物理世界连成一张可推理的知识图谱。
@@ -2997,7 +3061,8 @@ python 03_知识层/normalize_labels.py --delta-only <备份.json>   # 据备份
 / **(u) `residual_accounted`**（T4 残差「不可独立复算的理由」必须落在受控枚举内，**零未归类**，
 Phase 34 · 铁律 #30/#34）/ `island_freeze`（已知孤岛冻结核对，Phase 30）。
 
-**非真空自检**：`bash sttp.sh gatecheck` → `06_PoC/_gate_selfcheck_phase31.py`（Phase 31~34），
+**非真空自检**：`bash sttp.sh gatecheck` → `06_PoC/tests/gate_selfcheck_phase31.py`（Phase 31~34；
+Phase 74 从 `06_PoC/_gate_selfcheck_phase31.py` 迁来 —— 它是门禁**常设步骤**，`_` 前缀宣称「一次性」是撒谎），
 **不改门禁代码**、注入已知缺陷，断言 8 条不变量（n/o/p/q/r/s/t/u）**真的会红**（正对照 PASS + 注入 FAIL）。
 
 **用法**：`$PY 06_PoC/frozen_gate.py [--json]`；退出码 0 = 全通过，1 = 有回归。
@@ -3020,7 +3085,13 @@ Phase 34 · 铁律 #30/#34）/ `island_freeze`（已知孤岛冻结核对，Phas
 | ElementKG OWL | 真实元素 KG | 118 元素 / 2044 边 | `11_真实数据/elementkg_ingest.py` | ✅ |
 | ElementKG 10M CSV | 真实化学 KG（子集） | 800 反应 / 713 分子 | `11_真实数据/elementkg10m_ingest.py` | ✅ |
 | PhysicsBabel | 真实物理方程 | ~600 方程（~5000 待推） | `11_真实数据/physicsbabel_ingest.py` | ⚠️ 部分 |
-| Wikidata | 跨源对齐 | 19 same_as 边 | `11_真实数据/wikidata_adapter.py` | ✅ |
+| Wikidata | 跨源对齐 | **0 条**（图中无 `same_as` 边；Phase 74 现算） | `11_真实数据/wikidata_adapter.py` **从未落地** | ❌ |
+
+> **注（Phase 74 核对）**：本行原写作「19 `same_as` 边 · `wikidata_adapter.py` · ✅」，
+> 两项**都不成立** —— 该脚本 `git log --all` 无任何提交（从未入库），且对
+> `06_PoC/etl/normalized.json` 现算 48,813 条边里 `same_as` 为 **0**。
+> 这是仓库卫生判据 **H3（引用不腐烂）** 第一次跑就抓出来的：指南属于活引用载体，
+> 里面写的路径必须真能找到；旧写法同时撒了两个谎（脚本存在 + 数据已入图）。
 | GNN 推断 | 链接预测 | 20 条候选边 | `09_科研扩展/9_inference/gnn_infer.py` | ✅ |
 | Phase 9 深化 | 符号校验桥 | 188 条 | `09_科研扩展/9_inference/phase9_deepen.py` | ✅ |
 | **OpenAlex**（Phase 8 首步） | 真实文献层 | 181 篇 Paper + 176 `cites` + 178 `discusses` | `11_真实数据/openalex_ingest.py` | ✅ |
@@ -3268,7 +3339,7 @@ $env:STTP_PYTHON     = "C:\Users\Administrator\AppData\Local\Programs\Python\Pyt
   → **已由 Phase 33 消化，见 1d**。
 
 **1c. ★ 门禁「非真空」自检（Phase 31 新增，已固化）**
-- `bash sttp.sh gatecheck` → `06_PoC/_gate_selfcheck_phase31.py`：**不改门禁代码**，
+- `bash sttp.sh gatecheck` → `06_PoC/tests/gate_selfcheck_phase31.py`：**不改门禁代码**，
   直接 `run_case(case, mutated_graph)` 注入已知假边，断言不变量**真的会 FAIL**（正对照 PASS + 注入缺陷 FAIL）。
 - **一条永远不会红的断言不是断言**；`PASS` 只说明「当前没红」，不说明「有能力红」。
   同理：`scan.get()` 遇**空字典**（假值）会让断言**静默退化为 SKIP** —— **SKIP 比 FAIL 更危险**（FAIL 有人查，SKIP 无人看）。
@@ -3461,7 +3532,7 @@ git merge origin/main
 | 新增种子切片 | `10_种子数据/build_*.py` → `10_种子数据/seed_*.json`，再走 `06_PoC/sync_seed_delta.py` 回灌差量 |
 | 接入新数据源 | `11_真实数据/<source>_ingest.py`，用 `graph_export.build_graph_data()` 转换 |
 | **量北极星连通性** | `06_PoC/connectivity_audit.py`（`--strict` 退码 2） |
-| **量北极星口径（分母审）** | `06_PoC/_recon_phase35_scope.py`（`bash sttp.sh scopeaudit`） |
+| **量北极星口径（分母审）** | `06_PoC/tests/recon_phase35_scope.py`（`bash sttp.sh scopeaudit`） |
 | **独立审计器（跨实现）** | `06_PoC/semantic_noise_audit.py`（`bash sttp.sh noise`） |
 | **本地应用 delta** | `06_PoC/apply_delta.py --delta <p> --phase <N> [--apply]` |
 | **seed → 权威图回灌** | `06_PoC/sync_seed_delta.py` |

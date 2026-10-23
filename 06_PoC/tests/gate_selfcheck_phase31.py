@@ -29,7 +29,9 @@
     Phase 35 —— (v) independence_accounted（**达标但非独立**且理由未登记 → FAIL）
                 (w) scope_accounted（**不在任务族**的边类型理由未登记 → FAIL）
 
-用法：python 06_PoC/_gate_selfcheck_phase31.py
+用法：python 06_PoC/tests/gate_selfcheck_phase31.py
+    （Phase 74 从 06_PoC/_gate_selfcheck_phase31.py 迁来 —— 它是门禁的常设步骤，
+      `_` 前缀宣称"一次性"是撒谎；历史报告里写的旧路径是**当时的事实**，不改。）
 退出码：0 = 全部符合预期（真空即 1）。
 """
 from __future__ import annotations
@@ -41,12 +43,14 @@ import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, HERE)
+HERE = os.path.dirname(os.path.abspath(__file__))        # 06_PoC/tests
+POC  = os.path.dirname(HERE)                              # 06_PoC
+ROOT = os.path.dirname(POC)                               # STTP
+sys.path.insert(0, POC)
 
 import frozen_gate as fg                                     # noqa: E402
 
-CASES = os.path.join(HERE, "frozen_counterexamples.json")
+CASES = os.path.join(POC, "frozen_counterexamples.json")
 
 fails = []
 

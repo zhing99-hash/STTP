@@ -62,6 +62,7 @@ import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 
@@ -1133,6 +1134,29 @@ def residue_report():
 
 
 # ---------------------------------------------------------------------------
+def _cleanup_tmp():
+    """清理探针导出的临时数据集（`.runlog/redprobe-ds*`）—— 用完即删。
+
+    ★ 与 RR（还原自检）**互不干涉**：RR 管的是"被突变的**事实源**有没有还原"，
+      这里删的是"探针**产物**"。产物每次运行重新生成，删掉不影响可复现性。
+    """
+    d = os.path.join(ROOT, ".runlog")
+    if not os.path.isdir(d):
+        return
+    removed = []
+    for name in sorted(os.listdir(d)):
+        if not name.startswith("redprobe-ds"):
+            continue
+        p = os.path.join(d, name)
+        try:
+            shutil.rmtree(p) if os.path.isdir(p) else os.remove(p)
+            removed.append(name)
+        except OSError:
+            pass
+    if removed:
+        print("  （已清理探针临时产物：%s）" % "、".join(removed))
+
+
 def emit(rep, res):
     """把结果写成**字面量断言名**（见 DECLARED_PROBE_IDS 的说明）。"""
     # ★ 下面每一行的名字都是**字面量**，不得改成 f-string：
@@ -1304,6 +1328,13 @@ def main(argv=None):
 
     rep = Rep()
     emit(rep, res)
+
+    # ★ Phase 74：探针导出过一份 110 MB 的临时数据集（`.runlog/redprobe-ds.tmp/`）
+    #   且**跑完不删**。门禁里 `red_probe` 之后紧接着就是 `[4/8] 仓库卫生自检`，
+    #   这条残留会让它变红（实测）—— 这不是判据太严，是**临时产物没清理**。
+    #   用完即删：下次运行会重新生成，留着只会 stale，且占用的是被 git 忽略的空间
+    #   （没人会去看它，但每个人都得为它付磁盘）。
+    _cleanup_tmp()
 
     # ★ SKIP 行已由 `Rep.add(None, …)` **逐条**给出（三态），此处只决定退出码：
     #   只有**选中了却缺前置**才把退出码抬到 2（铁律 #20：SKIP 不是 PASS）；

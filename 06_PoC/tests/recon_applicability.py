@@ -22,7 +22,7 @@
         能不能直接拿来抽适用条件？（预期：不能，它是假设生成器）
     R7  结论：≥1,500 的目标在当前数据上可不可达？差多少？缺口只能靠什么补？
 
-用法： python 06_PoC/_recon_applicability.py [--dump]
+用法： python 06_PoC/tests/recon_applicability.py [--dump]
        --dump  把带文本的 Formula 的全文逐条打印（人工核对用）
 """
 import json
@@ -31,7 +31,9 @@ import os
 import re
 import sys
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+HERE = os.path.dirname(os.path.abspath(__file__))        # 06_PoC/tests
+POC  = os.path.dirname(HERE)                              # 06_PoC
+ROOT = os.path.dirname(POC)                               # STTP
 NORM = os.path.join(ROOT, "06_PoC", "etl", "normalized.json")
 RAW = os.path.join(ROOT, "11_真实数据", "physicsbabel_raw.json")
 PARQUET = os.path.join(ROOT, "11_真实数据", "physicsbabel_circuits.parquet")

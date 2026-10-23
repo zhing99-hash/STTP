@@ -4,7 +4,7 @@
 # -*- coding: utf-8 -*-
 """Phase 63 · G3 适用条件落盘（规则 a1，零抓取，只写人工核对过的）
 
-前置：`06_PoC/_recon_applicability.py` 已把四条来源路径全部量清（commit a612421）：
+前置：`06_PoC/tests/recon_applicability.py` 已把四条来源路径全部量清（commit a612421）：
 
     P1 PB 原文           0 条（parquet 15 列 + raw 12 字段零命中）⇒ No-Go
     P2 词典法（策展文本） 30 条真条件
@@ -48,7 +48,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 NORM = os.path.join(ROOT, "06_PoC", "etl", "normalized.json")
 OUT = os.path.join(ROOT, "06_PoC", "etl", "neo4j", "phase63_applicability_delta.json")
-RECON = os.path.join(ROOT, "06_PoC", "_recon_applicability.py")
+RECON = os.path.join(ROOT, "06_PoC", "06_PoC/tests/recon_applicability.py")
 
 RULE_VERSION = "a1"
 #   a1（定稿）：词典发现候选 + 人工核对表（VERDICT）裁决；
@@ -129,7 +129,7 @@ VERDICT = {
 
 def load_recon_verdict():
     """把探针脚本里的 VERDICT 读出来（不执行它的 main）。"""
-    spec = importlib.util.spec_from_file_location("_recon_applicability", RECON)
+    spec = importlib.util.spec_from_file_location("recon_applicability", RECON)
     if spec is None or spec.loader is None:
         return None
     mod = importlib.util.module_from_spec(spec)

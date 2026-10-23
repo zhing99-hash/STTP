@@ -20,7 +20,7 @@
      是此前**从未被测量**过的一个维度（铁律 #33：每个新维度都先问「这里有没有
      从未被检验过的断言」）。
 
-用法：python 06_PoC/_recon_phase35_scope.py
+用法：python 06_PoC/tests/recon_phase35_scope.py
 """
 from __future__ import annotations
 import collections
@@ -30,15 +30,16 @@ import re
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
-sys.path.insert(0, HERE)
+HERE = os.path.dirname(os.path.abspath(__file__))        # 06_PoC/tests
+POC  = os.path.dirname(HERE)                              # 06_PoC
+ROOT = os.path.dirname(POC)                               # STTP
+sys.path.insert(0, POC)
 sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
 
 import graph_export as gx                                      # noqa: E402
 import verification_model as vm                                # noqa: E402
 
-NORM = os.path.join(HERE, "etl", "normalized.json")
+NORM = os.path.join(POC, "etl", "normalized.json")
 _PH = re.compile(r"^(FG|reaction|molecule|mol|rxn|rx)[_\-]?\d+$", re.I)
 
 

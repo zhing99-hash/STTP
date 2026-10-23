@@ -15,7 +15,7 @@
 本脚本**只做 HTTP 探测，不解析、不写库**；输出一张「候选源 × 结论」表，作为本轮
 「改轨」决策的证据留档。全部请求经代理 `STTP_PROXY`（默认 127.0.0.1:10808）。
 
-用法：python 06_PoC/_recon_phase35_reachability.py [--proxy URL]
+用法：python 06_PoC/tests/recon_phase35_reachability.py [--proxy URL]
 """
 from __future__ import annotations
 import argparse

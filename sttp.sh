@@ -37,7 +37,7 @@
 #   bash sttp.sh release-full [--allow-dirty]       对完整快照跑全量发布校验（洁净度前置断言 + --release 门禁 + manifest 现算比对）
 #   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
 #   bash sttp.sh gnneval [--gnn-seeds 1,2]           推理增量评测协议 v2：P1/P2 + 基线对照 + 种子方差（Phase 39 R11续）
-#   bash sttp.sh gatecheck                         门禁七步（Phase 73：/3 → /7，并入 subgraph/grade/等价证明复核/报告数字对账）
+#   bash sttp.sh gatecheck                         门禁八步（Phase 74：/7 → /8，并入仓库卫生自检 H1/H2/H3）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
@@ -269,17 +269,17 @@ EOF
     # Phase 35 北极星口径自审：分母内/外占比 + 反向对照 + 占位实体审计（只读）
     shift
     require_authority scopeaudit "$NORM_GRAPH"
-    "$PY" 06_PoC/_recon_phase35_scope.py "$@"
+    "$PY" 06_PoC/tests/recon_phase35_scope.py "$@"
     ;;
   mnxrecov)
     # Phase 35 MetaNetX 对 Rhea 反应的覆盖率现算（只读；铁律 #44 数字由仪器现算）
     shift
-    "$PY" 06_PoC/_recon_phase35_mnx_recov.py "$@"
+    "$PY" 06_PoC/tests/recon_phase35_mnx_recov.py "$@"
     ;;
   reach35)
     # Phase 35 第二源可达性穷举侦察（只读 HTTP 探测；铁律 #34 负结果优先）
     shift
-    "$PY" 06_PoC/_recon_phase35_reachability.py "$@"
+    "$PY" 06_PoC/tests/recon_phase35_reachability.py "$@"
     ;;
   rescope)
     # Phase 36 验证语义校正（GPT6 复评 R03/R04/R05）：共享词典重定 + 算子桥正名
@@ -295,20 +295,20 @@ EOF
     #   的执法工具，但它自身一直没有断言覆盖（"谁来核对核对器"）。
     #   ★ 它**不依赖权威图** ⇒ 刻意放在 require_authority **之前**：干净检出里也能跑，
     #     而不是被守卫一并挡成 RC=2（真实原因只有"缺图"，不该掩盖"自检从未执行"）。
-    echo "== [0/7] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
+    echo "== [0/8] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
     "$PY" 06_PoC/tests/assert_name_diff.py --selfcheck || exit $?
     # ★ Phase 53（D55 收口）：把「构造性可红性探针」挂在这里，与上一步同理放在守卫**之前**
     #   —— 它不依赖权威图 ⇒ 干净检出里也能跑。
     #   动机：`names` 只能证明"没有断言被删"，**证明不了"还活着的断言仍在断言它声称的语义"**
     #   （"名字还在、判据被换掉"）。本步对关键断言**注入已知缺陷**，断言必须真的变红。
     #   ★ 它会**自己还原**被突变的事实源（逐字节 + sha256），还原失败即 RC=3 并显式告警。
-    echo "== [1/7] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
+    echo "== [1/8] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
     "$PY" 06_PoC/tests/red_probe.py || exit $?
     # ★ Phase 55（D58 收口）：同上 —— 不依赖权威图，故也放在守卫**之前**
     #   （干净检出里"自检从未执行"不得被"缺图"一并掩盖）。
     #   它是 `interp_note.py` 的**执行工具**：那条纪律的实现收在一处只保证"不分叉"，
     #   本步负责"不漏接"（#92）。
-    echo "== [2/7] 「非通过」判据自述解释器 —— 全链防漏网（铁律 #92；D58）=="
+    echo "== [2/8] 「非通过」判据自述解释器 —— 全链防漏网（铁律 #92；D58）=="
     "$PY" 06_PoC/tests/interp_selfreport_check.py || exit $?
 
     # ★ Phase 73（D110 的操作性推论）：**凭证必须有日常复核**，否则它就是装饰品。
@@ -318,24 +318,34 @@ EOF
     #   valid、`subgraph` V18h 照样绿（它只要求 stale=0）⇒ **伪造一份永久通行证无人发现**。
     #   正向判据证明机制能工作，只有反向复核证明它**在起作用**。
     #   本步不依赖权威图 ⇒ 同样放在守卫之前（干净检出里也能跑）。
-    echo "== [3/7] 等价性证明复核（拿 git 历史重算，不信表里的结论；D110）=="
+    echo "== [3/8] 等价性证明复核（拿 git 历史重算，不信表里的结论；D110）=="
     "$PY" 11_真实数据/reverify_attest.py --check || exit $?
     require_authority gatecheck "$NORM_GRAPH"
-    echo "== [4/7] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
-    "$PY" 06_PoC/_gate_selfcheck_phase31.py "$@"
-    echo "== [5/7] 局部图谱查询自检（A04 状态只在这里被真正读一遍）=="
+    # ★ Phase 74（F15/F16 治理的固化）：**清理不挂判据 = 把垃圾扫到地毯下面**。
+    #   本轮手工删掉 2.9 GB 冗余、把 4 个「顶着一次性前缀的常设脚本」搬回 tests/，
+    #   但 `apply_delta` 每跑一轮多留一份 78 MB、`merge_seed_delta` 每跑一轮多一份 62 MB ——
+    #   仓库的熵单调递增，一次性清理管不了六个月。本步咬住三件事：
+    #     H1 常设流程（sttp.sh / 生产代码）不得依赖 `06_PoC/_*.py` 一次性脚本
+    #     H2 被忽略的大产物必须在白名单内且条数受限（graph_data_phase* ≤ 2、before_* ≤ 3）
+    #     H3 活文件里写的路径必须真的存在（引用不腐烂）
+    #   不依赖权威图 ⇒ 同样放在守卫之前（干净检出里也能跑）。
+    echo "== [4/8] 仓库卫生自检（H1 命名不撒谎 / H2 大产物不堆积 / H3 引用不腐烂）=="
+    "$PY" 06_PoC/tests/repo_hygiene_selfcheck.py || exit $?
+    echo "== [5/8] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
+    "$PY" 06_PoC/tests/gate_selfcheck_phase31.py "$@"
+    echo "== [6/8] 局部图谱查询自检（A04 状态只在这里被真正读一遍）=="
     # ★ Phase 73（D109）：这一步以前**不在**门禁里，Phase 72 收尾就漏跑了它 ——
     #   而 32,583 条证据 stale 只有它能看见。处置不是"以后记得跑"，
     #   而是"把上一次没跑的那台并进门禁"（#118）。
     "$PY" 06_PoC/tests/phase43_subgraph_selfcheck.py || exit $?
-    echo "== [6/7] 证据等级报告 + G1–G5 对账（落盘值必须等于现算）=="
+    echo "== [7/8] 证据等级报告 + G1–G5 对账（落盘值必须等于现算）=="
     "$PY" 06_PoC/grade_report.py || exit $?
 
     # ★ Phase 73（D100 的续）：**报告里的数字也要有判据** —— 判据此前覆盖了代码、覆盖了数据，
     #   唯独没覆盖我们自己写下的结论。本步把已登记的报告数字与图里现算值**逐字**比对。
     #   本轮新登记的 4 条里，「带 rva 的证据 / 全部 A04 证据」是关键那条：把 `vch` 改成当前值
     #   同样能让 stale 归零、V18h 同样绿 —— 只有 rva 覆盖率能把「重验过」与「重写哈希」分开。
-    echo "== [7/7] 报告数字对账（报告写的 == 图里现算；D100）=="
+    echo "== [8/8] 报告数字对账（报告写的 == 图里现算；D100）=="
     "$PY" 06_PoC/report_number_check.py || exit $?
     ;;
   release)

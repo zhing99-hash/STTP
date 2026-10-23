@@ -14,7 +14,7 @@
   用仪器现算 `mnx_reac_xref.tsv` 实为 **1836** 个唯一 `rh:<id>` —— **记录数字有误，已订正**。
   但**结论不变**：我们图谱的 Rhea 反应集与 MNX 的 1836 个**几乎不相交**（939 中 45；残差 269 中 5）。
 
-用法：python 06_PoC/_recon_phase35_mnx_recov.py
+用法：python 06_PoC/tests/recon_phase35_mnx_recov.py
 """
 from __future__ import annotations
 import collections
@@ -23,9 +23,10 @@ import os
 import re
 import sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
-sys.path.insert(0, HERE)
+HERE = os.path.dirname(os.path.abspath(__file__))        # 06_PoC/tests
+POC  = os.path.dirname(HERE)                              # 06_PoC
+ROOT = os.path.dirname(POC)                               # STTP
+sys.path.insert(0, POC)
 sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -34,7 +35,7 @@ import verification_model as vm
 MNX = os.path.join(ROOT, ".runlog", "mnx25", "mnx_reac_xref.tsv")
 
 # ---- 1) 本地图谱：T4 残差涉及的「反应节点」与其中的 Rhea 反应 ----
-d = json.load(open(os.path.join(HERE, "etl", "normalized.json"), encoding="utf-8"))
+d = json.load(open(os.path.join(POC, "etl", "normalized.json"), encoding="utf-8"))
 nodes, edges = d["nodes"], d["edges"]
 N = {n["id"]: n for n in nodes}
 res = [e for e in edges if e["type"] in ("reactant_of", "product_of") and vm.indep_reason(e, N)]
