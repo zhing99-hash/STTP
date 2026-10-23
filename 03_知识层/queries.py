@@ -111,6 +111,11 @@ TRUST_VERIFIED = "verified"
 TRUST_STRICT = "verified_strict"
 TRUST_LEVELS = (TRUST_ALL, TRUST_VERIFIED, TRUST_STRICT)
 
+#: 导航层级（F13）：学科 → 领域 → 领域标签。
+#  ★ 前两层**单归属**（每个节点恰好落一格）⇒ 计数必须守恒；第三层是**多值**标签 ⇒
+#    必然不守恒。三者共用一套响应形状，靠 `stats.multi_valued` 区分口径（见 `Backend.nav`）。
+NAV_LEVELS = ("subject", "domain", "tags")
+
 # ----------------------------------------------------------------------------
 # why_shown（吸收 codex 设计稿 §5.5）：每个节点/边都必须回答"为什么它在图里"
 # ----------------------------------------------------------------------------
@@ -1659,6 +1664,125 @@ class Backend:
                 "stats": {"n_nodes": len(nodes), "n_edges": len(edges),
                           "full_nodes": len(idx["nodes"]), "full_edges": len(idx["edges"]),
                           "elapsed_ms": _ms(t0)}}
+
+
+    # ---------------- C. 学科 / 领域三层导航（F13） ----------------
+    def nav(self, level: str = "subject", parent: Optional[str] = None,
+            limit: int = 6, node_type_of: Optional[Callable] = None,
+            subject_of_fn: Optional[Callable] = None) -> dict:
+        """学科 → 领域 → 领域标签 的三层导航（F13 · 替代「必须知道名字才能查」）。
+
+        铁律 #66：**绝不返回全图** —— 每格只给「计数 + 前 `limit` 个代表节点」，
+        想看内容就点代表节点走 `subgraph`。
+
+        为什么要 `stats.conserved`（这个方法存在的理由）：
+          导航最容易犯的错是**漏人**——某几个节点谁都不收，页面上看不出来。
+          故前两层是**单归属**的，`sum_items == scanned` 必须成立（V22a/V22b 咬住）；
+          第三层 `tags` 是**多值**的（实测 5,090 个带标签节点里 **4,289** 个有 ≥2 个标签），
+          `sum_items` 必然 > `scanned`，于是显式给 `multi_valued: true` 与 `untagged`，
+          让**可核的那条式子**变成 `tagged + untagged == scanned`（D115：0 条与没扫过同形）。
+
+        参数：`level ∈ NAV_LEVELS`；`domain` 层要 `parent=<学科>`，
+        `tags` 层要 `parent=<领域>`（与上一层返回的 `items[].key` 逐字相同）。
+        """
+        t0 = time.monotonic()
+        idx = self._index()
+        level = (level or "subject").lower()
+        if level not in NAV_LEVELS:
+            raise ValueError("level 必须 ∈ %s，收到 %r" % (list(NAV_LEVELS), level))
+        limit, _ = _clamp(limit, 1, 50)
+        if level in ("domain", "tags") and not parent:
+            raise ValueError("level=%s 需要 parent（%s 层的 key）"
+                             % (level, "学科" if level == "domain" else "领域"))
+
+        def props(nid: str) -> dict:
+            return (idx["nodes"].get(nid) or {}).get("props") or {}
+
+        def nsubj(nid: str) -> str:
+            return subject_of_fn(props(nid).get("domain"), nid) if subject_of_fn else ""
+
+        def ntype(nid: str) -> str:
+            n = idx["nodes"].get(nid) or {}
+            return node_type_of(n.get("labels")) if node_type_of else \
+                ((n.get("labels") or ["Unknown"])[0])
+
+        def nlabel(nid: str) -> str:
+            p = props(nid)
+            return str(p.get("name") or p.get("label") or p.get("formula") or nid)
+
+        buckets: Dict[str, dict] = {}
+        scanned = 0
+        untagged = 0
+        parent_found = (level == "subject")
+
+        for nid in idx["nodes"]:
+            p = props(nid)
+            sub = nsubj(nid)
+            dom = str(p.get("domain") or "")
+            if level == "domain":
+                if sub != parent:
+                    continue
+                parent_found = True
+                keys = [dom or "(无领域)"]
+            elif level == "tags":
+                if dom != parent:
+                    continue
+                parent_found = True
+            else:
+                keys = [sub or "(无学科)"]
+
+            # ★ `scanned` 先记，再判「有没有标签」——第一版把 `scanned += 1` 放在
+            #   `untagged` 的 `continue` **之后**，于是整格都没有标签时（实测
+            #   `chem.reaction` 的 1,697 个节点全部无标签）报出 `scanned=0, untagged=1697`，
+            #   而 `tagged + untagged == scanned` 当场不成立。计数位置错了，
+            #   对账式就会以「看起来合理」的方式撒谎（V22c 咬住这条）。
+            scanned += 1
+            if level == "tags":
+                tags = [str(t) for t in (p.get("domain_tags") or []) if t]
+                if not tags:
+                    untagged += 1
+                    continue
+                keys = tags                      # ★ 多值：同一节点计入每个标签
+
+            deg = len(idx["adj"].get(nid, []))
+            for k in keys:
+                b = buckets.get(k)
+                if b is None:
+                    b = buckets[k] = {"n": 0, "top": []}
+                b["n"] += 1
+                b["top"].append((deg, nid))
+
+        items = []
+        for k in sorted(buckets, key=lambda x: (-buckets[x]["n"], x)):
+            b = buckets[k]
+            top = sorted(b["top"], key=lambda t: (-t[0], t[1]))[:limit]
+            items.append({
+                "key": k, "label": k, "n": b["n"],
+                "samples": [{"id": nid, "label": nlabel(nid), "type": ntype(nid),
+                             "degree": d} for d, nid in top],
+            })
+        sum_items = sum(b["n"] for b in buckets.values())
+        multi = (level == "tags")
+        return {
+            "status": OK if items else NO_RESULT,
+            "note": "导航（聚合；非全图。每格只给前 %d 个代表节点）" % limit,
+            "level": level, "parent": parent,
+            "items": items,
+            "stats": {
+                "scanned": scanned,
+                "sum_items": sum_items,
+                # 前两层必须相等；第三层多值 ⇒ 必然不等，如实报出而不是硬凑
+                "conserved": sum_items == scanned,
+                "multi_valued": multi,
+                # 可核的那条式子（tags 层）：tagged + untagged == scanned
+                "tagged": scanned - untagged,
+                "untagged": untagged if multi else 0,
+                "parent_exists": parent_found,
+                "full_nodes": len(idx["nodes"]),
+                "scan_complete": True,
+                "elapsed_ms": _ms(t0),
+            },
+        }
 
 
 # ----------------------------------------------------------------------------

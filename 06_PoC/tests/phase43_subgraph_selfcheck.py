@@ -1413,6 +1413,124 @@ def main(argv=None) -> int:
             "edges=%d" % len(r["edges"]))
     shutil.rmtree(_tmp, ignore_errors=True)
 
+    # ---------- V22 学科 / 领域导航（F13） ----------
+    #  ★ 这两层是真图上**没法凭空验**的：守恒式要么处处成立（看不出错），要么被某几个
+    #    漏掉的节点破坏（真图上得先知道正确答案）。故用合成图把「漏人」做成可红的形状，
+    #    再用 V22i 拿真图核一次「全图 == 各学科之和」（这才是用户看到的那条）。
+    print("\n[V22] 三层导航：前两层计数必须守恒，第三层多值必须自报（合成图，6 节点 0 边）")
+    _fx2 = {
+        "nodes": [
+            {"id": "P:a", "labels": ["Formula"],
+             "props": {"domain": "physics.em", "domain_tags": ["physics.em", "math"],
+                       "name": "a"}},
+            {"id": "P:b", "labels": ["Formula"],
+             "props": {"domain": "physics.em", "domain_tags": ["physics.em"], "name": "b"}},
+            {"id": "P:c", "labels": ["PhysicalQuantity"], "props": {"domain": "physics.mech"}},
+            {"id": "C:a1", "labels": ["Reaction"], "props": {"domain": "chem.reaction"}},
+            {"id": "C:a2", "labels": ["Reaction"], "props": {"domain": "chem.reaction"}},
+            {"id": "X:m", "labels": ["Definition"], "props": {}},
+        ],
+        "edges": [],
+    }
+    _tmp2 = tempfile.mkdtemp(prefix="sttp-f13-")
+    _fxp2 = os.path.join(_tmp2, "fixture.json")
+    with open(_fxp2, "w", encoding="utf-8") as _f:
+        json.dump(_fx2, _f, ensure_ascii=False)
+    _fb2 = Q.NXBackend(_fxp2)
+
+    def _so2(domain, nid=""):
+        d = (domain or "").lower()
+        if d.startswith("phys"):
+            return "物理"
+        if d.startswith("chem"):
+            return "化学"
+        return "其他"
+
+    def _nv(**kw):
+        kw.setdefault("node_type_of", _nt)
+        kw.setdefault("subject_of_fn", _so2)
+        return _fb2.nav(**kw)
+
+    def _stt(r):
+        return r.get("stats") or {}
+
+    def _nn(r):
+        return {it["key"]: it["n"] for it in (r.get("items") or [])}
+
+    n22 = _nv(level="subject")
+    rep.add(_nn(n22) == {"物理": 3, "化学": 2, "其他": 1}
+            and _stt(n22)["sum_items"] == _stt(n22)["scanned"] == 6
+            and _stt(n22)["conserved"] is True,
+            "V22a 学科层：各格之和 == 扫描数 == 全图节点数（导航**不许漏人**）",
+            "items=%s scanned=%s" % (_nn(n22), _stt(n22).get("scanned")))
+
+    n22b = _nv(level="domain", parent="物理")
+    rep.add(_nn(n22b) == {"physics.em": 2, "physics.mech": 1}
+            and _stt(n22b)["scanned"] == 3 and _stt(n22b)["conserved"] is True,
+            "V22b 领域层：只扫 parent 学科下的节点，且各格之和 == 该学科数",
+            "items=%s scanned=%s" % (_nn(n22b), _stt(n22b).get("scanned")))
+
+    n22c = _nv(level="domain", parent="其他")
+    rep.add(_nn(n22c) == {"(无领域)": 1} and _stt(n22c)["conserved"] is True,
+            "V22c 没有 domain 的节点落进显式兜底桶（不得被静默丢掉）",
+            "items=%s" % _nn(n22c))
+
+    n22d = _nv(level="tags", parent="physics.em")
+    s22d = _stt(n22d)
+    rep.add(_nn(n22d) == {"physics.em": 2, "math": 1}
+            and s22d["multi_valued"] is True
+            and s22d["sum_items"] > s22d["scanned"],
+            "V22d 标签层是多值的：同一节点计入每个标签 ⇒ sum_items > scanned，**必须自报**",
+            "items=%s sum=%s scanned=%s" % (_nn(n22d), s22d.get("sum_items"),
+                                            s22d.get("scanned")))
+    rep.add(s22d["tagged"] + s22d["untagged"] == s22d["scanned"],
+            "V22e 多值层的可核式子：tagged + untagged == scanned（不守恒要说得清）",
+            "%s + %s == %s" % (s22d.get("tagged"), s22d.get("untagged"), s22d.get("scanned")))
+
+    n22f = _nv(level="tags", parent="chem.reaction")
+    s22f = _stt(n22f)
+    rep.add(n22f["status"] == "no_result" and _nn(n22f) == {}
+            and s22f["scanned"] == 2 and s22f["untagged"] == 2
+            and s22f["tagged"] + s22f["untagged"] == s22f["scanned"],
+            "V22f 整格都没有标签时：scanned 仍必须是 2（第一版把 scanned 记在 continue 之后 ⇒ 报 0）",
+            "status=%s scanned=%s untagged=%s" % (n22f["status"], s22f.get("scanned"),
+                                                  s22f.get("untagged")))
+
+    n22g = _nv(level="domain", parent="没有这个学科")
+    rep.add(n22g["status"] == "no_result" and _stt(n22g)["parent_exists"] is False
+            and _stt(n22g)["scanned"] == 0,
+            "V22g 父级不存在 ⇒ no_result + parent_exists=false（0 条与没扫过必须分得开）",
+            "status=%s exists=%s" % (n22g["status"], _stt(n22g).get("parent_exists")))
+
+    try:
+        _nv(level="bogus")
+        bad22 = False
+    except ValueError:
+        bad22 = True
+    rep.add(bad22, "V22h 未知 level ⇒ ValueError（不得静默当成 subject 返回全表）")
+
+    n22i = _nv(level="subject", limit=1)
+    rep.add(all(len(it["samples"]) <= 1 for it in n22i["items"]) and n22i["items"],
+            "V22i limit 生效：每格最多 limit 个代表节点（铁律 #66：绝不返回全图）",
+            "samples=%s" % [len(it["samples"]) for it in n22i["items"]])
+
+    n22j = _fb2.nav(level="subject", node_type_of=_nt)      # 不给 subject_of_fn
+    rep.add(_nn(n22j) == {"(无学科)": 6} and _stt(n22j)["conserved"] is True,
+            "V22j 没有学科解析器时全部落进 (无学科)：守恒式不依赖 resolver 才对",
+            "items=%s" % _nn(n22j))
+    shutil.rmtree(_tmp2, ignore_errors=True)
+
+    _, nv_http = http_get(port, "/api/nav" + q(level="subject"))
+    sh_http = nv_http.get("stats") or {}
+    rep.add(nv_http.get("status") == "ok" and sh_http.get("conserved") is True
+            and sh_http.get("sum_items") == sh_http.get("full_nodes"),
+            "V22k 真图 HTTP：学科各格之和 == 全图节点数（用户看到的就是这条式子）",
+            "sum=%s full=%s" % (sh_http.get("sum_items"), sh_http.get("full_nodes")))
+    code_400, body_400 = http_get(port, "/api/nav" + q(level="domain"))
+    rep.add(code_400 == 400 and body_400.get("error_code") == "BAD_REQUEST",
+            "V22l 缺 parent ⇒ HTTP 400 BAD_REQUEST（不让它静默返回空表）",
+            "code=%s code_err=%s" % (code_400, body_400.get("error_code")))
+
     # ---------- Neo4j 契约（本环境不可达 ⇒ SKIP，不计通过） ----------
     print("\n[Neo4j] 双后端同契约（本环境不可达 ⇒ SKIP）")
     try:

@@ -28,6 +28,8 @@
     GET /api/subgraph?…          → ★ 局部子图（ego / path / filter 三模式，五态 + 预算）
     GET /api/path?src=&dst=      → 有界可解释路径（改造：不再无界物化、不吞异常）
     GET /api/overview            → 概览元图（替代"全图浏览"，铁律 #66）
+    GET /api/nav?level=&parent=  → ★ Phase 76 学科/领域/领域标签三层导航（F13；
+                                   每格只给计数 + 前 N 个代表节点，绝不返回全图）
 
 统一信封（所有 `/api/*` 查询端点）
 ----------------------------------
@@ -1207,6 +1209,8 @@ class VizHandler(BaseHTTPRequestHandler):
                 return self._guard(self._api_subgraph, qs)
             if route == "/api/overview":
                 return self._guard(self._api_overview, qs)
+            if route == "/api/nav":
+                return self._guard(self._api_nav, qs)
             if route == "/api/path":
                 return self._guard(self._api_path, qs)
 
@@ -1280,7 +1284,7 @@ class VizHandler(BaseHTTPRequestHandler):
             #   （否则只能靠测时间推断 ⇒ 快机器假绿 / 慢机器假红）。见 H8h。
             "cache_builds": build_stats(),
             "endpoints": ["/api/healthz", "/api/stats", "/api/search",
-                          "/api/subgraph", "/api/overview", "/api/path"],
+                          "/api/subgraph", "/api/overview", "/api/nav", "/api/path"],
         }
         if done:
             # 仅预热完成后才取快照（此时 `snapshot_id()` 是纯内存计算）
@@ -1334,6 +1338,29 @@ class VizHandler(BaseHTTPRequestHandler):
         r = b.overview(mode=params["mode"], k=int(params["k"] or 300),
                        node_type_of=(gx.pick_type if gx else None),
                        subject_of_fn=(gx.subject_of if gx else None))
+        r.update({"snapshot_id": self._snapshot_id(), "query_hash": _qhash(params)})
+        return self._json(200, r)
+
+    # ---- /api/nav（学科/领域/领域标签 三层导航；F13）----
+    def _api_nav(self, qs):
+        """`level=subject|domain|tags` + `parent=<上层 key>`。
+
+        ★ 与 `/api/overview` 同一个理由存在两层端点：overview 回答「这张图长什么样」
+          （学科×类型的元图），nav 回答「我能往下翻到什么」（层级 + 计数 + 入口）。
+          前者不可下钻，后者每格带 `samples` 供点击 ⇒ 语义不同，不合并。
+        """
+        b = get_backend()
+        if b is None:
+            return self._json(503, {"status": "error", "reason": "查询层不可用",
+                                    "error_code": "TOOL_EXECUTION_ERROR"})
+        gx = _gx()
+        params = {"level": self._p(qs, "level", "subject"),
+                  "parent": self._p(qs, "parent"),
+                  "limit": self._p(qs, "limit", "6")}
+        r = b.nav(level=params["level"] or "subject", parent=params["parent"],
+                  limit=int(params["limit"] or 6),
+                  node_type_of=(gx.pick_type if gx else None),
+                  subject_of_fn=(gx.subject_of if gx else None))
         r.update({"snapshot_id": self._snapshot_id(), "query_hash": _qhash(params)})
         return self._json(200, r)
 
@@ -1669,6 +1696,7 @@ def main(argv=None) -> int:
     print(f"             ★ /api/subgraph?seeds=<id>&mode=ego&hops=1   （局部子图，五态+预算）")
     print(f"             ★ /api/path?src=<id>&dst=<id>&max_paths=20    （有界路径；legacy 扁平信封）")
     print(f"             ★ /api/overview                    （概览元图，替代全图）")
+    print(f"             ★ /api/nav?level=&parent=          （学科/领域/标签三层导航；每格只给计数+代表节点）")
     print(f"  前端模式 : ?mode=live（默认，查询面板+子图）｜ ?mode=bundle（样例全量，小图）")
     print(f"  会话预算 : {SESSION_NODES} 节点 / {SESSION_EDGES} 边（超出即拒绝继续展开）")
     print(f"             无 session_id ⇒ 不记账、不限流；reset=1 清空该会话（前端「重置」）")

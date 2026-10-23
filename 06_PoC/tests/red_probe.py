@@ -877,6 +877,28 @@ PROBES = [
         "requires": ["authority"],
     },
     {
+        "id": "R46",
+        "kind": "mutate",
+        "why": ("Phase 76 · F13：导航存在的理由是**不许漏人** —— 界面上的「各学科之和」"
+                "必须等于全图节点数，否则那几个谁都不收的节点从来没人会发现。"
+                "这里把「没有 domain 的节点」从兜底桶里静默丢掉（看起来很合理："
+                "空字段不该单独占一格），于是 domain 层 `sum_items` 比 `scanned` 少 1，"
+                "而界面上只会显示「物理 2 格 / 化学 1 格」，看不出少了人。"
+                "★ 这条也没有任何报错：每一格计数都「看起来对」，只有对账式能看见它。"
+                "⇒ 判据 V22c（无领域节点必须进显式兜底桶、conserved 必须为 True）必须变红。"),
+        "file": "03_知识层/queries.py",
+        # ★ 注入体首行带 `redprobe:` 注释：`residue_report()` 靠它区分「注入残留」与
+        #   「本来就该在文件里的正常代码」（R45 踩过这个坑）。
+        "new": ('                # redprobe: 无领域节点被静默丢掉（conserved 必须变红）\n'
+                '                keys = [dom] if dom else []'),
+        "old": '                keys = [dom or "(无领域)"]',
+        "cmd": "PY 06_PoC/tests/phase43_subgraph_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["V22c"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -901,7 +923,7 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
                       "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "R38", "R39",
-                      "R40", "R41", "R42", "R43", "R44", "R45", "RN")
+                      "R40", "R41", "R42", "R43", "R44", "R45", "R46", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -1266,6 +1288,8 @@ def emit(rep, res):
             res["R44"][1])
     rep.add(res["R45"][0], "R45 孤立节点也给放宽按钮（点了照样空）⇒ V21a 必须变红（F12/D69）",
             res["R45"][1])
+    rep.add(res["R46"][0], "R46 无领域节点被静默丢掉（看起来每格都对）⇒ V22c 必须变红（F13）",
+            res["R46"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

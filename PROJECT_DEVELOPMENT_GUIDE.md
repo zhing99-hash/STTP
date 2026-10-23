@@ -300,6 +300,9 @@
   （9,657/48,712 → **9,750/48,813**，`attrs.domain_tags` 0 → **5,090** 条）—— 此前页面比权威图
   **少 93 节点 / 101 边**且无人咬住，而 `evidence.js` 读的 `domain_tags` 恒空。详见 **§0.3.33**
   （含两条遗留：`.env` 不入库、`/graph_data.json` 被 `indent=2` 撑大 31%）。
+  ★ **同日进行中 · F13 学科导航**：后端 v1 就绪（`GET /api/nav` 三层：学科/领域/领域标签，
+  前两层计数**必须守恒**、第三层多值**必须自报**），`subgraph` **124/0/3**、`redprobe` **51/0/0**；
+  前端抽屉与 `domains` 过滤**未做**。详见 **§0.3.34** 与 **D117**。
 - ★ **干净检出（clone）的能力与限制**（2026-10-13 首测；**2026-10-14 步骤 B 复测**，见
   `07_交付物/Phase43_局部图谱查询与前端_20261014.md` **§7** 的完整矩阵）：
   ① `contracts/*.json`、两份 `Phase43_*selfcheck.json` 留痕、`06_PoC/release/manifest.json`
@@ -2681,6 +2684,50 @@ delta）、44 份 `graph_data_phase*.json`（1.2 GB，只有 `phase41` 在服役
    并让 `viz_server` 启动横幅报出**快照名 + 节点/边数 + sha256 前 12 位**。
 ② `/graph_data.json` 的 `indent=2` 让 85 MB 成为线上下发量，而浏览器解析器并不需要缩进 ——
    改 compact 可省 **~20 MB（31%）**，但要先确认没有别处依赖这个格式。
+
+#### 0.3.34 F13 学科导航（**后端 v1 已就绪，前端待接**）—— 更新于 2026-10-23
+
+**为什么先做后端**：F13 的最初设想是「前端聚合」（9,750 个节点在浏览器里汇总，零后端改动）。
+**这条被现有实现直接否掉**：`06_PoC/js/core.js:45` 明写 `bundleGraph` 只在 `mode=bundle` 下读取、
+**live 模式永不请求** `/graph_data.json`，而 `BUNDLE_MAX_BYTES = 8 MB` 对全图是**拒绝**
+（铁律 #66「规模是设计约束」）。live 页面手上没有全图 ⇒ 前端聚合得先下 85 MB。
+故 F13 的数据面**必须**落在后端。
+
+**处置**：`Backend.nav(level, parent, limit)`（`03_知识层/queries.py`）+ `GET /api/nav`
+（`06_PoC/viz_server.py`）。三层：学科 → 领域 → 领域标签；每格只给「计数 + 前 `limit` 个代表节点」，
+**绝不返回全图**。
+
+**计数口径（用户拍板 A：按 `subject` 主归属）**：前两层是**单归属** ⇒ `sum_items == scanned`
+必须成立（V22a/V22b 咬住，"导航不许漏人"）；第三层 `domain_tags` 是**多值**的
+（实测 5,090 个带标签节点里 **4,289** 个有 ≥2 个标签）⇒ `sum_items > scanned` 是**正常**，
+于是显式给 `multi_valued: true` 与 `tagged` / `untagged`，把可核的式子换成
+`tagged + untagged == scanned`。
+
+**真图实测**（`/api/nav` 服务端真返回，不是读文件）：
+
+| 请求 | 结果 | 守恒 |
+|---|---|---|
+| `level=subject` | 物理 4,983 / 化学 4,442 / 数学 300 / 跨学科 25 | ✅ sum == `scanned` == **9,750** == 全图 |
+| `level=domain&parent=化学` | chem.reaction 1,697 / chem.compound 1,378 / chem.molecule 827 / chem.general 319 … | ✅ sum == `scanned` == **4,442** |
+| `level=tags&parent=chem.reaction` | 该格 1,697 个节点**全部无标签** ⇒ `items=[]`、`untagged=1,697`、`tagged=0` | ✅ **0 + 1697 == 1697** |
+
+★ **一个必须说清的事实**：`domain_tags` 只长在 `Formula` 类节点上 —— `physics.em`(3,217)、
+`physics.mechanics`(719)、`physics.thermo`(643)、`chem.general`(319) 全都有；而
+`chem.reaction` / `chem.compound` / `chem.molecule` / `math` 是 **0 条**。所以第三层在化学三大格上
+**必然是空的** —— 界面必须说「这一格没有领域标签」，不能说「无结果」（D115 同族）。
+
+★ **D117**：**计数语句的位置错了，对账式就会以「看起来合理」的方式撒谎。** 第一版把
+`scanned += 1` 写在「无标签 ⇒ `continue`」之后，于是整格无标签时报出 `scanned=0 / untagged=1697`，
+`tagged + untagged == scanned` 当场不成立 —— 而这个错**没有任何输出异常**：`items=[]`、
+`status=no_result`，看起来就是「没有标签」。是 V22f 这条对账断言把它抓出来的。
+
+**仪器**：`subgraph` **124 / 0 / 3**（+12：V22a–V22l）、`redprobe` **51 / 0 / 0**
+（+R46：无领域节点被静默丢掉 ⇒ **V22c 必须变红**，实测 `RC=1；目标断言均已变红：V22c`）、
+`gatecheck` 八步 **RC=0**。
+
+**未做（下一轮）**：① 前端抽屉（入口 / 面包屑 / 点代表节点走现有 `subgraph`）；
+② `domains` 过滤 —— 要让「整格筛选」可用，必须同时改 `_empty_diagnosis` 的条件表与
+`EMPTY_RELAX_*` 三张表（不是加一个参数就完事）。
 
 ## 一、项目愿景与目标
 
