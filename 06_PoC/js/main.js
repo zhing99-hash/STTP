@@ -32,6 +32,7 @@ import { SubgraphStore } from "./subgraph.js";
 import { QueryPanel, renderStatusLine, renderBanner, bindSearch, esc } from "./panels.js";
 import { renderNodeDetail, renderEdgeDetail, renderOverviewDetail } from "./evidence.js";
 import { TaskEntry } from "./task.js";
+import { emptyDiagOf } from "./empty.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -50,6 +51,9 @@ const state = {
   lastEnv: null,
   overview: false,
   pathList: [],
+  // ★ F12：上一次**真正发出**的查询（模式 + 种子 + 跳数）。「一键放宽」必须
+  //   用同一模式重发，否则会把"给这个节点找个邻域"变成"全图筛一块"，结果面目全非。
+  lastQuery: null,
 };
 
 // ---------------------------------------------------------------------------
@@ -86,11 +90,15 @@ function refreshStatus(env) {
     modeText: state.mode === "bundle" ? MODE_BADGE.bundle.text : MODE_BADGE.live.text,
   });
   renderBanner($("banner"), st, {
-    onAction: (act) => {
+    onAction: (act, btn) => {
       if (act === "raise2") { state.panel.raiseBudget(2); runFilter(); }
       else if (act === "raise5") { state.panel.raiseBudget(5); runFilter(); }
       else if (act === "shrink") { focusPanel(true); }
-      else if (act === "relax") { state.panel.clear(); focusPanel(true); }
+      // ★ F12（D69）：旧的 `relax` 只是 `panel.clear()` —— 把用户的所有条件一并丢掉，
+      //   既没说"刚才是谁挡住的"，也不保证清空后能有结果。现在按**服务端诊断**放宽
+      //   **一个**维度后重发；清空面板另设一个如实命名的动作。
+      else if (act === "relax-diag") { relaxByDiagnosis(btn); }
+      else if (act === "clear-filters") { state.panel.clear(); focusPanel(true); runFilter(); }
       else if (act === "overview") { showOverview(); }
       else if (act === "lower-hops") {
         const h = $("f-hops"); if (h) h.value = String(Math.max(1, (parseInt(h.value, 10) || 3) - 1));
@@ -197,6 +205,10 @@ async function runEgo(seed, { label } = {}) {
  */
 async function runSubgraph(params, { label } = {}) {
   state.overview = false;
+  // ★ F12：记下**这次真正发出的**查询形态 —— 「一键放宽」必须用同一模式重发
+  //   （把 ego 悄悄变成 filter 会换掉整个语义，用户看到的图将不是他刚才那张）。
+  state.lastQuery = { mode: (params.mode || "ego"), seeds: params.seeds || null,
+                      hops: params.hops };
   const r = await state.store.run(params, { label: label || params.mode });
   if (!r.ok) {
     onEnvError(r.env || {
@@ -299,6 +311,63 @@ async function runFilter() {
   return runSubgraph(p, { label: "筛选" });
 }
 
+/** 在**当前**横幅追加一行说明（不覆盖原诊断；下一次 refresh 自然消失）。 */
+function bannerNote(msg) {
+  const el = $("banner");
+  const body = el && el.querySelector(".bbody");
+  if (!body) return;
+  let n = body.querySelector(".ed-note");
+  if (!n) {
+    n = document.createElement("div");
+    n.className = "note ed-note";
+    body.appendChild(n);
+  }
+  n.textContent = msg;
+}
+
+/**
+ * 「一键放宽」—— 按服务端诊断**只改一个维度**后，用同一模式重发。
+ *
+ * 四条纪律（每一条都对应一次踩过的坑）：
+ *  1. 只改诊断点名的那**一个**键。整块清空（旧实现）等于把用户的其他选择一起丢掉，
+ *     而且下一轮又不知道是谁挡的 —— 放宽失去"可解释"。
+ *  2. 改**面板控件**（单一真相源）而不是请求参数：否则界面条件与实际生效条件分叉，
+ *     用户下次手点「执行」时又回到旧条件（"点了没反应"）。
+ *  3. 面板若**什么都没变** ⇒ 不重发。重发一次注定同样空的查询 = 假动作（铁律 #30）。
+ *  4. 按钮必须与**当前**诊断对得上（横幅可能已刷新）—— 否则拿旧按钮改新维度。
+ */
+async function relaxByDiagnosis(btn) {
+  const diag = emptyDiagOf(state.lastEnv);
+  if (!diag || !diag.action) {
+    bannerNote("当前没有可执行的放宽动作（诊断未给出）。");
+    return;
+  }
+  const key = btn ? btn.getAttribute("data-relax-key") : null;
+  if (key && key !== diag.action.key) {
+    bannerNote(`诊断已更新（按钮对应「${key}」，当前建议「${diag.action.key}」）⇒ 请按当前诊断操作。`);
+    return;
+  }
+  if (!state.panel || typeof state.panel.applyPatch !== "function") {
+    bannerNote("查询面板不可用，无法放宽。");
+    return;
+  }
+  const changed = state.panel.applyPatch(diag.action);
+  if (!changed.length) {
+    bannerNote("面板上没有可改的东西（该条件已是最宽）⇒ 未重发请求，"
+      + "避免一次注定同样空的查询。");
+    return;
+  }
+  const last = state.lastQuery || { mode: "filter" };
+  if (last.mode === "path") { await runPath(); return; }
+  if (last.mode === "ego" && last.seeds) {
+    const p = state.panel.collect();
+    const hops = diag.action.key === "hops" ? diag.action.to : last.hops;
+    await runSubgraph({ ...p, mode: "ego", seeds: last.seeds, hops }, { label: "放宽后重试" });
+    return;
+  }
+  await runFilter();
+}
+
 async function expandSelected() {
   if (!state.selNode) return;
   const r = await state.store.expand(state.selNode.id, { hops: 1 });
@@ -346,6 +415,7 @@ async function runPath() {
     $("path-status").textContent = "请先设置起点与终点（两端都要有）";
     return;
   }
+  state.lastQuery = { mode: "path", seeds: [src, dst], hops: req.max_hops };
   const env = await state.api.subgraph(req);
   state.lastEnv = env;
   refreshStatus(env);

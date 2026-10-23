@@ -36,9 +36,15 @@
 （报告是历史记录，改它就是篡改历史）。故 H1/H3 只管**活引用**；
 一次性脚本搬走后，历史报告里的旧路径由脚本自身的 docstring 说明去向。
 
+★ 关于「判据文件自身」：本文件**必须**逐字写下被豁免 / 被占位 / 被注入的路径才能判
+（`MENTION_ONLY`、`PLACEHOLDER`、S1/S3 的负对照夹具），那些字面量是**判据的输入**，
+不是引用 ⇒ 引用扫描排除 `SELF`。但**不静默排除**：自检 S6a/S6b/S6c 三条咬住
+—— (a) 被排除的字面量真的在文件里，(b) 同一个字面量换到别的文件里扫描器照样抓到，
+(c) 排除**只**对 `SELF` 生效。三条缺一条，「排除自己」就退化成看不见的豁免（D116）。
+
 用法：
     python 06_PoC/tests/repo_hygiene_selfcheck.py            # 判据（RC≠0 即红）
-    python 06_PoC/tests/repo_hygiene_selfcheck.py --selfcheck # 自检 S0–S5（含 3 个负对照）
+    python 06_PoC/tests/repo_hygiene_selfcheck.py --selfcheck # 自检 S0–S6（含 5 个负对照）
 """
 from __future__ import annotations
 
@@ -46,8 +52,10 @@ import argparse
 import ast
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))            # 06_PoC/tests
 POC = os.path.dirname(HERE)                                  # 06_PoC
@@ -57,6 +65,11 @@ sys.path.insert(0, POC)
 import interp_note as interp                                 # noqa: E402
 
 BIG = 50 * 1024 * 1024                                       # 50 MB
+
+# 判据文件自身的仓库相对路径 —— 它的路径字面量是**判据输入**，不是引用（D116）。
+#   ★ 排除**必须**由自检 S6a/S6b/S6c 咬住，不能只是 `if f == SELF: continue` 一句了事：
+#     静默排除 = 又一个看不见的豁免，下次谁改了表都无从核对。
+SELF = "06_PoC/tests/repo_hygiene_selfcheck.py"
 
 # ---------------------------------------------------------------------------
 # 白名单：**显式列出**允许存在的被忽略大产物，并给出条数上限与理由。
@@ -212,9 +225,18 @@ def code_files(files):
 
 
 def scan_refs(files):
-    """扫出活文件里写下的仓库内 .py 路径引用 → {路径: [出处]}。"""
+    """扫出活文件里写下的仓库内 .py 路径引用 → {路径: [出处]}。
+
+    ★ 跳过 `SELF`：判据文件里那些路径字面量是**判据输入**（豁免表 / 占位符表 /
+      负对照夹具），不是引用 —— 否则判据会把自己举报成违规（Phase 75 实测：
+      `_gate_selfcheck_phase31.py` / `_recon_domain.py` / `wikidata_adapter.py`
+      三条全是因为判据文件里写着「哪些名字不该被引用」）。排除由 S6a/S6b/S6c 三条
+      自检咬住，不是静默的。
+    """
     refs = {}
     for f in files:
+        if f == SELF:
+            continue
         p = os.path.join(ROOT, f)
         got = _refs_in_py(p) if f.endswith(".py") else _refs_in_text(p)
         for m in got:
@@ -303,7 +325,7 @@ def selfcheck():
         return 2
     ignored = ignored_files() or []
 
-    print("自检 S0–S5（仓库卫生自检的自检；含 3 个负对照）")
+    print("自检 S0–S6（仓库卫生自检的自检；含 5 个负对照）")
     _c("S0 取集合非真空（活文件 %d、被忽略 %d）" % (len(files), len(ignored)),
        len(files) >= 20 and len(ignored) >= 1,
        "取不到集合 ⇒ 三条判据全部退化为真空（D110b）")
@@ -346,19 +368,44 @@ def selfcheck():
        len(MENTION_ONLY) >= 1 and not stale,
        ("腐烂项：%s" % stale) if stale else "文件删了而豁免还挂着 ⇒ 豁免变成永久通行证")
 
+    # S6：判据文件自身的排除**不静默**（D116）—— 三条缺一条，排除就变成通行证
+    self_lits = _refs_in_py(os.path.join(ROOT, SELF))
+    _c("S6a 排除非空转：判据文件自身含 %d 条路径字面量" % len(self_lits),
+       len(self_lits) >= 1,
+       "字面量一条都没有 ⇒ 这条排除无从验证，等于给自己发了一张空白通行证")
+
+    tmpdir = tempfile.mkdtemp(prefix="sttp-hyg-")
+    try:
+        probe = "06_PoC/_recon_domain.py"
+        tmp_py = os.path.join(tmpdir, "fixture_ref.py")
+        with open(tmp_py, "w", encoding="utf-8") as fh:
+            fh.write('X = "%s"\n' % probe)
+        _c("S6b 扫描器不瞎：同一字面量写在**别的**文件里必须被抓到",
+           probe in _refs_in_py(tmp_py),
+           "取不到 ⇒ 排除 SELF 会顺带把真引用一起放过（扫描器坏了，不是排除对了）")
+        only_self = scan_refs([SELF])
+        mixed = scan_refs([SELF, tmp_py])
+        _c("S6c 排除只对判据文件生效（单扫 SELF 得 %d 条；带夹具得 %d 条）"
+           % (len(only_self), len(mixed)),
+           probe not in only_self and probe in mixed,
+           "单扫 SELF 仍有货 ⇒ S6a 的表漏了；带夹具也取不到 ⇒ 排除范围写大了，"
+           "把别人的引用一起吞了")
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
+
     # S4：白名单非真空（否则 H2 退化成"一律报红"或"一律放行"）
     _c("S4 白名单非真空且每条有理由",
        len(DIR_WHITELIST) >= 2 and len(PAT_WHITELIST) >= 2 and
        all(lim >= 0 and why for _p, lim, why in PAT_WHITELIST) and
        all(why for _d, why in DIR_WHITELIST))
 
-    print("\n%s" % ("汇总：✅ 自检 S0–S5 全过" if ok else "汇总：❌ 自检未通过"))
+    print("\n%s" % ("汇总：✅ 自检 S0–S6 全过" if ok else "汇总：❌ 自检未通过"))
     return 0 if ok else 1
 
 
 def main():
     ap = argparse.ArgumentParser(description="仓库卫生自检（Phase 74 · F15/F16 治理的固化）")
-    ap.add_argument("--selfcheck", action="store_true", help="自检 S0–S5（含 3 个负对照）")
+    ap.add_argument("--selfcheck", action="store_true", help="自检 S0–S6（含 5 个负对照）")
     a = ap.parse_args()
     if a.selfcheck:
         return selfcheck()

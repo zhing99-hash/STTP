@@ -27,7 +27,8 @@ import { readFileSync } from "node:fs";
 import * as C from "../js/core.js";
 import { Api, normalizeEnvelope } from "../js/api.js";
 import { detectMode } from "../js/modes.js";
-import { renderStatusLine, renderBanner, bindSearch } from "../js/panels.js";
+import { renderStatusLine, renderBanner, bindSearch, esc as escPanel } from "../js/panels.js";
+import { emptyDiagOf, emptyDiagHTML, boundaryText, scopeText, esc as escEmpty } from "../js/empty.js";
 import { FIDELITY_CLASSES, FIDELITY_BADGE, FIDELITY_UNKNOWN, fidelityBadge,
          EVIDENCE_STATUSES, STALE_EVIDENCE_STATUSES, EVIDENCE_STATUS_RANK,
          EVIDENCE_STATUS_BADGE, EVIDENCE_STATUS_ABSENT, EVIDENCE_STATUS_UNKNOWN,
@@ -424,8 +425,13 @@ check("F26b pending_frontier 被标为「下界」，且**不**渲染成「还�
 
 const bn2 = fakeEl();
 renderBanner(bn2, { status: "no_result", statusInfo: C.statusStyle("no_result"), stats: {}, reason: "" });
-check("F26c 无结果横幅给「放宽建议」，且明说不是失败",
-      bn2.innerHTML.includes("放宽") && bn2.innerHTML.includes("不是失败"), "");
+// ★ F12 规格变更：服务端没给结构化诊断时，**不再**甩一句「放宽建议：去掉部分语义关系 / 换学科…」
+//   —— 那句话没有一个字告诉用户"刚才是哪一条挡住的"。新判据更强：必须明说「不猜原因」，
+//   且只给一个如实命名的中性动作（旧动作 `relax` 会静默清空整个面板，已删除）。
+check("F26c 无结果横幅：明说不是失败；**没有诊断时不猜原因**，只给中性动作",
+      bn2.innerHTML.includes("不是失败") && bn2.innerHTML.includes("不猜原因")
+      && bn2.innerHTML.includes('data-act="clear-filters"')
+      && !bn2.innerHTML.includes('data-act="relax"'), "");
 
 const bn3 = fakeEl();
 renderBanner(bn3, { status: "ok", statusInfo: C.statusStyle("ok"), stats: {} });
@@ -1664,6 +1670,92 @@ const _allRendered = [htmlSym, htmlBlank, htmlNoSym, htmlEx, htmlNr, htmlNe, htm
 check("F44n 渲染结果里**不得出现 Markdown 星号**（`**` 会原样显示成星号，抓自真实冒烟）",
       !/\*\*/.test(_allRendered),
       (_allRendered.match(/.{0,12}\*\*.{0,12}/) || [""])[0]);
+
+// ---------------------------------------------------------------------------
+// F45 空结果诊断（F12 / D69）—— 前端**只排版**，不猜原因
+// ---------------------------------------------------------------------------
+const DG = {
+  scope: "ego", why: "filtered", counterfactual: true, scanned: 3, degree: 3, scan_complete: true,
+  title: "被「可信档」挡住（当前 0 条，放宽后 1 条）",
+  text: "只放宽这一项就能看到 1 条边（当前 0 条），其余条件保持不变。",
+  counts: [{ key: "trust", what: "可信档", n: 1 }, { key: "kinds", what: "关系类型", n: 0 }],
+  action: { key: "trust", to: "all", gain: 1, label: "含全部可信档重试" },
+};
+const envOf = (d, status = "no_result") => ({
+  status, statusInfo: C.statusStyle(status), reason: "",
+  stats: d ? { empty_diagnosis: d } : {},
+});
+
+check("F45a 没有 empty_diagnosis ⇒ 返回 null（宁可不说，也不编原因）",
+      emptyDiagOf(envOf(null)) === null && emptyDiagOf(null) === null, "");
+
+check("F45b 半份诊断（缺 why / 缺 scope）⇒ 一律 null（半份比没有更危险）",
+      emptyDiagOf(envOf({ ...DG, why: undefined })) === null
+      && emptyDiagOf(envOf({ ...DG, scope: undefined })) === null, "");
+
+const dNullTo = emptyDiagOf(envOf({ ...DG, action: { key: "kinds", to: null, label: "清空关系类型" } }));
+check("F45c `to: null` 是**合法目标值**（清空某条件），不得被当成「没有目标」丢弃",
+      dNullTo && dNullTo.action && dNullTo.action.key === "kinds"
+      && dNullTo.action.to === null, JSON.stringify(dNullTo && dNullTo.action));
+
+const dNoTo = emptyDiagOf(envOf({ ...DG, action: { key: "kinds", label: "清空关系类型" } }));
+check("F45d action 缺 `to` ⇒ 丢弃动作（否则点下去不知道要改成什么）",
+      dNoTo && dNoTo.action === null && dNoTo.counts.length === 2, "");
+
+const dBadCnt = emptyDiagOf(envOf({
+  ...DG, counts: [{ key: "trust", what: "可信档", n: 1 }, { key: "x" }, { key: "y", what: "Y", n: "abc" }],
+}));
+check("F45e counts 里的非法项被剔除（缺字段 / n 不是数）⇒ 只剩 1 条",
+      dBadCnt && dBadCnt.counts.length === 1 && dBadCnt.counts[0].key === "trust", "");
+
+const dIso = emptyDiagOf(envOf({ ...DG, why: "isolated", action: null, degree: 0, counts: [] }));
+const isoHtml = emptyDiagHTML(dIso);
+check("F45f isolated：**不渲染放宽按钮**，且说明「放宽必然无效」（边界必须写在界面上）",
+      !isoHtml.includes("relax-diag") && boundaryText(dIso).includes("放宽必然无效"), "");
+
+const dMiss = emptyDiagOf(envOf({ ...DG, why: "missing_seed", action: null, counts: [] }));
+check("F45g missing_seed：边界说明必须点明「没有放宽按钮」的理由（名字不存在）",
+      boundaryText(dMiss).includes("没有放宽按钮") && boundaryText(dMiss).includes("不存在"), "");
+
+const dPath = emptyDiagOf(envOf({ ...DG, scope: "path", why: "no_path",
+                                  counterfactual: false, counts: [] }));
+check("F45h counterfactual=false ⇒ **不渲染**「判定依据：扫描 N 条」（不假精确）",
+      scopeText(dPath) === "" && boundaryText(dPath).includes("不承诺"), "");
+
+const bnOk = fakeEl();
+renderBanner(bnOk, envOf(DG, "ok"));
+check("F45i ok + 0 边：横幅**必须出现**（此前根本不渲染 = D69 的现场）",
+      bnOk.hidden === false && bnOk.className.includes("st-empty")
+      && bnOk.getAttribute("data-state") === "empty"
+      && bnOk.innerHTML.includes("查询正常完成"), "");
+
+const bnNr = fakeEl();
+renderBanner(bnNr, envOf(DG, "no_result"));
+check("F45j no_result + 诊断：说清「无结果 ≠ 失败」，且按钮带着**动作键**",
+      bnNr.innerHTML.includes("无结果 ≠ 失败")
+      && bnNr.innerHTML.includes('data-relax-key="trust"'), "");
+
+const bnNoDg = fakeEl();
+renderBanner(bnNoDg, envOf(null, "no_result"));
+check("F45k 无诊断 ⇒ 明说「不猜原因」，且**不再有**会静默清空面板的 `relax` 动作",
+      bnNoDg.innerHTML.includes("不猜原因")
+      && bnNoDg.innerHTML.includes('data-act="clear-filters"')
+      && !bnNoDg.innerHTML.includes('data-act="relax"'), "");
+
+check("F45l 诊断块里**不得出现 Markdown 星号**（横幅是 HTML，`**` 会原样显示）",
+      !/\*\*/.test(emptyDiagHTML(emptyDiagOf(envOf(DG)))), "");
+
+const nasty = `<a href="x">&'"`;
+check("F45m empty.esc 与 panels.esc 逐字一致（两份实现 ⇒ 由这条钉住，而不是靠 import 耦合）",
+      escEmpty(nasty) === escPanel(nasty) && escEmpty("<b>") === "&lt;b&gt;", escEmpty(nasty));
+
+const deadHtml = emptyDiagHTML(emptyDiagOf(envOf(DG)));
+check("F45n 计数为 0 的那一行标 `dead` 且写「无效」（让用户知道**别**往那个方向试）",
+      deadHtml.includes('class="ed-row dead"') && deadHtml.includes("无效"), "");
+
+const dUnknown = emptyDiagOf(envOf({ scope: "ego", why: "brand_new_state", action: null, counts: [] }));
+check("F45o 没见过的 why ⇒ 仍渲染并**显式暴露原值**（不静默当空，与 whyRow 同一条纪律）",
+      emptyDiagHTML(dUnknown).includes("brand_new_state"), "");
 
 // ---------------------------------------------------------------------------
 // META：证明报告器**可红**（不是恒真）

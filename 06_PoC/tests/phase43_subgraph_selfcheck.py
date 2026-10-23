@@ -1294,6 +1294,125 @@ def main(argv=None) -> int:
             "V20e HTTP 信封透传且仍 ≤ 全图边数（跨层口径一致，前端文案据此可成立）",
             "http=%d ≤ %d" % (hh20, n_edges_total))
 
+    # ---------- V21 空结果诊断（F12 / D69） ----------
+    #  ★ 用**合成图**而不是真图：真图里当前**没有**度为 0 的节点（现算 0 个），
+    #    最关键的「孤立 ⇒ 不给放宽按钮」那条分支在真图上根本走不到。
+    #    判据看不见的分支等于没判据（#118 的读法：上一次没跑的那台仪器）。
+    print("\n[V21] 空结果诊断：单条件反事实 + 放宽的边界（合成图，4 节点 3 边）")
+    import shutil
+    import tempfile
+    _fx = {
+        "nodes": [
+            {"id": "N:iso", "labels": ["Definition"], "props": {"domain": "d1"}},
+            {"id": "N:a", "labels": ["Definition"], "props": {"domain": "d1"}},
+            {"id": "N:b", "labels": ["Quantity"], "props": {"domain": "d2"}},
+            {"id": "N:c", "labels": ["Definition"], "props": {"domain": "d1"}},
+        ],
+        "edges": [
+            {"id": "E:low", "source": "N:a", "target": "N:b", "type": "has_symbol",
+             "kind": "has_symbol", "props": {"verification_level": "model_inferred"}},
+            {"id": "E:high", "source": "N:a", "target": "N:c", "type": "has_symbol",
+             "kind": "has_symbol", "props": {"verification_level": "by_construction"}},
+            {"id": "E:mid", "source": "N:b", "target": "N:c", "type": "has_quantity",
+             "kind": "has_quantity", "props": {"verification_level": "by_construction"}},
+        ],
+    }
+    _tmp = tempfile.mkdtemp(prefix="sttp-f12-")
+    _fxp = os.path.join(_tmp, "fixture.json")
+    with open(_fxp, "w", encoding="utf-8") as _f:
+        json.dump(_fx, _f, ensure_ascii=False)
+    _fb = Q.NXBackend(_fxp)
+
+    def _nt(labels):
+        return (labels or ["Unknown"])[0]
+
+    def _so(domain, nid):
+        return domain or ""
+
+    def _eg(**kw):
+        kw.setdefault("node_type_of", _nt)
+        kw.setdefault("subject_of_fn", _so)
+        return _fb.subgraph(**kw)
+
+    def _dg(r):
+        return r.get("stats", {}).get("empty_diagnosis") or {}
+
+    def _cn(d):
+        return {x["key"]: x["n"] for x in (d.get("counts") or [])}
+
+    r = _eg(seeds=["N:iso"], mode="ego", hops=1, trust="all")
+    d0 = _dg(r)
+    rep.add(r["status"] == "ok" and not r["edges"] and d0.get("why") == "isolated"
+            and d0.get("action") is None and d0.get("degree") == 0,
+            "V21a 孤立节点 ⇒ why=isolated 且**无放宽动作**（放宽必然无效，给了就是假动作）",
+            "%s why=%s action=%s degree=%s"
+            % (r["status"], d0.get("why"), d0.get("action"), d0.get("degree")))
+    r = _eg(seeds=["N:a"], mode="ego", hops=1, trust="all")
+    rep.add(len(r["edges"]) > 0 and "empty_diagnosis" not in r["stats"],
+            "V21a' 反例：有边的种子 ⇒ 不产生诊断（证明 isolated 不是恒真）",
+            "edges=%d" % len(r["edges"]))
+
+    r = _eg(seeds=["N:a"], mode="ego", hops=1, trust="verified", kinds="__none__")
+    d1 = _dg(r)
+    a1 = d1.get("action") or {}
+    c1 = _cn(d1)
+    rep.add(d1.get("why") == "filtered" and a1.get("key") == "kinds" and c1.get("kinds") == 1,
+            "V21b 两个条件同时生效时，只选出**有效**的那一项（kinds=1 条 / trust=0 条）",
+            "action=%s gain=%s counts=%s" % (a1.get("key"), a1.get("gain"), c1))
+    rep.add(a1.get("key") in c1 and c1.get(a1.get("key"), 0) > 0,
+            "V21b' 一致性：建议的动作必须是**计数为正**的那一项（不得建议放宽一个无效项）",
+            "%s → %s" % (a1.get("key"), c1.get(a1.get("key"))))
+
+    r = _eg(seeds=["N:a"], mode="ego", hops=1, trust="all", kinds="__none__")
+    d2 = _dg(r)
+    a2 = d2.get("action") or {}
+    rep.add(a2.get("gain") == 2 and _cn(d2).get("kinds") == 2,
+            "V21c 同一条边、换可信档后反事实计数**跟着变**（1 → 2）⇒ 是真复算，不是常量",
+            "gain=%s kinds=%s" % (a2.get("gain"), _cn(d2).get("kinds")))
+
+    r = _eg(seeds=["N:a"], mode="ego", hops=1, trust="verified")
+    rep.add(len(r["edges"]) == a1.get("gain"),
+            "V21d **承诺 == 交付**：按诊断建议放宽后重跑，实得边数 == 承诺的 gain",
+            "承诺 %s 条 / 实得 %d 条" % (a1.get("gain"), len(r["edges"])))
+
+    r = _eg(seeds=["N:a"], mode="ego", hops=0, trust="all")
+    d3 = _dg(r)
+    rep.add(d3.get("why") == "hops_zero" and (d3.get("action") or {}).get("key") == "hops",
+            "V21e 跳数=0 ⇒ 单列为 hops_zero（放大可信档救不回来），动作＝增跳数",
+            "%s → %s" % (d3.get("why"), (d3.get("action") or {}).get("key")))
+
+    r = _eg(seeds=["DOES:NOT:EXIST"], mode="ego")
+    d4 = _dg(r)
+    rep.add(r["status"] == "no_result" and d4.get("why") == "missing_seed"
+            and d4.get("action") is None,
+            "V21f 种子不存在 ⇒ **不给任何放宽动作**（放宽救不了一个不存在的名字）",
+            "%s why=%s" % (r["status"], d4.get("why")))
+
+    r = _eg(mode="filter", kinds="has_symbol", subjects="d2")
+    d5 = _dg(r)
+    a5 = d5.get("action") or {}
+    rep.add(r["status"] == "no_result" and a5.get("key") == "subjects" and a5.get("gain") == 1,
+            "V21g filter 模式：学科限定把两个端点拆开 ⇒ 建议放宽学科，而不是瞎猜边级条件",
+            "action=%s gain=%s" % (a5.get("key"), a5.get("gain")))
+    rep.add(d5.get("scanned") == len(_fx["edges"]) and d5.get("scan_complete") is True,
+            "V21h 诊断必须自报扫描范围（`scanned`）：**0 条 ≠ 没扫过**（D110b）",
+            "scanned=%s complete=%s" % (d5.get("scanned"), d5.get("scan_complete")))
+
+    r = _eg(seeds=["N:a", "N:iso"], mode="path", hops=1, max_hops=2, trust="all")
+    d6 = _dg(r)
+    rep.add(d6.get("counterfactual") is False
+            and (d6.get("action") or {}).get("key") == "hops"
+            and d6.get("counts") == [],
+            "V21i path 模式**不做**反事实计数（连通性不由单条件决定）⇒ counterfactual=false",
+            "action=%s counts=%s" % ((d6.get("action") or {}).get("key"), d6.get("counts")))
+
+    # 诊断只能出现在「真空」时：有结果还必须给诊断 ⇒ 每次查询都在渲染无用的解释块
+    r = _eg(seeds=["N:a"], mode="ego", hops=1, kinds="has_symbol", trust="all")
+    rep.add(len(r["edges"]) == 2 and "empty_diagnosis" not in r["stats"],
+            "V21j 非空结果 ⇒ 不带诊断（诊断只在真空时出现，不做常驻噪音）",
+            "edges=%d" % len(r["edges"]))
+    shutil.rmtree(_tmp, ignore_errors=True)
+
     # ---------- Neo4j 契约（本环境不可达 ⇒ SKIP，不计通过） ----------
     print("\n[Neo4j] 双后端同契约（本环境不可达 ⇒ SKIP）")
     try:

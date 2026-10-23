@@ -234,6 +234,20 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
   .banner.st-error { color: var(--st-error); }
   .banner .note { color: var(--muted); }
 
+  /* ---------- F12 空结果诊断（D69）：为什么是空的 + 一键放宽 ----------
+     ok + 0 边用 `st-empty`（中性灰）：既不能染成绿色"正常"，
+     也不能冒充 no_result —— 五态是另一条断言（状态行）在管。 */
+  .banner.st-empty { color: var(--st-no-result); }
+  .banner .ed-cnt { list-style: none; margin: 5px 0 0; padding: 0; display: grid; gap: 2px; }
+  .banner .ed-row { display: flex; gap: 8px; align-items: baseline; font-size: 12px; line-height: 1.45; }
+  .banner .ed-k { color: var(--text); min-width: 82px; }
+  .banner .ed-v { color: var(--text); }
+  .banner .ed-row.dead .ed-v { color: var(--muted); }
+  .banner .ed-scope, .banner .ed-bound { font-size: 11.5px; line-height: 1.5; }
+  .banner .ed-bound { margin-top: 4px; }
+  .banner .ed-note { margin-top: 4px; color: var(--warn); font-size: 11.5px; }
+  .banner .ed-not-fail { margin-bottom: 3px; }
+
   /* ---------- 详情 / 证据 ---------- */
   .detail-title { font-size: 16px; font-weight: 700; margin: 0 0 2px; word-break: break-all; }
   .detail-block { margin-top: 11px; }

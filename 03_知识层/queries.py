@@ -774,6 +774,254 @@ class Backend:
             return False
         return True
 
+    # ---------------- 空结果诊断（F12 / D69） ----------------
+    # ★ 为什么是「单条件反事实」而不是一句「可放宽条件」：
+    #   旧文案教用户放宽，却**没说放宽哪一个**；而「放宽条件并重试」的实现是
+    #   `panel.clear()`（整块清空面板）—— 用户既不知道刚才哪一条把它挡住了，
+    #   也不知道清空后还会不会空。这是 D64（指引指向代码无法兑现的动作）的同族：
+    #   动作存在，但没有信息含量。
+    # ★ `counts[k]` 的语义：**只**取消第 k 个条件（其余一律不动）后能通过的候选边数。
+    #   它是对同一份索引**重算**出来的，不是估计值；`scanned` 必须与它一同给出 ——
+    #   「0 条」与「没扫过」在读数上不可区分（D110b）。
+    # ★ 边界是可证的：`degree`（不加任何条件时的候选数）为 0 ⇒ 放宽**必然**无效，
+    #   此时 `action` 必须是 None。没有这一条，一键放宽就退化成
+    #   「永远能搜到东西」的假动作（铁律 #30）。
+    EMPTY_RELAX_ORDER = ("trust", "exclude_stale", "min_confidence",
+                         "exclude_model_inferred", "kinds", "types",
+                         "node_types", "subjects")
+    EMPTY_RELAX_LABEL = {
+        "trust": "含全部可信档重试",
+        "exclude_stale": "不再排除过期证据",
+        "min_confidence": "清空置信度门槛",
+        "exclude_model_inferred": "不再排除模型推断",
+        "kinds": "清空关系类型",
+        "types": "清空证据类型",
+        "node_types": "清空节点类型",
+        "subjects": "清空学科限定",
+        "hops": "增加 1 跳再试",
+    }
+    # 「谁把它挡住的」—— 与 EMPTY_RELAX_LABEL（动作名）**必须分开**：
+    # 句子要说"被『可信档』挡住"，而不是"被『含全部可信档重试』挡住"（那是把动作当原因）。
+    EMPTY_RELAX_WHAT = {
+        "trust": "可信档", "exclude_stale": "过期证据排除",
+        "min_confidence": "置信度门槛", "exclude_model_inferred": "模型推断排除",
+        "kinds": "关系类型", "types": "证据类型",
+        "node_types": "节点类型", "subjects": "学科限定", "hops": "跳数",
+    }
+    EMPTY_RELAX_TO = {
+        "trust": TRUST_ALL,
+        "exclude_stale": False,
+        "min_confidence": 0,
+        "exclude_model_inferred": False,
+        "kinds": None, "types": None, "node_types": None, "subjects": None,
+        "hops": None,
+    }
+
+    def _empty_diagnosis(self, cand_edges, *, f, trust, nt, sub, nodes_by_id,
+                         node_type_of, subject_of_fn, scope, scanned,
+                         scan_complete=True, hops=None, max_hops=None,
+                         budget_ms=1500):
+        """0 边时给出**可复算**的原因与**单一的**下一步动作。
+
+        `cand_edges`：判定所依据的候选边（ego ＝ 种子关联边；filter ＝ 全图边）。
+        返回 dict（不抛异常、不猜）：
+          why      isolated（候选边一条都没有）/ hops_zero（跳数为 0）/ filtered / combined
+          degree   不加任何条件时能通过的候选数（**边界**：0 ⇒ 放宽必然无效）
+          counts   每个**当前生效**条件的单条件反事实计数
+          action   唯一建议动作 {key, to, gain, label} 或 None
+          applied  本次实际生效的条件（服务端口径，前端不必自行重建）
+        `budget_ms` 只约束**诊断本身**：超时即停并置 `scan_complete=False`,
+        绝不把「没算完」写成一个看起来精确的 0（宁可不给动作，也不给假精确）。
+        """
+        t0 = time.monotonic()
+        edges = cand_edges if isinstance(cand_edges, list) else list(cand_edges)
+        state = {"partial": False}
+
+        def _passes(e, f2, trust2, nt2, sub2):
+            if not self._edge_ok(e, f2):
+                return False
+            if not self._trust_ok(e, trust2):
+                return False
+            for nid in (e["source"], e["target"]):
+                n = nodes_by_id.get(nid)
+                if n is None:
+                    return False
+                if nt2 and ((node_type_of(n["labels"]) if node_type_of else "Unknown") not in nt2):
+                    return False
+                if sub2 and ((subject_of_fn(n["props"].get("domain"), nid)
+                              if subject_of_fn else "") not in sub2):
+                    return False
+            return True
+
+        def _apply(key, f2, trust2, nt2, sub2):
+            if key == "trust":
+                trust2 = TRUST_ALL
+            elif key == "exclude_stale":
+                f2["exclude_stale"] = False
+            elif key == "min_confidence":
+                f2["min_confidence"] = 0.0
+            elif key == "exclude_model_inferred":
+                f2["exclude_model_inferred"] = False
+            elif key == "kinds":
+                f2["kinds"] = None
+            elif key == "types":
+                f2["types"] = None
+            elif key == "node_types":
+                nt2 = None
+            elif key == "subjects":
+                sub2 = None
+            return f2, trust2, nt2, sub2
+
+        def _count(drops):
+            f2, trust2, nt2, sub2 = dict(f), trust, nt, sub
+            for k in drops:
+                f2, trust2, nt2, sub2 = _apply(k, f2, trust2, nt2, sub2)
+            n = 0
+            for e in edges:
+                if _expired(t0, budget_ms):
+                    state["partial"] = True
+                    break
+                if _passes(e, f2, trust2, nt2, sub2):
+                    n += 1
+            return n
+
+        _F0 = {"types": None, "kinds": None, "min_confidence": 0.0,
+               "exclude_model_inferred": False, "exclude_stale": False}
+
+        def _count_all():
+            """**不加任何条件**时能通过的候选数 —— 这是「放宽的边界」本身。
+
+            ★ 不能拿 `_count(())` 顶替：那个用的是**当前**条件，结果恒为 0
+              （本次之所以进来就是因为 0）。第一版就是这么写错的，`degree` 全是 0，
+              于是每个空结果都被判成「孤立节点、无可放宽」—— 判据自己把自己骗过去了。
+            """
+            n = 0
+            for e in edges:
+                if _expired(t0, budget_ms):
+                    state["partial"] = True
+                    break
+                if _passes(e, _F0, TRUST_ALL, None, None):
+                    n += 1
+            return n
+
+        applied = {
+            "trust": trust,
+            "hops": hops, "max_hops": max_hops,
+            "n_kinds": len(f["kinds"] or ()), "n_types": len(f["types"] or ()),
+            "n_subjects": len(sub or ()), "n_node_types": len(nt or ()),
+            "min_confidence": f["min_confidence"],
+            "exclude_stale": bool(f["exclude_stale"]),
+            "exclude_model_inferred": bool(f["exclude_model_inferred"]),
+        }
+        base = {"scope": scope, "scanned": scanned, "scan_complete": scan_complete,
+                "counterfactual": True, "applied": applied, "counts": []}
+
+        def _counts_list(counts):
+            """→ [{key, what, n}]（按 EMPTY_RELAX_ORDER）。中文名**只在后端**有一份。"""
+            return [{"key": k, "what": self.EMPTY_RELAX_WHAT[k], "n": counts[k]}
+                    for k in self.EMPTY_RELAX_ORDER if k in counts]
+
+        # ① 跳数为 0：任何条件放宽都救不回来，必须单独识别 —— 否则会给出
+        #    「放宽可信档可多看到 12 条边」这种**照做也无效**的建议。
+        if scope == "ego" and hops is not None and int(hops) <= 0:
+            base.update({
+                "why": "hops_zero", "degree": None,
+                "title": "跳数为 0（只返回种子本身）",
+                "action": {"key": "hops", "to": max(1, int(max_hops or 1)),
+                           "gain": None, "label": self.EMPTY_RELAX_LABEL["hops"]},
+                "text": "本次跳数为 0 ⇒ 只返回种子本身、不展开任何邻边。增加跳数才能看到邻域。",
+            })
+            return base
+
+        degree = _count_all()
+        base["degree"] = degree
+        if state["partial"]:
+            base.update({"why": "undecided", "action": None,
+                         "title": "诊断未算完（不给建议）",
+                         "text": "诊断在预算内没算完（候选 %d 条）⇒ 不给放宽建议，"
+                                 "以免把「没算完」说成「没有」。" % len(edges)})
+            return base
+        if degree == 0:
+            base.update({
+                "why": "isolated", "action": None,
+                "title": "该条目在整图里没有边",
+                "text": "该条目在整图里没有任何一条可用的边（不是被条件挡住的）："
+                        "放宽任一条件都不会改变结果。",
+            })
+            return base
+
+        active = [k for k in self.EMPTY_RELAX_ORDER
+                  if (k == "trust" and trust != TRUST_ALL)
+                  or (k == "exclude_stale" and f["exclude_stale"])
+                  or (k == "min_confidence" and f["min_confidence"] > 0.0)
+                  or (k == "exclude_model_inferred" and f["exclude_model_inferred"])
+                  or (k == "kinds" and f["kinds"])
+                  or (k == "types" and f["types"])
+                  or (k == "node_types" and nt)
+                  or (k == "subjects" and sub)]
+
+        _c = {}
+        for k in active:
+            _c[k] = _count((k,))
+        if state["partial"]:
+            base.update({"why": "undecided", "action": None,
+                         "title": "诊断未算完（不给建议）",
+                         "text": "诊断在预算内没算完 ⇒ 不给放宽建议（否则会把"
+                                 "「没算完」说成「没用」）。"})
+            return base
+
+        base["counts"] = _counts_list(_c)
+        best, best_n = None, 0
+        for k in self.EMPTY_RELAX_ORDER:
+            n = _c.get(k, 0)
+            if n > best_n:
+                best, best_n = k, n
+        if best is not None:
+            base.update({
+                "why": "filtered",
+                "title": "被「%s」挡住（当前 0 条，放宽后 %d 条）"
+                         % (self.EMPTY_RELAX_WHAT[best], best_n),
+                "action": {"key": best, "to": self.EMPTY_RELAX_TO[best],
+                           "gain": best_n, "label": self.EMPTY_RELAX_LABEL[best]},
+                # 标题说"谁挡的"，正文说"放宽后能得到什么" —— 两句话各管一件事，
+                # 不重复（按钮上已经有动作名，正文再写一遍就是三份）。
+                "text": "只放宽这一项就能看到 %d 条边（当前 0 条），其余条件保持不变。"
+                        % best_n,
+            })
+            return base
+
+        # ② 单条件都不够（同时被两个以上条件挡住）：按累积顺序找第一个能出结果的步骤。
+        drops, cum = [], 0
+        for k in self.EMPTY_RELAX_ORDER:
+            if k not in active:
+                continue
+            drops.append(k)
+            cum = _count(tuple(drops))
+            if state["partial"]:
+                base.update({"why": "undecided", "action": None,
+                             "text": "诊断在预算内没算完 ⇒ 不给放宽建议。"})
+                return base
+            if cum > 0:
+                base.update({
+                    "why": "combined",
+                    "title": "多项条件同时把它挡住了",
+                    "action": {"key": k, "to": self.EMPTY_RELAX_TO[k],
+                               "gain": cum, "label": self.EMPTY_RELAX_LABEL[k]},
+                    "text": "需要同时放宽多项：先放宽「%s」（累积到这一步共 %d 条边）；"
+                            "单放宽其中任意一项都不够。" % (self.EMPTY_RELAX_WHAT[k], cum),
+                })
+                return base
+
+        # ③ 兜底：候选非空、条件也全放开了，仍为 0 —— 说明判定口径与候选集合不同源。
+        #    这时**不给动作**（给了就是假动作），如实登记。
+        base.update({
+            "why": "unreachable", "action": None,
+            "title": "诊断与候选集合不同源（缺陷）",
+            "text": "候选 %d 条边、条件已放宽到最宽仍为 0 ⇒ 诊断口径与候选集合不同源，"
+                    "登记为缺陷而不是给出无效的放宽建议。" % len(edges),
+        })
+        return base
+
     # ---------------- A/B. 搜索 ----------------
     def search(self, q: str, node_types=None, subjects=None, limit: int = 20,
                node_type_of: Optional[Callable] = None,
@@ -1023,16 +1271,56 @@ class Backend:
                 return self._envelope(NO_RESULT, "节点不存在：%s" % ",".join(pr["missing"]),
                                       {}, {}, query={"mode": mode, "seeds": seed_list},
                                       stats={"missing_seeds": pr["missing"],
+                                             "empty_diagnosis": {
+                                                 "scope": "path", "why": "missing_seed",
+                                                 "title": "端点不存在",
+                                                 "counterfactual": False, "action": None,
+                                                 "scanned": None, "degree": None, "counts": [],
+                                                 "applied": {"seeds": seed_list},
+                                                 "text": "端点不存在（%s）⇒ 放宽可信档或跳数"
+                                                         "都不会产生路径；请重新设置端点。"
+                                                         % "、".join(pr["missing"])},
                                              "elapsed_ms": _ms(t0)})
             if pr["timed_out"]:
                 truncated_by = "deadline"
                 reasons.append("超过 deadline_ms=%d" % deadline_ms)
             if not pr["paths"]:
+                # ★ F12：路径模式的「空」**不能**用单条件反事实解释 —— 连通性不是
+                #   单条件可分的（去掉一个条件不一定让 a、b 连上）。给假精确比不给更糟，
+                #   故这里只给**两个真实可执行的步骤**并显式标注 `counterfactual=false`。
+                _act = None
+                if hidden_edges and trust != TRUST_ALL:
+                    _act = {"key": "trust", "to": TRUST_ALL, "gain": None,
+                            "label": self.EMPTY_RELAX_LABEL["trust"]}
+                elif hops < max_hops:
+                    _act = {"key": "hops", "to": min(int(max_hops), int(hops) + 1),
+                            "gain": None, "label": self.EMPTY_RELAX_LABEL["hops"]}
                 return self._envelope(NO_RESULT,
                                       "在 %d 跳内没有满足过滤条件的路径（a=%s, b=%s）" % (hops, a, b),
                                       {}, {}, query={"mode": mode, "seeds": seed_list},
                                       stats={"missing_seeds": missing_seeds, "hops": hops,
                                              "hidden_by_trust": len(hidden_edges),
+                                             "empty_diagnosis": {
+                                                 "scope": "path", "why": "no_path",
+                                                 "counterfactual": False,
+                                                 "title": "没有路径",
+                                                 "scanned": None, "degree": None,
+                                                 "counts": [],
+                                                 "applied": {"trust": trust, "hops": hops,
+                                                             "max_hops": max_hops},
+                                                 "hidden_by_trust": len(hidden_edges),
+                                                 "action": _act,
+                                                 "text": ("已隐藏 %d 条低可信度边（按边 id 去重）："
+                                                          "通路可能正被它们连接。"
+                                                          % len(hidden_edges))
+                                                         if hidden_edges else
+                                                         ("没有更低的可信档可放开，且跳数已到上限"
+                                                          "（%d）⇒ 这一对端点在当前图里不连通。"
+                                                          % hops) if hops >= max_hops else
+                                                         ("在当前可信档（%s）下没有路径；"
+                                                          "跳数还能再加（%d → %d）。"
+                                                          % (trust, hops, min(int(max_hops),
+                                                                              int(hops) + 1)))},
                                              "elapsed_ms": _ms(t0)})
             for p in pr["paths"]:
                 for nid in p["nodes"]:
@@ -1086,6 +1374,14 @@ class Backend:
                         {}, {}, query={"mode": mode},
                         stats={"hidden_by_trust": len(hidden_edges), "truncated_by": "deadline",
                                "pre_truncation": None, "elapsed_ms": _ms(t0)})
+                # ★ F12：filter 模式的「空」有两种成因 —— 边级条件挡掉、或端点学科/类型
+                #   挡掉。二者对用户意味着完全不同的下一步，必须分开算（单条件反事实）。
+                #   只在这一刻做：全量扫描已经跑完 ⇒ 诊断复用的正是同一份边集。
+                _diag = self._empty_diagnosis(
+                    idx["edges"], f=f, trust=trust, nt=nt, sub=sub,
+                    nodes_by_id=nodes_by_id, node_type_of=node_type_of,
+                    subject_of_fn=subject_of_fn, scope="filter",
+                    scanned=len(idx["edges"]), budget_ms=2000)
                 return self._envelope(NO_RESULT,
                                       "过滤后没有边（已扫描 %d 条，hidden_by_trust=%d）"
                                       % (i + 1, len(hidden_edges)),
@@ -1093,6 +1389,7 @@ class Backend:
                                           "hidden_by_trust": len(hidden_edges),
                                           "pre_truncation": pre_truncation,
                                           "truncated_by": None,
+                                          "empty_diagnosis": _diag,
                                           "elapsed_ms": _ms(t0)})
             edge_sel = matched_edges if scan_timed_out else matched_edges[:max_edges]
             edges_cut = len(matched_edges) > len(edge_sel)
@@ -1123,11 +1420,22 @@ class Backend:
 
         else:  # ego
             if not present_seeds:
+                # ★ F12：种子不存在时**不得**给任何放宽动作 —— 放宽救不了一个
+                #   不存在的名字，给了就是"点了也照样空"的假动作（铁律 #30）。
                 return self._envelope(
                     NO_RESULT,
                     "种子节点不存在：%s" % ",".join(seed_list) if seed_list else "缺少参数 seeds",
                     {}, {}, query={"mode": mode, "seeds": seed_list},
-                    stats={"missing_seeds": missing_seeds, "elapsed_ms": _ms(t0)})
+                    stats={"missing_seeds": missing_seeds,
+                           "empty_diagnosis": {
+                               "scope": "ego", "why": "missing_seed", "action": None,
+                               "title": "种子不存在", "counterfactual": False,
+                               "scanned": 0, "degree": None, "counts": [],
+                               "applied": {"seeds": seed_list},
+                               "text": "种子不存在（%s）⇒ 任何条件放宽都不会让它出现；"
+                                       "请改用搜索选一个存在的条目。"
+                                       % "、".join(missing_seeds or seed_list)},
+                           "elapsed_ms": _ms(t0)})
             for s in present_seeds:
                 why_nodes[s] = WHY_USER
             from collections import deque
@@ -1171,6 +1479,25 @@ class Backend:
                 truncated_by = "hops"
                 reasons.append("请求跳数被夹紧至 max_hops=%d" % max_hops)
 
+        # ★ F12（D69）：0 边时给出**可复算**的原因与**单一的**下一步动作。
+        #   只在**没被预算截断**时做 —— `truncated_by` 非空时「0 条」的含义是
+        #   「还没找到」（deadline）或「被夹紧」，不是「没有」；此时给放宽建议就是
+        #   把「没算完」说成「没有」（D110b 同族）。
+        empty_diag = None
+        if not why_edges and truncated_by is None:
+            _cand, _seen_e = [], set()
+            for _s0 in present_seeds:
+                for _item in idx["adj"].get(_s0, []):
+                    _e = _item[0]
+                    if _e["id"] in _seen_e:
+                        continue
+                    _seen_e.add(_e["id"])
+                    _cand.append(_e)
+            empty_diag = self._empty_diagnosis(
+                _cand, f=f, trust=trust, nt=nt, sub=sub, nodes_by_id=nodes_by_id,
+                node_type_of=node_type_of, subject_of_fn=subject_of_fn,
+                scope="ego", scanned=len(_cand), hops=hops, max_hops=max_hops)
+
         nodes_out = [nodes_by_id[nid] for nid in sorted(why_nodes) if nid in nodes_by_id]
         edges_out = sorted((e for e in idx["edges"] if e["id"] in why_edges),
                            key=lambda x: x["id"])
@@ -1191,6 +1518,8 @@ class Backend:
             "clamped": {k: v for k, v in clamp.items() if v},
             "elapsed_ms": _ms(t0),
         }
+        if empty_diag is not None:
+            stats["empty_diagnosis"] = empty_diag
         # ★ A04 · 验证依赖状态（Phase 45）：本次可见子图内的**分列**计数。
         #   与 `evidence_fidelity` 并列但**粒度不同**：前者是**边级字节**忠实度，
         #   本项是**证据级依赖**状态（参考表 / 验证器 / 依赖版本 / 命题被否决 / 哈希来路不明）。

@@ -28,6 +28,7 @@ import {
 import {
   EDGE_TYPE_COLOR, NODE_TYPE_ORDER, SUBJECT_ORDER, VERIFICATION_BADGE, EOI_STYLE,
 } from "./style.js";
+import { emptyDiagOf, emptyDiagHTML } from "./empty.js";
 
 const EDGE_TYPES = Object.keys(EDGE_TYPE_COLOR);   // ★ 恰好 24 种（与规范图实测集合相等）
 
@@ -139,9 +140,13 @@ export function renderStatusLine(el, env, extra = {}) {
  */
 export function renderBanner(el, env, opts = {}) {
   if (!el) return;
-  if (!env || env.status === "ok") { el.innerHTML = ""; el.hidden = true; return; }
+  // ★ F12（D69）：`ok` + 0 边（单节点/空子图）以前**根本不出现横幅** ——
+  //   用户看到一张空画布，没有任何文字说明发生了什么。现在只要服务端给了
+  //   `stats.empty_diagnosis` 就必须渲染，哪怕五态是 `ok`。
+  const diag = emptyDiagOf(env);
+  if (!env || (env.status === "ok" && !diag)) { el.innerHTML = ""; el.hidden = true; return; }
   el.hidden = false;
-  const st = env.statusInfo;
+  const st = env.statusInfo || statusStyle(env.status);
   const stats = env.stats || {};
   let body = "";
 
@@ -156,11 +161,23 @@ export function renderBanner(el, env, opts = {}) {
       + '<button class="toolbtn" data-act="raise5">提高预算 ×5</button>'
       + '<button class="toolbtn" data-act="shrink">缩小过滤</button>'
       + "</div>";
-  } else if (env.status === "no_result") {
-    body = `<div class="bt">该条件下<b>确实没有匹配</b>（不是失败）。</div>`
-      + '<div class="note">放宽建议：去掉部分语义关系 / 换学科 / 提高跳数 / 降低置信度门槛 / 检查拼写。</div>'
-      + '<div class="bact"><button class="toolbtn" data-act="relax">放宽条件并重试</button>'
-      + '<button class="toolbtn" data-act="overview">改看概览</button></div>';
+  } else if (env.status === "no_result" || (env.status === "ok" && diag)) {
+    if (diag) {
+      // ★ 「无结果 ≠ 失败」这句**必须**保留（铁律 #67）：诊断说的是原因，
+      //   不是"这次查询出错了"。`ok` + 0 边时同样要说清"查询正常完成、只是没有边"。
+      const lead = env.status === "no_result"
+        ? '<div class="note ed-not-fail">无结果 ≠ 失败：查询已正常执行完，是这个条件下确实没有匹配。</div>'
+        : '<div class="note ed-not-fail">查询正常完成（五态＝ok），但结果里没有边：'
+          + '下面是它为什么会是空的。</div>';
+      body = lead + emptyDiagHTML(diag);
+    } else {
+      // 服务端没给诊断（老快照 / 非本仓路径）⇒ **不编原因**，只给可执行的中性动作。
+      body = `<div class="bt">该条件下<b>确实没有匹配</b>（不是失败）。</div>`
+        + '<div class="note">本次没有拿到结构化诊断（服务端未给 empty_diagnosis）⇒ '
+        + '不猜原因。可先清空筛选条件重试。</div>'
+        + '<div class="bact"><button class="toolbtn" data-act="clear-filters">清空筛选条件</button>'
+        + '<button class="toolbtn" data-act="overview">改看概览</button></div>';
+    }
   } else if (env.status === "timeout") {
     body = `<div class="bt">查询在预算内未完成（<b>非空、非失败</b>；已返回能找到的部分）。</div>`
       + `<div class="note">${esc(env.reason || "")}</div>`
@@ -172,11 +189,17 @@ export function renderBanner(el, env, opts = {}) {
       + `${env.error_code && ERROR_CODE_TEXT[env.error_code] ? "（" + esc(ERROR_CODE_TEXT[env.error_code]) + "）" : ""}</div>`;
   }
 
-  el.className = `banner ${st.cls}`;
-  el.innerHTML = `<span class="bicon">${statusIconSvg(st.icon, 16)}</span><div class="bbody">${body}</div>`;
+  const emptyish = !!(diag && env.status === "ok");
+  const cls = emptyish ? "st-empty" : st.cls;
+  const icon = emptyish ? STATUS_STYLE.no_result.icon : st.icon;
+  el.className = `banner ${cls}`;
+  el.setAttribute("data-state", emptyish ? "empty" : (env.status || ""));
+  el.innerHTML = `<span class="bicon">${statusIconSvg(icon, 16)}</span><div class="bbody">${body}</div>`;
   if (typeof opts.onAction === "function") {
     el.querySelectorAll("[data-act]").forEach((b) => {
-      b.addEventListener("click", () => opts.onAction(b.getAttribute("data-act")));
+      // ★ 第二个参数把"点的是哪个按钮"传出去：放宽动作必须与**当前**诊断对得上，
+      //   否则会拿着上一帧的按钮去改这一帧的面板（竞态型假动作）。
+      b.addEventListener("click", () => opts.onAction(b.getAttribute("data-act"), b));
     });
   }
   return el;
@@ -358,6 +381,80 @@ export class QueryPanel {
         : id === "f-hops" ? BUDGET.hops : BUDGET.deadline_ms);
     });
     this.onChanged(this.collect());
+  }
+
+  /**
+   * 按**诊断给出的**单个键把控件改到目标值（供「一键放宽」用）。
+   *
+   * 为什么必须改**控件**而不是直接改请求参数：面板是参数的**单一真相源**
+   * （`collect()` 既是执行入口也是「执行参数」的唯一构造点）。绕过面板改请求，
+   * 界面显示的条件与实际生效的条件就会分叉 —— 用户下一次手点「执行」，
+   * 条件又悄悄回到旧的，表现为"点了没反应"。
+   *
+   * @param {{key:string, to:any}} patch 服务端 `empty_diagnosis.action`
+   * @returns {string[]} **实际发生变化**的键；空数组 ⇒ 没有可改的东西，
+   *   调用方**不得**重发请求（重发一次必然同样空的请求 = 假动作）
+   */
+  applyPatch(patch) {
+    const r = this.root;
+    if (!r || !patch || !patch.key) return [];
+    const key = String(patch.key);
+    const changed = [];
+    const uncheckAll = (name) => {
+      let n = 0;
+      r.querySelectorAll(`input[name="${name}"]:checked`).forEach((c) => {
+        c.checked = false; n += 1;
+      });
+      if (n) changed.push(key);
+    };
+    switch (key) {
+      case "trust": {
+        const t = r.querySelector(`input[name="ftrust"][value="${patch.to}"]`);
+        if (t && !t.checked) { t.checked = true; changed.push(key); }
+        break;
+      }
+      case "kinds": {
+        const el = r.querySelector("#f-kinds");
+        if (el && el.value !== "") { el.value = ""; changed.push(key); }
+        break;
+      }
+      case "types": uncheckAll("ftype"); break;
+      case "node_types": uncheckAll("fntype"); break;
+      case "subjects": uncheckAll("fsubject"); break;
+      case "exclude_stale": {
+        const el = r.querySelector("#f-exclude-stale");
+        if (el && el.checked) { el.checked = false; changed.push(key); }
+        break;
+      }
+      case "exclude_model_inferred": {
+        const el = r.querySelector("#f-exclude-inferred");
+        if (el && el.checked) { el.checked = false; changed.push(key); }
+        break;
+      }
+      case "min_confidence": {
+        const c = r.querySelector("#f-conf");
+        if (c && c.value !== "0") {
+          c.value = "0";
+          const lab = r.querySelector("#conf-val");
+          if (lab) lab.textContent = "0.00";
+          changed.push(key);
+        }
+        break;
+      }
+      case "hops": {
+        const el = r.querySelector("#f-hops");
+        if (el && patch.to != null && String(el.value) !== String(patch.to)) {
+          el.value = String(patch.to);
+          changed.push(key);
+        }
+        break;
+      }
+      default:
+        // 不认识的键 ⇒ 什么都不改。**不猜**（猜错会改到用户没同意的维度）。
+        break;
+    }
+    if (changed.length) this.onChanged(this.collect());
+    return changed;
   }
 
   /** 截断横幅的「提高预算」动作 */
