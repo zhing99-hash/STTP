@@ -447,7 +447,7 @@ def reverify(old_graph, new_graph=NORM, base=ROOT, emit_ledger=False,
     violations = detect_inplace_rewrites(oedges, nedges, ledger)
     stats["n_inplace_rewrite_violations"] = len(violations)
     if violations:
-        stats["violations"] = violations[:5]
+        stats["violations"] = violations[:5]  # noloss-exempt: 诊断报告取样，不入图
 
     if emit_ledger:
         payload = {
@@ -993,7 +993,7 @@ def _reverify_probe():
                and en.get("evidence_id") != ev["evd"]
                and "ref_changed:dimension_table" in en.get("reason", ""))
         out["LIN11"] = (c_b, "supersedes=%s → 新 %s ｜ 原因 %s"
-                        % (str(en.get("supersedes"))[:18], str(en.get("evidence_id"))[:18],
+                        % (str(en.get("supersedes"))[:18], str(en.get("evidence_id"))[:18],  # noloss-exempt: 错误信息截断，不入图
                            en.get("reason")))
 
         # (c) ★ 单纯重写哈希**不**恢复 valid。
@@ -1043,7 +1043,7 @@ def _reverify_probe():
         # (e) 旧证据**保留**（不被删除）—— 用「新图里仍能查到旧 evd」断言
         still = any(e2.get("evd") == ev["evd"] for e2 in
                     new_edges_evs(json.load(open(new_g, encoding="utf-8"))["edges"]))
-        out["LIN14"] = (still, "新图仍可查到旧 evd=%s" % str(ev["evd"])[:18])
+        out["LIN14"] = (still, "新图仍可查到旧 evd=%s" % str(ev["evd"])[:18])  # noloss-exempt: 诊断报告文案，不入图
     finally:
         sr.rmtree_force(tmp)
     return out

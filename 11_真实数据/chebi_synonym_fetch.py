@@ -75,7 +75,7 @@ def fetch_one(item, retries=3):
             return cid, {"ok": True, "label": t.get("label"),
                          "synonyms": t.get("synonyms") or [], **meta}
         except Exception as ex:                               # noqa: BLE001
-            last = str(ex)[:80]
+            last = str(ex)[:80]  # noloss-exempt: 错误信息截断，不入图
     return cid, {"ok": False, "reason": "err:" + last, **meta}
 
 

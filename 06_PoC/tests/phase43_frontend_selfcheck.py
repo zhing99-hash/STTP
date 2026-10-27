@@ -901,6 +901,30 @@ def main(argv=None):
     except Exception as e:  # noqa: BLE001
         rep.skip("X18 导航层级跨层一致", f"读取/解析失败：{e}")
 
+    # ---------------------------------------------------------------- X19 跨层：公式五段
+    # ★ F6：抽屉按 `FORMULA_SECTIONS` 的**顺序**渲染五段，后端按同一常量组织 `sections`。
+    #   两侧各写一份 ⇒ 改名/调序时抽屉**静默漏掉一段**（不报错，只是不显示），
+    #   与 X18（导航层序）同族：症状是「这一段好像从来没有过」。
+    rep.section("[X19] 公式五段：前端 `js/formula.js` ↔ 后端 `queries.FORMULA_SECTIONS`")
+    try:
+        _fjs = read(os.path.join(POC, "js", "formula.js"))
+        _m_ff = re.search(r"export const FORMULA_SECTIONS\s*=\s*Object\.freeze\(\[(.*?)\]\)", _fjs, re.S)
+        _m_bf = re.search(r"^FORMULA_SECTIONS\s*=\s*\((.*?)\)", _qpy, re.S | re.M)
+        _ff = re.findall(r'"([a-z_]+)"', _m_ff.group(1)) if _m_ff else []
+        _bf = re.findall(r'"([a-z_]+)"', _m_bf.group(1)) if _m_bf else []
+        _ok19 = bool(_ff) and bool(_bf) and _ff == _bf
+        rep.add(_ok19,
+                "X19a 前端 FORMULA_SECTIONS == 后端 FORMULA_SECTIONS（逐值且**顺序**相同）",
+                f"前端 {_ff} / 后端 {_bf}"
+                + ("" if _ok19 else " ⇒ 抽屉会静默漏掉一段，表现为「这一段好像从来没有过」"))
+
+        # 可红性自证：把前端段序反转 ⇒ 同一判据必须判不等
+        _rev2 = list(reversed(_ff))
+        rep.add(bool(_ff) and _rev2 != _bf,
+                "X19a-NEG 【负对照】把前端段序反转 ⇒ 必须判不等（检测非恒真）",
+                f"反转后 {_rev2} vs 后端 {_bf}")
+    except Exception as e:  # noqa: BLE001
+        rep.skip("X19 公式五段跨层一致", f"读取/解析失败：{e}")
     # ---------------------------------------------------------------- N 段
     rep.section("[N] Node 纯逻辑断言（`node 06_PoC/tests/frontend_core_check.mjs`）")
     node = find_node()

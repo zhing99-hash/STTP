@@ -245,7 +245,7 @@ def main():
         for fid in missing:
             row = rows[fid]
             pool, inf = pick(row)
-            top = ["%s|%s|%s" % (c["wid"], c["where"], (c["title"] or "")[:52]) for c in pool[:3]]
+            top = ["%s|%s|%s" % (c["wid"], c["where"], (c["title"] or "")[:52]) for c in pool[:3]]  # noloss-exempt: 候选列表显示，不入图
             print("  %-28s %-38s n=%d %s%s" % (fid, row["name"][:38], len(pool),
                                                "" if inf else "[跨] ", " ; ".join(top) or "（无候选）"))
         extra = sorted(set(VERDICT) - set(rows))
@@ -425,13 +425,13 @@ def main():
         ("S1 三态全覆盖", total == len(forms),
          "%d / %d" % (total, len(forms))),
         ("S2 每条 summarizing 证据可追溯", not snippet_bad,
-         "snippet 里复现不出公式名的：%d 条（须 0）%s" % (len(snippet_bad), snippet_bad[:3])),
+         "snippet 里复现不出公式名的：%d 条（须 0）%s" % (len(snippet_bad), snippet_bad[:3])),  # noloss-exempt: 错误信息截断，不入图
         ("S3 候选全部已裁决", not unverified,
          "表里没有的：%d 条（须 0 —— 出现就必须先人工读，否则准确率是假数）%s"
-         % (len(unverified), unverified[:5])),
+         % (len(unverified), unverified[:5])),  # noloss-exempt: 错误信息截断，不入图
         ("S4 裁决与候选一致", not accept_but_empty,
          "判 accept 却拿不到候选的：%d 条（须 0 ⇒ 候选池变了，表要重读）%s"
-         % (len(accept_but_empty), accept_but_empty[:3])),
+         % (len(accept_but_empty), accept_but_empty[:3])),  # noloss-exempt: 错误信息截断，不入图
         # ★ D101 改写：旧版是「curated 一律不许记 no_referent」—— 那是在把
         #   「查过确认无」也一并禁掉，逼着它们落到 not_extracted（未知）才不红。
         #   正确的硬线是：**没检索过的**不许记成已确认无（那才是编造）。
@@ -446,7 +446,7 @@ def main():
          "池里 error %d 条 ／ 记为未检索 %d 条（必须相等）／状态被写成 no_referent 的 %d 条（须 0）" % (len(bad_rows), st["unsearched"], len(pretend))),
         ("S5c 检索过的不许记成未检索（D101 镜像）", not fake_unsearched,
          "记 not_extracted 但池里没有 error 的 curated：%d 条（须 0 —— "
-         "出现即「把已确认无降级成未知」）%s" % (len(fake_unsearched), fake_unsearched[:3])),
+         "出现即「把已确认无降级成未知」）%s" % (len(fake_unsearched), fake_unsearched[:3])),  # noloss-exempt: 错误信息截断，不入图
         ("S6 非真空", st["extracted"] > 0 and st["no_referent"] > 0 and checked == len(rows),
          "extracted %d（>0 证明抽到了）；no_referent %d（>0 证明这条分支在走）；"
          "已裁决 %d = curated %d" % (st["extracted"], st["no_referent"], checked, len(rows))),

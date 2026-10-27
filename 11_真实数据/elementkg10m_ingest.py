@@ -126,7 +126,7 @@ def pass2(selected, rxn_entities, entity2mol, need_mols):
             elif h == "functionalGroup" and rel == "HAS_ELEMENT" and hv in need_fg and tt == "element":
                 fg_elem[hv].append(tv)
             elif h == "Reaction" and hv in selected and rel in rxn_lit and tt == "literal":
-                rxn_props.setdefault(hv, {})[rxn_lit[rel]] = tv[:400] if rel == "REACTION_MAPPED_IS" else tv
+                rxn_props.setdefault(hv, {})[rxn_lit[rel]] = tv
             elif h == "element" and tt == "literal":
                 elem_props.setdefault(hv, {}); _set_elem_prop(elem_props[hv], rel, tv)
 

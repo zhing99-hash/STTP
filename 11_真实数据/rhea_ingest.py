@@ -268,7 +268,7 @@ def cmd_fetch(a):
                 cache[cid] = f.result()
                 ok += 1
             except Exception as e:      # noqa: BLE001
-                cache[cid] = {"ok": False, "error": str(e)[:120]}
+                cache[cid] = {"ok": False, "error": str(e)[:120]}  # noloss-exempt: 错误信息截断，不入图
                 fail += 1
             if i % 200 == 0:
                 print("   ... %d/%d（ok %d / fail %d）%.0fs"
@@ -421,7 +421,7 @@ def cmd_build(a):
         if c.get("inchi_key"):
             props["inchi_key"] = c["inchi_key"]
         if c.get("xrefs"):
-            props["xrefs"] = sorted(c["xrefs"])[:20]
+            props["xrefs"] = sorted(c["xrefs"])
         nodes.append({"id": nid, "labels": ["Entity", "Molecule"], "props": props})
         n_cpd += 1
 

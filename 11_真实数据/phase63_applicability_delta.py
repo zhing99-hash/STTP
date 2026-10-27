@@ -262,10 +262,10 @@ def main():
          % (n_ext, n_noref, n_notext, n_ext + n_noref + n_notext, len(nodes))),
         ("S2 evidence 可追溯", not evid_bad,
          "evidence 的 term/snippet 查不到原文的：%d 条（须 0）%s"
-         % (len(evid_bad), evid_bad[:3])),
+         % (len(evid_bad), evid_bad[:3])),  # noloss-exempt: 错误信息截断，不入图
         ("S3 无未经核对的候选", not unverified_all,
          "核对表里没有的候选：%d 条（须 0 —— 出现就必须先人工裁决，否则准确率是假数）%s"
-         % (len(unverified_all), unverified_all[:3])),
+         % (len(unverified_all), unverified_all[:3])),  # noloss-exempt: 错误信息截断，不入图
         ("S4 不编造（无指称不得有值）", not forged,
          "no_referent 却带 applicability 的：%d 条（须 0）" % len(forged)),
         ("S5 核对表与探针一致", not drift,

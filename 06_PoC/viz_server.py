@@ -30,6 +30,9 @@
     GET /api/overview            → 概览元图（替代"全图浏览"，铁律 #66）
     GET /api/nav?level=&parent=  → ★ Phase 76 学科/领域/领域标签三层导航（F13；
                                    每格只给计数 + 前 N 个代表节点，绝不返回全图）
+    GET /api/formula?id=<id>     → ★ Phase 77 公式详情（F6；适用条件/符号/量纲/
+                                   来源/等价式五段，每段带 present + kind；
+                                   不是公式 ⇒ no_result，不给空壳）
 
 统一信封（所有 `/api/*` 查询端点）
 ----------------------------------
@@ -1211,6 +1214,8 @@ class VizHandler(BaseHTTPRequestHandler):
                 return self._guard(self._api_overview, qs)
             if route == "/api/nav":
                 return self._guard(self._api_nav, qs)
+            if route == "/api/formula":
+                return self._guard(self._api_formula, qs)
             if route == "/api/path":
                 return self._guard(self._api_path, qs)
 
@@ -1284,7 +1289,8 @@ class VizHandler(BaseHTTPRequestHandler):
             #   （否则只能靠测时间推断 ⇒ 快机器假绿 / 慢机器假红）。见 H8h。
             "cache_builds": build_stats(),
             "endpoints": ["/api/healthz", "/api/stats", "/api/search",
-                          "/api/subgraph", "/api/overview", "/api/nav", "/api/path"],
+                          "/api/subgraph", "/api/overview", "/api/nav", "/api/path",
+                          "/api/formula"],
         }
         if done:
             # 仅预热完成后才取快照（此时 `snapshot_id()` 是纯内存计算）
@@ -1362,6 +1368,44 @@ class VizHandler(BaseHTTPRequestHandler):
                   node_type_of=(gx.pick_type if gx else None),
                   subject_of_fn=(gx.subject_of if gx else None))
         r.update({"snapshot_id": self._snapshot_id(), "query_hash": _qhash(params)})
+        return self._json(200, r)
+
+    # ---- /api/formula（F6 · 公式详情）----
+    def _api_formula(self, qs):
+        """`id=<节点 id>` + `limit=<每段最多几条，1..200>`。
+
+        ★ 与 `/api/neighbors` 分工不同：neighbors 回答「连着谁」（拓扑），
+          本端点回答「这一段**为什么是空的**」（语义）。全图 5,090 个 Formula
+          里 `applicability_status=extracted` 仅 30；若只回 `applicability: []`，
+          使用者会读成「尚未抽取」，而真相多为「量纲合成式，无从谈适用条件」。
+        ★ 许可三态用 `redistribution_closure`（**闭包** = 血缘链上最严者），
+          不用布尔的 `is_redistributable` —— 后者会把 internal_only 与
+          forbidden 压成同一个 False（D115 同族）。
+        """
+        b = get_backend()
+        if b is None:
+            return self._json(503, {"status": "error", "reason": "查询层不可用",
+                                    "error_code": "TOOL_EXECUTION_ERROR"})
+        nid = (self._p(qs, "id") or "").strip()
+        if not nid:
+            raise ValueError("缺少参数 id")
+        raw = self._p(qs, "limit", "20") or "20"
+        try:
+            lim = int(raw)
+        except ValueError:
+            raise ValueError("limit 必须是整数，收到：%s" % raw)
+        if lim < 1 or lim > 200:
+            raise ValueError("limit 必须在 1..200，收到：%d" % lim)
+        gx = _gx()
+        sr = _load_source_registry()
+        params = {"id": nid, "limit": str(lim)}
+        r = b.formula_detail(
+            nid, limit=lim,
+            license_of=(sr.redistribution_closure if sr else None),
+            node_type_of=(gx.pick_type if gx else None),
+            subject_of_fn=(gx.subject_of if gx else None))
+        r.update({"snapshot_id": self._snapshot_id(), "query": params,
+                  "query_hash": _qhash(params)})
         return self._json(200, r)
 
     # ---- /api/subgraph（核心）----
@@ -1697,6 +1741,7 @@ def main(argv=None) -> int:
     print(f"             ★ /api/path?src=<id>&dst=<id>&max_paths=20    （有界路径；legacy 扁平信封）")
     print(f"             ★ /api/overview                    （概览元图，替代全图）")
     print(f"             ★ /api/nav?level=&parent=          （学科/领域/标签三层导航；每格只给计数+代表节点）")
+    print(f"             ★ /api/formula?id=<节点id>         （公式详情五段：适用条件/符号/量纲/来源/等价式）")
     print(f"  前端模式 : ?mode=live（默认，查询面板+子图）｜ ?mode=bundle（样例全量，小图）")
     print(f"  会话预算 : {SESSION_NODES} 节点 / {SESSION_EDGES} 边（超出即拒绝继续展开）")
     print(f"             无 session_id ⇒ 不记账、不限流；reset=1 清空该会话（前端「重置」）")
