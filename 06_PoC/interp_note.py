@@ -70,6 +70,10 @@ ENTRY_POINTS = (
     # ★ Phase 74：仓库卫生自检。它有 `[前置缺失] git ls-files 失败` 出口 ——
     #   同样是**主动登记**（D107 的学费：缺件分支在绿树上永不执行，等人来报就晚了）。
     "06_PoC/tests/repo_hygiene_selfcheck.py",
+    # ★ Phase 80：`slicing.py` 的两个 `[前置缺失]` 出口（规范图缺件 / 台账为空）
+    #   是 Phase 78 漏下的 —— 直到本轮第一次跑全链门禁才被 Q3 咬住。
+    #   记在这里当第 10 号：**有出口登记是纪律，不是可选项。**
+    "06_PoC/dataset/slicing.py",
 )
 
 

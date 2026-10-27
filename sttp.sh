@@ -37,7 +37,9 @@
 #   bash sttp.sh release-full [--allow-dirty]       对完整快照跑全量发布校验（洁净度前置断言 + --release 门禁 + manifest 现算比对）
 #   bash sttp.sh eval [--split test]                科学任务评测集：构建冻结任务集 + 规则基线 + 非真空自检（Phase 38 R11）
 #   bash sttp.sh gnneval [--gnn-seeds 1,2]           推理增量评测协议 v2：P1/P2 + 基线对照 + 种子方差（Phase 39 R11续）
-#   bash sttp.sh gatecheck                         门禁八步（Phase 74：/7 → /8，并入仓库卫生自检 H1/H2/H3）
+#   bash sttp.sh fourreq [--red]                    **四项要求**门禁：交付物缺①②③④任一段即阻断（2026-10-27 起为硬要求）
+#   bash sttp.sh xcheck [--sample N] [--seed N]     D 级证据：PubChem/ChEBI **在线**交叉核对（★ 需联网，故不入离线门禁链）
+#   bash sttp.sh gatecheck                         门禁（十一道：Phase 74 八步 + 四项要求门禁 + Phase 80 溯源保真）
 #   bash sttp.sh gatecheck                          门禁「非真空」自检（注入假边，断言真会红）
 #   bash sttp.sh dimaudit                           量纲审计：独立 SI 基表对照 + 矛盾方程检测 + 判据自检（Phase 40 R09）
 #   bash sttp.sh lineage                            证据血缘审计：来源登记 + 变更定位 + 判据自检（Phase 41 R10）
@@ -45,6 +47,9 @@
 #   bash sttp.sh subgraph [--json OUT]              局部图谱查询自检：真 HTTP 响应体 + V1–V19 正/反例（Phase 43/45）
 #   bash sttp.sh install                            第三人可安装入口自检：元数据/解释器约束分离/依赖声明覆盖/无原机路径/入口/两级可复现/离线 wheel（Phase 45 A05）
 #   bash sttp.sh frontend [--json OUT]              前端（局部图谱浏览）自检：静态结构/无障碍/模块图/跨层一致性/Node 逻辑/HTTP（Phase 43 步骤 B）
+#   bash sttp.sh phase77 [--json OUT]               F6 公式详情的**语义门禁**自检：非公式 ⇒ 不给空壳 / 覆盖对账 / 占位值清洗（Phase 77；★ 内存夹具 ⇒ 干净检出可全过）
+#   bash sttp.sh phase78                            F8 导出切片的**对账**判据：学科/来源双守恒 + 等级双口径分档 + 空片分说（★ 需权威图，缺 ⇒ SKIP）
+#   bash sttp.sh slice --dim D --value V [--basis B] F8 导出**一个**切片子集：落盘 + 独立台账 slices.jsonl（★ 需权威图；产物不入库）
 #   bash sttp.sh taskflow [--url U] [--headed]      任务式首屏**真浏览器**端到端验收：问题→候选→确认实体→生成图→改查询（Phase 51；★ 非自包含：需 viz 在跑 + 可选 Playwright；缺前置 ⇒ **RC=2**）
 #   bash sttp.sh offline [--scenario cdn-fallback]  A4 **断网渲染**端到端验证：CDN 全不可达时页面仍能渲染（Phase 52；★ 非自包含：需 viz 在跑 + 可选 Playwright；缺前置 ⇒ **RC=2**）
 #   bash sttp.sh names <旧文件> <新文件> [--pair 旧:新]  断言**名字集合**比对（铁律 #87：只看总数会漏掉"加 2 删 1"）
@@ -121,6 +126,7 @@ require_authority() {   # 用法: require_authority <命令名> <相对路径>..
     echo "        ② 或从 Release 资产下载同名快照，放到上述路径。"
     echo "  干净检出里**可运行**的替代验证："
     echo "        - bash sttp.sh frontend        （可运行；缺图处记 SKIP 而**不假通过**）"
+    echo "        - bash sttp.sh phase77         （可运行；F6 语义门禁走**内存夹具**，不需要权威图）"
     echo "        - bash sttp.sh check           （环境自检）"
     # ★ 计数订正（2026-10-16）：Phase 55 新增 G4（门禁缺依赖 SKIP 须自述解释器）⇒ 29 → 30 条。
     #   按 E43「上一轮记下的数字不得直接当现在用」，此处描述的是**当下的行为** ⇒ 必须跟着改。
@@ -290,25 +296,33 @@ EOF
   gatecheck)
     # 门禁「非真空」自检：注入已知假边，断言不变量真的会红（铁律 #14）
     shift
+    # ★ 2026-10-27 起：**四项要求**升级为硬要求 —— 本步骤是它的执法点，取代前一天
+    #   「《四项要求》只作精神、不新增 gatecheck」的裁决。口径见
+    #   `00_项目管理/四项要求_执行制式_20261027.md`：交付物缺①②③④任一段即阻断。
+    # ★ 为什么放**第一步、且排在 require_authority 之前**：能让交付停下来的检查，
+    #   不该被「缺图」一并挡成 RC=2 —— 否则一份缺了两段的交付物会因为"没有图"而获豁免，
+    #   而真正的失败原因（没写）被掩盖。"自检从未执行"不可接受（D55/D58 同族教训）。
+    echo "== [0/10] 四项要求门禁（①专家补做 ②最原始素材 ③方法与工具 ④独立验证，缺段即阻断）=="
+    "$PY" 06_PoC/tests/fourreq_gate.py || exit $?
     # ★ Phase 52 收口：把「断言名字集合核对工具」（`names`）的自检也挂在这里。
     #   动机与 D51 同族 —— **没有目标就没有人会跑它**：`assert_name_diff.py` 是铁律 #87
     #   的执法工具，但它自身一直没有断言覆盖（"谁来核对核对器"）。
     #   ★ 它**不依赖权威图** ⇒ 刻意放在 require_authority **之前**：干净检出里也能跑，
     #     而不是被守卫一并挡成 RC=2（真实原因只有"缺图"，不该掩盖"自检从未执行"）。
-    echo "== [0/8] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
+    echo "== [1/10] 断言名字核对工具自检（仪器的仪器；铁律 #87/#88）=="
     "$PY" 06_PoC/tests/assert_name_diff.py --selfcheck || exit $?
     # ★ Phase 53（D55 收口）：把「构造性可红性探针」挂在这里，与上一步同理放在守卫**之前**
     #   —— 它不依赖权威图 ⇒ 干净检出里也能跑。
     #   动机：`names` 只能证明"没有断言被删"，**证明不了"还活着的断言仍在断言它声称的语义"**
     #   （"名字还在、判据被换掉"）。本步对关键断言**注入已知缺陷**，断言必须真的变红。
     #   ★ 它会**自己还原**被突变的事实源（逐字节 + sha256），还原失败即 RC=3 并显式告警。
-    echo "== [1/8] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
+    echo "== [2/10] 构造性可红性探针（注入已知缺陷 ⇒ 关键断言必须真会红；铁律 #100）=="
     "$PY" 06_PoC/tests/red_probe.py || exit $?
     # ★ Phase 55（D58 收口）：同上 —— 不依赖权威图，故也放在守卫**之前**
     #   （干净检出里"自检从未执行"不得被"缺图"一并掩盖）。
     #   它是 `interp_note.py` 的**执行工具**：那条纪律的实现收在一处只保证"不分叉"，
     #   本步负责"不漏接"（#92）。
-    echo "== [2/8] 「非通过」判据自述解释器 —— 全链防漏网（铁律 #92；D58）=="
+    echo "== [3/10] 「非通过」判据自述解释器 —— 全链防漏网（铁律 #92；D58）=="
     "$PY" 06_PoC/tests/interp_selfreport_check.py || exit $?
 
     # ★ Phase 73（D110 的操作性推论）：**凭证必须有日常复核**，否则它就是装饰品。
@@ -318,7 +332,7 @@ EOF
     #   valid、`subgraph` V18h 照样绿（它只要求 stale=0）⇒ **伪造一份永久通行证无人发现**。
     #   正向判据证明机制能工作，只有反向复核证明它**在起作用**。
     #   本步不依赖权威图 ⇒ 同样放在守卫之前（干净检出里也能跑）。
-    echo "== [3/8] 等价性证明复核（拿 git 历史重算，不信表里的结论；D110）=="
+    echo "== [4/10] 等价性证明复核（拿 git 历史重算，不信表里的结论；D110）=="
     "$PY" 11_真实数据/reverify_attest.py --check || exit $?
     require_authority gatecheck "$NORM_GRAPH"
     # ★ Phase 74（F15/F16 治理的固化）：**清理不挂判据 = 把垃圾扫到地毯下面**。
@@ -329,23 +343,29 @@ EOF
     #     H2 被忽略的大产物必须在白名单内且条数受限（graph_data_phase* ≤ 2、before_* ≤ 3）
     #     H3 活文件里写的路径必须真的存在（引用不腐烂）
     #   不依赖权威图 ⇒ 同样放在守卫之前（干净检出里也能跑）。
-    echo "== [4/8] 仓库卫生自检（H1 命名不撒谎 / H2 大产物不堆积 / H3 引用不腐烂）=="
+    echo "== [5/10] 仓库卫生自检（H1 命名不撒谎 / H2 大产物不堆积 / H3 引用不腐烂）=="
     "$PY" 06_PoC/tests/repo_hygiene_selfcheck.py || exit $?
-    echo "== [5/8] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
+    # ★ Phase 80（溯原创洁性）：批次 namespace 之后立刻回答「图里的值还是原表那个值吗」。
+    #   为什么紧接在卫生自检之后：**清理流水线最怕的是"干净但没有质量"** ——
+    #   结构、命名、产物都对，唯独数据被悄悄改写过。S97 与 F15/F16 的清点互补：
+    #   前者管"内容有没有被改"，后者管"仓库有没有变脏"。
+    echo "== [6/10] 溯源保真 Phase 80（图内值 == 最上游原表逐字符；S97/S98）=="
+    "$PY" 06_PoC/tests/phase80_selfcheck.py || exit $?
+    echo "== [7/10] 门禁非真空自检（注入已知假边 ⇒ 不变量必须真会红）=="
     "$PY" 06_PoC/tests/gate_selfcheck_phase31.py "$@"
-    echo "== [6/8] 局部图谱查询自检（A04 状态只在这里被真正读一遍）=="
+    echo "== [8/10] 局部图谱查询自检（A04 状态只在这里被真正读一遍）=="
     # ★ Phase 73（D109）：这一步以前**不在**门禁里，Phase 72 收尾就漏跑了它 ——
     #   而 32,583 条证据 stale 只有它能看见。处置不是"以后记得跑"，
     #   而是"把上一次没跑的那台并进门禁"（#118）。
     "$PY" 06_PoC/tests/phase43_subgraph_selfcheck.py || exit $?
-    echo "== [7/8] 证据等级报告 + G1–G5 对账（落盘值必须等于现算）=="
+    echo "== [9/10] 证据等级报告 + G1–G5 对账（落盘值必须等于现算）=="
     "$PY" 06_PoC/grade_report.py || exit $?
 
     # ★ Phase 73（D100 的续）：**报告里的数字也要有判据** —— 判据此前覆盖了代码、覆盖了数据，
     #   唯独没覆盖我们自己写下的结论。本步把已登记的报告数字与图里现算值**逐字**比对。
     #   本轮新登记的 4 条里，「带 rva 的证据 / 全部 A04 证据」是关键那条：把 `vch` 改成当前值
     #   同样能让 stale 归零、V18h 同样绿 —— 只有 rva 覆盖率能把「重验过」与「重写哈希」分开。
-    echo "== [8/8] 报告数字对账（报告写的 == 图里现算；D100）=="
+    echo "== [10/10] 报告数字对账（报告写的 == 图里现算；D100）=="
     "$PY" 06_PoC/report_number_check.py || exit $?
     ;;
   release)
@@ -532,6 +552,78 @@ EOF
     shift
     set -e
     "$PY" 06_PoC/tests/phase43_frontend_selfcheck.py "$@"
+    ;;
+  slice)
+    # Phase 78 · F8：按维度导出一个切片子集（**落盘** + 独立台账 `slices.jsonl`）。
+    # 用法：bash sttp.sh slice --dim domain --value physics
+    #       bash sttp.sh slice --dim source --value ChEBI
+    #       bash sttp.sh slice --dim grade --value 4 --basis public_p1
+    # ★ 产物在 06_PoC/dataset/slices/（**不入库**，66 MB 量级）；台账 `slices.jsonl` **入库**。
+    # ★ parent 默认取 versions.jsonl 最后一条（= 当前全量包）；没有全量包 ⇒ RC=2，不编假 parent。
+    shift
+    set -e
+    "$PY" 06_PoC/dataset/slicing.py "$@"
+    ;;
+  fourreq)
+    # **四项要求**门禁：①专家补做项 ②最原始素材 ③方法与工具 ④独立验证 —— 缺段即阻断。
+    # ★ 取代 2026-10-26「《四项要求》只作精神、不新增 gatecheck」的裁决。
+    #   `--red` 模式：临时造缺段文档，验证本门禁真会红（"注册 ≠ 生效" 的 D135 教训）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/fourreq_gate.py "$@"
+    ;;
+  xcheck)
+    # D 级独立证据：把图里的分子送去 **PubChem/ChEBI 在线**交叉核对。
+    # ★ 为什么不并入离线门禁：联网结果会随时间漂移（外部库自身在改），
+    #   混进去会让"结构性绿"与"今天恰好绿"无法区分 ⇒ 单列入口，按需跑。
+    # ★ 不可达 ⇒ RC=2（不得报 0）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/external_crosscheck.py "$@"
+    ;;
+  phase80)
+    # Phase 80：**溯源保真** —— 图里的值，还等于最上游原始素材给的那个值吗？
+    # ★ 缺陷模型：拿我方 ingest 输出的 *_raw.json / *_cache.json 当「原始证据」，
+    #   等于拿自己的输出给自己打分 —— 双方口径一致，却都说不出原始素材是什么。
+    # 全仓真正未加工的上游只有 2 件：10m_elementkg_release.csv（858MB 三元原表）与
+    # elementkg.owl。本仪器用**另一条读取路径**（单遍线性扫描 vs ingest 的两遍状态机）
+    # 直接从原表重建期望值，与 normalized.json 逐字符对撞 ⇒ 期望与实际不同源。
+    # ★ S97 守「我方 ETL 未篡改」；S98 守「化学上仍自洽」（重复映射等，基线+漂移）。
+    # ★ `--red` 自证模式：在系统临时目录造篡改副本验证判据可红，不碰权威图
+    #   （图被 .gitignore 排除，一旦污染 git checkout 救不回来）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/phase80_selfcheck.py "$@"
+    ;;
+  phase79)
+    # Phase 79：**数据无损** —— 针对「静默截断」的三层判据。
+    # ★ 缺陷模型：写入方不知道丢了、读取方不知道缺了、双方都不报错
+    #   ⇒ 只能靠外部仪器照出来。实例见 PROJECT_DEVELOPMENT_GUIDE.md §0.3.37：
+    #   `tv[:400]` 让 333 条化学反应式变成不可解析的废品（占 Reaction 19.5%）。
+    # 三层分别守：D127 源码写法（防未来）/ D128 已发生堆积 / D129 后果可解析性。
+    # ★ 需要权威图；缺 ⇒ 记 SKIP。D129 需 RDKit，缺 ⇒ 记 SKIP（不假通过）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/phase79_selfcheck.py "$@"
+    ;;
+  phase78)
+    # Phase 78：F8 批量导出子集 —— **对账式判据**（Σ 各部分 == 全集）。
+    # ★ 为什么单独一个目标：切片缺陷**从不报错**（拿到 3 份切片以为是全库，
+    #   其实少了一半）⇒ 必须有只盯着「守恒」的仪器，不能混在全量构建里。
+    # ★ 需要权威图（断言前提是 9750 节点 / 48813 边）；缺图 ⇒ 记 SKIP。
+    #   纯逻辑判据不依赖权威图：python 06_PoC/dataset/slicing.py --selfcheck
+    shift
+    set -e
+    "$PY" 06_PoC/tests/phase78_selfcheck.py "$@"
+    ;;
+  phase77)
+    # Phase 77：F6 公式详情（**后端方法层的语义门禁**）+ F9 数据集版本化。
+    # ★ 为什么不在 frontend 里做：frontend 只断言静态结构与序列化，
+    #   「非公式 ⇒ 不给空壳」这类语义门禁它**看不到**（只看得到 status）。
+    # ★ 用**内存夹具**跑 ⇒ 不需要权威图，干净检出也能全过（铁律 #53）。
+    shift
+    set -e
+    "$PY" 06_PoC/tests/phase77_selfcheck.py "$@"
     ;;
   taskflow)
     # Phase 51：任务式首屏**真浏览器**端到端验收（B1–B5）。

@@ -1,0 +1,47 @@
+{
+ "seed": 20261027,
+ "sample": 30,
+ "rdkit": "2026.09.1",
+ "python": "3.11.9",
+ "pubchem": {
+  "stat": {
+   "queried": 96,
+   "found": 96,
+   "agree": 93,
+   "mismatch": 3,
+   "notfound": 0,
+   "error": 0
+  },
+  "detail": {
+   "mismatch": [
+    {
+     "smiles": "[Li][CH2]CCC",
+     "ours": "MZRVEZGGRBJDDB-UHFFFAOYSA-N",
+     "pubchem": "DLEDOFVPSDKWEF-UHFFFAOYSA-N"
+    },
+    {
+     "smiles": "CCC(=O)C1=C(O)CC(c2c(C)cc(C)cc2C)CC1=O",
+     "ours": "HBXUKEYLLIXGAE-UHFFFAOYSA-N",
+     "pubchem": "VWMWNVLYXWBXMU-UHFFFAOYSA-N"
+    },
+    {
+     "smiles": "CCC(=O)C1=C(O)CC(c2c(C)cc(C)c([N+](=O)[O-])c2C)CC1=O",
+     "ours": "LDHUPRUUNFGJCA-UHFFFAOYSA-N",
+     "pubchem": "TUUJTLSTKPFBFO-UHFFFAOYSA-N"
+    }
+   ],
+   "notfound": []
+  }
+ },
+ "chebi": {
+  "stat": {
+   "queried": 25,
+   "exists": 25,
+   "missing": 0,
+   "error": 0
+  },
+  "detail": {
+   "missing": []
+  }
+ }
+}
