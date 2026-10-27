@@ -248,6 +248,43 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
   .banner .ed-note { margin-top: 4px; color: var(--warn); font-size: 11.5px; }
   .banner .ed-not-fail { margin-bottom: 3px; }
 
+  /* ---------- F6 公式详情抽屉 ---------- */
+  #formula-drawer {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 8px 9px; margin-top: 10px;
+  }
+  .fd-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 7px; }
+  .fd-hint { display: block; font-size: 10.5px; color: #6f7d90; font-weight: 400; margin-top: 2px; line-height: 1.5; }
+  .fd-name { font-size: 12px; color: var(--text); font-weight: 600; line-height: 1.5; }
+  .fd-sub { margin: 4px 0 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .fd-tex {
+    font-size: 12.5px; color: #cfe3ff; background: rgba(76,114,176,.10);
+    border: 1px solid rgba(76,114,176,.28); border-radius: 4px;
+    padding: 6px 7px; margin-bottom: 8px; overflow-x: auto;
+  }
+  .fd-sec {
+    border-left: 2px solid rgba(76,114,176,.45); padding: 3px 0 3px 7px; margin-bottom: 7px;
+  }
+  .fd-sec-empty { border-left-color: rgba(210,153,34,.55); }
+  .fd-row { display: flex; gap: 6px; font-size: 11.5px; line-height: 1.6; }
+  .fd-k { color: var(--muted); min-width: 62px; flex-shrink: 0; }
+  .fd-v { color: var(--text); word-break: break-word; }
+  .fd-warn {
+    font-size: 11px; color: #f0c674; background: rgba(210,153,34,.10);
+    border: 1px solid rgba(210,153,34,.35); border-radius: 4px;
+    padding: 5px 7px; margin-bottom: 7px; line-height: 1.6;
+  }
+  .fd-na {
+    font-size: 11.5px; color: #ff9d97; background: rgba(248,81,73,.10);
+    border: 1px solid rgba(248,81,73,.35); border-radius: 4px;
+    padding: 6px 8px; line-height: 1.6;
+  }
+  .fd-na-reason { margin-top: 3px; color: var(--text); }
+  .fd-na-labels { margin-top: 6px; font-size: 11px; color: var(--muted); }
+  .fd-lic { margin: 6px 0; }
+  .fd-foot { margin-top: 8px; font-size: 10.5px; color: #6f7d90; line-height: 1.6; }
+  .fd-load, .fd-empty { font-size: 11.5px; color: var(--muted); padding: 6px 0; line-height: 1.6; }
+
   /* ---------- F13 学科/领域导航抽屉 ---------- */
   #nav-drawer {
     background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius);
@@ -539,6 +576,18 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
 
 <aside id="right">
   <div id="detail"></div>
+  <!-- ★ F6 入口：仅在选中**带 Formula 标签**的节点时显示。 -->
+  <button class="toolbtn" id="btn-formula" hidden
+          title="查看这条公式的五段详情：适用条件 / 符号 / 量纲 / 来源 / 等价式">查看公式详情</button>
+  <!-- ★ F6：公式详情抽屉。入口（#btn-formula）由 `syncFormulaEntry()` 控制显隐：
+       只有带 Formula 标签的节点才显示 —— 不给"注定无意义"的入口。 -->
+  <div id="formula-drawer" hidden>
+    <div class="nav-head">
+      <span class="nav-h">公式详情</span>
+      <button class="toolbtn tiny" data-fd-close title="关闭公式详情（画布不变）">关闭</button>
+    </div>
+    <div id="formula-body"></div>
+  </div>
 </aside>
 
 <footer id="bottom">

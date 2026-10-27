@@ -50,6 +50,15 @@ export const ENDPOINTS = Object.freeze({
    * ⇒ 在浏览器里对 9,750 个节点做学科汇总，得先下 85 MB。导航的数据面只能在后端。
    */
   nav: "/api/nav",
+  /**
+   * ★ Phase 77（F6）：单条公式的五段详情（适用条件/符号/量纲/来源/等价式）。
+   *
+   * **为什么不能由前端拼**：每段要给出 `kind`（这一段**为什么是空的**），而
+   *    `kind` 的依据是上游 ETL 对**整批**判定的 `applicability_status`
+   *   （extracted 30 / not_extracted 59 / no_referent 5,001）。节点自己不带这个
+   *   依据 ⇒ 前端无从判断，只能猜；猜出来的"尚未抽取"就是**编造**。
+   */
+  formula: "/api/formula",
   /** 仅在 mode=bundle（离线样例/小图）下读取；live 模式**永不**请求它（验收 V1）。 */
   bundleGraph: "/graph_data.json",
 });
@@ -339,6 +348,11 @@ export function buildParams(opts = {}) {
   //   "查不到" 而看起来像"这一类里没有东西"）。二者只有 `/api/nav` 读。
   put("level", o.level);
   put("parent", o.parent);
+  // ★ Phase 77（F6）`/api/formula` 专用：`id` = 目标公式的节点 id。
+  //   只有 `/api/formula` 读它（后端 `_api_formula`：缺 id ⇒ 400「缺少参数 id」）。
+  //   ★ 不放进其它端点：`id` 是个很常见的键名，无条件发送会污染别人的 query_hash
+  //     （F37c 方向B 要求每个 put 键都有归属 ⇒ 归属只在 /api/formula）。
+  put("id", o.id);
   // ★ 后端读的是 `exclude_model_inferred`（不是 `exclude_inferred`）。
   //   本函数**曾经**发 `exclude_inferred` ⇒ 「排除推断边」勾选框**完全无效**
   //   （实测：`exclude_inferred=1` 仍返回 5 条含 inferred 的边；
@@ -703,6 +717,16 @@ export const ENDPOINT_CLIENT_BUDGET_MS = Object.freeze({
    * 与 `contracts/endpoints.schema.json` 的 `client_budget_ms` 逐值相等（X16g 求差）。
    */
   nav: 8000,
+  /**
+   * `/api/formula` 同样**不接受** `deadline_ms` ⇒ 等待预算是纯客户端常量。
+   *
+   * 取值依据：单节点局部查询（O(度数)）+ 首次覆盖率全扫（O(N)，**按快照缓存**，
+   * 见 `Backend.formula_coverage`）⇒ 权威图 9,750 节点下实测 < 0.1 s；
+   * 冷进程首次建索引可达 ≈2 s ⇒ 给 5000，与 `/api/overview` 同级
+   * （比 `nav` 窄：nav 还要跑三层分桶）。
+   * 与 `contracts/endpoints.schema.json` 的 `client_budget_ms` 逐值相等（X16g 求差）。
+   */
+  formula: 5000,
 });
 
 /** 客户端等待预算相对服务端 `deadline_ms` 的默认余量（毫秒）。 */
