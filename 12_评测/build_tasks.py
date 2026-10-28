@@ -45,6 +45,7 @@ import hashlib
 import json
 import os
 import random
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -530,10 +531,20 @@ def graph_facts():
     ★ 只声明规模不够（两个不同的图可能撞规模）⇒ 同时给 sha256，
       让「陈旧报告哨兵」能做**强校验**。
     """
+    # ★ 非通过出口的自述必须有**唯一实现**（铁律 #92）：本文件的 `[前置缺失]` 出口
+    #   在加进来的同一轮就被 `interp_selfreport_check` 的 Q3 静态扫描咬住 ——
+    #   **缺件分支在绿树上永不执行，只有静态扫描能咬住**（D107 的学费）。
+    for _p in (ROOT, os.path.join(ROOT, "06_PoC")):
+        if _p not in sys.path:
+            sys.path.insert(0, _p)
+    import interp_note as IN                             # noqa: E402
+
     if not os.path.exists(NORM_GRAPH):
-        raise SystemExit(
-            "[前置缺失] 找不到权威图 %s —— 拒绝用写死的旧值冒充当前输入。"
-            % os.path.relpath(NORM_GRAPH).replace("\\", "/"))
+        print("[前置缺失] 找不到权威图 %s（RC=2）—— 拒绝用写死的旧值冒充当前输入"
+              % os.path.relpath(NORM_GRAPH).replace("\\", "/"))
+        print("        原因：%s" % IN.skip_detail("规范图缺件（先跑 `bash sttp.sh export`）"))
+        print("        ★ 为什么不给默认值：写死的「我基于 X」会让人信它（D152）。")
+        raise SystemExit(2)
     h = hashlib.sha256()
     with open(NORM_GRAPH, "rb") as f:
         for chunk in iter(lambda: f.read(1 << 20), b""):
