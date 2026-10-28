@@ -3293,12 +3293,42 @@ S95 的三道降噪闸门（缺一就淹没在假阳性里）：
     全图 stale `35197 → 224`（只剩 no_source 这一族的已知边界）；
     `gatecheck` Step 8 `121/3/3 → 124/0/3`，全链 `[FAIL]` 计数 0。
     仍需走 Phase 73 同款的结构性等价证明（`rva` 目前只抵 `verifier_changed`，
-    不抵 `src_changed` / `ref_changed` / `dep_version_changed`）。
+    不抵 `src_changed` / `ref_changed` / `dep_version_changed`）
+    ⇒ 已立项 **Phase 81**（见 `00_项目管理/Phase81立项_双重身份文件内容等价证明_20261028.md`）。
 - **D136　照屏幕输出重打字符串，会造出幽灵 bug。**
   从控制台抄第 3 条不符的 SMILES 时漏了结尾的 `=O`，跑出不同的 InChIKey，
   一度怀疑 RDKit 计算不确定（连算 3 次其实完全一致）。**真相是我串行了，不是工具不稳。**
   根治办法是把脚本的显示截断（`smi[:60]`）改成打完整值 —— 让错误没有藏身之处。
   与 D121 / D134 同源：**结论都要回到持久化的原始记录上核，不能对着屏幕 memory 抄。**
+
+##### ⑫ Phase 81（双重身份文件的内容等价证明通道）—— 立项于 2026-10-28，未动工
+
+起因：路线 A（回退注释 + 豁免外挂）**回避了问题而不是解决** —— 只要「改这类文件就必然三红」
+还在，下一次加注释/改缩进就会原样再来一遍。立项文档自带四段块并已过 `fourreq_gate`。
+
+**核心设计**：把 Phase 73 的 `rva` 通道从「只抵 `verifier_changed`」扩到三族，
+新增 kind `content_equivalent` + 方法 `ast_identical`（两版 blob 的
+`ast.dump(include_attributes=False)` **逐字符相同**才成立）。
+
+★ **第一档只放行最严的一档**：`ast_identical` 只覆盖「不进 AST 的改动」
+（注释 / 空行 / 行尾空白）。docstring、类型注解、任何常量变化一律拒。
+⇒ 它**没有彻底解决 D137**，只是把「加注释」这一类变成可走；真改数据仍需另开档位 + 另配负对照。
+
+**分步（我的选择：先证明器、后读侧）**：读侧一改就牵动 70.5% 的证据，而权威图**不入库**
+（改坏了没有 `git checkout` 可救，D134）⇒ 先把「证明器会拒真变更」钉死，再开读侧的闸。
+
+| 步 | 内容 | 出口 |
+|---|---|---|
+| S1 | 证明器（`--object {src,ref,dep}` + `ast_identical`） | NEG-S99（改一个原子量 ⇒ 必须拒）红得起来 |
+| S2 | 读侧（`evidence_status` 第 3.5 步扩族；`_attestation_ok` 按 object_id + from/to 对齐） | 非真空探针 > 0；S99c（越权不生效）红得起来 |
+| S3 | 真用例：注释加回来 + 出 4 张证明 ⇒ 全链闸门须仍 0 FAIL | 十步 `[FAIL]` 0 且 `changed` 不回升 |
+| S4 | D 级：118 元素与 PubChem 逐元素对表 | 有任一条不符 ⇒ 本通道不得用于该文件 |
+
+- **D138　同一个文件充当 N 个身份，一次改动就要 N 张证明。**
+  `element_reference.py` 同时是 ①`Phase13.Gate.B2` 的 locator ②`Phase13.Gate.B5` 的 locator
+  ③参考表 `element_reference` ④验证器依赖文件 ⇒ 加一行注释要开 **4 张** attestation
+  （src×2 + ref×1 + dep×1），不是一个数量级的成本。
+  ⇒ S1 必须顺带产出「该文件当前充当哪些身份」的**自动清单**，否则人一定会漏开某张。
 
 ## 一、项目愿景与目标
 
