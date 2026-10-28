@@ -1214,6 +1214,75 @@ PROBES = [
         "requires": [],
     },
     {
+        "id": "R62",
+        "kind": "mutate",
+        "why": ("Phase 82：新档 `changed_but_proven` 的全部力量都在「四要素绑定」上。"
+                "少比 `composite.from`（看起来只是「不要求记录值也对上，宽容一点」）"
+                "会让一张**任意版本对**的证明去抵任何同对象的变更 —— 证明退化成长期许可证。"
+                "★ 没有任何报错、没有失败计数，闸门反而更绿 —— 这正是最危险的方向。"
+                "⇒ NEG-S104（伪造 from ⇒ 必须完全失效）必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": ("        if comp.get(\"from\") != rec:\n"
+                "            continue"),
+        "new": ("        if False:  # redprobe: 不再核对 from（证明可跨版本复用）\n"
+                "            continue"),
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S104"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R63",
+        "kind": "mutate",
+        "why": ("Phase 82：证明文件是**可写文件**，判据必须能识破对它的篡改（D144 的教训："
+                "R43 曾用「只伪造一个字段」造出假绿）。把当场复算短路成恒真 —— "
+                "看起来只是「不重复算一遍，快一点」—— 实际后果是表里写什么都算数。"
+                "⇒ NEG-S108（篡改 files[].to_hash）与 NEG-S112（借别的提交的版本对）必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": "            ok, detail = ra.check_content_attestation(a, base=base)",
+        "new": "            ok, detail = True, \"redprobe: 不再复算\"",
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S108", "NEG-S112"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R64",
+        "kind": "mutate",
+        "why": ("Phase 82：「一条边有 N 条不符证据就必须 N 条全被覆盖」是最容易漏的口子 —— "
+                "多来源边覆盖一半看起来「基本覆盖了」，实际放行的是一条**部分失效**的边。"
+                "把「全部覆盖」放宽成「有覆盖就算」⇒ 合成双边（只给 B5 的证明）会被判 proven。"
+                "⇒ NEG-S111 必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": "    return (\"changed_but_proven\" if not misses else \"changed\"), {",
+        "new": "    return (\"changed_but_proven\" if covered else \"changed\"), {  # redprobe: 部分覆盖就放行",
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S111"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R65",
+        "kind": "mutate",
+        "why": ("Phase 82：`to_is_head` 是「这张证明说的是**当前**，还是某个历史版本对」的唯一标记。"
+                "去掉这道检查，回放用的历史证明就能抵当前原因 —— 而这张表里的证明"
+                "本来就都是历史版本对（生成时对象还未提交为 HEAD）。"
+                "⇒ NEG-S109（require_head=True 时覆盖必须为 0）必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": ("        if require_head and not a.get(\"to_is_head\"):\n"
+                "            continue"),
+        "new": ("        if False:  # redprobe: 历史版本对也当「当前」\n"
+                "            continue"),
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S109"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -1241,7 +1310,8 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R40", "R41", "R42", "R43", "R44", "R45", "R46", "R47", "R48",
                       "R49", "R50", "R51",
                       "R52", "R53", "R54",
-                      "R55", "R56", "R57", "R58", "R59", "R60", "R61", "RN")
+                      "R55", "R56", "R57", "R58", "R59", "R60", "R61",
+                      "R62", "R63", "R64", "R65", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -1637,6 +1707,14 @@ def emit(rep, res):
             res["R60"][1])
     rep.add(res["R61"][0], "R61 临时副本上篡改 ⇒ S97/S98 必须均可变红（Phase 80 溯源保真）",
             res["R61"][1])
+    rep.add(res["R62"][0], "R62 五档判据不再核对 from（证明可跨版本复用）⇒ NEG-S104 必须变红（Phase 82）",
+            res["R62"][1])
+    rep.add(res["R63"][0], "R63 证明不再当场复算（表里写什么都算数）⇒ NEG-S108/S112 必须变红（Phase 82）",
+            res["R63"][1])
+    rep.add(res["R64"][0], "R64 多来源边部分覆盖即放行 ⇒ NEG-S111 必须变红（Phase 82）",
+            res["R64"][1])
+    rep.add(res["R65"][0], "R65 历史版本对当「当前」用 ⇒ NEG-S109 必须变红（Phase 82）",
+            res["R65"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])
