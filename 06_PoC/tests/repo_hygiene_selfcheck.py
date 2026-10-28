@@ -44,7 +44,7 @@
 
 用法：
     python 06_PoC/tests/repo_hygiene_selfcheck.py            # 判据（RC≠0 即红）
-    python 06_PoC/tests/repo_hygiene_selfcheck.py --selfcheck # 自检 S0–S6（含 5 个负对照）
+    python 06_PoC/tests/repo_hygiene_selfcheck.py --selfcheck # 自检 S0–S7（含 8 个负对照）
 """
 from __future__ import annotations
 
@@ -308,6 +308,84 @@ def check_h3(files):
     return bad
 
 
+# --------------------------------------------------------------------------- H4
+_CN_DIGIT = {"零": 0, "一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
+             "六": 6, "七": 7, "八": 8, "九": 9}
+
+
+def _cn2int(s):
+    """中文数字 → int（只覆盖 `sttp.sh` 自称可能用到的量级，够用即止）。"""
+    s = s.strip()
+    if s.isdigit():
+        return int(s)
+    if s == "十":
+        return 10
+    if s.startswith("十"):                       # 十一 … 十九
+        return 10 + _CN_DIGIT.get(s[1], 0)
+    if "十" in s:                                # 二十 / 二十四 …
+        hi, lo = s.split("十", 1)
+        return _CN_DIGIT.get(hi, 0) * 10 + (_CN_DIGIT.get(lo, 0) if lo else 0)
+    return sum(_CN_DIGIT.get(c, 0) for c in s)
+
+
+_RE_GATECHECK_BODY = re.compile(r"\n {2}gatecheck\)(.*?)\n {2}[a-z][a-z0-9_-]*\)", re.S)
+
+
+def parse_gatecheck_selfclaim(text):
+    """从 `sttp.sh` 的**文本**里解析门禁的「自称道数」与「实际步骤标签」。
+
+    ★ 纯函数、**不读盘**：判据与负对照都吃同一个入参。这样负对照改的是内存里的
+      字符串，**永远不留注入残留**（D146 的教训：写临时文件 + 外部超时 ⇒ 残留）。
+
+    ★ 必须**先切出 `gatecheck` 分支再解析**。`sttp.sh` 有 30 多个分支，其中
+      `release`（4 步）、`install`、`frontend` 等**各自**也有 `[n/N]` 进度标签。
+      不切片会把它们一起算进来（实测 61 条 vs 真实 14 条）—— 这是本判据自己
+      踩的第一个坑：**范围写大了，判据红得振振有词，红的却是错的东西**。
+    """
+    m_body = _RE_GATECHECK_BODY.search(text)
+    body = m_body.group(1) if m_body else ""
+    labels = [(int(n), int(N))
+              for n, N in re.findall(r'echo "== \[(\d+)/(\d+)\]', body)]
+    m = re.search(r"bash sttp\.sh gatecheck\s+门禁（\*\*([一二三四五六七八九十\d]+)道\*\*", text)
+    claimed = _cn2int(m.group(1)) if m else None
+    return claimed, labels
+
+
+def check_h4(text):
+    """H4 · 自称 == 实现（D151）：使用说明声称的门禁道数，必须等于脚本实际跑的步数。
+
+    ★ 为什么需要这条：**自称层会腐烂，而且烂在自己的判据地盘上**。
+      本项目有 H1 专管「命名不撒谎」，而 `sttp.sh` 的使用说明自称「十三道」、
+      实际 `[0/13]`…`[13/13]` 是 **14 步**，且两行注释都以 `bash sttp.sh gatecheck`
+      开头、第二行描述属于别的命令 —— 长期无人发现。
+
+    ★ 检查四项（任一不符即返回）：
+      ① 标签分母必须统一；② 编号必须从 0 连续且不重复；
+      ③ 实际步骤条数 == 分母；④ 注释自称道数 == 分母。
+    """
+    bad = []
+    claimed, labels = parse_gatecheck_selfclaim(text)
+    if claimed is None:
+        return ["解析不到门禁「自称道数」（注释格式变了？）—— 解析不到就等于没检查"]
+    if not labels:
+        return ["解析不到任何 `[n/N]` 步骤标签（echo 格式变了？）"]
+    dens = sorted({N for _, N in labels})
+    if len(dens) != 1:
+        bad.append("步骤标签分母不统一：%s" % dens)
+    N = dens[0]
+    idx = sorted(n for n, _ in labels)
+    if idx != list(range(len(idx))):
+        bad.append("步骤编号必须从 0 连续，实际 %s" % idx)
+    dup = sorted({n for n in idx if idx.count(n) > 1})
+    if dup:
+        bad.append("步骤编号重复：%s" % dup)
+    if len(labels) != N:
+        bad.append("实际步骤 %d 条 ≠ 标签分母 %d" % (len(labels), N))
+    if claimed != N:
+        bad.append("注释自称「%d 道」≠ 实际 %d 步" % (claimed, N))
+    return bad
+
+
 # --------------------------------------------------------------------------- 自检
 def selfcheck():
     ok = True
@@ -325,7 +403,7 @@ def selfcheck():
         return 2
     ignored = ignored_files() or []
 
-    print("自检 S0–S6（仓库卫生自检的自检；含 5 个负对照）")
+    print("自检 S0–S7（仓库卫生自检的自检；含 8 个负对照）")
     _c("S0 取集合非真空（活文件 %d、被忽略 %d）" % (len(files), len(ignored)),
        len(files) >= 20 and len(ignored) >= 1,
        "取不到集合 ⇒ 三条判据全部退化为真空（D110b）")
@@ -399,18 +477,66 @@ def selfcheck():
        all(lim >= 0 and why for _p, lim, why in PAT_WHITELIST) and
        all(why for _d, why in DIR_WHITELIST))
 
-    print("\n%s" % ("汇总：✅ 自检 S0–S6 全过" if ok else "汇总：❌ 自检未通过"))
+    # ---- S7 / S7a–S7d：H4「自称 == 实现」（D151）----
+    # ★ 四个负对照全部**在内存里的字符串上做**，一次都不碰磁盘。
+    #   理由见 D146：写临时文件 + 外部超时 ⇒ finally 没跑完 ⇒ 注入残留 ⇒
+    #   后续判据在被注毒的文件上跑，症状被误读成「判据写错」。
+    _sh = os.path.join(ROOT, "sttp.sh")
+    if not os.path.exists(_sh):
+        _c("S7 H4 正例（sttp.sh 自称 == 实际）", False, "找不到 sttp.sh")
+    else:
+        with open(_sh, encoding="utf-8") as _fh:
+            _txt = _fh.read()
+        _claimed, _labels = parse_gatecheck_selfclaim(_txt)
+        _bad = check_h4(_txt)
+        _c("S7 H4 正例：sttp.sh 自称 %s 道、实际 %d 步 ⇒ 通过"
+           % (_claimed, len(_labels)), not _bad, "; ".join(_bad))
+        _c("S7 非真空：解析到的步骤 %d 条、自称 %s（任一为 0/None ⇒ 解析坏了）"
+           % (len(_labels), _claimed), len(_labels) >= 10 and _claimed)
+
+        # S7a 负对照：把「十四道」改回「十三道」⇒ 必须红（这正是本次抓到的真缺陷）
+        _t = _txt.replace("门禁（**十四道**", "门禁（**十三道**", 1)
+        _c("S7a 负对照：自称改成「十三道」⇒ H4 必须红",
+           _t != _txt and bool(check_h4(_t)),
+           "改了注释却不红 ⇒ H4 是恒真式")
+
+        # S7b 负对照：把某一行的标签分母改掉 ⇒ 分母不统一，必须红
+        _t = _txt.replace('== [3/14]', '== [3/13]', 1)
+        _c("S7b 负对照：单个标签分母改成 13 ⇒ H4 必须红",
+           _t != _txt and bool(check_h4(_t)))
+
+        # S7c 负对照：删掉一个步骤 ⇒ 编号不连续 / 条数≠分母，必须红
+        _t = re.sub(r'echo "== \[7/14\][^\n]*\n', '', _txt, count=1)
+        _c("S7c 负对照：删掉第 [7/14] 步 ⇒ H4 必须红",
+           _t != _txt and bool(check_h4(_t)),
+           "删一步却不红 ⇒ 步数减少无人发现（门禁少跑一步的入口）")
+
+        # S7d 负对照：把某一步的编号改成重复 ⇒ 必须红
+        _t = _txt.replace('== [9/14]', '== [8/14]', 1)
+        _c("S7d 负对照：第 9 步编号改成 8（重复）⇒ H4 必须红",
+           _t != _txt and bool(check_h4(_t)))
+
+        # S7e 负对照：**切片失效不得静默变绿**。
+        #   H4 靠「切出 gatecheck 分支」来限定范围；一旦分支改名，切片取不到，
+        #   若此时返回空 bad 列表，判据就从「在检查」变成「什么都没查还说通过了」。
+        _t = _txt.replace("\n  gatecheck)", "\n  gatecheckX)", 1)
+        _c("S7e 负对照：把 gatecheck 分支改名（切片失效）⇒ H4 必须红，不得静默通过",
+           _t != _txt and bool(check_h4(_t)),
+           "切片取不到却通过 ⇒ 分支一改名，这条判据就永久失明")
+
+    print("\n%s" % ("汇总：✅ 自检 S0–S7 全过（含 8 个负对照）" if ok
+                    else "汇总：❌ 自检未通过"))
     return 0 if ok else 1
 
 
 def main():
-    ap = argparse.ArgumentParser(description="仓库卫生自检（Phase 74 · F15/F16 治理的固化）")
-    ap.add_argument("--selfcheck", action="store_true", help="自检 S0–S6（含 5 个负对照）")
+    ap = argparse.ArgumentParser(description="仓库卫生自检（Phase 74 · F15/F16 治理的固化；H4 为 Phase 82 补）")
+    ap.add_argument("--selfcheck", action="store_true", help="自检 S0–S7（含 8 个负对照）")
     a = ap.parse_args()
     if a.selfcheck:
         return selfcheck()
 
-    print("仓库卫生自检 —— H1 命名不撒谎 / H2 大产物不堆积 / H3 引用不腐烂")
+    print("仓库卫生自检 —— H1 命名不撒谎 / H2 大产物不堆积 / H3 引用不腐烂 / H4 自称==实现")
     print("=" * 74)
     files = live_files()
     if not files:
@@ -453,11 +579,30 @@ def main():
     else:
         print("  ✅ %d 条路径引用全部存在" % len(scan_refs(files)))
 
+    print("\n-- H4 门禁「自称道数」==「实际步骤」（D151）--")
+    sh_path = os.path.join(ROOT, "sttp.sh")
+    if not os.path.exists(sh_path):
+        print("  ❌ 找不到 sttp.sh（H4 未执行）")
+        fails.append("H4:sttp.sh 缺失")
+    else:
+        with open(sh_path, encoding="utf-8") as fh:
+            sh_text = fh.read()
+        claimed, labels = parse_gatecheck_selfclaim(sh_text)
+        bad4 = check_h4(sh_text)
+        print("  · 自称 %s 道 ｜ 实际 %d 步 ｜ 标签分母 %s"
+              % (claimed, len(labels), sorted({N for _, N in labels})))
+        if bad4:
+            for b in bad4:
+                print("  ❌ %s" % b)
+                fails.append("H4:%s" % b)
+        else:
+            print("  ✅ 自称 == 实现 == 分母（%d）" % (claimed,))
+
     print("\n" + "-" * 74)
     if fails:
         print("汇总：❌ 仓库卫生未通过 %d 项：%s" % (len(fails), fails[:6]))
         return 1
-    print("汇总：✅ H1/H2/H3 全过 —— 清理不是一次性的，是被判据咬住的")
+    print("汇总：✅ H1/H2/H3/H4 全过 —— 清理不是一次性的，是被判据咬住的")
     return 0
 
 

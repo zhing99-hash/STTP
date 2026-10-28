@@ -278,7 +278,7 @@ def main(argv=None) -> int:
         print("     三种可用做法：")
         print("       ① 在已有权威图的副本上运行（本项目主工作区默认如此）；")
         print("       ② 指定替代源：GRAPH_SOURCE_FILE=<path> bash sttp.sh subgraph"
-              "（★ 但权威图口径的断言，如「48712 边」「hidden_by_trust 两档恒等」，")
+              "（★ 但权威图口径的断言，如「整图边数」「hidden_by_trust 两档恒等」，")
         print("          在小样例上**必然 FAIL** —— 本自检不是为样例设计的）；")
         print("       ③ 干净检出只验**下游链路**："
               "python 06_PoC/release/verify_release.py --release")
@@ -299,7 +299,7 @@ def main(argv=None) -> int:
     print("-" * 78)
     if n_full < 1000:
         print("  ⛔ 查询层后端不可用，或当前查询源只有 %d 个节点（疑似入库样例）——"
-              "本自检的多数断言以**权威图口径**（9657/48712）为前提。" % n_full)
+              "本自检的多数断言以**权威图口径**（整图规模）为前提。" % n_full)
         print("     请改用权威图运行，或改跑 `bash sttp.sh release`。")
         return 2
 

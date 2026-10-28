@@ -92,7 +92,7 @@ def no_authority():
     print("")
     print("[不可用] 命令 'grade' 缺少**权威输入**（该文件被 .gitignore 刻意排除、不入库）：")
     print("           - 06_PoC/etl/normalized.json")
-    print("  原因：等级计数以**权威图口径**（9657 节点 / 48712 边）为前提 ⇒ 干净检出里")
+    print("  原因：等级计数以**权威图口径**（整图规模，随输入而变）为前提 ⇒ 干净检出里")
     print("        **结构性不可用**，这是**已知边界而非代码缺陷**。")
     print("  恢复：① 本地 bash sttp.sh export（从 Aura 反向导出权威图）")
     print("        ② 或从 Release 资产下载同名快照，放到上述路径。")

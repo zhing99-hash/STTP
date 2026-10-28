@@ -49,6 +49,7 @@ from __future__ import annotations
 
 import argparse
 import functools
+import hashlib
 import io
 import json
 import os
@@ -394,6 +395,87 @@ def run_all(text_map=None):
     return results
 
 
+# ------------------------------------------------------- 陈旧报告哨兵（D152）
+#
+# ★ 上面对账的是「报告里写的**数字** == 现算」。这一节对账的是另一件事：
+#   「报告声明的**输入** == 当前输入」。两者不可互相替代 ——
+#   一份报告可以数字全对、却基于一张早已不存在的图（D152 的原型正是这样：
+#   eval_report 的 40/40 写在 9657/48712 的图上，重跑后报告 mtime 变新，
+#   而声明字段仍是旧值 —— 因为**那个字段原先压根不从输入来**）。
+#
+# ★ 为什么必须查 sha256 而不只查规模：两张不同的图可能节点/边数恰好相同。
+# ★ 为什么缺声明要判红：缺声明 = 无法判断新鲜度。若「没写」就放过，
+#   那么删掉字段就成了永远绿灯的通行证（D149 同族）。
+
+STALENESS = [
+    dict(report="12_评测/eval_report.json",
+         input="06_PoC/etl/normalized.json",
+         why="40/40 这个对外数字只有在声明的输入上才成立；输入变了而报告没重跑 ⇒ 该数字无法归因"),
+    dict(report="12_评测/tasks.json",
+         input="06_PoC/etl/normalized.json",
+         why="冻结任务集声明的候选空间：题在哪个图上可解，是这道题成立的前提"),
+]
+
+_RE_SIZE_IN_GRAPH = re.compile(r"([\d,]+)\s*节点\s*/\s*([\d,]+)\s*边")
+
+
+def _sha256_file(rel):
+    h = hashlib.sha256()
+    with open(os.path.join(ROOT, rel), "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _graph_size(rel):
+    with io.open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
+        g = json.load(fh)
+    return (len(g["nodes"]), len(g["edges"]))
+
+
+def _freshness_of(doc):
+    """从报告 JSON 里取出 (声明 sha256, 声明规模)。缺字段返回 (None, None)。"""
+    ss = doc.get("solution_space") or {}
+    if not isinstance(ss, dict):
+        return None, None
+    sha = ss.get("graph_sha256")
+    m = _RE_SIZE_IN_GRAPH.search(ss.get("graph") or "")
+    size = (int(m.group(1).replace(",", "")), int(m.group(2).replace(",", ""))) if m else None
+    return sha, size
+
+
+def check_staleness(decl, doc=None, current=None):
+    """单条新鲜度声明。返回 (ok, detail)。
+
+    `doc` / `current` 可注入 —— 自检的负对照**在内存里改**，不碰磁盘
+    （D146：写临时文件 + 外部超时 ⇒ 残留）。
+    """
+    rel, inp = decl["report"], decl["input"]
+    if doc is None:
+        with io.open(os.path.join(ROOT, rel), encoding="utf-8") as fh:
+            doc = json.load(fh)
+    sha, size = _freshness_of(doc)
+    if not sha:
+        return (False, "%s：**没有 `graph_sha256` 声明** ⇒ 无法判断新鲜度。"
+                       "缺声明按 fail-closed 判红（否则删掉字段就是永久绿灯）" % rel)
+    if size is None:
+        return (False, "%s：`graph` 字段里取不到「N 节点 / M 边」⇒ 规模无法核对" % rel)
+    if current is None:
+        current = {"sha256": _sha256_file(inp), "size": _graph_size(inp)}
+    if sha != current["sha256"]:
+        return (False, "%s：声明 sha256 %s… ≠ 当前输入 %s… ⇒ **报告基于旧输入**，"
+                       "其数字不能归因到当前图，须重跑" % (rel, sha[:12], current["sha256"][:12]))
+    if size != current["size"]:
+        return (False, "%s：声明规模 %d/%d ≠ 现算 %d/%d"
+                       % (rel, size[0], size[1], current["size"][0], current["size"][1]))
+    return (True, "%s：sha256 %s… 与规模 %d/%d 均与当前输入一致"
+                  % (rel, sha[:12], size[0], size[1]))
+
+
+def run_staleness(docs=None):
+    return [check_staleness(d, doc=(docs or {}).get(d["report"])) for d in STALENESS]
+
+
 # ---------------------------------------------------------------- 自检
 
 def selfcheck():
@@ -485,6 +567,47 @@ def selfcheck():
     rep.append(("S5 登记表非真空且字段齐备", len(DECLARATIONS) >= 2 and not miss,
                 "%d 条声明；缺字段：%s" % (len(DECLARATIONS), miss or "无")))
 
+    # ---- S6 / S6a–S6c：陈旧报告哨兵（D152）----
+    # ★ 四个负对照**全部在内存里做**：`check_staleness` 吃可注入的 `doc`/`current`。
+    #   不写临时文件 ⇒ 不会有 D146 那种「外部超时 ⇒ finally 没跑完 ⇒ 注入残留」。
+    need_s = {"report", "input", "why"}
+    miss_s = [d.get("report", "?") for d in STALENESS if not need_s.issubset(set(d))]
+    rep.append(("S6 新鲜度登记表非真空且字段齐备",
+                len(STALENESS) >= 1 and not miss_s,
+                "%d 条；缺字段：%s" % (len(STALENESS), miss_s or "无")))
+
+    _decl0 = STALENESS[0]
+    _cur = {"sha256": _sha256_file(_decl0["input"]), "size": _graph_size(_decl0["input"])}
+    with io.open(os.path.join(ROOT, _decl0["report"]), encoding="utf-8") as _fh:
+        _doc0 = json.load(_fh)
+    _ok0, _d0 = check_staleness(_decl0, doc=_doc0, current=_cur)
+    rep.append(("S6 正例：真实报告的新鲜度声明成立", _ok0, _d0))
+
+    # S6a：篡改 sha256 一个字符 ⇒ 必须红
+    _doc = json.loads(json.dumps(_doc0))
+    _sha = _doc["solution_space"]["graph_sha256"]
+    _doc["solution_space"]["graph_sha256"] = _sha[:-1] + ("0" if _sha[-1] != "0" else "1")
+    rep.append(("S6a 负对照：篡改声明 sha256 ⇒ 必须红",
+                not check_staleness(_decl0, doc=_doc, current=_cur)[0],
+                "篡改后仍通过 ⇒ 哨兵不看在输入上"))
+
+    # S6b：删掉 graph_sha256 ⇒ 必须红（fail-closed：不许靠「没写」过关）
+    _doc = json.loads(json.dumps(_doc0))
+    _doc["solution_space"].pop("graph_sha256", None)
+    rep.append(("S6b 负对照：删掉 graph_sha256 ⇒ 必须红（缺声明不得当通过）",
+                not check_staleness(_decl0, doc=_doc, current=_cur)[0],
+                "删字段却通过 ⇒ 「不写」成了永久绿灯（D149 同族）"))
+
+    # S6c：篡改 graph 里的规模 ⇒ 必须红（sha 对了也不许过 —— 规模写错同样是声明不实）
+    _doc = json.loads(json.dumps(_doc0))
+    _g = _doc["solution_space"]["graph"]
+    _n = int(_RE_SIZE_IN_GRAPH.search(_g).group(1).replace(",", ""))
+    _doc["solution_space"]["graph"] = _RE_SIZE_IN_GRAPH.sub(
+        "%d 节点 / 1 边" % (_n + 1), _g, count=1)
+    rep.append(("S6c 负对照：只改规模不改 sha256 ⇒ 必须红",
+                not check_staleness(_decl0, doc=_doc, current=_cur)[0],
+                "只改规模却通过 ⇒ 规模字段是装饰"))
+
     print("\n【报告数字对账 · 自检】")
     width = max(len(t) for t, _, _ in rep)
     bad_n = 0
@@ -515,8 +638,24 @@ def main():
         print("  [%s] %s\n         %s" % ("OK" if ok else "NG", decl["key"], detail))
     print("-" * 72)
     print("  %d 条声明，一致 %d，不一致 %d" % (len(results), len(results) - bad, bad))
+
+    # ---- 陈旧报告哨兵（D152）：报告声明的**输入** == 当前输入 ----
+    # ★ 与上面的「数字对账」不可互替：报告可以数字全对、却基于一张早已不存在的图。
+    print("\n【陈旧报告哨兵：报告声明的输入 == 当前输入】")
+    s_bad = 0
+    for decl, (ok, detail) in zip(STALENESS, run_staleness()):
+        if not ok:
+            s_bad += 1
+            bad += 1
+        print("  [%s] %s\n         %s\n         理由：%s"
+              % ("OK" if ok else "NG", decl["report"], detail, decl["why"]))
+    print("-" * 72)
+    print("  %d 条新鲜度声明，一致 %d，不一致 %d"
+          % (len(STALENESS), len(STALENESS) - s_bad, s_bad))
+
     if bad:
-        print("\n  ⇒ 报告里的数字与现算不符。**数字可以改，但只能是现算出来之后改**。")
+        print("\n  ⇒ 报告里的数字与现算不符，或报告基于旧输入。"
+              "**数字可以改，但只能是现算出来之后改；报告可以旧，但必须声明它旧在哪**。")
     return 1 if bad else 0
 
 
