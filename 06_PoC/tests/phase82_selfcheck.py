@@ -2,12 +2,17 @@
 # Copyright 2026 zhing
 """phase82_selfcheck.py —— V18 第五档 `changed_but_proven` 的**判据与负对照**
 
-⚠️ 本轮**只写判据，不开闸**。
-   `queries.FIDELITY_CLASSES` 仍是四类、`edge_fidelity()` 一字未改、服务端
-   `/api/subgraph` 仍只报四分类。本文件测的是 `11_真实数据/fidelity_proven.py`
-   这套**影子口径**：它能不能把 `changed` 正确二分，以及**能不能被打假**。
-   开闸（V18d 改成 `changed_unproven == 0` + 服务端披露第五档）是下一步，
-   必须在本文件全绿之后。
+■ 状态：**已开闸**（2026-10-28 · 方案 A）。
+   `changed` 现在被**细分**为 `changed_but_proven` / `changed_unproven`，
+   V18d 改判 `changed_unproven == 0`，`element_reference.py` 的注释已回归，
+   6 张 `content_equivalent` 证明已入库，路线 A 的 S94 外挂豁免已撤除。
+   `queries.FIDELITY_CLASSES` **仍是四类**（S114 咬住）—— 第五档是细分，不是第五个分类。
+
+■ 本文件测的是**判据本身**（`11_真实数据/fidelity_proven.py`）：
+   能不能把 `changed` 正确二分，以及**能不能被打假**。它用**回放**而不是改仓库 ——
+   S3 那次的真实状态仍在 git 历史里（0878538 带注释版），把登记快照的 src 哈希
+   换过去就精确复现了现场 ⇒ 负对照用的是真文件真历史，不是构造样本。
+   因此它不随开闸而失效，反而成了「闸门凭什么绿」的那份凭据。
 
 ■ 为什么要在「开闸前」写负对照
    S3 的教训（D145）是反过来的：先跑了真用例、发现闸门红了，才回头讨论判据
@@ -38,8 +43,8 @@
   NEG-S110 空证明表 ⇒ 覆盖 0
   NEG-S111 多来源边只覆盖一个 ⇒ 仍 changed（最容易漏的口子）
   NEG-S112 篡改 `from_rev`（借别的提交的版本对）⇒ 复算拒
-  S113  现状回放：HEAD（已回退）下 changed == 0，且 proven == 0（不会把"没变"算成"证明过"）
-  S114  生产口径未动：`FIDELITY_CLASSES` 仍四类，`edge_fidelity` 仍报 changed
+  S113  proven ⊆ changed：不得凭空造出「已证明」的边（不把「没变」算成「证明过」）
+  S114  四分类对外口径未扩：`FIDELITY_CLASSES` 仍四类（第五档只是 changed 的**细分**）
 
 运行： bash sttp.sh phase82
 """
@@ -95,8 +100,8 @@ class Report:
         npass = sum(1 for ok, _, _ in self.rows if ok)
         nfail = len(self.rows) - npass
         print()
-        print("  phase82_selfcheck（V18 第五档判据，**未开闸**）: PASS %d / FAIL %d"
-              % (npass, nfail))
+        print("  phase82_selfcheck（V18 第五档判据，**已开闸**；本仪器守判据本身）: "
+              "PASS %d / FAIL %d" % (npass, nfail))
         return 0 if nfail == 0 else 1
 
 
@@ -121,8 +126,7 @@ def main():
         hm2[sid] = ra.composite_hash_at_rev("src", sid, S3_REV, ROOT)
     reg = Q.build_stale_registry(sr.ids(), hm2, rsm)
 
-    # 现状快照（HEAD 已回退）：用于 S113
-    reg_now = Q.build_stale_registry(sr.ids(), hm, rsm)
+    # ★ 原「现状快照（HEAD 已回退）」已随开闸作废 —— 见 S113 的说明。
 
     # ---------- 真实证明：三张（内存里造，不动权威表） ----------
     atts = {}
@@ -248,17 +252,27 @@ def main():
             "S111b 同一条合成边两张都给 ⇒ proven（上一条不是恒红）",
             "proven=%d" % r111b["n_proven"])
 
-    # ---------- S113 现状回放 ----------
-    rnow = fp.split_changed(edges, reg_now, atts, require_head=False, base=ROOT)
-    rep.add(rnow["n_changed"] == 0 and rnow["n_proven"] == 0,
-            "S113 现状（HEAD 已回退）⇒ changed == 0 且 proven == 0"
-            "（不把「没变」算成「证明过」）",
-            "changed=%d / proven=%d" % (rnow["n_changed"], rnow["n_proven"]))
+    # ---------- S113 proven ⊆ changed ----------
+    #   ★ 原写法断言「现状（HEAD 已回退）下 changed == 0」。**开闸之后这条前提蒸发了**：
+    #     HEAD 现在就是带注释那版 ⇒ changed=703、proven=703 —— 判据会把「开闸成功」
+    #     读成「失败」。这与 S99i4 的退役是同一个道理（D145：前提蒸发了的判据不能留着）。
+    #   ★ 但它想守的性质仍然重要，只是得换一种**不依赖 HEAD 状态**的问法：
+    #     「已证明」的边必须**本来就是 changed**，不得凭空多出来 —— 也就是
+    #     不许把「没变」的边也算成「证明过」（那样 proven 就成了一顶白送的帽子）。
+    ch_keys = {Q.edge_key(e) for e in edges if Q.edge_fidelity(e, reg) == "changed"}
+    rnow = fp.split_changed(edges, reg, atts, require_head=False,
+                            now=lambda k, o: ra.composite_hash_at_rev(k, o, S3_REV, ROOT),
+                            base=ROOT)
+    extra = [k for k in rnow["proven_keys"] if k not in ch_keys]
+    rep.add(bool(ch_keys) and not extra and len(rnow["proven_keys"]) == rnow["n_proven"],
+            "S113 proven ⊆ changed：不得凭空造出「已证明」的边（不把「没变」算成「证明过」）",
+            "changed=%d / proven=%d / 越界 %d 条" % (len(ch_keys), rnow["n_proven"], len(extra)))
 
-    # ---------- S114 生产口径未动 ----------
+    # ---------- S114 四分类对外口径未扩（第五档只是**细分**） ----------
     rep.add(Q.FIDELITY_CLASSES == ("verified", "changed", "unverifiable_no_source",
                                    "unverifiable_not_in_repo"),
-            "S114 生产口径未动：FIDELITY_CLASSES 仍四类（本轮只出判据，**不开闸**）",
+            "S114 四分类对外口径未扩：FIDELITY_CLASSES 仍四类"
+            "（方案 A：第五档是 changed 的细分，不是第五个分类）",
             "FIDELITY_CLASSES=%s" % (Q.FIDELITY_CLASSES,))
 
     print()
