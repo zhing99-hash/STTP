@@ -459,7 +459,11 @@ def paths_of(kind, obj):
         v = ed.REFERENCE_REGISTRY.get(obj) or {}
         return list(v.get("paths") or [])
     if kind == "verifier":
-        return [obj] if obj in ed.VERIFIER_MODULES.values() else []
+        # ★ `VERIFIER_MODULES` 是 {verifier_id: rel}，键才是身份 —— S1 里误写成
+        #   `.values()`（拿 rel 去比 id），于是 verifier 身份**永远算不出复合哈希**。
+        #   这个 bug 在 S1 没被测到（当时没出过 verifier 证明），被 S3 真用例逮住。
+        rel = ed.VERIFIER_MODULES.get(obj)
+        return [rel] if rel else []
     if kind == "dep":
         # 只有**确实被某个验证器 import** 的文件才构成 dep 身份（fail-closed）
         hit = any(obj in (ed.code_imports(v) or set()) for v in ed.VERIFIER_MODULES.values())
@@ -515,7 +519,7 @@ def composite_hash_at_rev(kind, obj, rev, base=ROOT):
             h.update(b"\x00")
         return h.hexdigest()
     if kind == "ref":
-        parts = ["%s:%s" % (rp, hashlib.sha256(bodies[rp]).hexdigest()[:12]) for rp in rels]
+        parts = ["%s:%s" % (rp, hashlib.sha256(bodies[rp]).hexdigest()[:12]) for rp in rels]  # noloss-exempt: 截 12 位是图上既定的 ref 复合口径（evidence_deps.reference_content_hash 同样取 12 位再拼），与消费端逐位一致才可比，不是丢数据
         return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()[:16]
     return hashlib.sha256(bodies[rels[0]]).hexdigest()[:12]
 
@@ -634,12 +638,17 @@ def check_content_attestation(a, base=ROOT):
     got = composite_hash_at_rev(kind, obj, trev, base)
     if got != (a.get("composite") or {}).get("to"):
         return False, "to 复合哈希与 to_rev(%s) 复算不符 ⇒ 证明被篡改" % trev[:8]
-    # ★ 腐烂：声称 to 是「当前」的证明，一旦 HEAD 走了就必须失效
+    # ★ 新鲜度按**内容**判，不按「HEAD 是否还停在 to_rev」判（2026-10-28 · S3 实测修正）。
+    #   按 rev 判会让每张证明**在记录它的那一笔提交里就立刻过期** —— 证明文件本身
+    #   要提交进仓库，HEAD 必然前移一格，于是通道永远打不开（自相矛盾的死锁）。
+    #   正确语义：对象**当前**内容仍等于证明的 to 端。
+    #     HEAD 走了但对象没变 ⇒ 成立；对象再变一次 ⇒ 现算 ≠ to ⇒ 失效（仍然 fail-closed）。
     if a.get("to_is_head"):
-        head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=base,
-                              capture_output=True).stdout.decode().strip()
-        if head != trev:
-            return False, "to 声称是当前 HEAD(%s)，但 HEAD 已到 %s ⇒ 证明过期" % (trev, head)
+        now = composite_hash_now(kind, obj, base)
+        want = (a.get("composite") or {}).get("to")
+        if now != want:
+            return False, ("to 声称是当前内容，但现算 %s ≠ to %s ⇒ 证明过期（对象已再变）"
+                           % (str(now)[:12], str(want)[:12]))
     return True, "逐文件 AST 逐字符相同（%d 个文件，顶层 %s 个定义）" % (
         len(rels), ",".join(str(p.get("n_toplevel")) for p in (a.get("proof") or {}).get("per_file", [])))
 

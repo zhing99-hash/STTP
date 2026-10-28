@@ -224,7 +224,12 @@ def main():
     # ★ 「现算不出来」≠「不一致」：locator 未入库（如 elementkg_raw.json）时
     #   `composite_hash_now` 按 fail-closed 返回 None，那是**不可复算**，必须分列，
     #   不得当成不符（与 evidence_status 里「不可判定 ≠ 已变更」同一条规矩）。
-    n_ok, n_bad, n_skip, sample = 0, 0, 0, ""
+    # ★ S3 起「不等」有两种解释：①口径错（必须红）；②内容未变但字节变了，
+    #   已有 `content_equivalent` 证明把 from→to 桥住（合法，算「已桥接」）。
+    #   判据因此改成「**没有任何一项是既不等又无证明**」；且桥接必须是活绑定
+    #   （族 + 对象 + from + to 四要素全对上）—— 表里随便塞一张证明不算。
+    live = ed.content_attestations(ROOT)
+    n_ok, n_bad, n_skip, n_bridge, sample = 0, 0, 0, 0, ""
     for kind, key, h in ([("src", k, v) for k, v in rec_src.items()]
                          + [("ref", k, v) for k, v in sorted(rec_ref)]
                          + [("dep", k, v) for k, v in sorted(rec_dep)]):
@@ -233,12 +238,16 @@ def main():
             n_skip += 1
         elif got_h == h:
             n_ok += 1
+        elif ed._content_equivalent_covered(kind, key, h, got_h, live):
+            n_bridge += 1
         else:
             n_bad += 1
-            sample = sample or "%s:%s：图 %s ≠ 现算 %s" % (kind, key, str(h)[:12], str(got_h)[:12])
-    rep.add(n_bad == 0 and n_ok > 0,
-            "S99g 复合哈希口径：可复算的项必须逐一对上（一致 %d / 不符 %d / 不可复算 %d）"
-            % (n_ok, n_bad, n_skip),
+            sample = sample or "%s:%s：图 %s ≠ 现算 %s（且无证明桥接）" % (
+                kind, key, str(h)[:12], str(got_h)[:12])
+    rep.add(n_bad == 0 and n_ok + n_bridge > 0,
+            "S99g 复合哈希口径：不等必须有证明桥接，否则算不符"
+            "（一致 %d / 已桥接 %d / 不符 %d / 不可复算 %d）"
+            % (n_ok, n_bridge, n_bad, n_skip),
             sample or ("不可复算的 %d 项是 locator 未入库，属 fail-closed 的预期行为" % n_skip))
 
     # ---- S99h：fail-closed ----
@@ -284,16 +293,17 @@ def main():
             rep.add(rows3 and rows3[0][1] is False,
                     "S99i3 篡改：composite.to 被改 ⇒ 判失败（不是静默通过）",
                     (rows3[0][2] if rows3 else ""))
-            # 历史版本对：证明**本身**要能重算（to 不是 HEAD 也照算），
-            # 但声称 to_is_head 的证明一旦 HEAD 走了就必须失效
+            # ★ 原 S99i4「历史版本对硬说成 to_is_head ⇒ 判失败」**已于 2026-10-28 退役**：
+            #   S3 把注释加回后，`79c1648` 那一版的字节**恰好就是当前内容** ⇒
+            #   「冒充当前」其实是**真话**，判据放行是对的。前提蒸发了的判据不能留着充数。
+            #   同类守卫（且是受控夹具、不依赖仓库当前状态）由 S99v / S99w 承担：
+            #   对象未变而 HEAD 前进 ⇒ 成立；对象再变 ⇒ 失效。
             d4 = json.load(open(p, encoding="utf-8"))
             d4["attestations"][0]["to_is_head"] = True      # 冒充「to 就是当前」
             p4 = os.path.join(tmp, "att4.json")
             json.dump(d4, open(p4, "w", encoding="utf-8"), ensure_ascii=False)
             rows4 = ra.check_attestations(path=p4, base=ROOT)
-            rep.add(rows4 and rows4[0][1] is False,
-                    "S99i4 腐烂：把历史版本对硬说成 to_is_head ⇒ 判失败（读侧只认当前）",
-                    (rows4[0][2] if rows4 else ""))
+            _ = rows4        # 保留重算调用（不落判据），见上一条说明
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -387,8 +397,13 @@ def main():
             % (len(all_atts), len(only)),
             "全表 kinds=%s" % sorted({str(v.get("kind")) for v in all_atts.values()}))
 
-    # ---- S99u 接线零影响：当前表里没有 content_equivalent ⇒ 全图状态一条都不许变 ----
-    flip = 0
+    # ---- S99u 接线**有据**：全图逐条对比，凡状态变化必须由证明解释得了 ----
+    #   ★ v1 写的是「当前没有该证明 ⇒ 翻转必须为 0」—— 那是 S2 当时的快照，
+    #     S3 一加证明它就必然失效。改成**长期成立**的形式：
+    #     ① 变严（stale→valid/needs_review）必须带着 `reverified:content_equivalent`；
+    #     ② 变松之外的方向（valid→stale 之类）**一条都不许有**（证明只能减不能加）；
+    #     ③ 每条被翻转的证据，原先的变更原因必须**全部**被覆盖（不许「顺带洗白」）。
+    flip, unexplained, worse, leftover, sample = 0, 0, 0, 0, ""
     for _e in (json.load(open(os.path.join(ROOT, "06_PoC/etl/normalized.json"),
                               encoding="utf-8"))["edges"]):
         _p = _e.get("props") or {}
@@ -396,13 +411,92 @@ def main():
             if not isinstance(_ev, dict) or not ed.has_recorded_deps(_ev):
                 continue
             _r = ed.recorded_deps(_ev)
-            _a, _ = ed.evidence_status(_r, CUR_DEP)
-            _b, _ = ed.evidence_status(_r, CUR_DEP, attestations=only)
-            if _a != _b:
-                flip += 1
-    rep.add(flip == 0,
-            "S99u 接线零影响：当前无 content_equivalent 证明 ⇒ 全图状态翻转 0 条",
-            "翻转 %d 条" % flip)
+            _a, _ra = ed.evidence_status(_r, CUR_DEP)
+            _b, _rb = ed.evidence_status(_r, CUR_DEP, attestations=only)
+            if _a == _b:
+                continue
+            flip += 1
+            if _a == "valid":
+                worse += 1
+                continue
+            if not any(x.startswith("reverified:content_equivalent") for x in _rb):
+                unexplained += 1
+                sample = sample or "%s → %s：%s" % (_a, _b, _rb)
+                continue
+            # 原先的「变更」原因必须一条不剩（不可判定原因可以留下 ⇒ needs_review 合法）
+            left = [x for x in _rb if x.split(":")[0] in ed.CHANGE_REASONS]
+            if left:
+                leftover += 1
+                sample = sample or "残留变更原因 %s" % left
+    rep.add(unexplained == 0 and worse == 0 and leftover == 0,
+            "S99u 接线有据：全图翻转 %d 条，必须①都带 reverified ②无变严③无残留变更原因"
+            "（无据 %d / 变严 %d / 残留 %d）" % (flip, unexplained, worse, leftover), sample)
+
+    # ---- S99v / S99w：新鲜度必须按**内容**判，不能按「HEAD 还停在 to_rev」 ----
+    #   ★ 这是 S3 真用例逼出来的死锁：证明文件本身要提交进仓库 ⇒ HEAD 必然前移一格；
+    #     若按 rev 判，每张证明**在记录它的那一笔提交里就立刻过期** ⇒ 通道永远打不开。
+    #   用临时仓库造四段历史：A 基线 → B 只加注释（出证）→ C 无关提交 → D 改 AST。
+    t2 = tempfile.mkdtemp(prefix="sttp_s99v_")
+    try:
+        rel = TARGET
+        base_src = ra.blob_at("HEAD", rel)
+        commented = (base_src or "") + "\n# S99v 夹具：只加一行注释，不进 AST\n"
+        mutated = (base_src or "") + "\nS99V_MUTATION = 1     # 这一行进 AST\n"
+
+        def _put(body, name=None):
+            fp = os.path.join(t2, *(name or rel).split("/"))
+            d = os.path.dirname(fp)
+            if d and not os.path.isdir(d):
+                os.makedirs(d)
+            with open(fp, "w", encoding="utf-8", newline="") as f:
+                f.write(body)
+
+        def _g(*a):
+            r = subprocess.run(["git"] + list(a), cwd=t2, capture_output=True)
+            # ★ `source_registry._git` 有进程内缓存（键 = base + 参数）。生产里 HEAD
+            #   一次运行内不动，缓存合法；但本夹具在一次进程里连续推进 HEAD
+            #   ⇒ 不清缓存会读到旧 blob，S99w 会假绿（实测踩到）。
+            sr.clear_git_cache()
+            return r
+
+        _g("init", "-q")
+        _g("config", "user.email", "selfcheck@local")
+        _g("config", "user.name", "selfcheck")
+        if not base_src:
+            rep.add(False, "S99v 夹具：取不到该文件当前 blob", "blob_at 返回 None")
+        else:
+            _put(base_src)
+            _g("add", "-A")
+            _g("commit", "-qm", "A base")
+            rev_a = _g("rev-parse", "HEAD").stdout.decode().strip()
+            _put(commented)
+            _g("add", "-A")
+            _g("commit", "-qm", "B comment only")
+            att, why = ra.build_content_attestation("dep", rel, from_rev=rev_a, base=t2)
+            if att is None:
+                rep.add(False, "S99v 夹具：临时仓库里出不了证", why or "")
+            else:
+                # C：无关提交（HEAD 前进，但对象内容没变）
+                _put("unrelated\n", "__s99v_unrelated.txt")
+                _g("add", "-A")
+                _g("commit", "-qm", "C unrelated")
+                pj = os.path.join(t2, "_att.json")
+                with open(pj, "w", encoding="utf-8") as f:
+                    json.dump({"attestations": [att]}, f, ensure_ascii=False)
+                rows = ra.check_attestations(path=pj, base=t2)
+                ok_v = bool(rows) and rows[0][1] is True
+                rep.add(ok_v, "S99v 新鲜度按内容判：HEAD 前进但对象未变 ⇒ 证明仍成立（不死锁）",
+                        (rows[0][2] if rows else "无结果"))
+                # D：对象真变（AST 变）⇒ 必须失效
+                _put(mutated)
+                _g("add", "-A")
+                _g("commit", "-qm", "D ast change")
+                rows2 = ra.check_attestations(path=pj, base=t2)
+                rep.add(bool(rows2) and rows2[0][1] is False,
+                        "S99w 对象再变（AST 变）⇒ 证明必须失效（不是永久通行）",
+                        (rows2[0][2] if rows2 else "无结果"))
+    finally:
+        shutil.rmtree(t2, ignore_errors=True)
 
     return rep.render("Phase 81：S1 证明器 + S2 读侧接通（绑定四要素缺一不生效）")
 
