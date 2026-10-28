@@ -501,8 +501,10 @@ PROBES = [
                 "★ 为什么改 manifest 而不是改 VERSION：VERSION 是**事实源**，"
                 "改它等于换掉了被测对象的前提（测出来的是「文件不同」，不是「判据有效」）；"
                 "改**清单**才是模拟「清单与事实源漂移」这个真实故障形状。"
-                "★ 锚点会随版本号漂移而失效：`anchor_report()` 在开跑前静态检查全表锚点，"
-                "命中 ≠ 1 次会**大声报错**（#74），不会静默；届时随 VERSION 一起改这一行。"),
+                "★ 锚点由 `sync_manifest_anchors()` 在导入时**现读清单**生成（当前值 − 1），"
+                "不再死记某一版数字 —— 否则每次 `sttp.sh release` 重建清单都会让它失效。"
+                "`anchor_report()` 仍会在开跑前静态检查锚点命中次数，≠ 1 次就大声报错（#74）："
+                "数值漂移自动跟，格式漂移照样红。"),
         "file": "06_PoC/release/manifest.json",
         "old": '  "phase": 65,',
         # ★ 注入值必须是**合法 JSON**：第一版写成 `"phase": 64,   # 注释`，
@@ -1327,6 +1329,52 @@ def read_text(path):
 
 def write_text(path, s):
     io.open(path, "w", encoding="utf-8", newline="").write(s)
+
+
+def sync_manifest_anchors():
+    """让 R27/R28 的锚点**跟随当前清单值**，而不是死记某一版的具体数字。
+
+    ★ 为什么必须这样（D151 同族）：R27 原锚点是 `"phase": 65,`、R28 是
+      `"snapshot_phase": 41,`。每次重建发布清单（`sttp.sh release`）这两个数就变，
+      锚点随即命中 0 次 —— 而**没人会记得同步改探针**。
+      实测 2026-10-28：`3efec29` 把 phase 65→66 之后没有复跑全链门禁，
+      红了两轮才被 RS 逮到。**「记得改」不是机制。**
+
+    ★ 探针要注入的缺陷形状是「**清单与事实源漂移**」，与具体数值无关 ——
+      所以「当前值 − 1」是**永远正确**的注入；写成字面量反而把探针绑死在某一版上。
+
+    ★ 仍保留 fail-closed：若清单格式变了（键名/缩进），`old` 命中 0 次 ⇒
+      RS 照样大声报错。本函数只负责「数值漂移不需要人工跟」。
+    """
+    rel = os.path.join(ROOT, "06_PoC", "release", "manifest.json")
+    try:
+        with io.open(rel, encoding="utf-8") as fh:
+            m = json.load(fh)
+    except Exception as e:                              # noqa: BLE001
+        print("[WARN] sync_manifest_anchors：读不到 manifest（%s: %s）"
+              "⇒ R27/R28 锚点保持字面量，RS 会因命中 0 次而报红" % (type(e).__name__, e))
+        return
+    # ★ `phase` / `snapshot_phase` 在 **`release` 块里**，不在顶层。
+    #   本函数第一版写成 `m.get("phase")`（顶层）⇒ 拿到 None ⇒ 被 `except: return`
+    #   静默吞掉 ⇒ 锚点悄悄没同步，症状是「RS 照旧红，但看起来像没修」。
+    #   静默失败就是永久绿灯（D149 同族）—— 所以这里**任何异常都要打印**。
+    blk = m.get("release") or {}
+    want = {"R27": ("phase", blk.get("phase")),
+            "R28": ("snapshot_phase", blk.get("snapshot_phase"))}
+    for p in PROBES:
+        kv = want.get(p.get("id"))
+        if not kv:
+            continue
+        field, val = kv
+        if not isinstance(val, int):
+            print("[WARN] sync_manifest_anchors：release.%s 不是整数（实际 %r）"
+                  "⇒ %s 的锚点未同步，RS 会报红" % (field, val, p["id"]))
+            continue
+        p["old"] = '  "%s": %d,' % (field, val)
+        p["new"] = '  "%s": %d,' % (field, val - 1)
+
+
+sync_manifest_anchors()
 
 
 def sha256_text(s):
