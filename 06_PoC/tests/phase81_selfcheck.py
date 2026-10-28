@@ -54,6 +54,9 @@ except Exception:
 
 import reverify_attest as ra                              # noqa: E402
 import evidence_deps as ed                                # noqa: E402
+import source_registry as sr                              # noqa: E402
+
+CUR_DEP = None        # S2 用：权威图的「当前依赖快照」（main() 里现算，不复用旧报告）
 
 TARGET = "11_真实数据/element_reference.py"
 
@@ -93,7 +96,7 @@ class Report:
         npass = sum(1 for ok, _, _ in self.rows if ok)
         nfail = len(self.rows) - npass
         print()
-        print("  phase81_selfcheck（S1 证明器）: PASS %d / FAIL %d" % (npass, nfail))
+        print("  phase81_selfcheck（S1 证明器 + S2 读侧）: PASS %d / FAIL %d" % (npass, nfail))
         return 0 if nfail == 0 else 1
 
 
@@ -161,6 +164,9 @@ def mutate(src, mode):
 
 def main():
     rep = Report()
+    global CUR_DEP
+    CUR_DEP = ed.current_snapshot(base=ROOT, byte_source="repo",
+                                  src_hashes=sr.hash_map(ROOT))
 
     # ---- S99a：真实历史正例（加注释 ⇒ 成立） ----
     old = real_src(COMMENT_REV + "^")
@@ -291,7 +297,114 @@ def main():
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
-    return rep.render("Phase 81 · S1：内容等价证明器（ast_identical）—— 只证证明器，不动读侧")
+    # =====================================================================
+    # S2：读侧接通 —— 绑定匹配成立才抵，四项缺一即不生效
+    # =====================================================================
+    def fx(family, obj, rec_h, cur_h):
+        """构造一条「该族对象从 rec_h 变到 cur_h」的最小证据 + 当前快照。"""
+        rec = {"src": None, "src_hash": None, "reference_refs": [], "verifier": {}}
+        cur = {"src_hashes": {}, "reference_hashes": {}, "verifiers": {}}
+        # ★ ref/dep 夹具也要给一个**自洽的 src**：否则会凭空多出 `unverifiable_source`
+        #   ⇒ 被判 needs_review 而非 valid，把「证明生效没生效」的信号盖掉（夹具缺陷）。
+        rec["src"], rec["src_hash"] = "SRCFIX", "s" * 16
+        cur["src_hashes"]["SRCFIX"] = "s" * 16
+        if family == "src":
+            rec["src"], rec["src_hash"] = obj, rec_h
+            cur["src_hashes"][obj] = cur_h
+        elif family == "ref":
+            rec["reference_refs"] = [{"ref_id": obj, "content_hash": rec_h}]
+            cur["reference_hashes"][obj] = cur_h
+        else:
+            rec["verifier"] = {"verifier_id": "V", "code_hash": "x",
+                               "dependency_versions": {obj: rec_h}}
+            cur["verifiers"] = {"V": {"code_hash": "x", "dependency_versions": {obj: cur_h}}}
+        return rec, cur
+
+    def att(family, obj, frm, to, **kw):
+        d = {"id": "rva:t", "kind": "content_equivalent", "object_kind": family,
+             "object_id": obj, "composite": {"from": frm, "to": to}, "to_is_head": True}
+        d.update(kw)
+        return {"rva:t": d}
+
+    A, B = "a" * 16, "b" * 16
+    # ---- S99k 正例：三族各自的 changed 都能被抵（非真空：hit 必须 > 0） ----
+    for fam, obj, rid in (("src", "Phase13.Gate.B5", ed.R_SRC_CHANGED),
+                          ("ref", "element_reference", ed.R_REF_CHANGED),
+                          ("dep", TARGET, ed.R_DEP_CHANGED)):
+        rec, cur = fx(fam, obj, A, B)
+        st0, rs0 = ed.evidence_status(rec, cur)
+        st1, rs1 = ed.evidence_status(rec, cur, attestations=att(fam, obj, A, B))
+        rep.add(st0 == "stale" and st1 == "valid"
+                and any(r.startswith("reverified:content_equivalent") for r in rs1),
+                "S99k 正例 %s:%s —— 无证明 stale ⇒ 有证明 valid 且记 reverified" % (fam, obj),
+                "无证明 %s%s | 有证明 %s%s" % (st0, rs0, st1, rs1))
+
+    # ---- NEG-S99l 串族：ref 的证明不得抵 src_changed（同 object_id 也不行） ----
+    rec, cur = fx("src", "element_reference", A, B)
+    st, rs = ed.evidence_status(rec, cur, attestations=att("ref", "element_reference", A, B))
+    rep.add(st == "stale", "NEG-S99l 串族：ref 证明抵不掉 src_changed（同名对象也不行）",
+            "%s %s" % (st, rs))
+
+    # ---- NEG-S99m 越权对象：证明写的是别的对象 ----
+    rec, cur = fx("src", "Phase13.Gate.B5", A, B)
+    st, rs = ed.evidence_status(rec, cur, attestations=att("src", "Phase13.Gate.B2", A, B))
+    rep.add(st == "stale", "NEG-S99m 越权：证明的 object_id 不是本条证据的来源 ⇒ 不抵",
+            "%s %s" % (st, rs))
+
+    # ---- NEG-S99n/o 版本对不对齐 ----
+    rec, cur = fx("src", "Phase13.Gate.B5", A, B)
+    st, rs = ed.evidence_status(rec, cur, attestations=att("src", "Phase13.Gate.B5", "z" * 16, B))
+    rep.add(st == "stale", "NEG-S99n from 不符：证明的 from ≠ 证据记录值 ⇒ 不抵", "%s %s" % (st, rs))
+    st, rs = ed.evidence_status(rec, cur, attestations=att("src", "Phase13.Gate.B5", A, "c" * 16))
+    rep.add(st == "stale", "NEG-S99o to 过期：证明的 to ≠ 当前哈希 ⇒ 不抵", "%s %s" % (st, rs))
+
+    # ---- NEG-S99p 历史版本对：to_is_head=False 的证明不能抵「当前」的原因 ----
+    st, rs = ed.evidence_status(rec, cur,
+                                attestations=att("src", "Phase13.Gate.B5", A, B, to_is_head=False))
+    rep.add(st == "stale", "NEG-S99p 历史版本对（to_is_head=False）⇒ 不抵当前原因", "%s %s" % (st, rs))
+
+    # ---- NEG-S99q 串通道：Phase 73 的 code_equivalent 不得抵 src_changed ----
+    ce = {"rva:c": {"id": "rva:c", "kind": "code_equivalent", "verifier": "V",
+                    "from_code_hash": A, "to_code_hash": B}}
+    st, rs = ed.evidence_status(rec, cur, attestations=ce)
+    rep.add(st == "stale", "NEG-S99q 串通道：code_equivalent（Phase 73）不得抵 src_changed",
+            "%s %s" % (st, rs))
+
+    # ---- S99r 部分覆盖：只抵被证明覆盖的那一条，另一条照旧 ⇒ 仍 stale ----
+    rec, cur = fx("src", "Phase13.Gate.B5", A, B)
+    rec["reference_refs"] = [{"ref_id": "element_reference", "content_hash": A}]
+    cur["reference_hashes"]["element_reference"] = B
+    st, rs = ed.evidence_status(rec, cur, attestations=att("src", "Phase13.Gate.B5", A, B))
+    rep.add(st == "stale" and any(r.startswith(ed.R_REF_CHANGED) for r in rs)
+            and not any(r.startswith(ed.R_SRC_CHANGED) for r in rs),
+            "S99r 部分覆盖：src 被抵、ref 未覆盖 ⇒ 仍 stale（不是一刀切放行）", "%s %s" % (st, rs))
+
+    # ---- S99t 接线口按 kind 过滤：不得把 code_equivalent 顺带带上 ----
+    all_atts = ed.load_attestations(ROOT)
+    only = ed.content_attestations(ROOT)
+    rep.add(all((v.get("kind") == "content_equivalent") for v in only.values()),
+            "S99t 接线口：content_attestations() 只含 content_equivalent（全表 %d / 过滤后 %d）"
+            % (len(all_atts), len(only)),
+            "全表 kinds=%s" % sorted({str(v.get("kind")) for v in all_atts.values()}))
+
+    # ---- S99u 接线零影响：当前表里没有 content_equivalent ⇒ 全图状态一条都不许变 ----
+    flip = 0
+    for _e in (json.load(open(os.path.join(ROOT, "06_PoC/etl/normalized.json"),
+                              encoding="utf-8"))["edges"]):
+        _p = _e.get("props") or {}
+        for _ev in (_p.get("verification_evidence") or []):
+            if not isinstance(_ev, dict) or not ed.has_recorded_deps(_ev):
+                continue
+            _r = ed.recorded_deps(_ev)
+            _a, _ = ed.evidence_status(_r, CUR_DEP)
+            _b, _ = ed.evidence_status(_r, CUR_DEP, attestations=only)
+            if _a != _b:
+                flip += 1
+    rep.add(flip == 0,
+            "S99u 接线零影响：当前无 content_equivalent 证明 ⇒ 全图状态翻转 0 条",
+            "翻转 %d 条" % flip)
+
+    return rep.render("Phase 81：S1 证明器 + S2 读侧接通（绑定四要素缺一不生效）")
 
 
 if __name__ == "__main__":

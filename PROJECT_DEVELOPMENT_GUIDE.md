@@ -3301,7 +3301,7 @@ S95 的三道降噪闸门（缺一就淹没在假阳性里）：
   根治办法是把脚本的显示截断（`smi[:60]`）改成打完整值 —— 让错误没有藏身之处。
   与 D121 / D134 同源：**结论都要回到持久化的原始记录上核，不能对着屏幕 memory 抄。**
 
-##### ⑫ Phase 81（双重身份文件的内容等价证明通道）—— 立项 2026-10-28，**S1 已交付**，S2–S4 未动
+##### ⑫ Phase 81（双重身份文件的内容等价证明通道）—— 立项 2026-10-28，**S1+S2 已交付**，S3–S4 未动
 
 起因：路线 A（回退注释 + 豁免外挂）**回避了问题而不是解决** —— 只要「改这类文件就必然三红」
 还在，下一次加注释/改缩进就会原样再来一遍。立项文档自带四段块并已过 `fourreq_gate`。
@@ -3324,7 +3324,7 @@ S95 的三道降噪闸门（缺一就淹没在假阳性里）：
 | 步 | 内容 | 出口 | 状态 |
 |---|---|---|---|
 | S1 | 证明器（`--object {src,ref,dep,verifier}` + `ast_identical`）＋身份清单 | NEG-S99（改一个原子量 ⇒ 必须拒）红得起来 | ✅ **15/0** |
-| S2 | 读侧（`evidence_status` 第 3.5 步扩族；`_attestation_ok` 按 object_id + from/to 对齐） | 非真空探针 > 0；越权证明不生效 | 未动 |
+| S2 | 读侧（`evidence_status` 增第 3.6 步：三族按对象绑定抵消）＋官方失效报告接线 | 四要素缺一不生效；当前零影响 | ✅ **27/0**（S1 15 条 + S2 12 条） |
 | S3 | 真用例：注释加回来 + 出 **6 张**证明 ⇒ 全链闸门须仍 0 FAIL | 十二道 `[FAIL]` 0 且 `changed` 不回升 | 未动 |
 | S4 | D 级：118 元素与 PubChem 逐元素对表 | 有任一条不符 ⇒ 本通道不得用于该文件 | 未动 |
 
@@ -3338,6 +3338,20 @@ S99h/h2 fail-closed；S99i/i2 生成→重算闭环；NEG-S99j 越权；S99i3/i4
 ★ **口径订正**：图里 `src_hash` 存的是**完整 64 位** hex（不是 12 位截断）；
 `ref` 存 16 位、`dep`/`vch` 存 12 位。证明器按各族原口径存取，不截断。
 
+**S2 交付（2026-10-28）**：读侧接通，判据 **27/0**（S1 的 15 条 + S2 新增 12 条）。
+
+* `evidence_deps.py` 增第 **3.6** 步 + `_content_equivalent_covered()`：
+  族与对象对齐 ＋ `composite.from` == 记录值 ＋ `composite.to` == 当前值 ＋ `to_is_head` 为真
+  —— 四要素缺一不生效，且**只抵被证明覆盖的那几条原因**（同条证据上其它原因照旧 ⇒ 该 stale 仍 stale）。
+  ★ 覆盖判据是**绑定匹配**而非逐证据引用：证明说「对象 X 从 A 到 B 内容相同」，
+  则任何记录值 A、当前值 B 的证据都被覆盖 ⇒ **7 万条证据不必逐条挂 `rva`**（也就不用改图）。
+* 接线：`lineage_invalidation.py` 三处 `evidence_status()` 传入
+  `ed.content_attestations(base)`（**按 kind 过滤**，见 D140）。
+* S2 的 12 条判据：S99k 三族正例（有证明 ⇒ stale 转 valid 且记 `reverified:content_equivalent`）；
+  NEG-S99l 串族 / m 越权对象 / n from 不符 / o to 过期 / p 历史版本对 / q 串通道
+  （Phase 73 的 `code_equivalent` 抵不掉 `src_changed`）⇒ 一律**必须仍红**；
+  S99r 部分覆盖；S99t 接线口按 kind 过滤；**S99u 接线零影响**（全图状态翻转 0 条）。
+
 - **D138　同一个文件充当 N 个身份，一次改动就要 N 张证明。**
   `element_reference.py` 实测充当 **6 个身份**：①`src:Phase13.Gate.B2` ②`src:Phase13.Gate.B5`
   ③`src:element_reference` ④`ref:element_reference` ⑤`verifier:element_reference` ⑥`dep:本文件`。
@@ -3349,6 +3363,19 @@ S99h/h2 fail-closed；S99i/i2 生成→重算闭环；NEG-S99j 越权；S99i3/i4
   这不是判据失灵 —— 是判据在说「你的干扰根本没生效」（D121 / D134 同族，**第四度**）。
   改成用 **AST 定位数值常量**（`ast.Constant` + `col_offset/end_col_offset`）才改到数据上。
   ⇒ 凡是要证明「某类改动会被抓住」的负对照，改动必须落在 **AST/语义层**，文本正则等于掷骰子。
+- **D140　通道接线必须按 kind 分级，不能把证明表整表丢给读侧。**
+  实测：把**全表**（含 Phase 73 那条 `code_equivalent`）传给 `evidence_status()`，
+  当场把 **32609 条 stale 翻成 350 valid + 32259 needs_review** —— 那是**另一条通道**
+  的行为变更，混在本阶段里做就没人看得见。⇒ 接线口 `ed.content_attestations()`
+  只取 `content_equivalent`，并配判据 **S99u「当前零影响」** 守着（全图翻转必须为 0）。
+  ★ 顺带查出一个**既成缺口**（D135 的同款结构，注册 ≠ 生效）：
+  `evidence_status()` 的 `attestations` 参数此前**只有** `phase73_reverify_delta.py` 传，
+  `lineage_invalidation.py` 三处与查询层一律没传 ⇒ 那条通道在主要消费方一直是**死的**。
+  本阶段**没有**顺手把它接上（那是 32609 条的行为变更，要单独立项）。
+- **D141　「判据变红」先怀疑夹具，再怀疑判据（D121 第五度）。**
+  S2 首跑 2 条红：ref / dep 族的夹具**没给 src** ⇒ 凭空多出 `unverifiable_source`
+  ⇒ 状态落到 `needs_review` 而不是 `valid`，把「证明生效没生效」的信号盖住了。
+  ⇒ 夹具必须**自洽**：只留被测那一处差异，其余字段要配成不产生额外原因。
 
 ## 一、项目愿景与目标
 
