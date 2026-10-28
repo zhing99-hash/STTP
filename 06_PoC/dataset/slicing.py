@@ -840,6 +840,12 @@ def run_export(src_path, out_dir, *, dim, value, basis=None, root=None,
         import source_registry as _sr
         reg = _q.build_stale_registry(_sr.ids(), _sr.hash_map(base=root),
                                       _sr.repo_status_map(base=root))
+        # ★ Phase 82：自建 registry ⇒ 显式接上第五档，否则与服务端算两套等级（D140 同族）。
+        try:
+            import fidelity_proven as _fp                     # noqa: PLC0415
+            _fp.attach_proven(reg, edges, base=root)
+        except Exception as _ex:                             # noqa: BLE001
+            print("[WARN] 第五档 proven 不可用（%s: %s）" % (type(_ex).__name__, _ex))
         if basis == "internal_e1":
             grade_of = lambda e: _q.edge_grade(e, reg)          # noqa: E731
         else:

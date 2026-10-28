@@ -223,6 +223,33 @@ def split_changed(edges, registry, attestations=None, now=None, require_head=Tru
             "proven_keys": proven_keys, "unproven": unproven}
 
 
+def attach_proven(reg, edges, base=ROOT, verbose=True):
+    """**就地**把 proven 映射注入一份 registry（供**自建** registry 的消费方用）。
+
+    ★ D140（注册 ≠ 生效）的同族风险：`queries.edge_fidelity_proven()` 只在 registry
+      带 `proven` 时才可能为真。服务端 `viz_server.stale_registry()` 已经注入，
+      但**自己构造** registry 的消费方（`grade_report` / `dataset/slicing` /
+      `phase78`）拿不到 ⇒ 同一条边在两处算出**两个等级**。
+      实测：5 分 702 → 41（掉了 661 条），而 G2 断言的是「5 分且 fidelity≠verified」，
+      掉档后它们**不再是 5 分** ⇒ 自洽、不红 —— 典型的「数据悄悄变差、仪器全部安静」。
+
+    ⇒ 凡是自建 registry 又要算 `edge_grade` 的地方，都必须调一次本函数。
+      判据侧由 `report_number_check` 的等级分布声明 + G5 咬住（两处必须同一套数）。
+    """
+    try:
+        atts = ed.content_attestations(base)
+        if not atts:
+            return reg
+        reg["proven"] = proven_by_edge(edges, reg, atts, base=base)
+        return reg
+    except Exception as _e:                                   # noqa: BLE001
+        # ★ 不静默：接不上就要让人看见，否则「等级掉了」会被读成「数据本来就这样」。
+        if verbose:
+            print("[WARN] 第五档 proven 未接上（%s: %s）⇒ 等级按四分类口径（会掉档）"
+                  % (type(_e).__name__, _e))
+        return reg
+
+
 def proven_by_edge(edges, registry, attestations=None, now=None, require_head=True,
                    base=ROOT):
     """`{edge_key: True}` —— 供 `queries.build_stale_registry(proven_by_edge=…)` 注入。

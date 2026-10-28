@@ -124,11 +124,14 @@ def run_assertions(edges, gi, gp, reg, redist_of, rep,
     rep.add(s_p == n and cp.get("null", 0) == 0, "G1p",
             "对外口径 Σ=%d == 边总数 %d，且 null=%d" % (s_p, n, cp.get("null", 0)))
 
+    # ★ Phase 82：满分要求的是「内容能确认」—— 两条路：字节可复算（verified），
+    #   或字节变了但**内容等价且当场可复算**（`changed_but_proven`）。
+    #   只认 verified 会把 661 条 proven 的 5 分边判死，而它们的内容确实没变。
     bad5 = [e for e, g in zip(edges, gi)
-            if g == 5 and q_edge_fidelity(e, reg) != "verified"]
+            if g == 5 and q_edge_fidelity(e, reg) not in ("verified", "changed_but_proven")]
     rep.add(not bad5, "G2",
-            "内部 5 分 %d 条，其中 fidelity≠verified 的 %d 条（满分必须可字节复算）"
-            % (ci.get("5", 0), len(bad5)))
+            "内部 5 分 %d 条，其中「内容不可确认」的 %d 条"
+            "（满分必须 verified 或 changed_but_proven）" % (ci.get("5", 0), len(bad5)))
 
     bad1 = [e for e, g in zip(edges, gi)
             if g == 1 and q_edge_fidelity(e, reg) == "verified"
@@ -172,12 +175,19 @@ _Q = None
 
 
 def q_edge_fidelity(e, reg):
-    """延迟 import `queries`（`--selfcheck` 也要用，且不希望模块导入顺序影响判据）。"""
+    """延迟 import `queries`（`--selfcheck` 也要用，且不希望模块导入顺序影响判据）。
+
+    ★ Phase 82：用的是 `fidelity_for_grade`（**等级口径**），不是 `edge_fidelity`。
+      两者只在「字节不符但内容等价且当场可复算」这一档上不同 —— 那一档记作
+      `changed_but_proven`，对**等级**的贡献与 verified 相同（内容既然等价）。
+      ⇒ 对账断言（G2/G3）必须与 `edge_grade` 用**同一个**口径，否则会变成
+      「等级说 5 分、对账说这条边不可复算」的自相矛盾（实测 G2 红在 661 条）。
+    """
     global _Q
     if _Q is None:
         import queries as _m                                # noqa: PLC0415
         _Q = _m
-    return _Q.edge_fidelity(e, reg)
+    return _Q.fidelity_for_grade(e, reg)
 
 
 # ---------------------------------------------------------------------------
@@ -273,7 +283,8 @@ def main():
         return 3
 
     print("=" * 92)
-    print("证据等级（1—5 分）只读报告    HEAD = %s    规则 e1（内部）/ p1（对外）" % head_sha())
+    print("证据等级（1—5 分）只读报告    HEAD = %s    规则 %s（内部）/ p1（对外）"
+          % (head_sha(), getattr(q, "GRADE_RULE_VERSION", "?")))
     print("  输入 06_PoC/etl/normalized.json  （现算，不落盘）")
     print("=" * 92)
 
@@ -283,6 +294,16 @@ def main():
     if not edges:
         print("[FATAL] 权威图里没有边 —— 本仪器**拒绝以空集自证**（铁律 #20）")
         return 3
+    # ★ Phase 82（D140「注册 ≠ 生效」）：本文件**自己**构造 registry ⇒ 拿不到服务端注入的
+    #   proven ⇒ 703 条被证明覆盖的边（其中 661 条 5 分）会为一个注释凭空掉到 1 分，
+    #   而 G2 断言「5 分且 fidelity≠verified」在掉档后**自洽** ⇒ 不会红（实测 5 分 702 → 41）。
+    #   ⇒ 自建 registry 又算等级，就必须显式接上第五档。
+    try:
+        import fidelity_proven as fp                          # noqa: PLC0415
+        fp.attach_proven(reg, edges, base=ROOT)
+    except Exception as _ex:                                 # noqa: BLE001
+        print("[WARN] 第五档 proven 不可用（%s: %s）⇒ 等级按四分类口径（会掉档）"
+              % (type(_ex).__name__, _ex))
     print("边总数 %d" % len(edges))
 
     gi = [q.edge_grade(e, reg) for e in edges]

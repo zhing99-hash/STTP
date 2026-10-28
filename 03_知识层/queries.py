@@ -468,7 +468,7 @@ def edge_fidelity_proven(e, stale_registry) -> bool:
     return bool((stale_registry.get("proven") or {}).get(edge_key(e)))
 
 
-def _fidelity_for_grade(e, stale_registry) -> str:
+def fidelity_for_grade(e, stale_registry) -> str:
     """**等级**用的忠实度口径（唯一差别：认 `changed_but_proven`）。
 
     ★ 为什么 `edge_grade` 必须认它，而 `edge_fidelity` 不能认：
@@ -502,7 +502,7 @@ GRADE_VL = {"cross_source": 5, "by_construction": 4, "rule_checked": 4,
             "source_asserted": 3, "model_inferred": 1}   # 缺 level ⇒ 按 1（fail-closed）
 #: ★ `changed_but_proven`（Phase 82）：字节不符，但**当场可复算**的内容等价证明已覆盖。
 #    按 5 分：内容既然等价，它对「这条边能不能用」的贡献与 verified 相同。
-#    ★ 不写成 `verified`：多一个名字才能被单独数出来、被审（见 `_fidelity_for_grade`）。
+#    ★ 不写成 `verified`：多一个名字才能被单独数出来、被审（见 `fidelity_for_grade`）。
 #  ★ 版本 e1 → e2：规则表多了一档 ⇒ 落盘的分数必须重刷（`bash sttp.sh gradepersist --apply`），
 #    否则 G5 会拿「快照规则 e1」对「现行 e2」判 False（这是**故意**的：规则变了必须留下痕迹）。
 GRADE_FD = {"verified": 5, "changed_but_proven": 5,
@@ -519,7 +519,7 @@ def edge_grade(e, stale_registry) -> Optional[int]:
         return None
     props = e.get("props") or {}
     v = GRADE_VL.get(props.get("verification_level"), 1)
-    f = GRADE_FD.get(_fidelity_for_grade(e, stale_registry), 1)
+    f = GRADE_FD.get(fidelity_for_grade(e, stale_registry), 1)
     g = min(v, f)
     evs = [x for x in (props.get("verification_evidence") or []) if isinstance(x, dict)]
     n_src = len({x.get("src") for x in evs if x.get("src")})
@@ -590,7 +590,7 @@ def edge_grade_public(e, stale_registry, redist_of=None) -> Optional[int]:
     props = e.get("props") or {}
     evs = [x for x in (props.get("verification_evidence") or []) if isinstance(x, dict)]
     srcs = [x.get("src") for x in evs if x.get("src")]
-    f_int = GRADE_FD.get(_fidelity_for_grade(e, stale_registry), 1)
+    f_int = GRADE_FD.get(fidelity_for_grade(e, stale_registry), 1)
     # ★ 严格 bool：误传三态字符串会**当场抛错**而非静默虚高（D123）
     discount = 5 if srcs and all(_redist_bool(redist_of, s) for s in srcs) else 2
     f = min(f_int, discount)

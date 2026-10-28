@@ -91,6 +91,13 @@ def main() -> int:
     # ---- 等级：双口径分档 ----
     reg = _q.build_stale_registry(_sr.ids(), _sr.hash_map(base=ROOT),
                                   _sr.repo_status_map(base=ROOT))
+    # ★ Phase 82：自建 registry ⇒ 必须显式接上第五档，否则与服务端/grade_report
+    #   算出**两套等级**（D140 同族）。切片按 grade 分档，两套数 = 切片含义漂移。
+    try:
+        import fidelity_proven as _fp                         # noqa: PLC0415
+        _fp.attach_proven(reg, edges, base=ROOT)
+    except Exception as _ex:                                 # noqa: BLE001
+        print("[WARN] 第五档 proven 不可用（%s: %s）" % (type(_ex).__name__, _ex))
     buckets = {}
     for basis in _sl.GRADE_BASIS:
         gof = ((lambda e: _q.edge_grade(e, reg)) if basis == "internal_e1"
