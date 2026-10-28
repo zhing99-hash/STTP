@@ -78,19 +78,15 @@ EXEMPT_MARK = "noloss-exempt"
 #    S3 的假设是「Phase 81 的 content_equivalent 证明能让内联标注回归」。实测**不成立**：
 #    证明只作用于**证据层**（`evidence_status`），而 V18d「全图 changed == 0」是**字节层**
 #    判据（`queries.edge_fidelity` 只看 src_hash vs 仓库 blob，压根不看证据状态）
-#    ⇒ 注释一加回，`changed` 立刻 703，闸门必红，与证明无关。
-#    ⇒ 这条拐杖**还得留着**：除非批准给 V18 增一档「字节变了但内容等价」的口径。
-EXTERNAL_EXEMPTS = [
-    {
-        "file": "11_真实数据/element_reference.py",
-        "threshold": 1,
-        "line": "s2 = s[:1].upper() + s[1:].lower()",
-        "reason": "查表前的大小写归一，不是截断：`s[:1]` 取首字母后与 `s[1:]` 拼回完整串，"
-                  "无一字丢失。该行所在的 `element_reference.py` 是**已登记证据来源/参考表/依赖**，"
-                  "V18d 是**字节层**判据 ⇒ 插一个字节就 703 条 changed（Phase 81 · S3 实测），"
-                  "故豁免走本清单，指纹随行失效。",
-    },
-]
+#    ⇒ 注释一加回，`changed` 立刻 703，闸门必红，与证明无关 ⇒ 当时只能把拐杖先留着。
+#  ★ 2026-10-28（Phase 82 · **开闸**）：拐杖**已撤**，清单清空。
+#    V18 多了第五档 `changed_but_proven`（`edge_fidelity` **四分类一字未改**，`changed`
+#    只是被**细分**成「已证明 / 未证明」），V18d 改判 `changed_unproven == 0`。
+#    `element_reference.py` 的内联标注随之回归 —— 字节确实变了，但有 3 张
+#    `content_equivalent` 证明覆盖，且每次都拿 git 真 blob 重算（`fidelity_proven`）。
+#    ⇒ 清单清空**不等于**通道作废：S94c / NEG-S94c 仍用临时夹具逐条验指纹失配
+#      （清单为空时若不能注入，这两条判据就会真空通过）。
+EXTERNAL_EXEMPTS = []
 
 #: {(文件, 阈值, 该行 strip 原文): entry} —— 命中即可豁免；**三者全等**才算
 _EXEMPT_FINGERPRINTS = {

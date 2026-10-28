@@ -87,6 +87,24 @@ def _default_now(kind, obj, base=ROOT):
     return ra.composite_hash_now(kind, obj, base)
 
 
+def _make_now(now, base):
+    """★ `now` 必须记忆化：它默认要起一次 `git cat-file` 取 blob。不缓存的话，
+    每条「不符」的证据都会拉一次子进程 —— 703 条边 × 十来次调用实测 **110 秒**，
+    门禁里这个量级会被当成「仪器卡住」而遭外部超时杀掉
+    （红探针的注入体因此残留在工作树里 ⇒ D146）。慢仪器本身就是风险源。
+    """
+    memo = {}
+    _n = now or (lambda k, o: _default_now(k, o, base))
+
+    def _now(k, o):
+        key = (k, o)
+        if key not in memo:
+            memo[key] = _n(k, o)
+        return memo[key]
+
+    return _now
+
+
 def _covered(atts, kind, obj, rec, cur, require_head, now, cache, base):
     """这条「已变更」原因是否被一张**当场复算成立**的证明抵掉。
 
@@ -184,20 +202,10 @@ def split_changed(edges, registry, attestations=None, now=None, require_head=Tru
     """
     index = proven_index(attestations, base)
     cache = {}
-    # ★ `now` 必须记忆化：它默认要起一次 `git cat-file` 取 blob。不缓存的话，
-    #   每条「不符」的证据都会拉一次子进程 —— 703 条边 × 十来次调用实测 110 秒，
-    #   门禁里这个量级会被当成"仪器卡住"而遭外部超时杀掉（红探针注入残留就是这么来的）。
-    memo = {}
-    _now0 = now or (lambda k, o: _default_now(k, o, base))
-
-    def _now(k, o):
-        key = (k, o)
-        if key not in memo:
-            memo[key] = _now0(k, o)
-        return memo[key]
-
+    _now = _make_now(now, base)
     n_ch = n_pr = 0
     unproven = []
+    proven_keys = []
     for e in edges:
         verdict, detail = edge_changed_split(e, registry, index, now=_now,
                                              require_head=require_head, base=base,
@@ -207,11 +215,33 @@ def split_changed(edges, registry, attestations=None, now=None, require_head=Tru
         n_ch += 1
         if verdict == "changed_but_proven":
             n_pr += 1
+            proven_keys.append(Q.edge_key(e))
         else:
             unproven.append({"edge": Q.edge_key(e), "detail": detail})
     return {"n_total": len(edges), "n_changed": n_ch, "n_proven": n_pr,
             "n_unproven": n_ch - n_pr, "conserved": (n_pr + (n_ch - n_pr)) == n_ch,
-            "unproven": unproven}
+            "proven_keys": proven_keys, "unproven": unproven}
+
+
+def proven_by_edge(edges, registry, attestations=None, now=None, require_head=True,
+                   base=ROOT):
+    """`{edge_key: True}` —— 供 `queries.build_stale_registry(proven_by_edge=…)` 注入。
+
+    ★ 与 `split_changed` **同一份判定**，只是出口不同：那边给报告（带理由，便于定位
+      「哪一条证据没被覆盖」），这边给 03 层（只要 True/False，便于 `edge_grade` 用）。
+      两条出口若分叉，就会出现「报告说 703 条已证明、等级却按未证明掉 4 档」
+      ⇒ 由 phase82 的 **S115** 判据咬住（同源不得分叉）。
+    """
+    index = proven_index(attestations, base)
+    cache = {}
+    _now = _make_now(now, base)
+    out = {}
+    for e in edges:
+        verdict, _ = edge_changed_split(e, registry, index, now=_now,
+                                        require_head=require_head, base=base, cache=cache)
+        if verdict == "changed_but_proven":
+            out[Q.edge_key(e)] = True
+    return out
 
 
 def main(argv=None):

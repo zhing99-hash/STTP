@@ -360,6 +360,7 @@ def _gx():
 
 _SOURCE_REGISTRY = None       # 模块对象 / False
 _EVIDENCE_DEPS = None         # 模块对象 / False（A04 · Phase 45）
+_FIDELITY_PROVEN = None       # 模块对象 / False（第五档 · Phase 82）
 _STALE_CACHE = {"key": None, "val": None}
 # ★ 必须用 **RLock**（可重入）：`stale_registry()` 会在持锁期间调用
 #   `evidence_status_registry()`，而后者也要拿同一把锁。用 `threading.Lock()` 会
@@ -395,6 +396,12 @@ def build_stats() -> dict:
 #: 环境开关：A04 状态映射（默认开）。设 `STTP_EVIDENCE_STATUS=0` 可关闭
 #  —— 供「A04 未落图 / 想复现 Phase 44 行为」的对照实验，而**不是**为了静默退化。
 _EVIDENCE_STATUS_ENABLED = os.environ.get("STTP_EVIDENCE_STATUS", "1").strip().lower() \
+    not in ("0", "false", "no", "off")
+
+#: 环境开关：第五档 `changed_but_proven`（默认开）。设 `STTP_PROVEN=0` 可关闭
+#  —— 供「想复现开闸前行为」的对照实验，而**不是**为了静默退化。
+#  ★ 关掉后 `queries.edge_fidelity_proven()` 恒 False ⇒ 与 Phase 82 之前**逐位一致**。
+_PROVEN_ENABLED = os.environ.get("STTP_PROVEN", "1").strip().lower() \
     not in ("0", "false", "no", "off")
 
 
@@ -435,6 +442,85 @@ def _load_evidence_deps():
             print(f"[WARN] 无法加载 evidence_deps（{type(e).__name__}: {e}）；"
                   f"A04 验证依赖状态将不可用（回落到四分类口径）。")
     return _EVIDENCE_DEPS
+
+
+def _load_fidelity_proven():
+    """import 守卫：加载 `11_真实数据/fidelity_proven.py`（Phase 82 第五档判据）。
+
+    不可用时的行为是**显式降级**：`proven` 传空 ⇒ `queries.edge_fidelity_proven()`
+    恒 False ⇒ 与开闸前**逐位一致**（fail-closed，不是放行）。
+    `/api/stats` 会给出 `proven.available=false` 说明原因 —— **不静默假装没这一层**。
+    """
+    global _FIDELITY_PROVEN
+    if _FIDELITY_PROVEN is None:
+        d = os.path.join(ROOT, "11_真实数据")
+        try:
+            if d not in sys.path:
+                sys.path.insert(0, d)
+            import fidelity_proven  # type: ignore
+            _FIDELITY_PROVEN = fidelity_proven
+        except Exception as e:  # noqa: BLE001
+            _FIDELITY_PROVEN = False
+            print(f"[WARN] 无法加载 fidelity_proven（{type(e).__name__}: {e}）；"
+                  f"第五档 changed_but_proven 将不可用（回落到四分类口径）。")
+    return _FIDELITY_PROVEN
+
+
+def _attestation_fingerprint():
+    """重验证明表的**内容指纹**（Phase 82：证明表变 ⇒ 缓存的 proven 必须失效）。
+
+    ★ 为什么不能用 mtime：克隆/检出会重写 mtime 而内容不变 ⇒ 无谓重算；
+      反过来某些文件系统 mtime 精度不足 ⇒ 改了却不失效。取 sha256 才两头都稳。
+    """
+    ed = _load_evidence_deps()
+    rel = getattr(ed, "ATTESTATION_OUT", "11_真实数据/reverify_attestations.json") \
+        if ed else "11_真实数据/reverify_attestations.json"
+    p = os.path.join(ROOT, rel.replace("/", os.sep))
+    try:
+        with open(p, "rb") as f:
+            return hashlib.sha256(f.read()).hexdigest()[:16]
+    except OSError:
+        return "none"
+
+
+def proven_registry(base_reg, edges):
+    """`{edge_key: True}` —— 被**当场可复算**的内容等价证明完全覆盖的「已变更」边。
+
+    ★ 判定全在 `fidelity_proven.proven_by_edge()`（绑定四要素 + 取 git 真 blob 重跑
+      `ast_identical` + 全覆盖）。本层只负责注入与降级。
+    ★ 入参 `base_reg` 是**不含 proven 的**那份快照 —— 否则算 proven 又要一份完整
+      registry ⇒ 自递归。`stale_registry()` 负责把它拼回去。
+    """
+    fp = _load_fidelity_proven()
+    ed = _load_evidence_deps()
+    if not fp or not ed:
+        return {}
+    try:
+        return fp.proven_by_edge(edges, base_reg, ed.content_attestations(ROOT))
+    except Exception as e:  # noqa: BLE001
+        print(f"[WARN] proven 映射不可用（{type(e).__name__}: {e}）；回落到四分类口径。")
+        return {}
+
+
+def proven_summary():
+    """`/api/stats` 的 `proven` 段：第五档接没接上、用了几张证明、证明表的指纹。
+
+    ★ 为什么必须单独一段（`a04` 段的同款教训）：「`changed_but_proven=0`」
+      既可能是「没有需要证明的变更」，也可能是「这台机器根本没接上这一层」——
+      两种完全不同的状态**不能长得一样**，否则「没接上」会被读成「一切正常」。
+    """
+    fp = _load_fidelity_proven()
+    ed = _load_evidence_deps()
+    try:
+        atts = ed.content_attestations(ROOT) if ed else {}
+        return {"available": bool(fp), "enabled": _PROVEN_ENABLED,
+                "fingerprint": _attestation_fingerprint(),
+                "n_attestations": len(atts),
+                "objects": sorted("%s:%s" % (a.get("object_kind"), a.get("object_id"))
+                                  for a in atts.values())}
+    except Exception as e:  # noqa: BLE001
+        return {"available": False, "enabled": _PROVEN_ENABLED,
+                "reason": "%s: %s" % (type(e).__name__, e)}
 
 
 def evidence_status_registry(edges, src_hashes=None):
@@ -579,9 +665,12 @@ def _head_sha(base):
 
 
 def stale_registry():
-    """登记快照 `{known, hashes, repo_status}`，用于 `exclude_stale` 与忠实度分列。
+    """登记快照 `{known, hashes, repo_status, status, proven}`，用于 `exclude_stale` 与
+    忠实度分列。
 
-    ★ 缓存键 = `(HEAD sha, 每源的 lineage_recorded)`。HEAD 变（提交/切换）⇒ 键变 ⇒ 重算。
+    ★ 缓存键 = `(HEAD sha, 每源的 lineage_recorded, 证明表指纹)`。
+      HEAD 变（提交/切换）⇒ 键变 ⇒ 重算；**证明表变** ⇒ 键也变（Phase 82：proven
+      依赖表里那几张证明，表一改，覆盖关系可能整个换掉，缓存不能留）。
       不再把工作区 `mtime/size` 计入键：字节源既已是仓库 blob，工作区改动**本来就不该**
       影响裁决（这正是 D1 修复要的性质）。
     ★ `hashes` 只对**可从仓库复算**的来源有值；未入库 / 无 locator ⇒ None，
@@ -593,7 +682,8 @@ def stale_registry():
         return None
     base = getattr(sr, "ROOT", ROOT)
     key = (_head_sha(base),
-           tuple((sid, bool((sr.get(sid) or {}).get("lineage_recorded"))) for sid in sr.ids()))
+           tuple((sid, bool((sr.get(sid) or {}).get("lineage_recorded"))) for sid in sr.ids()),
+           _attestation_fingerprint())
     with _STALE_LOCK:
         if _STALE_CACHE["key"] == key and _STALE_CACHE["val"] is not None:
             return _STALE_CACHE["val"]
@@ -620,6 +710,12 @@ def stale_registry():
             if b is not None:
                 smap = evidence_status_registry(b.all_edges(), src_hashes=hm)
         val = q.build_stale_registry(sr.ids(), hm, rsm, status_by_edge=(smap or {}))
+        # ★ Phase 82：把「已变更但内容等价且当场可复算」的**边集合**注入同一份快照。
+        #   入参 `val` 此刻 `proven` 为空 ⇒ 不会自递归；模块不可用 ⇒ 传空 ⇒ 逐位一致。
+        if _PROVEN_ENABLED:
+            b2 = get_backend()
+            if b2 is not None:
+                val["proven"] = proven_registry(val, b2.all_edges())
         with _STALE_LOCK:
             _STALE_CACHE["key"], _STALE_CACHE["val"] = key, val
             return _STALE_CACHE["val"]
@@ -642,7 +738,9 @@ def fidelity_counts_global():
         return None
     base = ROOT
     try:
-        key = _head_sha(base)
+        # ★ Phase 82：证明表一变，proven 覆盖关系就变 ⇒ 缓存键必须跟着变，
+        #   否则「改了证明表却拿到旧计数」，服务端与自检会各说一套（D135 同族）。
+        key = (_head_sha(base), _attestation_fingerprint())
         with _FIDELITY_BUILD_LOCK:             # ★ 单飞：并发只算一遍（见文件头说明）
             with _STALE_LOCK:
                 if _FIDELITY_COUNTS_CACHE["key"] == key and _FIDELITY_COUNTS_CACHE["val"]:
@@ -654,6 +752,14 @@ def fidelity_counts_global():
                 _BUILD_STATS["fidelity"] += 1
             out = q.fidelity_counts(b.all_edges(), reg)
             out["n_edges_total"] = b.edge_count
+            # ★ Phase 82 第五档：`changed` 的**细分**（不是第五个分类）。
+            #   守恒：`changed == changed_but_proven + changed_unproven`（V18i 咬住）。
+            #   ★ 为什么必须单独披露：把「字节变了」直接写成 verified 等于抹掉事实；
+            #     只报 changed 又会让人以为「703 条边废了」。两个数字一起给，
+            #     读者才知道「变了，但已证明内容等价，且可当场复算」。
+            n_proven = sum(1 for e in b.all_edges() if q.edge_fidelity_proven(e, reg))
+            out["changed_but_proven"] = n_proven
+            out["changed_unproven"] = out.get("changed", 0) - n_proven
             with _STALE_LOCK:
                 _FIDELITY_COUNTS_CACHE["key"] = key
                 _FIDELITY_COUNTS_CACHE["val"] = out
@@ -679,7 +785,8 @@ def grade_counts_global():
         return None
     base = ROOT
     try:
-        key = _head_sha(base)
+        # ★ Phase 82：等级认 `changed_but_proven` ⇒ 证明表变，等级分布也要重算。
+        key = (_head_sha(base), _attestation_fingerprint())
         with _STALE_LOCK:
             if _GRADE_COUNTS_CACHE["key"] == key and _GRADE_COUNTS_CACHE["val"]:
                 return _GRADE_COUNTS_CACHE["val"]
@@ -989,6 +1096,7 @@ def graph_stats() -> dict:
                     getattr(_load_queries(), "GRADE_PUBLIC_RULE_VERSION", None)
                     if _load_queries() else None),
                 "a04": a04_registry_summary(),
+                "proven": proven_summary(),
                 "source_repo_status": _repo_status_counts(),
                 "evidence_byte_source": "repo（git cat-file blob HEAD:<path>）",
             }
@@ -1637,6 +1745,7 @@ class VizHandler(BaseHTTPRequestHandler):
         #   这里补上全图口径。两者均为 None ⇒ 该图上无 A04 记录（不假装 valid）。
         stats["evidence_status_global"] = evidence_status_counts_global()
         stats["a04"] = a04_registry_summary()
+        stats["proven"] = proven_summary()
         return self._json(200, self._env(
             status=r["status"], reason=r["reason"], error_code=r["error_code"],
             query=params, query_hash=qh, seed=seed_info,

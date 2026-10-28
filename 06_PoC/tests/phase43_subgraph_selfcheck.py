@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import copy
 import hashlib
 import json
 import os
@@ -880,10 +881,16 @@ def main(argv=None) -> int:
             if loccounts else "缺 evidence_fidelity")
 
     # V18d ★ D1 修复的核心断言：以仓库字节为准 ⇒ 全图 `changed` 必须为 0
-    rep.add(gcounts.get("changed") == 0,
-            "V18d 全图 changed == 0（D1 根因已修：裁决与检出/行尾无关）",
-            "changed=%s（若 >0 ⇒ 有已登记来源的真实字节与仓库 blob 不符，须查来源而非行尾）"
-            % gcounts.get("changed"))
+    #   ★ Phase 82 **开闸**：本条改成判 `changed_unproven == 0`。为什么不是继续判
+    #     `changed == 0`：那样「字节变了但内容等价且当场可复算」的 703 条边会被判死，
+    #     于是双重身份文件永远不能加一行注释（Phase 81 · S3 的负结果）。
+    #     改后的语义是「**没有一条边的变更是没交代的**」—— 交代了（proven）也要能复算，
+    #     复算不成立 ⇒ 回落 unproven ⇒ 立刻红（V18k 守这条）。
+    rep.add(gcounts.get("changed_unproven") == 0,
+            "V18d 【开闸后】全图 changed_unproven == 0（变了就必须有证明，有证明必须可复算）",
+            "changed=%s / proven=%s / unproven=%s"
+            % (gcounts.get("changed"), gcounts.get("changed_but_proven"),
+               gcounts.get("changed_unproven")))
 
     # V18e 字节源必须是仓库（不是 worktree）——否则 D1 会回归
     #   ★ 这两个字段是**图级事实**（不随子图变），发布在 `/api/stats`；
@@ -917,6 +924,84 @@ def main(argv=None) -> int:
             "V18f2 【重写】全图 stale = 字节层 ∪ A04 层（两层并集，含于区间内）",
             "stale=%d ∈ [%d, %d]（A04 层贡献 %d）"
             % (ind_stale, base_stale, base_stale + ind_a04_stale, ind_a04_stale))
+
+    # ---------- V18r / V18s / V18t（Phase 82 开闸；★ 不用 i/j/k —— 本文件已有同名判据） ----------
+    # V18r 第五档必须自洽：`changed` 拆成 proven / unproven，**不许多也不许少**。
+    #   ★ 为什么单列一条：V18a 守的是「四分类之和 == 边总数」，而第五档是 `changed`
+    #     的**细分** —— 两条守恒互不覆盖。细分漏项会让「703 条变了」里的某一部分
+    #     既不算 proven 也不算 unproven，报告上凭空消失。
+    n_ch_g = gcounts.get("changed")
+    n_pr_g = gcounts.get("changed_but_proven")
+    n_up_g = gcounts.get("changed_unproven")
+    rep.add(isinstance(n_pr_g, int) and isinstance(n_up_g, int)
+            and n_ch_g == n_pr_g + n_up_g,
+            "V18r 第五档守恒：changed == changed_but_proven + changed_unproven",
+            "%s == %s + %s" % (n_ch_g, n_pr_g, n_up_g))
+
+    # V18s **防「没接上」被读成「没问题」**。`changed_unproven` 缺失时 `.get()` 返回
+    #   None，`None == 0` 是 False 会红；但若换成 `or 0` 就会静默当 0 ⇒ 判据恒绿。
+    #   这里连服务端 `/api/stats` 的 `proven.available` 一起判 —— 模块加载失败、
+    #   证明表读不到，都必须**红**，不能长成「一切正常」（a04 段的同款教训）。
+    _, stats_r2 = http_get(port, "/api/stats")
+    pv = stats_r2.get("proven") or {}
+    rep.add(bool(pv.get("available")) and pv.get("enabled") is True,
+            "V18s 第五档已接线：响应带细分字段且服务端 proven 层可用（缺字段不得当 0）",
+            "proven=%s / changed_but_proven=%s" % (pv, n_pr_g))
+
+    # V18t **开闸的负对照**：证明不是许可证 —— 把 `composite.to` 改一个字符，
+    #   被覆盖的边必须**全部**回落 unproven。缺了这条，V18d 会退化成：
+    #   「只要表里躺着一张证明，闸门永远绿」（D109/D144 同族）。
+    try:
+        sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
+        import fidelity_proven as fp                      # noqa: E402
+        import evidence_deps as edx                       # noqa: E402
+        import reverify_attest as rax                     # noqa: E402
+        live_atts = edx.content_attestations(ROOT)
+        if live_atts:                                     # 开闸态：直接用真实证明表
+            reg_use, atts_use, req_head, now_use = reg, live_atts, True, None
+            tag = "（真实证明表 %d 张）" % len(live_atts)
+        else:
+            # ★ 回放态（开闸前的中间提交）：表里还没有 content 证明 ⇒ 自己造一个现场 ——
+            #   把登记快照里那 3 个 src 身份的哈希换成 `0878538`（带注释那版），
+            #   就精确复现 Phase 81 · S3 的 703 条 changed，再用真实历史版本对出 3 张证明。
+            #   **没有这一段，V18k 会在开闸前真空通过**（表里没证明 ⇒ 无所谓失效不失效）。
+            hm_rp = dict(reg["hashes"])
+            for _sid in ("Phase13.Gate.B2", "Phase13.Gate.B5", "element_reference"):
+                hm_rp[_sid] = rax.composite_hash_at_rev("src", _sid, "0878538", ROOT)
+            reg_use = Q.build_stale_registry((sr if "sr" in dir() else SR).ids(),
+                                             hm_rp, reg.get("repo_status") or {})
+            _rec = next((ev.get("src_hash")
+                         for e in b_all
+                         for ev in ((e.get("props") or {}).get("verification_evidence") or [])
+                         if isinstance(ev, dict) and ev.get("src") == "Phase13.Gate.B5"
+                         and ev.get("src_hash")), None)
+            atts_use = {}
+            for _sid in ("Phase13.Gate.B2", "Phase13.Gate.B5", "element_reference"):
+                _a, _w = rax.build_content_attestation("src", _sid, from_hash=_rec,
+                                                       to_rev="0878538", base=ROOT)
+                if _a is None:
+                    raise RuntimeError("回放证明出不了（%s）：%s" % (_sid, _w))
+                atts_use[_a["id"]] = _a
+            req_head = False
+            now_use = lambda k, o: rax.composite_hash_at_rev(k, o, "0878538", ROOT)
+            tag = "（回放态：自造 3 张证明，因表内暂无 content 证明）"
+        r_live = fp.split_changed(b_all, reg_use, atts_use, now=now_use,
+                                  require_head=req_head)
+        forged = copy.deepcopy(atts_use)
+        for a in forged.values():
+            if isinstance(a.get("composite"), dict) and a["composite"].get("to") is not None:
+                a["composite"]["to"] = str(a["composite"]["to"])[:-1] + "0"
+        r_forge = fp.split_changed(b_all, reg_use, forged, now=now_use,
+                                   require_head=req_head)
+        rep.add(r_live["n_changed"] > 0 and r_live["n_unproven"] == 0
+                and r_forge["n_proven"] == 0 and r_forge["n_changed"] == r_live["n_changed"],
+                "V18t 负对照：篡改证明的 composite.to ⇒ 被覆盖的边全部回落 unproven",
+                "%s 生效时 changed=%d unproven=%d；篡改后 proven=%d unproven=%d"
+                % (tag, r_live["n_changed"], r_live["n_unproven"],
+                   r_forge["n_proven"], r_forge["n_unproven"]))
+    except Exception as _e:                               # noqa: BLE001
+        rep.add(False, "V18t 负对照：篡改证明的 composite.to ⇒ 被覆盖的边全部回落 unproven",
+                "异常：%s: %s" % (type(_e).__name__, _e))
 
     # V18g 独立重算 == 响应（服务端不是另算一套）
     diffs = [k for k in classes if ind_counts.get(k) != gcounts.get(k)]
