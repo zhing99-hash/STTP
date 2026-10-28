@@ -2071,7 +2071,7 @@ ConnectionResetError: [WinError 10054] 远程主机强迫关闭了一个现有�
 
 | 位置 | 内容 |
 |---|---|
-| `VERSION`（新建，唯一事实源） | `0.65.0-rc1`；**MINOR = 开发阶段号** |
+| `VERSION`（新建，唯一事实源） | `0.66.0`；**MINOR = 开发阶段号**（2026-10-28 从 `0.65.0-rc1` 升上来，见 `CHANGELOG.md`） |
 | `make_manifest.py` | `read_version()` 解析；缺失/格式错 ⇒ **RC=2 且不写清单**（不降级为 `"unknown"`：清单的用途是让第三人对上账，假版本号比没有更糟） |
 | `verify_release.py` | `A0b` 清单 `version` ↔ VERSION（逐字）／`A0c` 清单 `phase` ↔ VERSION.MINOR（整数）／`A0d` 清单 `snapshot_phase` ↔ **产物文件名** `graph_data_phase41.json` |
 
