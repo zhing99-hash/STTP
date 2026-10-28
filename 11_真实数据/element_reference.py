@@ -231,7 +231,7 @@ def by_symbol(symbol):
     s = str(symbol).strip()
     if s in BY_SYMBOL:
         return BY_SYMBOL[s]
-    s2 = s[:1].upper() + s[1:].lower()  # noloss-exempt: 首字母大写本身无损：`s[:1].upper() + s[1:].lower()` 拼接回完整串
+    s2 = s[:1].upper() + s[1:].lower()
     return BY_SYMBOL.get(s2)
 
 

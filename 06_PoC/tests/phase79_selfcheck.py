@@ -74,6 +74,12 @@ EXEMPT_MARK = "noloss-exempt"
 #     · 清单条目若在某天对不上任何一行（**死条目**）⇒ 由 S94b 判红，逼人清理。
 #   也就是说它把「豁免」从**免死金牌**降级成「针对这一行的、可失效的收据」。
 #   NEG-S94b 逐条构造变异，证明这条通道**不是恒赦**。
+#  ★ 2026-10-28（Phase 81 · S3）：**清空过一次又恢复**，这段历史必须留着 ——
+#    S3 的假设是「Phase 81 的 content_equivalent 证明能让内联标注回归」。实测**不成立**：
+#    证明只作用于**证据层**（`evidence_status`），而 V18d「全图 changed == 0」是**字节层**
+#    判据（`queries.edge_fidelity` 只看 src_hash vs 仓库 blob，压根不看证据状态）
+#    ⇒ 注释一加回，`changed` 立刻 703，闸门必红，与证明无关。
+#    ⇒ 这条拐杖**还得留着**：除非批准给 V18 增一档「字节变了但内容等价」的口径。
 EXTERNAL_EXEMPTS = [
     {
         "file": "11_真实数据/element_reference.py",
@@ -81,7 +87,8 @@ EXTERNAL_EXEMPTS = [
         "line": "s2 = s[:1].upper() + s[1:].lower()",
         "reason": "查表前的大小写归一，不是截断：`s[:1]` 取首字母后与 `s[1:]` 拼回完整串，"
                   "无一字丢失。该行所在的 `element_reference.py` 是**已登记证据来源/参考表/依赖**，"
-                  "按字节保真判据不得插入内联标注 ⇒ 豁免走本清单，指紋随行失效。",
+                  "V18d 是**字节层**判据 ⇒ 插一个字节就 703 条 changed（Phase 81 · S3 实测），"
+                  "故豁免走本清单，指纹随行失效。",
     },
 ]
 
@@ -91,18 +98,23 @@ _EXEMPT_FINGERPRINTS = {
 }
 
 
-def _is_exempt(relpath, threshold, src_line):
-    """这处裸切片是否已被显式豁免（内联标注 **或** 带指纹的外部豁免）。"""
+def _is_exempt(relpath, threshold, src_line, prints=None):
+    """这处裸切片是否已被显式豁免（内联标注 **或** 带指纹的外部豁免）。
+
+    `prints` 允许传入**另一套**指纹表 —— 供 S94c 用临时夹具验证通道本身
+    （清单为空时若不能注入，这两条判据就会真空通过）。
+    """
     if EXEMPT_MARK in src_line:
         return True
-    return (relpath, threshold, src_line.strip()) in _EXEMPT_FINGERPRINTS
+    return (relpath, threshold, src_line.strip()) in (
+        _EXEMPT_FINGERPRINTS if prints is None else prints)
 
 
-def external_exempt_hits():
+def external_exempt_hits(entries=None, root=None):
     """每条外部豁免在目标文件里的**实际命中行数**（0 ⇒ 死条目，由 S94b 判红）。"""
     out = {}
-    for e in EXTERNAL_EXEMPTS:
-        fp = os.path.join(ROOT, e["file"].replace("/", os.sep))
+    for e in (EXTERNAL_EXEMPTS if entries is None else entries):
+        fp = os.path.join(root or ROOT, e["file"].replace("/", os.sep))
         want = e["line"].strip()
         n = 0
         if os.path.exists(fp):
@@ -428,14 +440,46 @@ def main() -> int:
     # ★ 新增第二条豁免通道本身就要有一个代价：清单条目必须始终指着一行真实存在的代码。
     #   0 命中 = 死条目（说明那行被改掉了或删掉了）⇒ 判红，逼人清理；
     #   命中 ≥2 = 同一行文本被复制到多处 ⇒ 披露（复制粘贴的写法将来要各自认领）。
-    dead = {f: n for f, n in external_exempt_hits().items() if n == 0}
-    dup = {f: n for f, n in external_exempt_hits().items() if n > 1}
-    add(not dead,
-        "S94b 外部豁免清单**不得腐烂**：每条必须仍指向一行真实源码（0 命中 ⇒ 死条目）",
-        ("已登记 %d 条 / 命中 %s" % (len(EXTERNAL_EXEMPTS), external_exempt_hits()))
-        if not dead else ("死条目：%s" % sorted(dead)))
-    if dup:
-        print("       [NOTE] 同一行文本命中多处（复制代码，各自认领）：%s" % dup)
+    if EXTERNAL_EXEMPTS:
+        dead = {f: n for f, n in external_exempt_hits().items() if n == 0}
+        dup = {f: n for f, n in external_exempt_hits().items() if n > 1}
+        add(not dead,
+            "S94b 外部豁免清单**不得腐烂**：每条必须仍指向一行真实源码（0 命中 ⇒ 死条目）",
+            ("已登记 %d 条 / 命中 %s" % (len(EXTERNAL_EXEMPTS), external_exempt_hits()))
+            if not dead else ("死条目：%s" % sorted(dead)))
+        if dup:
+            print("       [NOTE] 同一行文本命中多处（复制代码，各自认领）：%s" % dup)
+    else:
+        print("       [NOTE] 外部豁免清单为空（2026-10-28：内联标注已回归，见文件头）—— "
+              "通道本身由 S94c / NEG-S94c 用临时夹具验，不留真空。")
+
+    # ---- S94c / NEG-S94c：清单为空时，通道仍必须被验过（防真空通过） ----
+    #   ★ 用**临时夹具**造一个「已登记 + 可失效」的条目，逐项验三件事：
+    #     ① 指纹命中 ⇒ 豁免生效；② 该行改一个字符 ⇒ 立刻失配（不是对整个文件免死）；
+    #     ③ 目标文件消失 ⇒ 0 命中 = 死条目可被检出。
+    import tempfile as _tf
+    import shutil as _sh
+    fx_root = _tf.mkdtemp(prefix="sttp_s94c_")
+    try:
+        fx_rel = "fixture_ext.py"
+        fx_line = "s2 = s[:1].upper() + s[1:].lower()"
+        fx_body = "def f(s):\n    " + fx_line + "\n    return s\n"
+        with io.open(os.path.join(fx_root, fx_rel), "w", encoding="utf-8", newline="") as f:
+            f.write(fx_body)
+        fx_entries = [{"file": fx_rel, "threshold": 1, "line": fx_line, "reason": "S94c 夹具"}]
+        fx_prints = {(e["file"], e["threshold"], e["line"].strip()): e for e in fx_entries}
+        hit0 = external_exempt_hits(fx_entries, fx_root)
+        c1 = _is_exempt(fx_rel, 1, "    " + fx_line, prints=fx_prints)
+        c2 = not _is_exempt(fx_rel, 1, "    s3 = s[:1].upper() + s[1:].lower()", prints=fx_prints)
+        got = scan_text(fx_rel, fx_body.replace(fx_line, fx_line.replace("s2 =", "s3 =", 1)))
+        c3 = got is not None and any(v == 1 for _, _, v, _ in got)
+        os.remove(os.path.join(fx_root, fx_rel))
+        c4 = external_exempt_hits(fx_entries, fx_root).get(fx_rel) == 0
+        add(hit0.get(fx_rel) == 1 and c1 and c2 and c3 and c4,
+            "S94c 外挂通道自证：指纹命中即豁免 / 改一个字符即失配并重新变红 / 文件消失即死条目",
+            "命中=%s 生效=%s 失配=%s 重抽=%s 死条目=%s" % (hit0.get(fx_rel), c1, c2, c3, c4))
+    finally:
+        _sh.rmtree(fx_root, ignore_errors=True)
 
     # ---- NEG-S94b：外部豁免**不是恒赦** ----
     # ★ 这是本轮最关键的一条：把清单里挂了号的那一行的**原文改掉**（保留裸切片本身，
@@ -461,10 +505,13 @@ def main() -> int:
             bad_ext.append((e["file"], "变异体语法错误"))
         elif not any(v == e["threshold"] for _, _, v, _ in got):
             bad_ext.append((e["file"], "改行后仍未抽出 ⇒ 豁免对该文件整体生效（恒赦）"))
-    add(not bad_ext,
-        "NEG-S94b 外部豁免**不恒赦**：把登记过的那一行改掉 ⇒ 必须重新被 S94 抽出",
-        "；".join("%s %s" % (f, why) for f, why in bad_ext)
-        if bad_ext else "%d 条逐一变异，均重新变红" % len(EXTERNAL_EXEMPTS))
+    if EXTERNAL_EXEMPTS:
+        add(not bad_ext,
+            "NEG-S94b 外部豁免**不恒赦**：把登记过的那一行改掉 ⇒ 必须重新被 S94 抽出",
+            "；".join("%s %s" % (f, why) for f, why in bad_ext)
+            if bad_ext else "%d 条逐一变异，均重新变红" % len(EXTERNAL_EXEMPTS))
+    # ★ 清单为空时**不落一条恒真判据**（那是真空通过）；这条反证由 NEG-S94c 承担，
+    #   见上方夹具里的 c2/c3 两项。
 
     # ---- NEG-S95：监视**采集器本身** ----
     # ★ 这一条守的是「仪器睡着了」：采集路径一旦退化成空（generator 没迭代、
