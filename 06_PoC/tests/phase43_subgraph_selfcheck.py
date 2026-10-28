@@ -690,7 +690,23 @@ def main(argv=None) -> int:
             for ev in ((e.get("props") or {}).get("verification_evidence") or []):
                 if isinstance(ev, dict) and hm.get(ev.get("src")):
                     refs[ev["src"]] = refs.get(ev["src"], 0) + 1
-        sid_t = max(refs, key=refs.get) if refs else None
+        reg0 = Q.build_stale_registry(sr.ids(), hm, rsm)
+        # ★ Phase 82：**样本必须选「当前仍有 verified 边」的来源**。
+        #   原写法取 `max(refs)`（引用最多的 B5，734 条）—— 而开闸后 B5 的边
+        #   **已经**是 changed（`changed_but_proven` 只是细分，四分类不变）
+        #   ⇒ 翻转哈希不再产生任何增量 ⇒ `n1 > n0` 恒假 ⇒ **假红**。
+        #   判据本身没错，是**样本没选对**：它要守的是「verified ⇒ changed 的转移」，
+        #   一个已经没有 verified 边的来源，无从转移。
+        #   ★ 同一笔数据两种读法：把样本换成有 verified 边的来源，而不是把断言放松。
+        ver_by_src = {}
+        for e in all_e:
+            fi0 = Q.edge_fidelity(e, reg0)
+            for ev in ((e.get("props") or {}).get("verification_evidence") or []):
+                if isinstance(ev, dict) and ev.get("src") and hm.get(ev.get("src")):
+                    if fi0 == "verified":
+                        ver_by_src[ev["src"]] = ver_by_src.get(ev["src"], 0) + 1
+        cand = [s for s in refs if ver_by_src.get(s, 0) > 0]
+        sid_t = max(cand, key=lambda s: (ver_by_src.get(s, 0), refs[s])) if cand else None
         # ★ Phase 73（D109）：**两侧必须同一命题**。
         #   旧写法 `reg0 = V.stale_registry()` 取的是服务端 registry（含 A04 证据层），
         #   而 `reg1` 是 `Q.build_stale_registry()` 本地构造（**不含** A04）⇒
@@ -699,21 +715,30 @@ def main(argv=None) -> int:
         #     · A04 一旦判出 stale（本图 3.2 万条）⇒ 左大右小 ⇒ **假红**。
         #   这与 D72（V18h 旧版）是同一个模子，Phase 57 修 V18h 时漏修了同函数的 V16c。
         #   修法：两侧都用同一条构造路径，**只让哈希图这一个变量不同**。
-        reg0 = Q.build_stale_registry(sr.ids(), hm, rsm)
         n0 = sum(1 for e in all_e if Q.edge_is_stale(e, reg0))
         if sid_t:
             hm2 = dict(hm)
             hm2[sid_t] = "0" * 64
             reg1 = Q.build_stale_registry(sr.ids(), hm2, rsm)
             n1 = sum(1 for e in all_e if Q.edge_is_stale(e, reg1))
+            # ★ 构造性断言（而不是比总增量）：只看**该来源引用的那些边**，
+            #   翻转前 verified 的 v0 条，翻转后必须变成 changed。
+            #   ★ 为什么不再比全图 `n1 > n0`：那 v0 条边可能本来就被 A04 判为 stale
+            #     ⇒ 总数不增 ⇒ 用总数会假红。转移本身才是判据要的东西。
+            rel = [e for e in all_e
+                   if any(isinstance(ev, dict) and ev.get("src") == sid_t
+                          for ev in ((e.get("props") or {}).get("verification_evidence") or []))]
+            v0 = sum(1 for e in rel if Q.edge_fidelity(e, reg0) == "verified")
+            c1 = sum(1 for e in rel if Q.edge_fidelity(e, reg1) == "changed")
             n_ch = sum(1 for e in all_e if Q.edge_fidelity(e, reg1) == "changed")
-            rep.add(n1 > n0 and n_ch > 0,
-                    "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 相关边翻成 changed",
-                    "stale %d → %d（changed=%d，来源 %s，引用 %d 条）"
-                    % (n0, n1, n_ch, sid_t, refs.get(sid_t, 0)))
+            rep.add(v0 > 0 and c1 >= v0 and n1 >= n0 and n_ch > 0,
+                    "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 该来源的边 verified ⇒ changed",
+                    "来源 %s（引用 %d 条）：verified %d ⇒ changed %d；"
+                    "全图 changed=%d，stale %d → %d"
+                    % (sid_t, refs.get(sid_t, 0), v0, c1, n_ch, n0, n1))
         else:
-            rep.add(False, "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 相关边翻成 changed",
-                    "找不到有当前哈希的来源（hashes 全为 None？）")
+            rep.add(False, "V16c 判据非真空：翻转已登记来源的当前哈希 ⇒ 该来源的边 verified ⇒ changed",
+                    "找不到「有当前哈希且有 verified 边」的来源（hashes 全为 None，或全图无一可复算？）")
 
         # 缓存键：HEAD 变 ⇒ 键必变；不得按 mtime/size 猜
         with V._STALE_LOCK:
