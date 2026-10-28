@@ -3427,13 +3427,26 @@ S99h/h2 fail-closed；S99i/i2 生成→重算闭环；NEG-S99j 越权；S99i3/i4
      负对照只跑 changed 子集）是**安全性修复**，不是性能优化。
   ② `RT` 自检只能抓「文件里还留着注入体」，抓不到「注入体在本次 `--only` 之外」。
      跑单条探针前应先跑一次全量 `RT`。
+- **D148　「同一个规则，四处各自构造上下文」⇒ 注册 ≠ 生效（D140 第四次）。**
+  Phase 82 开闸后，第五档在服务端接上了，但 `grade_report` / `dataset/slicing` /
+  `phase60_grade_delta`（**落盘**）/ `phase78_selfcheck` 都**自己**构造 registry
+  ⇒ 四处拿不到 `proven` ⇒ 同一条边在两处算出**两个等级**（实测 5 分 702 → 41）。
+  收口方式：`fidelity_proven.attach_proven(reg, edges)` 一处实现、四处调用（#88），
+  接不上**打印告警**而不是静默退化。
+  ⇒ 凡是「由调用方注入的层」，都要清点**所有自建上下文的消费方**，不能只接服务端。
+- **D149　判据「自洽」不等于「没变差」。**
+  G2 断言「5 分且 fidelity≠verified 的必须为 0」。703 条边掉到 1 分之后，
+  它们**不再是 5 分** ⇒ 断言照样绿 —— 661 条边凭空掉 4 档，而没有任何一处报错。
+  判据写的是「若 X 则 Y」，一旦 X 本身被上游悄悄改掉，它就退化成旁观者。
+  ⇒ 凡断言形如「某档位的边必须满足某性质」，都要再配一条**档位分布本身**的声明
+  （本仓由 `report_number_check` 的等级分布声明 + G5「落盘 == 现算」承担）。
 - **D147　判据侧必须比读侧更严；放松开关要有名字、要留痕。**
   读侧（Phase 81 · S2）只认 `to_is_head=True`。判据侧为了能**回放**历史版本对，
   必须允许 `to_is_head=False` —— 但只能由调用方**显式**传 `require_head=False`，
   默认严格。若默认放开，回放用的证明就能抵当前原因，而表里的证明**本来就都是
   历史版本对**（生成时对象还没提交成 HEAD）⇒ 等于永久通行证。NEG-S109 守这条。
 
-##### ⑬ Phase 82（V18 第五档 `changed_but_proven`）—— 2026-10-28，**判据已交付，闸门未开**
+##### ⑬ Phase 82（V18 第五档 `changed_but_proven`）—— 2026-10-28，**已开闸**（方案 A）
 
 **为什么做**：Phase 81 的 S3 是**负结果**。证据层被证明救回 2431 条，而 V18d
 「全图 changed == 0」是**字节层**判据 —— 注释一加回就 703 条红，与证明无关（D145）。
@@ -3457,9 +3470,28 @@ AST 与 HEAD 相同，字节 +67）。把登记快照里的 src 哈希换成 087
 负对照用的是**真文件真历史**而不是构造样本（D139 同族要求）。实测：
 `changed=703 / proven=703 / unproven=0`；现状（已回退）`changed=0 / proven=0`。
 
-**为什么还不开闸**：开闸 = 改 `FIDELITY_CLASSES`、改 V18d 断言、给服务端加披露字段，
-牵动对外四分类口径与全部消费方（`viz_server` / `grade_report` / `_recon_*` / 前端）。
-本轮只证明「判据有能力红」；**开关留给下一轮单独批准**（顺序：先判据、后开闸）。
+**开闸做了什么**（方案 A：四分类对外口径不动，第五档只做 `changed` 的**细分**）：
+- `changed == changed_but_proven + changed_unproven`（V18r 守恒咬住）。
+  `queries.FIDELITY_CLASSES` **仍是四类**，`edge_fidelity()` 一字未改（S114）。
+- V18d 改判 `changed_unproven == 0`；新增 V18r（守恒）/ V18s（已接线，防「没接上」
+  被读成「没问题」）/ V18t（篡改 `composite.to` ⇒ 703 条全部回落 unproven）。
+- `GRADE_FD` 增 `changed_but_proven: 5`，`GRADE_RULE_VERSION` e1 → **e2**（落盘已重刷）。
+- 服务端 `/api/subgraph` 与 `/api/stats` 多两个字段 + `proven` 段
+  （available / enabled / fingerprint / n_attestations）；缓存键加**证明表指纹**。
+- 路线 A 的拐杖**撤除**：phase79 的 `EXTERNAL_EXEMPTS` 清空，
+  `element_reference.py` 的内联标注回归；6 张证明入库（src×3 + ref + verifier + dep）。
+
+**实测（开闸后）**：V18a `verified 1534→831 / changed 0→703`，Σ 仍 48813；
+V18d `changed=703 / proven=703 / unproven=0`；V18t 篡改后 `proven=0 / unproven=703`；
+等级分布**回到开闸前水平**（E5 702 / E1 248）；全链 gatecheck **14 道 RC=0**。
+
+**过程中被迫修的四件事**（都不是放松判据，是修口径/样本/接线）：
+1. `grade_report` 自建 registry ⇒ 拿不到 proven ⇒ **5 分 702 → 41**（D140 第四次，D148）。
+2. G2 判据口径：满分要求「内容能确认」= `verified` ∨ `changed_but_proven`（D149）。
+3. V16c 的**样本**换了：`max(refs)` 选到 B5（已全部 changed）⇒ 翻转无增量 ⇒ 假红。
+   改成选「当前仍有 verified 边」的来源（实测 `curated_seed`：524 条 verified ⇒ changed）。
+4. S113 **前提蒸发**（开闸后 HEAD 就是带注释那版 ⇒ 原断言「现状 changed==0」把成功
+   读成失败）⇒ 换成不依赖 HEAD 的问法 `proven ⊆ changed`（D145 同族第二次）。
 ## 一、项目愿景与目标
 
 **一句话目标**：把数学公式、物理规律、化学物质与物理世界连成一张可推理的知识图谱。
