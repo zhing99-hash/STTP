@@ -2,11 +2,11 @@
  "artifacts": {
   "full": {
    "normalized": {
-    "bytes": 81905406,
+    "bytes": 82865032,
     "edges": 48813,
     "nodes": 9750,
     "path": "06_PoC/etl/normalized.json",
-    "sha256": "65e1ee8d979740b5a798ef4b2c36967cba767ac135524a620b20e9dd484c52d4",
+    "sha256": "fec51bf0f20112cb369e374f89dfe0d1fe798ee38bfbef9d4a2ff0e76cc10ea0",
     "subjects": {
      "化学": 4442,
      "数学": 300,
@@ -16,32 +16,32 @@
     "tracked_in_git": false
    },
    "snapshot": {
-    "bytes": 59232780,
-    "edges": 48712,
-    "nodes": 9657,
+    "bytes": 87556097,
+    "edges": 48813,
+    "nodes": 9750,
     "obtain": "原始大数据不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
-    "path": "06_PoC/graph_data_phase41.json",
+    "path": "06_PoC/graph_data_phase73.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "21c38aaf877779c1c9f741594450c6b9cec841bd905d5955317e61a50d6cdb26",
+    "sha256": "45be0f554e4d10caec66515c2226bd63e6ce3fbe1b0711ae5232131df0441b1d",
     "tracked_in_git": false
    }
   },
   "sample": {
    "sample_graph.json": {
-    "bytes": 612447,
+    "bytes": 615487,
     "edges": 360,
     "nodes": 200,
     "path": "06_PoC/release/sample/sample_graph.json",
     "schema": "formula-graph-view/v1",
-    "sha256": "5c17c10bbbc40c2629bceccdf515348708f37e4fef65d4afd75ba3c0ea0bc105",
+    "sha256": "904a9f3890a03dbb9ec463229c9416acff7fa44aadc684c17df1a301a7b96e51",
     "tracked_in_git": true
    },
    "sample_normalized.json": {
-    "bytes": 747559,
+    "bytes": 750694,
     "edges": 360,
     "nodes": 200,
     "path": "06_PoC/release/sample/sample_normalized.json",
-    "sha256": "ef7630e589671cd154feec847376244b5c8a4e1451d84eb09e425cdd572007cd",
+    "sha256": "eecab36cab8c48a56bd1dd434d821d6bf6da583b26d546858e680b7a56fc3746",
     "subjects": {
      "化学": 79,
      "数学": 18,
@@ -79,8 +79,8 @@
   "dirty_declared_by_flag": false,
   "dirty_sample": [],
   "git_branch": "main",
-  "git_head_at_build": "0f462fb9ec08da6a7e0bda28c230b3f78cfc2edc",
-  "git_head_at_build_short": "0f462fb",
+  "git_head_at_build": "8c21f868e2b433d5374bd8841f381c5ad36286ce",
+  "git_head_at_build_short": "8c21f86",
   "working_tree_dirty_at_build": false
  },
  "counterexamples": {
@@ -475,14 +475,14 @@
      "WikidataEntity": 24
     }
    },
-   "edges": 48712,
+   "edges": 48813,
    "frozen_gate": {
     "tally": {
      "FAIL": 4,
      "PASS": 104
     }
    },
-   "nodes": 9657,
+   "nodes": 9750,
    "recomputable": "full_snapshot（不入库；`bash sttp.sh release-full` 现算校验）",
    "task_trust": {
     "T9_evidence_traceable": {
@@ -678,13 +678,13 @@
  "packed_snapshot": null,
  "release": {
   "code_license": "Apache-2.0",
-  "created": "2026-10-22T14:40:26+08:00",
+  "created": "2026-10-28T14:15:59+08:00",
   "data_license_doc": "DATA_LICENSES.md",
   "name": "STTP 研究快照",
   "phase": 65,
   "phase_note": "`phase`=VERSION 的 MINOR（开发阶段，唯一事实源 VERSION 文件）；`snapshot_phase`=完整快照文件名里的阶段（数据导出阶段，可为 null）。两者由 verify_release 交叉校验，漂移即 FAIL。",
   "positioning": "路线 A：研究原型（收敛版）—— 可复现研究 / 真实跨学科任务 / 方法比较",
-  "snapshot_phase": 41,
+  "snapshot_phase": 73,
   "version": "0.65.0-rc1"
  },
  "schema": "sttp-release-manifest/v1"
