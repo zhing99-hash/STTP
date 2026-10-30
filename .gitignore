@@ -149,3 +149,14 @@ _probe/
 #   否则下一个人会顺手把 `slices*` 一起忽略掉，台账就悄悄不进版本库了。
 06_PoC/dataset/slices/
 06_PoC/dataset/slices.tmp/
+
+# 本地探索版的数据库、审核草稿、用户统计与预览截图
+06_PoC/demo/db_work/
+06_PoC/demo/curation_work/
+06_PoC/demo/draft_work/
+06_PoC/demo/*.png
+# 本机隔离评估环境与原始数据备份，不随公开仓库分发
+review_20261028_full/python311/
+review_20261028_full/python311.zip
+review_20261028_full/snapshot/
+review_20261028_full/*.log

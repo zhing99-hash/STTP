@@ -1,0 +1,44 @@
+const { chromium } = require('playwright');
+const { strict: assert } = require('node:assert');
+(async () => {
+  const browser = await chromium.launch({headless:true, ...(process.env.STTP_BROWSER_PATH ? {executablePath:process.env.STTP_BROWSER_PATH} : {})});
+  try {
+    const page = await browser.newPage({viewport:{width:1440,height:900}});
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    await page.goto('http://127.0.0.1:8773/demo/');
+    assert.equal(await page.locator('#home-scope').inputValue(),'raw');
+    await page.locator('#home-category').selectOption('element');
+    await page.locator('#search-input').fill('氧');
+    await page.locator('#search-form button').click();
+    await page.getByRole('button',{name:/氧元素.*Oxygen/}).waitFor();
+    await page.screenshot({path:require('node:path').join(require('node:os').tmpdir(),'demo-search-v04.png'),fullPage:false});
+    await page.getByRole('button',{name:/氧元素.*Oxygen/}).click();
+    await page.getByRole('heading',{name:'氧元素'}).waitFor();
+    assert.equal(await page.getByText(/原图库本地探索/).count(),1);
+    await page.locator('#explore-category').selectOption('molecule');
+    await page.locator('#explore-search').fill('水分子有几个原子');
+    await page.locator('#explore-search-form button').click();
+    await page.getByRole('button',{name:/水分子.*Water/}).click();
+    await page.getByRole('heading',{name:'水分子'}).waitFor();
+    await page.getByRole('button',{name:'下一批'}).click();
+    await page.getByText(/9–16 \/ 18/).waitFor();
+    await page.getByRole('button',{name:'← 上一步'}).click();
+    await page.getByRole('heading',{name:'氧元素'}).waitFor();
+    await page.getByRole('button',{name:'提供反馈 ↗'}).click();
+    await page.locator('#feedback-term').fill('热胀冷缩');
+    await page.locator('#feedback-text').fill('测试：物体受热变化');
+    const [download] = await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'下载反馈文本'}).click()]);
+    const stream = await download.createReadStream();
+    let text = ''; for await (const chunk of stream) text += chunk.toString();
+    assert.match(text,/热胀冷缩/); assert.match(text,/物体受热变化/);
+    await page.getByRole('button',{name:'关闭',exact:true}).click();
+    await page.setViewportSize({width:390,height:844});
+    await page.locator('#explore-search').fill('压力');
+    await page.locator('#explore-category').selectOption('all');
+    await page.locator('#explore-search-form button').click();
+    await page.getByRole('button',{name:/压强.*Pressure/}).waitFor();
+    assert.deepEqual(errors,[]);
+    console.log('PASS: database search, element, natural question, graph paging, history, feedback download, mobile search');
+  } finally { await browser.close(); }
+})().catch(e => {console.error(e);process.exitCode=1;});

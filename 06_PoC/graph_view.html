@@ -94,7 +94,7 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
 
   header {
     grid-area: header; background: var(--panel); border-bottom: 1px solid var(--line);
-    display: flex; align-items: center; gap: 10px; padding: 0 14px; min-width: 0;
+    display: flex; align-items: center; gap: 10px; padding: 0 265px 0 14px; min-width: 0;
   }
   header h1 { font-size: 15px; margin: 0; font-weight: 600; white-space: nowrap; }
   header .spacer { flex: 1; }
@@ -409,6 +409,8 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
 
   /* ---------- Phase 49 · 任务式首屏（问题 → 候选 → 确认实体 → 生成） ---------- */
   #task-entry[hidden] { display: none; }
+  .sttp-version-nav { position:fixed; top:8px; right:12px; z-index:95; display:flex; gap:8px; align-items:center; }
+  .sttp-version-nav a,.sttp-version-nav button { background:#233954; color:#dce9fb; border:1px solid #496789; border-radius:5px; padding:6px 10px; font:12px "Microsoft YaHei",sans-serif; text-decoration:none; cursor:pointer; }
   #task-entry {
     position: fixed; inset: 0; z-index: 80; display: grid; place-items: center;
     padding: 22px; overflow: auto;
@@ -508,6 +510,7 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
 </style>
 </head>
 <body>
+<div class="sttp-version-nav"><span style="color:#b7cbea;font-size:12px">工程版</span><a id="return-explore" href="http://127.0.0.1:8773/demo/">← 探索版</a><a id="engineering-feedback" href="http://127.0.0.1:8773/demo/?feedback=1">反馈</a><button id="metrics-toggle" aria-pressed="false" disabled title="开启后仅记录本机版本点击和页面可见时长，统计表不保存问题或个人身份">试用统计：关</button></div>
 
 <!-- ============================================================
      Phase 49 · 任务式首屏（默认可见；生成子图后由 JS 隐藏）
@@ -609,6 +612,7 @@ if (window.__v_mj || !window.MathJax || !window.MathJax.typesetPromise) {
 </footer>
 
 <!-- ★ 原生 ES Module（零构建）：不需要打包器、不需要 package.json，离线照开 -->
+<script defer src="js/sttp_usage.js" data-version="engineering"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

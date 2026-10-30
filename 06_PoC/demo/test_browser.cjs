@@ -1,0 +1,41 @@
+// Local UI smoke test. Requires the bundled Playwright and installed Edge.
+const { chromium } = require('playwright');
+const { strict: assert } = require('node:assert');
+(async () => {
+  const browser = await chromium.launch({headless:true, ...(process.env.STTP_BROWSER_PATH ? {executablePath:process.env.STTP_BROWSER_PATH} : {})});
+  const page = await browser.newPage({viewport:{width:1440,height:900}});
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.goto('http://127.0.0.1:8773/demo/');
+  await page.getByRole('button',{name:/一束光，如何测出溶液浓度/}).click();
+  await page.getByRole('heading',{name:'比尔—朗伯定律'}).waitFor();
+  assert.equal(await page.getByText('A = εlc',{exact:true}).count() > 0, true);
+  assert.equal(await page.getByRole('link',{name:/Misuse of Beer/}).count(),1);
+  const graphBox = await page.locator('#graph').boundingBox();
+  // Click the formula label below the left-hand node, not just the circle.
+  await page.locator('#graph').click({position:{x:graphBox.width * 0.335,y:graphBox.height * 0.577}});
+  await page.getByRole('heading',{name:'正比例关系'}).waitFor();
+  await page.getByRole('button',{name:'← 上一步'}).click();
+  await page.getByRole('heading',{name:'比尔—朗伯定律'}).waitFor();
+  await page.getByRole('button',{name:/吸光度与透射率 · 测量定义/}).click();
+  await page.getByRole('heading',{name:'吸光度与透射率'}).waitFor();
+  await page.getByRole('button',{name:'← 上一步'}).click();
+  await page.getByRole('heading',{name:'比尔—朗伯定律'}).waitFor();
+  await page.screenshot({path:require('node:path').join(require('node:os').tmpdir(),'demo-preview-v03.png'),fullPage:false});
+  await page.getByRole('button',{name:'← 返回发现'}).click();
+  await page.getByRole('button',{name:/气体受热，为什么会膨胀/}).click();
+  await page.getByRole('heading',{name:'理想气体状态方程'}).waitFor();
+  await page.getByRole('button',{name:'下一批'}).click();
+  await page.getByText('9–9 / 9').waitFor();
+  await page.getByRole('button',{name:'上一批'}).click();
+  await page.getByText('1–8 / 9').waitFor();
+  await page.getByRole('button',{name:'02恒压下的温度与体积'}).click();
+  await page.getByRole('heading',{name:'恒压下的温度与体积'}).waitFor();
+  assert.equal(await page.getByRole('link',{name:/Charles’s law revisited/}).count(),1);
+  await page.setViewportSize({width:390,height:844});
+  await page.getByRole('button',{name:'← 上一步'}).click();
+  await page.getByRole('heading',{name:'理想气体状态方程'}).waitFor();
+  assert.deepEqual(errors,[]);
+  await browser.close();
+  console.log('PASS: theme, formula, paper links, cross-subject navigation, back, relation pagination, narrow viewport');
+})().catch(e => {console.error(e); process.exitCode=1;});

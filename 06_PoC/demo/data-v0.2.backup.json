@@ -1,0 +1,378 @@
+{
+  "version": "sttp-explore-demo-0.2",
+  "notice": "本地开发预览；内容尚未经独立科学及许可复核，不作为权威科研结论。",
+  "disciplines": [
+    "数学",
+    "物理",
+    "化学",
+    "生物",
+    "天文",
+    "工程"
+  ],
+  "sources": {
+    "bipm": {
+      "title": "BIPM · 国际单位制基本单位",
+      "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+    },
+    "gas": {
+      "title": "OpenStax · 理想气体方程",
+      "url": "https://openstax.org/books/chemistry-2e/pages/9-2-relating-pressure-volume-amount-and-temperature-the-ideal-gas-law"
+    },
+    "molar": {
+      "title": "OpenStax · 摩尔与摩尔质量",
+      "url": "https://openstax.org/books/chemistry-2e/pages/3-1-formula-mass-and-the-mole-concept"
+    },
+    "mole": {
+      "title": "BIPM · 摩尔的定义",
+      "url": "https://www.bipm.org/en/si-base-units/mole"
+    },
+    "water": {
+      "title": "PubChem · Water 记录",
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Water"
+    }
+  },
+  "themes": [
+    {
+      "id": "water",
+      "number": "01",
+      "eyebrow": "从熟悉的事物出发",
+      "title": "一杯水里，有多少分子？",
+      "subtitle": "从一滴水，走向物质的量与微观世界。",
+      "start": "MO:h2o",
+      "steps": [
+        "MO:h2o",
+        "demo:molar_mass",
+        "demo:amount",
+        "demo:avogadro"
+      ],
+      "duration": "约 3 分钟"
+    },
+    {
+      "id": "gas",
+      "number": "02",
+      "eyebrow": "看见公式背后的联系",
+      "title": "气体受热，为什么会膨胀？",
+      "subtitle": "沿着温度、体积与理想气体方程探索。",
+      "start": "TH:fo:ideal_gas",
+      "steps": [
+        "TH:fo:ideal_gas",
+        "TH:fo:charles",
+        "demo:temperature",
+        "demo:amount"
+      ],
+      "duration": "约 4 分钟"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "MO:h2o",
+      "legacy_id": "MO:h2o",
+      "title": "水分子",
+      "english": "Water",
+      "aliases": [
+        "水",
+        "h2o"
+      ],
+      "type": "物质",
+      "domain": "化学",
+      "formula": "H₂O",
+      "description": "水分子由氢和氧组成。可以从分子组成出发，了解质量、物质的量与粒子数量之间的联系。",
+      "conditions": "这里讨论水分子本身；水的物理性质随温度、压力与相态变化。",
+      "source": "water"
+    },
+    {
+      "id": "demo:molar_mass",
+      "title": "摩尔质量",
+      "english": "Molar mass",
+      "aliases": [
+        "摩尔质量",
+        "molar mass"
+      ],
+      "type": "概念",
+      "domain": "化学",
+      "formula": "M = m / n",
+      "description": "摩尔质量是物质质量与物质的量的比值，常用单位为 g/mol 或 kg/mol。",
+      "variables": [
+        "M：摩尔质量",
+        "m：质量",
+        "n：物质的量"
+      ],
+      "conditions": "物质的量须大于零；计算时保持质量和摩尔质量的单位一致。",
+      "source": "molar"
+    },
+    {
+      "id": "demo:amount",
+      "title": "物质的量",
+      "english": "Amount of substance",
+      "aliases": [
+        "物质的量",
+        "摩尔",
+        "mole",
+        "mol"
+      ],
+      "type": "物理量",
+      "domain": "化学",
+      "formula": "n = m / M",
+      "description": "物质的量用来描述指定基本单元的数量，国际单位制单位为摩尔。",
+      "variables": [
+        "n：物质的量（mol）",
+        "m：质量",
+        "M：摩尔质量"
+      ],
+      "conditions": "须明确所计数的基本单元；使用质量关系时 M 不为零。",
+      "example": "例如，将纯水的摩尔质量近似为 18.0 g/mol，18.0 g 水对应约 1.00 mol 水分子。",
+      "source": "molar"
+    },
+    {
+      "id": "demo:avogadro",
+      "title": "阿伏伽德罗常数",
+      "english": "Avogadro constant",
+      "aliases": [
+        "阿伏伽德罗",
+        "avogadro",
+        "粒子数"
+      ],
+      "type": "常数",
+      "domain": "物理",
+      "formula": "N = nNₐ",
+      "description": "阿伏伽德罗常数连接物质的量与所指定的基本单元数。",
+      "variables": [
+        "N：基本单元数",
+        "n：物质的量",
+        "Nₐ：阿伏伽德罗常数（6.02214076 × 10²³ mol⁻¹）"
+      ],
+      "conditions": "必须明确计数对象，可以是分子、原子或其他指定实体。",
+      "example": "例如一杯装有 250 g 纯水，按摩尔质量约 18.0 g/mol 估算，水的物质的量约为 13.9 mol，含约 8.36 × 10²⁴ 个水分子。这是按给定水质量估算，不假设所有杯子容量相同。",
+      "example_sources": [
+        "molar",
+        "mole"
+      ],
+      "source": "mole"
+    },
+    {
+      "id": "TH:fo:ideal_gas",
+      "legacy_id": "TH:fo:ideal_gas",
+      "title": "理想气体状态方程",
+      "english": "Ideal gas law",
+      "aliases": [
+        "理想气体",
+        "气体",
+        "ideal gas",
+        "pvnrt",
+        "pv=nrt"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "pV = nRT",
+      "description": "理想气体状态方程把压强、体积、温度和物质的量联系起来。",
+      "variables": [
+        "p：压强",
+        "V：体积",
+        "n：物质的量",
+        "R：摩尔气体常数",
+        "T：热力学温度"
+      ],
+      "conditions": "适用于理想气体模型；实际气体仅在特定条件下近似适用。T 使用开尔文，单位须一致。",
+      "source": "gas"
+    },
+    {
+      "id": "TH:fo:charles",
+      "legacy_id": "TH:fo:charles",
+      "title": "恒压下的温度与体积",
+      "english": "Charles's law",
+      "aliases": [
+        "查理定律",
+        "charles",
+        "比例"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "V₁ / T₁ = V₂ / T₂",
+      "description": "对于固定物质的量的理想气体，压强保持不变时，体积与热力学温度成正比。",
+      "variables": [
+        "V₁、V₂：气体体积",
+        "T₁、T₂：热力学温度（K）"
+      ],
+      "conditions": "固定物质的量、恒定压强；温度使用开尔文，适用理想气体模型。",
+      "source": "gas"
+    },
+    {
+      "id": "demo:temperature",
+      "title": "热力学温度",
+      "english": "Thermodynamic temperature",
+      "aliases": [
+        "温度",
+        "开尔文",
+        "temperature",
+        "kelvin"
+      ],
+      "type": "物理量",
+      "domain": "物理",
+      "formula": "T（单位：K）",
+      "description": "热力学温度用于描述热状态，在国际单位制中以开尔文为单位。",
+      "conditions": "计算气体状态时，温度应使用开尔文而非直接使用摄氏温度。",
+      "source": "bipm"
+    },
+    {
+      "id": "demo:pressure",
+      "title": "压强",
+      "english": "Pressure",
+      "aliases": [
+        "压力",
+        "压强",
+        "pressure",
+        "p"
+      ],
+      "type": "物理量",
+      "domain": "物理",
+      "formula": "p = F / A",
+      "description": "压强描述垂直作用于表面的力与面积之间的关系。",
+      "conditions": "此表达式表示均匀分布的垂直力，面积须大于零；SI 单位为帕斯卡。",
+      "source": "gas"
+    },
+    {
+      "id": "demo:volume",
+      "title": "体积",
+      "english": "Volume",
+      "aliases": [
+        "体积",
+        "volume",
+        "v"
+      ],
+      "type": "物理量",
+      "domain": "物理",
+      "formula": "V",
+      "description": "体积描述物体或系统所占空间的大小，常用立方米或升表示。",
+      "conditions": "在状态方程中应与压强、气体常数等单位保持一致。",
+      "source": "gas"
+    },
+    {
+      "id": "demo:proportion",
+      "title": "正比例关系",
+      "english": "Direct proportion",
+      "aliases": [
+        "正比例",
+        "比例",
+        "proportion"
+      ],
+      "type": "数学概念",
+      "domain": "数学",
+      "formula": "y = kx",
+      "description": "当比例系数 k 固定时，y 随 x 按固定比例变化。",
+      "conditions": "比例关系成立的具体条件由所研究的模型决定。",
+      "source": "gas"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "MO:h2o",
+      "target": "demo:molar_mass",
+      "discipline": "化学",
+      "relation": "物质属性",
+      "explanation": "摩尔质量可用于把水样品的质量与物质的量联系起来。",
+      "condition": "先确认样品组成及单位。",
+      "source_ref": "molar"
+    },
+    {
+      "id": "e2",
+      "source": "demo:molar_mass",
+      "target": "demo:amount",
+      "discipline": "数学",
+      "relation": "数量关系",
+      "explanation": "由 M=m/n 可在 M 非零时变形得到 n=m/M。",
+      "condition": "n 大于零、M 非零且单位一致。",
+      "source_ref": "molar"
+    },
+    {
+      "id": "e3",
+      "source": "demo:amount",
+      "target": "demo:avogadro",
+      "discipline": "物理",
+      "relation": "计数关系",
+      "explanation": "将物质的量乘以阿伏伽德罗常数，得到所指定单元的数量。",
+      "condition": "明确基本单元的种类。",
+      "source_ref": "mole"
+    },
+    {
+      "id": "e4",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:fo:charles",
+      "discipline": "数学",
+      "relation": "有条件变形",
+      "explanation": "理想气体方程在恒压且物质的量不变时给出体积与绝对温度的比例关系。",
+      "condition": "理想气体、固定物质的量和压强，温度用 K。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e5",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:temperature",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "方程中的 T 表示气体的热力学温度。",
+      "condition": "采用开尔文及一致的单位体系。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e6",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:pressure",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "方程中的 p 表示气体压强。",
+      "condition": "适用理想气体模型。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e7",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:volume",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "方程中的 V 表示气体体积。",
+      "condition": "适用理想气体模型。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e8",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:amount",
+      "discipline": "化学",
+      "relation": "包含物理量",
+      "explanation": "方程中的 n 是气体的物质的量；它可以联系到质量和摩尔质量。",
+      "condition": "讨论的是气体状态，不将液态水默认视为理想气体。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e9",
+      "source": "TH:fo:charles",
+      "target": "demo:proportion",
+      "discipline": "数学",
+      "relation": "数学形式",
+      "explanation": "满足恒压和固定物质的量等条件时，体积与绝对温度呈正比例。",
+      "condition": "理想气体，压强和物质的量恒定。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e10",
+      "source": "TH:fo:charles",
+      "target": "demo:temperature",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "查理定律中比较的是热力学温度。",
+      "condition": "温度须以开尔文表示。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e11",
+      "source": "TH:fo:charles",
+      "target": "demo:volume",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "查理定律研究恒压下体积与温度的关系。",
+      "condition": "固定物质的量，适用理想气体模型。",
+      "source_ref": "gas"
+    }
+  ]
+}
