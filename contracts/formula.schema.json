@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sttp-formula/v1",
+  "title": "STTP 公式详情响应（GET /api/formula）",
+  "description": "Phase 77（F6）。**单条公式**的结构化详情：适用条件 / 符号 / 量纲 / 来源 / 等价式五段。★ 本端点的价值不是把 props 原样吐出来（那用 /api/neighbors 也行），而是把「这一段**为什么是空的**」说清楚。实测（本次现算，权威图 9,750 节点）：全图 5,090 个 Formula 的 applicability_status = extracted 30 / not_extracted 59 / no_referent 5,001 ⇒ 只回 `applicability: []` 会被读成「尚未抽取」，而真相多为「量纲合成式，无从谈适用条件」。★ 因此每段都带 `present`（这一段**有没有数据**，而非「有没有字段」）与 `kind`（中文定性），顶层再给 `missing`。「空」是三种不同的空，接口不许说成一种（D115 同族）。★ 门禁：节点不带 Formula 标签 ⇒ 一律 `no_result`，**不给五段空壳**（用「空」回答「不适用」是同一类错误）。★ 门禁用 labels 而非主类型：实测 MX:lemma:partition_of_unity 的 labels=['Lemma','Formula','Entity']，主类型却是 Lemma ⇒ type 是「主类型」（着色用），labels 才是「全部归属」（判定用），不可互换。",
+  "type": "object",
+  "required": ["status", "error_code", "reason", "node", "sections", "missing", "stats"],
+  "properties": {
+    "status": { "enum": ["ok", "no_result", "error"] },
+    "error_code": {
+      "type": ["string", "null"],
+      "description": "★ 业务态（no_result）**不是错误** ⇒ 恒为 null；仅参数非法（HTTP 400）时为 BAD_REQUEST。与统一信封一致：其他 /api/* 都有此字段，F6 不得缺（否则前端统一读 env.error_code 会拿到 undefined）。"
+    },
+    "reason": {
+      "type": "string",
+      "description": "人类可读的定性说明：ok 时列 `missing` 段名；no_result 时说明是「找不到」还是「不是公式」。"
+    },
+    "snapshot_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{12}$" },
+    "query_hash": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "query": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "limit": { "type": "string" }
+      }
+    },
+    "node": {
+      "type": ["object", "null"],
+      "description": "★ 找不到节点时为 null；**不是公式**时给一个最小对象（{id, labels, type, is_formula:false}）供前端说明「它是什么」。",
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "label_from": { "enum": ["name", "label", "id"] },
+        "label_is_typeword": { "type": "boolean" },
+        "type": { "type": "string" },
+        "labels": { "type": "array", "items": { "type": "string" } },
+        "is_formula": { "type": "boolean" },
+        "subject": { "type": "string" },
+        "domain": { "type": ["string", "null"] },
+        "domain_tags": { "type": "array", "items": { "type": "string" } },
+        "latex": { "type": ["string", "null"] },
+        "degree": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "sections": {
+      "type": "object",
+      "required": ["applicability", "symbols", "dimension", "provenance", "equivalents"],
+      "description": "★ 五段**恒存在**（no_result 时整体为 {}，不给空壳）。每段必有 `present`。",
+      "properties": {
+        "applicability": {
+          "type": "object",
+          "required": ["present", "status", "kind"],
+          "properties": {
+            "present": { "type": "boolean" },
+            "status": {
+              "type": ["string", "null"],
+              "enum": ["extracted", "not_extracted", "no_referent", null]
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1,
+              "description": "★ 中文定性，必非空：extracted⇒有内容；not_extracted⇒有指称对象但未能抽出条件；no_referent⇒无指称对象（量纲合成式），无从谈适用条件；字段缺失⇒（图里没有登记适用性状态字段）。"
+            },
+            "terms": { "type": "array" },
+            "terms_total": { "type": "integer", "minimum": 0 },
+            "terms_truncated": { "type": "boolean" },
+            "evidence": { "type": "array" },
+            "evidence_total": { "type": "integer", "minimum": 0 },
+            "evidence_truncated": { "type": "boolean" },
+            "source": { "type": ["string", "null"] },
+            "rule_version": { "type": ["string", "null"] }
+          }
+        },
+        "symbols": {
+          "type": "object",
+          "required": ["present", "symbols_total"],
+          "properties": {
+            "present": { "type": "boolean" },
+            "symbols": { "type": "array" },
+            "symbols_total": { "type": "integer", "minimum": 0 },
+            "symbols_truncated": { "type": "boolean" },
+            "table": {},
+            "table_total": { "type": "integer", "minimum": 0 },
+            "unresolved": { "type": "array" },
+            "rule_version": { "type": ["string", "null"] },
+            "derive_version": { "type": ["string", "null"] }
+          }
+        },
+        "dimension": {
+          "type": "object",
+          "required": ["present"],
+          "properties": {
+            "present": { "type": "boolean" },
+            "equation": { "type": ["string", "null"] },
+            "exponents": { "type": ["object", "null"] },
+            "homogeneous": { "type": ["boolean", "null"] },
+            "scope": { "type": ["string", "null"] },
+            "verified_by": { "type": ["string", "null"] }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "required": ["present", "redistribution", "license_available"],
+          "properties": {
+            "present": { "type": "boolean" },
+            "source": { "type": ["string", "null"] },
+            "source_ref": { "type": ["string", "null"] },
+            "redistribution": {
+              "type": ["string", "null"],
+              "enum": ["redistributable", "internal_only", "forbidden", null],
+              "description": "★ **三态**（不是布尔）。用布尔会把 internal_only 与 forbidden 压成同一个 False，还会把「判定器不可用」也压成 False ⇒ 三种处境挤进一个值（D115 同族）。未登记来源由 `source_registry.redistribution_closure` fail-closed 记为 forbidden（铁律 #64）。"
+            },
+            "license_available": {
+              "type": "boolean",
+              "description": "★ 区分「有来源但判定器不可用」与「判定结果是 forbidden」：两者处理不同（前者是仪器缺失，后者是政策结论）。不可用时 `redistribution` 也为 null，但本字段为 false ⇒ 不许被误读成「不可分发」。"
+            }
+          }
+        },
+        "equivalents": {
+          "type": "object",
+          "required": ["present", "count"],
+          "properties": {
+            "present": { "type": "boolean" },
+            "count": { "type": "integer", "minimum": 0 },
+            "items": { "type": "array" },
+            "truncated": { "type": "boolean" },
+            "note": {
+              "type": "string",
+              "description": "★ 图里表达「同一个东西」的是 `same_as`（Formula ↔ WikidataEntity）。另有 `same_formula_as` 只连 Molecule↔Molecule，**不是**公式等价式 —— 接口按**图里的实际分布**取名，不按文档里的想象取名（#113 口径错同族）。"
+            }
+          }
+        }
+      }
+    },
+    "missing": {
+      "type": "array",
+      "items": { "enum": ["applicability", "symbols", "dimension", "provenance", "equivalents"] },
+      "description": "★ 真正缺数据的段名列表（present=false 的集合）。no_result 时为全集 —— 表示「不适用」，与逐段「无数据」语义不同，靠顶层 `status` 区分。"
+    },
+    "stats": {
+      "type": "object",
+      "required": ["scanned", "scan_complete", "coverage", "formula_nodes"],
+      "properties": {
+        "scanned": { "type": "integer", "minimum": 0 },
+        "scan_complete": { "type": "boolean" },
+        "coverage": {
+          "type": "object",
+          "description": "★ 全图 Formula 的 applicability_status 分布，**现算**（铁律 #14：不抄报告的历史数字）。这是解释「为什么这一段是空的」的关键背景证据。"
+        },
+        "formula_nodes": { "type": "integer", "minimum": 0 },
+        "is_formula": {
+          "type": "boolean",
+          "description": "仅门禁拒绝时出现，恒为 false。"
+        },
+        "elapsed_ms": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

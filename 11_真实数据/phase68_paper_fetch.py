@@ -623,7 +623,7 @@ def cmd_selfcheck(args):
         toks, ntoks = canon_tokens(text), name_tokens(nm)
         i = find_span(toks, ntoks)
         got = i >= 0
-        label = "H%-2d %-38s %s" % (len(rs) + 1, nm[:38], "should-hit" if want else "should-miss")
+        label = "H%-2d %-38s %s" % (len(rs) + 1, nm[:38], "should-hit" if want else "should-miss")  # noloss-exempt: 候选列表显示，不入图
         rs.append(_sc(got == want, label, why if got != want else ""))
         if got and want:
             sn = sentence_around(text, toks, i, len(ntoks))

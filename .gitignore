@@ -138,3 +138,25 @@ _probe/
 #     一起吞掉（实测：改名前的 `DIST_README.md` 就是这样从 `git status` 里消失的）。
 06_PoC/dataset/dist/
 06_PoC/dataset/dist.tmp/
+
+# ===== Phase 78 · F8 切片产物（构建物，不入库）=====
+# `slices/` 是按需导出的子集包（实测一个 `domain=physics` 就有 **66 MB**：
+# 4,994 节点 + 22,921 边的 JSONL）。与 `dist/` 同一条惯例：入库代码，不入库产物。
+# ★ `slices/` 与 `slices.jsonl` **是两回事**：
+#     · `slices/`      —— 产物目录（可重建，忽略）
+#     · `slices.jsonl` —— 版本台账（**入库**，因为切片版本是对外承诺，与 `versions.jsonl` 同族）
+#   只忽略目录时带尾斜杠，正好把台账排除在外 —— 这条区分必须写进注释，
+#   否则下一个人会顺手把 `slices*` 一起忽略掉，台账就悄悄不进版本库了。
+06_PoC/dataset/slices/
+06_PoC/dataset/slices.tmp/
+
+# 本地探索版的数据库、审核草稿、用户统计与预览截图
+06_PoC/demo/db_work/
+06_PoC/demo/curation_work/
+06_PoC/demo/draft_work/
+06_PoC/demo/*.png
+# 本机隔离评估环境与原始数据备份，不随公开仓库分发
+review_20261028_full/python311/
+review_20261028_full/python311.zip
+review_20261028_full/snapshot/
+review_20261028_full/*.log

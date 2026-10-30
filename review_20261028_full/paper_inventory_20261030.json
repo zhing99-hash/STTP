@@ -1,0 +1,49 @@
+{
+  "snapshot_sha256": "fec51bf0f20112cb369e374f89dfe0d1fe798ee38bfbef9d4a2ff0e76cc10ea0",
+  "paper_nodes": 274,
+  "paper_node_sources": {
+    "openalex": 181,
+    "openalex-mention": 93
+  },
+  "paper_node_types": {
+    "article": 264,
+    "book": 8,
+    "conference-paper": 1,
+    "other": 1
+  },
+  "paper_nodes_with_valid_shape_doi": 252,
+  "paper_node_distinct_doi": 252,
+  "paper_nodes_without_valid_shape_doi": 22,
+  "paper_nodes_stored_doi_verified_true": 163,
+  "paper_nodes_oa_status": {
+    "closed": 115,
+    "bronze": 48,
+    "green": 12,
+    "hybrid": 3,
+    "diamond": 2,
+    "gold": 1,
+    "未记录": 93
+  },
+  "formula_nodes": 5090,
+  "formula_papers_status": {
+    "no_referent": 5045,
+    "extracted": 45
+  },
+  "formulas_with_refs": 45,
+  "formula_paper_reference_entries": 101,
+  "formula_ref_distinct_doi": 90,
+  "formula_ref_missing_doi": 8,
+  "formula_ref_doi_overlaps_paper_nodes": 90,
+  "paper_formula_edges_by_type": {
+    "mentioned_in": 101
+  },
+  "paper_edges_by_type": {
+    "cites": 176,
+    "discusses": 178,
+    "mentioned_in": 101
+  },
+  "demo_nodes_with_papers": 4,
+  "demo_paper_reference_entries": 4,
+  "demo_distinct_doi": 2,
+  "note": "DOI 格式检查不代表 DOI 真实或引用关系正确；节点、内嵌线索和 Demo 不可直接相加。"
+}

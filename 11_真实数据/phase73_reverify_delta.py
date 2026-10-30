@@ -107,7 +107,13 @@ def build(nodes, edges, cur, attests):
             if not isinstance(ev, dict) or not ed.has_recorded_deps(ev):
                 continue
             rec = ed.recorded_deps(ev)
-            status, reasons = ed.evidence_status(rec, cur)
+            # ★ 2026-10-28（Phase 81 · S3）：状态必须按**读侧同一口径**算（两条通道都传）。
+            #   此前这里不传证明（fail-closed），S3 之后那 32609 条多了「内容真变了」
+            #   的原因（element_reference.py 的 dep 变了）⇒ 全被 skip_other_change 挡掉
+            #   ⇒ delta 归零、E5「已变更归零」再也做不到。
+            #   传进来**不会**放宽本 delta 的口径：它仍然只处置 `verifier_changed`，
+            #   内容层的原因由内容证明抵掉，抵不掉照样 skip（负对照 S3 仍在）。
+            status, reasons = ed.evidence_status(rec, cur, attestations=attests)
             if status == "valid":
                 st["skip_valid"] += 1
                 continue
@@ -195,11 +201,16 @@ def judge(nodes, edges, delta, st, rows, cur, attests, rep):
     froms = {ev.get("vch") for e in edges
              for ev in ((e.get("props") or {}).get("verification_evidence") or [])
              if isinstance(ev, dict) and ev.get("vfr") == "verification_model"}
-    tos = {a.get("to_code_hash") for a in (attests or {}).values()}
+    # ★ 只看 `code_equivalent`（2026-10-28）：表里现在还有 Phase 81 的
+    #   `content_equivalent`，它们的 to 在 `composite` 里、没有 `to_code_hash`
+    #   ⇒ 混在一起会得到 {None} 并与当前 vch 不等（E1 假红），`sorted` 还会直接报错。
+    code_atts = {k: v for k, v in (attests or {}).items()
+                 if v.get("kind") == "code_equivalent"}
+    tos = {a.get("to_code_hash") for a in code_atts.values()}
     cur_ch = ((cur.get("verifiers") or {}).get("verification_model") or {}).get("code_hash")
     rep.append(("E1 基线唯一：记录侧 vch 单值且 == 证明的 from、当前 == 证明的 to",
                 len(froms) == 1 and tos == {cur_ch}
-                and next(iter(froms), None) in {a.get("from_code_hash") for a in attests.values()},
+                and next(iter(froms), None) in {a.get("from_code_hash") for a in code_atts.values()},
                 "from=%s｜to=%s｜当前=%s" % (sorted(froms), sorted(tos), cur_ch)))
 
     # E2 证明仍成立（拿 git 历史真 blob 重算，不是读文件里的结论）
@@ -248,13 +259,37 @@ def judge(nodes, edges, delta, st, rows, cur, attests, rep):
                 "合并后 %s" % dict(sorted(after.items()))))
 
     # E6 反作弊：把证明的 to 改坏 ⇒ 合并态必须回到 stale（证明真的在管，不是摆设）
-    forged = {k: dict(v, to_code_hash="dead" + str(i))
-              for i, (k, v) in enumerate((attests or {}).items())}
+    # ★ 必须**按 kind 分别伪造**（2026-10-28 修正）：此前只改 `to_code_hash`，
+    #   而 Phase 81 的 `content_equivalent` 证明用的是 `composite.to` ——
+    #   伪造不中靶 ⇒ 本判据**假绿**（红探针 R43 当场抓到：「证明的 to 不再核对」
+    #   注入后 E6 竟不变红）。凡是「逐条伪造」的判据，都要问一句「kind 是否全会伪造」。
+    #   ★ 只伪造**本 delta 依赖的那条通道**（`code_equivalent`），内容证明保持原样：
+    #     若把内容证明一并伪造，`src/ref/dep` 的原因会重新冒出来 ⇒ stale 计数多出一大截，
+    #     判据就从「证明在管」退化成「两个通道互相掩盖」（实测过这个假红）。
+    #     内容通道自己的伪造反证在 `phase81_selfcheck`：S99i3 / NEG-S99q / S99u。
+    forged = dict(attests or {})
+    for i, (k, v) in enumerate((attests or {}).items()):
+        if v.get("kind") == "code_equivalent":
+            forged[k] = dict(v, to_code_hash="dead" + str(i))
     forged_after = a04_distribution(m_edges, cur, forged)
-    rep.append(("E6 反作弊：证明的 to 被改坏 ⇒ 同一条证据回落 stale（缺证明不放过）",
-                forged_after.get("stale", 0) == st.get("n_reverified", 0) > 0,
-                "伪造后 stale=%d（=本轮改动 %d 条）"
-                % (forged_after.get("stale", 0), st.get("n_reverified", 0))))
+    # ★ 判据从「等于**本轮改动**条数」改成「等于**当前依赖该通道**条数」（2026-10-28）：
+    #   图上已经有 `rva` 时本 delta 无事可做（n_reverified=0），旧写法因 `> 0` 恒假而**假红**；
+    #   而 E6 真正要守的是「证明在管」，与「本轮改了几条」无关。
+    #   改了 to ⇒ 依赖 code_equivalent 的证据必须全部回落 stale；若注入缺陷使 to 不再核对，
+    #   这些证据根本不回落 ⇒ 差值为 0 ⇒ 判红（R43 就是靠这条抓人）。
+    rely = 0
+    for _e in m_edges:
+        for _ev in ((_e.get("props") or {}).get("verification_evidence") or []):
+            if not isinstance(_ev, dict) or _ev.get("rva") not in code_atts:
+                continue
+            if ed.evidence_status(ed.recorded_deps(_ev), cur,
+                                  attestations=attests)[0] != "stale":
+                rely += 1
+    _grew = forged_after.get("stale", 0) - after.get("stale", 0)
+    rep.append(("E6 反作弊：证明的 to 被改坏 ⇒ 依赖该证明的证据回落 stale（缺证明不放过）",
+                _grew == rely > 0,
+                "伪造后 stale %d → %d（+%d，依赖该通道 %d 条）"
+                % (after.get("stale", 0), forged_after.get("stale", 0), _grew, rely)))
 
     # E7 幂等：合并态再 build ⇒ 0 变更
     d2, st2, _ = build(m_nodes, m_edges, cur, attests)

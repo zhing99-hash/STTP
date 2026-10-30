@@ -187,7 +187,7 @@ def main():
                 "dc_unknown_quantity": audit["unknown_quantity"],
                 "dc_violations_count": len(audit["violations"]),
                 "dc_violations_by_source": dict(viol_by_src),
-                "dc_violations": audit["violations"][:50],
+                "dc_violations": audit["violations"][:50],  # noloss-exempt: 诊断报告取样，不入图
                 "manual_violations": manual_viol,
                 "new_dc_skipped_dup": skipped_dc,
                 "new_dc_skipped_ghost": skipped_ghost_edge,

@@ -501,8 +501,10 @@ PROBES = [
                 "★ 为什么改 manifest 而不是改 VERSION：VERSION 是**事实源**，"
                 "改它等于换掉了被测对象的前提（测出来的是「文件不同」，不是「判据有效」）；"
                 "改**清单**才是模拟「清单与事实源漂移」这个真实故障形状。"
-                "★ 锚点会随版本号漂移而失效：`anchor_report()` 在开跑前静态检查全表锚点，"
-                "命中 ≠ 1 次会**大声报错**（#74），不会静默；届时随 VERSION 一起改这一行。"),
+                "★ 锚点由 `sync_manifest_anchors()` 在导入时**现读清单**生成（当前值 − 1），"
+                "不再死记某一版数字 —— 否则每次 `sttp.sh release` 重建清单都会让它失效。"
+                "`anchor_report()` 仍会在开跑前静态检查锚点命中次数，≠ 1 次就大声报错（#74）："
+                "数值漂移自动跟，格式漂移照样红。"),
         "file": "06_PoC/release/manifest.json",
         "old": '  "phase": 65,',
         # ★ 注入值必须是**合法 JSON**：第一版写成 `"phase": 64,   # 注释`，
@@ -937,6 +939,352 @@ PROBES = [
         "requires": ["node"],
     },
     {
+        "id": "R49",
+        "kind": "mutate",
+        "why": ("Phase 77 · F9：数据集版本与图快照的**绑定**是这条线上唯一不可绕过的地方 —— "
+                "格式版本是手写的，换一张图重新构建它可以一个字都不变，于是两份内容不同的包"
+                "顶着同一个版本号，在引用 / 缓存 / 复现三处静默互串（与 D42「快照 id 只登记不校验」"
+                "同族）。这里把 `dataset_id` 里的 g 段写死成常量（看起来只是少拼一个变量），"
+                "于是 dataset_id 与登记的上游哈希各说各的，而 manifest 里两个字段**都在**、"
+                "都不报错。★ 它没有任何异常：包照样能构建、能下载、能被 sha256 校验通过。"
+                "⇒ 判据 S8（回读 dataset_id 的 g 段 == 现算快照身份）必须变红。"),
+        "file": "06_PoC/dataset/versioning.py",
+        "old": '    return "%s+g%s.c%s" % (format_version, body, c)',
+        # ★ 注入体首行必须带 `redprobe:` 注释（R45 踩过的坑）
+        "new": ('    # redprobe: dataset_id 的 g 段写死（与上游哈希脱钩）\n'
+                '    return "%s+g%s.c%s" % (format_version, "0" * SNAPSHOT_HEX, c)'),
+        "cmd": "PY 06_PoC/dataset/export_dataset.py --skip-determinism",
+        "cwd": ROOT,
+        "expect_red": ["S8"],
+        "expect_rc": 1,
+        "requires": ["authority"],
+    },
+    {
+        "id": "R50",
+        "kind": "mutate",
+        "why": ("Phase 77 · F9：`classify_change` 判「记录字段集变了 ⇒ 破坏性变更」是"
+                "整个版本化里**唯一需要人签字**的地方（机器不知道加一个可选字段算不算破坏）。"
+                "这里把 `breaking` 恒置 False（看起来更温和：别动不动就报破坏），于是字段集"
+                "增删再也不会要求升 MAJOR ⇒ 版本号彻底失去意义，而清单里的 `compatibility` "
+                "段照样写着「无变更」。★ 它不报错，只是让一条纪律永远沉默。"
+                "⇒ 判据 E8a（字段集变 ⇒ 必须判 breaking）必须变红。"),
+        "file": "06_PoC/dataset/versioning.py",
+        "old": '    breaking = "record_fields" in changed',
+        "new": ('    # redprobe: breaking 恒 False（破坏性判定被静音）\n'
+                '    breaking = False'),
+        "cmd": "PY 06_PoC/dataset/versioning.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["E8a"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R51",
+        "kind": "mutate",
+        "why": ("Phase 77 · F9：内容指纹里**绑上游哈希**是「这个包来自哪张图」的唯一答案。"
+                "这里把它从载荷里去掉（看起来很合理：sha256 已在 manifest 里单独登记了，"
+                "别算两遍），于是换一张图重新构建，只要计数不变 `content_id` 就不变 —— "
+                "「哪张图」退化成一个只登记、不参与身份的字段。"
+                "★ 它没有任何报错：包照样构建、照样下载、校验通过。"
+                "⇒ 判据 E7（换上游图 ⇒ content_id 必变）必须变红。"),
+        "file": "06_PoC/dataset/versioning.py",
+        "old": '        "source": {"sha256": str(source_sha256), "bytes": int(source_bytes)},',
+        "new": ('        # redprobe: 内容指纹不绑上游哈希（换图 content_id 不变）\n'
+                '        "source": {"bytes": int(source_bytes)},'),
+        "cmd": "PY 06_PoC/dataset/versioning.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["E7"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R52",
+        "kind": "mutate",
+        "why": ("Phase 77 · F6：公式详情的**门禁**是这条线存在的理由之一。"
+                "对「单位」「论文」这类非公式节点，若照样返回 ok + 五个空段，"
+                "界面上就是一个全是「无数据」的公式面板 ⇒ 使用者据此判定"
+                "「这条公式的数据没抽出来」，而真相是**它根本不是公式**。"
+                "这是 D115 的同族：用「空」回答「不适用」。这里把门禁条件改成"
+                "恒假（看起来只是省了一次判断），于是任何节点都能拿到一份"
+                "五段空壳。★ 它不抛异常、不报错，只是把「不适用」悄悄说成「空」。"
+                "⇒ 判据 F60（非 Formula 标签 ⇒ no_result）必须变红。"),
+        "file": "03_知识层/queries.py",
+        "old": '        if "Formula" not in (n.get("labels") or []):\n',
+        # ★ 注入体首行必须带 `redprobe:` 注释（R45 踩过的坑）
+        "new": ('        # redprobe: 门禁条件恒假（非公式也放行）\n'
+                '        if False:\n'),
+        "cmd": "PY 06_PoC/tests/phase77_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["F60"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R53",
+        "kind": "mutate",
+        "why": ("Phase 77 · F6：占位值（`暂无` / `-` / 字符串 `None`）**不是数据**，"
+                "是「没有数据」的记号。若不清洗，`discoverer` 会是「暂无」并被当成"
+                "「发现者：暂无」显示 ⇒ 使用者以为真有这么个字段值，甚至据此统计"
+                "「有多少条有发现者」。这里让 `clean_value` 原样返回（看起来最省事："
+                "别动数据），于是占位值一路冒充到界面上。★ 它不报错 —— 编造从来不报错，"
+                "它只是让假的有模有样。⇒ 判据 F64 必须变红。"),
+        "file": "03_知识层/queries.py",
+        "old": ('def clean_value(v):\n'
+                '    """\u628a\u4e0a\u6e38\u5360\u4f4d\u503c'),
+        "new": ('def clean_value(v):\n'
+                '    # redprobe: \u5360\u4f4d\u503c\u4e0d\u518d\u6e05\u6d17\uff08\u539f\u6837\u8fd4\u56de\uff09\n'
+                '    return v\n'
+                '    """\u628a\u4e0a\u6e38\u5360\u4f4d\u503c'),
+        "cmd": "PY 06_PoC/tests/phase77_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["F64"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R54",
+        "kind": "mutate",
+        "why": ("Phase 77 · F6：**覆盖率现算**（铁律 #14：不抄报告里的历史数字）。"
+                "这里把 `formula_coverage` 的结果换成我从旧报告里读到的那组数字"
+                "（extracted 30 / not_extracted 59 / no_referent 5001）—— "
+                "它们在**当初那张图**上是对的，但换一张图就全错。"
+                "★ 这正是本条判据要抓的具体错误形状：数字对得上记忆、"
+                "对不上数据，而它**看起来专业**且从不报错。"
+                "⇒ 判据 F65（夹具已知分布 == 返回值）必须变红。"),
+        "file": "03_知识层/queries.py",
+        "old": ('        out = {"snapshot_id": self.snapshot_id(), "counts": cnt,\n'
+                '               "formula_nodes": total}'),
+        "new": ('        # redprobe: \u8986\u76d6\u7387\u6284\u65e7\u62a5\u544a\u6570\u5b57\uff08\u4e0d\u73b0\u7b97\uff09\n'
+                '        out = {"snapshot_id": self.snapshot_id(),\n'
+                '               "counts": {"extracted": 30, "not_extracted": 59, "no_referent": 5001},\n'
+                '               "formula_nodes": 5090}'),
+        "cmd": "PY 06_PoC/tests/phase77_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["F65"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R55",
+        "kind": "mutate",
+        "why": ("Phase 78 · F8：学科切片若**漏掉** `unclassified` 桶，Σ 各片就小于全图，"
+                "而每一片单独看都「正常」—— 这正是可对账要挡的**静默丢数据**。"
+                "这里让 `slice_by_domain` 在匹配时把 `unclassified` 排除掉"
+                "（看起来只是「没分类的不算一片」），于是那 25 个无 domain 的节点"
+                "哪片都不属于。★ 它不抛异常、不报错，只是让总数悄悄少一截。"
+                "⇒ 判据 **S80**（真图学科守恒）必须变红；"
+                "合成图那条 S70 由 `slicing.py --selfcheck` 覆盖（NEG-1 已证）。"),
+        "file": "06_PoC/dataset/slicing.py",
+        "old": '    m_nodes = [i for i, d in dom.items() if d == value]\n',
+        # ★ 注入体首行必须带 `redprobe:` 注释（R45 踩过的坑）
+        "new": ('    # redprobe: unclassified 节点被静默漏掉（守恒必须变红）\n'
+                '    m_nodes = [i for i, d in dom.items()\n'
+                '               if d == value and d != UNCLASSIFIED]\n'),
+        "cmd": "PY 06_PoC/tests/phase78_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["S80"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R56",
+        "kind": "mutate",
+        "why": ("Phase 78 · F8：边的归属规则若悄悄变成「两端同域才算」，"
+                "跨界边就会被**整片丢弃** —— 实测这会让 2,595 条边（5.32%）"
+                "从所有切片里消失，而每片的计数依然自洽。这里把归属条件"
+                "加上「终点也须同域」，模拟这个缺陷。"
+                "★ 守恒式是对这类「局部都对、总体少了」错误的唯一防线。"
+                "⇒ 判据 S71（边守恒）必须变红。"),
+        "file": "06_PoC/dataset/slicing.py",
+        "old": ('    for e in edges:\n'
+                '        if dom.get(e.get("source")) != value:\n'
+                '            continue\n'),
+        "new": ('    for e in edges:\n'
+                '        # redprobe: 跨界边被静默丢弃（边守恒必须变红）\n'
+                '        if (dom.get(e.get("source")) != value\n'
+                '                or dom.get(e.get("target")) != value):\n'
+                '            continue\n'),
+        "cmd": "PY 06_PoC/tests/phase78_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["S80e"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R57",
+        "kind": "mutate",
+        "why": ("Phase 78 · F8 · D123：`redist_of` 的契约是 **bool 谓词**，"
+                "而仓库里还有一个名字相近、返回**三态字符串**的 "
+                "`redistribution_closure`。误传后者时，非空字符串恒为真 ⇒ "
+                "对外折扣恒为 5（不打折）⇒ 对外分数被虚高成内部值"
+                "（实测 `≥5` 从 15 条虚高到 702 条，47 倍）。"
+                "这里让 `assert_bool_predicate` 的判定条件恒假（看起来"
+                "只是「省一次类型检查」），于是误传再也不会被抓住。"
+                "⇒ 判据 S79（谓词契约）必须变红。"),
+        "file": "06_PoC/dataset/slicing.py",
+        "old": ('        if v is not True and v is not False:\n'
+                '            return False, "pred(%r) -> %r\uff08\u975e bool\uff09" % (s, v)\n'),
+        "new": ('        # redprobe: 不再校验谓词返回类型（误传三态字符串会静默虚高）\n'
+                '        if False:\n'
+                '            return False, "pred(%r) -> %r\uff08\u975e bool\uff09" % (s, v)\n'),
+        "cmd": "PY 06_PoC/tests/phase78_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["S79"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R58",
+        "kind": "mutate",
+        "why": ("Phase 78 · F8：切片内容指纹若**不含谓词**，则「physics 切片」与"
+                "「chemistry 切片」在记录集合恰好相同时会算出**同一个** `#` 段。"
+                "版本号表面仍不同（路径段不同），但那说明「内容指纹」没在履行"
+                "它名字承诺的事 —— 而对外一旦拿 `#` 段比对，两片就会被判为同一份。"
+                "实测踩到过：S88 只比整串时仍 PASS，是 S88b（比 `#` 段）才抓住。"
+                "这里把谓词从指纹输入里去掉（看起来只是「少一个字段」）。"
+                "⇒ 判据 S88b（内容指纹本身含谓词）必须变红。"),
+        "file": "06_PoC/dataset/slicing.py",
+        "old": '        "predicate": dict(predicate or {}),\n',
+        # ★ 注入体首行必须带 `redprobe:` 注释（R45 踩过的坑）
+        "new": '        # redprobe: 谓词不再进指纹（两片可能撞号）\n',
+        "cmd": "PY 06_PoC/dataset/slicing.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["S88b"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R59",
+        "kind": "mutate",
+        "why": ("Phase 78 · F8：切片台账 `slices.jsonl` 是**入库**文件，"
+                "把绝对路径写进去会让它换台机器就失效（且违反仓库既有的"
+                "「无原机路径」纪律，`install` 的 A05 判据就在查这个）。"
+                "这里让 `out_dir` 回退成绝对路径（看起来最省事：直接存传入值）。"
+                "★ 它不会让任何东西报错 —— 提交上去也照样跑，"
+                "只有别人 clone 下来才会发现路径指不到东西。"
+                "⇒ 判据 **S92v**（合成侧：导出条目不得含绝对路径）必须变红。"),
+        "file": "06_PoC/dataset/slicing.py",
+        "old": ('    if out_dir_rel:\n'
+                '        entry["out_dir"] = out_dir_rel.replace(os.sep, "/")\n'),
+        "new": ('    # redprobe: 台账回退成绝对路径（换机器即失效）\n'
+                '    entry["out_dir"] = out_dir\n'),
+        # ★ 目标必须是**真的会落盘**的那条命令。起初写的是 phase78_selfcheck，
+        #   但它只**读**现有台账、不调用 export_slice ⇒ 注入后没有任何新写入，
+        #   S92 自然不会红，探针判 FAIL。实测一次才发现：
+        #   「探针要指向**会产生该缺陷的代码路径**」，不是「指向检查该缺陷的仪器」。
+        "cmd": "PY 06_PoC/dataset/slicing.py --selfcheck",
+        "cwd": ROOT,
+        "expect_red": ["S92v"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R60",
+        "kind": "mutate",
+        "why": ("Phase 79 数据无损：重新引入被修掉的 tv[:400] 截断，"
+                "证明 S94（源码层禁未豁免裸切片）真的会红，而不是修完就永久失明。\n"
+                "        ★ 这条守的是**回归**：化学侧之前有 333 条反应式因此变成废品，"
+                "未来任何人在 ingest 里顺手写一处切片都会被它接住。\n"
+                "        ★ D135：本条最初的 kind 写成框架不认识的 `inject` —— R0 会报错、"
+                "选中它会 KeyError 崩掉，**上岗后从未真正运行过一次**。"
+                "改回 mutate 后才第一次跑通。教训：注册 ≠ 生效，探针自己也要被跑一遍。"),
+        "file": "11_真实数据/elementkg10m_ingest.py",
+        "old": "                rxn_props.setdefault(hv, {})[rxn_lit[rel]] = tv\n",
+        "new": ("                # redprobe: R60 临时注入（切勿提交）\n"
+                "                rxn_props.setdefault(hv, {})[rxn_lit[rel]] = "
+                "tv[:400] if rel == \"REACTION_MAPPED_IS\" else tv\n"),
+        "cmd": "PY 06_PoC/tests/phase79_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["S94"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R61",
+        "kind": "expect",
+        "why": ("Phase 80 溯源保真：验证 S97/S98 **有能力变红**，不是「当前恰好不红」。\n"
+                "        ★ 用 expect 而非 mutate：`normalized.json` 被 .gitignore 排除，"
+                "框架靠 git checkout 还原 ⇒ 改它会造成**永久污染**。\n"
+                "        ★ 因此改为让被测仪器自带 `--red` 模式：在系统临时目录造篡改副本，"
+                "跑完自删，全程不碰权威图。\n"
+                "        ★ 这条同时记住 D134：红测试的条件写错（选到短记录，切操作变成空操作）"
+                "会造出「判据失灵」的假象 —— 判据没红，红的是写测试的人。"),
+        "cmd": "PY 06_PoC/tests/phase80_selfcheck.py --red",
+        "cwd": ROOT,
+        "expect_rc": 0,
+        "expect_text": ["phase80 --red: OK 判据可红", "[FAIL] S97", "[FAIL] S98"],
+        "requires": [],
+    },
+    {
+        "id": "R62",
+        "kind": "mutate",
+        "why": ("Phase 82：新档 `changed_but_proven` 的全部力量都在「四要素绑定」上。"
+                "少比 `composite.from`（看起来只是「不要求记录值也对上，宽容一点」）"
+                "会让一张**任意版本对**的证明去抵任何同对象的变更 —— 证明退化成长期许可证。"
+                "★ 没有任何报错、没有失败计数，闸门反而更绿 —— 这正是最危险的方向。"
+                "⇒ NEG-S104（伪造 from ⇒ 必须完全失效）必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": ("        if comp.get(\"from\") != rec:\n"
+                "            continue"),
+        "new": ("        if False:  # redprobe: 不再核对 from（证明可跨版本复用）\n"
+                "            continue"),
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S104"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R63",
+        "kind": "mutate",
+        "why": ("Phase 82：证明文件是**可写文件**，判据必须能识破对它的篡改（D144 的教训："
+                "R43 曾用「只伪造一个字段」造出假绿）。把当场复算短路成恒真 —— "
+                "看起来只是「不重复算一遍，快一点」—— 实际后果是表里写什么都算数。"
+                "⇒ NEG-S108（篡改 files[].to_hash）与 NEG-S112（借别的提交的版本对）必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": "            ok, detail = ra.check_content_attestation(a, base=base)",
+        "new": "            ok, detail = True, \"redprobe: 不再复算\"",
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S108", "NEG-S112"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R64",
+        "kind": "mutate",
+        "why": ("Phase 82：「一条边有 N 条不符证据就必须 N 条全被覆盖」是最容易漏的口子 —— "
+                "多来源边覆盖一半看起来「基本覆盖了」，实际放行的是一条**部分失效**的边。"
+                "把「全部覆盖」放宽成「有覆盖就算」⇒ 合成双边（只给 B5 的证明）会被判 proven。"
+                "⇒ NEG-S111 必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": "    return (\"changed_but_proven\" if not misses else \"changed\"), {",
+        "new": "    return (\"changed_but_proven\" if covered else \"changed\"), {  # redprobe: 部分覆盖就放行",
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S111"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
+        "id": "R65",
+        "kind": "mutate",
+        "why": ("Phase 82：`to_is_head` 是「这张证明说的是**当前**，还是某个历史版本对」的唯一标记。"
+                "去掉这道检查，回放用的历史证明就能抵当前原因 —— 而这张表里的证明"
+                "本来就都是历史版本对（生成时对象还未提交为 HEAD）。"
+                "⇒ NEG-S109（require_head=True 时覆盖必须为 0）必须变红。"),
+        "file": "11_真实数据/fidelity_proven.py",
+        "old": ("        if require_head and not a.get(\"to_is_head\"):\n"
+                "            continue"),
+        "new": ("        if False:  # redprobe: 历史版本对也当「当前」\n"
+                "            continue"),
+        "cmd": "PY 06_PoC/tests/phase82_selfcheck.py",
+        "cwd": ROOT,
+        "expect_red": ["NEG-S109"],
+        "expect_rc": 1,
+        "requires": [],
+    },
+    {
         "id": "RN",
         "kind": "mutate",
         "why": "负对照：**纯注释**级改动不得让任何断言变红（证明「变红」检测非恒真）",
@@ -961,7 +1309,11 @@ DECLARED_PROBE_IDS = ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9",
                       "R17", "R18", "R19", "R20", "R21", "R22", "R23",
                       "R24", "R25", "R26", "R27", "R28",
                       "R29", "R30", "R31", "R32", "R33", "R34", "R35", "R36", "R37", "R38", "R39",
-                      "R40", "R41", "R42", "R43", "R44", "R45", "R46", "R47", "R48", "RN")
+                      "R40", "R41", "R42", "R43", "R44", "R45", "R46", "R47", "R48",
+                      "R49", "R50", "R51",
+                      "R52", "R53", "R54",
+                      "R55", "R56", "R57", "R58", "R59", "R60", "R61",
+                      "R62", "R63", "R64", "R65", "RN")
 
 # 与 emit() 一一对应的键（含仪器自身的三条自检 + 注册表自检）。
 ALL_ROW_IDS = DECLARED_PROBE_IDS + ("RS", "RR", "RT", "R0")
@@ -977,6 +1329,52 @@ def read_text(path):
 
 def write_text(path, s):
     io.open(path, "w", encoding="utf-8", newline="").write(s)
+
+
+def sync_manifest_anchors():
+    """让 R27/R28 的锚点**跟随当前清单值**，而不是死记某一版的具体数字。
+
+    ★ 为什么必须这样（D151 同族）：R27 原锚点是 `"phase": 65,`、R28 是
+      `"snapshot_phase": 41,`。每次重建发布清单（`sttp.sh release`）这两个数就变，
+      锚点随即命中 0 次 —— 而**没人会记得同步改探针**。
+      实测 2026-10-28：`3efec29` 把 phase 65→66 之后没有复跑全链门禁，
+      红了两轮才被 RS 逮到。**「记得改」不是机制。**
+
+    ★ 探针要注入的缺陷形状是「**清单与事实源漂移**」，与具体数值无关 ——
+      所以「当前值 − 1」是**永远正确**的注入；写成字面量反而把探针绑死在某一版上。
+
+    ★ 仍保留 fail-closed：若清单格式变了（键名/缩进），`old` 命中 0 次 ⇒
+      RS 照样大声报错。本函数只负责「数值漂移不需要人工跟」。
+    """
+    rel = os.path.join(ROOT, "06_PoC", "release", "manifest.json")
+    try:
+        with io.open(rel, encoding="utf-8") as fh:
+            m = json.load(fh)
+    except Exception as e:                              # noqa: BLE001
+        print("[WARN] sync_manifest_anchors：读不到 manifest（%s: %s）"
+              "⇒ R27/R28 锚点保持字面量，RS 会因命中 0 次而报红" % (type(e).__name__, e))
+        return
+    # ★ `phase` / `snapshot_phase` 在 **`release` 块里**，不在顶层。
+    #   本函数第一版写成 `m.get("phase")`（顶层）⇒ 拿到 None ⇒ 被 `except: return`
+    #   静默吞掉 ⇒ 锚点悄悄没同步，症状是「RS 照旧红，但看起来像没修」。
+    #   静默失败就是永久绿灯（D149 同族）—— 所以这里**任何异常都要打印**。
+    blk = m.get("release") or {}
+    want = {"R27": ("phase", blk.get("phase")),
+            "R28": ("snapshot_phase", blk.get("snapshot_phase"))}
+    for p in PROBES:
+        kv = want.get(p.get("id"))
+        if not kv:
+            continue
+        field, val = kv
+        if not isinstance(val, int):
+            print("[WARN] sync_manifest_anchors：release.%s 不是整数（实际 %r）"
+                  "⇒ %s 的锚点未同步，RS 会报红" % (field, val, p["id"]))
+            continue
+        p["old"] = '  "%s": %d,' % (field, val)
+        p["new"] = '  "%s": %d,' % (field, val - 1)
+
+
+sync_manifest_anchors()
 
 
 def sha256_text(s):
@@ -1331,6 +1729,40 @@ def emit(rep, res):
     rep.add(res["R47"][0], "R47 分类名不存在被当成普通空 ⇒ F46l 必须变红（F13）", res["R47"][1])
     rep.add(res["R48"][0], "R48 导航栈把层级记错（回退才暴露）⇒ F46z 必须变红（F13）",
             res["R48"][1])
+    rep.add(res["R49"][0], "R49 dataset_id 的 g 段写死（与图脱钩）⇒ S8 必须变红（F9）",
+            res["R49"][1])
+    rep.add(res["R50"][0], "R50 破坏性判定被静音（breaking 恒 False）⇒ E8a 必须变红（F9）",
+            res["R50"][1])
+    rep.add(res["R51"][0], "R51 内容指纹不绑上游哈希（换图不改版本）⇒ E7 必须变红（F9）",
+            res["R51"][1])
+    rep.add(res["R52"][0], "R52 去掉非公式门禁 ⇒ F60 必须变红（F6）",
+            res["R52"][1])
+    rep.add(res["R53"][0], "R53 占位值不再清洗 ⇒ F64 必须变红（F6）",
+            res["R53"][1])
+    rep.add(res["R54"][0], "R54 覆盖率抄旧报告数字 ⇒ F65 必须变红（F6）",
+            res["R54"][1])
+    rep.add(res["R55"][0], "R55 学科切片漏掉 unclassified ⇒ S80 必须变红（F8）",
+            res["R55"][1])
+    rep.add(res["R56"][0], "R56 跨界边被静默丢弃 ⇒ S80e 必须变红（F8）",
+            res["R56"][1])
+    rep.add(res["R57"][0], "R57 不再校验谓词返回类型 ⇒ S79 必须变红（F8·D123）",
+            res["R57"][1])
+    rep.add(res["R58"][0], "R58 谓词不进内容指纹 ⇒ S88b 必须变红（F8）",
+            res["R58"][1])
+    rep.add(res["R59"][0], "R59 台账写绝对路径 ⇒ S92v 必须变红（F8）",
+            res["R59"][1])
+    rep.add(res["R60"][0], "R60 恢复 tv[:400] 截断 ⇒ S94 必须变红（Phase 79 数据无损）",
+            res["R60"][1])
+    rep.add(res["R61"][0], "R61 临时副本上篡改 ⇒ S97/S98 必须均可变红（Phase 80 溯源保真）",
+            res["R61"][1])
+    rep.add(res["R62"][0], "R62 五档判据不再核对 from（证明可跨版本复用）⇒ NEG-S104 必须变红（Phase 82）",
+            res["R62"][1])
+    rep.add(res["R63"][0], "R63 证明不再当场复算（表里写什么都算数）⇒ NEG-S108/S112 必须变红（Phase 82）",
+            res["R63"][1])
+    rep.add(res["R64"][0], "R64 多来源边部分覆盖即放行 ⇒ NEG-S111 必须变红（Phase 82）",
+            res["R64"][1])
+    rep.add(res["R65"][0], "R65 历史版本对当「当前」用 ⇒ NEG-S109 必须变红（Phase 82）",
+            res["R65"][1])
     rep.add(res["RN"][0], "RN 负对照：纯注释改动不得让任何断言变红（证明「变红」非恒真）", res["RN"][1])
     rep.add(res["RS"][0], "RS 锚点自检：注册表每条 mutate 探针的锚点在当前事实源里恰好命中一次",
             res["RS"][1])

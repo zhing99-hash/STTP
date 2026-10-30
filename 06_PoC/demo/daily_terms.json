@@ -1,0 +1,24 @@
+{
+  "version": "0.1",
+  "notice": "日常用语映射是待验证的检索线索，不是公式适用性的判断。",
+  "entries": [
+    {"terms":["水分子","水"],"targets":["MO:h2o"],"question":"您想了解水分子的组成、物理性质，还是水样的数量？"},
+    {"terms":["二氧化碳"],"targets":["MO:co2"],"question":"您想查找二氧化碳分子、反应还是气体性质？"},
+    {"terms":["压力","气压","压强"],"targets":["TH:pq:pressure","TH:fo:ideal_gas","TH:fo:boyle"],"question":"您指作用在物体上的力，还是单位面积上的压强？"},
+    {"terms":["热力","热力学","受热","加热","热胀"],"targets":["TH:fo:first_law","TH:fo:ideal_gas","TH:fo:charles"],"question":"请说明物质状态、压强或体积是否保持不变。"},
+    {"terms":["理想气体","气体状态"],"targets":["TH:fo:ideal_gas"],"question":"实际气体的适用范围需结合温度和压强判断。"},
+    {"terms":["体积变大","气球膨胀","气球受热"],"targets":["TH:fo:charles","TH:fo:ideal_gas"],"question":"请确认压强是否近似恒定，以及气体物质的量是否变化。"},
+    {"terms":["压缩","气体压缩"],"targets":["TH:fo:boyle","TH:fo:ideal_gas"],"question":"请确认过程是否近似恒温以及气体量是否固定。"},
+    {"terms":["电压","电流","电阻"],"targets":["EM:fo:ohm"],"question":"请确认所研究的元件是否满足欧姆定律。"},
+    {"terms":["引力","重力","万有引力"],"targets":["CM:fo:gravity"],"question":"重力与万有引力并非总是完全同义，请确认对象和场景。"},
+    {"terms":["动量","碰撞"],"targets":["CM:fo:momentum"],"question":"碰撞问题可能需要动量守恒或能量关系，请补充条件。"},
+    {"terms":["酸碱度","酸性","碱性","ph"],"targets":["IC:fo:ph"],"question":"pH 与氢离子活度有关；具体溶液条件需核查。"},
+    {"terms":["氢"],"targets":["EK:el:H"],"question":"氢元素和氢气分子不同，请选择需要的对象。"},
+    {"terms":["氧"],"targets":["EK:el:O"],"question":"氧元素和氧气分子不同，请选择需要的对象。"},
+    {"terms":["碳"],"targets":["EK:el:C"],"question":"碳元素与碳的具体单质或化合物不同。"},
+    {"terms":["铁"],"targets":["EK:el:Fe"],"question":"请区分铁元素、铁单质及含铁化合物。"},
+    {"terms":["铜"],"targets":["EK:el:Cu"],"question":"请区分铜元素、铜单质及含铜化合物。"},
+    {"terms":["钠"],"targets":["EK:el:Na"],"question":"请区分钠元素和钠离子。"},
+    {"terms":["氯"],"targets":["EK:el:Cl"],"question":"请区分氯元素、氯气与氯离子。"}
+  ]
+}

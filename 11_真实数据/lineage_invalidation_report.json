@@ -53,21 +53,25 @@
   "deps": {
    "changed_dep_versions": [],
    "changed_reference_ids": [],
-   "changed_verifier_ids": [],
+   "changed_verifier_ids": [
+    "verification_model"
+   ],
    "enabled": true,
    "n_evidence_with_deps": 35669,
-   "n_evidence_without_deps": 13903,
+   "n_evidence_without_deps": 14004,
    "n_no_dep": 0,
    "n_ref_bound": 35669,
-   "n_stale_edges": 0,
-   "n_stale_evidence": 0,
+   "n_stale_edges": 32583,
+   "n_stale_evidence": 32609,
    "n_verifier_bound": 32609,
    "reason_counts": {
-    "unverifiable_source": 34569
+    "unverifiable_source": 34569,
+    "verifier_changed": 32609
    },
    "status_counts": {
-    "needs_review": 34569,
-    "valid": 1100
+    "needs_review": 2310,
+    "stale": 32609,
+    "valid": 750
    }
   },
   "lineage_gap_sources": [
@@ -80,14 +84,15 @@
    "unregistered"
   ],
   "n_affected_by_input": 0,
-  "n_affected_edges": 0,
+  "n_affected_edges": 32583,
   "n_claims_on_lineage_gap": 116,
   "n_claims_on_not_reproducible": 47055,
   "n_compared_sources": 9,
-  "n_no_hash_sources": 21,
-  "n_sources": 31,
+  "n_no_hash_sources": 22,
+  "n_sources": 32,
   "not_reproducible_sources": [
    "ChEBI",
+   "ElementKG1.0",
    "ElementKG2.0",
    "NIST Chemistry WebBook",
    "Phase13.Gate.B1",
@@ -103,7 +108,7 @@
   "repo_status": {
    "in_repo": 10,
    "no_locator": 9,
-   "not_in_repo": 12
+   "not_in_repo": 13
   }
  },
  "schema": "sttp-lineage-invalidation/v3"

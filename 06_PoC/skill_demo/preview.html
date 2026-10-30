@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STTP Skill · 问答输出形态预览（真实数据）</title>
+<style>
+:root{
+  --bg:#0b1020; --panel:#111832; --panel2:#161f3d; --line:#223055;
+  --txt:#e8edf7; --dim:#93a1c4; --accent:#3d8bff; --accent2:#00d0c8;
+  --ok:#2ecc9b; --warn:#f0b429; --inf:#b07bff; --bad:#ff5f6d;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.7;padding:28px 20px 60px}
+.wrap{max-width:900px;margin:0 auto}
+header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:26px}
+h1{font-size:19px;font-weight:600;margin:0 0 6px;letter-spacing:.3px}
+.sub{color:var(--dim);font-size:13px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;
+  border:1px solid var(--line);color:var(--dim);margin-left:8px;vertical-align:2px}
+.q{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:8px;padding:14px 18px;margin-bottom:22px}
+.q .who{color:var(--accent);font-size:12px;letter-spacing:1px;margin-bottom:6px}
+.q .txt{font-size:15px}
+.a{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+h2{font-size:15px;font-weight:600;margin:26px 0 12px;color:var(--txt)}
+h3{font-size:13px;font-weight:600;margin:18px 0 8px;color:var(--accent2)}
+p{margin:8px 0}
+code{font-family:var(--mono);font-size:12.5px;background:rgba(61,139,255,.12);
+  padding:1px 6px;border-radius:4px;color:#9fc6ff}
+math{font-family:var(--mono);color:#ffd479}
+.route{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:10px 0;background:#0e1530}
+.route .hd{font-size:12px;color:var(--dim);margin-bottom:8px}
+.hops{font-family:var(--mono);font-size:12px;word-break:break-all;line-height:1.9}
+.hop{display:inline-block;background:#182449;border:1px solid var(--line);
+  border-radius:5px;padding:2px 7px;margin:2px 0}
+.arrow{color:var(--accent);margin:0 5px}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#15203f;color:var(--dim);font-weight:500;font-size:11.5px;letter-spacing:.5px}
+td.mono{font-family:var(--mono);font-size:11.5px}
+.lv{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;white-space:nowrap}
+.lv-rule{background:rgba(46,204,155,.16);color:var(--ok);border:1px solid rgba(46,204,155,.4)}
+.lv-assert{background:rgba(240,180,41,.14);color:var(--warn);border:1px solid rgba(240,180,41,.38)}
+.lv-model{background:rgba(255,95,109,.14);color:var(--bad);border:1px solid rgba(255,95,109,.4)}
+.note{border:1px dashed var(--line);border-radius:8px;padding:14px 16px;background:#0d1428;margin:14px 0}
+.note.warn{border-color:rgba(255,95,109,.45);background:rgba(255,95,109,.06)}
+.note.ok{border-color:rgba(46,204,155,.4);background:rgba(46,204,155,.05)}
+.note .t{font-size:12.5px;font-weight:600;margin-bottom:6px}
+.miss{font-family:var(--mono);font-size:12px;color:var(--dim)}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:12px}
+.api{font-family:var(--mono);font-size:11.5px;color:#7fb0ff;margin:3px 0}
+.badge{float:right;font-size:11px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>STTP Skill · 问答输出形态预览<span class="tag">真实 API 数据 · 非构造样本</span></h1>
+  <div class="sub">服务实例 <code class="miss">127.0.0.1:8765</code> · 权威图 9,750 节点 / 48,813 边 ·
+    <span class="badge">生成于 2026-10-28</span></div>
+</header>
+
+<div class="q">
+  <div class="who">用户提问</div>
+  <div class="txt">ΔG° = −RT ln K 和「熵」到底是怎么连起来的？我要知道这条链路可不可信 —— 别给我一句话结论。</div>
+</div>
+
+<div class="a">
+  <h3 style="margin-top:0">结论</h3>
+  <p>图上确实连得上，而且不止一条路。三条已知路径见下。</p>
+
+  <h3>路径 ①　直接断言（1 跳）</h3>
+  <div class="route">
+    <div class="hops">
+      <span class="hop">CE:fo:gibbs_standard</span><span class="arrow">──derived_from──▶</span><span class="hop">TH:pq:entropy</span>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--dim)"><code>kind=gibbs_from_entropy</code> · confidence 1.0 ·
+      来源 <code>curated_seed</code> · 等级 <span class="lv lv-assert">source_asserted</span></div>
+  </div>
+
+  <h3>路径 ②　经由数学算子与玻尔兹曼公式（4 跳）</h3>
+  <div class="route">
+    <div class="hops">
+      <span class="hop">CE:fo:gibbs_standard</span><span class="arrow">─uses_operator─▶</span>
+      <span class="hop">MA:fo:log_product</span><span class="arrow">◀─</span>
+      <span class="hop">SM:fo:boltzmann</span><span class="arrow">─defines─▶</span>
+      <span class="hop">SM:pq:stat_entropy</span><span class="arrow">─same_as─▶</span>
+      <span class="hop">TH:pq:entropy</span>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--dim)">两端两侧的 <code>uses_operator</code> 是<strong style="color:var(--ok)">可复算</strong>的
+      （<code>verification_model.math_operator_presence</code>，independent=true）；中间的 defines / same_as 仍是种子断言。</div>
+  </div>
+
+  <h3>路径 ③　经由单位与量纲（5 跳）★ 这条最能说明问题</h3>
+  <div class="route">
+    <div class="hops">
+      <span class="hop">CE:fo:gibbs_standard</span><span class="arrow">─defines─▶</span>
+      <span class="hop">CE:pq:gibbs_std</span><span class="arrow">─has_unit─▶</span>
+      <span class="hop">TH:un:joule</span><span class="arrow">─same_as─▶</span>
+      <span class="hop">UN:j</span><span class="arrow">◀─same_as─ </span>
+      <span class="hop">TH:un:j_per_k</span><span class="arrow">◀─has_unit─ </span>
+      <span class="hop">TH:pq:entropy</span>
+    </div>
+  </div>
+
+  <h2>逐跳可信度 —— 这条链路的强度取决于「你在说哪一跳」</h2>
+  <table>
+    <tr><th style="width:30%">边的本来就有的话</th><th style="width:14%">等级</th><th style="width:10%">置信</th><th style="width:20%">来源</th><th>独立复核</th></tr>
+    <tr><td class="mono">defines ｜ <span style="color:var(--dim)">gibbs_standard → gibbs_std</span></td>
+      <td><span class="lv lv-assert">source_asserted</span></td><td>1.0</td><td class="mono">curated_seed</td>
+      <td class="mono">✗ 「策划种子直接断言；未做独立复核」</td></tr>
+    <tr><td class="mono">has_unit ｜ <span style="color:var(--dim)">gibbs_std → joule</span></td>
+      <td><span class="lv lv-assert">source_asserted</span></td><td>1.0</td><td class="mono">curated_seed</td>
+      <td class="mono">✗ 同上</td></tr>
+    <tr><td class="mono">same_as ｜ <span style="color:var(--dim)">joule → UN:j</span></td>
+      <td><span class="lv lv-assert">source_asserted</span></td><td>1.0</td><td class="mono">curated_seed</td>
+      <td class="mono">✗ 同上</td></tr>
+    <tr><td class="mono">same_as ｜ <span style="color:var(--dim)">j_per_k → UN:j</span></td>
+      <td><span class="lv lv-model">model_inferred</span></td><td>0.7</td><td class="mono">Phase13.GNN.typed</td>
+      <td class="mono">✗ ✗ 图上原话：<strong style="color:var(--bad)">「模型预测产物；不构成验证」</strong></td></tr>
+    <tr><td class="mono">has_unit ｜ <span style="color:var(--dim)">entropy → j_per_k</span></td>
+      <td><span class="lv lv-rule">rule_checked</span></td><td>1.0</td><td class="mono">curated_seed</td>
+      <td class="mono">✓ 量纲复算一致</td></tr>
+  </table>
+
+  <div class="note ok">
+    <div class="t">这一跳是真的算过 —— 图上留了原始比对串</div>
+    <p class="miss" style="color:var(--txt)">
+      Entropy = { L: 2.0, M: 1.0, Th: −1.0, T: −2.0 }<br>
+      J/K&nbsp;&nbsp;&nbsp;&nbsp;= { M: 1.0, L: 2.0, T: −2.0, Th: −1.0 }<br>
+      <span style="color:var(--ok)">⇒ 量纲一致（dimension_table × 单位符号解析，independent = true）</span>
+    </p>
+  </div>
+
+  <div class="note warn">
+    <div class="t">诚实的不确定性 —— 这一跳是 GNN 猜的</div>
+    <p>路径 ③ 中间那一步 <code>TH:un:j_per_k ←same_as→ UN:j</code> 来自 <code>Phase13.GNN.typed</code>，
+      置信度 0.7，图上明确标注<strong style="color:var(--bad)">「模型预测产物；不构成验证」</strong>。
+      所以：<strong>「ΔG° 的单位是 J/mol」和「熵的单位是 J/(mol·K)」这两端是可信的，
+      但把它们归并到同一个 J 的那步，目前只有模型建议，没有人复核过。</strong></p>
+  </div>
+
+  <div class="note">
+    <div class="t">图上没有的，我不替它编</div>
+    <p>查询 <code>/api/formula?id=CE:fo:gibbs_standard</code> 返回 Rights 声明：<br>
+      <span class="miss">"以下段在图上没有数据：applicability、dimension、equivalents"</span></p>
+    <p>所以「这个公式在什么条件下成立」「它的等价式有哪些」，我<strong>无法从图上给出答案</strong>。
+      这不算错误 —— 图上把这三段标成 <code>status=not_extracted</code>（有指称对象但未抽出），
+      而不是默认成「没有条件」。<strong>Skill 侧必须把这个「不知道」原样说出来，而不是替它补齐。</strong></p>
+  </div>
+
+  <h2>这次 Skill 用到的 API</h2>
+  <div class="api">GET /api/search?q=Gibbs</div>
+  <div class="api">GET /api/formula?id=CE:fo:gibbs_standard</div>
+  <div class="api">GET /api/path?src=CE:fo:gibbs_standard&amp;dst=TH:pq:entropy&amp;max_paths=3</div>
+  <p style="color:var(--dim);font-size:12.5px;margin-top:10px">
+    约束：retrieval-only —— 回答里的每条事实必须能落到上面三个响应的某个字段；
+    找不到的字段如实说「图上没有」，模型不得自行补全。</p>
+</div>
+
+<footer>
+  本页所有数据来自本次真实调用，未加工、未构造。<br>
+  对比一下：同一个问题交给通用大模型，它会给出通顺的答案，但不会告诉你哪一跳是 GNN 猜的 ——
+  <strong style="color:var(--txt)">这正是 STTP 作为 Skill 的全部价值</strong>。
+</footer>
+
+</div>
+</body>
+</html>

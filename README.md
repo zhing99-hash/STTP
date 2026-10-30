@@ -2,15 +2,22 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
-[![Version](https://img.shields.io/badge/version-v0.65.0--rc1-orange.svg)](VERSION)
+[![Version](https://img.shields.io/badge/version-v0.66.0-blue.svg)](VERSION)
 
-> **当前版本**：`v0.65.0-rc1` —— 版本号的唯一事实源是仓库根的 [`VERSION`](VERSION)，
+> **当前版本**：`v0.66.0` —— 版本号的唯一事实源是仓库根的 [`VERSION`](VERSION)，
 > 发布清单（`06_PoC/release/manifest.json`）由它派生并由 `verify_release.py` 交叉校验。
-> 能力边界与全部可复跑证据见 [`07_交付物/RC1_整体状态评估_20261020.md`](07_交付物/RC1_整体状态评估_20261020.md)。
+>
+> **这版相对 `v0.65.0-rc1`（2026-10-20）改了什么、对外能给什么 / 不能给什么，
+> 见 [`CHANGELOG.md`](CHANGELOG.md) —— 想试用或对接前请先读它的「对外边界」一节。**
 
 > **S**cience **T**opology **T**hrough **P**hysics — 把数学公式、物理规律、化学物质与物理世界（元素 / 分子 / 反应 / 单位 / 物理量）连成**一张可推理的知识图谱**。
 
 本项目把"公式"与"物理世界"打通：从 E=mc²、F=ma、动能定理，一路连到甲烷燃烧反应、原子组成、国际单位制，并在图谱上用 **GNN 推断 + LLM 假设 + 符号校验（SymPy / pint / RDKit-等价逻辑）** 自动发现并验证跨域边。
+
+
+### 体验科学探索版（本地 Demo 0.4）
+
+探索版从主题或搜索出发，逐步浏览数学、物理和化学的公式及联系，并可切换工程版。使用 Python 3.11 并安装项目依赖后，运行 `python 06_PoC/demo/launcher.py`，访问 <http://127.0.0.1:8773/demo/>；Windows 也可运行 `06_PoC/demo/start_demo.cmd`。详见 [探索版使用说明](06_PoC/demo/README.md)。精选内容可直接使用；原图库搜索需要自行准备原始图文件并构建本地数据库，数据和统计记录未包含在仓库。探索版仍为试用原型，不代表正式发布或完成科学审校。
 
 ---
 

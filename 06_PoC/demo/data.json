@@ -1,0 +1,790 @@
+{
+  "version": "sttp-explore-demo-0.3",
+  "notice": "本地开发预览；内容尚未经独立科学及许可复核，不作为权威科研结论。",
+  "disciplines": [
+    "数学",
+    "物理",
+    "化学",
+    "生物",
+    "天文",
+    "工程"
+  ],
+  "sources": {
+    "bipm": {
+      "title": "BIPM · 国际单位制基本单位",
+      "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+    },
+    "gas": {
+      "title": "OpenStax · 理想气体方程",
+      "url": "https://openstax.org/books/chemistry-2e/pages/9-2-relating-pressure-volume-amount-and-temperature-the-ideal-gas-law"
+    },
+    "molar": {
+      "title": "OpenStax · 摩尔与摩尔质量",
+      "url": "https://openstax.org/books/chemistry-2e/pages/3-1-formula-mass-and-the-mole-concept"
+    },
+    "mole": {
+      "title": "BIPM · 摩尔的定义",
+      "url": "https://www.bipm.org/en/si-base-units/mole"
+    },
+    "water": {
+      "title": "PubChem · Water 记录",
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Water"
+    },
+    "solutions": {
+      "title": "OpenStax · 溶液浓度与稀释",
+      "url": "https://openstax.org/books/chemistry-2e/pages/3-3-molarity"
+    },
+    "mixgas": {
+      "title": "OpenStax · 气体混合与分压",
+      "url": "https://openstax.org/books/chemistry-2e/pages/9-3-stoichiometry-of-gaseous-substances-mixtures-and-reactions"
+    },
+    "spectroscopy": {
+      "title": "Delgado · 吸光度、透射率与校准",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8808104/"
+    }
+  },
+  "themes": [
+    {
+      "id": "water",
+      "number": "01",
+      "eyebrow": "从熟悉的事物出发",
+      "title": "一杯水里，有多少分子？",
+      "subtitle": "从一滴水，走向物质的量与微观世界。",
+      "start": "MO:h2o",
+      "steps": [
+        "MO:h2o",
+        "demo:molar_mass",
+        "demo:amount",
+        "demo:avogadro"
+      ],
+      "duration": "约 3 分钟"
+    },
+    {
+      "id": "gas",
+      "number": "02",
+      "eyebrow": "看见公式背后的联系",
+      "title": "气体受热，为什么会膨胀？",
+      "subtitle": "沿着温度、体积与理想气体方程探索。",
+      "start": "TH:fo:ideal_gas",
+      "steps": [
+        "TH:fo:ideal_gas",
+        "TH:fo:charles",
+        "demo:temperature",
+        "demo:amount"
+      ],
+      "duration": "约 4 分钟"
+    },
+    {
+      "id": "light",
+      "number": "03",
+      "eyebrow": "从颜色走进实验",
+      "title": "一束光，如何测出溶液浓度？",
+      "subtitle": "沿着光强、吸光度与溶液浓度探索。",
+      "start": "demo:beer_lambert",
+      "steps": [
+        "demo:beer_lambert",
+        "demo:absorbance",
+        "demo:transmittance",
+        "demo:molarity",
+        "demo:dilution"
+      ],
+      "duration": "约 5 分钟"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "MO:h2o",
+      "legacy_id": "MO:h2o",
+      "title": "水分子",
+      "english": "Water",
+      "aliases": [
+        "水",
+        "h2o"
+      ],
+      "type": "物质",
+      "domain": "化学",
+      "formula": "H₂O",
+      "description": "水分子由氢和氧组成。可以从分子组成出发，了解质量、物质的量与粒子数量之间的联系。",
+      "conditions": "这里讨论水分子本身；水的物理性质随温度、压力与相态变化。",
+      "source": "water"
+    },
+    {
+      "id": "demo:molar_mass",
+      "title": "摩尔质量",
+      "english": "Molar mass",
+      "aliases": [
+        "摩尔质量",
+        "molar mass"
+      ],
+      "type": "概念",
+      "domain": "化学",
+      "formula": "M = m / n",
+      "description": "摩尔质量是物质质量与物质的量的比值，常用单位为 g/mol 或 kg/mol。",
+      "variables": [
+        "M：摩尔质量",
+        "m：质量",
+        "n：物质的量"
+      ],
+      "conditions": "物质的量须大于零；计算时保持质量和摩尔质量的单位一致。",
+      "source": "molar"
+    },
+    {
+      "id": "demo:amount",
+      "title": "物质的量",
+      "english": "Amount of substance",
+      "aliases": [
+        "物质的量",
+        "摩尔",
+        "mole",
+        "mol"
+      ],
+      "type": "物理量",
+      "domain": "化学",
+      "formula": "n = m / M",
+      "description": "物质的量用来描述指定基本单元的数量，国际单位制单位为摩尔。",
+      "variables": [
+        "n：物质的量（mol）",
+        "m：质量",
+        "M：摩尔质量"
+      ],
+      "conditions": "须明确所计数的基本单元；使用质量关系时 M 不为零。",
+      "example": "例如，将纯水的摩尔质量近似为 18.0 g/mol，18.0 g 水对应约 1.00 mol 水分子。",
+      "source": "molar"
+    },
+    {
+      "id": "demo:avogadro",
+      "title": "阿伏伽德罗常数",
+      "english": "Avogadro constant",
+      "aliases": [
+        "阿伏伽德罗",
+        "avogadro",
+        "粒子数"
+      ],
+      "type": "常数",
+      "domain": "物理",
+      "formula": "N = nNₐ",
+      "description": "阿伏伽德罗常数连接物质的量与所指定的基本单元数。",
+      "variables": [
+        "N：基本单元数",
+        "n：物质的量",
+        "Nₐ：阿伏伽德罗常数（6.02214076 × 10²³ mol⁻¹）"
+      ],
+      "conditions": "必须明确计数对象，可以是分子、原子或其他指定实体。",
+      "example": "例如一杯装有 250 g 纯水，按摩尔质量约 18.0 g/mol 估算，水的物质的量约为 13.9 mol，含约 8.36 × 10²⁴ 个水分子。这是按给定水质量估算，不假设所有杯子容量相同。",
+      "example_sources": [
+        "molar",
+        "mole"
+      ],
+      "source": "mole"
+    },
+    {
+      "id": "TH:fo:ideal_gas",
+      "legacy_id": "TH:fo:ideal_gas",
+      "title": "理想气体状态方程",
+      "english": "Ideal gas law",
+      "aliases": [
+        "理想气体",
+        "气体",
+        "ideal gas",
+        "pvnrt",
+        "pv=nrt"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "pV = nRT",
+      "description": "理想气体状态方程把压强、体积、温度和物质的量联系起来。",
+      "variables": [
+        "p：压强",
+        "V：体积",
+        "n：物质的量",
+        "R：摩尔气体常数",
+        "T：热力学温度"
+      ],
+      "conditions": "适用于理想气体模型；实际气体仅在特定条件下近似适用。T 使用开尔文，单位须一致。",
+      "source": "gas"
+    },
+    {
+      "id": "TH:fo:charles",
+      "legacy_id": "TH:fo:charles",
+      "title": "恒压下的温度与体积",
+      "english": "Charles's law",
+      "aliases": [
+        "查理定律",
+        "charles",
+        "比例"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "V₁ / T₁ = V₂ / T₂",
+      "description": "对于固定物质的量的理想气体，压强保持不变时，体积与热力学温度成正比。",
+      "variables": [
+        "V₁、V₂：气体体积",
+        "T₁、T₂：热力学温度（K）"
+      ],
+      "conditions": "固定物质的量、恒定压强；温度使用开尔文，适用理想气体模型。",
+      "source": "gas",
+      "papers": [
+        {
+          "title": "Charles’s law revisited",
+          "authors": "Arnold George; Clem Zidick",
+          "year": 1991,
+          "journal": "Journal of Chemical Education, 68(12), 1042",
+          "doi": "10.1021/ed068p1042",
+          "url": "https://pubs.acs.org/doi/10.1021/ed068p1042",
+          "relation": "介绍不使用水银气压计的查理定律实验建议；是相关教学论文，并非原始定律发现论文。"
+        }
+      ]
+    },
+    {
+      "id": "demo:temperature",
+      "title": "热力学温度",
+      "english": "Thermodynamic temperature",
+      "aliases": [
+        "温度",
+        "开尔文",
+        "temperature",
+        "kelvin"
+      ],
+      "type": "物理量",
+      "domain": "物理",
+      "formula": "T（单位：K）",
+      "description": "热力学温度用于描述热状态，在国际单位制中以开尔文为单位。",
+      "conditions": "计算气体状态时，温度应使用开尔文而非直接使用摄氏温度。",
+      "source": "bipm"
+    },
+    {
+      "id": "demo:pressure",
+      "title": "压强",
+      "english": "Pressure",
+      "aliases": [
+        "压力",
+        "压强",
+        "pressure",
+        "p"
+      ],
+      "type": "物理量",
+      "domain": "物理",
+      "formula": "p = F / A",
+      "description": "压强描述垂直作用于表面的力与面积之间的关系。",
+      "conditions": "此表达式表示均匀分布的垂直力，面积须大于零；SI 单位为帕斯卡。",
+      "source": "gas"
+    },
+    {
+      "id": "demo:volume",
+      "title": "体积",
+      "english": "Volume",
+      "aliases": [
+        "体积",
+        "volume",
+        "v"
+      ],
+      "type": "物理量",
+      "domain": "物理",
+      "formula": "V",
+      "description": "体积描述物体或系统所占空间的大小，常用立方米或升表示。",
+      "conditions": "在状态方程中应与压强、气体常数等单位保持一致。",
+      "source": "gas"
+    },
+    {
+      "id": "demo:proportion",
+      "title": "正比例关系",
+      "english": "Direct proportion",
+      "aliases": [
+        "正比例",
+        "比例",
+        "proportion"
+      ],
+      "type": "数学概念",
+      "domain": "数学",
+      "formula": "y = kx",
+      "description": "当比例系数 k 固定时，y 随 x 按固定比例变化。",
+      "conditions": "比例关系成立的具体条件由所研究的模型决定。",
+      "source": "gas"
+    },
+    {
+      "id": "TH:fo:boyle",
+      "legacy_id": "TH:fo:boyle",
+      "title": "玻意耳定律",
+      "english": "Boyle's law",
+      "aliases": [
+        "玻意耳",
+        "等温",
+        "boyle"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "p₁V₁ = p₂V₂",
+      "description": "同一份理想气体在温度不变时，压强和体积的乘积保持不变。",
+      "variables": [
+        "p₁、p₂：两种状态的压强",
+        "V₁、V₂：两种状态的体积"
+      ],
+      "conditions": "固定物质的量、温度恒定；适用理想气体模型。",
+      "source": "gas"
+    },
+    {
+      "id": "TH:fo:gay_lussac",
+      "legacy_id": "TH:fo:gay_lussac",
+      "title": "恒容压强温度关系",
+      "english": "Amontons's law",
+      "aliases": [
+        "盖吕萨克",
+        "阿蒙顿",
+        "恒容",
+        "amontons"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "p₁ / T₁ = p₂ / T₂",
+      "description": "固定量的理想气体在体积不变时，压强与热力学温度成正比。",
+      "variables": [
+        "p：压强",
+        "T：热力学温度（K）"
+      ],
+      "conditions": "固定物质的量与体积；两状态的温度用 K，适用理想气体模型。",
+      "source": "gas"
+    },
+    {
+      "id": "demo:partial_pressure",
+      "title": "道尔顿分压定律",
+      "english": "Dalton's law of partial pressures",
+      "aliases": [
+        "分压",
+        "道尔顿",
+        "partial pressure"
+      ],
+      "type": "公式",
+      "domain": "化学",
+      "formula": "p总 = Σpᵢ",
+      "description": "理想气体混合物的总压强等于各组分气体分压之和。",
+      "variables": [
+        "p总：混合气体总压强",
+        "pᵢ：第 i 个组分的分压"
+      ],
+      "conditions": "采用理想气体混合模型；各分压定义在同一温度和总体积下。",
+      "source": "mixgas"
+    },
+    {
+      "id": "demo:gas_density",
+      "title": "理想气体密度",
+      "english": "Ideal gas density",
+      "aliases": [
+        "气体密度",
+        "density"
+      ],
+      "type": "公式",
+      "domain": "化学",
+      "formula": "ρ = pM / (RT)",
+      "description": "理想气体密度与压强、摩尔质量、温度之间的关系，可由状态方程和摩尔质量定义推得。",
+      "variables": [
+        "ρ：质量密度",
+        "p：压强",
+        "M：摩尔质量",
+        "R：气体常数",
+        "T：热力学温度"
+      ],
+      "conditions": "气体满足理想气体模型；温度使用 K，单位一致；T 和 R 非零。",
+      "source": "mixgas"
+    },
+    {
+      "id": "demo:molarity",
+      "title": "物质的量浓度",
+      "english": "Molar concentration",
+      "aliases": [
+        "浓度",
+        "摩尔浓度",
+        "molarity"
+      ],
+      "type": "公式",
+      "domain": "化学",
+      "formula": "c = n / V",
+      "description": "物质的量浓度是指定溶质的物质的量除以溶液体积。",
+      "variables": [
+        "c：溶质物质的量浓度",
+        "n：溶质物质的量",
+        "V：溶液体积"
+      ],
+      "conditions": "V 指溶液体积且大于零；例如 n 使用 mol、V 使用 L 时，c 的单位为 mol/L。",
+      "source": "solutions"
+    },
+    {
+      "id": "demo:dilution",
+      "title": "溶液稀释关系",
+      "english": "Dilution equation",
+      "aliases": [
+        "稀释",
+        "稀释方程",
+        "dilution"
+      ],
+      "type": "公式",
+      "domain": "化学",
+      "formula": "c₁V₁ = c₂V₂",
+      "description": "单纯稀释前后，所讨论溶质的物质的量保持不变。",
+      "variables": [
+        "c₁、c₂：稀释前后浓度",
+        "V₁、V₂：对应溶液体积"
+      ],
+      "conditions": "溶质没有损失、反应或额外加入；浓度与体积单位一致。",
+      "source": "solutions"
+    },
+    {
+      "id": "demo:beer_lambert",
+      "title": "比尔—朗伯定律",
+      "english": "Beer–Lambert law",
+      "aliases": [
+        "比尔",
+        "朗伯",
+        "吸光度",
+        "beer lambert",
+        "光吸收"
+      ],
+      "type": "公式",
+      "domain": "化学",
+      "formula": "A = εlc",
+      "description": "在适用条件下，溶液吸光度与吸收物质浓度和光程长度成正比。",
+      "variables": [
+        "A：吸光度，无量纲",
+        "ε：指定波长的摩尔吸光系数",
+        "l：光程长度",
+        "c：吸收物质的物质的量浓度"
+      ],
+      "conditions": "近似单色光、均匀且适当稀的样品；ε 与波长、物种和测量条件相关；散射等影响需评估。",
+      "source": "spectroscopy",
+      "papers": [
+        {
+          "title": "Misuse of Beer–Lambert Law and other calibration curves",
+          "authors": "Rosario Delgado",
+          "year": 2022,
+          "journal": "Royal Society Open Science, 9(2), 211103",
+          "doi": "10.1098/rsos.211103",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8808104/",
+          "relation": "讨论吸光度与浓度的关系及实验校准中容易出现的统计误用。"
+        }
+      ]
+    },
+    {
+      "id": "demo:absorbance",
+      "title": "吸光度与透射率",
+      "english": "Absorbance and transmittance",
+      "aliases": [
+        "吸光度",
+        "透射率",
+        "absorbance",
+        "log"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "A = −log₁₀(T)",
+      "description": "吸光度由透射率的负常用对数定义。",
+      "variables": [
+        "A：吸光度",
+        "T：透射率，为出射光强与入射光强之比"
+      ],
+      "conditions": "T 为正的无量纲比值；测量结果可能受散射和仪器条件影响。",
+      "source": "spectroscopy",
+      "papers": [
+        {
+          "title": "Misuse of Beer–Lambert Law and other calibration curves",
+          "authors": "Rosario Delgado",
+          "year": 2022,
+          "journal": "Royal Society Open Science, 9(2), 211103",
+          "doi": "10.1098/rsos.211103",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8808104/",
+          "relation": "讨论吸光度与浓度的关系及实验校准中容易出现的统计误用。"
+        }
+      ]
+    },
+    {
+      "id": "demo:transmittance",
+      "title": "透射率",
+      "english": "Transmittance",
+      "aliases": [
+        "透射率",
+        "光强",
+        "transmittance"
+      ],
+      "type": "公式",
+      "domain": "物理",
+      "formula": "T = I / I₀",
+      "description": "透射率是透过样品的光强与入射光强之比。",
+      "variables": [
+        "I：透过样品的光强",
+        "I₀：入射或参考光强"
+      ],
+      "conditions": "I₀ 大于零；比较同一波长和一致的测量条件。",
+      "source": "spectroscopy",
+      "papers": [
+        {
+          "title": "Misuse of Beer–Lambert Law and other calibration curves",
+          "authors": "Rosario Delgado",
+          "year": 2022,
+          "journal": "Royal Society Open Science, 9(2), 211103",
+          "doi": "10.1098/rsos.211103",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8808104/",
+          "relation": "讨论吸光度与浓度的关系及实验校准中容易出现的统计误用。"
+        }
+      ]
+    },
+    {
+      "id": "demo:inverse_proportion",
+      "title": "反比例关系",
+      "english": "Inverse proportion",
+      "aliases": [
+        "反比例",
+        "inverse proportion"
+      ],
+      "type": "公式",
+      "domain": "数学",
+      "formula": "y = k / x",
+      "description": "当 k 固定且 x 非零时，x 与 y 的乘积保持为 k。",
+      "variables": [
+        "x、y：变量",
+        "k：固定的比例系数"
+      ],
+      "conditions": "x 不为零；应用到科学现象时还需满足对应模型的条件。",
+      "source": "gas"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "MO:h2o",
+      "target": "demo:molar_mass",
+      "discipline": "化学",
+      "relation": "物质属性",
+      "explanation": "摩尔质量可用于把水样品的质量与物质的量联系起来。",
+      "condition": "先确认样品组成及单位。",
+      "source_ref": "molar"
+    },
+    {
+      "id": "e2",
+      "source": "demo:molar_mass",
+      "target": "demo:amount",
+      "discipline": "数学",
+      "relation": "数量关系",
+      "explanation": "由 M=m/n 可在 M 非零时变形得到 n=m/M。",
+      "condition": "n 大于零、M 非零且单位一致。",
+      "source_ref": "molar"
+    },
+    {
+      "id": "e3",
+      "source": "demo:amount",
+      "target": "demo:avogadro",
+      "discipline": "物理",
+      "relation": "计数关系",
+      "explanation": "将物质的量乘以阿伏伽德罗常数，得到所指定单元的数量。",
+      "condition": "明确基本单元的种类。",
+      "source_ref": "mole"
+    },
+    {
+      "id": "e4",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:fo:charles",
+      "discipline": "数学",
+      "relation": "有条件变形",
+      "explanation": "理想气体方程在恒压且物质的量不变时给出体积与绝对温度的比例关系。",
+      "condition": "理想气体、固定物质的量和压强，温度用 K。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e5",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:temperature",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "方程中的 T 表示气体的热力学温度。",
+      "condition": "采用开尔文及一致的单位体系。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e6",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:pressure",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "方程中的 p 表示气体压强。",
+      "condition": "适用理想气体模型。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e7",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:volume",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "方程中的 V 表示气体体积。",
+      "condition": "适用理想气体模型。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e8",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:amount",
+      "discipline": "化学",
+      "relation": "包含物理量",
+      "explanation": "方程中的 n 是气体的物质的量；它可以联系到质量和摩尔质量。",
+      "condition": "讨论的是气体状态，不将液态水默认视为理想气体。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e9",
+      "source": "TH:fo:charles",
+      "target": "demo:proportion",
+      "discipline": "数学",
+      "relation": "数学形式",
+      "explanation": "满足恒压和固定物质的量等条件时，体积与绝对温度呈正比例。",
+      "condition": "理想气体，压强和物质的量恒定。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e10",
+      "source": "TH:fo:charles",
+      "target": "demo:temperature",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "查理定律中比较的是热力学温度。",
+      "condition": "温度须以开尔文表示。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "e11",
+      "source": "TH:fo:charles",
+      "target": "demo:volume",
+      "discipline": "物理",
+      "relation": "包含物理量",
+      "explanation": "查理定律研究恒压下体积与温度的关系。",
+      "condition": "固定物质的量，适用理想气体模型。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "n1",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:fo:boyle",
+      "discipline": "数学",
+      "relation": "有条件变形",
+      "explanation": "固定气体物质的量与温度，状态方程给出压强与体积乘积不变。",
+      "condition": "理想气体、温度和物质的量恒定。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "n2",
+      "source": "TH:fo:ideal_gas",
+      "target": "TH:fo:gay_lussac",
+      "discipline": "数学",
+      "relation": "有条件变形",
+      "explanation": "恒容且气体物质的量固定时，状态方程给出压强与热力学温度的比例关系。",
+      "condition": "理想气体、体积与物质的量恒定，温度用 K。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "n3",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:partial_pressure",
+      "discipline": "化学",
+      "relation": "混合气体",
+      "explanation": "状态方程可用于理想混合物中各组分的分压计算。",
+      "condition": "理想气体混合模型；各组分使用共同的温度和总体积。",
+      "source_ref": "mixgas"
+    },
+    {
+      "id": "n4",
+      "source": "TH:fo:ideal_gas",
+      "target": "demo:gas_density",
+      "discipline": "化学",
+      "relation": "公式推导",
+      "explanation": "结合 n=m/M 和 ρ=m/V，可推导出气体密度表达式。",
+      "condition": "理想气体，R、T 非零，单位一致。",
+      "source_ref": "mixgas"
+    },
+    {
+      "id": "n5",
+      "source": "TH:fo:boyle",
+      "target": "demo:inverse_proportion",
+      "discipline": "数学",
+      "relation": "数学形式",
+      "explanation": "恒温时 pV 不变，因而压强与体积在模型中呈反比例。",
+      "condition": "固定物质的量和温度；体积大于零。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "n6",
+      "source": "TH:fo:gay_lussac",
+      "target": "demo:proportion",
+      "discipline": "数学",
+      "relation": "数学形式",
+      "explanation": "恒容时，气体压强与热力学温度呈正比例。",
+      "condition": "固定物质的量和体积，温度用 K。",
+      "source_ref": "gas"
+    },
+    {
+      "id": "n7",
+      "source": "demo:gas_density",
+      "target": "demo:molar_mass",
+      "discipline": "化学",
+      "relation": "物质量关联",
+      "explanation": "气体密度关系中的 M 是气体的摩尔质量。",
+      "condition": "单位一致并使用理想气体模型。",
+      "source_ref": "mixgas"
+    },
+    {
+      "id": "n8",
+      "source": "demo:molarity",
+      "target": "demo:amount",
+      "discipline": "化学",
+      "relation": "定义",
+      "explanation": "物质的量浓度由溶质物质的量和溶液体积共同决定。",
+      "condition": "体积为溶液总体积且大于零。",
+      "source_ref": "solutions"
+    },
+    {
+      "id": "n9",
+      "source": "demo:molarity",
+      "target": "demo:dilution",
+      "discipline": "数学",
+      "relation": "守恒推导",
+      "explanation": "由 n=cV 和稀释前后溶质物质的量相等得到稀释关系。",
+      "condition": "没有溶质损失或反应，单位一致。",
+      "source_ref": "solutions"
+    },
+    {
+      "id": "n10",
+      "source": "demo:molarity",
+      "target": "demo:beer_lambert",
+      "discipline": "化学",
+      "relation": "测量应用",
+      "explanation": "比尔—朗伯定律使用吸收物质的浓度来联系吸光度。",
+      "condition": "适用模型及一致浓度单位。",
+      "source_ref": "spectroscopy"
+    },
+    {
+      "id": "n11",
+      "source": "demo:beer_lambert",
+      "target": "demo:absorbance",
+      "discipline": "物理",
+      "relation": "测量定义",
+      "explanation": "吸光度可以由光的透射率通过常用对数计算。",
+      "condition": "透射率大于零，测量条件一致。",
+      "source_ref": "spectroscopy"
+    },
+    {
+      "id": "n12",
+      "source": "demo:absorbance",
+      "target": "demo:transmittance",
+      "discipline": "数学",
+      "relation": "对数关系",
+      "explanation": "透射率是光强比值，吸光度是该比值的负常用对数。",
+      "condition": "入射光强与透射率均大于零。",
+      "source_ref": "spectroscopy"
+    },
+    {
+      "id": "n13",
+      "source": "demo:beer_lambert",
+      "target": "demo:proportion",
+      "discipline": "数学",
+      "relation": "数学形式",
+      "explanation": "光程和吸光系数固定时，吸光度与浓度成正比。",
+      "condition": "适用比尔—朗伯模型，光程和吸光系数固定。",
+      "source_ref": "spectroscopy"
+    }
+  ]
+}

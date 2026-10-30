@@ -230,7 +230,7 @@ def get_json(url: str, *, timeout: int = DEFAULT_TIMEOUT, tries: int = 3,
     if cache_dir:
         os.makedirs(cache_dir, exist_ok=True)
         import hashlib
-        key = os.path.join(cache_dir, hashlib.sha256(url.encode("utf-8")).hexdigest()[:24] + ".json")
+        key = os.path.join(cache_dir, hashlib.sha256(url.encode("utf-8")).hexdigest()[:24] + ".json")  # noloss-exempt: 缓存文件名用 hash 前缀，非数据
         if os.path.exists(key):
             STATS["cache_hits"] += 1
             with open(key, encoding="utf-8") as f:
@@ -396,7 +396,7 @@ def selfcheck() -> int:
 
     rs = [
         _check(invert_abstract(_A) == _A_TEXT, "F1 倒排摘要按位置还原（不按 dict 顺序）",
-               "得到：%r" % invert_abstract(_A)[:60]),
+               "得到：%r" % invert_abstract(_A)[:60]),  # noloss-exempt: 错误信息截断，不入图
         _check(invert_abstract(None) == "" and invert_abstract({}) == "",
                "F2 空输入 → 空串（None 与 {} 都要扛）"),
         _check(abstract_len(_A) == 8, "F3 词数 = 位置条目数（样例故意缺位 1、2）",

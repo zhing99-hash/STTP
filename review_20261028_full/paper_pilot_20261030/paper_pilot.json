@@ -1,0 +1,1274 @@
+{
+  "schema": "sttp-paper-pilot-review-v1",
+  "generated_for": "2026-10-30",
+  "graph_sha256": "fec51bf0f20112cb369e374f89dfe0d1fe798ee38bfbef9d4a2ff0e76cc10ea0",
+  "candidate_pool_sha256": "9b9a3edd524a8c69fbe1948c00276a5b281db7ea76798110ccc1417cb5617325",
+  "notice": "本包是内部候选，不自动写入项目数据库，论文不等于公式原始发现或证明。",
+  "seeds": [
+    {
+      "id": "TH:fo:ideal_gas",
+      "name": "Ideal gas law",
+      "domain": "physics.thermo",
+      "formula": "PV=nRT",
+      "candidate_count_in_existing_pool": 1,
+      "selected_existing_candidates": [
+        {
+          "title": "An improved equation for the radio refractive index of air",
+          "doi": "10.1029/rs009i010p00803",
+          "openalex_id": "W2163847452",
+          "year": 1974,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "TH:fo:charles",
+      "name": "Charles's law",
+      "domain": "physics.thermo",
+      "formula": "\\frac{V_1}{T_1}=\\frac{V_2}{T_2}",
+      "candidate_count_in_existing_pool": 7,
+      "selected_existing_candidates": [
+        {
+          "title": "Derivation of the Ideal Gas Law",
+          "doi": "10.1021/ed084p1832",
+          "openalex_id": "W1969759694",
+          "year": 2007,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Introduction to Chemical Principles",
+          "doi": null,
+          "openalex_id": "W1561249824",
+          "year": 1983,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "IMPROVING THE PERFORMANCE OF THE INFRA-RED CARBON DIOXIDE METER",
+          "doi": "10.1093/bja/44.2.131",
+          "openalex_id": "W1997646721",
+          "year": 1972,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "TH:fo:boyle",
+      "name": "Boyle's law",
+      "domain": "physics.thermo",
+      "formula": "P_1 V_1 = P_2 V_2",
+      "candidate_count_in_existing_pool": 13,
+      "selected_existing_candidates": [
+        {
+          "title": "Boyle's Law and Gravitational Instability",
+          "doi": "10.1093/mnras/116.3.351",
+          "openalex_id": "W2114351830",
+          "year": 1956,
+          "source_location": "title",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Diving Birds in Cold Water: Do Archimedes and Boyle Determine Energetic Costs?",
+          "doi": "10.1086/285409",
+          "openalex_id": "W2088499447",
+          "year": 1992,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Static volume-pressure characteristics of the respiratory system during maximal efforts",
+          "doi": "10.1152/jappl.1964.19.5.1016",
+          "openalex_id": "W2124557727",
+          "year": 1964,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "TH:fo:gay_lussac",
+      "name": "Gay-Lussac's law",
+      "domain": "physics.thermo",
+      "formula": "\\frac{P_1}{T_1}=\\frac{P_2}{T_2}",
+      "candidate_count_in_existing_pool": 14,
+      "selected_existing_candidates": [
+        {
+          "title": "Introduction to Chemical Principles",
+          "doi": null,
+          "openalex_id": "W1561249824",
+          "year": 1983,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Formation and Dimerization of NO2 A General Chemistry Experiment",
+          "doi": "10.1021/ed074p1340",
+          "openalex_id": "W2008205893",
+          "year": 1997,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "The origins of Gay-Lussac's law of combining volumes of gases",
+          "doi": "10.1080/00033796100202521",
+          "openalex_id": "W1593392335",
+          "year": 1961,
+          "source_location": "title",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "TH:fo:first_law",
+      "name": "First law of thermodynamics",
+      "domain": "physics.thermo",
+      "formula": "\\Delta U = Q - W",
+      "candidate_count_in_existing_pool": 7,
+      "selected_existing_candidates": [
+        {
+          "title": "Cosmological event horizons, thermodynamics, and particle creation",
+          "doi": "10.1103/physrevd.15.2738",
+          "openalex_id": "W2120830691",
+          "year": 1977,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Solar Radiation and Productivity in Tropical Ecosystems",
+          "doi": "10.2307/2401901",
+          "openalex_id": "W2154700052",
+          "year": 1972,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "The Thermodynamics of Irreversible Processes. III. Relativistic Theory of the Simple Fluid",
+          "doi": "10.1103/physrev.58.919",
+          "openalex_id": "W2243423914",
+          "year": 1940,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "TH:fo:carnot",
+      "name": "Carnot efficiency",
+      "domain": "physics.thermo",
+      "formula": "\\eta = 1 - \\frac{T_c}{T_h}",
+      "candidate_count_in_existing_pool": 8,
+      "selected_existing_candidates": [
+        {
+          "title": "Efficiency of hot-carrier solar energy converters",
+          "doi": "10.1063/1.331124",
+          "openalex_id": "W2045037421",
+          "year": 1982,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "A thermoacoustic-Stirling heat engine: Detailed study",
+          "doi": "10.1121/1.429343",
+          "openalex_id": "W2069253163",
+          "year": 2000,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Efficiency at maximum power: An analytically solvable model for stochastic heat engines",
+          "doi": "10.1209/0295-5075/81/20003",
+          "openalex_id": "W2061597479",
+          "year": 2007,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CM:fo:momentum",
+      "name": "Momentum",
+      "domain": "physics.mechanics",
+      "formula": "p=mv",
+      "candidate_count_in_existing_pool": 21,
+      "selected_existing_candidates": [
+        {
+          "title": "Cancer statistics, 2020",
+          "doi": "10.3322/caac.21590",
+          "openalex_id": "W2999417355",
+          "year": 2020,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "A unified formulation of the constant temperature molecular dynamics methods",
+          "doi": "10.1063/1.447334",
+          "openalex_id": "W2017196167",
+          "year": 1984,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "On Persistence in Mutual Fund Performance",
+          "doi": "10.1111/j.1540-6261.1997.tb03808.x",
+          "openalex_id": "W2136120210",
+          "year": 1997,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CM:fo:gravity",
+      "name": "Newton's law of gravitation",
+      "domain": "physics.gravitation",
+      "formula": "F=G\\frac{m_1 m_2}{r^2}",
+      "candidate_count_in_existing_pool": 1,
+      "selected_existing_candidates": [
+        {
+          "title": "Entropic corrections to Friedmann equations",
+          "doi": "10.1103/physrevd.81.104011",
+          "openalex_id": "W2090826311",
+          "year": 2010,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CM:fo:centripetal",
+      "name": "Centripetal force",
+      "domain": "physics.mechanics",
+      "formula": "F=\\frac{mv^2}{r}",
+      "candidate_count_in_existing_pool": 8,
+      "selected_existing_candidates": [
+        {
+          "title": "Adaptive Dynamic Surface Control for Formations of Autonomous Surface Vehicles With Uncertain Dynamics",
+          "doi": "10.1109/tcst.2011.2181513",
+          "openalex_id": "W2013928382",
+          "year": 2012,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Test Particles in a Completely Ionized Plasma",
+          "doi": "10.1063/1.1705998",
+          "openalex_id": "W1978862360",
+          "year": 1960,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "The Core–Periphery Model and Endogenous Growth: Stabilizing and Destabilizing Integration",
+          "doi": "10.1111/1468-0335.00211",
+          "openalex_id": "W3125854052",
+          "year": 2000,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CM:fo:work",
+      "name": "Work",
+      "domain": "physics.mechanics",
+      "formula": "W=Fd",
+      "candidate_count_in_existing_pool": 17,
+      "selected_existing_candidates": [
+        {
+          "title": "Molecular Cloning: A Laboratory Manual",
+          "doi": null,
+          "openalex_id": "W2144634347",
+          "year": 1989,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Case Study Research: Design and Methods",
+          "doi": null,
+          "openalex_id": "W1527311855",
+          "year": 1984,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks",
+          "doi": "10.1109/tpami.2016.2577031",
+          "openalex_id": "W639708223",
+          "year": 2016,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CM:fo:power",
+      "name": "Power",
+      "domain": "physics.mechanics",
+      "formula": "P=\\frac{W}{t}",
+      "candidate_count_in_existing_pool": 22,
+      "selected_existing_candidates": [
+        {
+          "title": "Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing",
+          "doi": "10.1111/j.2517-6161.1995.tb02031.x",
+          "openalex_id": "W2110065044",
+          "year": 1995,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Evaluating Structural Equation Models with Unobservable Variables and Measurement Error",
+          "doi": "10.1177/002224378101800104",
+          "openalex_id": "W4235678817",
+          "year": 1981,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Statistical Power Analysis for the Behavioral Sciences",
+          "doi": "10.1080/00401706.1989.10488618",
+          "openalex_id": "W4300870773",
+          "year": 1989,
+          "source_location": "title",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "FO:fma",
+      "name": "Newton's second law",
+      "domain": "physics.mechanics",
+      "formula": "F=ma",
+      "candidate_count_in_existing_pool": 7,
+      "selected_existing_candidates": [
+        {
+          "title": "Landslide triggering by rain infiltration",
+          "doi": "10.1029/2000wr900090",
+          "openalex_id": "W2079965317",
+          "year": 2000,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "On modifications of Newton's second law and linear continuum elastodynamics",
+          "doi": "10.1098/rspa.2006.1795",
+          "openalex_id": "W2124533274",
+          "year": 2007,
+          "source_location": "title",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Automotive Control Systems: For Engine, Driveline, and Vehicle",
+          "doi": "10.1088/0957-0233/11/12/708",
+          "openalex_id": "W2127472055",
+          "year": 2000,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "FO:ke",
+      "name": "Kinetic energy",
+      "domain": "physics.mechanics",
+      "formula": "KE=\\tfrac{1}{2}mv^2",
+      "candidate_count_in_existing_pool": 7,
+      "selected_existing_candidates": [
+        {
+          "title": "GENERAL CIRCULATION EXPERIMENTS WITH THE PRIMITIVE EQUATIONS",
+          "doi": "10.1175/1520-0493(1963)091<0099:gcewtp>2.3.co;2",
+          "openalex_id": "W2168795429",
+          "year": 1963,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Plasma perspective on strong field multiphoton ionization",
+          "doi": "10.1103/physrevlett.71.1994",
+          "openalex_id": "W2035188058",
+          "year": 1993,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Density Functionals with Broad Applicability in Chemistry",
+          "doi": "10.1021/ar700111a",
+          "openalex_id": "W2085336624",
+          "year": 2008,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "EM:fo:coulomb",
+      "name": "Coulomb's law",
+      "domain": "physics.em",
+      "formula": "F=k\\frac{q_1 q_2}{r^2}",
+      "candidate_count_in_existing_pool": 16,
+      "selected_existing_candidates": [
+        {
+          "title": "Field and wave electromagnetics",
+          "doi": null,
+          "openalex_id": "W1500697756",
+          "year": 1983,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "The electrostatic potential: an overview",
+          "doi": "10.1002/wcms.19",
+          "openalex_id": "W1990437495",
+          "year": 2011,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "The Surface Tension of Debye-Hückel Electrolytes",
+          "doi": "10.1063/1.1749522",
+          "openalex_id": "W2088960562",
+          "year": 1934,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "EM:fo:faraday",
+      "name": "Faraday's law",
+      "domain": "physics.em",
+      "formula": "\\mathcal{E}=-\\frac{d\\Phi}{dt}",
+      "candidate_count_in_existing_pool": 12,
+      "selected_existing_candidates": [
+        {
+          "title": "Field and wave electromagnetics",
+          "doi": null,
+          "openalex_id": "W1500697756",
+          "year": 1983,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Effectiveness of Impressed Current Technique to Simulate Corrosion of Steel Reinforcement in Concrete",
+          "doi": "10.1061/(asce)0899-1561(2003)15:1(41)",
+          "openalex_id": "W1964053232",
+          "year": 2003,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Physics: Principles with Applications",
+          "doi": null,
+          "openalex_id": "W1593988141",
+          "year": 1980,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "EM:fo:gauss",
+      "name": "Gauss's law",
+      "domain": "physics.em",
+      "formula": "\\nabla\\cdot\\vec{E}=\\frac{\\rho}{\\varepsilon_0}",
+      "candidate_count_in_existing_pool": 14,
+      "selected_existing_candidates": [
+        {
+          "title": "Field and wave electromagnetics",
+          "doi": null,
+          "openalex_id": "W1500697756",
+          "year": 1983,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Charged black hole in a grand canonical ensemble",
+          "doi": "10.1103/physrevd.42.3376",
+          "openalex_id": "W2028184956",
+          "year": 1990,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Quantum simulations of gauge theories with ultracold atoms: Local gauge invariance from angular-momentum conservation",
+          "doi": "10.1103/physreva.88.023617",
+          "openalex_id": "W1969538961",
+          "year": 2013,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "EM:fo:lorentz",
+      "name": "Lorentz force",
+      "domain": "physics.em",
+      "formula": "\\vec{F}=q(\\vec{E}+\\vec{v}\\times\\vec{B})",
+      "candidate_count_in_existing_pool": 15,
+      "selected_existing_candidates": [
+        {
+          "title": "On Maxwell's displacement current for energy and sensors: the origin of nanogenerators",
+          "doi": "10.1016/j.mattod.2016.12.001",
+          "openalex_id": "W2567728595",
+          "year": 2017,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "The Boltzmann equation an d the one-fluid hydromagnetic equations in the absence of particle collisions",
+          "doi": "10.1098/rspa.1956.0116",
+          "openalex_id": "W2027824283",
+          "year": 1956,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Flux pinning mechanisms in type II superconductors",
+          "doi": "10.1080/14786439808206556",
+          "openalex_id": "W2048072145",
+          "year": 1974,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "OP:fo:lens",
+      "name": "Thin lens equation",
+      "domain": "physics.optics",
+      "formula": "\\frac{1}{f}=\\frac{1}{u}+\\frac{1}{v}",
+      "candidate_count_in_existing_pool": 5,
+      "selected_existing_candidates": [
+        {
+          "title": "Two-Photon Imaging with Thermal Light",
+          "doi": "10.1103/physrevlett.94.063601",
+          "openalex_id": "W2763190499",
+          "year": 2005,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Correlated two-photon imaging with true thermal light",
+          "doi": "10.1364/ol.30.002354",
+          "openalex_id": "W1996736699",
+          "year": 2005,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Ghost imaging with incoherent and partially coherent light radiation",
+          "doi": "10.1103/physreve.71.056607",
+          "openalex_id": "W2086070889",
+          "year": 2005,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "OP:fo:snell",
+      "name": "Snell's law",
+      "domain": "physics.optics",
+      "formula": "n_1\\sin\\theta_1=n_2\\sin\\theta_2",
+      "candidate_count_in_existing_pool": 23,
+      "selected_existing_candidates": [
+        {
+          "title": "Experimental Verification of a Negative Index of Refraction",
+          "doi": "10.1126/science.1058847",
+          "openalex_id": "W1990245077",
+          "year": 2001,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Composite Medium with Simultaneously Negative Permeability and Permittivity",
+          "doi": "10.1103/physrevlett.84.4184",
+          "openalex_id": "W2027652501",
+          "year": 2000,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "High-Efficiency Broadband Anomalous Reflection by Gradient Meta-Surfaces",
+          "doi": "10.1021/nl3032668",
+          "openalex_id": "W2065862819",
+          "year": 2012,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:arrhenius",
+      "name": "Arrhenius equation",
+      "domain": "chem.kinetics",
+      "formula": "k=A\\,e^{-E_a/(RT)}",
+      "candidate_count_in_existing_pool": 6,
+      "selected_existing_candidates": [
+        {
+          "title": "The development of the Arrhenius equation",
+          "doi": "10.1021/ed061p494",
+          "openalex_id": "W2052953969",
+          "year": 1984,
+          "source_location": "title",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Isoconversional Kinetic Analysis of Thermally Stimulated Processes in Polymers",
+          "doi": "10.1002/marc.200600404",
+          "openalex_id": "W1969945203",
+          "year": 2006,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Basin Analysis: Principles and Applications",
+          "doi": null,
+          "openalex_id": "W1980909228",
+          "year": 1990,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:nernst",
+      "name": "Nernst equation",
+      "domain": "chem.electrochem",
+      "formula": "E=E^{\\circ}-\\frac{RT}{nF}\\ln Q",
+      "candidate_count_in_existing_pool": 5,
+      "selected_existing_candidates": [
+        {
+          "title": "Performance Modeling of the Ballard Mark IV Solid Polymer Electrolyte Fuel Cell: I . Mechanistic Model Development",
+          "doi": "10.1149/1.2043866",
+          "openalex_id": "W3138295406",
+          "year": 1995,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Potassium activation in Helix aspersa neurones under voltage clamp: a component mediated by calcium influx.",
+          "doi": "10.1113/jphysiol.1975.sp011012",
+          "openalex_id": "W2081299190",
+          "year": 1975,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Dopamine acts on D2 receptors to increase potassium conductance in neurones of the rat substantia nigra zona compacta.",
+          "doi": "10.1113/jphysiol.1987.sp016787",
+          "openalex_id": "W2026339353",
+          "year": 1987,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:henderson",
+      "name": "Henderson–Hasselbalch equation",
+      "domain": "chem.acidbase",
+      "formula": "pH=pK_a+\\log_{10}\\frac{[A^{-}]}{[HA]}",
+      "candidate_count_in_existing_pool": 17,
+      "selected_existing_candidates": [
+        {
+          "title": "Buffers for pH and Metal Ion Control.",
+          "doi": "10.1093/jaoac/58.4.864",
+          "openalex_id": "W3115438173",
+          "year": 1975,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Rapid Saline Infusion Produces Hyperchloremic Acidosis in Patients Undergoing Gynecologic Surgery",
+          "doi": "10.1097/00000542-199905000-00007",
+          "openalex_id": "W1987303342",
+          "year": 1999,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "The Henderson-Hasselbalch Equation: Its History and Limitations",
+          "doi": "10.1021/ed078p1499",
+          "openalex_id": "W1976149946",
+          "year": 2001,
+          "source_location": "title",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:mass_action",
+      "name": "Law of mass action (equilibrium constant)",
+      "domain": "chem.equilibrium",
+      "formula": "K=\\frac{[C]^{c}[D]^{d}}{[A]^{a}[B]^{b}}",
+      "candidate_count_in_existing_pool": 7,
+      "selected_existing_candidates": [
+        {
+          "title": "Exploiting the isomorphism between quantum theory and classical statistical mechanics of polyatomic fluids",
+          "doi": "10.1063/1.441588",
+          "openalex_id": "W1984135072",
+          "year": 1981,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Operational models of pharmacological agonism",
+          "doi": "10.1098/rspb.1983.0093",
+          "openalex_id": "W2066482395",
+          "year": 1983,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Evaluation of enzyme inhibitors in drug discovery. A guide for medicinal chemists and pharmacologists.",
+          "doi": null,
+          "openalex_id": "W1563650227",
+          "year": 2005,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:kw",
+      "name": "Water autoionization constant",
+      "domain": "chem.acidbase",
+      "formula": "K_w=[H^{+}][OH^{-}]=1.0\\times10^{-14}",
+      "candidate_count_in_existing_pool": 0,
+      "selected_existing_candidates": [],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:ka",
+      "name": "Acid dissociation constant",
+      "domain": "chem.acidbase",
+      "formula": "K_a=\\frac{[H^{+}][A^{-}]}{[HA]}",
+      "candidate_count_in_existing_pool": 1,
+      "selected_existing_candidates": [
+        {
+          "title": "The Structural Basis of Ribosome Activity in Peptide Bond Synthesis",
+          "doi": "10.1126/science.289.5481.920",
+          "openalex_id": "W2097654784",
+          "year": 2000,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:ksp",
+      "name": "Solubility product",
+      "domain": "chem.solubility",
+      "formula": "K_{sp}=[A^{+}]^{m}[B^{-}]^{n}",
+      "candidate_count_in_existing_pool": 0,
+      "selected_existing_candidates": [],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:le_chatelier",
+      "name": "Le Chatelier's principle",
+      "domain": "chem.equilibrium",
+      "formula": "\\text{system shifts to oppose the disturbance}",
+      "candidate_count_in_existing_pool": 15,
+      "selected_existing_candidates": [
+        {
+          "title": "Maximum Mass of a Neutron Star",
+          "doi": "10.1103/physrevlett.32.324",
+          "openalex_id": "W2018944415",
+          "year": 1974,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Inhibition of Vanadium Cathodes Dissolution in Aqueous Zn‐Ion Batteries",
+          "doi": "10.1002/adma.202310645",
+          "openalex_id": "W4390912254",
+          "year": 2024,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Stable blue TiO2−x nanoparticles for efficient visible light photocatalysts",
+          "doi": "10.1039/c3ta14484d",
+          "openalex_id": "W2065521584",
+          "year": 2014,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "CE:fo:gibbs_standard",
+      "name": "Standard Gibbs energy and equilibrium constant",
+      "domain": "chem.equilibrium",
+      "formula": "\\Delta G^{\\circ}=-RT\\ln K",
+      "candidate_count_in_existing_pool": 0,
+      "selected_existing_candidates": [],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "OM:fo:combustion",
+      "name": "Hydrocarbon combustion",
+      "domain": "chem.thermo",
+      "formula": "C_xH_y + (x+\\tfrac{y}{4})O_2 \\rightarrow xCO_2 + \\tfrac{y}{2}H_2O",
+      "candidate_count_in_existing_pool": 1,
+      "selected_existing_candidates": [
+        {
+          "title": "Chemical kinetic modeling of hydrocarbon combustion",
+          "doi": "10.1016/0360-1285(84)90118-7",
+          "openalex_id": "W1977513091",
+          "year": 1984,
+          "source_location": "title",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MA:fo:pythagoras",
+      "name": "Pythagorean theorem",
+      "domain": "math.geometry",
+      "formula": "a^2+b^2=c^2",
+      "candidate_count_in_existing_pool": 10,
+      "selected_existing_candidates": [
+        {
+          "title": "Pythagorean Membership Grades, Complex Numbers, and Decision Making",
+          "doi": "10.1002/int.21584",
+          "openalex_id": "W1668569279",
+          "year": 2013,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "A History of Mathematics: An Introduction",
+          "doi": "10.2307/2687626",
+          "openalex_id": "W2115038101",
+          "year": 1994,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Quality of geometry instruction and its short-term impact on students' understanding of the Pythagorean Theorem",
+          "doi": "10.1016/j.learninstruc.2008.11.001",
+          "openalex_id": "W2093040787",
+          "year": 2008,
+          "source_location": "title",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MA:fo:quadratic",
+      "name": "Quadratic formula",
+      "domain": "math.algebra",
+      "formula": "x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}",
+      "candidate_count_in_existing_pool": 0,
+      "selected_existing_candidates": [],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MA:fo:log_product",
+      "name": "Logarithm of a product",
+      "domain": "math.algebra",
+      "formula": "\\log(xy)=\\log x+\\log y",
+      "candidate_count_in_existing_pool": 0,
+      "selected_existing_candidates": [],
+      "graph_paper_status": "no_referent",
+      "graph_paper_count": 0,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MA:fo:euler_identity",
+      "name": "Euler's identity",
+      "domain": "math.analysis",
+      "formula": "e^{i\\pi}+1=0",
+      "candidate_count_in_existing_pool": 2,
+      "selected_existing_candidates": [
+        {
+          "title": "The distribution of prime numbers",
+          "doi": "10.1070/rm1990v045n05abeh002680",
+          "openalex_id": "W1996123738",
+          "year": 1990,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "On the parity of partition functions",
+          "doi": "10.1215/ijm/1255986266",
+          "openalex_id": "W1489158779",
+          "year": 1995,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MA:fo:binomial",
+      "name": "Binomial theorem",
+      "domain": "math.algebra",
+      "formula": "(a+b)^n=\\sum_{k=0}^{n}\\binom{n}{k}a^{n-k}b^k",
+      "candidate_count_in_existing_pool": 2,
+      "selected_existing_candidates": [
+        {
+          "title": "Exclusion of chromosomal mosaicism: tables of 90%, 95% and 99% confidence limits and comments on use.",
+          "doi": null,
+          "openalex_id": "W1525233566",
+          "year": 1977,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Discrete and Combinatorial Mathematics: An Applied Introduction",
+          "doi": null,
+          "openalex_id": "W1509149194",
+          "year": 1998,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 1,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MC:fo:chain_rule",
+      "name": "Chain rule",
+      "domain": "math.calculus",
+      "formula": "\\frac{d}{dx}f(g(x))=f'(g(x))\\,g'(x)",
+      "candidate_count_in_existing_pool": 3,
+      "selected_existing_candidates": [
+        {
+          "title": "Backpropagation through time: what it does and how to do it",
+          "doi": "10.1109/5.58337",
+          "openalex_id": "W2150355110",
+          "year": 1990,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "An Algorithmic Introduction to Numerical Simulation of Stochastic Differential Equations",
+          "doi": "10.1137/s0036144500378302",
+          "openalex_id": "W2145137020",
+          "year": 2001,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Diffusion Processes and Their Sample Paths.",
+          "doi": "10.2307/2291616",
+          "openalex_id": "W2082131924",
+          "year": 1996,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MC:fo:ftc",
+      "name": "Fundamental theorem of calculus",
+      "domain": "math.calculus",
+      "formula": "\\int_a^b f'(x)\\,dx=f(b)-f(a)",
+      "candidate_count_in_existing_pool": 3,
+      "selected_existing_candidates": [
+        {
+          "title": "Real and Complex Analysis.",
+          "doi": "10.2307/2348852",
+          "openalex_id": "W1594563152",
+          "year": 1987,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Existence and uniqueness of monotone measure-preserving maps",
+          "doi": "10.1215/s0012-7094-95-08013-2",
+          "openalex_id": "W2042319042",
+          "year": 1995,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Images of rate and operational understanding of the fundamental theorem of calculus",
+          "doi": "10.1007/bf01273664",
+          "openalex_id": "W2004685039",
+          "year": 1994,
+          "source_location": "title",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 2,
+      "review": "待审，未确认适用条件、来源和关联"
+    },
+    {
+      "id": "MC:fo:taylor",
+      "name": "Taylor series",
+      "domain": "math.calculus",
+      "formula": "f(x)=\\sum_{n=0}^\\infty \\frac{f^{(n)}(a)}{n!}(x-a)^n",
+      "candidate_count_in_existing_pool": 8,
+      "selected_existing_candidates": [
+        {
+          "title": "A Simulation Study of Mediated Effect Measures",
+          "doi": "10.1207/s15327906mbr3001_3",
+          "openalex_id": "W1971383683",
+          "year": 1995,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Time-dependent approach to semiclassical dynamics",
+          "doi": "10.1063/1.430620",
+          "openalex_id": "W2007274640",
+          "year": 1975,
+          "source_location": "abstract",
+          "in_original_paper_nodes": false,
+          "status": "候选线索，关系与许可待核对"
+        },
+        {
+          "title": "Introduction to Variance Estimation.",
+          "doi": "10.2307/2289497",
+          "openalex_id": "W2117161260",
+          "year": 1987,
+          "source_location": "abstract",
+          "in_original_paper_nodes": true,
+          "status": "候选线索，关系与许可待核对"
+        }
+      ],
+      "graph_paper_status": "extracted",
+      "graph_paper_count": 3,
+      "review": "待审，未确认适用条件、来源和关联"
+    }
+  ],
+  "new_publisher_page_candidates": [
+    {
+      "doi": "10.1021/ed075p1186",
+      "title": "Why the Arrhenius Equation Is Always in the Exponentially Increasing Region in Chemical Kinetic Studies",
+      "authors": [
+        "Harvey F. Carroll"
+      ],
+      "year": 1998,
+      "journal": "Journal of Chemical Education 75(9), 1186",
+      "url": "https://pubs.acs.org/doi/10.1021/ed075p1186",
+      "connection": "讨论阿伦尼乌斯方程的温度变化与教学背景。",
+      "target_id": "CE:fo:arrhenius",
+      "record_type": "教学或研究文章线索",
+      "publisher_page_checked": "2026-10-30；依据搜索结果中出版方页面题录和摘要片段；直接打开页面返回 403，未阅读全文",
+      "in_original_paper_nodes": false,
+      "review": "待独立核对具体关联、全文许可与使用范围"
+    },
+    {
+      "doi": "10.1021/ed084p1776",
+      "title": "Visualizing the Transition State: A Hands-on Approach to the Arrhenius Equation",
+      "authors": [
+        "Matthew S. Swanson",
+        "Deborah K. Sayers",
+        "Thomas S. Kuntzleman"
+      ],
+      "year": 2007,
+      "journal": "Journal of Chemical Education 84(11), 1776",
+      "url": "https://pubs.acs.org/doi/10.1021/ed084p1776",
+      "connection": "以课堂模拟介绍反应动力学与阿伦尼乌斯方程。",
+      "target_id": "CE:fo:arrhenius",
+      "record_type": "教学或研究文章线索",
+      "publisher_page_checked": "2026-10-30；依据搜索结果中出版方页面题录和摘要片段；直接打开页面返回 403，未阅读全文",
+      "in_original_paper_nodes": false,
+      "review": "待独立核对具体关联、全文许可与使用范围"
+    },
+    {
+      "doi": "10.1021/acs.jchemed.0c00081",
+      "title": "Establishing a Connection for Students between the Reacting System and the Particle Model with Games and Stochastic Simulations of the Arrhenius Equation",
+      "authors": [
+        "Thomas Kraska"
+      ],
+      "year": 2020,
+      "journal": "Journal of Chemical Education 97(7), 1951–1959",
+      "url": "https://pubs.acs.org/doi/10.1021/acs.jchemed.0c00081",
+      "connection": "利用游戏和随机模拟讲解反应体系与粒子模型。",
+      "target_id": "CE:fo:arrhenius",
+      "record_type": "教学或研究文章线索",
+      "publisher_page_checked": "2026-10-30；依据搜索结果中出版方页面题录和摘要片段；直接打开页面返回 403，未阅读全文",
+      "in_original_paper_nodes": false,
+      "review": "待独立核对具体关联、全文许可与使用范围"
+    }
+  ]
+}

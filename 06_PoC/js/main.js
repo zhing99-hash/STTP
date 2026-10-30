@@ -34,6 +34,7 @@ import { renderNodeDetail, renderEdgeDetail, renderOverviewDetail } from "./evid
 import { TaskEntry } from "./task.js";
 import { emptyDiagOf } from "./empty.js";
 import { navHTML, navPush, navClip, navTargetOf } from "./nav.js";
+import { formulaHTML, isFormulaLabels } from "./formula.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -62,6 +63,11 @@ const state = {
    *   会把「学科层的结果」画到「领域层」的标题下面（看起来像数据错乱）。
    */
   nav: { open: false, stack: [], env: null, loading: false, seq: 0 },
+  /**
+   * ★ F6：公式详情抽屉。`id` = 当前查询的节点 id；`env` = 最近一次响应；
+   *   `seq` = 竞态序号（连点两个公式时，只采纳最后一次的结果）。
+   */
+  formula: { open: false, id: null, env: null, loading: false, seq: 0 },
 };
 
 // ---------------------------------------------------------------------------
@@ -143,6 +149,7 @@ function syncSubstack() {
       ? "会话预算已用尽：请「返回上一层」或「重置会话」"
       : (state.selNode ? `选中：${shortId(state.selNode.id)}` : "在画布上点一个节点，然后点「展开邻居」");
   }
+  syncFormulaEntry(state.selNode);     // ★ F6：非公式节点 ⇒ 收起入口与抽屉
 }
 
 function refreshLegend() {
@@ -554,6 +561,87 @@ function bindNav() {
   });
 }
 
+// ---------------------------------------------------------------------------
+// F6：公式详情抽屉
+// ---------------------------------------------------------------------------
+/**
+ * 是否公式节点 —— 判据用 **labels**，不用主类型 `type`。
+ *
+ * ★ 实测：`MX:lemma:partition_of_unity` 的 labels = ['Lemma','Formula','Entity']，
+ *   带 Formula，但 `pick_type` 选出的主类型是 Lemma ⇒ 用 type 判断会把
+ *   **102 条带 Formula 标签但主类型不是 Formula** 的节点误判成非公式。
+ */
+function isFormulaNode(node) {
+  return isFormulaLabels((node && node.labels) || []);
+}
+
+/** 抽屉入口的显隐（非公式 ⇒ 隐藏并收起抽屉，避免残留上一次的详情）。 */
+function syncFormulaEntry(node) {
+  const box = $("formula-drawer");
+  const btn = $("btn-formula");
+  const show = isFormulaNode(node);
+  if (btn) btn.hidden = !show;
+  if (!box) return;
+  if (!show) { box.hidden = true; state.formula.open = false; state.formula.env = null; }
+}
+
+/** 抽屉正文渲染（纯函数 `formulaHTML` 负责排版与转义）。 */
+function renderFormula() {
+  const el = $("formula-body");
+  if (el) el.innerHTML = formulaHTML(state.formula.env, { loading: state.formula.loading });
+}
+
+/**
+ * 拉取并展示一条公式的五段详情。
+ *
+ * ★ `limit=10`：每段最多 10 条（抽屉窄，再多就是一片墙；`*_total`/`*_truncated`
+ *   由后端给出 ⇒ 显示不下时**明说截断**，不静默省略）。
+ * ★ 失败不静默：`api.formula()` 出错时返回 `status="error"` 的信封，
+ *   由 `formulaHTML` 原样呈现（`status !== "ok"` 分支）。
+ */
+async function openFormula(id, { label } = {}) {
+  if (!id) return null;
+  const seq = ++state.formula.seq;
+  state.formula.loading = true;
+  state.formula.id = id;
+  const box = $("formula-drawer");
+  if (box) box.hidden = false;
+  state.formula.open = true;
+  renderFormula();
+  const env = await state.api.formula(id, { limit: 10 });
+  if (seq !== state.formula.seq) return null;   // 有更新的请求在飞 ⇒ 丢弃这次结果
+  state.formula.loading = false;
+  state.formula.env = env;
+  renderFormula();
+  if (label && typeof bannerNote === "function") bannerNote(label);
+  return env;
+}
+
+/** 抽屉事件（关闭 / 重试）。 */
+function bindFormula() {
+  const btn = $("btn-formula");
+  if (btn) {
+    btn.addEventListener("click", async () => {
+      const id = state.selNode && state.selNode.id;
+      if (!id) return;
+      await openFormula(id, { label: `公式详情 · ${shortId(id)}` });
+    });
+  }
+  const box = $("formula-drawer");
+  if (!box) return;
+  box.addEventListener("click", async (e) => {
+    const t = e.target && e.target.closest
+      ? e.target.closest("[data-fd-close],[data-fd-retry]") : null;
+    if (!t || !box.contains(t)) return;
+    if (t.hasAttribute("data-fd-close")) {
+      box.hidden = true; state.formula.open = false; return;
+    }
+    if (t.hasAttribute("data-fd-retry") && state.formula.id) {
+      await openFormula(state.formula.id);
+    }
+  });
+}
+
 async function showOverview() {
   state.overview = true;
   const env = await state.api.overview({ mode: "aggregate" });
@@ -705,6 +793,7 @@ async function boot() {
     $("btn-nav") && ($("btn-nav").hidden = false);
     $("btn-nav") && $("btn-nav").addEventListener("click", () => toggleNav());
     bindNav();
+    bindFormula();
   }
 
   // 头部/工具条

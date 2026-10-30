@@ -116,6 +116,26 @@ TRUST_LEVELS = (TRUST_ALL, TRUST_VERIFIED, TRUST_STRICT)
 #    必然不守恒。三者共用一套响应形状，靠 `stats.multi_valued` 区分口径（见 `Backend.nav`）。
 NAV_LEVELS = ("subject", "domain", "tags")
 
+#: F6 公式详情的五个段（对外契约：`GET /api/formula`）。
+FORMULA_SECTIONS = ("applicability", "symbols", "dimension", "provenance", "equivalents")
+
+#: `applicability_status` → 中文定性。
+#: ★ 三种「空」必须**分开说**（D115 同族）：「没抽到」与「没有指称对象」在数据上是
+#:   两种真相。压成一句「无适用条件」，使用者会去补数据 —— 而量纲合成式
+#:   **根本没有可补的对象**（实测 5,001 条 `no_referent`）。
+# ★ 条目类型词：上游 ETL 把 MathXiv 条目的**类型**写进了 Formula 的 `name` 字段
+#   （实测 8 条：definition 4 / lemma 2 / theorem 2）。这不是本端点的错，而是
+#   上游字段口径问题；本端点只**如实标注来源**（`label_from`），不替它改名。
+ENTRY_TYPE_WORDS = frozenset({
+    "definition", "lemma", "theorem", "proposition", "corollary",
+    "example", "remark", "axiom", "conjecture", "equation", "formula",
+})
+APPLICABILITY_KIND = {
+    "extracted": "有内容",
+    "not_extracted": "有指称对象，但未能抽出条件",
+    "no_referent": "无指称对象（量纲合成式），无从谈适用条件",
+}
+
 # ----------------------------------------------------------------------------
 # why_shown（吸收 codex 设计稿 §5.5）：每个节点/边都必须回答"为什么它在图里"
 # ----------------------------------------------------------------------------
@@ -224,6 +244,30 @@ def _clamp(v, lo: int, hi: int):
     return max(lo, min(hi, n)), c
 
 
+# ★ 上游占位值：这些**不是数据**，是「没有数据」的记号。
+#   实测权威图里 `discoverer` 等字段大量使用 `暂无`；若不判掉，接口会把
+#   「没有发现者」显示成「发现者：暂无」，使用者据此以为真有这个字段值。
+PLACEHOLDER_VALUES = frozenset({"\u6682\u65e0", "-", "\u2014", "N/A", "None"})
+
+
+def clean_value(v):
+    """把上游占位值（`暂无` / 空串 / `-` / 字符串 `None`）一律判为**没有**。
+
+    ★ 不是"清洗得干净点"，而是**不许占位值冒充数据**（与 D115 同族）。
+    ★ 列表/元组**逐元素**递归清洗并剔除清洗后为 None 的项 —— 否则
+      `["a", "暂无"]` 会被当成「有 2 个符号」，`symbols_total` 随之失真，
+      而截断判定（`symbols_total > limit`）也跟着错。
+    """
+    if v is None:
+        return None
+    if isinstance(v, str):
+        t = v.strip()
+        return None if (not t or t in PLACEHOLDER_VALUES) else t
+    if isinstance(v, (list, tuple)):
+        return [x for x in (clean_value(i) for i in v) if x is not None]
+    return v
+
+
 def _norm_set(v) -> Optional[set]:
     """逗号分隔字符串 / 列表 → set；空 → None（= 不过滤）。"""
     if v is None:
@@ -260,7 +304,7 @@ def edge_rank(props: dict) -> int:
 
 
 def build_stale_registry(known_sources, current_hashes, repo_status=None,
-                         status_by_edge=None) -> dict:
+                         status_by_edge=None, proven_by_edge=None) -> dict:
     """构造 stale/fidelity 判定所需的登记快照
     （由调用方从 `11_真实数据/source_registry.py` 现算）。
 
@@ -286,11 +330,19 @@ def build_stale_registry(known_sources, current_hashes, repo_status=None,
       （03 层不反向 import 11 层 ⇒ 与 `node_type_of` 同样的「形参注入」惯例）。
       **不注入时**（`{}`/`None`）本模块行为与 Phase 44 **逐位一致**——这是有意的：
       发布样例图、裸 clone 前的中间图都可能还没有 A04 记录，此时不得因缺记录而改判。
+
+    ★ 第 5 个可选键 `proven`（Phase 82 · 开闸）：`{edge_key: True}`，由调用方用
+      `11_真实数据/fidelity_proven.py` 现算后注入 —— 同「形参注入」惯例，判定逻辑
+      （绑定四要素 / 当场复算 / 全覆盖）**不在本层**。
+      它**不改变** `edge_fidelity()` 的四分类（对外口径一字未动），只用于把
+      `changed` **细分**成「变了且已证明内容等价」/「变了且未证明」（见
+      `edge_fidelity_proven`）。**未注入 ⇒ 恒 False ⇒ 逐位一致**（fail-closed）。
     """
     return {"known": set(known_sources or ()),
             "hashes": dict(current_hashes or {}),
             "repo_status": dict(repo_status or {}),
-            "status": dict(status_by_edge or {})}
+            "status": dict(status_by_edge or {}),
+            "proven": dict(proven_by_edge or {})}
 
 
 FIDELITY_CLASSES = ("verified", "changed", "unverifiable_no_source",
@@ -399,6 +451,40 @@ def edge_fidelity(e, stale_registry) -> str:
     return "verified"
 
 
+def edge_fidelity_proven(e, stale_registry) -> bool:
+    """这条边的「已变更」是否被一张**当场可复算**的内容等价证明**完全**覆盖。
+
+    ★ 这是 Phase 82 的**开闸开关**，但**不是** `edge_fidelity()` 的改判：
+      四分类仍是四类，`changed` 的含义也仍是「字节不符」。这里只回答一个附加问题
+      ——「这个不符，有没有被证明为**内容等价**（且当场可重算）」。
+
+    ★ 判定**不在本层**（03 层不反向 import 11 层）：由调用方用
+      `fidelity_proven.proven_by_edge()` 现算后注入。
+      **未注入 ⇒ 恒 False** ⇒ 与 Phase 82 之前**逐位一致**（fail-closed，不是放行）。
+      这是刻意的：宁可"该抵的没抵"，不可"不该抵的抵了"。
+    """
+    if not stale_registry:
+        return False
+    return bool((stale_registry.get("proven") or {}).get(edge_key(e)))
+
+
+def fidelity_for_grade(e, stale_registry) -> str:
+    """**等级**用的忠实度口径（唯一差别：认 `changed_but_proven`）。
+
+    ★ 为什么 `edge_grade` 必须认它，而 `edge_fidelity` 不能认：
+      实测 703 条被证明覆盖的边里 **661 条是 5 分**。若等级不认证明，
+      它们会因为一个注释凭空从 5 分掉到 1 分 —— 而**没有任何判据会红**
+      （G2 断言的是「5 分且 fidelity≠verified」，掉档后它们不是 5 分了，自洽）。
+      也就是说：这是那种"数据悄悄变差、仪器全部安静"的缺陷类型。
+    ★ 但仍然**不**把它们写成 `verified`：多一个名字才能被数出来、被审，
+      伪装成 verified 等于把「字节确实变了」这个事实抹掉。
+    """
+    fi = edge_fidelity(e, stale_registry)
+    if fi == "changed" and edge_fidelity_proven(e, stale_registry):
+        return "changed_but_proven"
+    return fi
+
+
 def fidelity_counts(edges, stale_registry) -> dict:
     """四分类计数（**可直接加总回边总数** —— 分列而不合并，铁律 #41/#67 同一精神）。"""
     c = {k: 0 for k in FIDELITY_CLASSES}
@@ -411,10 +497,16 @@ def fidelity_counts(edges, stale_registry) -> dict:
 # ★ 证据等级 1–5（Phase 58 · `00_项目管理/证据分级规范与抓取优先级_20261019.md`）。
 #   **派生**而非人工打分：grade = min(断言强度档, 字节忠实度档)，多源独立且 ≥3 时 +1（封顶 5）。
 #   规则变更必须升 `GRADE_RULE_VERSION` —— 分数写进投影后即固化（D64 同族：不得随前端现算漂移）。
-GRADE_RULE_VERSION = "e1"
+GRADE_RULE_VERSION = "e2"
 GRADE_VL = {"cross_source": 5, "by_construction": 4, "rule_checked": 4,
             "source_asserted": 3, "model_inferred": 1}   # 缺 level ⇒ 按 1（fail-closed）
-GRADE_FD = {"verified": 5, "unverifiable_not_in_repo": 2,
+#: ★ `changed_but_proven`（Phase 82）：字节不符，但**当场可复算**的内容等价证明已覆盖。
+#    按 5 分：内容既然等价，它对「这条边能不能用」的贡献与 verified 相同。
+#    ★ 不写成 `verified`：多一个名字才能被单独数出来、被审（见 `fidelity_for_grade`）。
+#  ★ 版本 e1 → e2：规则表多了一档 ⇒ 落盘的分数必须重刷（`bash sttp.sh gradepersist --apply`），
+#    否则 G5 会拿「快照规则 e1」对「现行 e2」判 False（这是**故意**的：规则变了必须留下痕迹）。
+GRADE_FD = {"verified": 5, "changed_but_proven": 5,
+            "unverifiable_not_in_repo": 2,
             "unverifiable_no_source": 1, "changed": 1}   # 未入库=2：「不可复算」≠「不可信」
 
 
@@ -427,7 +519,7 @@ def edge_grade(e, stale_registry) -> Optional[int]:
         return None
     props = e.get("props") or {}
     v = GRADE_VL.get(props.get("verification_level"), 1)
-    f = GRADE_FD.get(edge_fidelity(e, stale_registry), 1)
+    f = GRADE_FD.get(fidelity_for_grade(e, stale_registry), 1)
     g = min(v, f)
     evs = [x for x in (props.get("verification_evidence") or []) if isinstance(x, dict)]
     n_src = len({x.get("src") for x in evs if x.get("src")})
@@ -455,6 +547,27 @@ def grade_counts(edges, stale_registry) -> dict:
 GRADE_PUBLIC_RULE_VERSION = "p1"
 
 
+def _redist_bool(redist_of, sid):
+    """把 `redist_of` 的返回值**严格**当 bool 用；非 bool ⇒ **抛错**，不猜。
+
+    ★ 为什么必须有这一层（D123）：本仓库里同时存在
+        `redistribution_closure(sid) -> str`   （三态：redistributable/internal_only/forbidden）
+        `is_redistributable(sid)     -> bool`
+      两者名字相近、都跟「再分发」有关。若误把前者注入 `edge_grade_public`，
+      Python 会把**非空字符串一律当真** ⇒ `all(...)` 恒为 True ⇒ 折扣恒为 5（不打折）
+      ⇒ 对外分数被**虚高**成内部值。后果不是数字难看，而是：
+        把 `internal_only` / `forbidden` 的来源当成「可随包分发」。
+      这正是「不可判定 ⇒ None，不得假装 5 分」要防的事 —— 所以用 `is True / is False`
+      显式判定，任何第三态都是**调用方的契约错误**，让它当场炸掉。
+    """
+    v = redist_of(sid)
+    if v is True:
+        return True
+    if v is False:
+        return False
+    raise TypeError("redist_of 必须返回 bool，实得 %r（src=%r）" % (v, sid))
+
+
 def edge_grade_public(e, stale_registry, redist_of=None) -> Optional[int]:
     """对外口径的证据等级 1–5。
 
@@ -477,14 +590,15 @@ def edge_grade_public(e, stale_registry, redist_of=None) -> Optional[int]:
     props = e.get("props") or {}
     evs = [x for x in (props.get("verification_evidence") or []) if isinstance(x, dict)]
     srcs = [x.get("src") for x in evs if x.get("src")]
-    f_int = GRADE_FD.get(edge_fidelity(e, stale_registry), 1)
-    discount = 5 if srcs and all(redist_of(s) for s in srcs) else 2
+    f_int = GRADE_FD.get(fidelity_for_grade(e, stale_registry), 1)
+    # ★ 严格 bool：误传三态字符串会**当场抛错**而非静默虚高（D123）
+    discount = 5 if srcs and all(_redist_bool(redist_of, s) for s in srcs) else 2
     f = min(f_int, discount)
     v = GRADE_VL.get(props.get("verification_level"), 1)
     g = min(v, f)
-    n_src = len({s for s in srcs if redist_of(s)})
+    n_src = len({s for s in srcs if _redist_bool(redist_of, s)})
     n_indep = sum(1 for x in evs
-                  if x.get("indep") and x.get("src") and redist_of(x.get("src")))
+                  if x.get("indep") and x.get("src") and _redist_bool(redist_of, x.get("src")))
     if g >= 3 and (n_src >= 2 or n_indep >= 2):
         g = min(5, g + 1)
     return g
@@ -693,7 +807,7 @@ class Backend:
                 with open(val, "rb") as f:
                     for chunk in iter(lambda: f.read(1 << 20), b""):
                         h.update(chunk)
-                self._snap_key, self._snap_id = key, "sha256:" + h.hexdigest()[:12]
+                self._snap_key, self._snap_id = key, "sha256:" + h.hexdigest()[:12]  # noloss-exempt: snapshot_id 约定取 sha256 前 12 位，非数据
             return self._snap_id
         seed_txt = "%s|%s" % (kind, val)
         return "sha256:" + hashlib.sha256(seed_txt.encode("utf-8")).hexdigest()[:12]
@@ -1782,6 +1896,228 @@ class Backend:
                 "scan_complete": True,
                 "elapsed_ms": _ms(t0),
             },
+        }
+
+
+    # ---------------- F6 · 公式覆盖率（按快照缓存） ----------------
+    def formula_coverage(self) -> dict:
+        """全图 Formula 的 `applicability_status` 分布（**按快照缓存**）。
+
+        ★ 为什么必须缓存：这是 O(N) 全图扫描；而「查一条公式的详情」本该是
+          O(度数) 的局部操作。不缓存 ⇒ 每查一条公式都要扫一遍全图，详情的代价
+          随图规模线性上涨（铁律 #66：规模是设计约束）。
+        ★ 缓存键 = `snapshot_id`：同一份图 ⇒ 同一个分布；图换了自动失效，
+          **不需要手工清理**（与 `_index()` 的实例缓存同族）。
+        ★ 计数用 `clean_value` 判占位值 ⇒ 「没有状态」与「状态是占位符」
+          不会各自成一个桶（否则分布表自己制造出一批假类别）。
+        """
+        cached = getattr(self, "_fcov", None)
+        if cached is not None and cached.get("snapshot_id") == self.snapshot_id():
+            return cached
+        cnt: Dict[str, int] = {}
+        total = 0
+        for _nid, _n in self._index()["nodes"].items():
+            if "Formula" not in (_n.get("labels") or []):
+                continue
+            total += 1
+            _k = str(clean_value((_n.get("props") or {}).get("applicability_status")) or "")
+            cnt[_k] = cnt.get(_k, 0) + 1
+        out = {"snapshot_id": self.snapshot_id(), "counts": cnt,
+               "formula_nodes": total}
+        self._fcov = out
+        return out
+
+    # ---------------- F6 · 公式详情（结构化） ----------------
+    def formula_detail(self, node_id: str, *, limit: int = 20,
+                       license_of: Optional[Callable] = None,
+                       node_type_of: Optional[Callable] = None,
+                        subject_of_fn: Optional[Callable] = None) -> dict:
+        """F6 · 公式详情：适用条件 / 符号 / 量纲 / 来源 / 等价式。
+
+        ★ 这个端点的价值**不是把 props 原样吐出来**（那用 `/api/neighbors` 也行），
+          而是把「这一段**为什么是空的**」说清楚。实测（本次现算，非抄旧报告）：
+          全图 5,090 个 Formula，`applicability_status` =
+          `extracted` **30** / `not_extracted` 59 / `no_referent` 5,001。
+          只返回 `applicability: []` 会被读成「尚未抽取」⇒ 误判图不完整。
+
+        ★ 因此每段都带 `present`（这一段**有没有数据**，而不是"有没有字段"）
+          与 `kind`（中文定性）；顶层再给一份 `missing`：列出真正缺数据的段。
+          「空」是三种不同的空，接口不许把它们说成一种（D115）。
+
+        ★ 许可三态由调用方注入（`license_of`）：入参是来源 id，返回三态字符串
+          （`redistributable` / `internal_only` / `forbidden`）。
+          与 `nav` 注入 `node_type_of` / `subject_of_fn` 同一个理由：
+          **判定口径只有一份**，`Backend` 不复制第二份（铁律 #64 / D106）。
+
+          ★ 为什么**不用**布尔的 `is_redistributable`：它会把 internal_only 与
+            forbidden 压成同一个 False，还会把「判定器不可用」也压成 False ⇒
+            三种处境挤进一个值（D115 同族）。因此这里要三态，且把"判定器不在"
+            单列成 `license_available: false`，不许冒充 `forbidden`。
+
+        ★ ★ 门禁（真图试跑后补）：传入的节点若**不带 Formula 标签**，
+          一律返回 `NO_RESULT`，**不给**五段空壳。理由：对「单位」「论文」
+          返回 `ok` + 五个空段，等于**用「空」回答「不适用」**（D115 同族），
+          前端会渲染出一个全是"无数据"的公式面板，使用者据此误判图不完整。
+
+        ★ ★ 门禁判据用 `labels` 而**不是** `node_type_of` 的结果：
+          实测 `MX:lemma:partition_of_unity` 的 labels = ['Lemma','Formula','Entity']，
+          带 Formula，但主类型是 Lemma ⇒ **type 是「主类型」（着色用）**，
+          **labels 才是「全部归属」（判定用）**，两者不可互换。
+        """
+        t0 = time.monotonic()
+        idx = self._index()
+        nid = str(node_id or "").strip()
+        n = idx["nodes"].get(nid)
+        if n is None:
+            return {"status": NO_RESULT, "reason": "找不到节点：%s" % (nid or "<空>"),
+                    "error_code": None,          # 业务态"空"，不是错误（铁律 #67）
+                    "node": None, "sections": {}, "missing": list(FORMULA_SECTIONS),
+                    "stats": {"scanned": 0, "scan_complete": True, "elapsed_ms": _ms(t0)}}
+        # ★ 门禁：不是公式就不回答（判据用 labels，不用 pick_type 结果 —— 见文档串）
+        if "Formula" not in (n.get("labels") or []):
+            _t = (node_type_of(n["labels"]) if node_type_of
+                  else (n["labels"][0] if n["labels"] else "Unknown"))
+            return {"status": NO_RESULT,
+                    "error_code": None,          # 同上：不适用 ≠ 出错
+                    "reason": "节点存在，但不是公式（主类型：%s）；"
+                              "本端点只回答带 Formula 标签的节点" % _t,
+                    "node": {"id": nid, "labels": list(n["labels"]),
+                             "type": _t, "is_formula": False},
+                    "sections": {}, "missing": list(FORMULA_SECTIONS),
+                    "stats": {"scanned": 1, "scan_complete": True,
+                              "is_formula": False, "elapsed_ms": _ms(t0)}}
+        p = dict(n["props"])
+        lim, _ = _clamp(limit, 1, 200)
+
+        _val = clean_value      # 共享口径（唯一实现在模块级；见 `clean_value`）
+
+        # ---- ① 适用条件 ----
+        astatus = _val(p.get("applicability_status"))
+        terms = _val(p.get("applicability")) or []
+        evid = [e for e in (p.get("applicability_evidence") or [])
+                if isinstance(e, dict)]
+        sec_app = {
+            "present": astatus == "extracted" and bool(terms),
+            "status": astatus,
+            "kind": (APPLICABILITY_KIND.get(astatus, "（未识别的状态：%s）" % (astatus,))
+                    if astatus else "（图里没有登记适用性状态字段）"),
+            "terms": terms[:lim],
+            "terms_total": len(terms),
+            "terms_truncated": len(terms) > lim,
+            "evidence": evid[:lim],
+            "evidence_total": len(evid),
+            "evidence_truncated": len(evid) > lim,
+            "source": _val(p.get("applicability_source")),
+            "rule_version": _val(p.get("applicability_rule_version")),
+        }
+
+        # ---- ② 符号 ----
+        syms = _val(p.get("symbols")) or []
+        _table = p.get("symbol_table")
+        table = _table if isinstance(_table, (list, dict)) else None
+        sec_sym = {
+            "present": bool(syms),
+            "symbols": syms[:lim],
+            "symbols_total": len(syms),
+            "symbols_truncated": len(syms) > lim,
+            "table": table,
+            "table_total": len(table) if table is not None else 0,
+            "unresolved": _val(p.get("symbols_unresolved")) or [],
+            "rule_version": _val(p.get("symbols_rule_version")),
+            "derive_version": _val(p.get("symbols_derive_version")),
+        }
+
+        # ---- ③ 量纲 ----
+        _exps = p.get("dim_exponents")
+        exps = _exps if isinstance(_exps, dict) else None
+        hom = p.get("dim_homogeneous")
+        sec_dim = {
+            "present": exps is not None,
+            "equation": _val(p.get("equation")),
+            "exponents": exps,
+            "homogeneous": bool(hom) if isinstance(hom, (bool, int, float)) else None,
+            "scope": _val(p.get("dim_scope")),
+            "verified_by": _val(p.get("dim_verified_by")),
+        }
+
+        # ---- ④ 来源 / 许可 ----
+        src = _val(p.get("source"))
+        _lic = license_of(src) if (license_of and src) else None
+        sec_prov = {
+            "present": bool(src),
+            "source": src,
+            "source_ref": _val(p.get("source_ref")),
+            # ★ 三态字符串；None 表示**这一段不适用**（无来源值），见下
+            "redistribution": _lic,
+            # ★ 区分「有来源但判定器不可用」与「判定结果是 forbidden」：
+            #   两者处理不同（前者是仪器缺失，后者是政策结论），不许混为一个 None。
+            "license_available": bool(src) and license_of is not None,
+        }
+
+        # ---- ⑤ 等价式 ----
+        #   ★ 图里表达「同一个东西」的是 `same_as`（Formula ↔ WikidataEntity）。
+        #     另有 `same_formula_as` 只连 Molecule↔Molecule，**不是**公式等价式 ——
+        #     接口按**图里的实际分布**取名，不按文档里的想象取名（#113 口径错同族）。
+        eq = []
+        for edge, other, direction in idx["adj"].get(nid, []):
+            if edge["type"] != "same_as":
+                continue
+            op = (idx["nodes"].get(other) or {}).get("props") or {}
+            eq.append({
+                "id": edge["id"], "peer": other, "direction": direction,
+                "peer_label": _val(op.get("name")) or _val(op.get("label")) or other,
+                "verifier": _val((edge.get("props") or {}).get("verifier")),
+            })
+        eq.sort(key=lambda x: x["id"])
+        sec_eq = {"present": bool(eq), "count": len(eq),
+                  "items": eq[:lim], "truncated": len(eq) > lim}
+
+        sections = {"applicability": sec_app, "symbols": sec_sym,
+                    "dimension": sec_dim, "provenance": sec_prov,
+                    "equivalents": sec_eq}
+        missing = [k for k in FORMULA_SECTIONS if not sections[k].get("present")]
+
+        # ---- 覆盖率：**现算**（铁律 #14：不抄报告里的历史数字）；
+        #      同一快照内复用缓存（见 `formula_coverage`）----
+        cov = self.formula_coverage()
+
+        # ★ label 的**来源字段**要可见：否则「名称：definition」会被读成公式名
+        #   （上游把条目类型写进了 name；本端点只标注来源，不替它改名）
+        if _val(p.get("name")):
+            _label, _from = _val(p.get("name")), "name"
+        elif _val(p.get("label")):
+            _label, _from = _val(p.get("label")), "label"
+        else:
+            _label, _from = nid, "id"
+
+        return {
+            "status": OK,
+            "error_code": None,
+            "reason": "" if not missing else "以下段在图上没有数据：%s" % "、".join(missing),
+            "node": {
+                "id": nid,
+                "label": _label,
+                "label_from": _from,
+                "label_is_typeword": (_from == "name"
+                                      and _label.strip().lower() in ENTRY_TYPE_WORDS),
+                "type": (node_type_of(n["labels"]) if node_type_of
+                         else (n["labels"][0] if n["labels"] else "Unknown")),
+                "labels": list(n["labels"]),
+                # 门禁之后恒为 True；保留字段是为了契约稳定（前端不必改）
+                "is_formula": True,
+                "subject": (subject_of_fn(_val(p.get("domain")), nid)
+                            if subject_of_fn else ""),
+                "domain": _val(p.get("domain")),
+                "domain_tags": _val(p.get("domain_tags")) or [],
+                "latex": _val(p.get("latex")),
+                "degree": len(idx["adj"].get(nid, [])),
+            },
+            "sections": sections,
+            "missing": missing,
+            "stats": {"scanned": 1, "scan_complete": True,
+                      "coverage": cov["counts"],
+                      "formula_nodes": cov["formula_nodes"],
+                      "elapsed_ms": _ms(t0)},
         }
 
 

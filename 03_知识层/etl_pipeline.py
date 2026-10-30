@@ -579,7 +579,7 @@ class PhysicsBabelAdapter(SourceAdapter):
             eq = r.get("equation_str") or r.get("equation") or r.get("latex")
             if not eq:
                 continue
-            eid = str(r.get("equation_id") or r.get("id") or slugify(eq)[:32])
+            eid = str(r.get("equation_id") or r.get("id") or slugify(eq)[:32])  # noloss-exempt: id 生成且当前实测无碰撞（恰好=32 的 id 0 个）；改它会改写全图 id ⇒ 破坏性变更，单列待决
             nodes.append({
                 "local_id": eid,
                 "labels": ["Formula", "Equation"],

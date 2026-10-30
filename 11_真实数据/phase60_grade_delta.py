@@ -92,6 +92,16 @@ def main():
     reg = q.build_stale_registry(sr.ids(), sr.hash_map(base=ROOT), sr.repo_status_map(base=ROOT))
     b = q.NXBackend(NORM)
     all_edges = b.all_edges()
+    # ★ Phase 82：落盘**也**要接第五档 —— 否则落盘算的是四分类口径（703 条掉到 1 分），
+    #   而 `grade_report` 现算认 proven（5 分）⇒ G5「落盘 == 现算」立刻红 703 条。
+    #   ★ 这是 D140（注册 ≠ 生效）的**第四次**现身：落盘、报告、服务端、切片
+    #     四处各自构造 registry，四处都得接上，漏一处就是两套数。
+    try:
+        import fidelity_proven as fp                          # noqa: PLC0415
+        fp.attach_proven(reg, all_edges, base=ROOT)
+    except Exception as _ex:                                 # noqa: BLE001
+        print("[WARN] 第五档 proven 不可用（%s: %s）⇒ 落盘按四分类口径（会掉档）"
+              % (type(_ex).__name__, _ex))
     if len(all_edges) != len(edges):
         print("[FATAL] NXBackend 边数 %d != JSON 边数 %d —— 拒绝生成半张图的 delta"
               % (len(all_edges), len(edges)))

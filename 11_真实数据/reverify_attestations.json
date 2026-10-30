@@ -1,7 +1,7 @@
 {
  "schema": "sttp-reverify-attestation/v1",
- "phase": 73,
- "note": "每条 = 一个「验证器版本对 + 排除范围」。**不是许可**：`reverify_attest.py --check` 每次都会拿 git 历史真 blob 重算 AST 证明；算不出来 ⇒ 整条不成立 ⇒ 引用它的证据回落 stale。",
+ "phase": "73+81",
+ "note": "每条 = 一个「版本对 + 范围」。**不是许可**：`reverify_attest.py --check` 每次都会拿 git 历史真 blob 重算；算不出来 ⇒ 整条不成立。kind=code_equivalent（Phase 73）＝验证器插入-only；kind=content_equivalent（Phase 81）＝双重身份文件 AST 逐字符相同。",
  "attestations": [
   {
    "id": "rva:9302106b0f54",
@@ -80,6 +80,216 @@
     "n_stmt_insertions": 2
    },
    "note": "证明的是「被排除的边类型之外，验证器行为不变」。范围由 exclude_types 表达；`--check` 会拿 git 历史里的真 blob 重算。"
+  },
+  {
+   "id": "rva:144664035cfb",
+   "kind": "content_equivalent",
+   "object_kind": "src",
+   "object_id": "Phase13.Gate.B2",
+   "paths": [
+    "11_真实数据/element_reference.py"
+   ],
+   "composite": {
+    "from": "1fe029a4cdc898eb6baf2070bdea914565258200da4a908a7711c66037235f71",
+    "to": "423d40fe7e723defe2c2a5d7ac0d499b10ccec4234a899281670817386fb20d8"
+   },
+   "files": [
+    {
+     "rel": "11_真实数据/element_reference.py",
+     "from_hash": "a6ad4fec1dfd",
+     "to_hash": "251c435e4ee1"
+    }
+   ],
+   "to_is_head": true,
+   "from_rev": "49fe18c",
+   "to_rev": "bff4dd1",
+   "at": "2026-10-28T12:58:02+08:00",
+   "proof": {
+    "method": "ast_identical",
+    "per_file": [
+     {
+      "rel": "11_真实数据/element_reference.py",
+      "ast_digest": "7904a691cbbb02d2",
+      "n_toplevel": 24
+     }
+    ]
+   },
+   "note": "证明的是「文件内容（AST 语义）未变」。只覆盖**不进 AST** 的改动：注释 / 空行 / 行尾空白。docstring、类型注解、任何常量变化一律拒。"
+  },
+  {
+   "id": "rva:df8e565c9d44",
+   "kind": "content_equivalent",
+   "object_kind": "src",
+   "object_id": "Phase13.Gate.B5",
+   "paths": [
+    "11_真实数据/element_reference.py"
+   ],
+   "composite": {
+    "from": "1fe029a4cdc898eb6baf2070bdea914565258200da4a908a7711c66037235f71",
+    "to": "423d40fe7e723defe2c2a5d7ac0d499b10ccec4234a899281670817386fb20d8"
+   },
+   "files": [
+    {
+     "rel": "11_真实数据/element_reference.py",
+     "from_hash": "a6ad4fec1dfd",
+     "to_hash": "251c435e4ee1"
+    }
+   ],
+   "to_is_head": true,
+   "from_rev": "49fe18c",
+   "to_rev": "bff4dd1",
+   "at": "2026-10-28T12:58:02+08:00",
+   "proof": {
+    "method": "ast_identical",
+    "per_file": [
+     {
+      "rel": "11_真实数据/element_reference.py",
+      "ast_digest": "7904a691cbbb02d2",
+      "n_toplevel": 24
+     }
+    ]
+   },
+   "note": "证明的是「文件内容（AST 语义）未变」。只覆盖**不进 AST** 的改动：注释 / 空行 / 行尾空白。docstring、类型注解、任何常量变化一律拒。"
+  },
+  {
+   "id": "rva:9f42004219f0",
+   "kind": "content_equivalent",
+   "object_kind": "src",
+   "object_id": "element_reference",
+   "paths": [
+    "11_真实数据/element_reference.py"
+   ],
+   "composite": {
+    "from": "1fe029a4cdc898eb6baf2070bdea914565258200da4a908a7711c66037235f71",
+    "to": "423d40fe7e723defe2c2a5d7ac0d499b10ccec4234a899281670817386fb20d8"
+   },
+   "files": [
+    {
+     "rel": "11_真实数据/element_reference.py",
+     "from_hash": "a6ad4fec1dfd",
+     "to_hash": "251c435e4ee1"
+    }
+   ],
+   "to_is_head": true,
+   "from_rev": "49fe18c",
+   "to_rev": "bff4dd1",
+   "at": "2026-10-28T12:58:02+08:00",
+   "proof": {
+    "method": "ast_identical",
+    "per_file": [
+     {
+      "rel": "11_真实数据/element_reference.py",
+      "ast_digest": "7904a691cbbb02d2",
+      "n_toplevel": 24
+     }
+    ]
+   },
+   "note": "证明的是「文件内容（AST 语义）未变」。只覆盖**不进 AST** 的改动：注释 / 空行 / 行尾空白。docstring、类型注解、任何常量变化一律拒。"
+  },
+  {
+   "id": "rva:17520a4db4be",
+   "kind": "content_equivalent",
+   "object_kind": "ref",
+   "object_id": "element_reference",
+   "paths": [
+    "11_真实数据/element_reference.py"
+   ],
+   "composite": {
+    "from": "3a4e6d035f109462",
+    "to": "3f72bba7b0bec0ff"
+   },
+   "files": [
+    {
+     "rel": "11_真实数据/element_reference.py",
+     "from_hash": "a6ad4fec1dfd",
+     "to_hash": "251c435e4ee1"
+    }
+   ],
+   "to_is_head": true,
+   "from_rev": "49fe18c",
+   "to_rev": "bff4dd1",
+   "at": "2026-10-28T12:58:03+08:00",
+   "proof": {
+    "method": "ast_identical",
+    "per_file": [
+     {
+      "rel": "11_真实数据/element_reference.py",
+      "ast_digest": "7904a691cbbb02d2",
+      "n_toplevel": 24
+     }
+    ]
+   },
+   "note": "证明的是「文件内容（AST 语义）未变」。只覆盖**不进 AST** 的改动：注释 / 空行 / 行尾空白。docstring、类型注解、任何常量变化一律拒。"
+  },
+  {
+   "id": "rva:47129a061861",
+   "kind": "content_equivalent",
+   "object_kind": "verifier",
+   "object_id": "element_reference",
+   "paths": [
+    "11_真实数据/element_reference.py"
+   ],
+   "composite": {
+    "from": "a6ad4fec1dfd",
+    "to": "251c435e4ee1"
+   },
+   "files": [
+    {
+     "rel": "11_真实数据/element_reference.py",
+     "from_hash": "a6ad4fec1dfd",
+     "to_hash": "251c435e4ee1"
+    }
+   ],
+   "to_is_head": true,
+   "from_rev": "49fe18c",
+   "to_rev": "bff4dd1",
+   "at": "2026-10-28T12:58:03+08:00",
+   "proof": {
+    "method": "ast_identical",
+    "per_file": [
+     {
+      "rel": "11_真实数据/element_reference.py",
+      "ast_digest": "7904a691cbbb02d2",
+      "n_toplevel": 24
+     }
+    ]
+   },
+   "note": "证明的是「文件内容（AST 语义）未变」。只覆盖**不进 AST** 的改动：注释 / 空行 / 行尾空白。docstring、类型注解、任何常量变化一律拒。"
+  },
+  {
+   "id": "rva:4a4b075b418b",
+   "kind": "content_equivalent",
+   "object_kind": "dep",
+   "object_id": "11_真实数据/element_reference.py",
+   "paths": [
+    "11_真实数据/element_reference.py"
+   ],
+   "composite": {
+    "from": "a6ad4fec1dfd",
+    "to": "251c435e4ee1"
+   },
+   "files": [
+    {
+     "rel": "11_真实数据/element_reference.py",
+     "from_hash": "a6ad4fec1dfd",
+     "to_hash": "251c435e4ee1"
+    }
+   ],
+   "to_is_head": true,
+   "from_rev": "49fe18c",
+   "to_rev": "bff4dd1",
+   "at": "2026-10-28T12:58:03+08:00",
+   "proof": {
+    "method": "ast_identical",
+    "per_file": [
+     {
+      "rel": "11_真实数据/element_reference.py",
+      "ast_digest": "7904a691cbbb02d2",
+      "n_toplevel": 24
+     }
+    ]
+   },
+   "note": "证明的是「文件内容（AST 语义）未变」。只覆盖**不进 AST** 的改动：注释 / 空行 / 行尾空白。docstring、类型注解、任何常量变化一律拒。"
   }
  ]
 }

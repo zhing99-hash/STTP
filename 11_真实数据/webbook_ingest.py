@@ -126,7 +126,7 @@ def parse_page(txt):
     if k > 0:
         seg = seg[:k]
     else:
-        seg = seg[:40000]
+        seg = seg[:40000]  # noloss-exempt: HTML 段落解析的无界内存兜底（NIST 系数表实测未触及）；有意的防御上限
 
     # 行模式：<quantity> <value> [± <unc>] <unit> <method> <reference>
     #   注意数量名可能带后缀（`S° gas,1 bar`），故接一个可选修饰段

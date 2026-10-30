@@ -41,11 +41,14 @@ from __future__ import annotations
 
 import argparse
 import collections
+import hashlib
 import json
 import os
 import random
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+NORM_GRAPH = os.path.join(ROOT, "06_PoC", "etl", "normalized.json")
 OUT = os.path.join(HERE, "tasks.json")
 
 SCHEMA = "sttp-eval-tasks/v1"
@@ -515,12 +518,40 @@ def validate(tasks):
     return errs
 
 
+def graph_facts():
+    """**现算**权威图的规模与 sha256，供 `solution_space` 声明用。
+
+    ★ 为什么必须用现算（D152）：`solution_space.graph` 原先写死
+      「9657 节点 / 48712 边」。后果不是"数字旧了"，而是**这个字段永远无法自证新鲜** ——
+      重跑评测（报告 mtime 会更新）也救不了它，因为它压根不从输入来。
+      2026-10-28 实测：重跑后报告是新的，声明仍是旧图，而真实图已变成 9750/48813。
+      **一份写着"我基于 X"、实际基于 Y 的报告，比没有声明更危险** —— 它会让人信它。
+
+    ★ 只声明规模不够（两个不同的图可能撞规模）⇒ 同时给 sha256，
+      让「陈旧报告哨兵」能做**强校验**。
+    """
+    if not os.path.exists(NORM_GRAPH):
+        raise SystemExit(
+            "[前置缺失] 找不到权威图 %s —— 拒绝用写死的旧值冒充当前输入。"
+            % os.path.relpath(NORM_GRAPH).replace("\\", "/"))
+    h = hashlib.sha256()
+    with open(NORM_GRAPH, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    with open(NORM_GRAPH, encoding="utf-8") as f:
+        g = json.load(f)
+    return {"nodes": len(g["nodes"]), "edges": len(g["edges"]),
+            "sha256": h.hexdigest()}
+
+
 def build():
     tasks = [dict(t) for t in TASKS]
     tasks = assign_split(tasks)
     errs = validate(tasks)
     if errs:
         raise SystemExit("任务集校验失败：\n  " + "\n  ".join(errs))
+
+    gf = graph_facts()          # ★ 现算（D152），不写死
 
     doc = {
         "schema": SCHEMA,
@@ -531,7 +562,10 @@ def build():
         "answer_policy": "expected 锚定独立权威源（CODATA/SI/IUPAC/标准热力学关系），"
                          "不由被测图生成；学科人员外部审查待进行。",
         "solution_space": {
-            "graph": "06_PoC/etl/normalized.json（权威规范图，9657 节点 / 48712 边）",
+            # ★ 现算，不写死（D152）：写死的声明字段**永远无法自证新鲜**。
+            "graph": "06_PoC/etl/normalized.json（权威规范图，%d 节点 / %d 边）"
+                     % (gf["nodes"], gf["edges"]),
+            "graph_sha256": gf["sha256"],
             "truth_tables": ["11_真实数据/element_reference.py",
                              "11_真实数据/dimension_table.py"],
             "note": "基线只读上述候选空间；不访问网络、不使用 LLM。",

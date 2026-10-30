@@ -425,6 +425,56 @@ def load_attestations(base=ROOT):
     return {a["id"]: a for a in ent if isinstance(a, dict) and a.get("id")}
 
 
+def content_attestations(base=ROOT):
+    """只取**可用于抵当前原因**的 `content_equivalent` 证明（Phase 81 · S2 接线用）。
+
+    ★ 为什么**不给** `code_equivalent`（Phase 73 那条）一并放行：实测把全表传给
+      `evidence_status()` 会当场把 32609 条 stale 翻成 350 valid + 32259 needs_review
+      —— 那是**另一条通道**的行为变更，不该混在本阶段里偷偷做。本函数按 kind 过滤，
+      于是「接通」在**当前表还没有 content_equivalent 证明时是零影响的**（有判据守着）。
+    """
+    return {k: v for k, v in load_attestations(base).items()
+            if isinstance(v, dict) and v.get("kind") == "content_equivalent"}
+
+
+def _content_equivalent_covered(family, obj, rec_hash, cur_hash, attestations):
+    """Phase 81 · S2：`content_equivalent` 证明是否**抵掉**这条「已变更」原因。
+
+    与 Phase 73 的 `_attestation_ok()` 是**两个通道**，别混：
+
+    * `code_equivalent`：**逐证据**带 `rva` 引用，抵 `verifier_changed`；
+      证明的是「验证器**语义**没变」（允许插入）。
+    * `content_equivalent`：**按对象绑定**自动覆盖，抵 `src_changed` / `ref_changed` /
+      `dep_version_changed`；证明的是「对象**内容**没变」（`ast_identical`，不放行插入）。
+      覆盖判据是**绑定匹配**而非逐证据引用：证明说「对象 X 从 A 到 B 内容相同」，
+      那么**任何**记录值为 A、当前值为 B 的证据都被覆盖 —— 7 万条证据不必逐条挂引用。
+
+    绑定四要素（缺一不生效，全部当场核对，不缓存）：
+      kind == `content_equivalent` 且 `to_is_head` 为真（历史版本对不算「当前」）
+      ＋族与对象对齐（src/ref/dep 不得串族）＋`composite.from` == 记录值
+      ＋`composite.to` == 当前值。
+
+    ★ 这里**只做绑定核对**，语义等价性由 `reverify_attest.py --check` 对着 git 历史
+      重算 AST（证明造假 ⇒ 那个 gate 拒）。缺一不可，与 Phase 73 的分工一致。
+    """
+    if not attestations or rec_hash is None or cur_hash is None:
+        return None
+    for a in attestations.values():
+        if not isinstance(a, dict):
+            continue
+        if a.get("kind") != "content_equivalent":
+            continue
+        if not a.get("to_is_head"):
+            continue                                   # 历史版本对 ⇒ 不能抵「当前」的原因
+        if a.get("object_kind") != family or a.get("object_id") != obj:
+            continue
+        comp = a.get("composite") or {}
+        if comp.get("from") != rec_hash or comp.get("to") != cur_hash:
+            continue
+        return a.get("id")
+    return None
+
+
 def _attestation_ok(rec, current, attestations):
     """证据自带的 `rva` 是否**当场**成立（版本对 + 验证器身份三者全对上才算）。
 
@@ -551,6 +601,10 @@ def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=Non
        与当前验证器身份**逐项对齐**（`_attestation_ok`），则该原因被
        「`reverified:code_equivalent`」取代（Phase 73；证明的语义由
        `reverify_attest.py --check` 独立重算，不在本函数里做）。
+       3.6 例外（Phase 81）：`src_changed` / `ref_changed` / `dep_version_changed`
+       这三条**逐条**被 `content_equivalent` 证明抵掉（`_content_equivalent_covered`：
+       族 + 对象 + from + to 四要素全对齐才抵），记 `reverified:content_equivalent`。
+       ★ 只抵被覆盖的那几条；同一证据上其它原因照旧 ⇒ 该 stale 仍 stale。
     4. 否则有任一**不可判定**原因（或账本显示被无留痕地改写过）⇒ `needs_review`。
     5. 否则 ⇒ `valid`。
 
@@ -581,6 +635,7 @@ def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=Non
 
     ver = recorded.get("verifier") or {}
     vid = ver.get("verifier_id")
+    cur_deps = {}
     if vid:
         cur_v = (current.get("verifiers") or {}).get(vid) or {}
         rec_ch = ver.get("code_hash")
@@ -612,6 +667,39 @@ def evidence_status(recorded, current, *, claim_rejected=False, ledger_entry=Non
         if _attestation_ok(recorded, current, attestations):
             reasons = [r for r in reasons if not r.startswith(R_VERIFIER_CHANGED)]
             reasons.append("%s:code_equivalent" % R_REVERIFIED)
+
+    # ★ 3.6（Phase 81 · S2）「文件字节变了」与「内容变了」也不是一回事。
+    #   `element_reference.py` 这类**双重身份**文件加一行注释，会同时推翻 src / ref / dep
+    #   三族哈希 ⇒ 一次改动打红 35040 条证据（70.5%，见 D137）。若内容真没变
+    #   （AST 逐字符相同），这些证据不该判 stale —— 但**不能靠放宽判据**来救：
+    #   必须出示可重算的 `content_equivalent` 证明，且族 / 对象 / 版本对三者全对上才抵。
+    #   ★ 只抵**被证明覆盖的那几条**原因；同一条证据上其它原因照旧 ⇒ 该 stale 仍 stale。
+    CONTENT_FAMILY = {R_SRC_CHANGED: "src", R_REF_CHANGED: "ref", R_DEP_CHANGED: "dep"}
+    if attestations and any(r.split(":")[0] in CONTENT_FAMILY for r in reasons):
+        rec_by, cur_by = {}, {}
+        if src is not None:
+            rec_by[(R_SRC_CHANGED, src)] = rec_src
+            cur_by[(R_SRC_CHANGED, src)] = cur_src
+        for rr in (recorded.get("reference_refs") or []):
+            rid = rr.get("ref_id")
+            rec_by[(R_REF_CHANGED, rid)] = rr.get("content_hash")
+            cur_by[(R_REF_CHANGED, rid)] = cur_refs.get(rid)
+        for rel, h in (ver.get("dependency_versions") or {}).items():
+            rec_by[(R_DEP_CHANGED, rel)] = h
+            cur_by[(R_DEP_CHANGED, rel)] = cur_deps.get(rel)
+        kept, hit = [], 0
+        for r in reasons:
+            fam, _, obj = r.partition(":")
+            if fam in CONTENT_FAMILY:
+                aid = _content_equivalent_covered(CONTENT_FAMILY[fam], obj,
+                                                  rec_by.get((fam, obj)),
+                                                  cur_by.get((fam, obj)), attestations)
+                if aid:
+                    hit += 1
+                    continue
+            kept.append(r)
+        if hit:
+            reasons = kept + ["%s:content_equivalent" % R_REVERIFIED]
 
     # ★ 「重写哈希不能恢复 valid」的程序化堵口
     if ledger_entry is None:

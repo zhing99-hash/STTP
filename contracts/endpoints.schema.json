@@ -119,6 +119,19 @@
       "client_budget_ms": 8000,
       "note": "Phase 76（F13）新增。三层导航：subject → domain → tags，每格只给「计数 + 前 limit 个代表节点」，**绝不返回全图**（铁律 #66）—— live 页面手上没有全图，所以聚合只能在后端（`core.js:45` 的 bundle 分支 live 下永不请求）。★ 与 `/api/overview` **不合并**：overview 答「这张图长什么样」（学科×类型元图，不可下钻），nav 答「我能往下翻到什么」（层级 + 计数 + 可点击代表）。★ 计数口径：前两层单归属 ⇒ `stats.sum_items == stats.scanned`；第三层多值 ⇒ 靠 `stats.multi_valued` 与 `tagged/untagged` 换式子。★ `parent` 必须**原样**转发（中文、带点的英文、含空格标签），归一化会把「没找到」伪装成「没有」。★ 本端点**不读** `deadline_ms` ⇒ 等待预算是纯客户端常量，与 `core.js` 的 `ENDPOINT_CLIENT_BUDGET_MS.nav` 逐值相等（X16g）。"
     },
+    "/api/formula": {
+      "handler": "_api_formula",
+      "response_schema": "contracts/formula.schema.json",
+      "required": ["id"],
+      "params": {
+        "id": "node_id（必须带 Formula 标签，否则 no_result）",
+        "limit": "int（每段最多几条，1..200）"
+      },
+      "frontend_uses": ["id", "limit"],
+      "frontend_must_not_send": [],
+      "client_budget_ms": 5000,
+      "note": "Phase 77（F6）新增。单条公式五段详情：适用条件/符号/量纲/来源/等价式，每段带 `present` + `kind`（中文定性），顶层 `missing` 列真正缺数据的段。★ 与 `/api/neighbors` **不合并**：neighbors 答「连着谁」（拓扑），本端点答「这一段为什么是空的」（语义）。★ 门禁：**不是公式 ⇒ no_result，不给空壳**（用「空」回答「不适用」是 D115 同族错误）；门禁用 `labels` 而非主类型（实测 MX:lemma:partition_of_unity 的 labels=['Lemma','Formula','Entity'] 但主类型是 Lemma）。★ 许可为**三态**（redistributable/internal_only/forbidden），`license_available:false` 表示判定器不在、不许冒充 forbidden。★ `stats.coverage` 现算且**按快照缓存**（否则每条详情都要 O(N) 扫全图，违背铁律 #66）。"
+    },
     "/api/stats": {
       "handler": "do_GET 内联",
       "required": [],

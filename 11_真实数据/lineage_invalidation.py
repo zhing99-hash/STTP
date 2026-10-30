@@ -217,6 +217,9 @@ def analyze(base=ROOT, edges=None, byte_source="repo", with_deps=True):
     dep_affected_ids = set()
     if with_deps:
         ledger = ed.load_ledger(base)
+        # ★ Phase 81 · S2：`content_equivalent` 证明（只抵 src/ref/dep 三族的内容未变）。
+        #   按 kind 过滤 ⇒ 当前表里没有这类证明时**零影响**（有判据守着，见 S99j）。
+        atts = ed.content_attestations(base)
         cur_dep = ed.current_snapshot(base=base, byte_source=byte_source, src_hashes=cur)
         cur_ref = cur_dep["reference_hashes"]
         cur_ver = cur_dep["verifiers"]
@@ -238,7 +241,8 @@ def analyze(base=ROOT, edges=None, byte_source="repo", with_deps=True):
                 st, rs = ed.evidence_status(
                     ed.recorded_deps(ev), cur_dep,
                     claim_rejected=bool(p.get("rejected")),
-                    ledger_entry=ledger.get(ev.get("evd") or ""))
+                    ledger_entry=ledger.get(ev.get("evd") or ""),
+                    attestations=atts)
                 dep["status_counts"][st] += 1
                 for r in rs:
                     dep["reason_counts"][r.split(":")[0]] += 1
@@ -390,6 +394,7 @@ def reverify(old_graph, new_graph=NORM, base=ROOT, emit_ledger=False,
     else:
         nedges = oedges
     ledger = ed.load_ledger(base)
+    atts = ed.content_attestations(base)      # Phase 81 · S2：内容等价证明（按 kind 过滤）
     cur_dep = ed.current_snapshot(base=base, byte_source="repo",
                                   src_hashes=sr.hash_map(base))
     stamp = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec="seconds")
@@ -403,7 +408,8 @@ def reverify(old_graph, new_graph=NORM, base=ROOT, emit_ledger=False,
                 continue
             rec = ed.recorded_deps(ev)
             st, rs = ed.evidence_status(rec, cur_dep,
-                                        ledger_entry=ledger.get(ev.get("evd") or ""))
+                                        ledger_entry=ledger.get(ev.get("evd") or ""),
+                                        attestations=atts)
             stats["n_checked"] += 1
             if st == "valid":
                 stats["n_already_valid"] += 1
@@ -447,7 +453,7 @@ def reverify(old_graph, new_graph=NORM, base=ROOT, emit_ledger=False,
     violations = detect_inplace_rewrites(oedges, nedges, ledger)
     stats["n_inplace_rewrite_violations"] = len(violations)
     if violations:
-        stats["violations"] = violations[:5]
+        stats["violations"] = violations[:5]  # noloss-exempt: 诊断报告取样，不入图
 
     if emit_ledger:
         payload = {
@@ -473,15 +479,16 @@ def reverify(old_graph, new_graph=NORM, base=ROOT, emit_ledger=False,
 
     if with_levels:
         stats["level_changes"] = dict(_level_changes([e for e in oedges
-                                                      if _edge_has_stale(e, cur_dep, ledger)]))
+                                                      if _edge_has_stale(e, cur_dep, ledger, atts)]))
     return entries, stats
 
 
-def _edge_has_stale(e, cur_dep, ledger):
+def _edge_has_stale(e, cur_dep, ledger, atts=None):
     for ev in ((e.get("props") or {}).get("verification_evidence") or []):
         if isinstance(ev, dict) and ed.has_recorded_deps(ev):
             st, _ = ed.evidence_status(ed.recorded_deps(ev), cur_dep,
-                                       ledger_entry=ledger.get(ev.get("evd") or ""))
+                                       ledger_entry=ledger.get(ev.get("evd") or ""),
+                                       attestations=atts)
             if st == "stale":
                 return True
     return False
@@ -993,7 +1000,7 @@ def _reverify_probe():
                and en.get("evidence_id") != ev["evd"]
                and "ref_changed:dimension_table" in en.get("reason", ""))
         out["LIN11"] = (c_b, "supersedes=%s → 新 %s ｜ 原因 %s"
-                        % (str(en.get("supersedes"))[:18], str(en.get("evidence_id"))[:18],
+                        % (str(en.get("supersedes"))[:18], str(en.get("evidence_id"))[:18],  # noloss-exempt: 错误信息截断，不入图
                            en.get("reason")))
 
         # (c) ★ 单纯重写哈希**不**恢复 valid。
@@ -1043,7 +1050,7 @@ def _reverify_probe():
         # (e) 旧证据**保留**（不被删除）—— 用「新图里仍能查到旧 evd」断言
         still = any(e2.get("evd") == ev["evd"] for e2 in
                     new_edges_evs(json.load(open(new_g, encoding="utf-8"))["edges"]))
-        out["LIN14"] = (still, "新图仍可查到旧 evd=%s" % str(ev["evd"])[:18])
+        out["LIN14"] = (still, "新图仍可查到旧 evd=%s" % str(ev["evd"])[:18])  # noloss-exempt: 诊断报告文案，不入图
     finally:
         sr.rmtree_force(tmp)
     return out

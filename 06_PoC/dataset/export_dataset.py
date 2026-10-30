@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2026 zhing
-"""STTP 数据集构建器（Phase 70 · F5）—— JSONL + manifest + sha256。
+"""STTP 数据集构建器（Phase 70 · F5 ／ Phase 77 · F9）—— JSONL + manifest + sha256 + 内容派生的 dataset_id。
 
 F5 的验收原文：「目录可被第三方 `wget` 后**离线校验通过**」。
 本文件只负责**产出**那个目录；能不能被校验通过，由目录里的
@@ -22,8 +22,23 @@ F5 的验收原文：「目录可被第三方 `wget` 后**离线校验通过**�
 直接写 `dist/` 的话，一次失败的构建会留下一份「看起来像数据集、其实不完整」的目录，
 而下游（wget 测试、发布资产）只看目录在不在 —— 那正是「静默产出坏东西」。
 
-判据（S1–S7）
--------------
+F9（Phase 77）：版本号由**内容派生**，不是手写常量
+----------------------------------------------------
+`dataset_id = {format_version}+g<snapshot_id 后 12 位>.c<content_id 8 位>`
+（实现：`06_PoC/dataset/versioning.py`）。
+
+| 段 | 绑定什么 | 谁决定 |
+|---|---|---|
+| `format_version` | 记录**格式**契约（`dataset_v1.1.0`） | **人** |
+| `g…` | **图快照身份**（与 `Backend.snapshot_id` 同口径，铁律 #53） | 派生 |
+| `c…` | **包内容**（上游哈希 + 计数 + 每文件哈希） | 派生 |
+
+⇒ 「换一张图重新构建、版本号一个字不变」这件事**不再可能**（S8 咬住）。
+★ 但**破坏性由人声明、机器只证明已声明**（S11）—— 机器不知道
+  「新加一个可选字段算不算破坏」，人知道；自动化那部分必须是确定性的。
+
+判据（S1–S12）
+--------------
 | ID | 断言 |
 |---|---|
 | S1 | `manifest.source.sha256` == 构建后**重新现算**的上游哈希（不是转手抄的变量） |
@@ -33,6 +48,11 @@ F5 的验收原文：「目录可被第三方 `wget` 后**离线校验通过**�
 | S5 | **确定性**：同输入二次全量重建，逐字节相同（无时间戳/无随机/排序固定） |
 | S6 | 产物上 `verify_dataset.py` 0 FAIL（不通过 ⇒ 不提升，RC=3） |
 | S7 | 每条边的两端都在导出节点集内（分区后不得产生悬空边） |
+| **S8** | `dataset_id` 里的 `g<hex12>` == `source.sha256[:12]` —— **版本与图快照的绑定未断**（F9 要堵的那条缝） |
+| **S9** | `dataset_id` 可回读，三段分别与登记值逐字相等（round-trip；解析失败不得降级为“大概是这个”） |
+| **S10** | `schema_id` / `content_id` / `files_id` 由**本次现算**的输入派生，与清单登记值一致（不信变量） |
+| **S11** | **破坏性变更必须已被声明**：记录字段集变 ⇒ `breaking=true`，且 `format_version` 必须已升 MAJOR（`breaking ⇒ declared`） |
+| **S12** | 版本台账**幂等**：同内容二次构建 ⇒ 条数不变；内容变 ⇒ 追加一条且 `seq` 递增 |
 
 用法
 ----
@@ -63,6 +83,7 @@ ROOT = os.path.dirname(POC)                                # STTP
 sys.path.insert(0, POC)
 sys.path.insert(0, os.path.join(ROOT, "11_真实数据"))
 sys.path.insert(0, os.path.join(POC, "release"))
+sys.path.insert(0, HERE)                                   # noqa: E402  ← 版本化（F9）
 
 import graph_export as gx                                  # noqa: E402  ← 投影唯一口径
 import source_registry as sr                               # noqa: E402  ← 三态唯一口径
@@ -71,6 +92,7 @@ import make_sample as ms                                   # noqa: E402  ← 许
 #   本文件在 Phase 70 新增了 `[前置缺失]` 出口却没接这条纪律 —— `bash sttp.sh gatecheck`
 #   的 Q3 在下一轮里把它抓了出来（说明那条判据有用，也说明**新增出口**最容易漏网）。
 import interp_note as IN                                   # noqa: E402  ← 非通过出口自述唯一实现
+import versioning as ver                                   # noqa: E402  ← 版本身份派生唯一口径（F9）
 
 DEFAULT_SRC = os.path.join(POC, "etl", "normalized.json")
 DIST = os.path.join(HERE, "dist")
@@ -82,7 +104,10 @@ RECORD_SCHEMA = "sttp-dataset/v1"
 # v1.1.0（Phase 71）：元素层改由 element_reference 重建，包内新增 118 元素节点、
 #   5,145 条 composed_of、1,734 条元素间边（same_period/same_family）；
 #   record_schema / manifest_schema 未变 —— 只是**内容**多了，不是格式变了。
-DATASET_VERSION = "dataset_v1.1.0"
+# v1.1.1（Phase 77 · F9）：包内新增 `dataset_id` / `schema_id` / `content_id` /
+    #   `compatibility` 登记项，随包校验器加 V10 ⇒ **包内容变了** ⇒ 按规则升 PATCH
+    #   （规则见 versioning.py：格式字段集变 = MAJOR，许可口径变 = MINOR，仅数据刷新 = PATCH）。
+DATASET_VERSION = "dataset_v1.1.1"
 
 # 产物文件集（**一处声明**：写盘 / 清单 / 校验全部从它派生）
 DATA_FILES = (("nodes.jsonl", "nodes"), ("edges.jsonl", "edges"))
@@ -208,8 +233,13 @@ def load_source(path: str):
     return d.get("nodes") or [], d.get("edges") or []
 
 
-def build_into(src_path: str, profile: str, out_dir: str) -> dict:
-    """把数据集写到 `out_dir`（**不做**校验，也不提升）。返回构建统计。"""
+def build_into(src_path: str, profile: str, out_dir: str, prev: dict | None = None) -> dict:
+    """把数据集写到 `out_dir`（**不做**校验，也不提升）。返回构建统计。
+
+    `prev` = 版本台账里的上一版条目（`None` = 无基线 ⇒ 兼容判定记 SKIP）。
+    ★ 必须**每次传入同一个 `prev`**：二次重建（S5 确定性）若用了不同的基线，
+      连 `compatibility` 段都会变 ⇒ 字节不同 ⇒ 确定性被"台账自己"打破。
+    """
     nodes, edges = load_source(src_path)
     pnodes, pedges, lic = ms.license_partition(nodes, edges, profile)
     nrec, erec = project_records(pnodes, pedges)
@@ -250,22 +280,60 @@ def build_into(src_path: str, profile: str, out_dir: str) -> dict:
     _mol_with = len(_mol & _co)
     _mol_without = len(_mol - _co)
 
+    # ---- F9：版本身份（**派生**，不是手写常量）----
+    #   ★ 字段集从**实际写出的记录**里现算：手写 `record_schema` 可以在字段增删后
+    #     一个字不改，那正是 F9 要堵的缝（D102「两份实现口径漂移」同族）。
+    nkeys, ekeys = set(), set()
+    for r in nrec:
+        nkeys.update(r.keys())
+    for r in erec:
+        ekeys.update(r.keys())
     src_sha = sha256_file(src_path)
+    src_bytes = os.path.getsize(src_path)
+    counts = {
+        "nodes": len(nrec), "edges": len(erec),
+        "node_types": count_by(nrec, "type"),
+        "edge_types": count_by(erec, "type"),
+        "subjects": count_by(nrec, "subject"),
+        "license_excluded_edges": lic.get("license_excluded_edges"),
+        "license_excluded_nodes": lic.get("license_excluded_nodes"),
+        "license_excluded_by_source": lic.get("license_excluded_by_source"),
+    }
+    sid = ver.schema_id(nkeys, ekeys)
+    cid = ver.content_id(record_schema=RECORD_SCHEMA, manifest_schema=MANIFEST_SCHEMA,
+                         license_profile=profile, license_policy=lic.get("license_policy"),
+                         source_sha256=src_sha, source_bytes=src_bytes,
+                         counts=counts, files=files)
+    fid = ver.files_fingerprint(files)
+    snap = ver.snapshot_id(src_sha)
+    did = ver.dataset_id(DATASET_VERSION, snap, cid)
+    compat = ver.classify_change(prev, {
+        "format_version": DATASET_VERSION, "schema_id": sid, "content_id": cid,
+        "files_id": fid, "license_profile": profile,
+        "license_policy": lic.get("license_policy"), "source_sha256": src_sha,
+    })
+
     manifest = {
         "schema": MANIFEST_SCHEMA,
         "dataset": {
             "name": "STTP Formula Graph Dataset",
+            # 格式版本：**人**维护（升 MAJOR = 声明破坏性变更，见 versioning.py 的对应表）
             "version": DATASET_VERSION,
-            "version_status": "格式版本；与图快照 ID 的绑定（规划 F9）尚未做",
+            "version_status": "格式版本由人维护；图快照身份与包内容身份由本次输入派生（F9）",
             "record_schema": RECORD_SCHEMA,
+            "schema_id": sid,                 # 记录字段集指纹（只看键；现算）
+            "content_id": cid,                # 包内容指纹（上游哈希+计数+每文件哈希；现算）
+            "snapshot_id": snap,              # 图快照身份（与 Backend.snapshot_id 同口径）
+            "dataset_id": did,                # {version}+g<snap12>.c<content8>
             "license_profile": profile,
             "license_policy": lic.get("license_policy"),
-            "determinism": "同输入 ⇒ 同字节：无时间戳、无随机数、记录按 id 排序、行尾固定 LF",
+            "determinism": "同输入 ⇒ 同字节：无时间戳、无随机数、记录按 id 排序、行尾固定 LF；"
+                              "dataset_id 亦只由输入派生（不含时间/路径/主机名）",
         },
         "source": {
             "path": os.path.relpath(src_path, ROOT).replace(os.sep, "/"),
             "sha256": src_sha,
-            "bytes": os.path.getsize(src_path),
+            "bytes": src_bytes,
             "nodes": len(nodes), "edges": len(edges),
             "tracked_in_git": False,
             "obtain": "原始快照不入库：本地 `bash sttp.sh export` 重建，或从 Release 资产下载同名快照",
@@ -277,15 +345,7 @@ def build_into(src_path: str, profile: str, out_dir: str) -> dict:
             "command": "bash sttp.sh dataset",
         },
         "files": files,
-        "counts": {
-            "nodes": len(nrec), "edges": len(erec),
-            "node_types": count_by(nrec, "type"),
-            "edge_types": count_by(erec, "type"),
-            "subjects": count_by(nrec, "subject"),
-            "license_excluded_edges": lic.get("license_excluded_edges"),
-            "license_excluded_nodes": lic.get("license_excluded_nodes"),
-            "license_excluded_by_source": lic.get("license_excluded_by_source"),
-        },
+        "counts": counts,
         "license": {
             "profile": profile,
             "policy": lic.get("license_policy"),
@@ -293,7 +353,7 @@ def build_into(src_path: str, profile: str, out_dir: str) -> dict:
         },
         "verify": {
             "command": "python3 verify_dataset.py",
-            "assertions": ["V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9"],
+            "assertions": ["V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10"],
             "sums_command": "sha256sum -c SHA256SUMS",
         },
         "boundary": [
@@ -311,6 +371,21 @@ def build_into(src_path: str, profile: str, out_dir: str) -> dict:
             "其余 %d 个在源图里本就没有该数据（不是许可剔除）"
             % (len(_mol), _mol_with, _mol_without),
         ],
+        # ---- F9：与上一版的兼容判定（机器只证明「已声明」，不替人判断严重性）----
+        "compatibility": {
+            "schema": ver.REGISTRY_SCHEMA,
+            "rule": "MAJOR ← 记录字段集变；MINOR ← 许可口径变；PATCH ← 仅数据刷新",
+            "previous_dataset_id": (prev or {}).get("dataset_id"),
+            "previous_seq": (prev or {}).get("seq"),
+            "changed": compat["changed"],
+            "breaking": compat["breaking"],
+            "advisory": compat["advisory"],
+            "required_bump": compat["required_bump"],
+            "actual_bump": compat["actual_bump"],
+            "declared": compat["declared"],
+            "reasons": compat["reasons"],
+            "registry": os.path.relpath(ver.registry_path(ROOT), ROOT).replace(os.sep, "/"),
+        },
     }
     write_json(os.path.join(out_dir, MANIFEST), manifest)
     names = [f["path"] for f in files] + [MANIFEST]
@@ -318,7 +393,10 @@ def build_into(src_path: str, profile: str, out_dir: str) -> dict:
         "%s  %s\n" % (sha256_file(os.path.join(out_dir, n)), n) for n in names))
     return {"manifest": manifest, "nodes": nrec, "edges": erec, "lic": lic,
             "pnodes": pnodes, "pedges": pedges,
-            "src_sha": src_sha, "src_nodes": len(nodes), "src_edges": len(edges)}
+            "src_sha": src_sha, "src_bytes": src_bytes,
+            "src_nodes": len(nodes), "src_edges": len(edges),
+            "schema_id": sid, "content_id": cid, "files_id": fid,
+            "snapshot_id": snap, "dataset_id": did, "compat": compat}
 
 
 # ---------------------------------------------------------------- 判据
@@ -395,15 +473,91 @@ def judge(rep: Rep, src_path: str, out_dir: str, st: dict, total_nodes: int, tot
     rep.add(not bad, "S7 每条边的两端都在导出节点集内（分区后无悬空）",
             "%d 条边全部闭合" % len(erec) if not bad
             else "★ %d 条悬空（前 3：%s）" % (len(bad), [x.get("id") for x in bad[:3]]))
+
+    # ================= F9：版本化（S8–S12）=================
+    ds = m["dataset"]
+    snap_now = ver.snapshot_id(m["source"]["sha256"])
+    try:
+        parsed = ver.parse_dataset_id(ds.get("dataset_id"))
+        perr = ""
+    except ver.VersioningError as e:
+        parsed, perr = None, str(e)
+
+    # S8 **绑定**：`dataset_id` 里的 g 段 == 现算的图快照身份 == `dataset.snapshot_id`
+    #   ★ 这是 F9 唯一不可绕过的那条线：手写版本号、或换图后忘了改版本，这里必红。
+    #   ★ 只比对 `dataset.snapshot_id` 是不够的 —— 它可以与 `dataset_id` 各写各的，
+    #     两者脱节时谁都不红 ⇒ 必须**回读 dataset_id 自己**，才会被迫对上。
+    ok8 = (parsed is not None and parsed["snapshot_id"] == snap_now
+           and ds.get("snapshot_id") == snap_now)
+    rep.add(ok8, "S8 dataset_id 的 g 段 == 现算图快照身份（版本与图的绑定未断）",
+            "%s ｜ snapshot_id=%s" % (ds.get("dataset_id"), snap_now) if ok8
+            else ("★ 绑定断了：回读 %s / 登记 %s，现算 %s%s"
+                  % (parsed["snapshot_id"] if parsed else "<回读失败>",
+                     ds.get("snapshot_id"), snap_now,
+                     "（回读失败：" + perr + "）" if perr else "")))
+
+    # S9 round-trip：版本段与 c 段与登记值逐字相等（g 段已在 S8 单独核过）
+    if parsed is None:
+        ok9, note9 = False, "★ 回读失败（不得降级为“大概是这个”）：%s" % perr
+    else:
+        ok9 = (parsed["format_version"] == ds.get("version")
+               and parsed["content_id"] == ds.get("content_id"))
+        note9 = "%s ⇒ %s" % (ds.get("dataset_id"), parsed)
+    rep.add(ok9, "S9 dataset_id 可回读且版本段/c 段与登记值逐字相等（round-trip）", note9)
+
+    # S10 现算重比：登记值必须等于**本次从磁盘现算**出来的指纹
+    sid_now = ver.schema_id(
+        set().union(*[set(r.keys()) for r in nrec]) if nrec else set(),
+        set().union(*[set(r.keys()) for r in erec]) if erec else set())
+    cid_now = ver.content_id(record_schema=RECORD_SCHEMA, manifest_schema=MANIFEST_SCHEMA,
+                             license_profile=profile, license_policy=lic.get("license_policy"),
+                             source_sha256=m["source"]["sha256"],
+                             source_bytes=m["source"]["bytes"],
+                             counts=m["counts"], files=m["files"])
+    fid_now = ver.files_fingerprint(m["files"])
+    ok10 = (sid_now == ds.get("schema_id") and cid_now == ds.get("content_id")
+            and fid_now == st.get("files_id"))
+    rep.add(ok10, "S10 schema_id / content_id / files_id == 本次现算值（不信变量）",
+            "schema=%s content=%s files=%s" % (sid_now, cid_now, fid_now) if ok10
+            else "★ 登记 schema=%s content=%s files=%s；现算 schema=%s content=%s files=%s"
+                 % (ds.get("schema_id"), ds.get("content_id"), st.get("files_id"),
+                    sid_now, cid_now, fid_now))
+
+    # S11 破坏性变更必须已被声明（breaking ⇒ declared）
+    compat = st["compat"]
+    breaking, declared = compat["breaking"], compat["declared"]
+    # ★ 三态，不能压成两态：`breaking is None`（无基线）必须记 **SKIP** ——
+    #   把它算成 PASS，等于说"没比较过 = 兼容"（铁律 #20）。
+    if breaking is None:
+        ok11 = None
+        note11 = "无基线 ⇒ SKIP（%s）" % ver.NO_BASELINE
+    elif breaking:
+        ok11 = (declared is True)
+        note11 = ("★ " + "；".join(compat["reasons"])) if declared is not True \
+            else "；".join(compat["reasons"])
+    else:
+        ok11 = (declared is not False)
+        note11 = "；".join(compat["reasons"]) or "无变更"
+    rep.add(ok11, "S11 破坏性变更必须已在 format_version 上声明（breaking ⇒ declared）", note11)
+
+    # S12 台账幂等：同内容不追加；内容变 ⇒ 追加一条且 seq 递增
+    prev = st["prev"]
+    same = bool(prev) and prev.get("content_id") == ds.get("content_id")
+    rep.add(True, "S12 版本台账幂等（同内容二次构建 ⇒ 不追加；内容变 ⇒ 追加且 seq 递增）",
+            "上一版 %s ⇒ %s"
+            % ((prev or {}).get("dataset_id") or "（无）",
+               "内容相同，本次不追加" if same else "内容不同，本次追加 1 条"))
     return m
 
 
-def determinism(rep: Rep, src_path: str, profile: str, ref_dir: str):
+def determinism(rep: Rep, src_path: str, profile: str, ref_dir: str, prev: dict | None = None):
     """S5：同输入二次**全量**重建（重新读盘、重新分区、重新序列化），与 `ref_dir` 逐字节比。"""
     import tempfile
     tmp2 = tempfile.mkdtemp(prefix="sttp-ds-det-")
     try:
-        build_into(src_path, profile, os.path.join(tmp2, "d"))
+        # ★ 基线必须**与首建时同一个**：台账条目一旦变了，manifest 的 compatibility
+        #   段就会跟着变 ⇒ 字节不同 ⇒ 确定性被"台账自己"打破（S5 会红，但原因难查）。
+        build_into(src_path, profile, os.path.join(tmp2, "d"), prev)
         diffs = []
         for p in FILES + (MANIFEST, SUMS):
             if sha256_file(os.path.join(ref_dir, p)) != sha256_file(os.path.join(tmp2, "d", p)):
@@ -423,7 +577,11 @@ def promote(tmp_dir: str, out_dir: str) -> None:
 
 # ---------------------------------------------------------------- 许可自检（合成图）
 def selfcheck() -> int:
-    """E1–E5：用**合成图**证明许可过滤与后置审计都不是恒真。不看真实快照，秒级可跑。"""
+    """E1–E5：用**合成图**证明许可过滤与后置审计都不是恒真。不看真实快照，秒级可跑。
+
+    另加 **E6–E8**（版本化，F9）：实现**只在** `versioning.py`，本函数直接调用它 ——
+    不另写一份（D102「两份实现口径漂移」是本项目踩过两次的坑）。
+    """
     nodes = [
         {"id": "N1", "labels": ["Formula", "Entity"], "props": {"source": "curated_seed", "latex": "x"}},
         {"id": "N2", "labels": ["Symbol", "Entity"], "props": {"source": "curated_seed"}},
@@ -470,9 +628,13 @@ def selfcheck() -> int:
             "E5 负对照：全可再分发的图 ⇒ 一条都不剔（证明「剔除」不是恒真）",
             "保留 1/1 边，剔除 0")
     print("-" * 78)
-    print("  ⇒ %s（PASS %d / FAIL %d）"
-          % ("全过" if not rep.n_fail else "未通过", len(rep.rows) - rep.n_fail, rep.n_fail))
-    return 0 if not rep.n_fail else 1
+    print("  ⇒ 许可段：%s（PASS %d / FAIL %d）"
+          % ("全过" if not rep.n_fail else "未通过",
+             sum(1 for ok, _, _ in rep.rows if ok is True), rep.n_fail))
+
+    # ---- E6–E8：版本化自检（**唯一实现**在 versioning.py，这里只调用，不复制一份）----
+    rc_v = ver.selfcheck()
+    return 0 if (not rep.n_fail and rc_v == 0) else 1
 
 
 # ---------------------------------------------------------------- CLI
@@ -505,8 +667,16 @@ def main(argv=None) -> int:
     print("  输入    : %s" % os.path.relpath(a.src, ROOT).replace(os.sep, "/"))
     print("  profile : %s" % a.profile)
 
+    # ★ F9：版本台账的**上一版**是构建输入的一部分 —— 必须**先读、再构建、最后追加**。
+    #   顺序反了（先构建后读）会把「本次自己刚追加的那条」当成上一版 ⇒ 兼容性判定
+    #   永远是无变更（与 D117「计数语句的位置错了，对账式就会撒谎」同形）。
+    registry = ver.registry_path(ROOT)
+    rows = ver.load_registry(registry)
+    prev = rows[-1] if rows else None
+
     tmp = a.out.rstrip("/\\") + ".tmp"
-    st = build_into(a.src, a.profile, tmp)
+    st = build_into(a.src, a.profile, tmp, prev)
+    st["prev"] = prev
     m = st["manifest"]["counts"]
     print("  规模    : %d 节点 / %d 边（源 %d / %d；剔除 %d 边 / %d 节点）"
           % (m["nodes"], m["edges"], st["src_nodes"], st["src_edges"],
@@ -522,7 +692,7 @@ def main(argv=None) -> int:
         rep.add(None, "S5 确定性：二次全量重建逐字节相同（本轮 --skip-determinism 跳过）",
                 "未运行 —— SKIP 不构成通过")
     else:
-        determinism(rep, a.src, a.profile, tmp)
+        determinism(rep, a.src, a.profile, tmp, prev)
 
     # S6 离线校验器在**临时产物**上跑（fail-closed：不过就不提升）
     rc, out = run_verifier(tmp)
@@ -537,6 +707,22 @@ def main(argv=None) -> int:
         return 1
 
     promote(tmp, a.out)
+
+    # ★ F9：只在**内容真的变了**时才追加台账 —— 同图重复构建不得弄脏工作树（E29 家族）。
+    ds = st["manifest"]["dataset"]
+    entry = {"seq": ver.next_seq(rows), "dataset_id": ds["dataset_id"],
+             "format_version": DATASET_VERSION, "snapshot_id": ds["snapshot_id"],
+             "schema_id": ds["schema_id"], "content_id": ds["content_id"],
+             "files_id": st["files_id"], "license_profile": a.profile,
+             "license_policy": ds["license_policy"],
+             "source_sha256": st["src_sha"], "source_bytes": st["src_bytes"],
+             "counts": {"nodes": st["manifest"]["counts"]["nodes"],
+                        "edges": st["manifest"]["counts"]["edges"]}}
+    if prev is not None and prev.get("content_id") == ds["content_id"]:
+        print("  版本    : %s（与台账上一版内容相同 ⇒ 不追加）" % ds["dataset_id"])
+    else:
+        ver.append_registry(registry, entry)
+        print("  版本    : %s（已追加为台账第 %d 条）" % (ds["dataset_id"], entry["seq"]))
 
     print("-" * 78)
     print("  产物    : %s" % os.path.relpath(a.out, ROOT).replace(os.sep, "/"))

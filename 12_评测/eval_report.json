@@ -4,7 +4,8 @@
   "seed": 20261012,
   "split_rule": "按类别分层；困难题与基本题各自对半交替分入 dev/test（固定 seed=20261012，确定性）",
   "solution_space": {
-    "graph": "06_PoC/etl/normalized.json（权威规范图，9657 节点 / 48712 边）",
+    "graph": "06_PoC/etl/normalized.json（权威规范图，9750 节点 / 48813 边）",
+    "graph_sha256": "fec51bf0f20112cb369e374f89dfe0d1fe798ee38bfbef9d4a2ff0e76cc10ea0",
     "truth_tables": [
       "11_真实数据/element_reference.py",
       "11_真实数据/dimension_table.py"

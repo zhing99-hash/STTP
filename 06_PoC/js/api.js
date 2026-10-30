@@ -369,6 +369,23 @@ export class Api {
       { deadlineMs: opts.deadlineMs || ENDPOINT_CLIENT_BUDGET_MS.nav });
   }
 
+  /**
+   * GET /api/formula?id=<节点 id>&limit=<每段上限> —— 公式详情五段（F6）。
+   *
+   * ★ `id` **必填**（后端缺它即 400「缺少参数 id」）。`mode: null` 用于抑制
+   *   `buildParams` 的默认 `mode=ego` —— 本端点不认 `mode`（与 `search()` 同理）。
+   * ★ 五段：**applicability / symbols / dimension / provenance / equivalents**，
+   *   每段带 `present` 与 `kind`；顶层 `missing` = 真正缺数据的段名集合。
+   * ★ 展示纪律（本端点的存在理由）：**「无数据」与「不适用」必须分列**。
+   *   节点不是公式时后端给 `status=no_result` 并说明它是什么（Unit / Paper …），
+   *   前端**不得**把它渲染成「这条公式没有任何数据」——那正是 D115 的同族错误。
+   */
+  formula(id, opts = {}) {
+    const p = buildParams({ id, limit: opts.limit, mode: null });
+    return this._get(ENDPOINTS.formula, p,
+      { deadlineMs: opts.deadlineMs || ENDPOINT_CLIENT_BUDGET_MS.formula });
+  }
+
   /** GET /graph_data.json —— **仅** bundle 模式调用（验收 V1 断言的静态面） */
   bundle() {
     return this._get(ENDPOINTS.bundleGraph, null,

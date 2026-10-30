@@ -16,8 +16,8 @@ F5 的验收是「目录可被第三方 `wget` 后**离线校验通过**」。�
 这不是重复劳动，而是刻意（铁律 #14：自检输入须独立）——若校验器调用构建器算哈希，
 那就变成「构建器自己跟自己一致」，一个算错的哈希会两边一起错、且永不被发现。
 
-判据（V1–V9）
--------------
+判据（V1–V10）
+--------------
 | ID | 断言 | 红意味着什么 |
 |---|---|---|
 | V0 | `manifest.json` 可解析且 `schema` 匹配 | 目录不是本格式，或传输截断 |
@@ -30,6 +30,13 @@ F5 的验收是「目录可被第三方 `wget` 后**离线校验通过**」。�
 | V7 | `SHA256SUMS` 自洽（`sha256sum -c` 等价）且文件集一致 | 不用 python 的人拿到的是错的校验清单 |
 | V8 | 上游快照登记项形态完整 | 不知道这份数据从哪来 |
 | V9 | 每个来源都在 `ATTRIBUTION.md` 有行（CC BY 须署名） | 署名义务没落地 |
+| **V10** | `dataset_id` 的 `g` 段 == `source.sha256[:12]`，版本段 == `dataset.version` | **版本与图快照的绑定断了**（换图重构建而版本号不变） |
+
+**V10 的能力边界（与 V8 同口径，不许冒充能算）**：本判据**只核对登记值之间的自洽**，
+**不重算** `schema_id` / `content_id` —— 那需要指纹算法，而把算法抄进随包文件就会与
+构建侧形成「两份实现」，一起漂移时两侧同时错且永不被发现（D102 的坑）。
+它能抓住的正是 F9 要堵的那条缝：**手写版本号、或换图后忘了改版本**（S8 在构建侧
+用现算值再核一遍，两侧不共用代码）。
 
 **V8 的能力边界（必须说清楚，不许冒充能算）**：上游快照 81 MB 按惯例不入数据集目录，
 所以本判据只能核对**登记值是否完整**，不能重算上游哈希。这条边界写进清单的 `boundary`。
@@ -117,6 +124,10 @@ def count_by(rows, key):
             k = "<none>"
         out[k] = out.get(k, 0) + 1
     return dict(sorted(out.items()))
+
+
+def _is_hex(s) -> bool:
+    return isinstance(s, str) and len(s) > 0 and all(c in "0123456789abcdef" for c in s)
 
 
 # ---------------------------------------------------------------- 判据
@@ -334,6 +345,46 @@ def verify(dataset_dir: str):
             v9.append("%s 缺失或为空" % d)
     rep.append(("V9", not v9, "%d 个来源均已在 ATTRIBUTION 登记许可文本；随包文档齐备"
                 % len(srcs) if not v9 else "★ " + "；".join(v9[:4])))
+
+    # ---- V10 版本身份绑定（F9）----
+    #   ★ 只核对**登记值之间是否自洽**：`dataset_id` 的 `g` 段必须指向清单里登记的上游
+    #     快照哈希，版本段必须等于 `dataset.version`。不重算指纹（理由见文件头 V10 边界）。
+    #   ★ 缺字段 ⇒ 记 **SKIP**（F9 之前的产物，无法判定），**不得**记成 PASS（铁律 #20）。
+    dsv = m.get("dataset") or {}
+    did = dsv.get("dataset_id")
+    v10 = []
+    if not isinstance(did, str) or not did.strip():
+        rep.append(("V10", None,
+                    "本包未登记 dataset_id（F9 之前的产物）⇒ 无法核对绑定；"
+                    "SKIP 不构成通过"))
+        return rep
+    want_g = str(src.get("sha256") or "")[:12]
+    if "+" not in did:
+        v10.append("缺 build metadata 段（应形如 dataset_v1.1.0+g<12hex>.c<8hex>）：%r" % did)
+    else:
+        ver_seg, _, meta = did.partition("+")
+        if ver_seg != dsv.get("version"):
+            v10.append("★ 版本段 %r ≠ dataset.version %r" % (ver_seg, dsv.get("version")))
+        seg = meta.split(".")
+        if len(seg) != 2:
+            v10.append("元数据段应为 g<12hex>.c<8hex>，实际 %r" % meta)
+        else:
+            gseg, cseg = seg
+            if not gseg.startswith("g") or not _is_hex(gseg[1:]) or gseg[1:] != want_g:
+                v10.append("★ 绑定断了：g 段 %r 应等于 source.sha256[:12] = %r" % (gseg, want_g))
+            if not cseg.startswith("c") or not _is_hex(cseg[1:]) or len(cseg) != 9:
+                v10.append("c 段应为 c<8hex>，实际 %r" % cseg)
+    # ★ 这里的 "sha256:" 是本文件**唯一**从构建侧抄来的字面量 —— 它是已发布的
+    #   ID 格式（像文件魔数）：要核对格式就必须知道格式。若构建侧改了前缀，
+    #   本条会**红**（fail-closed），不会静默放过 —— 与「抄一整套算法」不同。
+    if isinstance(dsv.get("snapshot_id"), str) and dsv.get("snapshot_id") \
+            and dsv["snapshot_id"] != "sha256:" + want_g:
+        v10.append("★ 绑定断了：dataset.snapshot_id %r ≠ sha256:%s"
+                   % (dsv.get("snapshot_id"), want_g))
+    if not _is_hex(str(dsv.get("schema_id") or "")) or len(str(dsv.get("schema_id") or "")) != 12:
+        v10.append("schema_id 应为 12 位 hex，实际 %r" % (dsv.get("schema_id"),))
+    rep.append(("V10", not v10, "dataset_id=%s 与上游哈希 / 格式版本自洽" % did
+                if not v10 else "★ " + "；".join(v10)))
     return rep
 
 
@@ -404,7 +455,10 @@ def _write_fixture(d: str) -> dict:
     manifest = {
         "schema": MANIFEST_SCHEMA,
         "dataset": {"name": "fixture", "version": "dataset_v0", "record_schema": RECORD_SCHEMA,
-                    "license_profile": "public_demo"},
+                    "license_profile": "public_demo",
+                    "schema_id": "abc123abc123", "content_id": "12345678",
+                    "snapshot_id": "sha256:000000000000",
+                    "dataset_id": "dataset_v0+g000000000000.c12345678"},
         "source": {"path": "fixture/none.json", "sha256": "0" * 64, "bytes": 1,
                    "nodes": 3, "edges": 2},
         "files": files,
@@ -500,6 +554,20 @@ def selftest() -> int:
         open(os.path.join(d, "notes.txt"), "w", encoding="utf-8").write("夹带\n")
     add("VS9 目录里多一个未登记文件 ⇒ V1 必须变红（未登记内容不得随包发出去）",
         m_extra, ["V1"])
+
+    def m_bind(d):
+        _mut_set_manifest(d, lambda m: m["dataset"].__setitem__(
+            "dataset_id", "dataset_v1.1.0+g000000000000.c02edb979"))
+        _refresh_sums(d)
+    add("VS10 把 dataset_id 的 g 段改掉（内容一字未动）⇒ V10 必须变红（绑定是那条线）",
+        m_bind, ["V10"])
+
+    def m_ver(d):
+        _mut_set_manifest(d, lambda m: m["dataset"].__setitem__(
+            "dataset_id", "dataset_v9.9.9+gf8ebee052d1b.c02edb979"))
+        _refresh_sums(d)
+    add("VS11 让 dataset_id 的版本段与 dataset.version 脱节 ⇒ V10 必须变红",
+        m_ver, ["V10"])
 
     print("=" * 78)
     print("  verify_dataset.py --selftest：合成夹具逐项注入缺陷，判据必须真的变红")

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>STTP · 科学之间</title>
+  <meta name="description" content="从一个问题出发，探索科学概念、公式与学科之间的联系。">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="../vendor/cytoscape.min.js"></script>
+  <script defer src="./usage.js" data-version="explore"></script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" aria-label="主导航">
+    <a class="brand" href="./" aria-label="STTP 科学之间，回到首页"><span class="brand-mark"><span></span><span></span><span></span></span><span>STTP<small>SCIENCE ATLAS</small></span></a>
+    <div class="side-label">探索</div>
+    <nav><button class="nav-item active" id="home-nav"><span class="nav-icon">⌂</span>发现<span class="nav-index">01</span></button><button class="nav-item" id="explore-nav"><span class="nav-icon">◎</span>知识图谱<span class="nav-index">02</span></button><a class="nav-item" href="#about"><span class="nav-icon">◇</span>关于本项目<span class="nav-index">03</span></a></nav>
+    <div class="side-spacer"></div>
+    <div class="side-version-switch" aria-label="选择版本"><button type="button" id="mode-explore" class="side-version active" data-explore-choice aria-current="page"><span class="version-dot" aria-hidden="true"></span>探索版</button><a class="side-version" href="http://127.0.0.1:8765/" data-engineering-link><span class="version-dot" aria-hidden="true"></span>工程版</a></div>
+    <div class="side-bottom">STTP <span>·</span> LOCAL PREVIEW</div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div class="top-crumb">科学之间 <span>/</span> <strong id="top-context">发现</strong></div><div class="top-actions"><span class="status-dot"></span><span>本地预览</span><button class="text-btn" id="metrics-toggle" aria-pressed="false" disabled title="开启后本机按版本汇总点击与页面可见时长；不记录搜索内容">试用统计：关</button><button class="text-btn" id="metrics-open" disabled>查看统计</button><button class="text-btn" id="open-feedback">提供反馈 <span>↗</span></button></div></header>
+    <div class="content" id="home-page">
+      <div class="intro-line"><span class="line-icon">✳</span><span>SCIENCE, CONNECTED</span><span class="intro-line-end">VOL. 01 / 探索版</span></div>
+      <section class="hero"><div class="hero-copy"><div class="eyebrow"><span></span> 一张会生长的知识地图</div><h1>科学之间，<br><em>自有联系。</em></h1><p>从一个好奇的问题出发，看见公式、概念与自然世界之间的关联。</p><form id="search-form" class="hero-search" role="search"><label class="sr-only" for="search-input">搜索科学概念、公式或关键词</label><span class="search-icon" aria-hidden="true"></span><input id="search-input" placeholder="搜索概念、公式或关键词，例如：水" autocomplete="off"><button type="submit">开始探索 <span>↗</span></button></form><div class="quick">试着搜索 <button data-search="水">水分子</button><button data-search="理想气体">理想气体</button><button data-search="温度">温度</button></div><div id="search-results" class="search-results" aria-live="polite" hidden></div></div><div class="hero-art" aria-hidden="true"><div class="art-orbit orbit-a"></div><div class="art-orbit orbit-b"></div><div class="art-orbit orbit-c"></div><div class="art-center"><span>∑</span><small>ALL THINGS<br>CONNECTED</small></div><span class="art-node node-a">H₂O</span><span class="art-node node-b">pV=nRT</span><span class="art-node node-c">n</span><span class="art-spark spark-a">✳</span><span class="art-spark spark-b">✳</span><div class="art-caption">一个问题，无数个方向 <span>↗</span></div></div></section>
+      <div class="section-head"><div><div class="section-overline">CURATED EXPLORATIONS <span> / 01</span></div><h2>从一个问题开始</h2><p>沿着一条路径，发现科学之间的微妙联系。</p></div><div class="section-side">精选主题 <span id="theme-count">03</span></div></div>
+      <div id="theme-cards" class="theme-grid"></div>
+      <section class="mission" id="about"><div><div class="section-overline">A DIFFERENT WAY TO LEARN</div><h2>知识不是孤岛。</h2><p>每个概念都可能通往新的问题。STTP 帮你沿着真实的联系，一步步看见更大的世界。</p></div><div class="mission-right"><div class="mission-symbol">✳</div><p>从概念到公式，从物质到规律。<br>用自己的节奏，探索科学。</p></div></section>
+      <p class="metrics-explain">试用统计默认关闭；开启后仅在本机按版本汇总点击次数和标签页可见时长。统计表不保存搜索内容或身份，可随时关闭；单独运行的工程服务可能输出本地请求日志。</p>
+      <footer><span>STTP <b>·</b> SCIENCE ATLAS</span><span>开发预览 · 内容与许可待独立复核</span></footer>
+    </div>
+    <div class="content explore-page" id="explore-page" hidden>
+      <div class="explore-heading"><div><div class="section-overline">YOUR EXPLORATION <span> / 02</span></div><h1>探索知识的联系<span class="accent-dot">.</span></h1><p id="theme-description">从一个节点出发，沿着联系继续探索。</p></div><button class="outline-btn" id="back-home">← 返回发现</button></div>
+      <div class="explore-tools"><form id="explore-search-form" class="compact-search" role="search"><label class="sr-only" for="explore-search">搜索当前 Demo 知识</label><span class="search-icon" aria-hidden="true"></span><input id="explore-search" placeholder="搜索概念或公式"><button type="submit">搜索</button></form><div class="tool-meta"><span class="tiny-dot"></span> 局部探索 <span class="sep">/</span> <span id="version-label"></span></div></div><div id="explore-search-results" class="search-results" aria-live="polite" hidden></div>
+      <div id="story-steps" class="story-steps" aria-label="主题路线" hidden></div><div class="pathbar"><span class="path-label">探索路径</span><div id="breadcrumbs" class="breadcrumbs"></div><button id="back-node" class="back-node" disabled>← 上一步</button></div>
+      <div class="workspace"><section class="graph-panel"><div class="panel-header"><div><span class="panel-kicker">KNOWLEDGE MAP</span><h2>局部知识图谱</h2></div><div class="graph-controls"><button id="fit-graph" title="适应视图" aria-label="适应图谱视图">⤢</button></div></div><div class="graph-wrap"><div id="graph" aria-label="当前节点及相关知识图谱"></div><div class="graph-hint">选择一个节点，发现它的联系 <span>↗</span></div></div><div class="graph-footer"><span><i class="legend-point"></i> 当前节点</span><span><i class="legend-point adjacent"></i> 相关节点</span><span id="graph-count"></span></div><div class="list-heading"><span>相关节点</span><span>点击继续探索</span></div><div id="node-list" class="node-list"></div><div class="relation-pagination" id="relation-pagination" hidden><button class="outline-btn" id="relations-prev">上一批</button><span id="relations-page" aria-live="polite"></span><button class="outline-btn" id="relations-next">下一批</button></div><p class="api-status" id="api-status" role="status"></p></section><aside class="detail-panel" aria-label="节点详情" id="details"><div id="node-details"></div></aside></div>
+      <footer><span>STTP <b>·</b> SCIENCE ATLAS</span><span>本地探索 · 原图库内容与关联仍在完善</span></footer>
+    </div>
+  </main>
+</div>
+<dialog id="feedback-dialog"><form method="dialog" class="feedback-head"><div><div class="section-overline">YOUR FEEDBACK</div><h2>分享你的想法</h2></div><button aria-label="关闭">×</button></form><p>反馈和日常用语保存在本地复制或下载的文本中，不会自动发送。</p><label for="feedback-term">想补充的日常说法（可选）</label><input id="feedback-term" maxlength="100" placeholder="例如：热胀冷缩"><label for="feedback-text">你的意思或遇到的问题</label><textarea id="feedback-text" rows="5" placeholder="例如：我说的压力是指气体压强……"></textarea><div class="dialog-actions"><button class="outline-btn" id="download-feedback" type="button">下载反馈文本</button><button class="primary-btn" id="copy-feedback" type="button">复制反馈</button></div><p id="feedback-status" role="status"></p></dialog>
+<dialog id="metrics-dialog"><form method="dialog" class="feedback-head"><h2>本机试用统计</h2><button aria-label="关闭统计">×</button></form><p>统计表仅汇总主动开启统计的页面进入、点击及标签页可见时长；不保存问题、身份或 IP，也不统计独立人数。其他未开启的使用不计入。可见时长可能包含挂机或窗口失焦，不等于有效操作时长。单独运行的工程服务可能输出本地请求日志。</p><pre id="metrics-results" class="metrics-results" aria-live="polite"></pre><p>数据保存在本机；两个版本均可分别关闭统计。工程版使用前请确保本机服务已经启动。</p></dialog>
+<noscript>此体验需要启用 JavaScript。请参考项目中的 Demo 使用说明。</noscript>
+</body></html>
