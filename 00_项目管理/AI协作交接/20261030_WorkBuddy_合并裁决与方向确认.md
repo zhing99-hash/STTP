@@ -11,9 +11,8 @@
      **同时收集用户反馈**；并且**降低项目的使用成本**。
 - 仓库 / 分支 / 起始提交：`zhing99-hash/STTP` `main`；起始为本地 `886b832`（本地 29 提交未推送）
   与远端 `619c3b9`，共同 base `eedbb12`
-- 最终提交、是否推送、远端分支：本地提交 `4adb47e`（合并）+ `46ced81`（报备）；
-  **尚未推送到 `origin/main`**——三条通道均受阻，详见文末「推送受阻」一节
-  （本文件目前只在 `F:\sttp` 本地仓库内，远端尚无此文件）
+- 最终提交、是否推送、远端分支：`0cda590`（含合并 `4adb47e` 与报备 `46ced81`）；
+  **已于 2026-10-31 08:24 推送到 `origin/main`**（`619c3b9..0cda590`，走 SSH 通道）
 - 状态：合并与门禁**已完成**；方向调整**已确认、待排期**；`fidelity_proven.py` 裁决**待 Codex 复核**
 - 备份：合并前状态保留在分支 `backup-20261030-precodex`
 
@@ -166,9 +165,14 @@ if False:  # redprobe: 不再核对 from（证明可跨版本复用）   ← 远
 - 探索版：[README](../../06_PoC/demo/README.md)、[验收记录](../../06_PoC/demo/验收记录.md)
 - 工程版判据：`11_真实数据/fidelity_proven.py`、`03_知识层/queries.py`
 
-## 推送受阻（2026-10-30 16:50 实测，未解决）
+## 推送通道（2026-10-31 08:24 已通；以下受阻记录保留为证据）
 
-负责人已授权推送，但本机三条通道全部不通，故本文件**尚未到达 GitHub**：
+**已解决**：负责人把本机公钥 `qclaw-sttp` 登记到 GitHub 账户后，改走 SSH 通道，
+`git push origin-ssh main` 一次成功：`619c3b9..0cda590`（32 个提交）。
+本机 `~/.ssh/config` 已把 `github.com` 绑定到 `id_ed25519_sttp`（原文件为空，备份 `config.bak_20261031`）；
+新增远端 `origin-ssh`（原 HTTPS `origin` 保留作回退）。
+
+下面是 2026-10-30 16:50 的受阻实测，保留以免重复踩：
 
 | 通道 | 实测结果 | 卡在哪 |
 |---|---|---|
@@ -176,9 +180,10 @@ if False:  # redprobe: 不再核对 from（证明可跨版本复用）   ← 远
 | SSH `git@github.com`（22 与 `ssh.github.com:443`） | `Permission denied (publickey)` —— TCP 可达 GitHub | 本地公钥 `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEGbFNB22wBGym6EAYD7iKcRgvuQFeTGHNbZ5zdyKW4U qclaw-sttp` 未登记到 GitHub 账户 |
 | GitHub 连接器（API 提交） | `unauthorized: token authentication failed: credential expired` | 凭据过期，需重新授权连接器 |
 
-**三条出路（任选其一即可推送，均为负责人侧操作）**：
+**三条出路（最终采用第 1 条）**：
 
-1. 把上述公钥加到 GitHub 账户 SSH Keys ⇒ 本机改用 `git@github.com:zhing99-hash/STTP.git` 推送（TCP 已验证可达）。
+1. **（已采用）** 把上述公钥加到 GitHub 账户 SSH Keys ⇒ 本机改用 `git@github.com:zhing99-hash/STTP.git`
+   推送（TCP 已验证可达）。实测：登记后 `git push origin-ssh main` 一次通过。
 2. 在能访问 `github.com` 的网络/机器上推送：已备好差量包
    `F:/sttp_pub_test/sttp_push_20261030.bundle`（68KB，含 `origin/main..main` 全部提交），
    目标机执行 `git fetch <bundle> main:tmp && git merge tmp` 或直接 `git pull <bundle> main` 后 `git push`。
